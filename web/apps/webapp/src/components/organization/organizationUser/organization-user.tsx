@@ -8,6 +8,7 @@ import {
   GridContainer,
   LeadIconTypography,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackRow,
 } from '@/components/commons';
@@ -521,11 +522,10 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     router.push(getOrganizationBookingsBaseLink(organizationId, { customerId }));
   };
 
-  if (!rootData.customer) {
+  const customer = rootData.customer;
+  if (!customer) {
     return <></>;
   }
-
-  const customer = rootData.customer;
 
   const billingContactDetails = rootData.myBillingContactDetails;
   const companyName = billingContactDetails.companyName ? billingContactDetails.companyName : '';
@@ -537,6 +537,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   const province = billingContactDetails.province ? billingContactDetails.province : '';
   const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
   const country = billingContactDetails.country ? billingContactDetails.country : '';
+  const isItMe = customer.id === rootData.me?.id;
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -586,39 +587,47 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Designation">
-                    <TextField name="designation" required={requiredProfileDetailsFields.designation} />
+                    {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
+                    {!isItMe && <SmallIconTypography label={customer.designation} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Title">
-                    <TextField name="title" required={requiredProfileDetailsFields.title} />
+                    {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
+                    {!isItMe && <SmallIconTypography label={customer.title} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredProfileDetailsFields.name} />
+                    {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
+                    {!isItMe && <SmallIconTypography label={customer.name} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Given Name">
-                    <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />
+                    {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
+                    {!isItMe && <SmallIconTypography label={customer.givenName} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Middle Name">
-                    <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />
+                    {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
+                    {!isItMe && <SmallIconTypography label={customer.middleName} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Family Name">
-                    <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />
+                    {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
+                    {!isItMe && <SmallIconTypography label={customer.familyName} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />
+                    {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
+                    {!isItMe && <SmallIconTypography label={customer.timezone} />}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Phone Number">
-                    <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
+                    {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
+                    {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
                   </FormFieldLabel>
                 </StackColumn>
 
-                {rootData.customer?.id === rootData.me?.id && (
+                {isItMe && (
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>

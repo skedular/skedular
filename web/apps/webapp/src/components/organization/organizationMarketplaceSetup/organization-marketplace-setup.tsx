@@ -451,7 +451,10 @@ const OrganizationMarketplaceSetup = ({
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount],
   ];
 
-  const organizationStripeConnectAccountDetails = useMemo(() => organizationStripeConnectAccounts.find((item) => item.id === selectedOrganizationStripeConnectAccountId), [selectedOrganizationStripeConnectAccountId, organizationStripeConnectAccounts]);
+  const organizationStripeConnectAccountDetails = useMemo(
+    () => organizationStripeConnectAccounts.find((item) => item.id === selectedOrganizationStripeConnectAccountId),
+    [selectedOrganizationStripeConnectAccountId, organizationStripeConnectAccounts],
+  );
 
   const handleRefetchOrganizationStripeConnectAccounts = useCallback(
     (organizationStripeConnectAccountNameSearchText: string) => {

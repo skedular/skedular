@@ -1,5 +1,16 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -8,6 +19,9 @@ import type { editStripeConnectAccount_updateOrganizationStripeConnectAccountMut
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
@@ -124,7 +138,8 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
     router.back();
   };
 
-  if (!rootData.organizationStripeConnectAccount) {
+  const account = rootData.organizationStripeConnectAccount;
+  if (!account) {
     return <></>;
   }
 
@@ -144,14 +159,46 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Stripe Connect Account Setup" />
-                    <BodyIconTypography label="Edit your Stripe Connect account name and details" />
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <SectionIconTypography label="Stripe Connect Account Setup" />
+                        <BodyIconTypography label="Edit your Stripe Connect account name and details" />
+                      </Grid>
+
+                      <Grid>
+                        {!account.onboardingCompleted && <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="medium" />}
+                      </Grid>
+                    </GridContainer>
                     <Divider />
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Nickname">
                       <TextField name="name" required={requiredFields.name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Country">
+                      <SmallIconTypography label={getCountryData(account.country as TCountryCode).name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Default Currency">
+                      <SmallIconTypography label={account.defaultCurrency} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Business Type">
+                      <SmallIconTypography label={account.businessType} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Company Name">
+                      <SmallIconTypography label={account.companyName} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Email">
+                      <SmallIconTypography label={account.email} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Phone">
+                      <SmallIconTypography label={account.phone} />
                     </FormFieldLabel>
                   </StackColumn>
 

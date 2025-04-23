@@ -17,9 +17,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 const RootQuery = graphql`
-  query pageOrganizationStripeConnectAccount_rootQuery(
-    $organizationStripeConnectAccountId: String!
-  ) {
+  query pageOrganizationStripeConnectAccount_rootQuery($organizationStripeConnectAccountId: String!) {
     organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {
       name
     }
@@ -32,7 +30,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const ProductPage = ({ queryReference, onReloadRequired }: Props) => {
+const StripeConnectAccountPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationStripeConnectAccount_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -60,14 +58,14 @@ const ProductPage = ({ queryReference, onReloadRequired }: Props) => {
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <EditStripeConnectAccount rootDataRelay={rootData} onReloadRequired={onReloadRequired}  />
+      <EditStripeConnectAccount rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
     </RootShell>
   );
 };
 
-const MemoProductPage = memo(ProductPage);
+const MemoStripeConnectAccountPage = memo(StripeConnectAccountPage);
 
-const ProductPageWithRelay = () => {
+const StripeConnectAccountPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationStripeConnectAccount_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -95,7 +93,7 @@ const ProductPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId,  finalOrganizationStripeConnectAccountId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationStripeConnectAccountId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -109,9 +107,9 @@ const ProductPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoProductPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoStripeConnectAccountPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
 
-export default memo(ProductPageWithRelay);
+export default memo(StripeConnectAccountPageWithRelay);
