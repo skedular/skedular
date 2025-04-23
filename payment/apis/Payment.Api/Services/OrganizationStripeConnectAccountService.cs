@@ -245,7 +245,7 @@ public class OrganizationStripeConnectAccountService(
         }
 
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
-            accountRefreshCode.OrganizationStripeConnectAccount.Id,
+            accountRefreshCode.OrganizationStripeConnectAccount.StripeAccountId,
             accountRefreshCode.OrganizationStripeConnectAccount.Organization.Id,
             accountRefreshCode.OrganizationStripeConnectAccount,
             cancellationToken);
