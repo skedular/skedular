@@ -75,19 +75,21 @@ public class Mapper : IMapper
             Company = new AccountCompanyOptions
             {
                 Name = src.Name,
-                Address = new AddressOptions
-                {
-                    Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
-                    Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
-                    City = src.PhysicalAddress?.City.ToSafeString(),
-                    State = src.PhysicalAddress?.Province.ToSafeString(),
-                    PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
-                    Country = src.PhysicalAddress?.Country.ToSafeString()
-                },
-                Phone = src.ContactPhone
+                Address = src.PhysicalAddress is null
+                    ? null
+                    : new AddressOptions
+                    {
+                        Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
+                        Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
+                        City = src.PhysicalAddress?.City.ToSafeString(),
+                        State = src.PhysicalAddress?.Province.ToSafeString(),
+                        PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
+                        Country = src.PhysicalAddress?.Country.ToSafeString()
+                    },
+                Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
             },
             BusinessType = "company",
-            Email = src.ContactEmail,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
             Capabilities =
                 new AccountCapabilitiesOptions
                 {

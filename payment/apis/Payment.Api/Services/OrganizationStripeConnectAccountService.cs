@@ -69,21 +69,6 @@ public class OrganizationStripeConnectAccountService(
             throw new OrganizationNameIsInvalid();
         }
 
-        if (string.IsNullOrWhiteSpace(organization.ContactEmail))
-        {
-            throw new OrganizationContactEmailNotSet();
-        }
-
-        if (string.IsNullOrWhiteSpace(organization.ContactPhone))
-        {
-            throw new OrganizationContactPhoneNotSet();
-        }
-
-        if (organization.PhysicalAddress is null)
-        {
-            throw new OrganizationPhysicalAddressNotSet();
-        }
-
         if (!string.IsNullOrWhiteSpace(id))
         {
             var existingAccount = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
