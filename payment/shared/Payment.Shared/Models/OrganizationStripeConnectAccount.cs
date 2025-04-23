@@ -20,7 +20,7 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string CapabilitiesTransfers { get; set; } = string.Empty;
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
     public string OnboardingUrl { get; set; } = string.Empty;
-    public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized;
+    public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized && ChargesEnabled && PayoutsEnabled;
 
     public Organization Organization { get; set; }
 }

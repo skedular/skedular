@@ -48,7 +48,7 @@ public class StripeConnectAccountLinkService(
             {
                 Account = id,
                 RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, _refreshLinkBaseUrl.Value).SetQueryParam("code", code),
-                ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", id),
+                ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", accountEntity.Id),
                 Type = "account_onboarding"
             },
             new RequestOptions(),
