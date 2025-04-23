@@ -14,6 +14,7 @@ namespace Payment.Shared.Repositories;
 public interface IOrganizationStripeConnectAccountRepository : IRepository<OrganizationStripeConnectAccount>
 {
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount?> GetByStripeAccountIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<OrganizationStripeConnectAccount>> GetAllAsync(CancellationToken cancellationToken);
     OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount organizationStripeConnectAccount);
@@ -85,6 +86,11 @@ public class OrganizationStripeConnectAccountRepository(PaymentDbContext dbConte
         await DbContext.OrganizationStripeConnectAccount
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<OrganizationStripeConnectAccount?> GetByStripeAccountIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationStripeConnectAccount
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.StripeAccountId == id, cancellationToken);
 
     public async Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);

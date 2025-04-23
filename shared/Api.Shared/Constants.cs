@@ -105,6 +105,7 @@ public static class Constants
     public const int MaxProductPriceCurrencyLength = 16;
     public const int MaxProductPriceUnitLength = 16;
 
+    public const int MaxStripeConnectAccountIdLength = 100;
     public const int MaxStripeConnectAccountNameLength = 200;
     public const int MaxStripeConnectAccountTypeLength = 50;
     public const int MaxStripeCapabilitiesStatusLength = 50;

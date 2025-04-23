@@ -4,6 +4,7 @@ namespace Payment.Shared.Models;
 
 public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
 {
+    public string StripeAccountId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public bool ChargesEnabled { get; set; }
     public bool PayoutsEnabled { get; set; }
@@ -14,11 +15,12 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string CompanyName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+    public bool DetailsSubmitted { get; set; }
+    public bool ApplicationAuthorized { get; set; }
     public string CapabilitiesTransfers { get; set; } = string.Empty;
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
     public string OnboardingUrl { get; set; } = string.Empty;
-    public DateTimeOffset? OnboardingCompletedAt { get; set; }
-    public bool OnboardingCompleted => OnboardingCompletedAt.HasValue;
+    public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized;
 
     public Organization Organization { get; set; }
 }

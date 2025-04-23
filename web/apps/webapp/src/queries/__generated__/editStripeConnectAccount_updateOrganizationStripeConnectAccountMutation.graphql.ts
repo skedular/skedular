@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0351bf0034ce472ec1449f756e43ed02>>
+ * @generated SignedSource<<28970b0a1959a139ff012b62f8620a23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,35 +9,34 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddOrganizationStripeConnectAccountInput = {
+export type UpdateOrganizationStripeConnectAccountInput = {
   clientMutationId?: string | null | undefined;
-  id?: string | null | undefined;
+  id: string;
   name: string;
-  organizationId: string;
 };
-export type addStripeConnectAccount_addStripeConnectAccountMutation$variables = {
-  input: AddOrganizationStripeConnectAccountInput;
+export type editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$variables = {
+  input: UpdateOrganizationStripeConnectAccountInput;
 };
-export type addStripeConnectAccount_addStripeConnectAccountMutation$data = {
-  readonly addOrganizationStripeConnectAccount: {
+export type editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$data = {
+  readonly updateOrganizationStripeConnectAccount: {
     readonly account: {
       readonly id: string;
       readonly name: string;
     };
   } | null | undefined;
 };
-export type addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse = {
-  readonly addOrganizationStripeConnectAccount: {
+export type editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$rawResponse = {
+  readonly updateOrganizationStripeConnectAccount: {
     readonly account: {
       readonly id: string;
       readonly name: string;
     };
   } | null | undefined;
 };
-export type addStripeConnectAccount_addStripeConnectAccountMutation = {
-  rawResponse: addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse;
-  response: addStripeConnectAccount_addStripeConnectAccountMutation$data;
-  variables: addStripeConnectAccount_addStripeConnectAccountMutation$variables;
+export type editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation = {
+  rawResponse: editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$rawResponse;
+  response: editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$data;
+  variables: editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -60,7 +59,7 @@ v1 = [
     ],
     "concreteType": "OrganizationStripeConnectAccountPayload",
     "kind": "LinkedField",
-    "name": "addOrganizationStripeConnectAccount",
+    "name": "updateOrganizationStripeConnectAccount",
     "plural": false,
     "selections": [
       {
@@ -97,7 +96,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
+    "name": "editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -106,20 +105,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
+    "name": "editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f0c6de506bb4e839a5b1e5156ace8334",
+    "cacheID": "fc317b39e239d9a33b5f0ad772adfeb7",
     "id": null,
     "metadata": {},
-    "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
+    "name": "editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation",
     "operationKind": "mutation",
-    "text": "mutation addStripeConnectAccount_addStripeConnectAccountMutation(\n  $input: AddOrganizationStripeConnectAccountInput!\n) {\n  addOrganizationStripeConnectAccount(input: $input) {\n    account {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation(\n  $input: UpdateOrganizationStripeConnectAccountInput!\n) {\n  updateOrganizationStripeConnectAccount(input: $input) {\n    account {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f1b6c4c6e87c1214ba514292840912b5";
+(node as any).hash = "dbd4b67eedbcc8d133b7b2362c397e11";
 
 export default node;

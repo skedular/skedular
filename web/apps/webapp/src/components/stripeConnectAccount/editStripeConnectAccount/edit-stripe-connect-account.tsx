@@ -3,23 +3,23 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addStripeConnectAccount_addStripeConnectAccountMutation } from '@/queries/__generated__/addStripeConnectAccount_addStripeConnectAccountMutation.graphql';
+import type { editStripeConnectAccount_query$key } from '@/queries/__generated__/editStripeConnectAccount_query.graphql';
+import type { editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation } from '@/queries/__generated__/editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useMutation } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 
 type Props = {
+  rootDataRelay: editStripeConnectAccount_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
-  onAdded: (productId: string) => void;
-  onCancel: () => void;
 };
 
 type StripeConnectAccountDetails = {
@@ -31,10 +31,30 @@ const stripeConnectAccountSchema = () =>
     name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
   });
 
-const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
-  const [commitAddStripeConnectAccount] = useMutation<addStripeConnectAccount_addStripeConnectAccountMutation>(graphql`
-    mutation addStripeConnectAccount_addStripeConnectAccountMutation($input: AddOrganizationStripeConnectAccountInput!) @raw_response_type {
-      addOrganizationStripeConnectAccount(input: $input) {
+const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<editStripeConnectAccount_query$key>(
+    graphql`
+      fragment editStripeConnectAccount_query on Query {
+        organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {
+          id
+          name
+          country
+          defaultCurrency
+          businessType
+          companyName
+          email
+          phone
+          onboardingUrl
+          onboardingCompleted
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [commitUpdateOrganizationStripeConnectAccount] = useMutation<editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation>(graphql`
+    mutation editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation($input: UpdateOrganizationStripeConnectAccountInput!) @raw_response_type {
+      updateOrganizationStripeConnectAccount(input: $input) {
         account {
           id
           name
@@ -43,35 +63,34 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema());
   const requiredFields = makeRequired(stripeConnectAccountSchema());
-  const [name, setName] = useState('');
+  const [name, setName] = useState(rootData.organizationStripeConnectAccount?.name);
 
-  const handleCloseClick = () => {
-    onCancel();
-    onReloadRequired();
-  };
+  const handleStripeConnectAccountDetailUpdateClick = ({ name }: StripeConnectAccountDetails) => {
+    const account = rootData.organizationStripeConnectAccount;
+    if (!account) {
+      return;
+    }
 
-  const handleStripeConnectAccountAddClick = ({ name }: StripeConnectAccountDetails) => {
-    const id = nanoid();
-    const toastId = themedToast(<NotificationContent content={`Adding Stripe Connect account '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating Stripe Connect account '${account.name}'...`} />, infoNotificationOptions);
 
-    commitAddStripeConnectAccount({
+    commitUpdateOrganizationStripeConnectAccount({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id,
+          id: account.id,
           name,
-          organizationId,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -79,22 +98,21 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Stripe Connect account ${name} added.`} />,
+          render: <NotificationContent content={`Stripe Connect account ${name} updated.`} />,
         });
 
-        onAdded(id);
-        onReloadRequired();
+        router.back();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        addOrganizationStripeConnectAccount: {
+        updateOrganizationStripeConnectAccount: {
           account: {
-            id,
+            id: account.id,
             name,
           },
         },
@@ -102,12 +120,20 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
     });
   };
 
+  const handleCloseClick = () => {
+    router.back();
+  };
+
+  if (!rootData.organizationStripeConnectAccount) {
+    return <></>;
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Add Stripe Connect Account">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Stripe Connect Account">
           <Form
-            onSubmit={handleStripeConnectAccountAddClick}
+            onSubmit={handleStripeConnectAccountDetailUpdateClick}
             initialValues={{
               name,
             }}
@@ -132,7 +158,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -146,4 +172,4 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
   );
 };
 
-export default memo(AddStripeConnectAccount);
+export default memo(EditStripeConnectAccount);

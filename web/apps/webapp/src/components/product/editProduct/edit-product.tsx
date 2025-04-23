@@ -268,13 +268,11 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     productTagIds,
     locationTagIds,
   }: ProductDetails) => {
-    if (!rootData.product) {
+    const product = rootData.product;
+    if (!product) {
       return;
     }
 
-    const product = rootData.product;
-
-    const id = nanoid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
     const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
     const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
@@ -365,8 +363,6 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   if (!rootData.product) {
     return <></>;
   }
-
-  const product = rootData.product;
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Payment.Api.GraphQL;
@@ -20,8 +21,8 @@ public interface IMapper
 
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
-    AccountCreateOptions MapTo(Organization src, string nickname);
-    OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization);
+    AccountCreateOptions MapToStripeAccountRequest(Organization src);
+    OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
@@ -68,7 +69,7 @@ public class Mapper : IMapper
     public IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src) =>
         src.Select(MapTo);
 
-    public AccountCreateOptions MapTo(Organization src, string nickname) =>
+    public AccountCreateOptions MapToStripeAccountRequest(Organization src) =>
         new()
         {
             Company = new AccountCompanyOptions
@@ -94,16 +95,14 @@ public class Mapper : IMapper
                     Transfers = new AccountCapabilitiesTransfersOptions { Requested = true }
                 },
             Type = "standard",
-            Metadata = new Dictionary<string, string>
-            {
-                { "organizationId", src.Id }, { "organizationName", src.Name.ToSafeString() }, { "nickname", nickname }
-            }
+            Metadata = new Dictionary<string, string> { { "organizationId", src.Id } }
         };
 
-    public OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization) =>
+    public OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Organization organization) =>
         new()
         {
-            Id = src.Id,
+            Id = id,
+            StripeAccountId = src.Id,
             Name = name,
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
@@ -114,6 +113,7 @@ public class Mapper : IMapper
             CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString(),
             Email = src.Email.ToSafeString(),
             Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString(),
+            DetailsSubmitted = src.DetailsSubmitted,
             CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString(),
             CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString(),
             Organization = organization
@@ -126,6 +126,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
+            StripeAccountId = src.StripeAccountId,
             Name = src.Name,
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
@@ -136,11 +137,12 @@ public class Mapper : IMapper
             CompanyName = src.CompanyName,
             Email = src.Email,
             Phone = src.Phone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            ApplicationAuthorized = src.ApplicationAuthorized,
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            OnboardingCompletedAt = src.OnboardingCompletedAt,
-            Organization = new Shared.Models.Organization { Id = src.Organization.Id }
+            Organization = MapTo(src.Organization)
         };
 
     public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
@@ -162,8 +164,8 @@ public class Mapper : IMapper
                 CapabilitiesCardPayments = src.CapabilitiesCardPayments,
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
                 OnboardingUrl = src.OnboardingUrl,
-                OnboardingCompletedAt = src.OnboardingCompletedAt,
                 OnboardingCompleted = src.OnboardingCompleted,
+                Organization = MapTo(src.Organization)
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -212,4 +214,20 @@ public class Mapper : IMapper
         src is null
             ? null
             : new Shared.Models.Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
+
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
+        new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+
+    private static Shared.Models.Organization MapTo(Organization src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Name = src.Name,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+        };
 }

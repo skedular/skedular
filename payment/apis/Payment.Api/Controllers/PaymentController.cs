@@ -50,14 +50,28 @@ public class PaymentController(
             {
                 case EventTypes.AccountApplicationAuthorized:
                 case EventTypes.AccountApplicationDeauthorized:
+                    {
+                        await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
+                            stripeEvent.Account,
+                            json,
+                            cancellationToken);
+                    }
+                    break;
+
                 case EventTypes.AccountExternalAccountCreated:
                 case EventTypes.AccountExternalAccountDeleted:
                 case EventTypes.AccountExternalAccountUpdated:
                 case EventTypes.AccountUpdated:
-                    var stripeAccount = stripeEvent.Data.Object as Account;
-                    ArgumentNullException.ThrowIfNull(stripeAccount);
+                    {
+                        var stripeAccount = stripeEvent.Data.Object as Account;
+                        ArgumentNullException.ThrowIfNull(stripeAccount);
 
-                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(stripeAccount.Id, json, cancellationToken);
+                        await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
+                            stripeAccount.Id,
+                            json,
+                            cancellationToken);
+                    }
+
                     break;
             }
 

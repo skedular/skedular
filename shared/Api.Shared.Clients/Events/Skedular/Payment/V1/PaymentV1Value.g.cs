@@ -36,22 +36,22 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "Q29ubmVjdEFjY291bnQYAiABKAsyKS5wYXltZW50Lk9yZ2FuaXphdGlvblN0",
             "cmlwZUNvbm5lY3RBY2NvdW50SABCCQoHcGF5bG9hZCJVChlPcmdhbml6YXRp",
             "b25QYXltZW50TWV0aG9kEhYKDm9yZ2FuaXphdGlvbklkGAEgASgJEiAKGGhh",
-            "c0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCLkAwogT3JnYW5pemF0aW9u",
+            "c0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCLCAwogT3JnYW5pemF0aW9u",
             "U3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0",
             "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdhbml6",
-            "YXRpb25JZBgDIAEoCRIMCgRuYW1lGAQgASgJEhYKDmNoYXJnZXNFbmFibGVk",
-            "GAUgASgIEhYKDnBheW91dHNFbmFibGVkGAYgASgIEgwKBHR5cGUYByABKAkS",
-            "DwoHY291bnRyeRgIIAEoCRIXCg9kZWZhdWx0Q3VycmVuY3kYCSABKAkSFAoM",
-            "YnVzaW5lc3NUeXBlGAogASgJEhMKC2NvbXBhbnlOYW1lGAsgASgJEg0KBWVt",
-            "YWlsGAwgASgJEg0KBXBob25lGA0gASgJEh0KFWNhcGFiaWxpdGllc1RyYW5z",
-            "ZmVycxgOIAEoCRIgChhjYXBhYmlsaXRpZXNDYXJkUGF5bWVudHMYDyABKAkS",
-            "FQoNb25ib2FyZGluZ1VybBgQIAEoCRI5ChVvbmJvYXJkaW5nQ29tcGxldGVk",
-            "QXQYESABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhsKE29uYm9h",
-            "cmRpbmdDb21wbGV0ZWQYEiABKAgqiAEKBFR5cGUSJQohT3JnYW5pemF0aW9u",
-            "UGF5bWVudE1ldGhvZHNVcGRhdGVkEAASLAooT3JnYW5pemF0aW9uU3RyaXBl",
-            "Q29ubmVjdEFjY291bnRVcHNlcnRlZBABEisKJ09yZ2FuaXphdGlvblN0cmlw",
-            "ZUNvbm5lY3RBY2NvdW50RGVsZXRlZBACQjaqAjNBcGkuU2hhcmVkLkNsaWVu",
-            "dHMuRXZlbnRzLlNrZWR1bGFyLlBheW1lbnQuVjEuVmFsdWViBnByb3RvMw=="));
+            "YXRpb25JZBgDIAEoCRIXCg9zdHJpcGVBY2NvdW50SWQYBCABKAkSDAoEbmFt",
+            "ZRgFIAEoCRIWCg5jaGFyZ2VzRW5hYmxlZBgGIAEoCBIWCg5wYXlvdXRzRW5h",
+            "YmxlZBgHIAEoCBIMCgR0eXBlGAggASgJEg8KB2NvdW50cnkYCSABKAkSFwoP",
+            "ZGVmYXVsdEN1cnJlbmN5GAogASgJEhQKDGJ1c2luZXNzVHlwZRgLIAEoCRIT",
+            "Cgtjb21wYW55TmFtZRgMIAEoCRINCgVlbWFpbBgNIAEoCRINCgVwaG9uZRgO",
+            "IAEoCRIdChVjYXBhYmlsaXRpZXNUcmFuc2ZlcnMYDyABKAkSIAoYY2FwYWJp",
+            "bGl0aWVzQ2FyZFBheW1lbnRzGBAgASgJEhUKDW9uYm9hcmRpbmdVcmwYESAB",
+            "KAkSGwoTb25ib2FyZGluZ0NvbXBsZXRlZBgSIAEoCCqIAQoEVHlwZRIlCiFP",
+            "cmdhbml6YXRpb25QYXltZW50TWV0aG9kc1VwZGF0ZWQQABIsCihPcmdhbml6",
+            "YXRpb25TdHJpcGVDb25uZWN0QWNjb3VudFVwc2VydGVkEAESKwonT3JnYW5p",
+            "emF0aW9uU3RyaXBlQ29ubmVjdEFjY291bnREZWxldGVkEAJCNqoCM0FwaS5T",
+            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudC5WMS5WYWx1",
+            "ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -59,7 +59,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod", "OrganizationStripeConnectAccount" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompletedAt", "OnboardingCompleted" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "StripeAccountId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1287,6 +1287,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       id_ = other.id_;
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
       organizationId_ = other.organizationId_;
+      stripeAccountId_ = other.stripeAccountId_;
       name_ = other.name_;
       chargesEnabled_ = other.chargesEnabled_;
       payoutsEnabled_ = other.payoutsEnabled_;
@@ -1300,7 +1301,6 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       capabilitiesTransfers_ = other.capabilitiesTransfers_;
       capabilitiesCardPayments_ = other.capabilitiesCardPayments_;
       onboardingUrl_ = other.onboardingUrl_;
-      onboardingCompletedAt_ = other.onboardingCompletedAt_ != null ? other.onboardingCompletedAt_.Clone() : null;
       onboardingCompleted_ = other.onboardingCompleted_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1347,8 +1347,20 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "stripeAccountId" field.</summary>
+    public const int StripeAccountIdFieldNumber = 4;
+    private string stripeAccountId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string StripeAccountId {
+      get { return stripeAccountId_; }
+      set {
+        stripeAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 4;
+    public const int NameFieldNumber = 5;
     private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1360,7 +1372,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "chargesEnabled" field.</summary>
-    public const int ChargesEnabledFieldNumber = 5;
+    public const int ChargesEnabledFieldNumber = 6;
     private bool chargesEnabled_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1372,7 +1384,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "payoutsEnabled" field.</summary>
-    public const int PayoutsEnabledFieldNumber = 6;
+    public const int PayoutsEnabledFieldNumber = 7;
     private bool payoutsEnabled_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1384,7 +1396,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 7;
+    public const int TypeFieldNumber = 8;
     private string type_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1396,7 +1408,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "country" field.</summary>
-    public const int CountryFieldNumber = 8;
+    public const int CountryFieldNumber = 9;
     private string country_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1408,7 +1420,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "defaultCurrency" field.</summary>
-    public const int DefaultCurrencyFieldNumber = 9;
+    public const int DefaultCurrencyFieldNumber = 10;
     private string defaultCurrency_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1420,7 +1432,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "businessType" field.</summary>
-    public const int BusinessTypeFieldNumber = 10;
+    public const int BusinessTypeFieldNumber = 11;
     private string businessType_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1432,7 +1444,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "companyName" field.</summary>
-    public const int CompanyNameFieldNumber = 11;
+    public const int CompanyNameFieldNumber = 12;
     private string companyName_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1444,7 +1456,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "email" field.</summary>
-    public const int EmailFieldNumber = 12;
+    public const int EmailFieldNumber = 13;
     private string email_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1456,7 +1468,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "phone" field.</summary>
-    public const int PhoneFieldNumber = 13;
+    public const int PhoneFieldNumber = 14;
     private string phone_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1468,7 +1480,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "capabilitiesTransfers" field.</summary>
-    public const int CapabilitiesTransfersFieldNumber = 14;
+    public const int CapabilitiesTransfersFieldNumber = 15;
     private string capabilitiesTransfers_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1480,7 +1492,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "capabilitiesCardPayments" field.</summary>
-    public const int CapabilitiesCardPaymentsFieldNumber = 15;
+    public const int CapabilitiesCardPaymentsFieldNumber = 16;
     private string capabilitiesCardPayments_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1492,7 +1504,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     }
 
     /// <summary>Field number for the "onboardingUrl" field.</summary>
-    public const int OnboardingUrlFieldNumber = 16;
+    public const int OnboardingUrlFieldNumber = 17;
     private string onboardingUrl_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1500,18 +1512,6 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       get { return onboardingUrl_; }
       set {
         onboardingUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "onboardingCompletedAt" field.</summary>
-    public const int OnboardingCompletedAtFieldNumber = 17;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp onboardingCompletedAt_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp OnboardingCompletedAt {
-      get { return onboardingCompletedAt_; }
-      set {
-        onboardingCompletedAt_ = value;
       }
     }
 
@@ -1545,6 +1545,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (Id != other.Id) return false;
       if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
       if (OrganizationId != other.OrganizationId) return false;
+      if (StripeAccountId != other.StripeAccountId) return false;
       if (Name != other.Name) return false;
       if (ChargesEnabled != other.ChargesEnabled) return false;
       if (PayoutsEnabled != other.PayoutsEnabled) return false;
@@ -1558,7 +1559,6 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (CapabilitiesTransfers != other.CapabilitiesTransfers) return false;
       if (CapabilitiesCardPayments != other.CapabilitiesCardPayments) return false;
       if (OnboardingUrl != other.OnboardingUrl) return false;
-      if (!object.Equals(OnboardingCompletedAt, other.OnboardingCompletedAt)) return false;
       if (OnboardingCompleted != other.OnboardingCompleted) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1570,6 +1570,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
+      if (StripeAccountId.Length != 0) hash ^= StripeAccountId.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (ChargesEnabled != false) hash ^= ChargesEnabled.GetHashCode();
       if (PayoutsEnabled != false) hash ^= PayoutsEnabled.GetHashCode();
@@ -1583,7 +1584,6 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (CapabilitiesTransfers.Length != 0) hash ^= CapabilitiesTransfers.GetHashCode();
       if (CapabilitiesCardPayments.Length != 0) hash ^= CapabilitiesCardPayments.GetHashCode();
       if (OnboardingUrl.Length != 0) hash ^= OnboardingUrl.GetHashCode();
-      if (onboardingCompletedAt_ != null) hash ^= OnboardingCompletedAt.GetHashCode();
       if (OnboardingCompleted != false) hash ^= OnboardingCompleted.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1615,61 +1615,61 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(OrganizationId);
       }
-      if (Name.Length != 0) {
+      if (StripeAccountId.Length != 0) {
         output.WriteRawTag(34);
+        output.WriteString(StripeAccountId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(42);
         output.WriteString(Name);
       }
       if (ChargesEnabled != false) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteBool(ChargesEnabled);
       }
       if (PayoutsEnabled != false) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(56);
         output.WriteBool(PayoutsEnabled);
       }
       if (Type.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(66);
         output.WriteString(Type);
       }
       if (Country.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(74);
         output.WriteString(Country);
       }
       if (DefaultCurrency.Length != 0) {
-        output.WriteRawTag(74);
+        output.WriteRawTag(82);
         output.WriteString(DefaultCurrency);
       }
       if (BusinessType.Length != 0) {
-        output.WriteRawTag(82);
+        output.WriteRawTag(90);
         output.WriteString(BusinessType);
       }
       if (CompanyName.Length != 0) {
-        output.WriteRawTag(90);
+        output.WriteRawTag(98);
         output.WriteString(CompanyName);
       }
       if (Email.Length != 0) {
-        output.WriteRawTag(98);
+        output.WriteRawTag(106);
         output.WriteString(Email);
       }
       if (Phone.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(Phone);
       }
       if (CapabilitiesTransfers.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(CapabilitiesTransfers);
       }
       if (CapabilitiesCardPayments.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(CapabilitiesCardPayments);
       }
       if (OnboardingUrl.Length != 0) {
-        output.WriteRawTag(130, 1);
-        output.WriteString(OnboardingUrl);
-      }
-      if (onboardingCompletedAt_ != null) {
         output.WriteRawTag(138, 1);
-        output.WriteMessage(OnboardingCompletedAt);
+        output.WriteString(OnboardingUrl);
       }
       if (OnboardingCompleted != false) {
         output.WriteRawTag(144, 1);
@@ -1697,61 +1697,61 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(OrganizationId);
       }
-      if (Name.Length != 0) {
+      if (StripeAccountId.Length != 0) {
         output.WriteRawTag(34);
+        output.WriteString(StripeAccountId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(42);
         output.WriteString(Name);
       }
       if (ChargesEnabled != false) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteBool(ChargesEnabled);
       }
       if (PayoutsEnabled != false) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(56);
         output.WriteBool(PayoutsEnabled);
       }
       if (Type.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(66);
         output.WriteString(Type);
       }
       if (Country.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(74);
         output.WriteString(Country);
       }
       if (DefaultCurrency.Length != 0) {
-        output.WriteRawTag(74);
+        output.WriteRawTag(82);
         output.WriteString(DefaultCurrency);
       }
       if (BusinessType.Length != 0) {
-        output.WriteRawTag(82);
+        output.WriteRawTag(90);
         output.WriteString(BusinessType);
       }
       if (CompanyName.Length != 0) {
-        output.WriteRawTag(90);
+        output.WriteRawTag(98);
         output.WriteString(CompanyName);
       }
       if (Email.Length != 0) {
-        output.WriteRawTag(98);
+        output.WriteRawTag(106);
         output.WriteString(Email);
       }
       if (Phone.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(Phone);
       }
       if (CapabilitiesTransfers.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(CapabilitiesTransfers);
       }
       if (CapabilitiesCardPayments.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(CapabilitiesCardPayments);
       }
       if (OnboardingUrl.Length != 0) {
-        output.WriteRawTag(130, 1);
-        output.WriteString(OnboardingUrl);
-      }
-      if (onboardingCompletedAt_ != null) {
         output.WriteRawTag(138, 1);
-        output.WriteMessage(OnboardingCompletedAt);
+        output.WriteString(OnboardingUrl);
       }
       if (OnboardingCompleted != false) {
         output.WriteRawTag(144, 1);
@@ -1775,6 +1775,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (OrganizationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
+      }
+      if (StripeAccountId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeAccountId);
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
@@ -1810,13 +1813,10 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CapabilitiesTransfers);
       }
       if (CapabilitiesCardPayments.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(CapabilitiesCardPayments);
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(CapabilitiesCardPayments);
       }
       if (OnboardingUrl.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(OnboardingUrl);
-      }
-      if (onboardingCompletedAt_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(OnboardingCompletedAt);
       }
       if (OnboardingCompleted != false) {
         size += 2 + 1;
@@ -1844,6 +1844,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (other.OrganizationId.Length != 0) {
         OrganizationId = other.OrganizationId;
+      }
+      if (other.StripeAccountId.Length != 0) {
+        StripeAccountId = other.StripeAccountId;
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
@@ -1884,12 +1887,6 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (other.OnboardingUrl.Length != 0) {
         OnboardingUrl = other.OnboardingUrl;
       }
-      if (other.onboardingCompletedAt_ != null) {
-        if (onboardingCompletedAt_ == null) {
-          OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        OnboardingCompletedAt.MergeFrom(other.OnboardingCompletedAt);
-      }
       if (other.OnboardingCompleted != false) {
         OnboardingCompleted = other.OnboardingCompleted;
       }
@@ -1928,62 +1925,59 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             break;
           }
           case 34: {
+            StripeAccountId = input.ReadString();
+            break;
+          }
+          case 42: {
             Name = input.ReadString();
             break;
           }
-          case 40: {
+          case 48: {
             ChargesEnabled = input.ReadBool();
             break;
           }
-          case 48: {
+          case 56: {
             PayoutsEnabled = input.ReadBool();
             break;
           }
-          case 58: {
+          case 66: {
             Type = input.ReadString();
             break;
           }
-          case 66: {
+          case 74: {
             Country = input.ReadString();
             break;
           }
-          case 74: {
+          case 82: {
             DefaultCurrency = input.ReadString();
             break;
           }
-          case 82: {
+          case 90: {
             BusinessType = input.ReadString();
             break;
           }
-          case 90: {
+          case 98: {
             CompanyName = input.ReadString();
             break;
           }
-          case 98: {
+          case 106: {
             Email = input.ReadString();
             break;
           }
-          case 106: {
+          case 114: {
             Phone = input.ReadString();
             break;
           }
-          case 114: {
+          case 122: {
             CapabilitiesTransfers = input.ReadString();
             break;
           }
-          case 122: {
+          case 130: {
             CapabilitiesCardPayments = input.ReadString();
             break;
           }
-          case 130: {
-            OnboardingUrl = input.ReadString();
-            break;
-          }
           case 138: {
-            if (onboardingCompletedAt_ == null) {
-              OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(OnboardingCompletedAt);
+            OnboardingUrl = input.ReadString();
             break;
           }
           case 144: {
@@ -2025,62 +2019,59 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             break;
           }
           case 34: {
+            StripeAccountId = input.ReadString();
+            break;
+          }
+          case 42: {
             Name = input.ReadString();
             break;
           }
-          case 40: {
+          case 48: {
             ChargesEnabled = input.ReadBool();
             break;
           }
-          case 48: {
+          case 56: {
             PayoutsEnabled = input.ReadBool();
             break;
           }
-          case 58: {
+          case 66: {
             Type = input.ReadString();
             break;
           }
-          case 66: {
+          case 74: {
             Country = input.ReadString();
             break;
           }
-          case 74: {
+          case 82: {
             DefaultCurrency = input.ReadString();
             break;
           }
-          case 82: {
+          case 90: {
             BusinessType = input.ReadString();
             break;
           }
-          case 90: {
+          case 98: {
             CompanyName = input.ReadString();
             break;
           }
-          case 98: {
+          case 106: {
             Email = input.ReadString();
             break;
           }
-          case 106: {
+          case 114: {
             Phone = input.ReadString();
             break;
           }
-          case 114: {
+          case 122: {
             CapabilitiesTransfers = input.ReadString();
             break;
           }
-          case 122: {
+          case 130: {
             CapabilitiesCardPayments = input.ReadString();
             break;
           }
-          case 130: {
-            OnboardingUrl = input.ReadString();
-            break;
-          }
           case 138: {
-            if (onboardingCompletedAt_ == null) {
-              OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(OnboardingCompletedAt);
+            OnboardingUrl = input.ReadString();
             break;
           }
           case 144: {

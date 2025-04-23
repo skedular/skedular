@@ -57,6 +57,7 @@ public class RemoveOrganizationPaymentMethodPayload
 public class AddOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
 }
@@ -116,8 +117,8 @@ public class OrganizationStripeConnectAccountDetails : Node
     public string CapabilitiesCardPayments { get; set; }
 
     [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; }
-    [GraphQLName("onboardingCompletedAt")] public DateTimeOffset? OnboardingCompletedAt { get; set; }
     [GraphQLName("onboardingCompleted")] public bool OnboardingCompleted { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -141,3 +142,10 @@ public class OrganizationStripeConnectAccountConnection : Enterprise.Shared.Grap
 [GraphQLName("OrganizationStripeConnectAccountEdge")]
 public class OrganizationStripeConnectAccountEdge(OrganizationStripeConnectAccountDetails node, string cursor)
     : Edge<OrganizationStripeConnectAccountDetails>(node, cursor);
+
+[GraphQLName("Payment_OrganizationDetails")]
+public class OrganizationDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}

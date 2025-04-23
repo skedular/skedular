@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09352788b6a1ebe97bffcea75b7c3597>>
+ * @generated SignedSource<<2f3322ea6b42d7b57a36139de640f6ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,11 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly email: string;
         readonly id: string;
         readonly name: string;
+        readonly onboardingCompleted: boolean;
         readonly onboardingUrl: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        };
         readonly phone: string;
       };
     }>;
@@ -210,6 +214,31 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "onboardingCompleted",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Payment_OrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -272,6 +301,6 @@ return {
 };
 })();
 
-(node as any).hash = "2abd8cc1fd7c07f1ce3e98ad3a28ecb6";
+(node as any).hash = "cb121b2f5cb86471c6255c6aa9f9cacd";
 
 export default node;

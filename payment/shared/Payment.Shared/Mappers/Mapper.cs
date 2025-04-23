@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
 using Enterprise.Shared;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Payment.Shared.Mappers;
 
@@ -16,6 +15,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             OrganizationId = src.Organization.Id,
+            StripeAccountId = src.StripeAccountId,
             Name = src.Name.ToSafeString(),
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
@@ -29,7 +29,6 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
             OnboardingUrl = src.OnboardingUrl.ToSafeString(),
-            OnboardingCompletedAt = src.OnboardingCompletedAt is null ? null : Timestamp.FromDateTimeOffset(src.OnboardingCompletedAt.Value),
             OnboardingCompleted = src.OnboardingCompleted
         };
 }

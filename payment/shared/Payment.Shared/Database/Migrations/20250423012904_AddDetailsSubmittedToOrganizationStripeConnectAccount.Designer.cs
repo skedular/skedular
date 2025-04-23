@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -12,9 +13,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423012904_AddDetailsSubmittedToOrganizationStripeConnectAccount")]
+    partial class AddDetailsSubmittedToOrganizationStripeConnectAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -519,11 +522,6 @@ namespace Payment.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<bool>("ApplicationAuthorized")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("BusinessType")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -583,6 +581,9 @@ namespace Payment.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<DateTimeOffset?>("OnboardingCompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("OnboardingUrl")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -602,11 +603,6 @@ namespace Payment.Shared.Database.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
-                    b.Property<string>("StripeAccountId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -619,8 +615,6 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationAuthorized");
 
                     b.HasIndex("BusinessType");
 
@@ -644,15 +638,13 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("OnboardingCompletedAt");
 
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("PayoutsEnabled");
 
                     b.HasIndex("Phone");
-
-                    b.HasIndex("StripeAccountId");
 
                     b.HasIndex("Type");
 

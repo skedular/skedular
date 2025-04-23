@@ -64,6 +64,7 @@ public static class Extensions
             .AddScoped<IUpdatable<Customer, CustomerUpdateOptions>, CustomerService>()
             .AddScoped<ICreatable<Account, AccountCreateOptions>, AccountService>()
             .AddScoped<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
+            .AddScoped<IDeletable<Account, AccountDeleteOptions>, AccountService>()
             .AddScoped<ICreatable<AccountLink, AccountLinkCreateOptions>, AccountLinkService>()
             .AddScoped<ICreatable<PaymentIntent, PaymentIntentCreateOptions>, PaymentIntentService>()
             .AddScoped<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()

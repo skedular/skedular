@@ -1,6 +1,6 @@
 import { AppBarWithStackColumn, BodyIconTypography, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBaseLink, getOrganizationProductBaseLink } from '@/components/links';
+import { getOrganizationBaseLink, getOrganizationProductBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { LocationTag } from '@/components/locationTag';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -11,6 +11,7 @@ import { EditOrganizationProductTagDialog } from '@/components/organization/edit
 import { NewProductButton } from '@/components/product/addProduct';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
+import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
@@ -37,7 +38,8 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { getCountryCode } from 'countries-list';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
@@ -89,6 +91,7 @@ type OrganizationStripeConnectAccountRowType = {
   companyName: string;
   email: string;
   phone: string;
+  requiresOnboarding: boolean;
 };
 
 const OrganizationMarketplaceSetup = ({
@@ -227,6 +230,10 @@ const OrganizationMarketplaceSetup = ({
               email
               phone
               onboardingUrl
+              onboardingCompleted
+              organization {
+                uniqueId
+              }
             }
           }
         }
@@ -431,7 +438,6 @@ const OrganizationMarketplaceSetup = ({
   const [selectedOrganizationStripeConnectAccountId, setSelectedOrganizationStripeConnectAccountId] = useState<null | string>(null);
   const [organizationStripeConnectAccountMoreActionsAnchorEl, setOrganizationStripeConnectAccountMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const organizationStripeConnectAccountMoreActionsMenuOpen = Boolean(organizationStripeConnectAccountMoreActionsAnchorEl);
-  const [isEditOrganizationStripeConnectAccountDialogOpen, setIsEditOrganizationStripeConnectAccountDialogOpen] = useState(false);
   const organizationStripeConnectAccounts = useMemo(
     () => rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts.edges.map(({ node }) => node),
     [rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts],
@@ -444,6 +450,8 @@ const OrganizationMarketplaceSetup = ({
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount],
   ];
+
+  const organizationStripeConnectAccountDetails = useMemo(() => organizationStripeConnectAccounts.find((item) => item.id === selectedOrganizationStripeConnectAccountId), [selectedOrganizationStripeConnectAccountId, organizationStripeConnectAccounts]);
 
   const handleRefetchOrganizationStripeConnectAccounts = useCallback(
     (organizationStripeConnectAccountNameSearchText: string) => {
@@ -985,21 +993,17 @@ const OrganizationMarketplaceSetup = ({
 
     switch (id) {
       case MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount:
-        setIsEditOrganizationStripeConnectAccountDialogOpen(true);
+        if (!organizationStripeConnectAccountDetails) {
+          return;
+        }
+
+        router.push(getOrganizationStripeConnectAccountBaseLink(organizationStripeConnectAccountDetails.organization?.uniqueId!, organizationStripeConnectAccountDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount:
         handleRemoveOrganizationStripeConnectAccountClick();
         break;
     }
-  };
-
-  const handleEditOrganizationStripeConnectAccountClick = () => {
-    setIsEditOrganizationStripeConnectAccountDialogOpen(false);
-  };
-
-  const handleEditOrganizationStripeConnectAccountCancel = () => {
-    setIsEditOrganizationStripeConnectAccountDialogOpen(false);
   };
 
   const handleRemoveOrganizationStripeConnectAccountsClick = () => {
@@ -1067,7 +1071,7 @@ const OrganizationMarketplaceSetup = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Location tag removed.`} />,
+          render: <NotificationContent content={`Stripe Connect account removed.`} />,
         });
 
         setSelectedOrganizationStripeConnectAccountId(null);
@@ -1324,15 +1328,16 @@ const OrganizationMarketplaceSetup = ({
     },
   ];
 
-  const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((organizationStripeConnectAccount) => ({
-    id: organizationStripeConnectAccount.id,
-    name: organizationStripeConnectAccount.name,
-    country: getCountryCode(organizationStripeConnectAccount.country) as string,
-    defaultCurrency: organizationStripeConnectAccount.defaultCurrency,
-    businessType: organizationStripeConnectAccount.businessType,
-    companyName: organizationStripeConnectAccount.companyName,
-    email: organizationStripeConnectAccount.email,
-    phone: organizationStripeConnectAccount.phone,
+  const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((account) => ({
+    id: account.id,
+    name: account.name,
+    country: getCountryData(account.country as TCountryCode).name,
+    defaultCurrency: account.defaultCurrency,
+    businessType: account.businessType,
+    companyName: account.companyName,
+    email: account.email,
+    phone: account.phone,
+    requiresOnboarding: !account.onboardingCompleted,
   }));
 
   const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
@@ -1390,7 +1395,26 @@ const OrganizationMarketplaceSetup = ({
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 100,
+      minWidth: 150,
+    },
+    {
+      field: 'requiresOnboarding',
+      headerName: 'Onboarding Required',
+      editable: false,
+      renderCell: (params) => {
+        if (!params.value) {
+          return <></>;
+        }
+
+        const account = organizationStripeConnectAccounts.find((account) => account.id === (params.id as string));
+        if (!account) {
+          return <></>;
+        }
+
+        return <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="small" sx={{ marginTop: 1, marginBottom: 1 }} />;
+      },
+      display: 'flex',
+      minWidth: 150,
     },
     {
       field: 'More Actions',

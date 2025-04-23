@@ -289,6 +289,7 @@ public class Mapper : IMapper
         dest.CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString();
         dest.Email = src.Email.ToSafeString();
         dest.Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString();
+        dest.DetailsSubmitted = src.DetailsSubmitted;
         dest.CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString();
         dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
         return dest;
@@ -301,6 +302,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
+            StripeAccountId = src.StripeAccountId,
             Name = src.Name,
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
@@ -311,10 +313,11 @@ public class Mapper : IMapper
             CompanyName = src.CompanyName,
             Email = src.Email,
             Phone = src.Phone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            ApplicationAuthorized = src.ApplicationAuthorized,
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            OnboardingCompletedAt = src.OnboardingCompletedAt,
             Organization = new Organization { Id = src.Organization.Id }
         };
 
