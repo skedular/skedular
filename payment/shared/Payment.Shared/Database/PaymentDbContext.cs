@@ -21,6 +21,8 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<OrganizationStripeConnectAccount> OrganizationStripeConnectAccount { get; set; }
     public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
     public DbSet<OrganizationStripePaymentMethod> OrganizationStripePaymentMethod { get; set; }
+    public DbSet<Product> Product { get; set; }
+    public DbSet<ProductVersion> ProductVersion { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>

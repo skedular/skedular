@@ -2,6 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
+using Payment.Shared.Database.Entities;
 using Stripe;
 using Address = Payment.Shared.Models.Address;
 using Customer = Payment.Shared.Models.Customer;
@@ -12,6 +13,7 @@ using OrganizationMember = Payment.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Payment.Shared.Database.Entities.OrganizationOffering;
 using OrganizationSsoSetting = Payment.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
+using Product = Payment.Shared.Models.Product;
 
 namespace Payment.Processors.Mappers;
 
@@ -69,6 +71,18 @@ public interface IMapper
 
     OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
+    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
+
+    ProductVersion MergeToEntity(
+        Shared.Models.ProductVersion src,
+        ProductVersion dest,
+        Shared.Database.Entities.Product product);
+
+    Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<ProductVersion> productVersions);
 }
 
 public class Mapper : IMapper
@@ -321,6 +335,53 @@ public class Mapper : IMapper
             Organization = new Organization { Id = src.Organization.Id }
         };
 
+    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
+    {
+        var productAfterState = src.Data.Product;
+        var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        var product = new Product
+        {
+            Id = productAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Organization = new Organization { Id = productAfterState.OrganizationId }
+        };
+
+        product.ProductVersions = new List<Shared.Models.ProductVersion> { MapTo(productAfterState.LatestProductVersion, product) };
+
+        return product;
+    }
+
+    public ProductVersion MergeToEntity(
+        Shared.Models.ProductVersion src,
+        ProductVersion dest,
+        Shared.Database.Entities.Product product)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Price = src.Price;
+        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.PricePerMinute = src.Price;
+        dest.Currency = src.Currency.ToCurrency();
+        dest.Product = product;
+        return dest;
+    }
+
+    public Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<ProductVersion> productVersions)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Organization = organization;
+        dest.ProductVersions = productVersions;
+        return dest;
+    }
+
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null
             ? null
@@ -335,4 +396,16 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country
             };
+
+    private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Price = src.Price.FromRoundedPrice(),
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            PricePerMinute = src.Price.FromRoundedPrice(),
+            Currency = src.Currency.ToCurrency(),
+            Product = product
+        };
 }

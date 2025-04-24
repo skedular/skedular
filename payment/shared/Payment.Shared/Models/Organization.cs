@@ -19,4 +19,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public ICollection<Product> Products { get; set; } = [];
 }

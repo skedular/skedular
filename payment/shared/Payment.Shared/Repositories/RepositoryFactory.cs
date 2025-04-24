@@ -18,6 +18,8 @@ public interface IRepositoryFactory
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    IProductRepository ProductRepository { get; }
+    IProductVersionRepository ProductVersionRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -40,6 +42,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
+        ProductRepository = new ProductRepository(_dbContext, timeProvider);
+        ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -60,6 +64,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    public IProductRepository ProductRepository { get; }
+    public IProductVersionRepository ProductVersionRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 
