@@ -79,14 +79,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /payment/api/v1/stripe/webhook:
+  /payment/api/v1/stripe/platform/account/webhook:
     post:
       tags:
         - payment
         - stripe
         - webhook
-      summary: Stripe Webhook
-      operationId: processStripeEvent
+        - platform
+      summary: Stripe Platform Account Webhook
+      operationId: processStripePlatformAccountEvent
       parameters:
         - in: header
           name: Stripe-Signature
@@ -97,7 +98,35 @@ paths:
 
       responses:
         "200":
-          description: the status of processing the Stripe event
+          description: the status of processing the Stripe Platform Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /payment/api/v1/stripe/connect/account/webhook:
+    post:
+      tags:
+        - payment
+        - stripe
+        - webhook
+        - connect
+      summary: Stripe Connect Account Webhook
+      operationId: processStripeConnectAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
 
         default:
           description: unexpected error

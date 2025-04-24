@@ -37,7 +37,7 @@ public class PaymentController(
         return Redirect(onboardingUrl);
     }
 
-    public override async Task<IActionResult> ProcessStripeEvent(
+    public override async Task<IActionResult> ProcessStripePlatformAccountEvent(
         // ReSharper disable once InconsistentNaming
         string? stripe_Signature,
         CancellationToken cancellationToken = default)
@@ -45,7 +45,40 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.WebhookKey, throwOnApiVersionMismatch: false);
+            _ = EventUtility.ConstructEvent(
+                json,
+                stripe_Signature,
+                stripeConfiguration.PlatformAccountWebhookKey,
+                throwOnApiVersionMismatch: false);
+
+            return Ok();
+        }
+        catch (StripeException ex)
+        {
+            logger.LogError(ex, "Failed to process Stripe Platform event.");
+
+            return BadRequest();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to process Stripe Platform event.");
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    public override async Task<IActionResult> ProcessStripeConnectAccountEvent(
+        // ReSharper disable once InconsistentNaming
+        string? stripe_Signature,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+            var stripeEvent = EventUtility.ConstructEvent(
+                json, stripe_Signature,
+                stripeConfiguration.ConnectAccountWebhookKey,
+                throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
             {
                 case EventTypes.AccountApplicationAuthorized:

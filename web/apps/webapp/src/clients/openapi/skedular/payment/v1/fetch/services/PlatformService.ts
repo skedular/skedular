@@ -5,7 +5,7 @@
 import type { Error } from '../models/Error';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
-export class WebhookService {
+export class PlatformService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Stripe Platform Account Webhook
@@ -20,24 +20,6 @@ export class WebhookService {
         return this.httpRequest.request({
             method: 'POST',
             url: '/payment/api/v1/stripe/platform/account/webhook',
-            headers: {
-                'Stripe-Signature': stripeSignature,
-            },
-        });
-    }
-    /**
-     * Stripe Connect Account Webhook
-     * @param stripeSignature Stripe webhook signature
-     * @returns any the status of processing the Stripe Connect Account event
-     * @returns Error unexpected error
-     * @throws ApiError
-     */
-    public processStripeConnectAccountEvent(
-        stripeSignature?: string,
-    ): CancelablePromise<any | Error> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/payment/api/v1/stripe/connect/account/webhook',
             headers: {
                 'Stripe-Signature': stripeSignature,
             },

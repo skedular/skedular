@@ -14,10 +14,12 @@ export type { Error } from './models/Error';
 
 export { $Error } from './schemas/$Error';
 
+export { ConnectService } from './services/ConnectService';
 export { OnboardingService } from './services/OnboardingService';
 export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentService } from './services/PaymentService';
 export { PaymentMethodService } from './services/PaymentMethodService';
+export { PlatformService } from './services/PlatformService';
 export { StripeService } from './services/StripeService';
 export { WebhookService } from './services/WebhookService';

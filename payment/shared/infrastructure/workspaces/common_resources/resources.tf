@@ -10,9 +10,26 @@ module "shared_common" {
   environment = var.environment
 }
 
-resource "stripe_webhook_endpoint" "webhook" {
-  url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/webhook"
-  description = "Stripe Webhook for Skedular"
+resource "stripe_webhook_endpoint" "webhook_platform_account" {
+  url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/platform/account/webhook"
+  description = "Stripe Platform Account Webhook for Skedular"
+  connect     = false
+  enabled_events = [
+    "account.updated"
+  ]
+}
+
+resource "aws_ssm_parameter" "stripe_webhook_platform_account_secret" {
+  name  = module.common.parameter_store_name_stripe_webhook_platform_account_secret
+  type  = "String"
+  value = stripe_webhook_endpoint.webhook_platform_account.secret
+  tags  = local.tags
+}
+
+resource "stripe_webhook_endpoint" "webhook_connect_account" {
+  url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/connect/account/webhook"
+  description = "Stripe Connect Account Webhook for Skedular"
+  connect     = true
   enabled_events = [
     "account.application.authorized",
     "account.application.deauthorized",
@@ -23,9 +40,9 @@ resource "stripe_webhook_endpoint" "webhook" {
   ]
 }
 
-resource "aws_ssm_parameter" "stripe_webhook_secret" {
-  name  = module.common.parameter_store_name_stripe_webhook_secret
+resource "aws_ssm_parameter" "stripe_webhook_connect_account_secret" {
+  name  = module.common.parameter_store_name_stripe_webhook_connect_account_secret
   type  = "String"
-  value = stripe_webhook_endpoint.webhook.secret
+  value = stripe_webhook_endpoint.webhook_connect_account.secret
   tags  = local.tags
 }

@@ -47,12 +47,20 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding([Microsoft.AspNetCore.Mvc.FromQuery] string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// Stripe Webhook
+        /// Stripe Platform Account Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <returns>the status of processing the Stripe event</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/stripe/webhook")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        /// <returns>the status of processing the Stripe Platform Account event</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/stripe/platform/account/webhook")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripePlatformAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Stripe Connect Account Webhook
+        /// </summary>
+        /// <param name="stripe_Signature">Stripe webhook signature</param>
+        /// <returns>the status of processing the Stripe Connect Account event</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/stripe/connect/account/webhook")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all OrganizationStripeConnectAccounts
