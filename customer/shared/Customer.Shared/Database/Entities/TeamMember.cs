@@ -18,7 +18,7 @@ public class TeamMember : ReplicatedEntityBaseWithDeleted
     public virtual Team Team { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string CustomerId { get; set; } = string.Empty;
+    public string CustomerId { get; set; }
     public virtual Customer Customer { get; set; }
 
     public virtual OrganizationMember? OrganizationMember { get; set; }

@@ -12,7 +12,7 @@ public class OrganizationStripeConnectAccountRefreshCode : EntityBaseWithDeleted
     public string Code { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationStripeConnectAccountId { get; set; } = string.Empty;
+    public string OrganizationStripeConnectAccountId { get; set; }
     public virtual OrganizationStripeConnectAccount OrganizationStripeConnectAccount { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

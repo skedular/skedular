@@ -23,7 +23,7 @@ public class ProductVersion : EntityBase
     public int? NumberOfResourcesToBook { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string ProductId { get; set; } = string.Empty;
+    public string ProductId { get; set; }
     public virtual Product Product { get; set; }
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];

@@ -14,6 +14,7 @@ public class ResourceBookingSlot : EntityBase
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ResourceId { get; set; }
     public virtual Resource Resource { get; set; }
+
     public virtual ICollection<Customer> Customers { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
 }

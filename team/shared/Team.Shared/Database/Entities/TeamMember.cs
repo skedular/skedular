@@ -14,11 +14,11 @@ public class TeamMember : EntityBaseWithDeleted
     public string Status { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string TeamId { get; set; } = string.Empty;
+    public string TeamId { get; set; }
     public virtual Team Team { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string CustomerId { get; set; } = string.Empty;
+    public string CustomerId { get; set; }
     public virtual Customer Customer { get; set; }
 
     public virtual OrganizationMember? OrganizationMember { get; set; }

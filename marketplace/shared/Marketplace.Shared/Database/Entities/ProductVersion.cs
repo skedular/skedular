@@ -24,8 +24,12 @@ public class ProductVersion : EntityBase
     public int NumberOfResourcesToBook { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string ProductId { get; set; } = string.Empty;
+    public string ProductId { get; set; }
     public virtual Product Product { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? OrganizationStripeConnectAccountId { get; set; }
+    public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
@@ -51,6 +55,10 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
+        builder
+            .HasOne(item => item.OrganizationStripeConnectAccount)
+            .WithMany(item => item.ProductVersions)
+            .HasForeignKey(item => item.OrganizationStripeConnectAccountId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

@@ -14,11 +14,11 @@ public class OrganizationMember : ReplicatedEntityBaseWithDeleted
     public string Status { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; } = string.Empty;
+    public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string CustomerId { get; set; } = string.Empty;
+    public string CustomerId { get; set; }
     public virtual Customer Customer { get; set; }
 
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];

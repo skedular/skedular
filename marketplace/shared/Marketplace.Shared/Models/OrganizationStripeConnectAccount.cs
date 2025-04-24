@@ -1,0 +1,12 @@
+using Enterprise.Shared.Models;
+
+namespace Marketplace.Shared.Models;
+
+public class OrganizationStripeConnectAccount : ReplicatedModelBaseWithDeleted
+{
+    public string? Name { get; set; } = string.Empty;
+
+    public Organization Organization { get; set; }
+    public ICollection<Product> Products { get; set; } = [];
+    public ICollection<ProductVersion> ProductVersions { get; set; } = [];
+}

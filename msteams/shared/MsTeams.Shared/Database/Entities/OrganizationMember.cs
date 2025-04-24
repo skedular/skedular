@@ -14,11 +14,11 @@ public class OrganizationMember : ReplicatedEntityBaseWithDeleted
     public string Status { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; } = string.Empty;
+    public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string CustomerId { get; set; } = string.Empty;
+    public string CustomerId { get; set; }
     public virtual Customer Customer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

@@ -25,8 +25,12 @@ public class Product : EntityBaseWithDeleted
     public int NumberOfResourcesToBook { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; } = string.Empty;
+    public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? OrganizationStripeConnectAccountId { get; set; }
+    public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
@@ -54,6 +58,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductProductTag);
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductLocationTags);
+        builder
+            .HasOne(item => item.OrganizationStripeConnectAccount)
+            .WithMany(item => item.Products)
+            .HasForeignKey(item => item.OrganizationStripeConnectAccountId);
 
         builder.HasIndex(item => item.Inactive);
 
