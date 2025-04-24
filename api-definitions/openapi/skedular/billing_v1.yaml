@@ -4,6 +4,16 @@ info:
   description: "Billing REST API"
   version: 1.0.0
 
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://stagingapi.skedular.app
+    description: staging
+  - url: https://localhost:9000
+    description: local gateway
+  - url: https://localhost:10800
+    description: local
+
 paths:
   /billing/api/v1/republish-organization-billing-info/{organizationId}:
     put:

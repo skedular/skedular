@@ -4,6 +4,16 @@ info:
   description: "Team REST API"
   version: 1.0.0
 
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://stagingapi.skedular.app
+    description: staging
+  - url: https://localhost:9000
+    description: local gateway
+  - url: https://localhost:10500
+    description: local
+
 paths:
   /team/api/v1/{teamId}/republish:
     put:
