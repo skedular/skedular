@@ -7,7 +7,7 @@ namespace Booking.Shared.Repositories;
 
 public interface ITeamRepository : IRepository<Team>
 {
-    Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+    Task<Team> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
@@ -18,10 +18,7 @@ public interface ITeamRepository : IRepository<Team>
 public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Team>(dbContext, timeProvider), ITeamRepository
 {
-    public async Task<Team> UpsertNakedAsync(
-        string id,
-        Organization? organization,
-        CancellationToken cancellationToken)
+    public async Task<Team> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

@@ -10,7 +10,7 @@ namespace Booking.Shared.Repositories;
 
 public interface IProductRepository : IRepository<Product>
 {
-    Task<Product> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+    Task<Product> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Product Update(Product product);
     Product Remove(Product product);
@@ -33,7 +33,7 @@ internal static class ProductExtensions
 public class ProductRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Product>(dbContext, timeProvider), IProductRepository
 {
-    public async Task<Product> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken)
+    public async Task<Product> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

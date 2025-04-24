@@ -8,7 +8,7 @@ namespace Booking.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Location>
 {
-    Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+    Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
     Location Update(Location location);
     Location Remove(Location location);
@@ -38,7 +38,7 @@ internal static class LocationExtensions
 public class LocationRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
@@ -71,8 +71,8 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue &&
                             !query.Organization.DeletedAt.HasValue &&
-                            query.Organization.OrganizationMembers.Any(
-                                organizationMember => !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == customerId))
+                            query.Organization.OrganizationMembers.Any(organizationMember =>
+                                !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == customerId))
             .AddDependentObjects(includeDeletedResources, false)
             .ToListAsync(cancellationToken);
 

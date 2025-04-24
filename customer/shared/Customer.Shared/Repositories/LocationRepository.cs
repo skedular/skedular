@@ -8,7 +8,7 @@ namespace Customer.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Location>
 {
-    Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+    Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<ICollection<Location>> GetAllAsync(bool includeDeletedLocationMembers, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedLocationMembers, CancellationToken cancellationToken);
     Location Add(Location location);
@@ -30,7 +30,7 @@ internal static class LocationExtensions
 public class LocationRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CustomerDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

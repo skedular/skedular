@@ -8,6 +8,7 @@ using Identity = Marketplace.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
+using OrganizationStripeConnectAccount = Marketplace.Shared.Models.OrganizationStripeConnectAccount;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using OrganizationTag = Marketplace.Shared.Models.OrganizationTag;
 
@@ -46,6 +47,13 @@ public interface IMapper
     OrganizationSsoSetting MergeTo(
         Shared.Models.OrganizationSsoSetting src,
         OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
+
+    OrganizationStripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src);
+
+    Shared.Database.Entities.OrganizationStripeConnectAccount MergeToEntity(
+        OrganizationStripeConnectAccount src,
+        Shared.Database.Entities.OrganizationStripeConnectAccount dest,
         Shared.Database.Entities.Organization organization);
 }
 
@@ -231,6 +239,34 @@ public class Mapper : IMapper
         dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
         dest.Organization = organization;
 
+        return dest;
+    }
+
+    public OrganizationStripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src)
+    {
+        var account = src.Data.OrganizationStripeConnectAccount;
+        var deletedAt = account.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new OrganizationStripeConnectAccount
+        {
+            Id = account.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = account.Name,
+            Organization = new Organization { Id = account.OrganizationId }
+        };
+    }
+
+    public Shared.Database.Entities.OrganizationStripeConnectAccount MergeToEntity(
+        OrganizationStripeConnectAccount src,
+        Shared.Database.Entities.OrganizationStripeConnectAccount dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Organization = organization;
         return dest;
     }
 }

@@ -7,7 +7,7 @@ namespace Notification.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Location>
 {
-    Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+    Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Location Add(Location location);
     Location Update(Location location);
@@ -17,10 +17,7 @@ public interface ILocationRepository : IRepository<Location>
 public class LocationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<NotificationDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location> UpsertNakedAsync(
-        string id,
-        Organization? organization,
-        CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

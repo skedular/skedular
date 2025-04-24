@@ -9,10 +9,8 @@ using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Team.Processors.Subscribers;
 
-public class LocationSubscriber(
-    ILogger<LocationSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+    : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
