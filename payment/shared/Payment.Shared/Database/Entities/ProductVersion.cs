@@ -18,6 +18,10 @@ public class ProductVersion : EntityBase
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
     public virtual Product Product { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? OrganizationStripeConnectAccountId { get; set; }
+    public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -34,6 +38,10 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
+        builder
+            .HasOne(item => item.OrganizationStripeConnectAccount)
+            .WithMany(item => item.ProductVersions)
+            .HasForeignKey(item => item.OrganizationStripeConnectAccountId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

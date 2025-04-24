@@ -76,7 +76,8 @@ public interface IMapper
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
-        Shared.Database.Entities.Product product);
+        Shared.Database.Entities.Product product,
+        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
 
     Shared.Database.Entities.Product MergeToEntity(
         Product src,
@@ -357,7 +358,8 @@ public class Mapper : IMapper
     public ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
-        Shared.Database.Entities.Product product)
+        Shared.Database.Entities.Product product,
+        OrganizationStripeConnectAccount? organizationStripeConnectAccount)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -366,6 +368,7 @@ public class Mapper : IMapper
         dest.PricePerMinute = src.Price;
         dest.Currency = src.Currency.ToCurrency();
         dest.Product = product;
+        dest.OrganizationStripeConnectAccount = organizationStripeConnectAccount;
         return dest;
     }
 
@@ -406,6 +409,9 @@ public class Mapper : IMapper
             PriceUnit = src.PriceUnit.ToPriceUnit(),
             PricePerMinute = src.Price.FromRoundedPrice(),
             Currency = src.Currency.ToCurrency(),
-            Product = product
+            Product = product,
+            OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.StripeConnectAccountId)
+                ? null
+                : new Shared.Models.OrganizationStripeConnectAccount { Id = src.StripeConnectAccountId }
         };
 }

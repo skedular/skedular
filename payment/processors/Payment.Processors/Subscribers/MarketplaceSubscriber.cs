@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
@@ -22,6 +23,18 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Product.OrganizationId);
 
                     var product = mapper.MapTo(@event);
+                    var account = product.ProductVersions.Single().OrganizationStripeConnectAccount;
+                    OrganizationStripeConnectAccount? accountEntity = null;
+                    if (account is not null)
+                    {
+                        accountEntity =
+                            await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(account.Id, cancellationToken);
+                        if (accountEntity is null)
+                        {
+                            throw new OrganizationStripeConnectAccountNotFound();
+                        }
+                    }
+
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(product.Organization.Id, cancellationToken);
                     var existingProduct = await repositoryFactory.ProductRepository.UpsertNakedAsync(product.Id, organization, cancellationToken);
                     if (existingProduct.EventRaisedAt > product.EventRaisedAt)
@@ -31,7 +44,12 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleProductUpsertedEventAsync(product, existingProduct, organization, cancellationToken);
+                    await HandleProductUpsertedEventAsync(
+                        product,
+                        existingProduct,
+                        organization,
+                        accountEntity,
+                        cancellationToken);
                 }
                 break;
 
@@ -63,6 +81,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
         Product product,
         Shared.Database.Entities.Product existingProduct,
         Organization organization,
+        OrganizationStripeConnectAccount? accountEntity,
         CancellationToken cancellationToken)
     {
         var productVersions = new List<ProductVersion>();
@@ -72,7 +91,8 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
                 await repositoryFactory.ProductVersionRepository.UpsertNakedAsync(productVersion.Id, existingProduct, cancellationToken);
 
             productVersions.Add(
-                repositoryFactory.ProductVersionRepository.Update(mapper.MergeToEntity(productVersion, productVersionEntity, existingProduct)));
+                repositoryFactory.ProductVersionRepository.Update(
+                    mapper.MergeToEntity(productVersion, productVersionEntity, existingProduct, accountEntity)));
         }
 
         _ = repositoryFactory.ProductRepository.Update(mapper.MergeToEntity(product, existingProduct, organization, productVersions));

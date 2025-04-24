@@ -17,13 +17,14 @@ public interface IProductRepository : IRepository<Product>
 
 internal static class ProductExtensions
 {
-    internal static IIncludableQueryable<Product, IEnumerable<ProductVersion>> AddDependentObjects(this IQueryable<Product> originalQuery) =>
+    internal static IIncludableQueryable<Product, OrganizationStripeConnectAccount?> AddDependentObjects(this IQueryable<Product> originalQuery) =>
         originalQuery
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt));
+            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
+            .ThenInclude(query => query.OrganizationStripeConnectAccount);
 }
 
 public class ProductRepository(PaymentDbContext dbContext, TimeProvider timeProvider)

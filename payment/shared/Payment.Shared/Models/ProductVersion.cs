@@ -11,4 +11,5 @@ public class ProductVersion : ModelBase
     public decimal PricePerMinute { get; set; }
     public Currency Currency { get; set; }
     public Product Product { get; set; }
+    public OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 }

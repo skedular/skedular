@@ -15,11 +15,12 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
 
 internal static class ProductVersionExtensions
 {
-    internal static IIncludableQueryable<ProductVersion, Organization> AddDependentObjects(
+    internal static IIncludableQueryable<ProductVersion, OrganizationStripeConnectAccount?> AddDependentObjects(
         this IQueryable<ProductVersion> originalQuery) =>
         originalQuery
             .Include(query => query.Product)
-            .ThenInclude(query => query.Organization);
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.OrganizationStripeConnectAccount);
 }
 
 public class ProductVersionRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
