@@ -14,6 +14,7 @@ resource "stripe_webhook_endpoint" "webhook_platform_account" {
   url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/platform/account/webhook"
   description = "Stripe Platform Account Webhook for Skedular"
   connect     = false
+  api_version = "2025-03-31.basil"
   enabled_events = [
     "account.updated"
   ]
@@ -30,6 +31,7 @@ resource "stripe_webhook_endpoint" "webhook_connect_account" {
   url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/connect/account/webhook"
   description = "Stripe Connect Account Webhook for Skedular"
   connect     = true
+  api_version = "2025-03-31.basil"
   enabled_events = [
     "account.application.authorized",
     "account.application.deauthorized",
