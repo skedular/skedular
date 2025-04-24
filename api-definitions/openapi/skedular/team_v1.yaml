@@ -9,9 +9,9 @@ servers:
     description: production
   - url: https://stagingapi.skedular.app
     description: staging
-  - url: https://localhost:9000
+  - url: http://localhost:9000
     description: local gateway
-  - url: https://localhost:10500
+  - url: http://localhost:10500
     description: local
 
 paths:
