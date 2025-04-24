@@ -347,6 +347,11 @@ type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
 
+type Marketplace_OrganizationStripeConnectAccountDetails {
+  name: String!
+  uniqueId: ID!
+}
+
 type Marketplace_OrganizationTagDetails {
   color: String
   name: String
@@ -852,6 +857,7 @@ type ProductDetails {
   name: String!
   numberOfResourcesToBook: Int!
   organization: Marketplace_OrganizationDetails!
+  organizationStripeConnectAccountDetails: Marketplace_OrganizationStripeConnectAccountDetails
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
@@ -1280,6 +1286,7 @@ input AddProductInput {
   name: String!
   numberOfResourcesToBook: Int!
   organizationId: String!
+  organizationStripeConnectAccountId: String
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!
@@ -1660,6 +1667,7 @@ input OrganizationStripeConnectAccountOrderInput {
 
 input OrganizationStripeConnectAccountWhereInput {
   nameContains: String
+  onboardingCompleted: Boolean
   organizationId: String!
 }
 
@@ -1944,6 +1952,7 @@ input UpdateProductInput {
   name: String!
   numberOfResourcesToBook: Int!
   organizationId: String!
+  organizationStripeConnectAccountId: String
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!

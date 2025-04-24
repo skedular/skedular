@@ -36,7 +36,8 @@ public class Mapper : IMapper
             RecurrenceWindowDays = src.RecurrenceWindowDays,
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            StripeConnectAccountId = src.OrganizationStripeConnectAccount?.Id.ToSafeString()
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));

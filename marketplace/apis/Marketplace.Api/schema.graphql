@@ -12,6 +12,11 @@ type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
 
+type Marketplace_OrganizationStripeConnectAccountDetails {
+  uniqueId: ID!
+  name: String!
+}
+
 type Marketplace_OrganizationTagDetails {
   uniqueId: ID!
   name: String
@@ -65,6 +70,7 @@ type ProductDetails {
   locationTags: [Marketplace_OrganizationTagDetails!]!
   latestProductVersionId: String!
   organization: Marketplace_OrganizationDetails!
+  organizationStripeConnectAccountDetails: Marketplace_OrganizationStripeConnectAccountDetails
   id: ID!
 }
 
@@ -122,6 +128,7 @@ input AddProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
+  organizationStripeConnectAccountId: String
 }
 
 input DeactivateProductsInput {
@@ -164,6 +171,7 @@ input UpdateProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
+  organizationStripeConnectAccountId: String
 }
 
 enum Currency {

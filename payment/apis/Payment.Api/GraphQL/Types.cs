@@ -127,6 +127,7 @@ public class OrganizationStripeConnectAccountWhereInput
 {
     [GraphQLName("organizationId")] public string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("onboardingCompleted")] public bool? OnboardingCompleted { get; set; }
 }
 
 [GraphQLName("OrganizationStripeConnectAccountOrderInput")]

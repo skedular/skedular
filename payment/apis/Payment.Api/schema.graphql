@@ -132,6 +132,7 @@ input OrganizationStripeConnectAccountOrderInput {
 input OrganizationStripeConnectAccountWhereInput {
   organizationId: String!
   nameContains: String
+  onboardingCompleted: Boolean
 }
 
 input RemoveOrganizationPaymentMethodInput {

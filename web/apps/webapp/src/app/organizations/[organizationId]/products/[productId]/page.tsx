@@ -22,6 +22,7 @@ const RootQuery = graphql`
     $productId: String!
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
+    $singleChoiceOrganizationStripeConnectAccountSortingValues: [OrganizationStripeConnectAccountOrderInput!]
   ) {
     product(id: $productId) {
       name
@@ -116,6 +117,12 @@ const ProductPageWithRelay = () => {
           },
         ],
         multipleChoicesLocationTagsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        singleChoiceOrganizationStripeConnectAccountSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

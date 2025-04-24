@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a35b60f8417e8dfe7419129f3a8b0ce>>
+ * @generated SignedSource<<9854591e273b7410eafeda96eec080c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type AddProductInput = {
   name: string;
   numberOfResourcesToBook: number;
   organizationId: string;
+  organizationStripeConnectAccountId?: string | null | undefined;
   price: string;
   priceUnit: PriceUnit;
   productTagIds: ReadonlyArray<string>;
@@ -54,6 +55,10 @@ export type addProduct_addProductMutation$data = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly numberOfResourcesToBook: number;
+      readonly organizationStripeConnectAccountDetails: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -90,6 +95,10 @@ export type addProduct_addProductMutation$rawResponse = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly numberOfResourcesToBook: number;
+      readonly organizationStripeConnectAccountDetails: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -136,14 +145,15 @@ v2 = [
   },
   (v1/*: any*/)
 ],
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v4 = [
+  (v3/*: any*/),
   (v1/*: any*/),
   {
     "alias": null,
@@ -153,7 +163,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": [
@@ -277,11 +287,24 @@ v4 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "Marketplace_OrganizationStripeConnectAccountDetails",
+            "kind": "LinkedField",
+            "name": "organizationStripeConnectAccountDetails",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              (v1/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Marketplace_OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -291,7 +314,7 @@ v4 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           }
         ],
@@ -307,7 +330,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addProduct_addProductMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -316,19 +339,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addProduct_addProductMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "772863afeec65b8f1a24cdcf0d04e33a",
+    "cacheID": "24da688ff856e474d5972e141d79827d",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      organizationStripeConnectAccountDetails {\n        uniqueId\n        name\n      }\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a666c83b2ec2cba6e2a0525cbf6b034f";
+(node as any).hash = "6194afd71f9c69e824a6b9c3055da9e1";
 
 export default node;

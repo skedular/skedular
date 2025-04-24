@@ -67,6 +67,7 @@ type ProductRowType = {
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
   maxBookingSpreadDays: number | null | undefined;
+  organizationStripeConnectAccountName: string | null | undefined;
   status: boolean;
 };
 
@@ -134,6 +135,10 @@ const OrganizationMarketplaceSetup = ({
               maxBookingSpreadDays
               organization {
                 uniqueId
+              }
+              organizationStripeConnectAccountDetails {
+                uniqueId
+                name
               }
             }
           }
@@ -1103,6 +1108,7 @@ const OrganizationMarketplaceSetup = ({
     recurrenceWindowDays: product.recurrenceWindowDays,
     requireConsecutiveDays: product.requireConsecutiveDays,
     maxBookingSpreadDays: product.maxBookingSpreadDays,
+    organizationStripeConnectAccountName: product.organizationStripeConnectAccountDetails?.name,
     status: !product.inactive,
   }));
 
@@ -1133,7 +1139,7 @@ const OrganizationMarketplaceSetup = ({
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 50,
     },
     {
       field: 'minDurationMinutes',
@@ -1165,7 +1171,7 @@ const OrganizationMarketplaceSetup = ({
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 50,
     },
     {
       field: 'requireConsecutiveDays',
@@ -1173,13 +1179,21 @@ const OrganizationMarketplaceSetup = ({
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
       display: 'flex',
-      minWidth: 100,
+      minWidth: 50,
     },
     {
       field: 'maxBookingSpreadDays',
       headerName: 'Max booking spread days',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? params.value.toString() : 'No limit'} />,
+      display: 'flex',
+      minWidth: 50,
+    },
+    {
+      field: 'organizationStripeConnectAccountName',
+      headerName: 'Stripe Connect account',
+      editable: false,
+      renderCell: (params) => (params.value ? <SmallIconTypography label={params.value} /> : <></>),
       display: 'flex',
       minWidth: 150,
     },

@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiL5AgoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "cm9kdWN0VmVyc2lvbiKZAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
             "IAEoCRIRCglwcmljZVVuaXQYBSABKAkSEAoIY3VycmVuY3kYBiABKAkSGgoS",
             "bWluRHVyYXRpb25NaW51dGVzGAcgASgFEhoKEm1heER1cmF0aW9uTWludXRl",
@@ -44,10 +44,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "cmVjdXJyZW5jZVdpbmRvd0RheXMYCiABKAUSHgoWcmVxdWlyZUNvbnNlY3V0",
             "aXZlRGF5cxgLIAEoCBIcChRtYXhCb29raW5nU3ByZWFkRGF5cxgMIAEoBRIf",
             "ChdudW1iZXJPZlJlc291cmNlc1RvQm9vaxgNIAEoBRIVCg1wcm9kdWN0VGFn",
-            "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJKi8KBFR5cGUSEwoP",
-            "UHJvZHVjdFVwc2VydGVkEAASEgoOUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5W",
-            "MS5WYWx1ZWIGcHJvdG8z"));
+            "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJEh4KFnN0cmlwZUNv",
+            "bm5lY3RBY2NvdW50SWQYECABKAkqLwoEVHlwZRITCg9Qcm9kdWN0VXBzZXJ0",
+            "ZWQQABISCg5Qcm9kdWN0RGVsZXRlZBABQjqqAjdBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -55,7 +56,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "StripeConnectAccountId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1370,6 +1371,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       numberOfResourcesToBook_ = other.numberOfResourcesToBook_;
       productTagIds_ = other.productTagIds_.Clone();
       locationTagIds_ = other.locationTagIds_.Clone();
+      stripeConnectAccountId_ = other.stripeConnectAccountId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1557,6 +1559,18 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       get { return locationTagIds_; }
     }
 
+    /// <summary>Field number for the "stripeConnectAccountId" field.</summary>
+    public const int StripeConnectAccountIdFieldNumber = 16;
+    private string stripeConnectAccountId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string StripeConnectAccountId {
+      get { return stripeConnectAccountId_; }
+      set {
+        stripeConnectAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1587,6 +1601,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != other.NumberOfResourcesToBook) return false;
       if(!productTagIds_.Equals(other.productTagIds_)) return false;
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
+      if (StripeConnectAccountId != other.StripeConnectAccountId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1609,6 +1624,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != 0) hash ^= NumberOfResourcesToBook.GetHashCode();
       hash ^= productTagIds_.GetHashCode();
       hash ^= locationTagIds_.GetHashCode();
+      if (StripeConnectAccountId.Length != 0) hash ^= StripeConnectAccountId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1681,6 +1697,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(output, _repeated_locationTagIds_codec);
+      if (StripeConnectAccountId.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(StripeConnectAccountId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1745,6 +1765,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(ref output, _repeated_locationTagIds_codec);
+      if (StripeConnectAccountId.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(StripeConnectAccountId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1796,6 +1820,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       size += productTagIds_.CalculateSize(_repeated_productTagIds_codec);
       size += locationTagIds_.CalculateSize(_repeated_locationTagIds_codec);
+      if (StripeConnectAccountId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountId);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1849,6 +1876,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.Add(other.productTagIds_);
       locationTagIds_.Add(other.locationTagIds_);
+      if (other.StripeConnectAccountId.Length != 0) {
+        StripeConnectAccountId = other.StripeConnectAccountId;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1928,6 +1958,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             locationTagIds_.AddEntriesFrom(input, _repeated_locationTagIds_codec);
             break;
           }
+          case 130: {
+            StripeConnectAccountId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -2005,6 +2039,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
           }
           case 122: {
             locationTagIds_.AddEntriesFrom(ref input, _repeated_locationTagIds_codec);
+            break;
+          }
+          case 130: {
+            StripeConnectAccountId = input.ReadString();
             break;
           }
         }

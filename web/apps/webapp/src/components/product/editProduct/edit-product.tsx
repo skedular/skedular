@@ -1,6 +1,12 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoicesCurrency, SingleChoicesPriceUnit } from '@/components/organization';
+import {
+  MultipleChoicesLocationTags,
+  MultipleChoicesProductTags,
+  SingleChoiceOrganizationStripeConnectAccount,
+  SingleChoicesCurrency,
+  SingleChoicesPriceUnit,
+} from '@/components/organization';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -39,6 +45,7 @@ type ProductDetails = {
   maxBookingSpreadDays: number | null;
   productTagIds: string[];
   locationTagIds: string[];
+  organizationStripeConnectAccountId?: string;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -140,6 +147,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     productTagIds: array().min(1, 'At least one product tag must be selected').required('Product tags are required'),
     locationTagIds: array().nullable(),
+    organizationStripeConnectAccountId: string().nullable(),
   });
 
 const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
@@ -180,12 +188,17 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           organization {
             uniqueId
           }
+          organizationStripeConnectAccountDetails {
+            uniqueId
+            name
+          }
         }
         openingHoursMinutesStep
         ...multipleChoicesProductTags_query
         ...multipleChoicesLocationTags_query
         ...singleChoicePriceUnit_query
         ...singleChoiceCurrency_query
+        ...singleChoiceOrganizationStripeConnectAccount_query
       }
     `,
     rootDataRelay,
@@ -225,6 +238,10 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
+          organizationStripeConnectAccountDetails {
+            uniqueId
+            name
+          }
         }
       }
     }
@@ -251,6 +268,9 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   );
   const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
+  const [organizationStripeConnectAccountId, setOrganizationStripeConnectAccountId] = useState<string | null | undefined>(
+    rootData.product?.organizationStripeConnectAccountDetails ? rootData.product.organizationStripeConnectAccountDetails.uniqueId : null,
+  );
 
   const handleProductDetailUpdateClick = ({
     name,
@@ -267,6 +287,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
+    organizationStripeConnectAccountId,
   }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
@@ -300,6 +321,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           productTagIds,
           locationTagIds,
           organizationId: product.organization.uniqueId,
+          organizationStripeConnectAccountId,
         },
       },
       onCompleted: (_, errors) => {
@@ -350,6 +372,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
+            organizationStripeConnectAccountDetails: null,
           },
         },
       },
@@ -385,6 +408,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               numberOfResourcesToBook,
               productTagIds,
               locationTagIds,
+              organizationStripeConnectAccountId,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -402,6 +426,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               setNumberOfResourcesToBook(values.numberOfResourcesToBook);
               setProductTagIds(values.productTagIds);
               setLocationTagIds(values.locationTagIds);
+              setOrganizationStripeConnectAccountId(values.organizationStripeConnectAccountId);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -446,6 +471,14 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
                     <FormFieldLabel label="Location Tags">
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Stripe Connect Account">
+                      <SingleChoiceOrganizationStripeConnectAccount
+                        rootDataRelay={rootData}
+                        name="organizationStripeConnectAccountId"
+                        required={requiredFields.organizationStripeConnectAccountId}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel>

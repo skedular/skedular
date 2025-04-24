@@ -54,4 +54,5 @@ message ProductVersion {
   int32 numberOfResourcesToBook = 13;
   repeated string productTagIds = 14;
   repeated string locationTagIds = 15;
+  string stripeConnectAccountId = 16;
 }

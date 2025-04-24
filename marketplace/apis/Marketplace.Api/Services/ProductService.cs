@@ -86,6 +86,24 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
+        Shared.Database.Entities.OrganizationStripeConnectAccount? existingOrganizationStripeConnectAccount = null;
+        if (productVersion.OrganizationStripeConnectAccount is not null)
+        {
+            existingOrganizationStripeConnectAccount =
+                await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(
+                    productVersion.OrganizationStripeConnectAccount.Id,
+                    cancellationToken);
+            if (existingOrganizationStripeConnectAccount is null)
+            {
+                throw new OrganizationStripeConnectAccountNotFound();
+            }
+
+            if (existingOrganizationStripeConnectAccount.Organization.Id != organizationId)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
@@ -95,9 +113,10 @@ public class ProductService(
             productVersion,
             existingOrganization,
             productTags,
-            locationTags);
+            locationTags,
+            existingOrganizationStripeConnectAccount);
 
-        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags);
+        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags, existingOrganizationStripeConnectAccount);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
@@ -273,14 +292,39 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
+        Shared.Database.Entities.OrganizationStripeConnectAccount? existingOrganizationStripeConnectAccount = null;
+        if (productVersion.OrganizationStripeConnectAccount is not null)
+        {
+            existingOrganizationStripeConnectAccount =
+                await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(
+                    productVersion.OrganizationStripeConnectAccount.Id,
+                    cancellationToken);
+            if (existingOrganizationStripeConnectAccount is null)
+            {
+                throw new OrganizationStripeConnectAccountNotFound();
+            }
+
+            if (existingOrganizationStripeConnectAccount.Organization.Id != existingProduct.Organization.Id)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags));
+        _ = repositoryFactory.ProductVersionRepository.Add(
+            mapper.MapTo(productVersion, existingProduct, productTags, locationTags, existingOrganizationStripeConnectAccount));
 
-        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags);
+        existingProduct = mapper.MergeTo(
+            productVersion,
+            existingProduct,
+            existingProduct.Organization,
+            productTags,
+            locationTags,
+            existingOrganizationStripeConnectAccount);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 

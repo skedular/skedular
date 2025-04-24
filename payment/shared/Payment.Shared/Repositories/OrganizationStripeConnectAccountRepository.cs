@@ -49,6 +49,13 @@ internal static class OrganizationStripeConnectAccountExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
+        if (searchCriteria.OnboardingCompleted is not null)
+        {
+            query = searchCriteria.OnboardingCompleted.Value
+                ? query.Where(item => item.DetailsSubmitted && item.ApplicationAuthorized && item.ChargesEnabled && item.PayoutsEnabled)
+                : query.Where(item => !item.DetailsSubmitted || !item.ApplicationAuthorized || !item.ChargesEnabled || !item.PayoutsEnabled);
+        }
+
         return query;
     }
 
