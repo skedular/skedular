@@ -87,15 +87,14 @@ public class OrganizationSubscriber(
         if (existingOrganization is null)
         {
             existingOrganization = mapper.MapToEntity(organization);
-            var stripeCustomer = await customerCreateService.CreateAsync(
+            var customer = await customerCreateService.CreateAsync(
                 mapper.MapTo(existingOrganization),
                 new RequestOptions { IdempotencyKey = organization.Id },
                 cancellationToken);
-            existingOrganization.StripeCustomerIdTemp = stripeCustomer.Id;
 
             var stripeCustomerEntity = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
             {
-                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
+                Id = randomHelper.Generate(), StripeCustomerId = customer.Id
             });
 
             existingOrganization.StripeCustomer = stripeCustomerEntity;
@@ -104,37 +103,29 @@ public class OrganizationSubscriber(
         else
         {
             existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
-            Customer? stripeCustomer;
-            if (string.IsNullOrWhiteSpace(existingOrganization.StripeCustomerIdTemp))
+            if (existingOrganization.StripeCustomer is null)
             {
-                stripeCustomer = await customerCreateService.CreateAsync(
+                var customer = await customerCreateService.CreateAsync(
                     mapper.MapTo(existingOrganization),
                     new RequestOptions { IdempotencyKey = organization.Id },
                     cancellationToken);
-            }
-            else
-            {
-                stripeCustomer = await customerUpdateService.UpdateAsync(
-                    existingOrganization.StripeCustomerIdTemp,
-                    mapper.MergeTo(existingOrganization),
-                    new RequestOptions { IdempotencyKey = @event.Metadata.Id },
-                    cancellationToken);
-            }
-
-            if (existingOrganization.StripeCustomer is null)
-            {
                 existingOrganization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
                 {
-                    Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
+                    Id = randomHelper.Generate(), StripeCustomerId = customer.Id
                 });
             }
             else
             {
+                var stripeCustomer = await customerUpdateService.UpdateAsync(
+                    existingOrganization.StripeCustomer.StripeCustomerId,
+                    mapper.MergeTo(existingOrganization),
+                    new RequestOptions { IdempotencyKey = @event.Metadata.Id },
+                    cancellationToken);
+
                 existingOrganization.StripeCustomer.StripeCustomerId = stripeCustomer.Id;
                 existingOrganization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Update(existingOrganization.StripeCustomer);
             }
 
-            existingOrganization.StripeCustomerIdTemp = stripeCustomer.Id;
             existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
         }
 

@@ -48,8 +48,13 @@ public class OrganizationPaymentService(
             throw new Unauthorized();
         }
 
+        if (organization.StripeCustomer is null)
+        {
+            throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
+        }
+
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = organization.StripeCustomerIdTemp, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions { Customer = organization.StripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
             new RequestOptions(), cancellationToken);
 
         repositoryFactory.OrganizationStripePaymentMethodRepository.Add(

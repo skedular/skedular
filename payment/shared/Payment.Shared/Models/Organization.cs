@@ -6,7 +6,6 @@ namespace Payment.Shared.Models;
 public class Organization : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
-    public string? StripeCustomerIdTemp { get; set; }
     public OrganizationType Type { get; set; }
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
     public string? ContactEmail { get; set; }

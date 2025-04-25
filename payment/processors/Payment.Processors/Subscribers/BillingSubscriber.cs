@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using Payment.Shared.Models;
@@ -97,16 +98,22 @@ public class BillingSubscriber(
                 organizationOfferingBilling.OrganizationId);
         }
 
+        if (organization.StripeCustomer is null)
+        {
+            throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
+        }
+
         // TODO: 20240601 : Morteza: Need to implement default payment methods in future
         var organizationStripePaymentMethod = organizationStripePaymentMethods.First();
         var amount = organizationOfferingBilling.TotalCost;
         var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
-                Customer = organization.StripeCustomerIdTemp,
+                Customer = organization.StripeCustomer.StripeCustomerId,
                 PaymentMethod = organizationStripePaymentMethod.PaymentMethodId,
                 Amount = amount,
-                Currency = "usd", // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
+                // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
+                Currency = "usd",
                 Confirm = true,
                 OffSession = true
             },

@@ -11,7 +11,6 @@ namespace Payment.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public string? StripeCustomerIdTemp { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
     public string? ContactEmail { get; set; }
@@ -41,7 +40,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
-        builder.Property(item => item.StripeCustomerIdTemp).HasMaxLength(Constants.StripeCustomerIdLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder
             .Property(item => item.MemberVisibilityPolicy)
@@ -54,6 +52,5 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.StripeCustomerId);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.StripeCustomerIdTemp);
     }
 }
