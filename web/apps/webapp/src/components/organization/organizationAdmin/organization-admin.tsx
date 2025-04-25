@@ -138,14 +138,16 @@ type OrganizationBillingDetails = {
 };
 
 const organizationBillingSchema = object({
-  email: string().email(({ value }) => `${value} is not a valid email`),
-  addressLine1: string().nullable(),
+  email: string()
+    .email(({ value }) => `${value} is not a valid email`)
+    .required('Email is required'),
+  addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
-  suburb: string().nullable(),
-  city: string().nullable(),
+  suburb: string().required('Suburb is required'),
+  city: string().required('City is required'),
   province: string().nullable(),
-  zipcode: string().nullable(),
-  country: string().nullable(),
+  zipcode: string().required('Zipcode is required'),
+  country: string().required('Country is required'),
 });
 
 type OrganziationSsoSettingsDetails = {

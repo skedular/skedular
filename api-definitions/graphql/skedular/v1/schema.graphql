@@ -903,7 +903,6 @@ type Query {
   bookingVersion: Version!
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
-  customerPaymentMethodsDetails(customerId: String!): [PaymentMethod!]! @cost(weight: "10")
   customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection! @cost(weight: "10")
   customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection! @cost(weight: "10")
   customerVersion: Version!
@@ -928,6 +927,7 @@ type Query {
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
+  myPaymentMethodsDetails: [PaymentMethod!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   notificationVersion: Version!

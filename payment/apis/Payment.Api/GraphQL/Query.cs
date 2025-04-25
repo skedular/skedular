@@ -39,8 +39,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await organizationService.GetPaymentMethodsAsync(organizationId, cancellationToken));
 
     [UseResolverScope]
-    public async Task<IEnumerable<PaymentMethod>> CustomerPaymentMethodsDetailsAsync(
-        string customerId,
+    public async Task<IEnumerable<PaymentMethod>> MyPaymentMethodsDetailsAsync(
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetPaymentMethodsAsync(cancellationToken));
