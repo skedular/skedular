@@ -63,15 +63,16 @@ public static class Extensions
 
         return services
             .AddSingleton(stripeConfiguration)
-            .AddScoped<ICreatable<Customer, CustomerCreateOptions>, CustomerService>()
-            .AddScoped<IUpdatable<Customer, CustomerUpdateOptions>, CustomerService>()
-            .AddScoped<ICreatable<Account, AccountCreateOptions>, AccountService>()
-            .AddScoped<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
-            .AddScoped<IDeletable<Account, AccountDeleteOptions>, AccountService>()
-            .AddScoped<ICreatable<AccountLink, AccountLinkCreateOptions>, AccountLinkService>()
-            .AddScoped<ICreatable<PaymentIntent, PaymentIntentCreateOptions>, PaymentIntentService>()
-            .AddScoped<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()
-            .AddScoped<IRetrievable<SetupIntent, SetupIntentGetOptions>, SetupIntentService>()
-            .AddScoped<IRetrievable<PaymentMethod, PaymentMethodGetOptions>, PaymentMethodService>();
+            .AddSingleton<ICreatable<Customer, CustomerCreateOptions>, CustomerService>()
+            .AddSingleton<IUpdatable<Customer, CustomerUpdateOptions>, CustomerService>()
+            .AddSingleton<ICreatable<Account, AccountCreateOptions>, AccountService>()
+            .AddSingleton<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
+            .AddSingleton<IDeletable<Account, AccountDeleteOptions>, AccountService>()
+            .AddSingleton<ICreatable<AccountLink, AccountLinkCreateOptions>, AccountLinkService>()
+            .AddSingleton<ICreatable<PaymentIntent, PaymentIntentCreateOptions>, PaymentIntentService>()
+            .AddSingleton<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()
+            .AddSingleton<IRetrievable<SetupIntent, SetupIntentGetOptions>, SetupIntentService>()
+            .AddSingleton<IRetrievable<PaymentMethod, PaymentMethodGetOptions>, PaymentMethodService>()
+            .AddSingleton<PaymentMethodService>();
     }
 }

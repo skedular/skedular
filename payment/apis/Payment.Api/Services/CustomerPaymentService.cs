@@ -33,6 +33,7 @@ public class CustomerPaymentService(
     ICreatable<SetupIntent, SetupIntentCreateOptions> setupIntentCreateService,
     IRetrievable<SetupIntent, SetupIntentGetOptions> setupIntentRetrievableService,
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
+    PaymentMethodService paymentMethodService,
     IRandomHelper randomHelper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
     IMapper mapper) : ICustomerPaymentService
@@ -75,6 +76,16 @@ public class CustomerPaymentService(
                     }
                     .AddInclude(query => query.Customer!))
             .FirstAsync(cancellationToken);
+
+        var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
+        if (paymentMethod is not null)
+        {
+            await paymentMethodService.DetachAsync(
+                stripePaymentMethod.PaymentMethodId,
+                new PaymentMethodDetachOptions(),
+                new RequestOptions(),
+                cancellationToken);
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -135,7 +146,7 @@ public class CustomerPaymentService(
         var paymentMethodsToRemove = (await repositoryFactory.StripePaymentMethodRepository.Query(
                     new Specification<StripePaymentMethod>
                     {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Organization != null && query.Organization.Id == customer!.Id &&
+                        Criteria = query => !query.DeletedAt.HasValue && query.Customer != null && query.Customer.Id == customer!.Id &&
                                             query.Status != StripePaymentMethodStatusConstants.Confirmed
                     })
                 .ToListAsync(cancellationToken))

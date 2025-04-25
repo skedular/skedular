@@ -35,6 +35,7 @@ public class OrganizationPaymentService(
     ICreatable<SetupIntent, SetupIntentCreateOptions> setupIntentCreateService,
     IRetrievable<SetupIntent, SetupIntentGetOptions> setupIntentRetrievableService,
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
+    PaymentMethodService paymentMethodService,
     IRandomHelper randomHelper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
     IMapper mapper) : IOrganizationPaymentService
@@ -81,12 +82,12 @@ public class OrganizationPaymentService(
     public async Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organizationStripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.Query(
+        var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.Query(
                 new Specification<StripePaymentMethod> { Criteria = query => query.Id == paymentMethodId && query.Organization != null }
                     .AddInclude(query => query.Organization!))
             .FirstAsync(cancellationToken);
 
-        var organization = organizationStripePaymentMethod.Organization;
+        var organization = stripePaymentMethod.Organization;
         organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization!.Id, false, false, cancellationToken);
         if (organization is null)
         {
@@ -98,9 +99,19 @@ public class OrganizationPaymentService(
             throw new Unauthorized();
         }
 
+        var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
+        if (paymentMethod is not null)
+        {
+            await paymentMethodService.DetachAsync(
+                stripePaymentMethod.PaymentMethodId,
+                new PaymentMethodDetachOptions(),
+                new RequestOptions(),
+                cancellationToken);
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        _ = repositoryFactory.StripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
+        _ = repositoryFactory.StripePaymentMethodRepository.Remove(stripePaymentMethod);
         await PublishOrganizationPaymentMethodStateAsync(organization.Id, cancellationToken);
 
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
