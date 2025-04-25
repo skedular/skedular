@@ -87,14 +87,14 @@ public class OrganizationSubscriber(
         if (existingOrganization is null)
         {
             existingOrganization = mapper.MapToEntity(organization);
-            var customer = await customerCreateService.CreateAsync(
+            var stripeCustomer = await customerCreateService.CreateAsync(
                 mapper.MapTo(existingOrganization),
                 new RequestOptions { IdempotencyKey = organization.Id },
                 cancellationToken);
 
             var stripeCustomerEntity = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
             {
-                Id = randomHelper.Generate(), StripeCustomerId = customer.Id
+                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
             });
 
             existingOrganization.StripeCustomer = stripeCustomerEntity;
@@ -105,13 +105,13 @@ public class OrganizationSubscriber(
             existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
             if (existingOrganization.StripeCustomer is null)
             {
-                var customer = await customerCreateService.CreateAsync(
+                var stripeCustomer = await customerCreateService.CreateAsync(
                     mapper.MapTo(existingOrganization),
                     new RequestOptions { IdempotencyKey = organization.Id },
                     cancellationToken);
                 existingOrganization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
                 {
-                    Id = randomHelper.Generate(), StripeCustomerId = customer.Id
+                    Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
                 });
             }
             else

@@ -87,6 +87,8 @@ public interface IMapper
 
     CustomerCreateOptions MapTo(Shared.Database.Entities.Organization src);
     CustomerUpdateOptions MergeTo(Shared.Database.Entities.Organization src);
+    CustomerCreateOptions MapTo(Shared.Database.Entities.Customer src);
+    CustomerUpdateOptions MergeTo(Shared.Database.Entities.Customer src);
 }
 
 public class Mapper : IMapper
@@ -405,6 +407,12 @@ public class Mapper : IMapper
             Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
+
+    public CustomerCreateOptions MapTo(Shared.Database.Entities.Customer src) =>
+        new() { Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } } };
+
+    public CustomerUpdateOptions MergeTo(Shared.Database.Entities.Customer src) =>
+        new() { Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } } };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null

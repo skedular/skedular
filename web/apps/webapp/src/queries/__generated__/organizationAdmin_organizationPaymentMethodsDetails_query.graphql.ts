@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<028f3723c8df5350e8ede33b80481f50>>
+ * @generated SignedSource<<d5a1c6fc6f7d3195e4763b26dea28632>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,7 +51,7 @@ const node: ReaderFragment = {
           "variableName": "organizationId"
         }
       ],
-      "concreteType": "OrganizationPaymentMethod",
+      "concreteType": "PaymentMethod",
       "kind": "LinkedField",
       "name": "organizationPaymentMethodsDetails",
       "plural": true,

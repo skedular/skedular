@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70eb74f953d1c992176d266175707e6f>>
+ * @generated SignedSource<<ae3722c1ecaceecc38e86f981f2b50ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,7 +60,7 @@ return {
             "variableName": "organizationId"
           }
         ],
-        "concreteType": "OrganizationPaymentMethod",
+        "concreteType": "PaymentMethod",
         "kind": "LinkedField",
         "name": "organizationPaymentMethodsDetails",
         "plural": true,
