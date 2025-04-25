@@ -50,24 +50,24 @@ type ProductDetails = {
 
 const productSchema = (openingHoursMinutesStep: number) =>
   object({
-    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
+    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required.'),
     description: string().nullable(),
     price: string()
-      .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number')
-      .required('Price is required'),
-    priceUnit: string().required('Price Unit is required'),
-    currency: string().required('Currency is required'),
-    numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0'),
+      .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
+      .required('Price is required.'),
+    priceUnit: string().required('Price Unit is required.'),
+    currency: string().required('Currency is required.'),
+    numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0.'),
     minDurationMinutes: number()
       .nullable()
-      .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments`, function (value) {
+      .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
         if (typeof value !== 'number') {
           return true;
         }
 
         return value % openingHoursMinutesStep === 0;
       })
-      .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes', function (value) {
+      .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
         const { maxDurationMinutes } = this.parent;
         if (!maxDurationMinutes) {
           return true;
@@ -78,17 +78,33 @@ const productSchema = (openingHoursMinutesStep: number) =>
         }
 
         return value <= maxDurationMinutes;
+      })
+      .test('is-following-hour-price-unit-rules', 'Minimum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
+        const { priceUnit } = this.parent;
+        if (!priceUnit) {
+          return true;
+        }
+
+        if (priceUnit !== 'PerHour') {
+          return true;
+        }
+
+        if (typeof value !== 'number') {
+          return true;
+        }
+
+        return value % 60 === 0;
       }),
     maxDurationMinutes: number()
       .nullable()
-      .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments`, function (value) {
+      .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
         if (typeof value !== 'number') {
           return true;
         }
 
         return value % openingHoursMinutesStep === 0;
       })
-      .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes', function (value) {
+      .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
         const { minDurationMinutes } = this.parent;
         if (!minDurationMinutes) {
           return true;
@@ -99,10 +115,26 @@ const productSchema = (openingHoursMinutesStep: number) =>
         }
 
         return value >= minDurationMinutes;
+      })
+      .test('is-following-hour-price-unit-rules', 'Maximum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
+        const { priceUnit } = this.parent;
+        if (!priceUnit) {
+          return true;
+        }
+
+        if (priceUnit !== 'PerHour') {
+          return true;
+        }
+
+        if (typeof value !== 'number') {
+          return true;
+        }
+
+        return value % 60 === 0;
       }),
     mustBookAllLocationResources: boolean(),
     recurrenceWindowDays: number()
-      .test('is-required', 'Recurrence window days is required', function (value) {
+      .test('is-required', 'Recurrence window days is required.', function (value) {
         const { bookAllLocationResources } = this.parent;
         if (bookAllLocationResources) {
           return true;
@@ -110,7 +142,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
 
         return !!value;
       })
-      .test('is-greater-than-zero', 'Recurrence window days must be greater than 0', function (value) {
+      .test('is-greater-than-zero', 'Recurrence window days must be greater than 0.', function (value) {
         const { bookAllLocationResources } = this.parent;
         if (bookAllLocationResources) {
           return true;
@@ -121,7 +153,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     requireConsecutiveDays: boolean(),
     maxBookingSpreadDays: number()
       .nullable()
-      .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
+      .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days.', function (value) {
         const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
         if (bookAllLocationResources || requireConsecutiveDays) {
           return true;
@@ -133,7 +165,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
 
         return typeof value === 'number' && value >= recurrenceWindowDays;
       })
-      .test('is-greater-than-zero', 'Max booking spread days must be greater than 0', function (value) {
+      .test('is-greater-than-zero', 'Max booking spread days must be greater than 0.', function (value) {
         const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
         if (bookAllLocationResources || requireConsecutiveDays) {
           return true;
@@ -145,7 +177,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
 
         return typeof value === 'number' && value > 0;
       }),
-    productTagIds: array().min(1, 'At least one product tag must be selected').required('Product tags are required'),
+    productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
     organizationStripeConnectAccountId: string().nullable(),
   });

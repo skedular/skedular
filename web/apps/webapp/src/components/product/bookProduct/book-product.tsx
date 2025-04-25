@@ -351,6 +351,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
       setDateTimeErrorMessage('');
 
+      if (rootData.product?.priceUnit.type === 'PerHour' && durationInMinutes % 60 !== 0) {
+        setDateTimeErrorMessage('You can only book resources for a duration that is a multiple of hours for this product.');
+
+        return invalidResult;
+      }
+
       return {
         valid: true,
         from,
