@@ -84,6 +84,9 @@ public interface IMapper
         Shared.Database.Entities.Product dest,
         Shared.Database.Entities.Organization organization,
         ICollection<ProductVersion> productVersions);
+
+    CustomerCreateOptions MapTo(Shared.Database.Entities.Organization src);
+    CustomerUpdateOptions MergeTo(Shared.Database.Entities.Organization src);
 }
 
 public class Mapper : IMapper
@@ -384,6 +387,24 @@ public class Mapper : IMapper
         dest.ProductVersions = productVersions;
         return dest;
     }
+
+    public CustomerCreateOptions MapTo(Shared.Database.Entities.Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
+
+    public CustomerUpdateOptions MergeTo(Shared.Database.Entities.Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null
