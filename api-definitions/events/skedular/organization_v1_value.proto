@@ -103,9 +103,10 @@ message Tag {
 
 message OrganizationSsoSettings {
   string id = 1;
-  string EntityId = 2;
-  string LoginUrl = 3;
-  string AppFederationMetadataUrl = 4;
+  string entityId = 2;
+  string loginUrl = 3;
+  string appFederationMetadataUrl = 4;
+  bool isActive = 5;
 }
 
 message Address {

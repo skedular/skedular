@@ -438,6 +438,7 @@ type Mutation {
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
+  toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
@@ -1820,6 +1821,12 @@ input TeamWhereInput {
   primaryLocationIds: [String!]
 }
 
+input ToggleOrganizationSsoInput {
+  clientMutationId: String
+  isActive: Boolean!
+  organizationId: String!
+}
+
 input UpdateBookingInput {
   clientMutationId: String
   customerId: String!
@@ -1951,6 +1958,7 @@ input UpdateOrganizationSsoSettingsInput {
   appFederationMetadataUrl: String!
   clientMutationId: String
   entityId: String!
+  isActive: Boolean!
   loginUrl: String!
   organizationId: String!
 }

@@ -101,7 +101,8 @@ public class Mapper : IMapper
                 Id = src.Id,
                 EntityId = src.EntityId.ToSafeString(),
                 LoginUrl = src.LoginUrl.ToSafeString(),
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString(),
+                IsActive = src.IsActive
             };
 
     private static Address? MapTo(Models.Address? src) =>

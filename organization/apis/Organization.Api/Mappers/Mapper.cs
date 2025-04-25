@@ -669,7 +669,8 @@ public class Mapper : IMapper
             EntityId = src.EntityId,
             LoginUrl = src.LoginUrl,
             AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            IsActive = src.IsActive
         };
 
     public OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>

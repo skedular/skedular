@@ -340,4 +340,15 @@ public class Mutation(IMapper mapper)
         var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
+    
+    [UseResolverScope]
+    public async Task<UpdateOrganizationSsoSettingsPayload?> ToggleOrganizationSsoAsync(
+        ToggleOrganizationSsoInput input,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Organization = mapper.MapTo(await organizationSsoService.ToggleSsoSettingsAsync(input.OrganizationId, input.IsActive, cancellationToken))!
+        };
 }

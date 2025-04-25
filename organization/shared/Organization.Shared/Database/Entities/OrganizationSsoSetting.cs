@@ -9,6 +9,7 @@ namespace Organization.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationSsoSetting : EntityBase
 {
+    public bool IsActive { get; set; }
     public string EntityId { get; set; }
     public string LoginUrl { get; set; }
     public string AppFederationMetadataUrl { get; set; }
@@ -24,7 +25,12 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
     public void Configure(EntityTypeBuilder<OrganizationSsoSetting> builder)
     {
         builder.ConfigureEntityBase();
+        
+        builder.Property(item => item.IsActive)
+            .HasDefaultValue(true)
+            .IsRequired();
 
+        builder.Property(item => item.IsActive).HasDefaultValue(true);
         builder.Property(item => item.EntityId).HasMaxLength(Constants.MaxSsoEntityIdLength);
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -33,5 +39,7 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
             .HasOne(item => item.Organization)
             .WithOne(item => item.OrganizationSsoSettings)
             .HasForeignKey<OrganizationSsoSetting>(item => item.OrganizationId);
+        
+        builder.HasIndex(item => item.IsActive);
     }
 }

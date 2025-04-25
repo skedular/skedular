@@ -51,6 +51,7 @@ type Mutation {
   updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
+  toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -519,6 +520,12 @@ input RemoveOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input ToggleOrganizationSsoInput {
+  clientMutationId: String
+  organizationId: String!
+  isActive: Boolean!
+}
+
 input UpdateCustomTagInput {
   clientMutationId: String
   id: String!
@@ -561,6 +568,7 @@ input UpdateOrganizationSsoSettingsInput {
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
+  isActive: Boolean!
 }
 
 input UpdateProductTagInput {

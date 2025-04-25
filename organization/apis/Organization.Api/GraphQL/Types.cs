@@ -482,6 +482,8 @@ public class UpdateOrganizationSsoSettingsInput
 
     [GraphQLName("appFederationMetadataUrl")]
     public required string AppFederationMetadataUrl { get; set; }
+    
+    [GraphQLName("isActive")] public bool IsActive { get; set; } = true;
 }
 
 [GraphQLName("UpdateOrganizationSsoSettingsPayload")]
@@ -678,4 +680,12 @@ public class AddressDetailsInput
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public required string Zipcode { get; set; }
     [GraphQLName("country")] public required string Country { get; set; }
+}
+
+[GraphQLName("ToggleOrganizationSsoInput")]
+public class ToggleOrganizationSsoInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("isActive")] public required bool IsActive { get; set; }
 }

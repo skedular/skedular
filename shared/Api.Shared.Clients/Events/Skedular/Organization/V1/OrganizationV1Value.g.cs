@@ -59,20 +59,21 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklk",
             "GAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEo",
             "CSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlw",
-            "dGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJImsKF09y",
-            "Z2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCEVudGl0eUlk",
-            "GAIgASgJEhAKCExvZ2luVXJsGAMgASgJEiAKGEFwcEZlZGVyYXRpb25NZXRh",
-            "ZGF0YVVybBgEIAEoCSKTAQoHQWRkcmVzcxIKCgJpZBgBIAEoCRIUCgxhZGRy",
-            "ZXNzTGluZTEYAiABKAkSFAoMYWRkcmVzc0xpbmUyGAMgASgJEg4KBnN1YnVy",
-            "YhgEIAEoCRIMCgRjaXR5GAUgASgJEhAKCHByb3ZpbmNlGAYgASgJEg8KB3pp",
-            "cGNvZGUYByABKAkSDwoHY291bnRyeRgIIAEoCSqtAQoEVHlwZRIYChRPcmdh",
-            "bml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIo",
-            "CiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJ",
-            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2Fu",
-            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQABIR",
-            "Cg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFj",
-            "dGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "dGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJIn0KF09y",
+            "Z2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCGVudGl0eUlk",
+            "GAIgASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFwcEZlZGVyYXRpb25NZXRh",
+            "ZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEoCCKTAQoHQWRkcmVzcxIK",
+            "CgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkSFAoMYWRkcmVzc0xp",
+            "bmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5GAUgASgJEhAKCHBy",
+            "b3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoHY291bnRyeRgIIAEo",
+            "CSqtAQoEVHlwZRIYChRPcmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2Fu",
+            "aXphdGlvbkRlbGV0ZWQQARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0",
+            "aW9uVXBzZXJ0ZWQQAhInCiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9u",
+            "RGVsZXRlZBADEh8KG09yZ2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAK",
+            "BFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVy",
+            "EAIqIgoGU3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFw",
+            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9u",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -85,7 +86,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null)
           }));
     }
@@ -3574,6 +3575,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       entityId_ = other.entityId_;
       loginUrl_ = other.loginUrl_;
       appFederationMetadataUrl_ = other.appFederationMetadataUrl_;
+      isActive_ = other.isActive_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3595,7 +3597,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "EntityId" field.</summary>
+    /// <summary>Field number for the "entityId" field.</summary>
     public const int EntityIdFieldNumber = 2;
     private string entityId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3607,7 +3609,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "LoginUrl" field.</summary>
+    /// <summary>Field number for the "loginUrl" field.</summary>
     public const int LoginUrlFieldNumber = 3;
     private string loginUrl_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3619,7 +3621,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "AppFederationMetadataUrl" field.</summary>
+    /// <summary>Field number for the "appFederationMetadataUrl" field.</summary>
     public const int AppFederationMetadataUrlFieldNumber = 4;
     private string appFederationMetadataUrl_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3628,6 +3630,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return appFederationMetadataUrl_; }
       set {
         appFederationMetadataUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "isActive" field.</summary>
+    public const int IsActiveFieldNumber = 5;
+    private bool isActive_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsActive {
+      get { return isActive_; }
+      set {
+        isActive_ = value;
       }
     }
 
@@ -3650,6 +3664,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (EntityId != other.EntityId) return false;
       if (LoginUrl != other.LoginUrl) return false;
       if (AppFederationMetadataUrl != other.AppFederationMetadataUrl) return false;
+      if (IsActive != other.IsActive) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3661,6 +3676,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (EntityId.Length != 0) hash ^= EntityId.GetHashCode();
       if (LoginUrl.Length != 0) hash ^= LoginUrl.GetHashCode();
       if (AppFederationMetadataUrl.Length != 0) hash ^= AppFederationMetadataUrl.GetHashCode();
+      if (IsActive != false) hash ^= IsActive.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3695,6 +3711,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(AppFederationMetadataUrl);
       }
+      if (IsActive != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(IsActive);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3721,6 +3741,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(AppFederationMetadataUrl);
       }
+      if (IsActive != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(IsActive);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3742,6 +3766,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (AppFederationMetadataUrl.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppFederationMetadataUrl);
+      }
+      if (IsActive != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3766,6 +3793,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (other.AppFederationMetadataUrl.Length != 0) {
         AppFederationMetadataUrl = other.AppFederationMetadataUrl;
+      }
+      if (other.IsActive != false) {
+        IsActive = other.IsActive;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3802,6 +3832,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             AppFederationMetadataUrl = input.ReadString();
             break;
           }
+          case 40: {
+            IsActive = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -3835,6 +3869,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 34: {
             AppFederationMetadataUrl = input.ReadString();
+            break;
+          }
+          case 40: {
+            IsActive = input.ReadBool();
             break;
           }
         }

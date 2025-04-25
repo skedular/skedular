@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<076d8d66cc85f25db0e3f95d7c8ca61b>>
+ * @generated SignedSource<<aa34311136396d93c609aefd9e5d26b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type UpdateOrganizationSsoSettingsInput = {
   appFederationMetadataUrl: string;
   clientMutationId?: string | null | undefined;
   entityId: string;
+  isActive: boolean;
   loginUrl: string;
   organizationId: string;
 };

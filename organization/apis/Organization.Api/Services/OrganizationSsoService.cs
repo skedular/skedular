@@ -19,6 +19,8 @@ public interface IOrganizationSsoService
     Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken);
+
 }
 
 public class OrganizationSsoService(
@@ -39,7 +41,7 @@ public class OrganizationSsoService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
-        if (ssoSettings is null)
+        if (ssoSettings is null || !ssoSettings.IsActive)
         {
             return false;
         }
@@ -175,5 +177,39 @@ public class OrganizationSsoService(
         }
 
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
+    }
+    
+    public async Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        if (!organizationAuthorizationService.CanModify(organization, customer))
+        {
+            throw new Unauthorized();
+        }
+
+        if (organization.OrganizationSsoSettings is null)
+        {
+            throw new OrganizationSsoIsNotYetSetup();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        organization.OrganizationSsoSettings.IsActive = isActive;
+        repositoryFactory.OrganizationSsoSettingRepository.Update(organization.OrganizationSsoSettings);
+
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(organization);
     }
 }
