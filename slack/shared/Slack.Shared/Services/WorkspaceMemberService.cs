@@ -176,7 +176,7 @@ public class WorkspaceMemberService(
     public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Models.Customer customer)
     {
         var workspaceMember = workspace.WorkspaceMembers.FirstOrDefault(item => identities.Contains(item.Id));
-        return workspaceMember is null ? customer.GetCustomerName() : $"<@{workspaceMember.Id}>";
+        return workspaceMember is null ? customer.ToDisplayableName() : $"<@{workspaceMember.Id}>";
     }
 
     private async Task SyncCustomersAndOrganizationMembersAsync(Database.Entities.Workspace workspace, CancellationToken cancellationToken)

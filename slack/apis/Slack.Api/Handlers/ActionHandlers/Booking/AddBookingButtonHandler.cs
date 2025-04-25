@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -18,6 +19,7 @@ using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 using Option = SlackNet.Blocks.Option;
 
@@ -297,7 +299,7 @@ public class AddBookingButtonHandler(
                     {
                         ActionId = OptionLoaderKeys.OrganizationMemberKey,
                         InitialOption =
-                            new Option { Text = customer.GetCustomerName().ToOptionText(), Value = customer.Id },
+                            new Option { Text = customer.ToDisplayableName().ToOptionText(), Value = customer.Id },
                         MinQueryLength = 0
                     },
                     Optional = false
@@ -318,7 +320,7 @@ public class AddBookingButtonHandler(
                 {
                     ActionId = OptionLoaderKeys.OrganizationMemberKey,
                     InitialOption =
-                        new Option { Text = customerToAddToBooking.GetCustomerName().ToOptionText(), Value = customerToAddToBooking.Id },
+                        new Option { Text = customerToAddToBooking.ToDisplayableName().ToOptionText(), Value = customerToAddToBooking.Id },
                     MinQueryLength = 0
                 },
                 Optional = false

@@ -1,10 +1,10 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
-using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
@@ -49,7 +49,7 @@ public class OrganizationMemberAndCustomerPairOptionProvider(
                 .Select(item => mapper.MapTo(item.Node))
                 .Select(item => new Option
                 {
-                    Text = item.Customer.GetCustomerName().ToOptionText(),
+                    Text = item.Customer.ToDisplayableName().ToOptionText(),
                     Value = $"{item.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}"
                 })
                 .ToList()

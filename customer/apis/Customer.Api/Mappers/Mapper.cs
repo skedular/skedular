@@ -115,11 +115,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
-            Email = src.Identities
-                .Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
-                .Select(item => item.Email!.ToLowerInvariant())
-                .Distinct()
-                .FirstOrDefault(),
+            Email = src.Identities.ToSingleEmail(),
             Identities = MapTo(src.Identities),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
@@ -322,43 +318,40 @@ public class Mapper : IMapper
                     }
         };
 
-        customer.Identities.AddRange(src.Identities.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
+        customer.Identities.AddRange(src.Identities.Select(item =>
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
 
-        customer.PreferredLocations.AddRange(src.PreferredLocations.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        customer.PreferredLocations.AddRange(src.PreferredLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+        }));
+
+        customer.PreferredTeams.AddRange(src.PreferredTeams.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+        }));
+
+        customer.PreferredResources.AddRange(src.PreferredResources.Select(item =>
+        {
+            var resource = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Resource { Id = item.Id, Name = item.Name.ToSafeString() };
+
+            if (item.Location is not null)
             {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
-            }));
+                resource.Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id };
+            }
 
-        customer.PreferredTeams.AddRange(src.PreferredTeams.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
-            }));
+            return resource;
+        }));
 
-        customer.PreferredResources.AddRange(src.PreferredResources.Select(
-            item =>
-            {
-                var resource = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Resource { Id = item.Id, Name = item.Name.ToSafeString() };
-
-                if (item.Location is not null)
-                {
-                    resource.Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id };
-                }
-
-                return resource;
-            }));
-
-        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
+        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),

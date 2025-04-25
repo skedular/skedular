@@ -74,7 +74,7 @@ public class CustomerSubscriber(
             existingCustomer = new Shared.Database.Entities.Customer { Id = customer.Id };
 
             var stripeCustomer = await customerCreateService.CreateAsync(
-                mapper.MapTo(existingCustomer),
+                mapper.MapTo(customer),
                 new RequestOptions { IdempotencyKey = customer.Id },
                 cancellationToken);
 
@@ -92,7 +92,7 @@ public class CustomerSubscriber(
             if (existingCustomer.StripeCustomer is null)
             {
                 var stripeCustomer = await customerCreateService.CreateAsync(
-                    mapper.MapTo(existingCustomer),
+                    mapper.MapTo(customer),
                     new RequestOptions { IdempotencyKey = customer.Id },
                     cancellationToken);
                 existingCustomer.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
@@ -104,7 +104,7 @@ public class CustomerSubscriber(
             {
                 var stripeCustomer = await customerUpdateService.UpdateAsync(
                     existingCustomer.StripeCustomer.StripeCustomerId,
-                    mapper.MergeTo(existingCustomer),
+                    mapper.MergeTo(customer),
                     new RequestOptions { IdempotencyKey = @event.Metadata.Id },
                     cancellationToken);
 

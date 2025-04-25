@@ -1,5 +1,6 @@
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -18,6 +19,7 @@ using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.GetInput;
 using Icons = Slack.Shared.Constants.Icons;
@@ -80,7 +82,7 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                InitialOption = new Option { Text = booking.Customer.GetCustomerName().ToOptionText(), Value = booking.Customer.Id },
+                InitialOption = new Option { Text = booking.Customer.ToDisplayableName().ToOptionText(), Value = booking.Customer.Id },
                 MinQueryLength = 0
             },
             Optional = false

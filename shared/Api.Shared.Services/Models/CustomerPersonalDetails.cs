@@ -22,6 +22,17 @@ public interface ICustomerPersonalDetails
 
 public static class CustomerPersonalDetailsExtensions
 {
+    public static string ToDisplayableName<T>(this T src) where T : ICustomerPersonalDetails
+    {
+        if (!string.IsNullOrWhiteSpace(src.Name))
+        {
+            return src.Name;
+        }
+
+        List<string?> allNames = [src.GivenName, src.MiddleName, src.FamilyName];
+        return allNames.Aggregate(string.Empty, (acc, name) => string.IsNullOrWhiteSpace(name) ? acc : $"{acc} {name}");
+    }
+
     public static T Redact<T>(this T src, OrganizationMemberVisibilityPolicy policy) where T : ICustomerPersonalDetails
     {
         src.Designation = src.Designation.FullRedact(policy);
@@ -47,6 +58,6 @@ public static class CustomerPersonalDetailsExtensions
     public static string? FullRedact(this string? src, OrganizationMemberVisibilityPolicy policy) =>
         policy == OrganizationMemberVisibilityPolicy.FullAccess ? src : string.Empty;
 
-    public static string? Redact(this string? src, OrganizationMemberVisibilityPolicy policy) =>
+    private static string? Redact(this string? src, OrganizationMemberVisibilityPolicy policy) =>
         policy == OrganizationMemberVisibilityPolicy.FullAccess ? src : src?.Length > 1 ? $"{src[..1]}[*****]" : src;
 }

@@ -1,5 +1,6 @@
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -12,7 +13,6 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
-using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.AspNetCore;
@@ -634,7 +634,7 @@ public class TeamsPage(
                         var customer = mapper.MapTo(item.Customer);
                         return new Option
                         {
-                            Text = customer.GetCustomerName().ToOptionText(),
+                            Text = customer.ToDisplayableName().ToOptionText(),
                             Value = $"{item.OrganizationMember.Id}{Global.OptionLoaderValueSeparator}{customer.Id}"
                         };
                     }).ToList(),

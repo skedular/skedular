@@ -85,10 +85,10 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         ICollection<ProductVersion> productVersions);
 
-    CustomerCreateOptions MapTo(Shared.Database.Entities.Organization src);
-    CustomerUpdateOptions MergeTo(Shared.Database.Entities.Organization src);
-    CustomerCreateOptions MapTo(Shared.Database.Entities.Customer src);
-    CustomerUpdateOptions MergeTo(Shared.Database.Entities.Customer src);
+    CustomerCreateOptions MapTo(Organization src);
+    CustomerUpdateOptions MergeTo(Organization src);
+    CustomerCreateOptions MapTo(Customer src);
+    CustomerUpdateOptions MergeTo(Customer src);
 }
 
 public class Mapper : IMapper
@@ -104,7 +104,21 @@ public class Mapper : IMapper
             Id = customer.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Identities = customer.Identities.Select(item => new Identity { Id = item.Id }).ToList()
+            Identities = customer.Identities
+                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .ToList(),
+            Name = customer.Name,
+            GivenName = customer.GivenName,
+            MiddleName = customer.MiddleName,
+            FamilyName = customer.FamilyName,
+            PhotoUrl = customer.PhotoUrl,
+            PhotoUrl24 = customer.PhotoUrl24,
+            PhotoUrl32 = customer.PhotoUrl32,
+            PhotoUrl48 = customer.PhotoUrl48,
+            PhotoUrl72 = customer.PhotoUrl72,
+            PhotoUrl192 = customer.PhotoUrl192,
+            PhotoUrl512 = customer.PhotoUrl512,
+            PhoneNumber = customer.PhoneNumber
         };
     }
 
@@ -390,7 +404,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public CustomerCreateOptions MapTo(Shared.Database.Entities.Organization src) =>
+    public CustomerCreateOptions MapTo(Organization src) =>
         new()
         {
             Name = src.Name,
@@ -399,7 +413,7 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
 
-    public CustomerUpdateOptions MergeTo(Shared.Database.Entities.Organization src) =>
+    public CustomerUpdateOptions MergeTo(Organization src) =>
         new()
         {
             Name = src.Name,
@@ -408,11 +422,23 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
 
-    public CustomerCreateOptions MapTo(Shared.Database.Entities.Customer src) =>
-        new() { Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } } };
+    public CustomerCreateOptions MapTo(Customer src) =>
+        new()
+        {
+            Name = src.ToDisplayableName(),
+            Email = src.Identities.ToSingleEmail(),
+            Phone = src.PhoneNumber.ToSafeString(),
+            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
 
-    public CustomerUpdateOptions MergeTo(Shared.Database.Entities.Customer src) =>
-        new() { Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } } };
+    public CustomerUpdateOptions MergeTo(Customer src) =>
+        new()
+        {
+            Name = src.ToDisplayableName(),
+            Email = src.Identities.ToSingleEmail(),
+            Phone = src.PhoneNumber.ToSafeString(),
+            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null
