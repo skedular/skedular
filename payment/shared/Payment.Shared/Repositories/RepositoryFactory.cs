@@ -21,6 +21,8 @@ public interface IRepositoryFactory
     IStripeCustomerRepository StripeCustomerRepository { get; }
     IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    IStripeProductRepository StripeProductRepository { get; }
+    IStripePriceRepository StripePriceRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -46,6 +48,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
         StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
         StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
+        StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
+        StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -69,6 +73,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IStripeCustomerRepository StripeCustomerRepository { get; }
     public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    public IStripeProductRepository StripeProductRepository { get; }
+    public IStripePriceRepository StripePriceRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

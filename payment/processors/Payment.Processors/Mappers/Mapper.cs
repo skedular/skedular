@@ -73,6 +73,11 @@ public interface IMapper
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
 
+    ProductVersion MapToEntity(
+        Shared.Models.ProductVersion src,
+        Shared.Database.Entities.Product product,
+        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
@@ -89,6 +94,10 @@ public interface IMapper
     CustomerUpdateOptions MergeTo(Organization src);
     CustomerCreateOptions MapTo(Customer src);
     CustomerUpdateOptions MergeTo(Customer src);
+
+    ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
+    ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
+    PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId);
 }
 
 public class Mapper : IMapper
@@ -374,6 +383,12 @@ public class Mapper : IMapper
         return product;
     }
 
+    public ProductVersion MapToEntity(
+        Shared.Models.ProductVersion src,
+        Shared.Database.Entities.Product product,
+        OrganizationStripeConnectAccount? organizationStripeConnectAccount) =>
+        MergeToEntity(src, new ProductVersion(), product, organizationStripeConnectAccount);
+
     public ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
@@ -438,6 +453,32 @@ public class Mapper : IMapper
             Email = src.Identities.ToSingleEmail(),
             Phone = src.PhoneNumber.ToSafeString(),
             Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
+
+    public ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
+        new()
+        {
+            Name = src.Name.ToSafeString(),
+            UnitLabel = src.PriceUnit.ToPriceUnitName(),
+            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
+        };
+
+    public ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
+        new()
+        {
+            Name = src.Name.ToSafeString(),
+            UnitLabel = src.PriceUnit.ToPriceUnitName(),
+            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
+        };
+
+    public PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId) =>
+        new()
+        {
+            Currency = src.Currency.ToCurrency(),
+            BillingScheme = "per_unit",
+            UnitAmount = (long)src.Price * 100,
+            Product = stripeProductId,
+            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>

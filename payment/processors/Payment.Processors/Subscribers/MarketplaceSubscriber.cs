@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Random;
 using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
 using Stripe;
@@ -16,13 +17,10 @@ public class MarketplaceSubscriber(
     ILogger<MarketplaceSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
+    IRandomHelper randomHelper,
     ICreatable<Stripe.Product, ProductCreateOptions> productCreateService,
     IUpdatable<Stripe.Product, ProductUpdateOptions> productUpdateService,
-    IDeletable<Stripe.Product, ProductDeleteOptions> productDeleteService,
-    IRetrievable<Stripe.Product, ProductGetOptions> productRetrieveService,
-    ICreatable<Price, PriceCreateOptions> priceCreateService,
-    IUpdatable<Price, PriceUpdateOptions> priceUpdateService,
-    IRetrievable<Price, PriceGetOptions> priceRetrieveService)
+    ICreatable<Price, PriceCreateOptions> priceCreateService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -56,6 +54,7 @@ public class MarketplaceSubscriber(
                     }
 
                     await HandleProductUpsertedEventAsync(
+                        @event,
                         product,
                         existingProduct,
                         organization,
@@ -89,6 +88,7 @@ public class MarketplaceSubscriber(
     }
 
     private async Task HandleProductUpsertedEventAsync(
+        Event @event,
         Product product,
         Shared.Database.Entities.Product existingProduct,
         Organization organization,
@@ -98,12 +98,90 @@ public class MarketplaceSubscriber(
         var productVersions = new List<ProductVersion>();
         foreach (var productVersion in product.ProductVersions)
         {
-            var productVersionEntity =
-                await repositoryFactory.ProductVersionRepository.UpsertNakedAsync(productVersion.Id, existingProduct, cancellationToken);
+            var existingProductVersionEntity = await repositoryFactory.ProductVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken);
+            if (existingProductVersionEntity is null)
+            {
+                existingProductVersionEntity = mapper.MapToEntity(productVersion, existingProduct, accountEntity);
 
-            productVersions.Add(
-                repositoryFactory.ProductVersionRepository.Update(
-                    mapper.MergeToEntity(productVersion, productVersionEntity, existingProduct, accountEntity)));
+                if (accountEntity is not null)
+                {
+                    var stripeProduct = await productCreateService.CreateAsync(
+                        mapper.MapToProduct(productVersion, product, organization.Id),
+                        new RequestOptions { IdempotencyKey = productVersion.Id, StripeAccount = accountEntity.StripeAccountId },
+                        cancellationToken);
+
+                    var stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
+                    {
+                        Id = randomHelper.Generate(), StripeProductId = stripeProduct.Id
+                    });
+
+                    var stripePrice = await priceCreateService.CreateAsync(
+                        mapper.MapToPrice(productVersion, product, organization.Id, stripeProduct.Id),
+                        new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
+                        cancellationToken);
+
+                    var stripePriceEntity = repositoryFactory.StripePriceRepository.Add(new StripePrice
+                    {
+                        Id = randomHelper.Generate(), StripePriceId = stripePrice.Id
+                    });
+
+                    existingProductVersionEntity.StripeProduct = stripeProductEntity;
+                    existingProductVersionEntity.StripePrice = stripePriceEntity;
+                }
+
+                existingProductVersionEntity = repositoryFactory.ProductVersionRepository.Add(existingProductVersionEntity);
+            }
+            else
+            {
+                existingProductVersionEntity = mapper.MergeToEntity(productVersion, existingProductVersionEntity, existingProduct, accountEntity);
+                if (existingProductVersionEntity.StripeProduct is null)
+                {
+                    if (accountEntity is not null)
+                    {
+                        var stripeProduct = await productCreateService.CreateAsync(
+                            mapper.MapToProduct(productVersion, product, organization.Id),
+                            new RequestOptions { IdempotencyKey = productVersion.Id, StripeAccount = accountEntity.StripeAccountId },
+                            cancellationToken);
+
+                        var stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
+                        {
+                            Id = randomHelper.Generate(), StripeProductId = stripeProduct.Id
+                        });
+
+                        var stripePrice = await priceCreateService.CreateAsync(
+                            mapper.MapToPrice(productVersion, product, organization.Id, stripeProduct.Id),
+                            new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
+                            cancellationToken);
+
+                        var stripePriceEntity = repositoryFactory.StripePriceRepository.Add(new StripePrice
+                        {
+                            Id = randomHelper.Generate(), StripePriceId = stripePrice.Id
+                        });
+
+                        existingProductVersionEntity.StripeProduct = stripeProductEntity;
+                        existingProductVersionEntity.StripePrice = stripePriceEntity;
+                    }
+                }
+                else
+                {
+                    if (accountEntity is not null)
+                    {
+                        var stripeProduct = await productUpdateService.UpdateAsync(
+                            existingProductVersionEntity.StripeProduct.StripeProductId,
+                            mapper.MergeToProduct(productVersion, product, organization.Id),
+                            new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
+                            cancellationToken);
+
+                        existingProductVersionEntity.StripeProduct.StripeProductId = stripeProduct.Id;
+                        existingProductVersionEntity.StripeProduct =
+                            repositoryFactory.StripeProductRepository.Update(existingProductVersionEntity.StripeProduct);
+                    }
+                }
+
+                existingProductVersionEntity = repositoryFactory.ProductVersionRepository.Update(existingProductVersionEntity);
+            }
+
+            productVersions.Add(existingProductVersionEntity);
         }
 
         _ = repositoryFactory.ProductRepository.Update(mapper.MergeToEntity(product, existingProduct, organization, productVersions));

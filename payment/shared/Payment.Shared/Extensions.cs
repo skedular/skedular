@@ -37,7 +37,9 @@ public static class Extensions
             .AddScoped<IProductVersionRepository, ProductVersionRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
             .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()
-            .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>();
+            .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>()
+            .AddScoped<IStripeProductRepository, StripeProductRepository>()
+            .AddScoped<IStripePriceRepository, StripePriceRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

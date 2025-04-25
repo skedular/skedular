@@ -8,8 +8,8 @@ public enum Currency
 
 public static class CurrencyConstants
 {
-    public const string Nzd = "NZD";
-    public const string Usd = "USD";
+    public const string Nzd = "nzd";
+    public const string Usd = "usd";
 }
 
 public static class CurrencyExtensions
