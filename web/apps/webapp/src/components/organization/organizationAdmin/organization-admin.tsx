@@ -128,13 +128,13 @@ const organizationSchema = object({
 
 type OrganizationBillingDetails = {
   email: string;
-  addressLine1: string | null;
+  addressLine1: string;
   addressLine2: string | null;
-  suburb: string | null;
-  city: string | null;
+  suburb: string;
+  city: string;
   province: string | null;
-  zipcode: string | null;
-  country: string | null;
+  zipcode: string;
+  country: string;
 };
 
 const organizationBillingSchema = object({
@@ -1122,10 +1122,6 @@ const OrganizationAdmin = ({
   };
 
   const handleRemovePaymentMethodClick = (id: string) => {
-    if (!rootData.organization) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Removing payment method...`} />, infoNotificationOptions);
 
     commitRemoveOrganizationPaymentMethod({

@@ -42,7 +42,7 @@ public class Query(IMapper mapper)
     public async Task<IEnumerable<PaymentMethod>> MyPaymentMethodsDetailsAsync(
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetPaymentMethodsAsync(cancellationToken));
+        mapper.MapTo(await customerService.GetMyPaymentMethodsAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountDetails?> OrganizationStripeConnectAccountAsync(

@@ -34,8 +34,8 @@ public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<AddCustomerPaymentMethodIntentPayload?> AddCustomerPaymentMethodIntentAsync(
-        AddCustomerPaymentMethodIntentInput input,
+    public async Task<AddCustomerPaymentMethodIntentPayload?> AddMyPaymentMethodIntentAsync(
+        AddMyPaymentMethodIntentInput input,
         [Service] ICustomerPaymentService customerPaymentService,
         CancellationToken cancellationToken)
     {
@@ -47,8 +47,8 @@ public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<RemoveCustomerPaymentMethodPayload?> RemoveCustomerPaymentMethodAsync(
-        RemoveCustomerPaymentMethodInput input,
+    public async Task<RemoveCustomerPaymentMethodPayload?> RemoveMyPaymentMethodAsync(
+        RemoveMyPaymentMethodInput input,
         [Service] ICustomerPaymentService customerPaymentService,
         CancellationToken cancellationToken)
     {

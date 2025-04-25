@@ -38,8 +38,8 @@ public class RemoveOrganizationPaymentMethodPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("AddCustomerPaymentMethodIntentInput")]
-public class AddCustomerPaymentMethodIntentInput
+[GraphQLName("AddMyPaymentMethodIntentInput")]
+public class AddMyPaymentMethodIntentInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
@@ -52,8 +52,8 @@ public class AddCustomerPaymentMethodIntentPayload
     [GraphQLName("clientSecret")] public string ClientSecret { get; set; } = string.Empty;
 }
 
-[GraphQLName("RemoveCustomerPaymentMethodInput")]
-public class RemoveCustomerPaymentMethodInput
+[GraphQLName("RemoveMyPaymentMethodInput")]
+public class RemoveMyPaymentMethodInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }

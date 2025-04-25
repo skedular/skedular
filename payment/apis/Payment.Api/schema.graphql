@@ -18,8 +18,8 @@ type AddOrganizationPaymentMethodIntentPayload {
 type Mutation {
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
-  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload @cost(weight: "10")
-  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
+  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload @cost(weight: "10")
+  removeMyPaymentMethod(input: RemoveMyPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
@@ -115,7 +115,7 @@ type Version {
   revision: Int!
 }
 
-input AddCustomerPaymentMethodIntentInput {
+input AddMyPaymentMethodIntentInput {
   clientMutationId: String
 }
 
@@ -152,7 +152,7 @@ input OrganizationStripeConnectAccountWhereInput {
   onboardingCompleted: Boolean
 }
 
-input RemoveCustomerPaymentMethodInput {
+input RemoveMyPaymentMethodInput {
   clientMutationId: String
   id: String!
 }

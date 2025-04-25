@@ -3,15 +3,18 @@ import {
   AppBarWithStackColumn,
   BodyIconTypography,
   CaptionIconTypography,
+  CreditCard,
   FormFieldLabel,
   FormStackColumn,
   GridContainer,
   LeadIconTypography,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackRow,
 } from '@/components/commons';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
+import { DeleteIcon, NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import type { RootError } from '@/components/relayError';
@@ -19,6 +22,9 @@ import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import type { myDetails_myPaymentMethodsDetails_query$key } from '@/queries/__generated__/myDetails_myPaymentMethodsDetails_query.graphql';
+import type { myDetails_myPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myDetails_myPaymentMethodsDetails_refetchableFragment.graphql';
+import type { myDetails_removeMyPaymentMethodMutation } from '@/queries/__generated__/myDetails_removeMyPaymentMethodMutation.graphql';
 import type { myDetails_rootQuery } from '@/queries/__generated__/myDetails_rootQuery.graphql';
 import type { myDetails_updateCustomerDetailsMutation } from '@/queries/__generated__/myDetails_updateCustomerDetailsMutation.graphql';
 import type { myDetails_updateMyBillingContactDetailsMutation } from '@/queries/__generated__/myDetails_updateMyBillingContactDetailsMutation.graphql';
@@ -29,12 +35,13 @@ import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, startTransition, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
+import AddMyPaymentMethodDialog from './add-my-payment-method-dialog';
 
 type Props = {
   queryReference: PreloadedQuery<myDetails_rootQuery, Record<string, unknown>>;
@@ -68,6 +75,7 @@ const RootQuery = graphql`
       zipcode
       country
     }
+    ...myDetails_myPaymentMethodsDetails_query
   }
 `;
 
@@ -96,13 +104,13 @@ const profileDetailsSchema = object({
 type CustomerBillingDetails = {
   companyName: string;
   email: string;
-  addressLine1: string | null;
+  addressLine1: string;
   addressLine2: string | null;
-  suburb: string | null;
-  city: string | null;
+  suburb: string;
+  city: string;
   province: string | null;
-  zipcode: string | null;
-  country: string | null;
+  zipcode: string;
+  country: string;
 };
 
 const customerBillingSchema = object({
@@ -121,6 +129,24 @@ const customerBillingSchema = object({
 
 const MyDetails = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<myDetails_rootQuery>(RootQuery, queryReference);
+  const [rootDataMyPaymentMethodsDetails, refetchMyPaymentMethodsDetails] = useRefetchableFragment<
+    myDetails_myPaymentMethodsDetails_refetchableFragment,
+    myDetails_myPaymentMethodsDetails_query$key
+  >(
+    graphql`
+      fragment myDetails_myPaymentMethodsDetails_query on Query @refetchable(queryName: "myDetails_myPaymentMethodsDetails_refetchableFragment") {
+        myPaymentMethodsDetails {
+          id
+          cardBrand
+          cardExpiryMonth
+          cardExpiryYear
+          cardLastFourDigit
+        }
+      }
+    `,
+    rootData,
+  );
+
   const [commitUpdateCustomerDetails] = useMutation<myDetails_updateCustomerDetailsMutation>(graphql`
     mutation myDetails_updateCustomerDetailsMutation($input: UpdateCustomerDetailsInput!) @raw_response_type {
       updateCustomerDetails(input: $input) {
@@ -158,6 +184,14 @@ const MyDetails = ({ queryReference }: Props) => {
     }
   `);
 
+  const [commitRemoveMyPaymentMethod] = useMutation<myDetails_removeMyPaymentMethodMutation>(graphql`
+    mutation myDetails_removeMyPaymentMethodMutation($input: RemoveMyPaymentMethodInput!) {
+      removeMyPaymentMethod(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -165,6 +199,18 @@ const MyDetails = ({ queryReference }: Props) => {
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
   const validateCustomerBilling = makeValidate(customerBillingSchema);
   const requiredCustomerBillingFields = makeRequired(customerBillingSchema);
+  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
+
+  const handleRefetchMyPaymentMethodsDetails = useCallback(() => {
+    startTransition(() => {
+      refetchMyPaymentMethodsDetails(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+        },
+      );
+    });
+  }, [refetchMyPaymentMethodsDetails]);
 
   const handleCloseClick = () => {
     router.push('/');
@@ -295,6 +341,50 @@ const MyDetails = ({ queryReference }: Props) => {
     });
   };
 
+  const handleAddPaymentMethodClicked = () => {
+    setIsAddPaymentMethodDialogOpen(true);
+  };
+
+  const handleAddPaymentMethodCancel = () => {
+    setIsAddPaymentMethodDialogOpen(false);
+  };
+
+  const handleRemovePaymentMethodClick = (id: string) => {
+    const toastId = themedToast(<NotificationContent content={`Removing payment method...`} />, infoNotificationOptions);
+
+    commitRemoveMyPaymentMethod({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove payment method. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Payment method removed.`} />,
+        });
+
+        handleRefetchMyPaymentMethodsDetails();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove payment method. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const me = rootData.me;
   if (!me) {
     return <></>;
@@ -311,160 +401,204 @@ const MyDetails = ({ queryReference }: Props) => {
   const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
   const country = billingContactDetails.country ? billingContactDetails.country : '';
 
+  const paymentMethodExist = rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails && rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails.length > 0;
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit My Details">
-          <Form
-            onSubmit={handleProfileDetailUpdateClick}
-            initialValues={{
-              timezone: me.timezone,
-              designation: me.designation,
-              title: me.title,
-              name: me.name,
-              givenName: me.givenName,
-              middleName: me.middleName,
-              familyName: me.familyName,
-              phoneNumber: me.phoneNumber,
-            }}
-            validate={validateProfileDetails}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <GridContainer sx={{ justifyContent: 'space-between' }}>
-                    <Grid>
-                      <StackRow>
-                        <CustomerAvatar name={me} photo={{ url: me?.photoUrl }} size="large" />
-                        <StackColumn spacing={-0.5}>
-                          <LeadIconTypography label={getCustomerFullName(me)} />
-                          <CaptionIconTypography label={me.email} />
-                        </StackColumn>
-                      </StackRow>
-                    </Grid>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit My Details">
+            <Form
+              onSubmit={handleProfileDetailUpdateClick}
+              initialValues={{
+                timezone: me.timezone,
+                designation: me.designation,
+                title: me.title,
+                name: me.name,
+                givenName: me.givenName,
+                middleName: me.middleName,
+                familyName: me.familyName,
+                phoneNumber: me.phoneNumber,
+              }}
+              validate={validateProfileDetails}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <StackRow>
+                          <CustomerAvatar name={me} photo={{ url: me?.photoUrl }} size="large" />
+                          <StackColumn spacing={-0.5}>
+                            <LeadIconTypography label={getCustomerFullName(me)} />
+                            <CaptionIconTypography label={me.email} />
+                          </StackColumn>
+                        </StackRow>
+                      </Grid>
 
-                    <Grid></Grid>
-                  </GridContainer>
-                  <Divider />
-                </StackColumn>
+                      <Grid></Grid>
+                    </GridContainer>
+                    <Divider />
+                  </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Designation">
-                    <TextField name="designation" required={requiredProfileDetailsFields.designation} />
-                  </FormFieldLabel>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Designation">
+                      <TextField name="designation" required={requiredProfileDetailsFields.designation} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Title">
-                    <TextField name="title" required={requiredProfileDetailsFields.title} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Title">
+                      <TextField name="title" required={requiredProfileDetailsFields.title} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredProfileDetailsFields.name} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredProfileDetailsFields.name} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Given Name">
-                    <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Given Name">
+                      <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Middle Name">
-                    <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Middle Name">
+                      <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Family Name">
-                    <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Family Name">
+                      <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Phone Number">
-                    <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
-                  </FormFieldLabel>
-                </StackColumn>
+                    <FormFieldLabel label="Phone Number">
+                      <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
+                    </FormFieldLabel>
+                  </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <StackRow>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      Update
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              )}
+            />
+
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Payment Method" />
+                  <BodyIconTypography label="Edit your payment method" />
+                </Grid>
+
+                <Grid>
+                  {!paymentMethodExist && (
+                    <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                      <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
                     </Button>
-                  </StackRow>
-                </StackColumn>
-              </FormStackColumn>
+                  )}
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            {paymentMethodExist && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackRow>
+                  {rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails.map((item) => (
+                    <StackColumn key={item.id}>
+                      <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
+                      <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
+                        <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
+                      </Button>
+                    </StackColumn>
+                  ))}
+                </StackRow>
+              </StackColumn>
             )}
-          />
 
-          <Form
-            onSubmit={handleMyBillingDetailUpdateClick}
-            initialValues={{
-              companyName,
-              email,
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-            }}
-            validate={validateCustomerBilling}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Billing & Payment Setup" />
-                  <BodyIconTypography label="Edit your billing and payment details" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Company">
-                    <TextField name="companyName" required={requiredCustomerBillingFields.companyName} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Email">
-                    <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address line 1">
-                    <TextField name="addressLine1" required={requiredCustomerBillingFields.addressLine1} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address line 2">
-                    <TextField name="addressLine2" required={requiredCustomerBillingFields.addressLine2} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Suburb">
-                    <TextField name="suburb" required={requiredCustomerBillingFields.suburb} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="City">
-                    <TextField name="city" required={requiredCustomerBillingFields.city} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Province">
-                    <TextField name="province" required={requiredCustomerBillingFields.province} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Zipcode">
-                    <TextField name="zipcode" required={requiredCustomerBillingFields.zipcode} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Country">
-                    <SingleChoiceCountry name="country" required={requiredCustomerBillingFields.country} />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <StackRow>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      Update
-                    </Button>
-                  </StackRow>
-                </StackColumn>
-              </FormStackColumn>
+            {!paymentMethodExist && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <SmallIconTypography label="No payment method setup yet" />
+              </StackColumn>
             )}
-          />
-        </AppBarWithStackColumn>
+
+            <Form
+              onSubmit={handleMyBillingDetailUpdateClick}
+              initialValues={{
+                companyName,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              }}
+              validate={validateCustomerBilling}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Billing & Payment Setup" />
+                    <BodyIconTypography label="Edit your billing and payment details" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Company">
+                      <TextField name="companyName" required={requiredCustomerBillingFields.companyName} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Email">
+                      <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Address line 1">
+                      <TextField name="addressLine1" required={requiredCustomerBillingFields.addressLine1} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Address line 2">
+                      <TextField name="addressLine2" required={requiredCustomerBillingFields.addressLine2} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Suburb">
+                      <TextField name="suburb" required={requiredCustomerBillingFields.suburb} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="City">
+                      <TextField name="city" required={requiredCustomerBillingFields.city} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Province">
+                      <TextField name="province" required={requiredCustomerBillingFields.province} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Zipcode">
+                      <TextField name="zipcode" required={requiredCustomerBillingFields.zipcode} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Country">
+                      <SingleChoiceCountry name="country" required={requiredCustomerBillingFields.country} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              )}
+            />
+          </AppBarWithStackColumn>
+        </Box>
       </Box>
-    </Box>
+      {!paymentMethodExist && isAddPaymentMethodDialogOpen && <AddMyPaymentMethodDialog isDialogOpen={isAddPaymentMethodDialogOpen} onCancel={handleAddPaymentMethodCancel} />}
+    </>
   );
 };
 

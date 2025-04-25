@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e143f97197c0fbfcf029bf4ddbb6db9d>>
+ * @generated SignedSource<<df67593e6ad6ce5f3a761e8cea464886>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type myDetails_rootQuery$variables = Record<PropertyKey, never>;
 export type myDetails_rootQuery$data = {
   readonly me: {
@@ -36,6 +37,7 @@ export type myDetails_rootQuery$data = {
     readonly suburb: string | null | undefined;
     readonly zipcode: string | null | undefined;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"myDetails_myPaymentMethodsDetails_query">;
 };
 export type myDetails_rootQuery = {
   response: myDetails_rootQuery$data;
@@ -57,160 +59,166 @@ v1 = {
   "name": "email",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "CustomerDetails",
-    "kind": "LinkedField",
-    "name": "me",
-    "plural": false,
-    "selections": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "photoUrl",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "designation",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "title",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "name",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "givenName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "middleName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "familyName",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "timezone",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "phoneNumber",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "CustomerBillingContactDetails",
-    "kind": "LinkedField",
-    "name": "myBillingContactDetails",
-    "plural": false,
-    "selections": [
-      (v0/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "companyName",
-        "storageKey": null
-      },
-      (v1/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "addressLine1",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "addressLine2",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "suburb",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "city",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "province",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "zipcode",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "country",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "CustomerDetails",
+  "kind": "LinkedField",
+  "name": "me",
+  "plural": false,
+  "selections": [
+    (v0/*: any*/),
+    (v1/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "photoUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "designation",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "givenName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "middleName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "familyName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "timezone",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "phoneNumber",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "CustomerBillingContactDetails",
+  "kind": "LinkedField",
+  "name": "myBillingContactDetails",
+  "plural": false,
+  "selections": [
+    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "companyName",
+      "storageKey": null
+    },
+    (v1/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "addressLine1",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "addressLine2",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "suburb",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "city",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "province",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "zipcode",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "country",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "myDetails_rootQuery",
-    "selections": (v2/*: any*/),
+    "selections": [
+      (v2/*: any*/),
+      (v3/*: any*/),
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "myDetails_myPaymentMethodsDetails_query"
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -219,19 +227,62 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "myDetails_rootQuery",
-    "selections": (v2/*: any*/)
+    "selections": [
+      (v2/*: any*/),
+      (v3/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "PaymentMethod",
+        "kind": "LinkedField",
+        "name": "myPaymentMethodsDetails",
+        "plural": true,
+        "selections": [
+          (v0/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardBrand",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardExpiryMonth",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardExpiryYear",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardLastFourDigit",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "f64814df486207be007032aa85261212",
+    "cacheID": "bb6e1b3a9ad75c68e2eb8524cf3afe56",
     "id": null,
     "metadata": {},
     "name": "myDetails_rootQuery",
     "operationKind": "query",
-    "text": "query myDetails_rootQuery {\n  me {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n  }\n  myBillingContactDetails {\n    id\n    companyName\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n}\n"
+    "text": "query myDetails_rootQuery {\n  me {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n  }\n  myBillingContactDetails {\n    id\n    companyName\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...myDetails_myPaymentMethodsDetails_query\n}\n\nfragment myDetails_myPaymentMethodsDetails_query on Query {\n  myPaymentMethodsDetails {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9771b84cb97f0b1673781e84ba260f91";
+(node as any).hash = "79be550816df4189643c70be2b688844";
 
 export default node;
