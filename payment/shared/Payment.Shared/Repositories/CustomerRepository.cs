@@ -19,10 +19,10 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, ICollection<Identity>> AddDependentObjects(
-        this IQueryable<Customer> originalQuery) =>
+    internal static IIncludableQueryable<Customer, StripeCustomer?> AddDependentObjects(this IQueryable<Customer> originalQuery) =>
         originalQuery
-            .Include(query => query.Identities);
+            .Include(query => query.Identities)
+            .Include(query => query.StripeCustomer);
 }
 
 public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timeProvider)

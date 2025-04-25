@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;
@@ -9,6 +10,7 @@ using Customer = Stripe.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using OrganizationMember = Payment.Shared.Database.Entities.OrganizationMember;
+using StripeCustomer = Payment.Shared.Database.Entities.StripeCustomer;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
@@ -16,6 +18,7 @@ namespace Payment.Processors.Subscribers;
 public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
+    IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
     ICreatable<Customer, CustomerCreateOptions> customerCreateService,
     IUpdatable<Customer, CustomerUpdateOptions> customerUpdateService)
@@ -89,21 +92,47 @@ public class OrganizationSubscriber(
                 new RequestOptions { IdempotencyKey = organization.Id },
                 cancellationToken);
             existingOrganization.StripeCustomerIdTemp = stripeCustomer.Id;
+
+            var stripeCustomerEntity = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
+            {
+                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
+            });
+
+            existingOrganization.StripeCustomer = stripeCustomerEntity;
             existingOrganization = repositoryFactory.OrganizationRepository.Add(existingOrganization);
         }
         else
         {
             existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
-            var stripeCustomer = string.IsNullOrWhiteSpace(existingOrganization.StripeCustomerIdTemp)
-                ? await customerCreateService.CreateAsync(
+            Customer? stripeCustomer;
+            if (string.IsNullOrWhiteSpace(existingOrganization.StripeCustomerIdTemp))
+            {
+                stripeCustomer = await customerCreateService.CreateAsync(
                     mapper.MapTo(existingOrganization),
                     new RequestOptions { IdempotencyKey = organization.Id },
-                    cancellationToken)
-                : await customerUpdateService.UpdateAsync(
+                    cancellationToken);
+            }
+            else
+            {
+                stripeCustomer = await customerUpdateService.UpdateAsync(
                     existingOrganization.StripeCustomerIdTemp,
                     mapper.MergeTo(existingOrganization),
                     new RequestOptions { IdempotencyKey = @event.Metadata.Id },
                     cancellationToken);
+            }
+
+            if (existingOrganization.StripeCustomer is null)
+            {
+                existingOrganization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
+                {
+                    Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
+                });
+            }
+            else
+            {
+                existingOrganization.StripeCustomer.StripeCustomerId = stripeCustomer.Id;
+                existingOrganization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Update(existingOrganization.StripeCustomer);
+            }
 
             existingOrganization.StripeCustomerIdTemp = stripeCustomer.Id;
             existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);

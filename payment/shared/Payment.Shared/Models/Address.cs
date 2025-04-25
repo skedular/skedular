@@ -9,7 +9,7 @@ public class Address : ModelBase, IAddressDetails
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
 
-    public Organization Organization { get; set; }
+    public Organization? Organization { get; set; }
     public string AddressLine1 { get; set; } = string.Empty;
     public string? AddressLine2 { get; set; }
     public string Suburb { get; set; } = string.Empty;

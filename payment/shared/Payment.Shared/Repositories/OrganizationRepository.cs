@@ -32,6 +32,7 @@ internal static class OrganizationExtensions
     {
         var updatedQuery = originalQuery
             .Include(query => query.OrganizationSsoSettings)
+            .Include(query => query.StripeCustomer)
             .Include(query => query.Products)
             .ThenInclude(query => query.ProductVersions)
             .Include(query => query.PhysicalAddress)

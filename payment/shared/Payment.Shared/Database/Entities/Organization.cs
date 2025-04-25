@@ -22,8 +22,8 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual Address? PhysicalAddress { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    // public string? StripeCustomerId { get; set; }
-    // public virtual StripeCustomer? StripeCustomer { get; set; }
+    public string? StripeCustomerId { get; set; }
+    public virtual StripeCustomer? StripeCustomer { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -51,6 +51,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
+        builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.StripeCustomerId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.StripeCustomerIdTemp);

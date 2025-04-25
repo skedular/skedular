@@ -20,6 +20,7 @@ public interface IRepositoryFactory
     IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
+    IStripeCustomerRepository StripeCustomerRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -44,6 +45,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -66,6 +68,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
+    public IStripeCustomerRepository StripeCustomerRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

@@ -36,7 +36,8 @@ public static class Extensions
             .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
             .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
-            .AddScoped<IProductVersionRepository, ProductVersionRepository>();
+            .AddScoped<IProductVersionRepository, ProductVersionRepository>()
+            .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

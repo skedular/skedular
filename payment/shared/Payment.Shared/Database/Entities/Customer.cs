@@ -8,6 +8,10 @@ namespace Payment.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : ReplicatedEntityBaseWithDeleted
 {
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? StripeCustomerId { get; set; }
+    public virtual StripeCustomer? StripeCustomer { get; set; }
+
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
 }
@@ -15,5 +19,10 @@ public class Customer : ReplicatedEntityBaseWithDeleted
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
-    public void Configure(EntityTypeBuilder<Customer> builder) => builder.ConfigureReplicatedEntityBaseWithDeleted();
+    public void Configure(EntityTypeBuilder<Customer> builder)
+    {
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Customer).HasForeignKey<Customer>(item => item.StripeCustomerId);
+    }
 }
