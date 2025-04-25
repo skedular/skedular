@@ -1,3 +1,4 @@
+export const getMeLink = () => `/me`;
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
 export const getOrganizationAddLink = () => `/organizations/add`;
 export const getOrganizationBookingsBaseLink = (id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {

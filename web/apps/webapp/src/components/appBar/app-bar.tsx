@@ -2,13 +2,7 @@ import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
-import {
-  getNotificationsBaseLink,
-  getOrganizationAddLink,
-  getOrganizationBaseLink,
-  getOrganizationUserBillingAndPaymentBaseLink,
-  getOrganizationUserProfileBaseLink,
-} from '@/components/links';
+import { getMeLink, getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, SelectedOrganizationContext, UpdatePaletteModeContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
@@ -109,7 +103,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
-    if (pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink()) {
+    if (pathName === getMeLink() || pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink()) {
       return;
     }
 
@@ -188,9 +182,10 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     familyName: rootData.me?.familyName,
   });
 
+  const meLink = getMeLink();
   const organizationAddLink = getOrganizationAddLink();
   const notificationsLink = getNotificationsBaseLink();
-  const showHambugerMenu = pathName !== organizationAddLink && pathName !== notificationsLink;
+  const showHambugerMenu = pathName !== meLink && pathName !== organizationAddLink && pathName !== notificationsLink;
 
   return (
     <>
@@ -271,7 +266,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-            <Link component={NextLink} href={getNotificationsBaseLink()}>
+            <Link component={NextLink} href={notificationsLink}>
               {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
               {rootData.pendingInvitationsCount > 0 && (
                 <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
@@ -327,19 +322,19 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
             <Divider />
 
             {selectedOrganizationId && (
-              <>
-                <MenuItem>
-                  <Link component={NextLink} href={getOrganizationUserProfileBaseLink(selectedOrganizationId, rootData.me.id)}>
-                    <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-                  </Link>
-                </MenuItem>
+              <MenuItem>
+                <Link component={NextLink} href={getMeLink()}>
+                  <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
+                </Link>
+              </MenuItem>
+            )}
 
-                <MenuItem>
-                  <Link component={NextLink} href={getOrganizationUserBillingAndPaymentBaseLink(selectedOrganizationId, rootData.me.id)}>
-                    <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
-                  </Link>
-                </MenuItem>
-              </>
+            {selectedOrganizationId && (
+              <MenuItem>
+                <Link component={NextLink} href={getMeLink()}>
+                  <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
+                </Link>
+              </MenuItem>
             )}
 
             {paletteMode === 'dark' && (

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aefe7ef5cddee0ce38688abe6c218e52>>
+ * @generated SignedSource<<c27cd792029daa338ee283ea234aa0f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,18 +56,6 @@ export type organizationUser_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly myBillingContactDetails: {
-    readonly addressLine1: string | null | undefined;
-    readonly addressLine2: string | null | undefined;
-    readonly city: string | null | undefined;
-    readonly companyName: string | null | undefined;
-    readonly country: string | null | undefined;
-    readonly email: string | null | undefined;
-    readonly id: string;
-    readonly province: string | null | undefined;
-    readonly suburb: string | null | undefined;
-    readonly zipcode: string | null | undefined;
-  };
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -99,45 +87,38 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "email",
+  "name": "photoUrl",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "photoUrl",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "givenName",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "givenName",
+  "name": "middleName",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "middleName",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "familyName",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "fields": [
     {
       "kind": "Variable",
@@ -153,21 +134,21 @@ v7 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -246,8 +227,14 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        },
         (v1/*: any*/),
-        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -262,10 +249,10 @@ return {
           "name": "title",
           "storageKey": null
         },
+        (v2/*: any*/),
         (v3/*: any*/),
         (v4/*: any*/),
         (v5/*: any*/),
-        (v6/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -291,14 +278,14 @@ return {
           "name": "orderBy",
           "variableName": "teamsSortingValues"
         },
-        (v7/*: any*/)
+        (v6/*: any*/)
       ],
       "concreteType": "TeamConnection",
       "kind": "LinkedField",
       "name": "__organizationUser_customerTeams_connection",
       "plural": false,
       "selections": [
-        (v8/*: any*/),
+        (v7/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -316,7 +303,7 @@ return {
               "plural": false,
               "selections": [
                 (v0/*: any*/),
-                (v3/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -325,7 +312,7 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v9/*: any*/)
+                    (v8/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -345,7 +332,7 @@ return {
                       "name": "organizationMember",
                       "plural": false,
                       "selections": [
-                        (v9/*: any*/),
+                        (v8/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -354,12 +341,12 @@ return {
                           "name": "customer",
                           "plural": false,
                           "selections": [
-                            (v9/*: any*/),
+                            (v8/*: any*/),
+                            (v3/*: any*/),
                             (v4/*: any*/),
                             (v5/*: any*/),
-                            (v6/*: any*/),
-                            (v3/*: any*/),
-                            (v2/*: any*/)
+                            (v2/*: any*/),
+                            (v1/*: any*/)
                           ],
                           "storageKey": null
                         }
@@ -419,21 +406,21 @@ return {
           ],
           "storageKey": null
         },
-        (v10/*: any*/)
+        (v9/*: any*/)
       ],
       "storageKey": null
     },
     {
       "alias": null,
       "args": [
-        (v7/*: any*/)
+        (v6/*: any*/)
       ],
       "concreteType": "OrganizationMemberConnection",
       "kind": "LinkedField",
       "name": "organizationMembers",
       "plural": false,
       "selections": [
-        (v8/*: any*/),
+        (v7/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -471,76 +458,7 @@ return {
           ],
           "storageKey": null
         },
-        (v10/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "CustomerBillingContactDetails",
-      "kind": "LinkedField",
-      "name": "myBillingContactDetails",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "companyName",
-          "storageKey": null
-        },
-        (v1/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "addressLine1",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "addressLine2",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "suburb",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "city",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "province",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "zipcode",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "country",
-          "storageKey": null
-        }
+        (v9/*: any*/)
       ],
       "storageKey": null
     },
@@ -560,6 +478,6 @@ return {
 };
 })();
 
-(node as any).hash = "e90b4b86b826ccdbff0af5ef526964d4";
+(node as any).hash = "d57506f0ef50c26e71ef7b7b92e94a50";
 
 export default node;

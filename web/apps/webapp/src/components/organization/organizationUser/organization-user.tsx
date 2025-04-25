@@ -12,7 +12,7 @@ import {
   StackColumn,
   StackRow,
 } from '@/components/commons';
-import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
+import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -24,7 +24,6 @@ import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/q
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
 import type { organizationUser_updateCustomerDetailsMutation } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
-import type { organizationUser_updateMyBillingContactDetailsMutation } from '@/queries/__generated__/organizationUser_updateMyBillingContactDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -66,30 +65,6 @@ const profileDetailsSchema = object({
   familyName: string().nullable(),
   timezone: string().required('Timezone is required'),
   phoneNumber: string().nullable(),
-});
-
-type CustomerBillingDetails = {
-  companyName: string;
-  email: string;
-  addressLine1: string | null;
-  addressLine2: string | null;
-  suburb: string | null;
-  city: string | null;
-  province: string | null;
-  zipcode: string | null;
-  country: string | null;
-};
-
-const customerBillingSchema = object({
-  companyName: string().nullable(),
-  email: string().email(({ value }) => `${value} is not a valid email`),
-  addressLine1: string().nullable(),
-  addressLine2: string().nullable(),
-  suburb: string().nullable(),
-  city: string().nullable(),
-  province: string().nullable(),
-  zipcode: string().nullable(),
-  country: string().nullable(),
 });
 
 const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) => {
@@ -151,18 +126,6 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             }
           }
         }
-        myBillingContactDetails {
-          id
-          companyName
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
-        }
         ...teamCard_query
         ...organizationUserLeftSideNavigationMenuContent_query
       }
@@ -220,25 +183,6 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     }
   `);
 
-  const [commitUpdateMyBillingContactDetails] = useMutation<organizationUser_updateMyBillingContactDetailsMutation>(graphql`
-    mutation organizationUser_updateMyBillingContactDetailsMutation($input: UpdateMyBillingContactDetailsInput!) @raw_response_type {
-      updateMyBillingContactDetails(input: $input) {
-        customerBillingContactDetails {
-          id
-          companyName
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
-        }
-      }
-    }
-  `);
-
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -248,9 +192,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
   const teams = useMemo(() => rootData.customerTeams.edges.map((edge) => edge.node), [rootData.customerTeams]);
-  const validateCustomerBilling = makeValidate(customerBillingSchema);
-  const requiredCustomerBillingFields = makeRequired(customerBillingSchema);
-  const connectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
+  const teamsConnectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
   const member = useMemo(() => (rootData.organizationMembers.edges.length > 0 ? rootData.organizationMembers.edges[0]?.node : null), [rootData.organizationMembers]);
 
   useEffect(() => {
@@ -423,7 +365,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
 
     commitRemoveOrganizationMembers({
       variables: {
-        connectionIds,
+        connectionIds: teamsConnectionIds,
         input: {
           clientMutationId: nanoid(),
           ids: [member.id],
@@ -455,69 +397,6 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     });
   };
 
-  const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: CustomerBillingDetails) => {
-    const billingDetails = rootData.myBillingContactDetails;
-    if (!billingDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);
-
-    commitUpdateMyBillingContactDetails({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          companyName,
-          email,
-          addressLine1,
-          addressLine2,
-          suburb,
-          city,
-          province,
-          zipcode,
-          country,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update billing. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Billing updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update billing. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateMyBillingContactDetails: {
-          customerBillingContactDetails: {
-            id: billingDetails.id,
-            companyName,
-            email,
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-          },
-        },
-      },
-    });
-  };
-
   const handleViewBookingsClick = () => {
     router.push(getOrganizationBookingsBaseLink(organizationId, { customerId }));
   };
@@ -527,16 +406,6 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     return <></>;
   }
 
-  const billingContactDetails = rootData.myBillingContactDetails;
-  const companyName = billingContactDetails.companyName ? billingContactDetails.companyName : '';
-  const email = billingContactDetails.email ? billingContactDetails.email : '';
-  const addressLine1 = billingContactDetails.addressLine1 ? billingContactDetails.addressLine1 : '';
-  const addressLine2 = billingContactDetails.addressLine2 ? billingContactDetails.addressLine2 : '';
-  const suburb = billingContactDetails.suburb ? billingContactDetails.suburb : '';
-  const city = billingContactDetails.city ? billingContactDetails.city : '';
-  const province = billingContactDetails.province ? billingContactDetails.province : '';
-  const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
-  const country = billingContactDetails.country ? billingContactDetails.country : '';
   const isItMe = customer.id === rootData.me?.id;
 
   return (
@@ -657,90 +526,12 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                 <TeamCard
                   rootDataRelay={rootData}
                   teamDetailsRelay={team}
-                  connectionIds={connectionIds}
+                  connectionIds={teamsConnectionIds}
                   teammates={team.members.filter(({ organizationMember }) => !!organizationMember)!.map(({ organizationMember }) => organizationMember!.customer)}
                 />
               </Grid>
             ))}
           </GridContainer>
-
-          {customerId === rootData.me?.id && (
-            <Form
-              onSubmit={handleMyBillingDetailUpdateClick}
-              initialValues={{
-                companyName,
-                email,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
-              }}
-              validate={validateCustomerBilling}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['billing-payment-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Billing & Payment Setup" />
-                    <BodyIconTypography label="Edit your billing and payment details" />
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Company">
-                      <TextField name="companyName" required={requiredCustomerBillingFields.companyName} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Email">
-                      <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Address line 1">
-                      <TextField name="addressLine1" required={requiredCustomerBillingFields.addressLine1} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Address line 2">
-                      <TextField name="addressLine2" required={requiredCustomerBillingFields.addressLine2} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Suburb">
-                      <TextField name="suburb" required={requiredCustomerBillingFields.suburb} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="City">
-                      <TextField name="city" required={requiredCustomerBillingFields.city} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Province">
-                      <TextField name="province" required={requiredCustomerBillingFields.province} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Zipcode">
-                      <TextField name="zipcode" required={requiredCustomerBillingFields.zipcode} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredCustomerBillingFields.country} />
-                    </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
-            />
-          )}
 
           <StackColumn
             sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

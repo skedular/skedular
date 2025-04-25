@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3910e7e9c64adec25da59818942f69d1>>
+ * @generated SignedSource<<668f48324925f1d45b57c361c1d86897>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,10 @@ export type UpdateMyBillingContactDetailsInput = {
   suburb?: string | null | undefined;
   zipcode?: string | null | undefined;
 };
-export type organizationUser_updateMyBillingContactDetailsMutation$variables = {
+export type myDetails_updateMyBillingContactDetailsMutation$variables = {
   input: UpdateMyBillingContactDetailsInput;
 };
-export type organizationUser_updateMyBillingContactDetailsMutation$data = {
+export type myDetails_updateMyBillingContactDetailsMutation$data = {
   readonly updateMyBillingContactDetails: {
     readonly customerBillingContactDetails: {
       readonly addressLine1: string | null | undefined;
@@ -40,7 +40,7 @@ export type organizationUser_updateMyBillingContactDetailsMutation$data = {
     };
   } | null | undefined;
 };
-export type organizationUser_updateMyBillingContactDetailsMutation$rawResponse = {
+export type myDetails_updateMyBillingContactDetailsMutation$rawResponse = {
   readonly updateMyBillingContactDetails: {
     readonly customerBillingContactDetails: {
       readonly addressLine1: string | null | undefined;
@@ -56,10 +56,10 @@ export type organizationUser_updateMyBillingContactDetailsMutation$rawResponse =
     };
   } | null | undefined;
 };
-export type organizationUser_updateMyBillingContactDetailsMutation = {
-  rawResponse: organizationUser_updateMyBillingContactDetailsMutation$rawResponse;
-  response: organizationUser_updateMyBillingContactDetailsMutation$data;
-  variables: organizationUser_updateMyBillingContactDetailsMutation$variables;
+export type myDetails_updateMyBillingContactDetailsMutation = {
+  rawResponse: myDetails_updateMyBillingContactDetailsMutation$rawResponse;
+  response: myDetails_updateMyBillingContactDetailsMutation$data;
+  variables: myDetails_updateMyBillingContactDetailsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -175,7 +175,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationUser_updateMyBillingContactDetailsMutation",
+    "name": "myDetails_updateMyBillingContactDetailsMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -184,20 +184,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationUser_updateMyBillingContactDetailsMutation",
+    "name": "myDetails_updateMyBillingContactDetailsMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1005dffce4f0b2b41b612d520ca4d66d",
+    "cacheID": "4e6ed680f1d631c909accb3644784534",
     "id": null,
     "metadata": {},
-    "name": "organizationUser_updateMyBillingContactDetailsMutation",
+    "name": "myDetails_updateMyBillingContactDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationUser_updateMyBillingContactDetailsMutation(\n  $input: UpdateMyBillingContactDetailsInput!\n) {\n  updateMyBillingContactDetails(input: $input) {\n    customerBillingContactDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "mutation myDetails_updateMyBillingContactDetailsMutation(\n  $input: UpdateMyBillingContactDetailsInput!\n) {\n  updateMyBillingContactDetails(input: $input) {\n    customerBillingContactDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7e0075d4645b58ea441a45d296e37c67";
+(node as any).hash = "0d5880d0626f6f9f7017d829c2e2a1db";
 
 export default node;
