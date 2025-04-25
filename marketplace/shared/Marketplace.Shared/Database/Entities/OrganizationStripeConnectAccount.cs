@@ -28,6 +28,6 @@ public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfigur
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxStripeConnectAccountNameLength);
 
-        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationStripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
+        builder.HasOne(item => item.Organization).WithMany(item => item.StripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
     }
 }

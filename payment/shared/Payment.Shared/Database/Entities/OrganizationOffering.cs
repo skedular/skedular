@@ -15,8 +15,9 @@ public class OrganizationOffering : ReplicatedEntityBaseWithDeleted
 
     public virtual Organization Organization { get; set; }
 
-    public virtual ICollection<OrganizationOfferingStripePaymentIntent>
-        OrganizationOfferingStripePaymentIntents { get; set; } = [];
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? StripePaymentIntentId { get; set; }
+    public virtual StripePaymentIntent? StripePaymentIntent { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -27,6 +28,10 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationOfferings);
+        builder
+            .HasOne(item => item.StripePaymentIntent)
+            .WithOne(item => item.OrganizationOffering)
+            .HasForeignKey<OrganizationOffering>(item => item.StripePaymentIntentId);
 
         builder.HasIndex(item => item.Code);
         builder.HasIndex(item => item.Start);

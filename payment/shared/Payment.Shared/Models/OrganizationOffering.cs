@@ -8,9 +8,6 @@ public class OrganizationOffering : ReplicatedModelBaseWithDeleted
     public OfferingCode Code { get; set; }
     public DateTimeOffset Start { get; set; }
     public DateTimeOffset End { get; set; }
-
     public Organization Organization { get; set; }
-
-    public ICollection<OrganizationOfferingStripePaymentIntent> OrganizationOfferingStripePaymentIntents { get; set; } =
-        [];
+    public StripePaymentIntent? StripePaymentIntent { get; set; }
 }

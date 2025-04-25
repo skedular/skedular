@@ -26,8 +26,8 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
-    public virtual ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
+    public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public virtual ICollection<OrganizationStripeConnectAccount> StripeConnectAccounts { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
 }
@@ -50,6 +50,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
         builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.StripeCustomerId);
+        builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Organization);
 
         builder.HasIndex(item => item.Name);
     }

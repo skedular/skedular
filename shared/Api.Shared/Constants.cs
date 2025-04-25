@@ -113,4 +113,16 @@ public static class Constants
     public const int MaxStripeConnectAccountCompanyNameLength = 200;
     public const int MaxStripeBusinessTypeLength = 50;
     public const int MaxStripeConnectAccountRefreshCodeLength = 50;
+
+    public const int MaxStripeSetupIntentIdLength = 100;
+    public const int MaxStripeClientSecretLength = 200;
+    public const int MaxStripePaymentMethodIdLength = 100;
+    public const int MaxStripeCardBrandLength = 20;
+    public const int MaxStripeCardCountryLength = 10;
+    public const int MaxStripeCardDescriptionLength = 200;
+    public const int MaxStripeCardFingerprintLength = 20;
+    public const int MaxStripeCardFundingLength = 50;
+    public const int MaxStripeCardIssuerLength = 20;
+    public const int MaxStripeCardLastFourDigitLength = 10;
+    public const int MaxStripePaymentMethodStatusLength = 50;
 }

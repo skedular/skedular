@@ -1,17 +1,16 @@
 using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
-using Payment.Shared.Models;
 using Payment.Shared.Repositories;
 using Stripe;
 using Event = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using OrganizationOffering = Payment.Shared.Database.Entities.OrganizationOffering;
-using OrganizationOfferingStripePaymentIntent =
-    Payment.Shared.Database.Entities.OrganizationOfferingStripePaymentIntent;
-using OrganizationStripePaymentMethod = Payment.Shared.Database.Entities.OrganizationStripePaymentMethod;
+using StripePaymentIntent = Payment.Shared.Database.Entities.StripePaymentIntent;
+using StripePaymentMethod = Payment.Shared.Database.Entities.StripePaymentMethod;
 using Type = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
@@ -47,14 +46,14 @@ public class BillingSubscriber(
         var organizationOfferingBilling = @event.Data.OrganizationOfferingBilling;
         if (organizationOfferingBilling.TotalCost == 0)
         {
-            // Total cost is Zero, no need to try charge customer 
+            // The total cost is Zero, no need to try charge customer 
             return;
         }
 
-        if (await repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.Query(
-                new Specification<OrganizationOfferingStripePaymentIntent>
+        if (await repositoryFactory.OrganizationOfferingRepository.Query(
+                new Specification<OrganizationOffering>
                 {
-                    Criteria = query => query.OrganizationOffering.Id == organizationOfferingBilling.OfferingId
+                    Criteria = query => query.Id == organizationOfferingBilling.OfferingId && query.StripePaymentIntent != null
                 }).AnyAsync(cancellationToken))
         {
             return;
@@ -67,7 +66,7 @@ public class BillingSubscriber(
         if (organizationOffering is null)
         {
             logger.LogError(
-                "no organization offering exist with given organization offering Id: {OfferingId}",
+                "No organization offering exist with given organization offering Id: {OfferingId}",
                 organizationOfferingBilling.OfferingId);
 
             return;
@@ -79,23 +78,24 @@ public class BillingSubscriber(
             .FirstOrDefaultAsync(cancellationToken);
         if (organization is null)
         {
-            logger.LogError("no organization exist with given organization Id: {OrganizationId}", organizationOfferingBilling.OrganizationId);
+            logger.LogError("No organization exist with given organization Id: {OrganizationId}", organizationOfferingBilling.OrganizationId);
 
             return;
         }
 
-        var organizationStripePaymentMethods = await repositoryFactory.OrganizationStripePaymentMethodRepository.Query(
-            new Specification<OrganizationStripePaymentMethod>
+        var stripePaymentMethods = await repositoryFactory.StripePaymentMethodRepository.Query(
+            new Specification<StripePaymentMethod>
             {
-                Criteria = query =>
-                    query.Organization.Id == organizationOfferingBilling.OrganizationId &&
-                    query.Status == OrganizationStripePaymentMethodStatus.Confirmed
+                Criteria = query => query.Organization != null && query.Organization.Id == organizationOfferingBilling.OrganizationId &&
+                                    query.Status == StripePaymentMethodStatusConstants.Confirmed
             }).ToListAsync(cancellationToken);
-        if (organizationStripePaymentMethods.Count == 0)
+        if (stripePaymentMethods.Count == 0)
         {
             logger.LogError(
-                "no confirmed organization payment method exist with given organization Id:  {OrganizationId}",
+                "No confirmed organization payment method exist with given organization Id:  {OrganizationId}",
                 organizationOfferingBilling.OrganizationId);
+
+            return;
         }
 
         if (organization.StripeCustomer is null)
@@ -104,13 +104,13 @@ public class BillingSubscriber(
         }
 
         // TODO: 20240601 : Morteza: Need to implement default payment methods in future
-        var organizationStripePaymentMethod = organizationStripePaymentMethods.First();
+        var stripePaymentMethod = stripePaymentMethods.First();
         var amount = organizationOfferingBilling.TotalCost;
         var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
                 Customer = organization.StripeCustomer.StripeCustomerId,
-                PaymentMethod = organizationStripePaymentMethod.PaymentMethodId,
+                PaymentMethod = stripePaymentMethod.PaymentMethodId,
                 Amount = amount,
                 // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
                 Currency = "usd",
@@ -120,15 +120,14 @@ public class BillingSubscriber(
             new RequestOptions { IdempotencyKey = organizationOffering.Id },
             cancellationToken);
 
-        _ = repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.Add(
-            new OrganizationOfferingStripePaymentIntent
+        repositoryFactory.StripePaymentIntentRepository.Add(
+            new StripePaymentIntent
             {
                 Id = paymentIntent.Id,
-                OrganizationOffering = organizationOffering,
-                OrganizationStripePaymentMethod = organizationStripePaymentMethod,
+                StripePaymentMethod = stripePaymentMethod,
                 Amount = paymentIntent.Amount,
                 Currency = paymentIntent.Currency,
-                Organization = organizationOffering.Organization
+                OrganizationOffering = organizationOffering
             });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

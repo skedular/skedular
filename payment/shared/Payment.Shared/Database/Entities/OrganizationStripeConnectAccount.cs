@@ -58,7 +58,7 @@ public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfigur
         builder.Property(item => item.CapabilitiesTransfers).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
         builder.Property(item => item.OnboardingUrl).HasMaxLength(Constants.MaxUrlLength);
 
-        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationStripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
+        builder.HasOne(item => item.Organization).WithMany(item => item.StripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
 
         builder.HasIndex(item => item.StripeAccountId);
         builder.HasIndex(item => item.Name);

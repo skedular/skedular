@@ -12,10 +12,7 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
     OrganizationOffering Update(OrganizationOffering organizationOffering);
     void UpdateRange(ICollection<OrganizationOffering> organizationOfferings);
     void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
-
-    Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationOfferingRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
@@ -49,11 +46,11 @@ public class OrganizationOfferingRepository(PaymentDbContext dbContext, TimeProv
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
 
-    public async Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationOffering
             .Where(query => query.Organization.Id == organizationId)
             .Include(query => query.Organization)
+            .Include(query => query.StripePaymentIntent)
+            .ThenInclude(query => query.StripePaymentMethod)
             .ToListAsync(cancellationToken);
 }

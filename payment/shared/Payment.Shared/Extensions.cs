@@ -31,13 +31,13 @@ public static class Extensions
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
-            .AddScoped<IOrganizationOfferingStripePaymentIntentRepository, OrganizationOfferingStripePaymentIntentRepository>()
-            .AddScoped<IOrganizationStripePaymentMethodRepository, OrganizationStripePaymentMethodRepository>()
             .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
             .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
             .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-            .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>();
+            .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
+            .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()
+            .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

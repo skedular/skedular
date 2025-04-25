@@ -13,14 +13,14 @@ public interface IRepositoryFactory
     IOrganizationRepository OrganizationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
-    IOrganizationOfferingStripePaymentIntentRepository OrganizationOfferingStripePaymentIntentRepository { get; }
-    IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
+    IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -38,14 +38,14 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        OrganizationOfferingStripePaymentIntentRepository = new OrganizationOfferingStripePaymentIntentRepository(_dbContext, timeProvider);
-        OrganizationStripePaymentMethodRepository = new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
         OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
+        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
+        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -61,14 +61,14 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationRepository OrganizationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
-    public IOrganizationOfferingStripePaymentIntentRepository OrganizationOfferingStripePaymentIntentRepository { get; }
-    public IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }
+    public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

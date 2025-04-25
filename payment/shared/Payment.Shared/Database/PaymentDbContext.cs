@@ -17,10 +17,10 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }
-    public DbSet<OrganizationOfferingStripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
+    public DbSet<StripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
     public DbSet<OrganizationStripeConnectAccount> OrganizationStripeConnectAccount { get; set; }
     public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
-    public DbSet<OrganizationStripePaymentMethod> OrganizationStripePaymentMethod { get; set; }
+    public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
     public DbSet<StripeCustomer> StripeCustomer { get; set; }

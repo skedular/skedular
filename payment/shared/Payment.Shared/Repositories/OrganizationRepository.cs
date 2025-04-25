@@ -24,7 +24,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, IEnumerable<OrganizationStripePaymentMethod>>
+    internal static IIncludableQueryable<Organization, StripePaymentMethod>
         AddDependentObjects(
             this IQueryable<Organization> originalQuery,
             bool includeDeletedOrganizationMembers,
@@ -39,22 +39,22 @@ internal static class OrganizationExtensions
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities);
+            .ThenInclude(query => query.Identities)
+            .Include(query =>
+                query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
 
         return includeAllOfferings
             ? updatedQuery
                 .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
-                .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
-                .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
-                    !organizationStripePaymentMethod.DeletedAt.HasValue))
+                .ThenInclude(query => query.StripePaymentIntent)
+                .ThenInclude(query => query.StripePaymentMethod)
             : updatedQuery
                 .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                     .OrderByDescending(organizationOffering => organizationOffering.End)
                     .Take(1))
-                .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
-                .Include(query => query.OrganizationStripePaymentMethods
-                    .Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
+                .ThenInclude(query => query.StripePaymentIntent)
+                .ThenInclude(query => query.StripePaymentMethod);
     }
 }
 

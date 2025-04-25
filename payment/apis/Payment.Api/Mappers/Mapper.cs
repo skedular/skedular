@@ -13,14 +13,10 @@ namespace Payment.Api.Mappers;
 
 public interface IMapper
 {
-    IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src);
-
-    Shared.Database.Entities.OrganizationStripePaymentMethod MergeTo(
-        PaymentMethod paymentMethod,
-        Shared.Database.Entities.OrganizationStripePaymentMethod dest);
-
+    IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
+    Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
     Customer MapTo(Shared.Database.Entities.Customer src);
-    IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
+    IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
     OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
@@ -30,12 +26,9 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) =>
-        src.Select(MapTo);
+    public IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
 
-    public Shared.Database.Entities.OrganizationStripePaymentMethod MergeTo(
-        PaymentMethod paymentMethod,
-        Shared.Database.Entities.OrganizationStripePaymentMethod dest)
+    public Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
     {
         dest.PaymentMethodId = paymentMethod.Id;
 
@@ -66,8 +59,7 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities).ToList()
         };
 
-    public IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src) =>
-        src.Select(MapTo);
+    public IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) => src.Select(MapTo);
 
     public AccountCreateOptions MapToStripeAccountRequest(Organization src) =>
         new()
@@ -172,7 +164,7 @@ public class Mapper : IMapper
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    private static OrganizationStripePaymentMethod MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src) =>
+    private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src) =>
         new()
         {
             Id = src.Id,
@@ -181,7 +173,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             SetupIntentId = src.SetupIntentId,
             ClientSecret = src.ClientSecret,
-            Status = src.Status,
+            Status = src.Status.ToStripePaymentMethodStatus(),
             PaymentMethodId = src.PaymentMethodId,
             CardBrand = src.CardBrand,
             CardCountry = src.CardCountry,
@@ -194,7 +186,7 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static OrganizationPaymentMethod MapTo(OrganizationStripePaymentMethod src) =>
+    private static OrganizationPaymentMethod MapTo(StripePaymentMethod src) =>
         new()
         {
             Id = src.Id,
@@ -217,8 +209,7 @@ public class Mapper : IMapper
             ? null
             : new Shared.Models.Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
 
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static Shared.Models.Organization MapTo(Organization src) =>
         new()

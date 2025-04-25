@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Exceptions;
+﻿using Api.Shared.Services.Models;
+using Enterprise.Shared.Exceptions;
 using Payment.Api.Mappers;
 using Payment.Api.Services.Authorization;
 using Payment.Shared.Models;
@@ -8,9 +9,7 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationService
 {
-    Task<ICollection<OrganizationStripePaymentMethod>> GetOrganizationPaymentMethodsAsync(
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<StripePaymentMethod>> GetOrganizationPaymentMethodsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -20,13 +19,12 @@ public class OrganizationService(
     IMapper mapper)
     : IOrganizationService
 {
-    public async Task<ICollection<OrganizationStripePaymentMethod>> GetOrganizationPaymentMethodsAsync(
+    public async Task<ICollection<StripePaymentMethod>> GetOrganizationPaymentMethodsAsync(
         string organizationId,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -38,9 +36,7 @@ public class OrganizationService(
         }
 
         return mapper
-            .MapTo(
-                organization.OrganizationStripePaymentMethods
-                    .Where(item => item.Status == OrganizationStripePaymentMethodStatus.Confirmed))
+            .MapTo(organization.StripePaymentMethods.Where(item => item.Status == StripePaymentMethodStatusConstants.Confirmed))
             .ToList();
     }
 }

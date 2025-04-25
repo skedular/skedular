@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -12,9 +13,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250425033633_MadeStripeModelReusable")]
+    partial class MadeStripeModelReusable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,6 +73,21 @@ namespace Payment.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("Outbox");
+                });
+
+            modelBuilder.Entity("OrganizationStripePaymentMethod", b =>
+                {
+                    b.Property<string>("OrganizationsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripePaymentMethodsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("OrganizationsId", "StripePaymentMethodsId");
+
+                    b.HasIndex("StripePaymentMethodsId");
+
+                    b.ToTable("OrganizationStripePaymentMethod");
                 });
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.Address", b =>
@@ -898,9 +916,6 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("PaymentMethodId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -932,8 +947,6 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("OrganizationId");
-
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("SetupIntentId")
@@ -944,6 +957,21 @@ namespace Payment.Shared.Database.Migrations
                     b.HasIndex("CardExpiryMonth", "CardExpiryYear");
 
                     b.ToTable("StripePaymentMethod");
+                });
+
+            modelBuilder.Entity("OrganizationStripePaymentMethod", b =>
+                {
+                    b.HasOne("Payment.Shared.Database.Entities.Organization", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Payment.Shared.Database.Entities.StripePaymentMethod", null)
+                        .WithMany()
+                        .HasForeignKey("StripePaymentMethodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.Customer", b =>
@@ -1089,15 +1117,6 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("StripePaymentMethod");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.StripePaymentMethod", b =>
-                {
-                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("StripePaymentMethods")
-                        .HasForeignKey("OrganizationId");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Payment.Shared.Database.Entities.Address", b =>
                 {
                     b.Navigation("Organization");
@@ -1121,8 +1140,6 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("StripeConnectAccounts");
-
-                    b.Navigation("StripePaymentMethods");
                 });
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripeConnectAccount", b =>
