@@ -22,6 +22,14 @@ public class ProductVersion : EntityBase
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationStripeConnectAccountId { get; set; }
     public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? StripeProductId { get; set; }
+    public virtual StripeProduct? StripeProduct { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? StripePriceId { get; set; }
+    public virtual StripePrice? StripePrice { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -42,6 +50,9 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
             .HasOne(item => item.OrganizationStripeConnectAccount)
             .WithMany(item => item.ProductVersions)
             .HasForeignKey(item => item.OrganizationStripeConnectAccountId);
+
+        builder.HasOne(item => item.StripeProduct).WithOne(item => item.ProductVersion).HasForeignKey<ProductVersion>(item => item.StripeProductId);
+        builder.HasOne(item => item.StripePrice).WithOne(item => item.ProductVersion).HasForeignKey<ProductVersion>(item => item.StripePriceId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

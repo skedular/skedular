@@ -73,6 +73,14 @@ public static class Extensions
             .AddSingleton<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()
             .AddSingleton<IRetrievable<SetupIntent, SetupIntentGetOptions>, SetupIntentService>()
             .AddSingleton<IRetrievable<PaymentMethod, PaymentMethodGetOptions>, PaymentMethodService>()
+            .AddSingleton<ICreatable<Product, ProductCreateOptions>, ProductService>()
+            .AddSingleton<IUpdatable<Product, ProductUpdateOptions>, ProductService>()
+            .AddSingleton<IDeletable<Product, ProductDeleteOptions>, ProductService>()
+            .AddSingleton<IRetrievable<Product, ProductGetOptions>, ProductService>()
+            .AddSingleton<IListable<Product, ProductListOptions>, ProductService>()
+            .AddSingleton<ICreatable<Price, PriceCreateOptions>, PriceService>()
+            .AddSingleton<IUpdatable<Price, PriceUpdateOptions>, PriceService>()
+            .AddSingleton<IRetrievable<Price, PriceGetOptions>, PriceService>()
             .AddSingleton<PaymentMethodService>();
     }
 }

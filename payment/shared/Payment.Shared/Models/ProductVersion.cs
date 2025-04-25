@@ -12,4 +12,6 @@ public class ProductVersion : ModelBase
     public Currency Currency { get; set; }
     public Product Product { get; set; }
     public OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
+    public virtual StripeProduct? StripeProduct { get; set; }
+    public virtual StripePrice? StripePrice { get; set; }
 }

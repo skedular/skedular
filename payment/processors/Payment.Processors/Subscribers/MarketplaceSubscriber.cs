@@ -1,9 +1,10 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
+using Stripe;
+using Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event;
 using IMapper = Payment.Processors.Mappers.IMapper;
 using Product = Payment.Shared.Models.Product;
 using ProductVersion = Payment.Shared.Database.Entities.ProductVersion;
@@ -11,7 +12,17 @@ using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 
-public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class MarketplaceSubscriber(
+    ILogger<MarketplaceSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICreatable<Stripe.Product, ProductCreateOptions> productCreateService,
+    IUpdatable<Stripe.Product, ProductUpdateOptions> productUpdateService,
+    IDeletable<Stripe.Product, ProductDeleteOptions> productDeleteService,
+    IRetrievable<Stripe.Product, ProductGetOptions> productRetrieveService,
+    ICreatable<Price, PriceCreateOptions> priceCreateService,
+    IUpdatable<Price, PriceUpdateOptions> priceUpdateService,
+    IRetrievable<Price, PriceGetOptions> priceRetrieveService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)

@@ -24,6 +24,8 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
+    public DbSet<StripeProduct> StripeProduct { get; set; }
+    public DbSet<StripePrice> StripePrice { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>
