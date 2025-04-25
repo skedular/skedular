@@ -34,6 +34,29 @@ public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<AddCustomerPaymentMethodIntentPayload?> AddCustomerPaymentMethodIntentAsync(
+        AddCustomerPaymentMethodIntentInput input,
+        [Service] ICustomerPaymentService customerPaymentService,
+        CancellationToken cancellationToken)
+    {
+        var clientSecret = await customerPaymentService.AddPaymentMethodIntentAsync(cancellationToken);
+        return new AddCustomerPaymentMethodIntentPayload
+        {
+            ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<RemoveCustomerPaymentMethodPayload?> RemoveCustomerPaymentMethodAsync(
+        RemoveCustomerPaymentMethodInput input,
+        [Service] ICustomerPaymentService customerPaymentService,
+        CancellationToken cancellationToken)
+    {
+        await customerPaymentService.RemovePaymentMethodAsync(input.Id, cancellationToken);
+        return new RemoveCustomerPaymentMethodPayload { ClientMutationId = input.ClientMutationId };
+    }
+
+    [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload?> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,

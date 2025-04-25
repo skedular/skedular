@@ -25,6 +25,7 @@ public class StripePaymentMethod : EntityBaseWithDeleted
     public string? CardLastFourDigit { get; set; }
 
     public virtual Organization? Organization { get; set; }
+    public virtual Customer? Customer { get; set; }
     public virtual ICollection<StripePaymentIntent> StripePaymentIntents { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

@@ -92,7 +92,7 @@ public class BillingSubscriber(
         if (stripePaymentMethods.Count == 0)
         {
             logger.LogError(
-                "No confirmed organization payment method exist with given organization Id:  {OrganizationId}",
+                "No confirmed organization payment method exist with given organization Id: {OrganizationId}",
                 organizationOfferingBilling.OrganizationId);
 
             return;

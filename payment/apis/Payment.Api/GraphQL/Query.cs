@@ -32,11 +32,18 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<IEnumerable<OrganizationPaymentMethod>> OrganizationPaymentMethodsDetailsAsync(
+    public async Task<IEnumerable<PaymentMethod>> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken));
+        mapper.MapTo(await organizationService.GetPaymentMethodsAsync(organizationId, cancellationToken));
+
+    [UseResolverScope]
+    public async Task<IEnumerable<PaymentMethod>> CustomerPaymentMethodsDetailsAsync(
+        string customerId,
+        [Service] ICustomerService customerService,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await customerService.GetPaymentMethodsAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountDetails?> OrganizationStripeConnectAccountAsync(

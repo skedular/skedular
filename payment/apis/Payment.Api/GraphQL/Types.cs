@@ -25,21 +25,6 @@ public class AddOrganizationPaymentMethodIntentPayload
     [GraphQLName("clientSecret")] public string ClientSecret { get; set; } = string.Empty;
 }
 
-[GraphQLName("OrganizationPaymentMethod")]
-public class OrganizationPaymentMethod : Node
-{
-    [GraphQLName("cardBrand")] public string? CardBrand { get; set; }
-    [GraphQLName("cardCountry")] public string? CardCountry { get; set; }
-    [GraphQLName("cardDescription")] public string? CardDescription { get; set; }
-    [GraphQLName("cardExpiryMonth")] public int? CardExpiryMonth { get; set; }
-    [GraphQLName("cardExpiryYear")] public int? CardExpiryYear { get; set; }
-    [GraphQLName("cardFingerprint")] public string? CardFingerprint { get; set; }
-    [GraphQLName("cardFunding")] public string? CardFunding { get; set; }
-    [GraphQLName("cardIssuer")] public string? CardIssuer { get; set; }
-    [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
-}
-
 [GraphQLName("RemoveOrganizationPaymentMethodInput")]
 public class RemoveOrganizationPaymentMethodInput
 {
@@ -51,6 +36,48 @@ public class RemoveOrganizationPaymentMethodInput
 public class RemoveOrganizationPaymentMethodPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}
+
+[GraphQLName("AddCustomerPaymentMethodIntentInput")]
+public class AddCustomerPaymentMethodIntentInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}
+
+[GraphQLName("AddCustomerPaymentMethodIntentPayload")]
+public class AddCustomerPaymentMethodIntentPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("publishedKeys")] public string PublishedKeys { get; set; } = string.Empty;
+    [GraphQLName("clientSecret")] public string ClientSecret { get; set; } = string.Empty;
+}
+
+[GraphQLName("RemoveCustomerPaymentMethodInput")]
+public class RemoveCustomerPaymentMethodInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("RemoveCustomerPaymentMethodPayload")]
+public class RemoveCustomerPaymentMethodPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}
+
+[GraphQLName("PaymentMethod")]
+public class PaymentMethod : Node
+{
+    [GraphQLName("cardBrand")] public string? CardBrand { get; set; }
+    [GraphQLName("cardCountry")] public string? CardCountry { get; set; }
+    [GraphQLName("cardDescription")] public string? CardDescription { get; set; }
+    [GraphQLName("cardExpiryMonth")] public int? CardExpiryMonth { get; set; }
+    [GraphQLName("cardExpiryYear")] public int? CardExpiryYear { get; set; }
+    [GraphQLName("cardFingerprint")] public string? CardFingerprint { get; set; }
+    [GraphQLName("cardFunding")] public string? CardFunding { get; set; }
+    [GraphQLName("cardIssuer")] public string? CardIssuer { get; set; }
+    [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("AddOrganizationStripeConnectAccountInput")]

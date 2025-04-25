@@ -20,5 +20,6 @@ public class StripePaymentMethod : ModelBaseWithDeleted
     public string? CardLastFourDigit { get; set; }
 
     public Organization? Organization { get; set; }
+    public Customer? Customer { get; set; }
     public ICollection<StripePaymentIntent> StripePaymentIntents { get; set; } = [];
 }

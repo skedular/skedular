@@ -9,19 +9,16 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationService
 {
-    Task<ICollection<StripePaymentMethod>> GetOrganizationPaymentMethodsAsync(string organizationId, CancellationToken cancellationToken);
+    Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
-    IMapper mapper)
-    : IOrganizationService
+    IMapper mapper) : IOrganizationService
 {
-    public async Task<ICollection<StripePaymentMethod>> GetOrganizationPaymentMethodsAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);

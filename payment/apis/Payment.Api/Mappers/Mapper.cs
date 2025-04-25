@@ -8,13 +8,14 @@ using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
+using PaymentMethod = Payment.Api.GraphQL.PaymentMethod;
 
 namespace Payment.Api.Mappers;
 
 public interface IMapper
 {
-    IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
-    Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
+    IEnumerable<PaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
+    Shared.Database.Entities.StripePaymentMethod MergeTo(Stripe.PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
@@ -26,9 +27,9 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+    public IEnumerable<PaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
 
-    public Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
+    public Shared.Database.Entities.StripePaymentMethod MergeTo(Stripe.PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
     {
         dest.PaymentMethodId = paymentMethod.Id;
 
@@ -56,7 +57,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Id = src.Id,
-            Identities = MapTo(src.Identities).ToList()
+            Identities = MapTo(src.Identities).ToList(),
+            StripeCustomer = MapTo(src.StripeCustomer)
         };
 
     public IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) => src.Select(MapTo);
@@ -186,7 +188,7 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static OrganizationPaymentMethod MapTo(StripePaymentMethod src) =>
+    private static PaymentMethod MapTo(StripePaymentMethod src) =>
         new()
         {
             Id = src.Id,
@@ -223,4 +225,9 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
+
+    private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src) =>
+        src is null
+            ? null
+            : new StripeCustomer { CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Id = src.Id, StripeCustomerId = src.StripeCustomerId };
 }

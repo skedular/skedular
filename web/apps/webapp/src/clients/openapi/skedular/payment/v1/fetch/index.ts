@@ -15,6 +15,7 @@ export type { Error } from './models/Error';
 export { $Error } from './schemas/$Error';
 
 export { ConnectService } from './services/ConnectService';
+export { CustomerService } from './services/CustomerService';
 export { OnboardingService } from './services/OnboardingService';
 export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';

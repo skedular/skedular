@@ -12,6 +12,7 @@ public class PaymentController(
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
     IOrganizationPaymentService organizationPaymentService,
+    ICustomerPaymentService customerPaymentService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IPaymentInternalPublisher paymentInternalPublisher,
     ILogger<PaymentController> logger) : PaymentControllerBase
@@ -23,7 +24,20 @@ public class PaymentController(
         string redirect_status,
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default) =>
-        Redirect(await organizationPaymentService.AddPaymentMethodAsync(
+        Redirect(await organizationPaymentService.HandleStripePaymentMethodEventAsync(
+            setup_intent,
+            setup_intent_client_secret,
+            redirect_status,
+            cancellationToken));
+
+    public override async Task<IActionResult> AddCustomerPaymentMethod(
+        // ReSharper disable InconsistentNaming
+        string setup_intent,
+        string setup_intent_client_secret,
+        string redirect_status,
+        // ReSharper restore InconsistentNaming
+        CancellationToken cancellationToken = default) =>
+        Redirect(await customerPaymentService.HandleStripePaymentMethodEventAsync(
             setup_intent,
             setup_intent_client_secret,
             redirect_status,

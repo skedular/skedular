@@ -65,3 +65,5 @@ public class OrganizationStripeConnectAccountNotFound() : Exception("Organizatio
 public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("Organization Stripe Connect Account refresh code not found");
 
 public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
+
+public class CustomerStripeCustomerRelationshipIsNotSetYet() : Exception("Customer Stripe customer relationship is not set yet");
