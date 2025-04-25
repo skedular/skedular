@@ -23,6 +23,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<OrganizationStripePaymentMethod> OrganizationStripePaymentMethod { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
+    public DbSet<StripeCustomer> StripeCustomer { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>

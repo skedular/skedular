@@ -11,7 +11,7 @@ namespace Payment.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public string? StripeCustomerId { get; set; }
+    public string? StripeCustomerIdTemp { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
     public string? ContactEmail { get; set; }
@@ -20,6 +20,10 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? PhysicalAddressId { get; set; }
     public virtual Address? PhysicalAddress { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    // public string? StripeCustomerId { get; set; }
+    // public virtual StripeCustomer? StripeCustomer { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -37,7 +41,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
-        builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
+        builder.Property(item => item.StripeCustomerIdTemp).HasMaxLength(Constants.StripeCustomerIdLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder
             .Property(item => item.MemberVisibilityPolicy)
@@ -49,6 +53,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.StripeCustomerId);
+        builder.HasIndex(item => item.StripeCustomerIdTemp);
     }
 }

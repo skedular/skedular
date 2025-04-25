@@ -49,7 +49,7 @@ public class OrganizationPaymentService(
         }
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = organization.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions { Customer = organization.StripeCustomerIdTemp, PaymentMethodTypes = ["card"] },
             new RequestOptions(), cancellationToken);
 
         repositoryFactory.OrganizationStripePaymentMethodRepository.Add(

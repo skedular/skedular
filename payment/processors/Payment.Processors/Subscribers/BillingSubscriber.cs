@@ -103,7 +103,7 @@ public class BillingSubscriber(
         var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
-                Customer = organization.StripeCustomerId,
+                Customer = organization.StripeCustomerIdTemp,
                 PaymentMethod = organizationStripePaymentMethod.PaymentMethodId,
                 Amount = amount,
                 Currency = "usd", // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
