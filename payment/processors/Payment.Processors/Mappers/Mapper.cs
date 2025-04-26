@@ -399,7 +399,6 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Price = src.Price;
         dest.PriceUnit = src.PriceUnit.ToPriceUnit();
-        dest.PricePerMinute = src.Price;
         dest.Currency = src.Currency.ToCurrency();
         dest.Product = product;
         dest.OrganizationStripeConnectAccount = organizationStripeConnectAccount;
@@ -476,7 +475,7 @@ public class Mapper : IMapper
         {
             Currency = src.Currency.ToCurrency(),
             BillingScheme = "per_unit",
-            UnitAmount = (long)src.Price * 100,
+            UnitAmountDecimal = src.Price,
             Product = stripeProductId,
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
@@ -503,7 +502,6 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Price = src.Price.FromRoundedPrice(),
             PriceUnit = src.PriceUnit.ToPriceUnit(),
-            PricePerMinute = src.Price.FromRoundedPrice(),
             Currency = src.Currency.ToCurrency(),
             Product = product,
             OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.StripeConnectAccountId)

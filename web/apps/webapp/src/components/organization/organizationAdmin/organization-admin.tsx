@@ -799,7 +799,7 @@ const OrganizationAdmin = ({
           entityId,
           loginUrl,
           appFederationMetadataUrl,
-          isActive: true,
+          isActive: false,
         },
       },
       onCompleted: (_, errors) => {

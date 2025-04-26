@@ -8,7 +8,6 @@ public class ProductVersion : ModelBase
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public PriceUnit PriceUnit { get; set; }
-    public decimal PricePerMinute { get; set; }
     public Currency Currency { get; set; }
     public Product Product { get; set; }
     public OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }

@@ -12,7 +12,6 @@ public class ProductVersion : EntityBase
     public string? Name { get; set; }
     public decimal? Price { get; set; }
     public string? PriceUnit { get; set; }
-    public decimal? PricePerMinute { get; set; }
     public string? Currency { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -42,7 +41,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxProductNameLength);
         builder.Property(item => item.PriceUnit).HasMaxLength(Constants.MaxProductPriceUnitLength);
         builder.Property(item => item.Price).HasColumnType("DECIMAL(18,4)");
-        builder.Property(item => item.PricePerMinute).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
@@ -55,7 +53,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.HasOne(item => item.StripePrice).WithOne(item => item.ProductVersion).HasForeignKey<ProductVersion>(item => item.StripePriceId);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.PricePerMinute);
         builder.HasIndex(item => item.Currency);
     }
 }
