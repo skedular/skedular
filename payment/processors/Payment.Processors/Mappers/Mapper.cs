@@ -475,7 +475,7 @@ public class Mapper : IMapper
         {
             Currency = src.Currency.ToCurrency(),
             BillingScheme = "per_unit",
-            UnitAmountDecimal = src.Price,
+            UnitAmountDecimal = src.Price * 100,
             Product = stripeProductId,
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
