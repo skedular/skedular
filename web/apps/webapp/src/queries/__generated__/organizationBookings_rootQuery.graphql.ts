@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5639b9cb601ce3f10a85e731b68f41c5>>
+ * @generated SignedSource<<fa411ad2fa4ad08ff90c8242e250f719>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -465,7 +465,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "OrganizationCustomerDetails",
+                    "concreteType": "Organization_CustomerDetails",
                     "kind": "LinkedField",
                     "name": "customer",
                     "plural": false,
@@ -626,7 +626,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingCustomerDetails",
+                    "concreteType": "Booking_CustomerDetails",
                     "kind": "LinkedField",
                     "name": "customer",
                     "plural": false,

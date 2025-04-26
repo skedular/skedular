@@ -73,7 +73,11 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
-            Team = MapTo(src.Team)
+            Team = MapTo(src.Team),
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
         };
 
         return team;
@@ -115,7 +119,11 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
             Resources = MapTo(src.Resources),
-            Team = MapTo(src.Team)
+            Team = MapTo(src.Team),
+            InvolvedCustomers = MapTo(src.InvolvedCustomers),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations),
+            InvolvedLocations = MapTo(src.InvolvedLocations),
+            InvolvedTeams = MapTo(src.InvolvedTeams)
         };
 
     public Shared.Models.Booking MapTo(AddBookingInput src)
@@ -373,7 +381,7 @@ public class Mapper : IMapper
     private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
-    private static BookingCustomerDetails MapTo(Customer src) =>
+    private static CustomerDetails MapTo(Customer src) =>
         new()
         {
             UniqueId = src.Id,
@@ -499,14 +507,8 @@ public class Mapper : IMapper
 
     private static ResourceType MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
-    private static IEnumerable<BookingCustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
-
     private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapTo(item.Resource, item.Customers));
-
-    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
-
-    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
 
     private ResourceBookingSlot MapTo(Shared.Database.Entities.ResourceBookingSlot src) =>
         new()
@@ -529,4 +531,14 @@ public class Mapper : IMapper
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
+
+    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
+    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
+    private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
+    private IEnumerable<Shared.Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
+    private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
+    private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
+    private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
+    private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
+    private static IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) => src.Select(MapTo)!;
 }

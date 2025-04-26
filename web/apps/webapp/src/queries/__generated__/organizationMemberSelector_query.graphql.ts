@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20ee46fdbddcf3dafe338ddbb991baa1>>
+ * @generated SignedSource<<f1f908d038ce5cda540d2e44b1ec55cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -161,7 +161,7 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "OrganizationCustomerDetails",
+                      "concreteType": "Organization_CustomerDetails",
                       "kind": "LinkedField",
                       "name": "customer",
                       "plural": false,

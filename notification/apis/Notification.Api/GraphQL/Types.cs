@@ -16,8 +16,8 @@ public class Notification : Node
     [GraphQLName("sourceId")] [ID] public string SourceId { get; set; } = string.Empty;
     [GraphQLName("eventRaisedAt")] public DateTimeOffset EventRaisedAt { get; set; }
     [GraphQLName("notificationType")] public NotificationType NotificationType { get; set; }
-    [GraphQLName("invitedBy")] public NotificationCustomerDetails? InvitedBy { get; set; }
-    [GraphQLName("invitee")] public NotificationCustomerDetails? Invitee { get; set; }
+    [GraphQLName("invitedBy")] public CustomerDetails? InvitedBy { get; set; }
+    [GraphQLName("invitee")] public CustomerDetails? Invitee { get; set; }
     [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
     [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("team")] public TeamDetails? Team { get; set; }
@@ -27,8 +27,8 @@ public class Notification : Node
 [GraphQLName("NotificationConnection")]
 public class NotificationConnection : Enterprise.Shared.GraphQL.Types.Connection<NotificationEdge>;
 
-[GraphQLName("NotificationCustomerDetails")]
-public class NotificationCustomerDetails
+[GraphQLName("Notification_CustomerDetails")]
+public class CustomerDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }

@@ -43,6 +43,10 @@ public class Mapper : IMapper
 
         booking.Resources.AddRange(MapTo(src.Resources));
         booking.Schedules.AddRange(MapTo(src.BookingSchedules));
+        booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
+        booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
+        booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
+        booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
 
         return booking;
     }

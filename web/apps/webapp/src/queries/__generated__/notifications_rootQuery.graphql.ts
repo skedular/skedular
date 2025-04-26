@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c6d2cf8b976aeb743e3b509ec135f98>>
+ * @generated SignedSource<<71aeeb77717e813c3c426bb651a709dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -138,7 +138,7 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "NotificationCustomerDetails",
+                "concreteType": "Notification_CustomerDetails",
                 "kind": "LinkedField",
                 "name": "invitedBy",
                 "plural": false,

@@ -29,26 +29,11 @@ type BookingConnection {
   totalCount: Int
 }
 
-type BookingCustomerDetails {
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
 type BookingDetails {
-  customer: BookingCustomerDetails!
+  customer: Booking_CustomerDetails!
   from: DateTime!
   id: ID!
-  involvedCustomers: [BookingCustomerDetails!]!
+  involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
@@ -75,7 +60,7 @@ type BookingPayload {
 type BookingResourceDetails {
   capacity: Int!
   color: String
-  customers: [BookingCustomerDetails!]!
+  customers: [Booking_CustomerDetails!]!
   customTags: [Booking_OrganizationCustomTagDetails!]!
   inactive: Boolean!
   location: Booking_LocationDetails
@@ -88,6 +73,21 @@ type BookingResourceDetails {
 type Booking_CurrencyDetails {
   name: String!
   type: Currency!
+}
+
+type Booking_CustomerDetails {
+  familyName: String
+  givenName: String
+  middleName: String
+  name: String
+  photoUrl: String
+  photoUrl192: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl512: String
+  photoUrl72: String
+  uniqueId: ID!
 }
 
 type Booking_LocationDetails {
@@ -474,8 +474,8 @@ type MyBillingContactDetailsPayload {
 type Notification {
   eventRaisedAt: DateTime!
   id: ID!
-  invitedBy: NotificationCustomerDetails
-  invitee: NotificationCustomerDetails
+  invitedBy: Notification_CustomerDetails
+  invitee: Notification_CustomerDetails
   location: Notification_LocationDetails
   notificationType: NotificationType!
   organization: Notification_OrganizationDetails
@@ -489,7 +489,12 @@ type NotificationConnection {
   totalCount: Int
 }
 
-type NotificationCustomerDetails {
+type NotificationEdge {
+  cursor: String!
+  node: Notification!
+}
+
+type Notification_CustomerDetails {
   emails: [String!]!
   familyName: String
   givenName: String
@@ -503,11 +508,6 @@ type NotificationCustomerDetails {
   photoUrl512: String
   photoUrl72: String
   uniqueId: ID!
-}
-
-type NotificationEdge {
-  cursor: String!
-  node: Notification!
 }
 
 type Notification_LocationDetails {
@@ -606,23 +606,6 @@ type OrganizationConnection {
   totalCount: Int
 }
 
-type OrganizationCustomerDetails {
-  email: String
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  phoneNumber: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
 type OrganizationDailyBookingsTotal {
   date: DateTime!
   total: Int!
@@ -687,7 +670,7 @@ type OrganizationMemberConnection {
 }
 
 type OrganizationMemberDetails {
-  customer: OrganizationCustomerDetails!
+  customer: Organization_CustomerDetails!
   id: ID!
   isOrganizationOnboardingDone: Boolean!
   role: OrganizationMemberRole
@@ -817,6 +800,23 @@ type OrganizationTermsOfUse {
 type OrganizationTypeDetails {
   name: String!
   type: OrganizationType!
+}
+
+type Organization_CustomerDetails {
+  email: String
+  familyName: String
+  givenName: String
+  middleName: String
+  name: String
+  phoneNumber: String
+  photoUrl: String
+  photoUrl192: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl512: String
+  photoUrl72: String
+  uniqueId: ID!
 }
 
 type PageInfo {
@@ -1055,23 +1055,6 @@ type TeamConnection {
   totalCount: Int
 }
 
-type TeamCustomerDetails {
-  email: String
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  phoneNumber: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
 type TeamDetails {
   about: String
   canDelete: Boolean!
@@ -1098,7 +1081,7 @@ type TeamMemberConnection {
 }
 
 type TeamMemberDetails {
-  customer: TeamCustomerDetails!
+  customer: Team_CustomerDetails!
   id: ID!
   organizationMember: TeamOrganizationMemberDetails
   role: TeamMemberRole
@@ -1126,13 +1109,30 @@ type TeamMembersDetailsPayload {
 }
 
 type TeamOrganizationMemberDetails {
-  customer: TeamCustomerDetails!
+  customer: Team_CustomerDetails!
   uniqueId: ID!
 }
 
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
+}
+
+type Team_CustomerDetails {
+  email: String
+  familyName: String
+  givenName: String
+  middleName: String
+  name: String
+  phoneNumber: String
+  photoUrl: String
+  photoUrl192: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl512: String
+  photoUrl72: String
+  uniqueId: ID!
 }
 
 type Team_LocationDetails {

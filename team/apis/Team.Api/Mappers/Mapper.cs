@@ -448,7 +448,7 @@ public class Mapper : IMapper
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static TeamCustomerDetails MapTo(Customer src) =>
+    private static CustomerDetails MapTo(Customer src) =>
         new()
         {
             UniqueId = src.Id,

@@ -123,10 +123,10 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    private static NotificationCustomerDetails? MapTo(Customer? src) =>
+    private static CustomerDetails? MapTo(Customer? src) =>
         src is null
             ? null
-            : new NotificationCustomerDetails
+            : new CustomerDetails
             {
                 UniqueId = src.Id,
                 Name = src.Name,

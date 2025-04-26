@@ -873,7 +873,7 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static OrganizationCustomerDetails MapTo(Customer src) =>
+    private static CustomerDetails MapTo(Customer src) =>
         new()
         {
             UniqueId = src.Id,

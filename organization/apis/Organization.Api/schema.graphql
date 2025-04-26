@@ -90,23 +90,6 @@ type OrganizationConnection {
   totalCount: Int
 }
 
-type OrganizationCustomerDetails {
-  uniqueId: ID!
-  email: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  phoneNumber: String
-}
-
 type OrganizationDailyBookingsTotal {
   date: DateTime!
   total: Int!
@@ -174,7 +157,7 @@ type OrganizationMemberDetails {
   role: OrganizationMemberRole
   status: OrganizationMemberStatus!
   isOrganizationOnboardingDone: Boolean!
-  customer: OrganizationCustomerDetails!
+  customer: Organization_CustomerDetails!
   id: ID!
 }
 
@@ -261,6 +244,23 @@ type OrganizationTermsOfUse {
 type OrganizationTypeDetails {
   type: OrganizationType!
   name: String!
+}
+
+type Organization_CustomerDetails {
+  uniqueId: ID!
+  email: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  phoneNumber: String
 }
 
 type PageInfo {

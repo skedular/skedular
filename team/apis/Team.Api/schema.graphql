@@ -60,23 +60,6 @@ type TeamConnection {
   totalCount: Int
 }
 
-type TeamCustomerDetails {
-  uniqueId: ID!
-  email: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  phoneNumber: String
-}
-
 type TeamDetails {
   name: String!
   about: String
@@ -105,7 +88,7 @@ type TeamMemberConnection {
 type TeamMemberDetails {
   role: TeamMemberRole
   status: TeamMemberStatus!
-  customer: TeamCustomerDetails!
+  customer: Team_CustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
   id: ID!
 }
@@ -132,12 +115,29 @@ type TeamMembersDetailsPayload {
 
 type TeamOrganizationMemberDetails {
   uniqueId: ID!
-  customer: TeamCustomerDetails!
+  customer: Team_CustomerDetails!
 }
 
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
+}
+
+type Team_CustomerDetails {
+  uniqueId: ID!
+  email: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  phoneNumber: String
 }
 
 type Team_LocationDetails {

@@ -103,8 +103,8 @@ public class RejectInvitationToJoinTeamPayload
 [GraphQLName("TeamConnection")]
 public class TeamConnection : Enterprise.Shared.GraphQL.Types.Connection<TeamEdge>;
 
-[GraphQLName("TeamCustomerDetails")]
-public class TeamCustomerDetails
+[GraphQLName("Team_CustomerDetails")]
+public class CustomerDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("email")] public string? Email { get; set; }
@@ -149,7 +149,7 @@ public class TeamMemberDetails : Node
 {
     [GraphQLName("role")] public TeamMemberRole? Role { get; set; }
     [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
-    [GraphQLName("customer")] public TeamCustomerDetails Customer { get; set; }
+    [GraphQLName("customer")] public CustomerDetails Customer { get; set; }
     [GraphQLName("organizationMember")] public TeamOrganizationMemberDetails? OrganizationMember { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -197,7 +197,7 @@ public class OrganizationDetails
 public class TeamOrganizationMemberDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("customer")] public TeamCustomerDetails Customer { get; set; }
+    [GraphQLName("customer")] public CustomerDetails Customer { get; set; }
 }
 
 [GraphQLName("TeamPayload")]

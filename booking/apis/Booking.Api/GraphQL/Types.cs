@@ -55,8 +55,8 @@ public class DeleteBookingInput
 [GraphQLName("BookingConnection")]
 public class BookingConnection : Enterprise.Shared.GraphQL.Types.Connection<BookingEdge>;
 
-[GraphQLName("BookingCustomerDetails")]
-public class BookingCustomerDetails
+[GraphQLName("Booking_CustomerDetails")]
+public class CustomerDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -79,13 +79,13 @@ public class BookingDetails : Node
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingType Type { get; set; }
-    [GraphQLName("customer")] public BookingCustomerDetails Customer { get; set; }
+    [GraphQLName("customer")] public CustomerDetails Customer { get; set; }
     [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
     [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
     [GraphQLName("team")] public TeamDetails? Team { get; set; }
     [GraphQLName("productVersions")] public IEnumerable<ProductVersionDetails> ProductVersions { get; set; } = [];
-    [GraphQLName("involvedCustomers")] public IEnumerable<BookingCustomerDetails> InvolvedCustomers { get; set; }
+    [GraphQLName("involvedCustomers")] public IEnumerable<CustomerDetails> InvolvedCustomers { get; set; }
     [GraphQLName("involvedOrganizations")] public IEnumerable<OrganizationDetails> InvolvedOrganizations { get; set; }
     [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; }
     [GraphQLName("involvedTeams")] public IEnumerable<TeamDetails> InvolvedTeams { get; set; }
@@ -231,7 +231,7 @@ public class BookingResourceDetails
     [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationCustomTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationZoneDetails> Zones { get; set; } = [];
-    [GraphQLName("customers")] public IEnumerable<BookingCustomerDetails> Customers { get; set; } = [];
+    [GraphQLName("customers")] public IEnumerable<CustomerDetails> Customers { get; set; } = [];
 }
 
 [GraphQLName("OrganizationAvailableResources")]

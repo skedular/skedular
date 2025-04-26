@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<22a6e62fc59a76bedad35f1ba4074eb7>>
+ * @generated SignedSource<<4ae0067abf0c4d7ae82cb08162b712a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -222,7 +222,7 @@ v7 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingCustomerDetails",
+      "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
       "name": "customer",
       "plural": false,

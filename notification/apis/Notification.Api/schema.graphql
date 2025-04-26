@@ -6,8 +6,8 @@ type Notification {
   sourceId: ID!
   eventRaisedAt: DateTime!
   notificationType: NotificationType!
-  invitedBy: NotificationCustomerDetails
-  invitee: NotificationCustomerDetails
+  invitedBy: Notification_CustomerDetails
+  invitee: Notification_CustomerDetails
   organization: Notification_OrganizationDetails
   location: Notification_LocationDetails
   team: Notification_TeamDetails
@@ -20,7 +20,12 @@ type NotificationConnection {
   totalCount: Int
 }
 
-type NotificationCustomerDetails {
+type NotificationEdge {
+  node: Notification!
+  cursor: String!
+}
+
+type Notification_CustomerDetails {
   uniqueId: ID!
   name: String
   givenName: String
@@ -34,11 +39,6 @@ type NotificationCustomerDetails {
   photoUrl192: String
   photoUrl512: String
   emails: [String!]!
-}
-
-type NotificationEdge {
-  node: Notification!
-  cursor: String!
 }
 
 type Notification_LocationDetails {

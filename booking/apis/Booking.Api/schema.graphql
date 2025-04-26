@@ -9,33 +9,18 @@ type BookingConnection {
   totalCount: Int
 }
 
-type BookingCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-}
-
 type BookingDetails {
   from: DateTime!
   until: DateTime!
   notes: String
   type: BookingType!
-  customer: BookingCustomerDetails!
+  customer: Booking_CustomerDetails!
   organization: Booking_OrganizationDetails
   location: Booking_LocationDetails
   resources: [BookingResourceDetails!]!
   team: Booking_TeamDetails
   productVersions: [Booking_ProductVersionDetails!]!
-  involvedCustomers: [BookingCustomerDetails!]!
+  involvedCustomers: [Booking_CustomerDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
@@ -62,12 +47,27 @@ type BookingResourceDetails {
   location: Booking_LocationDetails
   customTags: [Booking_OrganizationCustomTagDetails!]!
   zones: [Booking_OrganizationZoneDetails!]!
-  customers: [BookingCustomerDetails!]!
+  customers: [Booking_CustomerDetails!]!
 }
 
 type Booking_CurrencyDetails {
   type: Currency!
   name: String!
+}
+
+type Booking_CustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
 }
 
 type Booking_LocationDetails {
