@@ -11,6 +11,7 @@ using Payment.Shared.Repositories;
 using Payment.Shared.Services;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
+using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
 
 namespace Payment.Api.Services;
 
@@ -31,6 +32,7 @@ public interface IOrganizationStripeConnectAccountService
 }
 
 public class OrganizationStripeConnectAccountService(
+    StripeConfiguration stripeConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
@@ -144,11 +146,14 @@ public class OrganizationStripeConnectAccountService(
             throw new Unauthorized();
         }
 
-        await accountDeleteService.DeleteAsync(
-            account.StripeAccountId,
-            new AccountDeleteOptions(),
-            new RequestOptions { IdempotencyKey = account.Id },
-            cancellationToken);
+        if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
+        {
+            await accountDeleteService.DeleteAsync(
+                account.StripeAccountId,
+                new AccountDeleteOptions(),
+                new RequestOptions { IdempotencyKey = account.Id },
+                cancellationToken);
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -181,12 +186,15 @@ public class OrganizationStripeConnectAccountService(
             throw new Unauthorized();
         }
 
-        await Task.WhenAll(
-            accounts.Select(item => accountDeleteService.DeleteAsync(
-                item.StripeAccountId,
-                new AccountDeleteOptions(),
-                new RequestOptions { IdempotencyKey = item.Id },
-                cancellationToken)));
+        if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
+        {
+            await Task.WhenAll(
+                accounts.Select(item => accountDeleteService.DeleteAsync(
+                    item.StripeAccountId,
+                    new AccountDeleteOptions(),
+                    new RequestOptions { IdempotencyKey = item.Id },
+                    cancellationToken)));
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
