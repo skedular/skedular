@@ -59,9 +59,8 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
 
     public async Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Where(query => !query.DeletedAt.HasValue &&
-                            !query.Organization.DeletedAt.HasValue &&
-                            query.Organization.OrganizationMembers.Any(organizationMember => !organizationMember.DeletedAt.HasValue &&
-                                                                                             organizationMember.Customer.Id == customerId))
+            .Where(query => !query.DeletedAt.HasValue && !query.Organization.DeletedAt.HasValue &&
+                            query.Organization.OrganizationMembers.Any(organizationMember =>
+                                !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == customerId))
             .ToListAsync(cancellationToken);
 }

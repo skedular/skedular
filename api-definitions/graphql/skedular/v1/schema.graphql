@@ -48,6 +48,10 @@ type BookingDetails {
   customer: BookingCustomerDetails!
   from: DateTime!
   id: ID!
+  involvedCustomers: [BookingCustomerDetails!]!
+  involvedLocations: [Booking_LocationDetails!]!
+  involvedOrganizations: [Booking_OrganizationDetails!]!
+  involvedTeams: [Booking_TeamDetails!]!
   location: Booking_LocationDetails
   notes: String
   organization: Booking_OrganizationDetails

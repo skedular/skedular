@@ -6,7 +6,7 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Organization = Booking.Shared.Database.Entities.Organization;
+using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Shared.Repositories;
 
@@ -27,7 +27,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, Organization?> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, ICollection<Team>> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.Customer)
@@ -45,7 +45,15 @@ internal static class BookingExtensions
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Resource)
             .ThenInclude(query => query.Location)
-            .ThenInclude(query => query.Organization);
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedCustomers)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.InvolvedCustomers)
+            .Include(query => query.InvolvedOrganizations)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.InvolvedLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedTeams);
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,

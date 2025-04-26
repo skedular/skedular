@@ -35,6 +35,10 @@ type BookingDetails {
   resources: [BookingResourceDetails!]!
   team: Booking_TeamDetails
   productVersions: [Booking_ProductVersionDetails!]!
+  involvedCustomers: [BookingCustomerDetails!]!
+  involvedOrganizations: [Booking_OrganizationDetails!]!
+  involvedLocations: [Booking_LocationDetails!]!
+  involvedTeams: [Booking_TeamDetails!]!
   id: ID!
 }
 

@@ -12,4 +12,5 @@ public class Location : ReplicatedModelBaseWithDeleted
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
+    public ICollection<Booking> InvolvedBookings { get; set; } = [];
 }

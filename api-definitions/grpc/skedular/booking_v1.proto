@@ -135,6 +135,10 @@ message Booking {
     repeated Resource resources = 9;
     BookingType type = 10;
     repeated BookingSchedule Schedules = 11;
+    repeated string involvedCustomerIds = 12;
+    repeated string involvedOrganizationIds = 13;
+    repeated string involvedLocationIds = 14;
+    repeated string involvedTeamIds = 15;
 }
 
 message Customer {

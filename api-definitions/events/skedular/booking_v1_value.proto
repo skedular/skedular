@@ -39,6 +39,10 @@ message Booking {
   string teamId = 10;
   BookingType type = 11;
   repeated BookingSchedule Schedules = 12;
+  repeated string involvedCustomerIds = 13;
+  repeated string involvedOrganizationIds = 14;
+  repeated string involvedLocationIds = 15;
+  repeated string involvedTeamIds = 16;
 }
 
 enum BookingType

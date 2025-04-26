@@ -85,6 +85,10 @@ public class BookingDetails : Node
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
     [GraphQLName("team")] public TeamDetails? Team { get; set; }
     [GraphQLName("productVersions")] public IEnumerable<ProductVersionDetails> ProductVersions { get; set; } = [];
+    [GraphQLName("involvedCustomers")] public IEnumerable<BookingCustomerDetails> InvolvedCustomers { get; set; }
+    [GraphQLName("involvedOrganizations")] public IEnumerable<OrganizationDetails> InvolvedOrganizations { get; set; }
+    [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; }
+    [GraphQLName("involvedTeams")] public IEnumerable<TeamDetails> InvolvedTeams { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

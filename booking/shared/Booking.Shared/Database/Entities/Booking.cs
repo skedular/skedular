@@ -22,6 +22,10 @@ public class Booking : EntityBaseWithDeleted
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual Team? Team { get; set; }
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
+    public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
+    public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
+    public virtual ICollection<Location> InvolvedLocations { get; set; } = [];
+    public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -42,6 +46,10 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasOne(item => item.Team).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
         builder.Property(item => item.BookingSchedules).HasColumnType("jsonb");
+        builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedBookings);
+        builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedBookings);
+        builder.HasMany(item => item.InvolvedLocations).WithMany(item => item.InvolvedBookings);
+        builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedBookings);
 
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.Until);

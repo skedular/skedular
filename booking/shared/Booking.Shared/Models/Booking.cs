@@ -44,4 +44,8 @@ public class Booking : ModelBaseWithDeleted
 
     public ICollection<ResourceCustomersPair> Resources { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
+    public ICollection<Customer> InvolvedCustomers { get; set; } = [];
+    public ICollection<Organization> InvolvedOrganizations { get; set; } = [];
+    public ICollection<Location> InvolvedLocations { get; set; } = [];
+    public ICollection<Team> InvolvedTeams { get; set; } = [];
 }
