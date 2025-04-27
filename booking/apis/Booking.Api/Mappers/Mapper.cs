@@ -403,7 +403,10 @@ public class Mapper : IMapper
         };
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
-    private static LocationDetails MapTo(Shared.Models.Location src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+
+    private static LocationDetails? MapTo(Shared.Models.Location? src) =>
+        src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+
     private static TeamDetails MapTo(Shared.Models.Team src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
@@ -538,6 +541,6 @@ public class Mapper : IMapper
     private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
     private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
     private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo);
-    private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo);
+    private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
     private static IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) => src.Select(MapTo);
 }

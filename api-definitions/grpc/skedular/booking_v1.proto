@@ -76,8 +76,7 @@ message BookingWhereInput {
     repeated string customerIds  = 14;
     bool includeMineOnly  = 15;
     bool includeFutureBookingsOnly  = 16;
-    bool combineOrganizationsLocationsTeams = 17;
-    string type = 18;
+    string type = 17;
 }
 
 message BookingOrderInput {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b96f02a31e88595dde722125021e9d4>>
+ * @generated SignedSource<<64a57d3a93b26b3df50aa9bec5b34ef3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -176,11 +176,6 @@ return {
         },
         {
           "fields": [
-            {
-              "kind": "Literal",
-              "name": "combineOrganizationsLocationsTeams",
-              "value": true
-            },
             {
               "kind": "Variable",
               "name": "customerIds",
@@ -456,6 +451,6 @@ return {
 };
 })();
 
-(node as any).hash = "d4bb744e68922c01623b00d164119f06";
+(node as any).hash = "236ca053ff07bde5157b5c350958a1f8";
 
 export default node;

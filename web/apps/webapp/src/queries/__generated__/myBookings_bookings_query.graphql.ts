@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c15f560ea79bb58d5cced87dc87bc1e6>>
+ * @generated SignedSource<<92cb00d7002d13eec882bba372b2b1d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -169,11 +169,6 @@ return {
         },
         {
           "fields": [
-            {
-              "kind": "Literal",
-              "name": "combineOrganizationsLocationsTeams",
-              "value": true
-            },
             {
               "kind": "Variable",
               "name": "fromGTE",
@@ -432,6 +427,6 @@ return {
 };
 })();
 
-(node as any).hash = "79ea2a6c0fcbfbd75015a3ea4db0c09f";
+(node as any).hash = "ffc59f4fcc7576cf35e4ecb575a0fa6a";
 
 export default node;

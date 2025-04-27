@@ -107,14 +107,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         bookings(
           first: $count
           after: $cursor
-          where: {
-            organizationIds: [$organizationId]
-            locationIds: $locationIds
-            teamIds: $teamIds
-            fromGTE: $bookingsSearchCriteriaFrom
-            fromLTE: $bookingsSearchCriteriaTo
-            combineOrganizationsLocationsTeams: true
-          }
+          where: { organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo }
           orderBy: [{ field: From, direction: Ascending }]
         ) @connection(key: "myBookings_bookings") {
           __id

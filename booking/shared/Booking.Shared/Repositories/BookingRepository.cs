@@ -41,7 +41,6 @@ internal static class BookingExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedCustomers)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.InvolvedCustomers)
             .Include(query => query.InvolvedOrganizations)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.InvolvedLocations)
@@ -102,7 +101,8 @@ internal static class BookingExtensions
 
         if (searchCriteria.CustomerIds.Count != 0)
         {
-            query = query.Where(item => item.InvolvedCustomers.Any(customer => searchCriteria.CustomerIds.Contains(customer.Id)));
+            query = query.Where(item => item.InvolvedCustomers.Any(customer =>
+                !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.BookingType))
@@ -110,35 +110,21 @@ internal static class BookingExtensions
             query = query.Where(item => item.Type == searchCriteria.BookingType);
         }
 
-        if (searchCriteria.CombineOrganizationsLocationsTeams is not null && searchCriteria.CombineOrganizationsLocationsTeams.Value)
+        if (searchCriteria.OrganizationIds.Count != 0)
         {
-            if (searchCriteria.OrganizationIds.Count != 0)
-            {
-                query = query.Where(item => item.InvolvedOrganizations.Any(organization =>
-                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
-            }
-
-            if (searchCriteria.LocationIds.Count != 0)
-            {
-                query = query.Where(item =>
-                    item.InvolvedLocations.Any(location => !location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(location.Id)));
-            }
-
-            if (searchCriteria.TeamIds.Count != 0)
-            {
-                query = query.Where(item => item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
-            }
+            query = query.Where(item => item.InvolvedOrganizations.Any(organization =>
+                !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
         }
-        else
+
+        if (searchCriteria.LocationIds.Count != 0)
         {
-            if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 || searchCriteria.TeamIds.Count != 0)
-            {
-                query = query.Where(item =>
-                    !item.InvolvedOrganizations.Any(organization =>
-                        !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)) ||
-                    item.InvolvedLocations.Any(location => !location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(location.Id)) ||
-                    item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
-            }
+            query = query.Where(item => item.InvolvedLocations.Any(location =>
+                !location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(location.Id)));
+        }
+
+        if (searchCriteria.TeamIds.Count != 0)
+        {
+            query = query.Where(item => item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NotesContains))

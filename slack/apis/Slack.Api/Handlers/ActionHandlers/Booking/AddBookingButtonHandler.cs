@@ -30,7 +30,6 @@ public class AddBookingButtonHandler(
     SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     ICustomerService customerService,
-    ILocationService locationService,
     ITeamService teamService,
     IBookingService bookingService,
     BookingService.BookingServiceClient bookingServiceClient,

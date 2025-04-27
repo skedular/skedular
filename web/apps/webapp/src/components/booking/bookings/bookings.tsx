@@ -123,7 +123,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             customerIds: $customerIds
             fromGTE: $bookingsSearchCriteriaFrom
             fromLTE: $bookingsSearchCriteriaTo
-            combineOrganizationsLocationsTeams: true
           }
           orderBy: [{ field: From, direction: Ascending }]
         ) @connection(key: "bookings_bookings") {

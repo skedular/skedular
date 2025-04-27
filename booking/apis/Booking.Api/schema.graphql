@@ -228,7 +228,6 @@ input BookingWhereInput {
   customerIds: [String!]
   includeMineOnly: Boolean
   includeFutureBookingsOnly: Boolean
-  combineOrganizationsLocationsTeams: Boolean
 }
 
 input DeleteBookingInput {

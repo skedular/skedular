@@ -611,7 +611,8 @@ public class HomePage(
             bookingComponents.GetBookingCardsAsync(
                 workspace,
                 workspaceMember,
-                bookings, myBookings,
+                bookings,
+                myBookings,
                 permissions.CanUpdateBookingOnBehalf,
                 permissions.CanDeleteBookingOnBehalf,
                 commonPageContext.PageContext,

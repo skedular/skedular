@@ -69,7 +69,6 @@ public class Query(IMapper mapper)
                 string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
-                where.CombineOrganizationsLocationsTeams,
                 where.OrganizationIds.ToSafeCollection(),
                 where.LocationIds.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
