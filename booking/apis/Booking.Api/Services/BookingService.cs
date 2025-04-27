@@ -118,6 +118,7 @@ public class BookingService(
 
         var bookingEntity = mapper.MapTo(booking, customerEntities, organizations, ResourcesToLocations(resources), teams, resources);
 
+        bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
 
@@ -607,6 +608,7 @@ public class BookingService(
         var bookingEntity =
             mapper.MergeTo(booking, existingBooking, customerEntities, organizations, ResourcesToLocations(resources), teams, resources);
 
+        bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
 

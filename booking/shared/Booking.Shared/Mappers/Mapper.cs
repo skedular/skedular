@@ -34,6 +34,13 @@ public class Mapper : IMapper
                 BookingType.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.TravelingForWork,
                 BookingType.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                BookingStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending,
+                BookingStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
+                BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
+                _ => throw new ArgumentOutOfRangeException()
             }
         };
 

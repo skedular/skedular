@@ -44,26 +44,6 @@ public class Mapper : IMapper
 
     public NotificationEdge MapTo(Edge<Shared.Models.Notification> src) => new(MapTo(src.Node), src.Cursor);
 
-    private GraphQL.Notification MapTo(Shared.Models.Notification src) =>
-        new()
-        {
-            Id = src.Id,
-            SourceId = src.SourceId,
-            EventRaisedAt = src.EventRaisedAt,
-            NotificationType = src.Type switch
-            {
-                NotificationTypeConstants.InvitationToJoinOrganization => NotificationType.InvitationToJoinOrganization,
-                NotificationTypeConstants.InvitationToJoinLocation => NotificationType.InvitationToJoinLocation,
-                NotificationTypeConstants.InvitationToJoinTeam => NotificationType.InvitationToJoinTeam,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            InvitedBy = MapTo(src.InvitedBy),
-            Invitee = MapTo(src.Invitee),
-            Organization = MapTo(src.Organization),
-            Location = MapTo(src.Location),
-            Team = MapTo(src.Team)
-        };
-
     private Shared.Models.Notification MapTo(Shared.Database.Entities.Notification src) =>
         new()
         {
@@ -73,7 +53,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             SourceId = src.SourceId,
-            Type = src.Type,
+            Type = src.Type.ToNotificationType(),
             InvitedBy = MapTo(src.InvitedBy),
             Invitee = MapTo(src.Invitee),
             Organization = MapTo(src.Organization),
@@ -163,5 +143,19 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
             EmailVerified = src.EmailVerified
+        };
+
+    private static NotificationDetails MapTo(Shared.Models.Notification src) =>
+        new()
+        {
+            Id = src.Id,
+            SourceId = src.SourceId,
+            EventRaisedAt = src.EventRaisedAt,
+            NotificationType = src.Type,
+            InvitedBy = MapTo(src.InvitedBy),
+            Invitee = MapTo(src.Invitee),
+            Organization = MapTo(src.Organization),
+            Location = MapTo(src.Location),
+            Team = MapTo(src.Team)
         };
 }

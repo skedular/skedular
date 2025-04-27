@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71aeeb77717e813c3c426bb651a709dc>>
+ * @generated SignedSource<<064569bdb809f15beddde2d66df16440>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type NotificationOrderField = "Date" | "Type" | "%future added value";
-export type NotificationType = "InvitationToJoinLocation" | "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
+export type NotificationType = "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type NotificationOrderInput = {
   direction: OrderDirection;
@@ -31,9 +31,6 @@ export type notifications_rootQuery$data = {
           readonly middleName: string | null | undefined;
           readonly name: string | null | undefined;
           readonly photoUrl: string | null | undefined;
-        } | null | undefined;
-        readonly location: {
-          readonly name: string;
         } | null | undefined;
         readonly notificationType: NotificationType;
         readonly organization: {
@@ -109,7 +106,7 @@ v3 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Notification",
+            "concreteType": "NotificationDetails",
             "kind": "LinkedField",
             "name": "node",
             "plural": false,
@@ -188,16 +185,6 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Notification_LocationDetails",
-                "kind": "LinkedField",
-                "name": "location",
-                "plural": false,
-                "selections": (v2/*: any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "Notification_TeamDetails",
                 "kind": "LinkedField",
                 "name": "team",
@@ -245,16 +232,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "c9e2676488e6bbc0928a4d2ab7deb177",
+    "cacheID": "6e3dd9d4514d473580121dbf61675ede",
     "id": null,
     "metadata": {},
     "name": "notifications_rootQuery",
     "operationKind": "query",
-    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  myNotifications(where: {}, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        sourceId\n        notificationType\n        invitedBy {\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          name\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  myNotifications(where: {}, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        sourceId\n        notificationType\n        invitedBy {\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          name\n        }\n        team {\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ada98cd6c9179a5b8cdcca3d8f1da20d";
+(node as any).hash = "6c5f93530292a328ee590cd862383e8f";
 
 export default node;

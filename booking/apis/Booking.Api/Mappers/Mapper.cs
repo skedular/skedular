@@ -9,6 +9,7 @@ using HotChocolate.Types.Pagination;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
+using BookingStatus = Api.Shared.Services.Models.BookingStatus;
 using Customer = Booking.Shared.Models.Customer;
 using Identity = Booking.Shared.Models.Identity;
 using Location = Booking.Shared.Database.Entities.Location;
@@ -69,6 +70,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
+            Status = src.Status.ToBookingStatus(),
             BookingSchedules = src.BookingSchedules,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
@@ -112,6 +114,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
+            Status = src.Status,
             Resources = MapTo(src.Resources),
             InvolvedCustomers = MapTo(src.InvolvedCustomers),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations),
@@ -184,6 +187,7 @@ public class Mapper : IMapper
         dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
+        dest.Status = src.Status.ToBookingStatus();
         dest.BookingSchedules = src.BookingSchedules;
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
@@ -212,6 +216,13 @@ public class Mapper : IMapper
                 BookingType.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation,
                 BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork,
                 BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                BookingStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Pending,
+                BookingStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Rejected,
+                BookingStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };

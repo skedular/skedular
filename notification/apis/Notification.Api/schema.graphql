@@ -2,7 +2,13 @@
   query: Query
 }
 
-type Notification {
+type NotificationConnection {
+  pageInfo: PageInfo!
+  edges: [NotificationEdge!]!
+  totalCount: Int
+}
+
+type NotificationDetails {
   sourceId: ID!
   eventRaisedAt: DateTime!
   notificationType: NotificationType!
@@ -14,14 +20,8 @@ type Notification {
   id: ID!
 }
 
-type NotificationConnection {
-  pageInfo: PageInfo!
-  edges: [NotificationEdge!]!
-  totalCount: Int
-}
-
 type NotificationEdge {
-  node: Notification!
+  node: NotificationDetails!
   cursor: String!
 }
 
@@ -94,7 +94,6 @@ enum NotificationOrderField {
 
 enum NotificationType {
   InvitationToJoinOrganization
-  InvitationToJoinLocation
   InvitationToJoinTeam
 }
 

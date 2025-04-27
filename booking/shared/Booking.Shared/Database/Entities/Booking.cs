@@ -15,6 +15,7 @@ public class Booking : EntityBaseWithDeleted
     public string? Notes { get; set; }
     public string Type { get; set; }
     public BookingSchedules BookingSchedules { get; set; }
+    public string Status { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
@@ -34,6 +35,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.Confirmed);
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
@@ -47,5 +49,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.Until);
         builder.HasIndex(item => item.Notes);
         builder.HasIndex(item => item.Type);
+        builder.HasIndex(item => item.Status);
     }
 }

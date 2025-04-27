@@ -104,6 +104,13 @@ enum BookingType
     NonWorkingDay = 8;
 }
 
+enum BookingStatus
+{
+    Pending = 0;
+    Rejected = 1;
+    Confirmed = 2;
+}
+
 message BookingConnection {
     PageInfo pageInfo = 1;
     repeated BookingEdge edges = 2;
@@ -122,11 +129,12 @@ message Booking {
     string notes = 4;
     repeated Resource resources = 5;
     BookingType type = 6;
-    repeated Customer involvedCustomers = 7;
-    repeated Organization involvedOrganizations = 8;
-    repeated Location involvedLocations = 9;
-    repeated Team involvedTeams = 10;
-    repeated BookingSchedule Schedules = 11;
+    BookingStatus status = 7;
+    repeated Customer involvedCustomers = 8;
+    repeated Organization involvedOrganizations = 9;
+    repeated Location involvedLocations = 10;
+    repeated Team involvedTeams = 11;
+    repeated BookingSchedule Schedules = 12;
 }
 
 message Customer {
@@ -210,7 +218,7 @@ message AddInput {
     google.protobuf.Timestamp until = 3;
     string notes = 4;
     BookingType type = 5;
-    repeated string customerIds = 6;
+     repeated string customerIds = 6;
     repeated string organizationIds = 7;
     repeated string teamIds = 8;
     repeated string resourceIds = 9;

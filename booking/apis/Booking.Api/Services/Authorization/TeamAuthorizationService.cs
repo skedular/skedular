@@ -19,13 +19,17 @@ public class TeamAuthorizationService(
     ICachedTeamService cachedTeamService)
     : ITeamAuthorizationService
 {
-    public bool CanViewBookings(Team team, Customer customer) => organizationAuthorizationService.CanViewBookings(team.Organization, customer);
+    public bool CanViewBookings(Team team, Customer customer) =>
+        team.Organization is not null && organizationAuthorizationService.CanViewBookings(team.Organization, customer);
 
-    public bool CanAddBooking(Team team, Customer customer) => organizationAuthorizationService.CanAddBooking(team.Organization, customer);
+    public bool CanAddBooking(Team team, Customer customer) =>
+        team.Organization is not null && organizationAuthorizationService.CanAddBooking(team.Organization, customer);
 
-    public bool CanUpdateBooking(Team team, Customer customer) => organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
+    public bool CanUpdateBooking(Team team, Customer customer) =>
+        team.Organization is not null && organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
 
-    public bool CanDeleteBooking(Team team, Customer customer) => organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
+    public bool CanDeleteBooking(Team team, Customer customer) =>
+        team.Organization is not null && organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
 
     public async Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {

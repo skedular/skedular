@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -9,8 +10,8 @@ using Notification.Shared.Models;
 
 namespace Notification.Api.GraphQL;
 
-[GraphQLName("Notification")]
-public class Notification : Node
+[GraphQLName("NotificationDetails")]
+public class NotificationDetails : Node
 {
     [GraphQLName("sourceId")] [ID] public string SourceId { get; set; } = string.Empty;
     [GraphQLName("eventRaisedAt")] public DateTimeOffset EventRaisedAt { get; set; }
@@ -45,7 +46,7 @@ public class CustomerDetails
 }
 
 [GraphQLName("NotificationEdge")]
-public class NotificationEdge(Notification node, string cursor) : Edge<Notification>(node, cursor);
+public class NotificationEdge(NotificationDetails node, string cursor) : Edge<NotificationDetails>(node, cursor);
 
 [GraphQLName("Notification_LocationDetails")]
 public class LocationDetails

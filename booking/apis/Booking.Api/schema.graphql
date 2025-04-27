@@ -14,6 +14,7 @@ type BookingDetails {
   until: DateTime!
   notes: String
   type: BookingType!
+  status: BookingStatus!
   resources: [BookingResourceDetails!]!
   productVersions: [Booking_ProductVersionDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
@@ -254,6 +255,12 @@ enum BookingOrderField {
   To
   Notes
   BookingType
+}
+
+enum BookingStatus {
+  Pending
+  Rejected
+  Confirmed
 }
 
 enum BookingType {

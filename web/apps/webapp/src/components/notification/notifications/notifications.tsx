@@ -47,9 +47,6 @@ const RootQuery = graphql`
           organization {
             name
           }
-          location {
-            name
-          }
           team {
             name
           }
@@ -302,9 +299,6 @@ const Notifications = ({ queryReference }: Props) => {
         switch (notification.notificationType) {
           case 'InvitationToJoinOrganization':
             return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join organization "${notification.organization?.name}"`} />;
-
-          case 'InvitationToJoinLocation':
-            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join location "${notification.location?.name}"`} />;
 
           case 'InvitationToJoinTeam':
             return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join team "${notification.team?.name}"`} />;

@@ -39,6 +39,7 @@ type BookingDetails {
   notes: String
   productVersions: [Booking_ProductVersionDetails!]!
   resources: [BookingResourceDetails!]!
+  status: BookingStatus!
   type: BookingType!
   until: DateTime!
 }
@@ -467,7 +468,13 @@ type MyBillingContactDetailsPayload {
   customerBillingContactDetails: CustomerBillingContactDetails!
 }
 
-type Notification {
+type NotificationConnection {
+  edges: [NotificationEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type NotificationDetails {
   eventRaisedAt: DateTime!
   id: ID!
   invitedBy: Notification_CustomerDetails
@@ -479,15 +486,9 @@ type Notification {
   team: Notification_TeamDetails
 }
 
-type NotificationConnection {
-  edges: [NotificationEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type NotificationEdge {
   cursor: String!
-  node: Notification!
+  node: NotificationDetails!
 }
 
 type Notification_CustomerDetails {
@@ -2061,6 +2062,12 @@ enum BookingOrderField {
   To
 }
 
+enum BookingStatus {
+  Confirmed
+  Pending
+  Rejected
+}
+
 enum BookingType {
   AnnualLeave
   ClientOffices
@@ -2108,7 +2115,6 @@ enum NotificationOrderField {
 }
 
 enum NotificationType {
-  InvitationToJoinLocation
   InvitationToJoinOrganization
   InvitationToJoinTeam
 }

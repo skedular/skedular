@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Random;
-using Notification.Shared.Models;
 using Customer = Notification.Shared.Database.Entities.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Notification.Shared.Database.Entities.Identity;
@@ -211,7 +210,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
-            Type = NotificationTypeConstants.InvitationToJoinOrganization,
+            Type = NotificationType.InvitationToJoinOrganization,
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Organization = new Organization { Id = notification.OrganizationId }
@@ -230,7 +229,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
-            Type = NotificationTypeConstants.InvitationToJoinTeam,
+            Type = NotificationType.InvitationToJoinTeam,
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Team = new Team { Id = notification.TeamId }
@@ -265,7 +264,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.SourceId = src.SourceId;
-        dest.Type = src.Type;
+        dest.Type = src.Type.ToNotificationType();
         dest.InvitedBy = invitedBy;
         dest.Invitee = invitee;
         dest.Organization = organization;
