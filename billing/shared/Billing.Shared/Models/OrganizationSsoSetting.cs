@@ -8,5 +8,5 @@ public class OrganizationSsoSetting : ReplicatedModelBase
     public string LoginUrl { get; set; } = string.Empty;
     public string AppFederationMetadataUrl { get; set; } = string.Empty;
 
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
 }

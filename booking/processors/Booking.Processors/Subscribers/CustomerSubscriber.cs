@@ -70,15 +70,13 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         var preferredLocations = new List<Location>();
         foreach (var item in customer.PreferredLocations)
         {
-            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization.Id, cancellationToken);
-            preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
+            preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, null, cancellationToken));
         }
 
         var preferredTeams = new List<Team>();
         foreach (var item in customer.PreferredTeams)
         {
-            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization.Id, cancellationToken);
-            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
+            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, null, cancellationToken));
         }
 
         var preferredResources = new List<Resource>();

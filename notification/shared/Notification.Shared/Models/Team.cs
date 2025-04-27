@@ -6,6 +6,6 @@ public class Team : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
 
-    public Organization Organization { get; set; }
+    public Organization? Organization { get; set; }
     public ICollection<Notification> Notifications { get; set; } = [];
 }

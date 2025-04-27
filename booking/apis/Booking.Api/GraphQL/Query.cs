@@ -56,14 +56,14 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(after, first, before, last),
             new BookingSearchCriteria(
-                where.FromGT,
-                where.FromGTE,
-                where.FromLT,
-                where.FromLTE,
-                where.ToGT,
-                where.ToGTE,
-                where.ToLT,
-                where.ToLTE,
+                where.FromGt,
+                where.FromGte,
+                where.FromLt,
+                where.FromLte,
+                where.ToGt,
+                where.ToGte,
+                where.ToLt,
+                where.ToLte,
                 where.NotesContains,
                 where.NameContains,
                 string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
@@ -129,12 +129,7 @@ public class Query(IMapper mapper)
     {
         if (string.IsNullOrWhiteSpace(teamId))
         {
-            return new TeamBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false
-            };
+            return new TeamBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
         }
 
         var permissions = await teamAuthorizationService.GetPermissionsAsync(teamId, cancellationToken);

@@ -7,11 +7,7 @@ namespace Organization.Shared.Repositories;
 
 public interface ITeamRepository : IRepository<Team>
 {
-    Task<Team> UpsertNakedAsync(
-        string id,
-        Database.Entities.Organization organization,
-        CancellationToken cancellationToken);
-
+    Task<Team> UpsertNakedAsync(string id, Database.Entities.Organization organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);

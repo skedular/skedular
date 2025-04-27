@@ -22,6 +22,6 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string OnboardingUrl { get; set; } = string.Empty;
     public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized && ChargesEnabled && PayoutsEnabled;
 
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
 }

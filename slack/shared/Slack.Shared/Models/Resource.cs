@@ -10,7 +10,7 @@ public class Resource : ReplicatedModelBase
     public string? Color { get; set; }
     public int Capacity { get; set; }
 
-    public ResourceType ResourceType { get; set; }
+    public ResourceType ResourceType { get; set; } = new();
     public Location? Location { get; set; }
     public ICollection<OrganizationCustomTag> OrganizationCustomTags { get; set; } = [];
     public ICollection<OrganizationZone> OrganizationZones { get; set; } = [];

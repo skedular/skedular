@@ -13,7 +13,7 @@ public class Location : ReplicatedEntityBaseWithDeleted
     public string? Name { get; set; }
     public OpeningHours? OpeningHours { get; set; }
 
-    public virtual Organization Organization { get; set; }
+    public virtual Organization? Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];

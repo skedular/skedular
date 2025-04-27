@@ -8,7 +8,7 @@ public class OrganizationTag : ReplicatedModelBaseWithDeleted
     public string? Name { get; set; }
     public OrganizationTagType? Type { get; set; }
     public string? Color { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
     public ICollection<ProductVersion> ProductVersionProductTag { get; set; } = [];

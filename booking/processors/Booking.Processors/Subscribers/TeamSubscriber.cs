@@ -24,7 +24,7 @@ public class TeamSubscriber(
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
 
                     var team = mapper.MapTo(@event);
-                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization!.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {

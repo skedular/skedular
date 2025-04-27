@@ -205,14 +205,14 @@ input BookingOrderInput {
 }
 
 input BookingWhereInput {
-  fromGT: DateTime
-  fromGTE: DateTime
-  fromLT: DateTime
-  fromLTE: DateTime
-  toGT: DateTime
-  toGTE: DateTime
-  toLT: DateTime
-  toLTE: DateTime
+  fromGt: DateTime
+  fromGte: DateTime
+  fromLt: DateTime
+  fromLte: DateTime
+  toGt: DateTime
+  toGte: DateTime
+  toLt: DateTime
+  toLte: DateTime
   notesContains: String
   type: String
   nameContains: String

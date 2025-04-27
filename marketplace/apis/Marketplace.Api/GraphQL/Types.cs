@@ -6,7 +6,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Marketplace.Shared.Models;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Marketplace.Api.GraphQL;
@@ -51,7 +50,7 @@ public class ProductEdge(ProductDetails node, string cursor) : Edge<ProductDetai
 public class ProductPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("product")] public ProductDetails Product { get; set; }
+    [GraphQLName("product")] public ProductDetails Product { get; set; } = new();
 }
 
 [GraphQLName("ProductDetails")]
@@ -60,11 +59,11 @@ public class ProductDetails : Node
     [GraphQLName("inactive")] public bool Inactive { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("price")] public required string Price { get; set; }
-    [GraphQLName("priceToDisplay")] public required string PriceToDisplay { get; set; }
-    [GraphQLName("currencyToDisplay")] public required string CurrencyToDisplay { get; set; }
-    [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; }
-    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; }
+    [GraphQLName("price")] public string Price { get; set; } = string.Empty;
+    [GraphQLName("priceToDisplay")] public string PriceToDisplay { get; set; } = string.Empty;
+    [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;
+    [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; } = new();
+    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
 
@@ -85,26 +84,26 @@ public class ProductDetails : Node
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
 
     [GraphQLName("latestProductVersionId")]
-    public required string LatestProductVersionId { get; set; }
+    public string LatestProductVersionId { get; set; } = string.Empty;
 
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
 
     [GraphQLName("organizationStripeConnectAccountDetails")]
     public OrganizationStripeConnectAccountDetails? OrganizationStripeConnectAccountDetails { get; set; }
 
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("Marketplace_OrganizationDetails")]
 public class OrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
 }
 
 [GraphQLName("Marketplace_OrganizationTagDetails")]
 public class OrganizationTagDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("tagType")] public string? TagType { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
@@ -115,10 +114,10 @@ public class AddProductInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("price")] public required string Price { get; set; }
+    [GraphQLName("price")] public string Price { get; set; } = string.Empty;
     [GraphQLName("priceUnit")] public PriceUnit PriceUnit { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
@@ -148,11 +147,11 @@ public class AddProductInput
 public class UpdateProductInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("price")] public required string Price { get; set; }
+    [GraphQLName("price")] public string Price { get; set; } = string.Empty;
     [GraphQLName("priceUnit")] public PriceUnit PriceUnit { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
@@ -182,21 +181,21 @@ public class UpdateProductInput
 public class DeleteProductsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+    [GraphQLName("ids")] public IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("ActivateProductsInput")]
 public class ActivateProductsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+    [GraphQLName("ids")] public IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("DeactivateProductsInput")]
 public class DeactivateProductsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+    [GraphQLName("ids")] public IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("ProductsPayload")]
@@ -209,6 +208,6 @@ public class ProductsPayload
 [GraphQLName("Marketplace_OrganizationStripeConnectAccountDetails")]
 public class OrganizationStripeConnectAccountDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

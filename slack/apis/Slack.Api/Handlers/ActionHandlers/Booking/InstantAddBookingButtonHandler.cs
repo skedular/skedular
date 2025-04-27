@@ -62,7 +62,7 @@ public class InstantAddBookingButtonHandler(
                 First = 1,
                 Before = string.Empty,
                 Last = -1,
-                Where = new BookingWhereInput { FromGTE = context.From.ToTimestamp(), FromLTE = context.Until.ToTimestamp(), IncludeMineOnly = true }
+                Where = new BookingWhereInput { FromGte = context.From.ToTimestamp(), FromLte = context.Until.ToTimestamp(), IncludeMineOnly = true }
             };
             getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
             if (!string.IsNullOrWhiteSpace(context.LocationId))

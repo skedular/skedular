@@ -6,5 +6,5 @@ public class OrganizationStripeConnectAccountRefreshCode : ModelBaseWithDeleted
 {
     public string Code { get; set; } = string.Empty;
 
-    public OrganizationStripeConnectAccount OrganizationStripeConnectAccount { get; set; }
+    public OrganizationStripeConnectAccount OrganizationStripeConnectAccount { get; set; } = new();
 }

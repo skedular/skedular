@@ -5,7 +5,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Payment.Shared.Models;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Payment.Api.GraphQL;
@@ -14,7 +13,7 @@ namespace Payment.Api.GraphQL;
 public class AddOrganizationPaymentMethodIntentInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 }
 
 [GraphQLName("AddOrganizationPaymentMethodIntentPayload")]
@@ -29,7 +28,7 @@ public class AddOrganizationPaymentMethodIntentPayload
 public class RemoveOrganizationPaymentMethodInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("RemoveOrganizationPaymentMethodPayload")]
@@ -56,7 +55,7 @@ public class AddCustomerPaymentMethodIntentPayload
 public class RemoveMyPaymentMethodInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("RemoveCustomerPaymentMethodPayload")]
@@ -77,7 +76,7 @@ public class PaymentMethod : Node
     [GraphQLName("cardFunding")] public string? CardFunding { get; set; }
     [GraphQLName("cardIssuer")] public string? CardIssuer { get; set; }
     [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("AddOrganizationStripeConnectAccountInput")]
@@ -85,74 +84,74 @@ public class AddOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
-    [GraphQLName("name")] public required string Name { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateOrganizationStripeConnectAccountInput")]
 public class UpdateOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("name")] public required string Name { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
 [GraphQLName("DeleteOrganizationStripeConnectAccountInput")]
 public class DeleteOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("DeleteOrganizationStripeConnectAccountsInput")]
 public class DeleteOrganizationStripeConnectAccountsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+    [GraphQLName("ids")] public IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("OrganizationStripeConnectAccountPayload")]
 public class OrganizationStripeConnectAccountPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("account")] public OrganizationStripeConnectAccountDetails Account { get; set; }
+    [GraphQLName("account")] public OrganizationStripeConnectAccountDetails Account { get; set; } = new();
 }
 
 [GraphQLName("OrganizationStripeConnectAccountsPayload")]
 public class OrganizationStripeConnectAccountsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("accounts")] public IEnumerable<OrganizationStripeConnectAccountDetails> Accounts { get; set; }
+    [GraphQLName("accounts")] public IEnumerable<OrganizationStripeConnectAccountDetails> Accounts { get; set; } = [];
 }
 
 [GraphQLName("OrganizationStripeConnectAccountDetails")]
 public class OrganizationStripeConnectAccountDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("chargesEnabled")] public bool ChargesEnabled { get; set; }
     [GraphQLName("payoutsEnabled")] public bool PayoutsEnabled { get; set; }
-    [GraphQLName("type")] public string Type { get; set; }
-    [GraphQLName("country")] public string Country { get; set; }
-    [GraphQLName("defaultCurrency")] public string DefaultCurrency { get; set; }
-    [GraphQLName("businessType")] public string BusinessType { get; set; }
-    [GraphQLName("companyName")] public string CompanyName { get; set; }
-    [GraphQLName("email")] public string Email { get; set; }
-    [GraphQLName("phone")] public string Phone { get; set; }
-    [GraphQLName("capabilitiesTransfers")] public string CapabilitiesTransfers { get; set; }
+    [GraphQLName("type")] public string Type { get; set; } = string.Empty;
+    [GraphQLName("country")] public string Country { get; set; } = string.Empty;
+    [GraphQLName("defaultCurrency")] public string DefaultCurrency { get; set; } = string.Empty;
+    [GraphQLName("businessType")] public string BusinessType { get; set; } = string.Empty;
+    [GraphQLName("companyName")] public string CompanyName { get; set; } = string.Empty;
+    [GraphQLName("email")] public string Email { get; set; } = string.Empty;
+    [GraphQLName("phone")] public string Phone { get; set; } = string.Empty;
+    [GraphQLName("capabilitiesTransfers")] public string CapabilitiesTransfers { get; set; } = string.Empty;
 
     [GraphQLName("capabilitiesCardPayments")]
-    public string CapabilitiesCardPayments { get; set; }
+    public string CapabilitiesCardPayments { get; set; } = string.Empty;
 
-    [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; }
+    [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; } = string.Empty;
     [GraphQLName("onboardingCompleted")] public bool OnboardingCompleted { get; set; }
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationStripeConnectAccountWhereInput")]
 public class OrganizationStripeConnectAccountWhereInput
 {
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("onboardingCompleted")] public bool? OnboardingCompleted { get; set; }
 }
@@ -174,6 +173,6 @@ public class OrganizationStripeConnectAccountEdge(OrganizationStripeConnectAccou
 [GraphQLName("Payment_OrganizationDetails")]
 public class OrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

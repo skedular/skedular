@@ -5,7 +5,6 @@ using HotChocolate;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Customer.Api.GraphQL;
@@ -14,21 +13,21 @@ namespace Customer.Api.GraphQL;
 public class AddCustomerPreferredLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
+    [GraphQLName("locationId")] public string LocationId { get; set; } = string.Empty;
 }
 
 [GraphQLName("AddCustomerPreferredOrganizationTagInput")]
 public class AddCustomerPreferredOrganizationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationTagId")] public required string OrganizationTagId { get; set; }
+    [GraphQLName("organizationTagId")] public string OrganizationTagId { get; set; } = string.Empty;
 }
 
 [GraphQLName("AddCustomerPreferredTeamInput")]
 public class AddCustomerPreferredTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("teamId")] public required string TeamId { get; set; }
+    [GraphQLName("teamId")] public string TeamId { get; set; } = string.Empty;
 }
 
 [GraphQLName("ClearCustomerDefaultOrganizationInput")]
@@ -123,7 +122,7 @@ public class CustomerDetails : Node
     [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredResources")] public IEnumerable<CustomerResourceDetails> PreferredResources { get; set; } = [];
 
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("CustomerEdge")]
@@ -134,13 +133,13 @@ public class CustomerIdentity : Node
 {
     [GraphQLName("email")] public string? Email { get; set; }
     [GraphQLName("verified")] public bool Verified { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("Customer_LocationDetails")]
 public class LocationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
 }
@@ -148,7 +147,7 @@ public class LocationDetails
 [GraphQLName("Customer_OrganizationTagDetails")]
 public class OrganizationTagDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
 }
@@ -163,7 +162,7 @@ public class CustomerOrderInput
 [GraphQLName("Customer_OrganizationDetails")]
 public class OrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }
@@ -172,13 +171,13 @@ public class OrganizationDetails
 public class CustomerPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("customer")] public CustomerDetails Customer { get; set; }
+    [GraphQLName("customer")] public CustomerDetails Customer { get; set; } = new();
 }
 
 [GraphQLName("CustomerTeamDetails")]
 public class CustomerTeamDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
 }
@@ -186,7 +185,7 @@ public class CustomerTeamDetails
 [GraphQLName("CustomersByPreferredLocationWhereInput")]
 public class CustomersByPreferredLocationWhereInput
 {
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
+    [GraphQLName("locationId")] public string LocationId { get; set; } = string.Empty;
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
@@ -194,28 +193,28 @@ public class CustomersByPreferredLocationWhereInput
 public class RemoveCustomerPreferredLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
+    [GraphQLName("locationId")] public string LocationId { get; set; } = string.Empty;
 }
 
 [GraphQLName("RemoveCustomerPreferredOrganizationTagInput")]
 public class RemoveCustomerPreferredOrganizationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationTagId")] public required string OrganizationTagId { get; set; }
+    [GraphQLName("organizationTagId")] public string OrganizationTagId { get; set; } = string.Empty;
 }
 
 [GraphQLName("RemoveCustomerPreferredTeamInput")]
 public class RemoveCustomerPreferredTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("teamId")] public required string TeamId { get; set; }
+    [GraphQLName("teamId")] public string TeamId { get; set; } = string.Empty;
 }
 
 [GraphQLName("SetCustomerDefaultOrganizationInput")]
 public class SetCustomerDefaultOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 }
 
 [GraphQLName("SubmitCustomerFeedbackInput")]
@@ -230,7 +229,7 @@ public class SubmitCustomerFeedbackInput
 [GraphQLName("SubmitCustomerFeedbackPayload")]
 public class SubmitCustomerFeedbackPayload
 {
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
@@ -252,7 +251,7 @@ public class UpdateMyCustomerDetailsInput
 public class UpdateCustomerDetailsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("designation")] public string? Designation { get; set; }
     [GraphQLName("title")] public string? Title { get; set; }
@@ -267,19 +266,19 @@ public class UpdateCustomerDetailsInput
 public class AddCustomerPreferredResourceInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("resourceId")] public required string ResourceId { get; set; }
+    [GraphQLName("resourceId")] public string ResourceId { get; set; } = string.Empty;
 }
 
 [GraphQLName("RemoveCustomerPreferredResourceInput")]
 public class RemoveCustomerPreferredResourceInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("resourceId")] public required string ResourceId { get; set; }
+    [GraphQLName("resourceId")] public string ResourceId { get; set; } = string.Empty;
 }
 
 [GraphQLName("CustomerResourceDetails")]
 public class CustomerResourceDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
 }

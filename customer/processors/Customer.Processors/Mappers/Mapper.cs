@@ -427,7 +427,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)!,
+                Organization = MapTo(src.Organization),
                 Resources = includeResources ? MapTo(src.Resources).ToList() : []
             };
 
@@ -462,7 +462,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)!
+                Organization = MapTo(src.Organization)
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>

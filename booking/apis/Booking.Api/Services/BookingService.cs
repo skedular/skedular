@@ -661,8 +661,9 @@ public class BookingService(
         }
         else if (organization is not null && team is null)
         {
-            locationEntity = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == organization.Id);
-            teamEntity = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == organization.Id);
+            locationEntity =
+                customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
+            teamEntity = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
         }
         else
         {
@@ -678,7 +679,7 @@ public class BookingService(
                     }
                 }
 
-                if (team is not null)
+                if (team is not null && team.Organization is not null)
                 {
                     organizationEntity =
                         await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, false, false, cancellationToken);
@@ -691,13 +692,15 @@ public class BookingService(
             else
             {
                 organizationEntity = customer.DefaultOrganization;
-                locationEntity = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);
+                locationEntity = customer.PreferredLocations.FirstOrDefault(item =>
+                    item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
                 if (locationEntity is not null)
                 {
                     locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
                 }
 
-                teamEntity = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);
+                teamEntity = customer.PreferredTeams.FirstOrDefault(item =>
+                    item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
                 if (team is not null)
                 {
                     teamEntity = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);

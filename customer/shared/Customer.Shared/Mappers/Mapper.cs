@@ -45,13 +45,15 @@ public class Mapper : IMapper
 
         customer.Identities.AddRange(MapTo(src.Identities));
         customer.PreferredLocations.AddRange(
-            src.PreferredLocations.Select(item => new Location { Id = item.Id, OrganizationId = item.Organization.Id })
+            src.PreferredLocations.Select(item =>
+                new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.PreferredResources.AddRange(
             src.PreferredResources.Select(item =>
                 new Resource { Id = item.Id, LocationId = item.Location is null ? string.Empty : item.Location.Id }));
         customer.PreferredTeams.AddRange(
-            src.PreferredTeams.Select(item => new Team { Id = item.Id, OrganizationId = item.Organization.Id }));
+            src.PreferredTeams.Select(item =>
+                new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id }));
         customer.PreferredOrganizationTags.AddRange(
             src.PreferredOrganizationTags.Select(item => new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
         );

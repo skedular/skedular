@@ -19,7 +19,7 @@ public class Product : ModelBaseWithDeleted
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];

@@ -7,5 +7,5 @@ public class DailyDeskCountRecording : ModelBaseWithDeleted
     public DateTimeOffset Date { get; set; }
     public int Count { get; set; }
 
-    public Location Location { get; set; }
+    public Location Location { get; set; } = new();
 }

@@ -10,5 +10,5 @@ public class Tag : ModelBaseWithDeleted
     public OrganizationTagType Type { get; set; }
     public string? Color { get; set; }
 
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
 }

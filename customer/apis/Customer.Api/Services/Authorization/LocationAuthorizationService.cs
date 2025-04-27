@@ -20,6 +20,8 @@ public class LocationAuthorizationService(
         Shared.Database.Entities.Customer customer,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(location.Organization);
+        
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             location.Organization.Id,
             false,
@@ -38,6 +40,8 @@ public class LocationAuthorizationService(
         Shared.Database.Entities.Customer customer,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(location.Organization);
+
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             location.Organization.Id,
             false,

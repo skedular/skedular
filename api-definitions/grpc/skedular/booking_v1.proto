@@ -60,14 +60,14 @@ message GetPaginatedBookingsInput {
 }
 
 message BookingWhereInput {
-    google.protobuf.Timestamp fromGT = 1;
-    google.protobuf.Timestamp fromGTE  = 2;
-    google.protobuf.Timestamp fromLT  = 3;
-    google.protobuf.Timestamp fromLTE  = 4;
-    google.protobuf.Timestamp toGT  = 5;
-    google.protobuf.Timestamp toGTE  = 6;
-    google.protobuf.Timestamp toLT  = 7;
-    google.protobuf.Timestamp toLTE  = 8;
+    google.protobuf.Timestamp fromGt = 1;
+    google.protobuf.Timestamp fromGte  = 2;
+    google.protobuf.Timestamp fromLt  = 3;
+    google.protobuf.Timestamp fromLte  = 4;
+    google.protobuf.Timestamp toGt  = 5;
+    google.protobuf.Timestamp toGte  = 6;
+    google.protobuf.Timestamp toLt  = 7;
+    google.protobuf.Timestamp toLte  = 8;
     string notesContains  = 9;
     string nameContains  = 10;
     repeated string  organizationIds  = 11;

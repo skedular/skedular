@@ -8,7 +8,7 @@ public class Team : ModelBaseWithDeleted
     public string? About { get; set; }
     public string? Timezone { get; set; }
 
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public Location? PrimaryLocation { get; set; }
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];

@@ -8,5 +8,5 @@ public class TeamMember : ReplicatedModelBaseWithDeleted
     public TeamMemberRole? Role { get; set; }
     public TeamMemberStatus Status { get; set; }
     public Team? Team { get; set; }
-    public Customer Customer { get; set; }
+    public Customer Customer { get; set; } = new();
 }

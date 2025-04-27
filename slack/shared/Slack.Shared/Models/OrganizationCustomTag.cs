@@ -6,5 +6,5 @@ public class OrganizationCustomTag : ModelBase
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
 }

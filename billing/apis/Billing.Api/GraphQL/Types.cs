@@ -2,7 +2,6 @@ using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Billing.Api.GraphQL;
@@ -13,7 +12,7 @@ public class OrganizationBillingContactDetailsPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("organizationBillingContactDetails")]
-    public OrganizationBillingContactDetails OrganizationBillingContactDetails { get; set; }
+    public OrganizationBillingContactDetails OrganizationBillingContactDetails { get; set; } = new();
 }
 
 [GraphQLName("OrganizationBillingContactDetails")]
@@ -27,7 +26,7 @@ public class OrganizationBillingContactDetails : Node
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public string? Zipcode { get; set; }
     [GraphQLName("country")] public string? Country { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateOrganizationBillingContactDetailsInput")]
@@ -51,7 +50,7 @@ public class MyBillingContactDetailsPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("customerBillingContactDetails")]
-    public CustomerBillingContactDetails CustomerBillingContactDetails { get; set; }
+    public CustomerBillingContactDetails CustomerBillingContactDetails { get; set; } = new();
 }
 
 [GraphQLName("CustomerBillingContactDetails")]
@@ -66,7 +65,7 @@ public class CustomerBillingContactDetails : Node
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public string? Zipcode { get; set; }
     [GraphQLName("country")] public string? Country { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateMyBillingContactDetailsInput")]

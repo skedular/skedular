@@ -29,7 +29,7 @@ public interface INotificationRepository : IRepository<Database.Entities.Notific
 
 internal static class NotificationExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Notification, Team> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Notification, Team?> AddDependentObjects(
         this IQueryable<Database.Entities.Notification> originalQuery) =>
         originalQuery
             .Include(query => query.InvitedBy)
@@ -56,8 +56,8 @@ internal static class NotificationExtensions
         {
             query = query.Where(item =>
                 (item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId) ||
-                (item.Location != null && item.Location.Organization.Id == searchCriteria.OrganizationId) ||
-                (item.Team != null && item.Team.Organization.Id == searchCriteria.OrganizationId));
+                (item.Location != null && item.Location.Organization != null && item.Location.Organization.Id == searchCriteria.OrganizationId) ||
+                (item.Team != null && item.Team.Organization != null && item.Team.Organization.Id == searchCriteria.OrganizationId));
         }
 
         return query;

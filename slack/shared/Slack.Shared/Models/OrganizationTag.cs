@@ -9,5 +9,5 @@ public class OrganizationTag : ModelBase
     public string? Description { get; set; }
     public string? Color { get; set; }
     public OrganizationTagType? Type { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
 }

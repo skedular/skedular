@@ -133,10 +133,9 @@ public class Mapper : IMapper
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization = new OrganizationDetails
-                {
-                    UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
-                }
+                Organization = item.Organization is null
+                    ? null
+                    : new OrganizationDetails { UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl }
             }),
             PreferredZones = src.PreferredOrganizationTags
                 .Where(item => item.Type == OrganizationTagType.Zone)
@@ -150,10 +149,9 @@ public class Mapper : IMapper
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization = new OrganizationDetails
-                {
-                    UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
-                }
+                Organization = item.Organization is null
+                    ? null
+                    : new OrganizationDetails { UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl }
             })
         };
 
@@ -328,14 +326,18 @@ public class Mapper : IMapper
         {
             Id = item.Id,
             Name = item.Name.ToSafeString(),
-            Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+            Organization = item.Organization is null
+                ? null
+                : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
         }));
 
         customer.PreferredTeams.AddRange(src.PreferredTeams.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
         {
             Id = item.Id,
             Name = item.Name.ToSafeString(),
-            Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+            Organization = item.Organization is null
+                ? null
+                : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
         }));
 
         customer.PreferredResources.AddRange(src.PreferredResources.Select(item =>
@@ -486,7 +488,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)!,
+                Organization = MapTo(src.Organization),
                 Resources = MapTo(src.Resources).ToList()
             };
 
@@ -540,7 +542,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)!
+                Organization = MapTo(src.Organization)
             };
 
     private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);

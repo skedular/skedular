@@ -277,7 +277,6 @@ namespace Customer.Shared.Database.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("OrganizationId")
-                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -601,7 +600,6 @@ namespace Customer.Shared.Database.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("OrganizationId")
-                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -833,9 +831,7 @@ namespace Customer.Shared.Database.Migrations
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("Locations")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrganizationId");
 
                     b.Navigation("Organization");
                 });
@@ -894,9 +890,7 @@ namespace Customer.Shared.Database.Migrations
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("Teams")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrganizationId");
 
                     b.Navigation("Organization");
                 });

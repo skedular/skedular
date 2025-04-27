@@ -10,6 +10,6 @@ public class OrganizationOffering : ModelBaseWithDeleted
     public DateTimeOffset End { get; set; }
     public bool AutoRenew { get; set; }
     public int UnitPrice { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
 }

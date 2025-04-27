@@ -9,7 +9,7 @@ public class JoinInvitation : ModelBaseWithDeleted
     public InvitationStatus Status { get; set; }
     public TeamMemberRole Role { get; set; }
 
-    public Team Team { get; set; }
-    public Customer CreatedBy { get; set; }
+    public Team Team { get; set; } = new();
+    public Customer CreatedBy { get; set; } = new();
     public Customer? Invitee { get; set; }
 }

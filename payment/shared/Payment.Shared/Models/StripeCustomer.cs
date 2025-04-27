@@ -5,6 +5,6 @@ namespace Payment.Shared.Models;
 public class StripeCustomer : ModelBaseWithDeleted
 {
     public string StripeCustomerId { get; set; } = string.Empty;
-    public Organization Organization { get; set; }
-    public Customer Customer { get; set; }
+    public Organization Organization { get; set; } = new();
+    public Customer Customer { get; set; } = new();
 }

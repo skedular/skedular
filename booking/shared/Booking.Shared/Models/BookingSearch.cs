@@ -4,14 +4,14 @@ namespace Booking.Shared.Models;
 
 // ReSharper disable InconsistentNaming
 public class BookingSearchCriteria(
-    DateTimeOffset? fromGT,
-    DateTimeOffset? fromGTE,
-    DateTimeOffset? fromLT,
-    DateTimeOffset? fromLTE,
-    DateTimeOffset? toGT,
-    DateTimeOffset? toGTE,
-    DateTimeOffset? toLT,
-    DateTimeOffset? toLTE,
+    DateTimeOffset? fromGt,
+    DateTimeOffset? fromGte,
+    DateTimeOffset? fromLt,
+    DateTimeOffset? fromLte,
+    DateTimeOffset? toGt,
+    DateTimeOffset? toGte,
+    DateTimeOffset? toLt,
+    DateTimeOffset? toLte,
     string? notesContains,
     string? nameContains,
     string? bookingType,
@@ -22,14 +22,14 @@ public class BookingSearchCriteria(
     IEnumerable<string> teamIds,
     IEnumerable<string> customerIds)
 {
-    public DateTimeOffset? FromGT { get; } = fromGT;
-    public DateTimeOffset? FromGTE { get; } = fromGTE;
-    public DateTimeOffset? FromLT { get; } = fromLT;
-    public DateTimeOffset? FromLTE { get; } = fromLTE;
-    public DateTimeOffset? ToGT { get; } = toGT;
-    public DateTimeOffset? ToGTE { get; } = toGTE;
-    public DateTimeOffset? ToLT { get; } = toLT;
-    public DateTimeOffset? ToLTE { get; } = toLTE;
+    public DateTimeOffset? FromGt { get; } = fromGt;
+    public DateTimeOffset? FromGte { get; } = fromGte;
+    public DateTimeOffset? FromLt { get; } = fromLt;
+    public DateTimeOffset? FromLte { get; } = fromLte;
+    public DateTimeOffset? ToGt { get; } = toGt;
+    public DateTimeOffset? ToGte { get; } = toGte;
+    public DateTimeOffset? ToLt { get; } = toLt;
+    public DateTimeOffset? ToLte { get; } = toLte;
     public string? NotesContains { get; } = notesContains;
     public string? NameContains { get; } = nameContains;
     public bool? IncludeMineOnly { get; } = includeMineOnly;

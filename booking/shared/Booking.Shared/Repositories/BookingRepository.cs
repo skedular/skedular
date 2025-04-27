@@ -59,44 +59,44 @@ internal static class BookingExtensions
             query = query.Where(item => item.From >= timeProvider.GetUtcNow().StartOfDay());
         }
 
-        if (searchCriteria.FromGT is not null)
+        if (searchCriteria.FromGt is not null)
         {
-            query = query.Where(item => item.From > searchCriteria.FromGT);
+            query = query.Where(item => item.From > searchCriteria.FromGt);
         }
 
-        if (searchCriteria.FromGTE is not null)
+        if (searchCriteria.FromGte is not null)
         {
-            query = query.Where(item => item.From >= searchCriteria.FromGTE);
+            query = query.Where(item => item.From >= searchCriteria.FromGte);
         }
 
-        if (searchCriteria.FromLT is not null)
+        if (searchCriteria.FromLt is not null)
         {
-            query = query.Where(item => item.From < searchCriteria.FromLT);
+            query = query.Where(item => item.From < searchCriteria.FromLt);
         }
 
-        if (searchCriteria.FromLTE is not null)
+        if (searchCriteria.FromLte is not null)
         {
-            query = query.Where(item => item.From <= searchCriteria.FromLTE);
+            query = query.Where(item => item.From <= searchCriteria.FromLte);
         }
 
-        if (searchCriteria.ToGT is not null)
+        if (searchCriteria.ToGt is not null)
         {
-            query = query.Where(item => item.Until > searchCriteria.ToGT);
+            query = query.Where(item => item.Until > searchCriteria.ToGt);
         }
 
-        if (searchCriteria.ToGTE is not null)
+        if (searchCriteria.ToGte is not null)
         {
-            query = query.Where(item => item.Until >= searchCriteria.ToGTE);
+            query = query.Where(item => item.Until >= searchCriteria.ToGte);
         }
 
-        if (searchCriteria.ToLT is not null)
+        if (searchCriteria.ToLt is not null)
         {
-            query = query.Where(item => item.Until < searchCriteria.ToLT);
+            query = query.Where(item => item.Until < searchCriteria.ToLt);
         }
 
-        if (searchCriteria.ToLTE is not null)
+        if (searchCriteria.ToLte is not null)
         {
-            query = query.Where(item => item.Until <= searchCriteria.ToLTE);
+            query = query.Where(item => item.Until <= searchCriteria.ToLte);
         }
 
         if (searchCriteria.CustomerIds.Count != 0)

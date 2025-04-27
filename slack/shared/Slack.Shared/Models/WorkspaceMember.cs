@@ -23,5 +23,5 @@ public class WorkspaceMember : ModelBaseWithDeleted
     public string? PhotoUrl512 { get; set; }
     public DateTimeOffset? LastProfileStatusUpdatedAt { get; set; }
     public bool? AutomaticallyUpdateProfileStatus { get; set; }
-    public Workspace Workspace { get; set; }
+    public Workspace Workspace { get; set; } = new();
 }

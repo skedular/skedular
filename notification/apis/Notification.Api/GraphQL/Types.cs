@@ -5,7 +5,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Notification.Shared.Models;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Notification.Api.GraphQL;
@@ -21,7 +20,7 @@ public class Notification : Node
     [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
     [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("team")] public TeamDetails? Team { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("NotificationConnection")]
@@ -30,7 +29,7 @@ public class NotificationConnection : Enterprise.Shared.GraphQL.Types.Connection
 [GraphQLName("Notification_CustomerDetails")]
 public class CustomerDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("givenName")] public string? GivenName { get; set; }
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
@@ -51,7 +50,7 @@ public class NotificationEdge(Notification node, string cursor) : Edge<Notificat
 [GraphQLName("Notification_LocationDetails")]
 public class LocationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
@@ -65,7 +64,7 @@ public class NotificationOrderInput
 [GraphQLName("Notification_OrganizationDetails")]
 public class OrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }
@@ -73,7 +72,7 @@ public class OrganizationDetails
 [GraphQLName("Notification_TeamDetails")]
 public class TeamDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 

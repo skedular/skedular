@@ -14,7 +14,6 @@ public class TeamAuthorizationService : ITeamAuthorizationService
         team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: TeamMemberStatusConstants.Active,
-            Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-            or TeamMemberRoleConstants.Member
+            Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator or TeamMemberRoleConstants.Member
         };
 }

@@ -23,7 +23,6 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
-            or OrganizationMemberRoleConstants.Member
+            or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
         };
 }

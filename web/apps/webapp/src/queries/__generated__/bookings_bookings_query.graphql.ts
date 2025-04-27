@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64a57d3a93b26b3df50aa9bec5b34ef3>>
+ * @generated SignedSource<<dde5fe64f7fa18c9ba2504b689988df8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -183,12 +183,12 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "fromGTE",
+              "name": "fromGte",
               "variableName": "bookingsSearchCriteriaFrom"
             },
             {
               "kind": "Variable",
-              "name": "fromLTE",
+              "name": "fromLte",
               "variableName": "bookingsSearchCriteriaTo"
             },
             {
@@ -451,6 +451,6 @@ return {
 };
 })();
 
-(node as any).hash = "236ca053ff07bde5157b5c350958a1f8";
+(node as any).hash = "38ccd122dd88047a07ffdf9443d0c9db";
 
 export default node;

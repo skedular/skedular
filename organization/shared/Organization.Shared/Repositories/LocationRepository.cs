@@ -7,11 +7,7 @@ namespace Organization.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Location>
 {
-    Task<Location> UpsertNakedAsync(
-        string id,
-        Database.Entities.Organization organization,
-        CancellationToken cancellationToken);
-
+    Task<Location> UpsertNakedAsync(string id, Database.Entities.Organization organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Location Add(Location location);
     Location Update(Location location);

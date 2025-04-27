@@ -16,7 +16,7 @@ public class Location : ModelBaseWithDeleted
 
     public Address? PhysicalAddress { get; set; }
 
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];

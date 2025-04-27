@@ -12,5 +12,5 @@ public class OrganizationOffering : ReplicatedModelBaseWithDeleted
     public int TotalNumberOfActiveCustomers { get; set; }
     public long TotalCost { get; set; }
     public DateTimeOffset? InvoiceDate { get; set; }
-    public Organization Organization { get; set; }
+    public Organization Organization { get; set; } = new();
 }

@@ -22,7 +22,7 @@ public class TeamSubscriber(
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
 
                     var team = mapper.MapTo(@event);
-                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization!.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
@@ -128,10 +128,7 @@ public class TeamSubscriber(
 
         var team = string.IsNullOrWhiteSpace(notification.Team?.Id)
             ? null
-            : await repositoryFactory.TeamRepository.UpsertNakedAsync(
-                notification.Team.Id,
-                null,
-                cancellationToken);
+            : await repositoryFactory.TeamRepository.UpsertNakedAsync(notification.Team.Id, null, cancellationToken);
 
         _ = existingNotification is null
             ? repositoryFactory.NotificationRepository.Add(mapper.MapToEntity(notification, invitedBy, invitee, null, null, team))

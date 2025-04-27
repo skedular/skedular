@@ -658,7 +658,7 @@ public class HomePage(
             First = first.ToNullInt(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = includeMyBookingsOnly }
+            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = includeMyBookingsOnly }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
@@ -680,7 +680,7 @@ public class HomePage(
         {
             First = -1,
             Last = -1,
-            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true }
+            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);

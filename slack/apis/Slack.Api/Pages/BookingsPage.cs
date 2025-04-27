@@ -466,8 +466,8 @@ public class BookingsPage(
             Last = last.ToNullInt(),
             Where = new BookingWhereInput
             {
-                FromGTE = from.ToTimestamp(),
-                FromLTE = until.ToTimestamp(),
+                FromGte = from.ToTimestamp(),
+                FromLte = until.ToTimestamp(),
                 IncludeMineOnly = commonPageContext.PageContext.BookingsPage.IncludeMyBookingsOnly
             }
         };
@@ -504,7 +504,7 @@ public class BookingsPage(
         {
             First = -1,
             Last = -1,
-            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true }
+            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         if (commonPageContext.PageContext.BookingsPage.LocationIds.Count != 0)

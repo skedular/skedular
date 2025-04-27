@@ -8,7 +8,7 @@ public class OrganizationMember : ModelBaseWithDeleted
     public OrganizationMemberRole Role { get; set; }
     public OrganizationMemberStatus Status { get; set; }
     public bool? IsOrganizationOnboardingDone { get; set; }
-    public Organization Organization { get; set; }
-    public Customer Customer { get; set; }
+    public Organization Organization { get; set; } = new();
+    public Customer Customer { get; set; } = new();
     public ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
 }
