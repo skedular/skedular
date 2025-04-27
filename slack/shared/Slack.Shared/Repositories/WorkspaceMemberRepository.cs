@@ -10,10 +10,8 @@ namespace Slack.Shared.Repositories;
 public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
 {
     Task<WorkspaceMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<WorkspaceMember?> GetByAnyMatchingIdAsync(ICollection<string> ids, CancellationToken cancellationToken);
     WorkspaceMember Add(WorkspaceMember workspaceMember);
     WorkspaceMember Update(WorkspaceMember workspaceMember);
-    WorkspaceMember Remove(WorkspaceMember workspaceMember);
     void RemoveRange(ICollection<WorkspaceMember> workspaceMembers);
 
     Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(
@@ -38,12 +36,6 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<WorkspaceMember?> GetByAnyMatchingIdAsync(ICollection<string> ids,
-        CancellationToken cancellationToken) =>
-        await DbContext.WorkspaceMember
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => ids.Contains(query.Id), cancellationToken);
-
     public WorkspaceMember Add(WorkspaceMember workspaceMember)
     {
         var now = TimeProvider.GetUtcNow();
@@ -55,13 +47,6 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
     {
         var now = TimeProvider.GetUtcNow();
         workspaceMember.ModifiedAt = now;
-        return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
-    }
-
-    public WorkspaceMember Remove(WorkspaceMember workspaceMember)
-    {
-        var now = TimeProvider.GetUtcNow();
-        workspaceMember.DeletedAt = now;
         return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
     }
 

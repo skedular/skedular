@@ -12,7 +12,7 @@ namespace Slack.Api.Components;
 public interface IBookingComponents
 {
     Block GetOnlyShowMyBookingCheckbox(string actionId, bool initialValue);
-    ICollection<IActionElement> GetAddBookingButton(string? locationId, string? teamId, PageContext pageContext);
+    ICollection<IActionElement> GetAddBookingButton(PageContext pageContext);
 
     Task<ICollection<Block>> GetBookingCardsAsync(
         Workspace workspace,
@@ -28,7 +28,7 @@ public interface IBookingComponents
         Workspace workspace,
         Booking booking,
         ICollection<Booking> myBookings,
-        Customer customer,
+        string loggedInCustomerId,
         bool canUpdateBookingOnBehalf,
         bool canDeleteBookingOnBehalf,
         bool includeActionButtons,
@@ -58,10 +58,10 @@ public class BookingComponents(
         };
     }
 
-    public ICollection<IActionElement> GetAddBookingButton(string? locationId, string? teamId, PageContext pageContext)
+    public ICollection<IActionElement> GetAddBookingButton(PageContext pageContext)
     {
         pageContext = pageContext.Clone();
-        var context = new AddBookingContext(pageContext, null, null, locationId, teamId).Serialize();
+        var context = new AddBookingContext(pageContext, null, null, null).Serialize();
 
         return
         [
@@ -84,15 +84,7 @@ public class BookingComponents(
         foreach (var booking in bookings)
         {
             blocks.AddRange(
-                GetBookingCard(
-                    workspace,
-                    booking,
-                    myBookings,
-                    customer,
-                    canUpdateBookingOnBehalf,
-                    canDeleteBookingOnBehalf,
-                    true,
-                    pageContext));
+                GetBookingCard(workspace, booking, myBookings, customer.Id, canUpdateBookingOnBehalf, canDeleteBookingOnBehalf, true, pageContext));
             blocks.Add(new DividerBlock());
         }
 
@@ -103,7 +95,7 @@ public class BookingComponents(
         Workspace workspace,
         Booking booking,
         ICollection<Booking> myBookings,
-        Customer customer,
+        string loggedInCustomerId,
         bool canUpdateBookingOnBehalf,
         bool canDeleteBookingOnBehalf,
         bool includeActionButtons,
@@ -111,33 +103,24 @@ public class BookingComponents(
     {
         pageContext = pageContext.Clone();
 
-        var blocks = new List<Block>
+        var blocks = new List<Block> { new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) } };
+
+        blocks.AddRange(booking.InvolvedCustomers.Select(item => new SectionBlock
         {
-            new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) },
-            new SectionBlock
-            {
-                Text = sharedWorkspaceMemberService.GetMentionedCustomerNameInSlackFormat(
-                    workspace,
-                    booking.Customer.Identities.Select(item => item.Id).ToList(),
-                    booking.Customer).ToMarkdown()
-            }
-        };
+            Text = sharedWorkspaceMemberService
+                .GetMentionedCustomerNameInSlackFormat(workspace, item.Identities.Select(identity => identity.Id).ToList(), item)
+                .ToMarkdown()
+        }));
 
         if (!string.IsNullOrWhiteSpace(booking.Notes))
         {
             blocks.Add(new SectionBlock { Text = $"Notes: {booking.Notes}" });
         }
 
-        if (!string.IsNullOrWhiteSpace(booking.Location?.Id))
-        {
-            blocks.Add(new SectionBlock { Text = booking.Location.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location) });
-        }
+        blocks.AddRange(booking.InvolvedLocations.Select(item =>
+            new SectionBlock { Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location) }));
 
-        if (!string.IsNullOrWhiteSpace(booking.Team?.Id))
-        {
-            blocks.Add(new SectionBlock { Text = booking.Team.Name.ToSafeString().ToPlainTextWithIcon(Icons.Team) });
-        }
-
+        blocks.AddRange(booking.InvolvedTeams.Select(item => new SectionBlock { Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Team) }));
         blocks.AddRange(bookingComponents.GetResourcesLines(booking));
 
         if (!includeActionButtons)
@@ -146,7 +129,7 @@ public class BookingComponents(
         }
 
         var buttons = new List<IActionElement>();
-        if (booking.Customer.Id == customer.Id)
+        if (booking.InvolvedCustomers.Select(item => item.Id).Contains(loggedInCustomerId))
         {
             buttons.Add(new Button
             {

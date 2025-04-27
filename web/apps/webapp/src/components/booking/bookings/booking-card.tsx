@@ -73,7 +73,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
         from
         until
         notes
-        customer {
+        involvedCustomers {
           uniqueId
           name
           givenName
@@ -81,14 +81,14 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           familyName
           photoUrl
         }
-        organization {
+        involvedOrganizations {
           uniqueId
         }
-        location {
+        involvedLocations {
           uniqueId
           name
         }
-        team {
+        involvedTeams {
           uniqueId
           name
         }
@@ -131,7 +131,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           until
           notes
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -139,11 +139,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             familyName
             photoUrl
           }
-          location {
+          involvedLocations {
             uniqueId
             name
           }
-          team {
+          involvedTeams {
             uniqueId
             name
           }
@@ -202,9 +202,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
   };
 
   const handleRemoveBookingClick = () => {
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
-    if (bookingDetails.location) {
-      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
@@ -259,12 +259,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
         input: {
           clientMutationId: nanoid(),
           id,
-          customerId: rootData.me.id,
           from: bookingDetails.from,
           until: bookingDetails.until,
-          organizationId: bookingDetails.organization?.uniqueId,
-          locationId: bookingDetails.location?.uniqueId,
-          teamId: bookingDetails.team?.uniqueId,
+          customerIds: [rootData.me.id],
+          organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          teamIds: bookingDetails.involvedTeams.map(({ uniqueId }) => uniqueId),
           resourceIds: [],
           type,
           productVersionIds: [],
@@ -281,10 +280,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
         }
 
         const booking = response.addBooking?.booking!;
-        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
-        if (booking.location) {
-          message += ` from the "${booking.location!.name}"`;
+        if (booking.involvedLocations.length > 0) {
+          message += ` from the "${booking.involvedLocations[0]!.name}"`;
         }
 
         if (booking.resources.length > 0) {
@@ -321,26 +320,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             until: bookingDetails.until,
             notes: null,
             type,
-            customer: {
-              uniqueId: rootData.me.id,
-              name: rootData.me.name,
-              givenName: rootData.me.givenName,
-              middleName: rootData.me.middleName,
-              familyName: rootData.me.familyName,
-              photoUrl: rootData.me.photoUrl,
-            },
-            location: bookingDetails.location
-              ? {
-                  uniqueId: bookingDetails.location.uniqueId,
-                  name: bookingDetails.location.name,
-                }
-              : null,
-            team: bookingDetails.team
-              ? {
-                  uniqueId: bookingDetails.team.uniqueId,
-                  name: bookingDetails.team.name,
-                }
-              : null,
+            involvedCustomers: [
+              {
+                uniqueId: rootData.me.id,
+                name: rootData.me.name,
+                givenName: rootData.me.givenName,
+                middleName: rootData.me.middleName,
+                familyName: rootData.me.familyName,
+                photoUrl: rootData.me.photoUrl,
+              },
+            ],
+            involvedLocations: [],
+            involvedTeams: [],
             resources: [],
           },
         },
@@ -374,7 +365,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           title={
             <StackRow>
               <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
-                <LeadIconTypography startElement={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                {bookingDetails.involvedLocations.map((item) => (
+                  <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                ))}
               </Link>
 
               <PushToRight />
@@ -406,13 +399,20 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <SmallIconTypography
-            label={getCustomerFullName(bookingDetails.customer)}
-            startElement={<CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} size="small" />}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
+          {bookingDetails.involvedCustomers.map((item) => (
+            <SmallIconTypography
+              key={item.uniqueId}
+              label={getCustomerFullName(item)}
+              startElement={<CustomerAvatar name={item} photo={{ url: item.photoUrl }} size="small" />}
+              sx={{ paddingTop: 1, paddingBottom: 1 }}
+            />
+          ))}
           <Divider />
-          <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          {bookingDetails.involvedTeams.length === 0 && <SmallIconTypography startElement={<TeamIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
+          {bookingDetails.involvedTeams.length > 0 &&
+            bookingDetails.involvedTeams.map((item) => (
+              <SmallIconTypography key={item.uniqueId} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+            ))}
           <Divider />
           <Resources
             resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}

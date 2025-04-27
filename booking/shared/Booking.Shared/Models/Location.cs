@@ -9,7 +9,6 @@ public class Location : ReplicatedModelBaseWithDeleted
     public OpeningHours? OpeningHours { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];
     public Organization Organization { get; set; }
-    public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];

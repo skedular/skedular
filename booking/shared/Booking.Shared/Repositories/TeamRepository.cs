@@ -9,7 +9,7 @@ public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
-    Team Add(Team team);
+    Task<ICollection<Team>> GetByIdsAsync(ICollection<string> ids, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Team Update(Team team);
     Team Remove(Team team);
     Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
@@ -36,12 +36,20 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public Team Add(Team team)
-    {
-        var now = TimeProvider.GetUtcNow();
-        team.CreatedAt = now;
-        return DbContext.Team.Add(team).Entity;
-    }
+    public async Task<ICollection<Team>> GetByIdsAsync(
+        ICollection<string> ids,
+        bool includeDeletedTeamMembers,
+        CancellationToken cancellationToken) =>
+        await DbContext.Team
+            .Where(query => ids.Contains(query.Id))
+            .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.Organization)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .Include(query => query.PreferredByCustomers)
+            .ToListAsync(cancellationToken);
 
     public Team Update(Team team)
     {

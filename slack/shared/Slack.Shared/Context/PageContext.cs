@@ -69,6 +69,8 @@ public class PageContext
     public SettingsPage? SettingsPage { get; set; }
     public BillingPage? BillingPage { get; set; }
 
+    public static PageContext New() => new();
+
     public PageContext PushCurrentPageToVisitedPagesAndClone()
     {
         var cloned = Clone();

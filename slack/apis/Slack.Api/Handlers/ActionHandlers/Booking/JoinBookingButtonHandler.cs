@@ -1,5 +1,4 @@
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -44,22 +43,23 @@ public class JoinBookingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = JoinBookingContext.Deserialize(action.Value);
 
-        var booking = mapper.MapTo(await bookingServiceClient.GetAsync(
-            new GetInput { Id = context.BookingId },
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken));
+        var booking = mapper.MapTo(
+            await bookingServiceClient.GetAsync(
+                new GetInput { Id = context.BookingId },
+                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                cancellationToken: cancellationToken));
 
         var addInput = new AddInput
         {
             Id = randomHelper.Generate(),
             From = booking.From.ToTimestamp(),
             Until = booking.Until.ToTimestamp(),
-            Type = BookingType.WorkingFromOffice,
-            CustomerId = customerId,
-            OrganizationId = string.IsNullOrWhiteSpace(booking.Organization?.Id) ? string.Empty : booking.Organization.Id,
-            LocationId = string.IsNullOrWhiteSpace(booking.Location?.Id) ? string.Empty : booking.Location.Id.ToSafeString(),
-            TeamId = string.IsNullOrWhiteSpace(booking.Team?.Id) ? string.Empty : booking.Team.Id.ToSafeString()
+            Type = BookingType.WorkingFromOffice
         };
+
+        addInput.CustomerIds.Add(customerId);
+        addInput.OrganizationIds.AddRange(booking.InvolvedOrganizations.Select(item => item.Id));
+        addInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
 
         await bookingServiceClient.AddAsync(
             addInput,

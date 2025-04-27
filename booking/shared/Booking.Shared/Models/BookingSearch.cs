@@ -51,12 +51,5 @@ public enum BookingOrderField
     From,
     To,
     Notes,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName,
-    OrganizationName,
-    LocationName,
-    TeamName,
     BookingType
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1c89795f0266a811a955734f17ac2dc>>
+ * @generated SignedSource<<2b96f02a31e88595dde722125021e9d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,24 +15,28 @@ export type bookings_bookings_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly customer: {
+        readonly from: any;
+        readonly id: string;
+        readonly involvedCustomers: ReadonlyArray<{
           readonly familyName: string | null | undefined;
           readonly givenName: string | null | undefined;
           readonly middleName: string | null | undefined;
           readonly name: string | null | undefined;
           readonly photoUrl: string | null | undefined;
           readonly uniqueId: string;
-        };
-        readonly from: any;
-        readonly id: string;
-        readonly location: {
+        }>;
+        readonly involvedLocations: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
-        } | null | undefined;
-        readonly notes: string | null | undefined;
-        readonly organization: {
+        }>;
+        readonly involvedOrganizations: ReadonlyArray<{
           readonly uniqueId: string;
-        } | null | undefined;
+        }>;
+        readonly involvedTeams: ReadonlyArray<{
+          readonly name: string;
+          readonly uniqueId: string;
+        }>;
+        readonly notes: string | null | undefined;
         readonly resources: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly customTags: ReadonlyArray<{
@@ -48,10 +52,6 @@ export type bookings_bookings_query$data = {
             readonly uniqueId: string;
           }>;
         }>;
-        readonly team: {
-          readonly name: string;
-          readonly uniqueId: string;
-        } | null | undefined;
         readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
@@ -283,8 +283,8 @@ return {
                   "args": null,
                   "concreteType": "Booking_CustomerDetails",
                   "kind": "LinkedField",
-                  "name": "customer",
-                  "plural": false,
+                  "name": "involvedCustomers",
+                  "plural": true,
                   "selections": [
                     (v1/*: any*/),
                     (v2/*: any*/),
@@ -324,8 +324,8 @@ return {
                   "args": null,
                   "concreteType": "Booking_OrganizationDetails",
                   "kind": "LinkedField",
-                  "name": "organization",
-                  "plural": false,
+                  "name": "involvedOrganizations",
+                  "plural": true,
                   "selections": [
                     (v1/*: any*/)
                   ],
@@ -336,8 +336,8 @@ return {
                   "args": null,
                   "concreteType": "Booking_LocationDetails",
                   "kind": "LinkedField",
-                  "name": "location",
-                  "plural": false,
+                  "name": "involvedLocations",
+                  "plural": true,
                   "selections": (v3/*: any*/),
                   "storageKey": null
                 },
@@ -346,8 +346,8 @@ return {
                   "args": null,
                   "concreteType": "Booking_TeamDetails",
                   "kind": "LinkedField",
-                  "name": "team",
-                  "plural": false,
+                  "name": "involvedTeams",
+                  "plural": true,
                   "selections": (v3/*: any*/),
                   "storageKey": null
                 },
@@ -456,6 +456,6 @@ return {
 };
 })();
 
-(node as any).hash = "c813b6d92888d99b1072c99697a6ac44";
+(node as any).hash = "d4bb744e68922c01623b00d164119f06";
 
 export default node;

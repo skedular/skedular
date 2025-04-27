@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b083a2f0bfb531bf65f14c4895e2f773>>
+ * @generated SignedSource<<c0712b978d56914b5659872f28643904>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,14 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type UpdateBookingInput = {
   clientMutationId?: string | null | undefined;
-  customerId: string;
+  customerIds: ReadonlyArray<string>;
   from: any;
   id: string;
-  locationId?: string | null | undefined;
   notes?: string | null | undefined;
-  organizationId?: string | null | undefined;
+  organizationIds: ReadonlyArray<string>;
   productVersionIds: ReadonlyArray<string>;
   resourceIds: ReadonlyArray<string>;
-  teamId?: string | null | undefined;
+  teamIds: ReadonlyArray<string>;
   type: BookingType;
   until: any;
 };
@@ -30,25 +29,29 @@ export type editBooking_updateBookingMutation$variables = {
 export type editBooking_updateBookingMutation$data = {
   readonly updateBooking: {
     readonly booking: {
-      readonly customer: {
+      readonly from: any;
+      readonly id: string;
+      readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
-      };
-      readonly from: any;
-      readonly id: string;
-      readonly location: {
+      }>;
+      readonly involvedLocations: ReadonlyArray<{
         readonly name: string;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
+      readonly involvedOrganizations: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
+      readonly involvedTeams: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly notes: string | null | undefined;
-      readonly organization: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -64,10 +67,6 @@ export type editBooking_updateBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -76,25 +75,29 @@ export type editBooking_updateBookingMutation$data = {
 export type editBooking_updateBookingMutation$rawResponse = {
   readonly updateBooking: {
     readonly booking: {
-      readonly customer: {
+      readonly from: any;
+      readonly id: string;
+      readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
-      };
-      readonly from: any;
-      readonly id: string;
-      readonly location: {
+      }>;
+      readonly involvedLocations: ReadonlyArray<{
         readonly name: string;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
+      readonly involvedOrganizations: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
+      readonly involvedTeams: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly notes: string | null | undefined;
-      readonly organization: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -110,10 +113,6 @@ export type editBooking_updateBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -226,8 +225,8 @@ v6 = [
             "args": null,
             "concreteType": "Booking_CustomerDetails",
             "kind": "LinkedField",
-            "name": "customer",
-            "plural": false,
+            "name": "involvedCustomers",
+            "plural": true,
             "selections": [
               (v1/*: any*/),
               (v2/*: any*/),
@@ -267,8 +266,8 @@ v6 = [
             "args": null,
             "concreteType": "Booking_OrganizationDetails",
             "kind": "LinkedField",
-            "name": "organization",
-            "plural": false,
+            "name": "involvedOrganizations",
+            "plural": true,
             "selections": (v3/*: any*/),
             "storageKey": null
           },
@@ -277,8 +276,8 @@ v6 = [
             "args": null,
             "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
-            "name": "location",
-            "plural": false,
+            "name": "involvedLocations",
+            "plural": true,
             "selections": (v3/*: any*/),
             "storageKey": null
           },
@@ -287,8 +286,8 @@ v6 = [
             "args": null,
             "concreteType": "Booking_TeamDetails",
             "kind": "LinkedField",
-            "name": "team",
-            "plural": false,
+            "name": "involvedTeams",
+            "plural": true,
             "selections": (v3/*: any*/),
             "storageKey": null
           },
@@ -351,16 +350,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "bc6b487a2321b9896b441307a8298aa5",
+    "cacheID": "91984dd8d1ae6c068ad734b059801a64",
     "id": null,
     "metadata": {},
     "name": "editBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1a1c753512e68c64de9c5cec4398c141";
+(node as any).hash = "43ee910769fd84f17d0007f5f1cb0c49";
 
 export default node;

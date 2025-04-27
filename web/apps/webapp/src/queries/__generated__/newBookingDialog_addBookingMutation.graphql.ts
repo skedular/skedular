@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ae0067abf0c4d7ae82cb08162b712a8>>
+ * @generated SignedSource<<a86e0c646a6dc855c240a337cdb181e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,14 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
-  customerId: string;
+  customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
-  locationId?: string | null | undefined;
   notes?: string | null | undefined;
-  organizationId?: string | null | undefined;
+  organizationIds: ReadonlyArray<string>;
   productVersionIds: ReadonlyArray<string>;
   resourceIds: ReadonlyArray<string>;
-  teamId?: string | null | undefined;
+  teamIds: ReadonlyArray<string>;
   type: BookingType;
   until: any;
 };
@@ -31,25 +30,29 @@ export type newBookingDialog_addBookingMutation$variables = {
 export type newBookingDialog_addBookingMutation$data = {
   readonly addBooking: {
     readonly booking: {
-      readonly customer: {
+      readonly from: any;
+      readonly id: string;
+      readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
-      };
-      readonly from: any;
-      readonly id: string;
-      readonly location: {
+      }>;
+      readonly involvedLocations: ReadonlyArray<{
         readonly name: string;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
+      readonly involvedOrganizations: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
+      readonly involvedTeams: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly notes: string | null | undefined;
-      readonly organization: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -65,10 +68,6 @@ export type newBookingDialog_addBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -77,25 +76,29 @@ export type newBookingDialog_addBookingMutation$data = {
 export type newBookingDialog_addBookingMutation$rawResponse = {
   readonly addBooking: {
     readonly booking: {
-      readonly customer: {
+      readonly from: any;
+      readonly id: string;
+      readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
-      };
-      readonly from: any;
-      readonly id: string;
-      readonly location: {
+      }>;
+      readonly involvedLocations: ReadonlyArray<{
         readonly name: string;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
+      readonly involvedOrganizations: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
+      readonly involvedTeams: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly notes: string | null | undefined;
-      readonly organization: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -111,10 +114,6 @@ export type newBookingDialog_addBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -224,8 +223,8 @@ v7 = {
       "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
-      "name": "customer",
-      "plural": false,
+      "name": "involvedCustomers",
+      "plural": true,
       "selections": [
         (v2/*: any*/),
         (v3/*: any*/),
@@ -265,8 +264,8 @@ v7 = {
       "args": null,
       "concreteType": "Booking_OrganizationDetails",
       "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
+      "name": "involvedOrganizations",
+      "plural": true,
       "selections": (v4/*: any*/),
       "storageKey": null
     },
@@ -275,8 +274,8 @@ v7 = {
       "args": null,
       "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
-      "name": "location",
-      "plural": false,
+      "name": "involvedLocations",
+      "plural": true,
       "selections": (v4/*: any*/),
       "storageKey": null
     },
@@ -285,8 +284,8 @@ v7 = {
       "args": null,
       "concreteType": "Booking_TeamDetails",
       "kind": "LinkedField",
-      "name": "team",
-      "plural": false,
+      "name": "involvedTeams",
+      "plural": true,
       "selections": (v4/*: any*/),
       "storageKey": null
     },
@@ -392,16 +391,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "832415930fe7a2ceffefb2818f44c0f0",
+    "cacheID": "5deb24b11ceb2135ba4eb145199ba45a",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "15bf5f5f9ffae64334afab5ca5ca97da";
+(node as any).hash = "0d3b29df56467109c0c6b12ea85da838";
 
 export default node;

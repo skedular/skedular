@@ -34,11 +34,7 @@ public class Mapper : IMapper
                 BookingType.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.TravelingForWork,
                 BookingType.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
-            },
-            CustomerId = src.Customer.Id,
-            OrganizationId = src.Organization is null ? string.Empty : src.Organization.Id,
-            LocationId = src.Location is null ? string.Empty : src.Location.Id,
-            TeamId = src.Team is null ? string.Empty : src.Team.Id
+            }
         };
 
         booking.Resources.AddRange(MapTo(src.Resources));

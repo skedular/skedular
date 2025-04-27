@@ -605,9 +605,9 @@ public class TeamsPage(
             Optional = true
         };
 
-        var teamEntity = await repositoryFactory.TeamRepository.Query(
-                new Specification<Team> { Criteria = query => query.Id == team.Id }
-                    .AddInclude(query => query.DailyUpdateChannel))
+        var teamEntity = await repositoryFactory.TeamRepository
+            .Query(new Specification<Team> { Criteria = query => query.Id == team.Id }
+                .AddInclude(query => query.DailyUpdateChannel))
             .FirstOrDefaultAsync(cancellationToken);
 
         var updateChannel = new InputBlock

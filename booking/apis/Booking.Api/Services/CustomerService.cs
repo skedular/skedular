@@ -9,7 +9,6 @@ namespace Booking.Api.Services;
 public interface ICustomerService
 {
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
-    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -29,17 +28,6 @@ public class CustomerService(
         }
 
         return (mapper.MapTo(customer)!, customer);
-    }
-
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
-        {
-            return (null, null);
-        }
-
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), true, cancellationToken);
-        return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
     }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken)

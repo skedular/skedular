@@ -45,8 +45,7 @@ public class WorkspaceMemberService(
         string workspaceMemberId,
         CancellationToken cancellationToken)
     {
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
         var workspaceMember = await EnsureWorkspaceMemberExistAsync(workspace, workspaceMemberId, cancellationToken);
         if (customer is not null)
         {
@@ -90,11 +89,10 @@ public class WorkspaceMemberService(
         CancellationToken cancellationToken)
     {
         string customerId;
-        var anyCustomerExistByVerifiableTokenResponse =
-            await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-                new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = workspaceMember.Id },
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
+        var anyCustomerExistByVerifiableTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+            new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = workspaceMember.Id },
+            customerConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
         if (anyCustomerExistByVerifiableTokenResponse.Exist)
         {
             customerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id;

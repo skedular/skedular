@@ -24,7 +24,6 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
-    public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual Organization? DefaultOrganization { get; set; }
     public virtual ICollection<Location> PreferredLocations { get; set; } = [];
     public virtual ICollection<Resource> PreferredResources { get; set; } = [];

@@ -431,7 +431,7 @@ public class BookingsPage(
     private ICollection<Block> GetToolbar(PageContext pageContext, string timezone)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, timezone);
-        var addBookingButton = bookingComponents.GetAddBookingButton(null, null, pageContext);
+        var addBookingButton = bookingComponents.GetAddBookingButton(pageContext);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return

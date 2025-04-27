@@ -135,7 +135,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
               from
               until
               notes
-              customer {
+              involvedCustomers {
                 uniqueId
                 name
                 givenName
@@ -143,14 +143,14 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                 familyName
                 photoUrl
               }
-              organization {
+              involvedOrganizations {
                 uniqueId
               }
-              location {
+              involvedLocations {
                 uniqueId
                 name
               }
-              team {
+              involvedTeams {
                 uniqueId
                 name
               }
@@ -197,7 +197,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           until
           notes
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -205,11 +205,11 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             familyName
             photoUrl
           }
-          location {
+          involvedLocations {
             uniqueId
             name
           }
-          team {
+          involvedTeams {
             uniqueId
             name
           }
@@ -301,9 +301,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     }
 
     const shortDateFormatFrom = toShortDate(bookingDetails.from);
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
-    if (bookingDetails.location) {
-      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0].name}"`;
     }
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
@@ -364,12 +364,11 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         input: {
           clientMutationId: nanoid(),
           id,
-          customerId: rootData.me.id,
+          customerIds: [rootData.me.id],
           from: bookingDetails.from,
           until: bookingDetails.until,
-          organizationId: bookingDetails.organization?.uniqueId,
-          locationId: bookingDetails.location?.uniqueId,
-          teamId: bookingDetails.team?.uniqueId,
+          organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          teamIds: [],
           resourceIds: [],
           type,
           productVersionIds: [],
@@ -386,10 +385,10 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         }
 
         const booking = response.addBooking?.booking!;
-        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
-        if (booking.location) {
-          message += ` from the "${booking.location!.name}"`;
+        if (booking.involvedLocations.length > 0) {
+          message += ` from the "${booking.involvedLocations[0].name}"`;
         }
 
         if (booking.resources.length > 0) {
@@ -426,26 +425,18 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             until: bookingDetails.until,
             notes: null,
             type,
-            customer: {
-              uniqueId: rootData.me.id,
-              name: rootData.me.name,
-              givenName: rootData.me.givenName,
-              middleName: rootData.me.middleName,
-              familyName: rootData.me.familyName,
-              photoUrl: rootData.me.photoUrl,
-            },
-            location: bookingDetails.location
-              ? {
-                  uniqueId: bookingDetails.location.uniqueId,
-                  name: bookingDetails.location.name,
-                }
-              : null,
-            team: bookingDetails.team
-              ? {
-                  uniqueId: bookingDetails.team.uniqueId,
-                  name: bookingDetails.team.name,
-                }
-              : null,
+            involvedCustomers: [
+              {
+                uniqueId: rootData.me.id,
+                name: rootData.me.name,
+                givenName: rootData.me.givenName,
+                middleName: rootData.me.middleName,
+                familyName: rootData.me.familyName,
+                photoUrl: rootData.me.photoUrl,
+              },
+            ],
+            involvedLocations: [],
+            involvedTeams: [],
             resources: [],
           },
         },
@@ -473,24 +464,23 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         return acc;
       }, []);
 
-    const canJoinBooking =
-      booking.customer.uniqueId === rootData.me?.id
-        ? false
-        : !!!bookings
-            .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
-            .find((myBooking) => {
-              const from = dayjs(booking.from);
-              const myFrom = dayjs(myBooking.from);
+    const canJoinBooking = booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)
+      ? false
+      : !!!bookings
+          .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id))
+          .find((myBooking) => {
+            const from = dayjs(booking.from);
+            const myFrom = dayjs(myBooking.from);
 
-              return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
-            });
+            return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+          });
 
     return {
       id: booking.id,
-      avatar: booking.customer,
-      user: booking.customer,
-      location: booking.location,
-      team: booking.team,
+      avatar: booking.involvedCustomers[0],
+      user: booking.involvedCustomers[0],
+      location: booking.involvedLocations.length > 0 ? booking.involvedLocations[0] : null,
+      team: booking.involvedTeams.length > 0 ? booking.involvedTeams[0] : null,
       resources: booking.resources,
       customTags,
       zones,
@@ -621,17 +611,16 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           <GridContainer>
             {bookings.map((booking) => {
               const key = convertDateToKey(booking.from);
-              const canJoinBooking =
-                booking.customer.uniqueId === rootData.me?.id
-                  ? false
-                  : !!!bookings
-                      .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
-                      .find((myBooking) => {
-                        const from = dayjs(booking.from);
-                        const myFrom = dayjs(myBooking.from);
+              const canJoinBooking = booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)
+                ? false
+                : !!!bookings
+                    .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id))
+                    .find((myBooking) => {
+                      const from = dayjs(booking.from);
+                      const myFrom = dayjs(myBooking.from);
 
-                        return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
-                      });
+                      return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+                    });
 
               return (
                 <Grid key={booking.id}>

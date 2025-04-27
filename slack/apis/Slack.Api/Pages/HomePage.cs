@@ -700,7 +700,7 @@ public class HomePage(
     private ICollection<Block> GetToolbar(PageContext pageContext)
     {
         var backButton = commonComponents.GetBackButton(pageContext);
-        var addBookingButton = bookingComponents.GetAddBookingButton(null, null, pageContext);
+        var addBookingButton = bookingComponents.GetAddBookingButton(pageContext);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
         var actionMenus = new StaticSelectMenu
         {

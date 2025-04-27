@@ -14,11 +14,7 @@ type BookingDetails {
   until: DateTime!
   notes: String
   type: BookingType!
-  customer: Booking_CustomerDetails!
-  organization: Booking_OrganizationDetails
-  location: Booking_LocationDetails
   resources: [BookingResourceDetails!]!
-  team: Booking_TeamDetails
   productVersions: [Booking_ProductVersionDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
@@ -187,15 +183,14 @@ type Version {
 input AddBookingInput {
   clientMutationId: String
   id: String
-  customerId: String!
+  customerIds: [String!]!
+  organizationIds: [String!]!
+  teamIds: [String!]!
   from: DateTime!
   until: DateTime!
   notes: String
   type: BookingType!
-  organizationId: String
-  locationId: String
   resourceIds: [String!]!
-  teamId: String
   productVersionIds: [String!]!
 }
 
@@ -250,15 +245,14 @@ input OrganizationAvailableResourcesWhereInput {
 input UpdateBookingInput {
   clientMutationId: String
   id: String!
-  customerId: String!
+  customerIds: [String!]!
+  organizationIds: [String!]!
+  teamIds: [String!]!
   from: DateTime!
   until: DateTime!
   notes: String
   type: BookingType!
-  organizationId: String
-  locationId: String
   resourceIds: [String!]!
-  teamId: String
   productVersionIds: [String!]!
 }
 
@@ -266,13 +260,6 @@ enum BookingOrderField {
   From
   To
   Notes
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  OrganizationName
-  LocationName
-  TeamName
   BookingType
 }
 

@@ -156,10 +156,12 @@ public class WorkspaceMemberService(
 
         if (bookingConnection.TotalCount != 0)
         {
-            var bookingWithLocation = bookingConnection.Edges
-                .Select(item => item.Node)
-                .FirstOrDefault(item => !string.IsNullOrWhiteSpace(item.Location?.Id));
-            var location = bookingWithLocation is null ? "Unknown" : bookingWithLocation.Location.Name.ToSafeString();
+            var locations = bookingConnection.Edges
+                .SelectMany(item => item.Node.InvolvedLocations)
+                .Aggregate(string.Empty, (acc, location) => $"{acc}, {location.Name.ToSafeString()}")
+                .Trim(',')
+                .Trim();
+            var location = string.IsNullOrWhiteSpace(locations) ? "Unknown" : locations;
             userProfile.StatusText = string.IsNullOrWhiteSpace(userProfile.StatusText)
                 ? $"Work from '{location}'"
                 : userProfile.StatusText;

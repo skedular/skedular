@@ -29,20 +29,16 @@ message Data { Booking booking = 1; }
 message Booking {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  string customerId = 3;
-  string organizationId = 4;
-  google.protobuf.Timestamp from = 5;
-  google.protobuf.Timestamp until = 6;
-  string notes = 7;
-  string locationId = 8;
-  repeated Resource resources = 9;
-  string teamId = 10;
-  BookingType type = 11;
+  google.protobuf.Timestamp from = 3;
+  google.protobuf.Timestamp until = 4;
+  string notes = 5;
+  BookingType type = 6;
+  repeated string involvedCustomerIds = 7;
+  repeated string involvedOrganizationIds = 8;
+  repeated string involvedLocationIds = 9;
+  repeated string involvedTeamIds = 10;
+  repeated Resource resources = 11;
   repeated BookingSchedule Schedules = 12;
-  repeated string involvedCustomerIds = 13;
-  repeated string involvedOrganizationIds = 14;
-  repeated string involvedLocationIds = 15;
-  repeated string involvedTeamIds = 16;
 }
 
 enum BookingType

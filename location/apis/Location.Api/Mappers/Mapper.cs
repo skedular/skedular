@@ -109,7 +109,6 @@ public class Mapper : IMapper
             Tags = MapTo(src.OrganizationTags).ToList()
         };
 
-        location.Bookings = MapTo(src.Bookings, location).ToList();
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
@@ -632,22 +631,6 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
             EmailVerified = src.EmailVerified
-        };
-
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            From = src.From,
-            Until = src.Until,
-            Location = location
         };
 
     private static IEnumerable<DailyDeskCountRecording> MapTo(

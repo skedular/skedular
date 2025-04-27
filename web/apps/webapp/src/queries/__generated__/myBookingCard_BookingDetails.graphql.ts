@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<059a8a23a6b05c64bef27149f79e5821>>
+ * @generated SignedSource<<c18a1a958b3488a8c979aee51ef46e5a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,20 +11,24 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
-  readonly customer: {
+  readonly from: any;
+  readonly id: string;
+  readonly involvedCustomers: ReadonlyArray<{
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
     readonly photoUrl: string | null | undefined;
     readonly uniqueId: string;
-  };
-  readonly from: any;
-  readonly id: string;
-  readonly location: {
+  }>;
+  readonly involvedLocations: ReadonlyArray<{
     readonly name: string;
     readonly uniqueId: string;
-  } | null | undefined;
+  }>;
+  readonly involvedTeams: ReadonlyArray<{
+    readonly name: string;
+    readonly uniqueId: string;
+  }>;
   readonly notes: string | null | undefined;
   readonly resources: ReadonlyArray<{
     readonly color: string | null | undefined;
@@ -41,10 +45,6 @@ export type myBookingCard_BookingDetails$data = {
       readonly uniqueId: string;
     }>;
   }>;
-  readonly team: {
-    readonly name: string;
-    readonly uniqueId: string;
-  } | null | undefined;
   readonly until: any;
   readonly " $fragmentType": "myBookingCard_BookingDetails";
 };
@@ -123,8 +123,8 @@ return {
       "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
-      "name": "customer",
-      "plural": false,
+      "name": "involvedCustomers",
+      "plural": true,
       "selections": [
         (v0/*: any*/),
         (v1/*: any*/),
@@ -164,8 +164,8 @@ return {
       "args": null,
       "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
-      "name": "location",
-      "plural": false,
+      "name": "involvedLocations",
+      "plural": true,
       "selections": (v2/*: any*/),
       "storageKey": null
     },
@@ -174,8 +174,8 @@ return {
       "args": null,
       "concreteType": "Booking_TeamDetails",
       "kind": "LinkedField",
-      "name": "team",
-      "plural": false,
+      "name": "involvedTeams",
+      "plural": true,
       "selections": (v2/*: any*/),
       "storageKey": null
     },
@@ -219,6 +219,6 @@ return {
 };
 })();
 
-(node as any).hash = "75b6de946fc87176a04046079c497933";
+(node as any).hash = "1e791e0604a57462cc4c0e00da05ed7a";
 
 export default node;

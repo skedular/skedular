@@ -30,19 +30,15 @@ type BookingConnection {
 }
 
 type BookingDetails {
-  customer: Booking_CustomerDetails!
   from: DateTime!
   id: ID!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
-  location: Booking_LocationDetails
   notes: String
-  organization: Booking_OrganizationDetails
   productVersions: [Booking_ProductVersionDetails!]!
   resources: [BookingResourceDetails!]!
-  team: Booking_TeamDetails
   type: BookingType!
   until: DateTime!
 }
@@ -1199,15 +1195,14 @@ input ActivateResourcesInput {
 
 input AddBookingInput {
   clientMutationId: String
-  customerId: String!
+  customerIds: [String!]!
   from: DateTime!
   id: String
-  locationId: String
   notes: String
-  organizationId: String
+  organizationIds: [String!]!
   productVersionIds: [String!]!
   resourceIds: [String!]!
-  teamId: String
+  teamIds: [String!]!
   type: BookingType!
   until: DateTime!
 }
@@ -1833,15 +1828,14 @@ input ToggleOrganizationSsoInput {
 
 input UpdateBookingInput {
   clientMutationId: String
-  customerId: String!
+  customerIds: [String!]!
   from: DateTime!
   id: String!
-  locationId: String
   notes: String
-  organizationId: String
+  organizationIds: [String!]!
   productVersionIds: [String!]!
   resourceIds: [String!]!
-  teamId: String
+  teamIds: [String!]!
   type: BookingType!
   until: DateTime!
 }
@@ -2069,15 +2063,8 @@ input ZoneOrganizationTagWhereInput {
 
 enum BookingOrderField {
   BookingType
-  FamilyName
   From
-  GivenName
-  LocationName
-  MiddleName
-  Name
   Notes
-  OrganizationName
-  TeamName
   To
 }
 

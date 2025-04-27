@@ -14,9 +14,6 @@ public class Booking : ModelBaseWithDeleted
     public string? Notes { get; set; }
     public BookingType Type { get; set; }
     public BookingSchedules BookingSchedules { get; set; }
-    public Customer Customer { get; set; }
-    public Organization? Organization { get; set; }
-    public Location? Location { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {
@@ -39,8 +36,6 @@ public class Booking : ModelBaseWithDeleted
                 }).ToList();
         }
     }
-
-    public Team? Team { get; set; }
 
     public ICollection<ResourceCustomersPair> Resources { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];

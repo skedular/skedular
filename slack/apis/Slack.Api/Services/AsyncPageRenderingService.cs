@@ -54,71 +54,65 @@ public class AsyncPageRenderingService(
     {
         try
         {
-            using var eventHandlerSubscription = EventHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, cancellationToken);
-                    },
-                    cancellationToken));
+            using var eventHandlerSubscription = EventHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, cancellationToken);
+                },
+                cancellationToken));
 
-            using var buttonActionHandlerSubscription = ButtonActionHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
-                    },
-                    cancellationToken));
+            using var buttonActionHandlerSubscription = ButtonActionHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
+                },
+                cancellationToken));
 
-            using var datePickerActionHandlerSubscription = DatePickerActionHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
-                    },
-                    cancellationToken));
+            using var datePickerActionHandlerSubscription = DatePickerActionHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
+                },
+                cancellationToken));
 
-            using var staticSelectActionHandlerSubscription = StaticSelectActionHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
-                    },
-                    cancellationToken));
+            using var staticSelectActionHandlerSubscription = StaticSelectActionHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
+                },
+                cancellationToken));
 
-            using var checkboxGroupActionHandlerSubscription = CheckboxGroupActionHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
-                    },
-                    cancellationToken));
+            using var checkboxGroupActionHandlerSubscription = CheckboxGroupActionHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
+                },
+                cancellationToken));
 
-            using var channelSelectActionHandlerSubscription = ChannelSelectActionHandlerStream.Subscribe(
-                value => Task.Run(async () =>
-                    {
-                        await using var scope = serviceProvider.CreateAsyncScope();
-                        var service =
-                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
-                        ArgumentNullException.ThrowIfNull(service);
-                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
-                    },
-                    cancellationToken));
+            using var channelSelectActionHandlerSubscription = ChannelSelectActionHandlerStream.Subscribe(value => Task.Run(async () =>
+                {
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var service =
+                        scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                    ArgumentNullException.ThrowIfNull(service);
+                    await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
+                },
+                cancellationToken));
 
             await Task.Delay(Timeout.Infinite, cancellationToken);
         }

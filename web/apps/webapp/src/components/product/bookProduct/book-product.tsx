@@ -171,7 +171,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           from
           until
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -179,7 +179,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             familyName
             photoUrl
           }
-          organization {
+          involvedOrganizations {
             uniqueId
             name
           }
@@ -439,10 +439,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         input: {
           clientMutationId: nanoid(),
           id,
-          customerId,
+          customerIds: [customerId],
           from,
           until,
-          organizationId,
+          organizationIds: [organizationId],
+          teamIds: [],
           resourceIds,
           type,
           productVersionIds: Array(quantity).fill(product.latestProductVersionId),
@@ -459,7 +460,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         }
 
         const booking = response.addBooking?.booking!;
-        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.resources.length > 0) {
           message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
@@ -495,20 +496,17 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             from,
             until,
             type,
-            customer: {
-              uniqueId: rootData.me.id,
-              name: '',
-              givenName: '',
-              middleName: '',
-              familyName: '',
-              photoUrl: '',
-            },
-            organization: organizationId
-              ? {
-                  uniqueId: organizationId,
-                  name: '',
-                }
-              : null,
+            involvedCustomers: [
+              {
+                uniqueId: rootData.me.id,
+                name: '',
+                givenName: '',
+                middleName: '',
+                familyName: '',
+                photoUrl: '',
+              },
+            ],
+            involvedOrganizations: organizationId ? [{ uniqueId: organizationId, name: '' }] : [],
             resources: [],
           },
         },

@@ -312,16 +312,12 @@ public class Mapper : IMapper
     {
         var updateInput = new UpdateInput
         {
-            Id = src.Id,
-            From = src.From.ToTimestamp(),
-            Until = src.Until.ToTimestamp(),
-            Notes = src.Notes.ToSafeString(),
-            CustomerId = src.Customer.Id,
-            OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization?.Id,
-            LocationId = string.IsNullOrWhiteSpace(src.Location?.Id) ? string.Empty : src.Location?.Id,
-            TeamId = string.IsNullOrWhiteSpace(src.Team?.Id) ? string.Empty : src.Team?.Id
+            Id = src.Id, From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp(), Notes = src.Notes.ToSafeString()
         };
 
+        updateInput.CustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
+        updateInput.OrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
+        updateInput.TeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
         updateInput.ResourceIds.AddRange(src.Resources.Select(item => item.Id));
 
         return updateInput;
@@ -487,11 +483,11 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
-            Customer = MapTo(src.Customer),
-            Organization = MapTo(src.Organization),
-            Location = MapTo(src.Location),
-            Resources = MapTo(src.Resources).ToList(),
-            Team = MapTo(src.Team)
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            Resources = MapTo(src.Resources).ToList()
         };
 
     public Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
@@ -588,18 +584,13 @@ public class Mapper : IMapper
     private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private static Shared.Models.Organization? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? src) =>
-        string.IsNullOrWhiteSpace(src?.Id)
-            ? null
-            : new Shared.Models.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
+    private static Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static Shared.Models.Location? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? src) =>
-        string.IsNullOrWhiteSpace(src?.Id)
-            ? null
-            : new Shared.Models.Location { Id = src.Id, Name = src.Name.ToSafeString() };
+    private static Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static Team? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
-        string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
+    private static Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team src) => new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<Resource> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> src) => src.Select(MapTo);
 
@@ -748,4 +739,17 @@ public class Mapper : IMapper
 
     private static ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.ResourceType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<Customer> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer> src) =>
+        src.Select(MapTo);
+
+    private static IEnumerable<Shared.Models.Organization>
+        MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization> src) =>
+        src.Select(MapTo);
+
+    private static IEnumerable<Shared.Models.Location> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location> src) =>
+        src.Select(MapTo);
+
+    private static IEnumerable<Team> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team> src) =>
+        src.Select(MapTo);
 }

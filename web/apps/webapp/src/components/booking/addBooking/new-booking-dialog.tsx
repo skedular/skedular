@@ -230,7 +230,7 @@ const NewBookingDialog = ({
           until
           notes
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -238,15 +238,15 @@ const NewBookingDialog = ({
             familyName
             photoUrl
           }
-          organization {
+          involvedOrganizations {
             uniqueId
             name
           }
-          location {
+          involvedLocations {
             uniqueId
             name
           }
-          team {
+          involvedTeams {
             uniqueId
             name
           }
@@ -439,13 +439,12 @@ const NewBookingDialog = ({
         input: {
           clientMutationId: nanoid(),
           id,
-          customerId,
           from,
           until,
           notes,
-          organizationId,
-          teamId,
-          locationId,
+          customerIds: [customerId],
+          organizationIds: [organizationId],
+          teamIds: teamId ? [teamId] : [],
           resourceIds,
           type,
           productVersionIds: [],
@@ -462,10 +461,10 @@ const NewBookingDialog = ({
         }
 
         const booking = response.addBooking?.booking!;
-        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+        let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
-        if (booking.location) {
-          message += ` from the "${booking.location!.name}"`;
+        if (booking.involvedLocations.length > 0) {
+          message += ` from the "${booking.involvedLocations[0]!.name}"`;
         }
 
         if (booking.resources.length > 0) {
@@ -503,32 +502,19 @@ const NewBookingDialog = ({
             until,
             notes,
             type,
-            customer: {
-              uniqueId: rootData.me.id,
-              name: '',
-              givenName: '',
-              middleName: '',
-              familyName: '',
-              photoUrl: '',
-            },
-            organization: organizationId
-              ? {
-                  uniqueId: organizationId,
-                  name: '',
-                }
-              : null,
-            location: locationId
-              ? {
-                  uniqueId: locationId,
-                  name: '',
-                }
-              : null,
-            team: teamId
-              ? {
-                  uniqueId: teamId,
-                  name: '',
-                }
-              : null,
+            involvedCustomers: [
+              {
+                uniqueId: rootData.me.id,
+                name: '',
+                givenName: '',
+                middleName: '',
+                familyName: '',
+                photoUrl: '',
+              },
+            ],
+            involvedOrganizations: organizationId ? [{ uniqueId: organizationId, name: '' }] : [],
+            involvedLocations: locationId ? [{ uniqueId: locationId, name: '' }] : [],
+            involvedTeams: teamId ? [{ uniqueId: teamId, name: '' }] : [],
             resources: [],
           },
         },

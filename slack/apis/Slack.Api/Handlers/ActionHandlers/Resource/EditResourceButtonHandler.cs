@@ -52,7 +52,7 @@ public class EditResourceButtonHandler(
             new GetResourceInput { Id = context.ResourceId },
             locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
-        
+
         var updateInput = new UpdateResourceInput { Id = context.ResourceId };
         updateInput.TagIds.AddRange(resource.OrganizationProductTags.Select(item => item.Id));
 

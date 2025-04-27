@@ -157,7 +157,6 @@ public class Mapper : IMapper
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
-        organization.Bookings = MapTo(src.Bookings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
         organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.Teams = MapTo(src.Teams, organization).ToList();
@@ -1017,22 +1016,6 @@ public class Mapper : IMapper
             End = src.End,
             AutoRenew = src.AutoRenew,
             UnitPrice = src.UnitPrice,
-            Organization = organization
-        };
-
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            From = src.From,
-            Until = src.Until,
             Organization = organization
         };
 

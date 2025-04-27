@@ -101,21 +101,25 @@ public class LocationDailyUpdaterService(
         {
             foreach (var booking in bookings)
             {
-                var customerEntity = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.Customer.Id, cancellationToken);
-                if (customerEntity is null)
+                var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
+                var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, cancellationToken);
+                if (customerEntities.Count == 0)
                 {
                     continue;
                 }
 
-                var customer = mapper.MapTo(customerEntity)!;
-                blocks.Add(new SectionBlock
+                foreach (var customerEntity in customerEntities)
                 {
-                    Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(
-                        workspace,
-                        customer.Identities.Select(item => item.Id).ToList(),
-                        customer).ToMarkdownWithIcon(Icons.People)
-                });
-                blocks.AddRange(bookingComponents.GetResourcesLines(booking));
+                    var customer = mapper.MapTo(customerEntity)!;
+                    blocks.Add(new SectionBlock
+                    {
+                        Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(
+                            workspace,
+                            customer.Identities.Select(item => item.Id).ToList(),
+                            customer).ToMarkdownWithIcon(Icons.People)
+                    });
+                    blocks.AddRange(bookingComponents.GetResourcesLines(booking));
+                }
             }
 
             if (bookingConnection.TotalCount > LocationBookingsPageSize)
@@ -135,7 +139,7 @@ public class LocationDailyUpdaterService(
                     ActionId = BookingActionTypes.InstantAddBooking,
                     Text = "Join".ToPlainTextWithIcon(Icons.Join),
                     Value = new InstantAddBookingContext(
-                            new PageContext(),
+                            PageContext.New(),
                             from,
                             until,
                             InitiationSource.LocationDailyUpdateChannel,

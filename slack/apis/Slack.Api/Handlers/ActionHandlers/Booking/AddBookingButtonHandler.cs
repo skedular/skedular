@@ -77,7 +77,6 @@ public class AddBookingButtonHandler(
 
         var asyncBlocks = await Task.WhenAll(
             GetOrganizationMemberBlockAsync(workspace, workspaceMember, context, customer, cancellationToken),
-            GetLocationBlockAsync(workspace, workspaceMember, context, customer, cancellationToken),
             GetTeamBlockAsync(workspace, workspaceMember, context, customer, cancellationToken));
 
         var notes = new InputBlock
@@ -97,11 +96,8 @@ public class AddBookingButtonHandler(
                 Title = "Make a booking",
                 Close = "Cancel",
                 Submit = "Add",
-                Blocks = new List<Block> { bookingDate }
-                    .Concat(asyncBlocks[0])
-                    .Concat(asyncBlocks[1])
-                    .Concat(asyncBlocks[2])
-                    .Concat([notes]).ToList(),
+                Blocks =
+                    new List<Block> { bookingDate }.Concat(asyncBlocks[0]).Concat(asyncBlocks[1]).Concat(asyncBlocks[2]).Concat([notes]).ToList(),
                 PrivateMetadata = action.Value
             },
             cancellationToken);
@@ -172,7 +168,7 @@ public class AddBookingButtonHandler(
                 if (organizationMember is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    addInput.CustomerId = value.SelectedOption.Value;
+                    addInput.CustomerIds.Add(value.SelectedOption.Value);
                 }
                 else
                 {
@@ -186,30 +182,7 @@ public class AddBookingButtonHandler(
         }
         else
         {
-            addInput.CustomerId = customerId;
-        }
-
-        if (values.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var locationBlock))
-        {
-            if (locationBlock.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var location))
-            {
-                if (location is ExternalSelectValue value)
-                {
-                    addInput.LocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
-                }
-                else
-                {
-                    throw new InvalidOperationException("location must be ExternalSelectValue");
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("location block is missing");
-            }
-        }
-        else
-        {
-            throw new InvalidOperationException("location block is missing");
+            addInput.CustomerIds.Add(customerId);
         }
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var teamBlock))
@@ -218,7 +191,10 @@ public class AddBookingButtonHandler(
             {
                 if (team is ExternalSelectValue value)
                 {
-                    addInput.TeamId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
+                    if (!string.IsNullOrWhiteSpace(value.SelectedOption?.Value))
+                    {
+                        addInput.TeamIds.Add(value.SelectedOption.Value);
+                    }
                 }
                 else
                 {
@@ -324,57 +300,6 @@ public class AddBookingButtonHandler(
                     MinQueryLength = 0
                 },
                 Optional = false
-            }
-        ];
-    }
-
-    private async Task<ICollection<Block>> GetLocationBlockAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        AddBookingContext context,
-        Customer customer,
-        CancellationToken cancellationToken)
-    {
-        if (context.LocationId is null)
-        {
-            var preferredLocation = customer.PreferredLocations
-                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
-
-            return
-            [
-                new InputBlock
-                {
-                    BlockId = OptionLoaderKeys.OrganizationLocationKey,
-                    Label = "Location".ToPlainText(),
-                    Element = new ExternalSelectMenu
-                    {
-                        ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                        InitialOption = preferredLocation is null
-                            ? null
-                            : new Option { Text = preferredLocation.Name.ToOptionText(), Value = preferredLocation.Id },
-                        MinQueryLength = 0
-                    },
-                    Optional = false
-                }
-            ];
-        }
-
-        var locationToAddToBooking = await locationService.GetLocationAsync(context.LocationId, workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(locationToAddToBooking);
-
-        return
-        [
-            new InputBlock
-            {
-                BlockId = OptionLoaderKeys.OrganizationLocationKey,
-                Label = "Location".ToPlainText(),
-                Element = new ExternalSelectMenu
-                {
-                    ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                    InitialOption = new Option { Text = locationToAddToBooking.Name.ToOptionText(), Value = locationToAddToBooking.Id },
-                    MinQueryLength = 0
-                },
-                Optional = true
             }
         ];
     }

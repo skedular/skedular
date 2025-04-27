@@ -77,13 +77,6 @@ public class BookingGrpcService(
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField.From,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Name => BookingOrderField.Name,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.GivenName => BookingOrderField.GivenName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.MiddleName => BookingOrderField.MiddleName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.FamilyName => BookingOrderField.FamilyName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.OrganizationName => BookingOrderField.OrganizationName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.LocationName => BookingOrderField.LocationName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.TeamName => BookingOrderField.TeamName,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Type => BookingOrderField.BookingType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -148,13 +141,6 @@ public class BookingGrpcService(
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField.From,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Name => BookingOrderField.Name,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.GivenName => BookingOrderField.GivenName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.MiddleName => BookingOrderField.MiddleName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.FamilyName => BookingOrderField.FamilyName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.OrganizationName => BookingOrderField.OrganizationName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.LocationName => BookingOrderField.LocationName,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.TeamName => BookingOrderField.TeamName,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

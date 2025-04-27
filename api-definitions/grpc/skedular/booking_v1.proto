@@ -89,14 +89,7 @@ enum BookingOrderField {
     From= 0;
     To= 1;
     Notes= 2;
-    Name= 3;
-    GivenName= 4;
-    MiddleName= 5;
-    FamilyName= 6;
-    OrganizationName= 7;
-    LocationName= 8;
-    TeamName= 9;
-    Type= 10;
+    Type= 3;
 }
 
 enum BookingType
@@ -128,17 +121,13 @@ message Booking {
     google.protobuf.Timestamp from = 2;
     google.protobuf.Timestamp to = 3;
     string notes = 4;
-    Customer customer = 5;
-    Organization organization = 6;
-    Location location = 7;
-    Team team = 8;
-    repeated Resource resources = 9;
-    BookingType type = 10;
+    repeated Resource resources = 5;
+    BookingType type = 6;
+    repeated Customer involvedCustomers = 7;
+    repeated Organization involvedOrganizations = 8;
+    repeated Location involvedLocations = 9;
+    repeated Team involvedTeams = 10;
     repeated BookingSchedule Schedules = 11;
-    repeated string involvedCustomerIds = 12;
-    repeated string involvedOrganizationIds = 13;
-    repeated string involvedLocationIds = 14;
-    repeated string involvedTeamIds = 15;
 }
 
 message Customer {
@@ -227,12 +216,11 @@ message AddInput {
     google.protobuf.Timestamp from = 2;
     google.protobuf.Timestamp until = 3;
     string notes = 4;
-    string customerId = 5;
-    string organizationId = 6;
-    string locationId = 7;
-    string teamId = 8;
+    BookingType type = 5;
+    repeated string customerIds = 6;
+    repeated string organizationIds = 7;
+    repeated string teamIds = 8;
     repeated string resourceIds = 9;
-    BookingType type = 10;
 }
 
 message UpdateInput {
@@ -240,12 +228,11 @@ message UpdateInput {
     google.protobuf.Timestamp from = 2;
     google.protobuf.Timestamp until = 3;
     string notes = 4;
-    string customerId = 5;
-    string organizationId = 6;
-    string locationId = 7;
-    string teamId = 8;
+    BookingType type = 5;
+    repeated string customerIds = 6;
+    repeated string organizationIds = 7;
+    repeated string teamIds = 8;
     repeated string resourceIds = 9;
-    BookingType type = 10;
 }
 
 message DeleteInput {

@@ -64,15 +64,9 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             }).ToListAsync(cancellationToken);
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, cancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
-
         var involvedLocations =
             await repositoryFactory.LocationRepository.GetByIdsAsync(booking.InvolvedLocations.Select(item => item.Id).ToList(), cancellationToken);
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, resources, location, involvedLocations));
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, resources, involvedLocations));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

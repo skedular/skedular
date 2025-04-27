@@ -33,7 +33,6 @@ public class EditBookingButtonHandler(
     SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
-    IBookingService bookingService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
@@ -51,7 +50,7 @@ public class EditBookingButtonHandler(
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,
             cancellationToken);
@@ -64,40 +63,43 @@ public class EditBookingButtonHandler(
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken));
 
-        if (booking.Customer.Id != customerId)
-        {
-            var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
-            if (!permissions.CanUpdateBookingOnBehalf)
-            {
-                throw new Unauthorized();
-            }
-        }
-
         var bookingDate = new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) };
 
-        var organizationMember = new InputBlock
+        if (booking.InvolvedCustomers.Count != 1)
+        {
+            // TODO: 20250427 - Morteza: We currently do not support handling multiple customers involved in a single booking in Slack 
+            return;
+        }
+
+        if (booking.InvolvedTeams.Count != 0 && booking.InvolvedTeams.Count != 1)
+        {
+            // TODO: 20250427 - Morteza: We currently do not support handling multiple teams involved in a single booking in Slack 
+            return;
+        }
+
+        var customer = booking.InvolvedCustomers.First();
+        var team = booking.InvolvedTeams.FirstOrDefault();
+        var organizationMemberBlock = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationMemberKey,
             Label = "Organization member".ToPlainText(),
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                InitialOption = new Option { Text = booking.Customer.ToDisplayableName().ToOptionText(), Value = booking.Customer.Id },
+                InitialOption = new Option { Text = customer.ToDisplayableName().ToOptionText(), Value = customer.Id },
                 MinQueryLength = 0
             },
             Optional = false
         };
 
-        var team = new InputBlock
+        var teamBlock = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationTeamKey,
             Label = "Team".ToPlainText(),
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                InitialOption = booking.Team is null
-                    ? null
-                    : new Option { Text = booking.Team.Name.ToOptionText(), Value = booking.Team.Id },
+                InitialOption = team is null ? null : new Option { Text = team.Name.ToOptionText(), Value = team.Id },
                 MinQueryLength = 0
             },
             Optional = true
@@ -114,14 +116,14 @@ public class EditBookingButtonHandler(
             Optional = true
         };
 
-        var blocks = new List<Block> { bookingDate, organizationMember };
+        var blocks = new List<Block> { bookingDate, organizationMemberBlock };
         var locationResources = await GetResourceOptionsAsync(request, workspace, booking, cancellationToken);
         if (locationResources is not null)
         {
             blocks.Add(locationResources);
         }
 
-        blocks.Add(team);
+        blocks.Add(teamBlock);
         blocks.Add(notes);
 
         var slackApiClient = workspace.GetApiClient();
@@ -182,7 +184,7 @@ public class EditBookingButtonHandler(
                 if (organizationMember is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    booking.Customer = new Customer { Id = value.SelectedOption.Value };
+                    booking.InvolvedCustomers = [new Customer { Id = value.SelectedOption.Value }];
                 }
                 else
                 {
@@ -231,9 +233,9 @@ public class EditBookingButtonHandler(
             {
                 if (team is ExternalSelectValue value)
                 {
-                    booking.Team = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? null
-                        : new Shared.Models.Team { Id = value.SelectedOption.Value };
+                    booking.InvolvedTeams = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? []
+                        : [new Shared.Models.Team { Id = value.SelectedOption.Value }];
                 }
                 else
                 {

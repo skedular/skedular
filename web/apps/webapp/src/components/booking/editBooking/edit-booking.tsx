@@ -88,7 +88,6 @@ type BookingDetails = {
   allDay: boolean;
   member: string;
   notes: string;
-  organization: string | undefined;
   team: string | undefined;
   location: string | undefined;
   resources: string[];
@@ -125,7 +124,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           until
           notes
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -133,15 +132,15 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             familyName
             photoUrl
           }
-          organization {
+          involvedOrganizations {
             uniqueId
             name
           }
-          location {
+          involvedLocations {
             uniqueId
             name
           }
-          team {
+          involvedTeams {
             uniqueId
             name
           }
@@ -254,7 +253,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           until
           notes
           type
-          customer {
+          involvedCustomers {
             uniqueId
             name
             givenName
@@ -262,15 +261,15 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             familyName
             photoUrl
           }
-          organization {
+          involvedOrganizations {
             uniqueId
             name
           }
-          location {
+          involvedLocations {
             uniqueId
             name
           }
-          team {
+          involvedTeams {
             uniqueId
             name
           }
@@ -310,9 +309,15 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   ]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
-  const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
-  const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
-  const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
+  const [customerId, setCustomerId] = useState<string | undefined>(
+    rootData.booking?.involvedCustomers && rootData.booking?.involvedCustomers.length > 0 ? rootData.booking?.involvedCustomers[0].uniqueId : undefined,
+  );
+  const [teamId, setTeamId] = useState<string | undefined>(
+    rootData.booking?.involvedTeams && rootData.booking?.involvedTeams.length > 0 ? rootData.booking?.involvedTeams[0].uniqueId : undefined,
+  );
+  const [locationId, setLocationId] = useState<string | undefined>(
+    rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].uniqueId : undefined,
+  );
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
@@ -445,7 +450,13 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     };
   }, []);
 
-  useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
+  useEffect(() => {
+    if (!rootData.booking?.involvedCustomers || rootData.booking?.involvedCustomers.length === 0) {
+      return;
+    }
+
+    handleRefetchTeams(rootData.booking.involvedCustomers[0].uniqueId);
+  }, [handleRefetchTeams, rootData.booking?.involvedCustomers]);
   useEffect(() => {
     const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
@@ -461,16 +472,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = ({
-    date,
-    allDay,
-    member: memberId,
-    notes,
-    organization: organizationId,
-    location: locationId,
-    team: teamId,
-    resources: resourceIds,
-  }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds }: BookingDetails) => {
     if (!rootData.booking) {
       return;
     }
@@ -488,9 +490,9 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     const shortDateTimeFormatFrom = toShortDate(start);
     const type = booking.type;
 
-    let bookingDetailsInfo = `for ${getCustomerFullName(booking.customer)}`;
-    if (booking.location) {
-      bookingDetailsInfo += ` at the "${booking.location!.name}"`;
+    let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
+    if (booking.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${booking.involvedLocations[0]!.name}"`;
     }
 
     bookingDetailsInfo += ` on ${toShortDate(dateRange.from)}`;
@@ -502,13 +504,12 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
         input: {
           clientMutationId: nanoid(),
           id: booking.id,
-          customerId: memberId,
           from,
           until,
           notes,
-          organizationId,
-          locationId,
-          teamId,
+          customerIds: [memberId],
+          organizationIds: booking.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          teamIds: teamId ? [teamId] : [],
           resourceIds,
           type,
           productVersionIds: [],
@@ -546,17 +547,19 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             until,
             notes,
             type,
-            customer: {
-              uniqueId: '',
-              name: '',
-              givenName: '',
-              middleName: '',
-              familyName: '',
-              photoUrl: '',
-            },
-            organization: null,
-            location: null,
-            team: null,
+            involvedCustomers: [
+              {
+                uniqueId: '',
+                name: '',
+                givenName: '',
+                middleName: '',
+                familyName: '',
+                photoUrl: '',
+              },
+            ],
+            involvedOrganizations: [],
+            involvedLocations: [],
+            involvedTeams: [],
             // TODO: 20240112 - Morteza: Below line stores the existing/old resource, but not the updated value for optimistic update, update this line with the updated value in future
             resources: booking.resources,
           },

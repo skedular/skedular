@@ -14,12 +14,7 @@ public record CommonPageContext(PageContext PageContext)
     }
 }
 
-public record AddBookingContext(
-    PageContext PageContext,
-    DateTimeOffset? From,
-    string? CustomerId,
-    string? LocationId,
-    string? TeamId)
+public record AddBookingContext(PageContext PageContext, DateTimeOffset? From, string? CustomerId, string? TeamId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 

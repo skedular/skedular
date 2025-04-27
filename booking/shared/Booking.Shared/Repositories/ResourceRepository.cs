@@ -147,7 +147,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Where(query => availableResourceIds.Contains(query.Id))
             .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Bookings)
-            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query.InvolvedLocations) // TODO: 20250427 - Morteza: Check if this line can be removed
             .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Customers)
             .Include(query => query.OrganizationTags)

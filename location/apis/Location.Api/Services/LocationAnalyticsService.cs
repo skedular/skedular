@@ -121,7 +121,6 @@ public class LocationAnalyticsService(
                             query.Until <= until.AddDays(1)
                     }
                     .AddInclude(query => query.Resources)
-                    .AddInclude(query => query.Location)
                     .AddInclude(query => query.InvolvedLocations))
             .AsNoTracking()
             .ToListAsync(cancellationToken);

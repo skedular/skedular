@@ -82,7 +82,6 @@ public class Mapper : IMapper
         };
 
         team.TeamMembers = MapTo(src.TeamMembers, team).ToList();
-        team.Bookings = MapTo(src.Bookings, team).ToList();
         team.JoinInvitations = MapTo(src.JoinInvitations, team).ToList();
 
         return team;
@@ -478,22 +477,6 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
             EmailVerified = src.EmailVerified
-        };
-
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Team team) =>
-        src.Select(item => MapTo(item, team));
-
-    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Team team) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            From = src.From,
-            Until = src.Until,
-            Team = team
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Team team) =>

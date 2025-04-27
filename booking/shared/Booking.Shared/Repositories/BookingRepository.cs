@@ -30,13 +30,6 @@ internal static class BookingExtensions
     internal static IIncludableQueryable<Database.Entities.Booking, ICollection<Team>> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
-            .Include(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .Include(query => query.Location)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.Team)
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Customers)
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -109,7 +102,7 @@ internal static class BookingExtensions
 
         if (searchCriteria.CustomerIds.Count != 0)
         {
-            query = query.Where(item => searchCriteria.CustomerIds.Contains(item.Customer.Id));
+            query = query.Where(item => item.InvolvedCustomers.Any(customer => searchCriteria.CustomerIds.Contains(customer.Id)));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.BookingType))
@@ -117,27 +110,23 @@ internal static class BookingExtensions
             query = query.Where(item => item.Type == searchCriteria.BookingType);
         }
 
-        if (searchCriteria.CombineOrganizationsLocationsTeams is not null &&
-            searchCriteria.CombineOrganizationsLocationsTeams.Value)
+        if (searchCriteria.CombineOrganizationsLocationsTeams is not null && searchCriteria.CombineOrganizationsLocationsTeams.Value)
         {
             if (searchCriteria.OrganizationIds.Count != 0)
             {
-                query = query.Where(item =>
-                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                    searchCriteria.OrganizationIds.Contains(item.Organization.Id));
+                query = query.Where(item => item.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
             }
 
             if (searchCriteria.LocationIds.Count != 0)
             {
                 query = query.Where(item =>
-                    item.Location != null && !item.Location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(item.Location.Id));
+                    item.InvolvedLocations.Any(location => !location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(location.Id)));
             }
-
 
             if (searchCriteria.TeamIds.Count != 0)
             {
-                query = query.Where(item =>
-                    item.Team != null && !item.Team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(item.Team.Id));
+                query = query.Where(item => item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
             }
         }
         else
@@ -145,12 +134,10 @@ internal static class BookingExtensions
             if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 || searchCriteria.TeamIds.Count != 0)
             {
                 query = query.Where(item =>
-                    (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                     searchCriteria.OrganizationIds.Contains(item.Organization.Id)) ||
-                    (item.Location != null && !item.Location.DeletedAt.HasValue &&
-                     searchCriteria.LocationIds.Contains(item.Location.Id)) ||
-                    (item.Team != null && !item.Team.DeletedAt.HasValue &&
-                     searchCriteria.TeamIds.Contains(item.Team.Id)));
+                    !item.InvolvedOrganizations.Any(organization =>
+                        !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)) ||
+                    item.InvolvedLocations.Any(location => !location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(location.Id)) ||
+                    item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
             }
         }
 
@@ -162,14 +149,14 @@ internal static class BookingExtensions
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
             query = query.Where(item =>
-                (item.Customer.Name != null &&
-                 EF.Functions.ILike(item.Customer.Name, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.GivenName != null &&
-                 EF.Functions.ILike(item.Customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.MiddleName != null &&
-                 EF.Functions.ILike(item.Customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.FamilyName != null &&
-                 EF.Functions.ILike(item.Customer.FamilyName, $"%{searchCriteria.NameContains}%")));
+                item.InvolvedCustomers.Any(customer => (customer.Name != null &&
+                                                        EF.Functions.ILike(customer.Name, $"%{searchCriteria.NameContains}%")) ||
+                                                       (customer.GivenName != null &&
+                                                        EF.Functions.ILike(customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
+                                                       (customer.MiddleName != null &&
+                                                        EF.Functions.ILike(customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
+                                                       (customer.FamilyName != null &&
+                                                        EF.Functions.ILike(customer.FamilyName, $"%{searchCriteria.NameContains}%"))));
         }
 
         return query;
@@ -196,27 +183,6 @@ internal static class BookingExtensions
             BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Notes)
                 : originalQuery.OrderByDescending(x => x.Notes),
-            BookingOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.Name)
-                : originalQuery.OrderByDescending(x => x.Customer.Name),
-            BookingOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.GivenName)
-                : originalQuery.OrderByDescending(x => x.Customer.GivenName),
-            BookingOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.MiddleName)
-                : originalQuery.OrderByDescending(x => x.Customer.MiddleName),
-            BookingOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.FamilyName)
-                : originalQuery.OrderByDescending(x => x.Customer.FamilyName),
-            BookingOrderField.OrganizationName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Organization.Name)
-                : originalQuery.OrderByDescending(x => x.Organization.Name),
-            BookingOrderField.LocationName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Location.Name)
-                : originalQuery.OrderByDescending(x => x.Location.Name),
-            BookingOrderField.TeamName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Team.Name)
-                : originalQuery.OrderByDescending(x => x.Team.Name),
             BookingOrderField.BookingType => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Type)
                 : originalQuery.OrderByDescending(x => x.Type),
@@ -233,27 +199,6 @@ internal static class BookingExtensions
                 BookingOrderField.Notes => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Notes)
                     : query.ThenByDescending(x => x.Notes),
-                BookingOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.Name)
-                    : query.ThenByDescending(x => x.Customer.Name),
-                BookingOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.GivenName)
-                    : query.ThenByDescending(x => x.Customer.GivenName),
-                BookingOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.MiddleName)
-                    : query.ThenByDescending(x => x.Customer.MiddleName),
-                BookingOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.FamilyName)
-                    : query.ThenByDescending(x => x.Customer.FamilyName),
-                BookingOrderField.OrganizationName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Organization.Name)
-                    : query.ThenByDescending(x => x.Organization.Name),
-                BookingOrderField.LocationName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Location.Name)
-                    : query.ThenByDescending(x => x.Location.Name),
-                BookingOrderField.TeamName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Team.Name)
-                    : query.ThenByDescending(x => x.Team.Name),
                 BookingOrderField.BookingType => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Type)
                     : query.ThenByDescending(x => x.Type),

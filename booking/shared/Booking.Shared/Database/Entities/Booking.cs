@@ -16,11 +16,7 @@ public class Booking : EntityBaseWithDeleted
     public string Type { get; set; }
     public BookingSchedules BookingSchedules { get; set; }
 
-    public virtual Customer Customer { get; set; }
-    public virtual Organization? Organization { get; set; }
-    public virtual Location? Location { get; set; }
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
-    public virtual Team? Team { get; set; }
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
@@ -39,11 +35,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
 
-        builder.HasOne(item => item.Customer).WithMany(item => item.Bookings);
-        builder.HasOne(item => item.Organization).WithMany(item => item.Bookings);
-        builder.HasOne(item => item.Location).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
-        builder.HasOne(item => item.Team).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
         builder.Property(item => item.BookingSchedules).HasColumnType("jsonb");
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedBookings);

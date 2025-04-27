@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<715f7aa9f32fb6c9436f3c0cdc720703>>
+ * @generated SignedSource<<3d8cb499f7c1950dba43121761ea7165>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,25 +13,29 @@ export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "S
 import { FragmentRefs } from "relay-runtime";
 export type editBooking_query$data = {
   readonly booking: {
-    readonly customer: {
+    readonly from: any;
+    readonly id: string;
+    readonly involvedCustomers: ReadonlyArray<{
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
       readonly photoUrl: string | null | undefined;
       readonly uniqueId: string;
-    };
-    readonly from: any;
-    readonly id: string;
-    readonly location: {
+    }>;
+    readonly involvedLocations: ReadonlyArray<{
       readonly name: string;
       readonly uniqueId: string;
-    } | null | undefined;
+    }>;
+    readonly involvedOrganizations: ReadonlyArray<{
+      readonly name: string;
+      readonly uniqueId: string;
+    }>;
+    readonly involvedTeams: ReadonlyArray<{
+      readonly name: string;
+      readonly uniqueId: string;
+    }>;
     readonly notes: string | null | undefined;
-    readonly organization: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
     readonly resources: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
@@ -47,10 +51,6 @@ export type editBooking_query$data = {
         readonly uniqueId: string;
       }>;
     }>;
-    readonly team: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
     readonly type: BookingType;
     readonly until: any;
   } | null | undefined;
@@ -248,8 +248,8 @@ return {
           "args": null,
           "concreteType": "Booking_CustomerDetails",
           "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
+          "name": "involvedCustomers",
+          "plural": true,
           "selections": [
             (v2/*: any*/),
             (v1/*: any*/),
@@ -289,8 +289,8 @@ return {
           "args": null,
           "concreteType": "Booking_OrganizationDetails",
           "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
+          "name": "involvedOrganizations",
+          "plural": true,
           "selections": (v3/*: any*/),
           "storageKey": null
         },
@@ -299,8 +299,8 @@ return {
           "args": null,
           "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
-          "name": "location",
-          "plural": false,
+          "name": "involvedLocations",
+          "plural": true,
           "selections": (v3/*: any*/),
           "storageKey": null
         },
@@ -309,8 +309,8 @@ return {
           "args": null,
           "concreteType": "Booking_TeamDetails",
           "kind": "LinkedField",
-          "name": "team",
-          "plural": false,
+          "name": "involvedTeams",
+          "plural": true,
           "selections": (v3/*: any*/),
           "storageKey": null
         },
@@ -364,6 +364,6 @@ return {
 };
 })();
 
-(node as any).hash = "671e9b4aa46b7a221c4dd82edee122a1";
+(node as any).hash = "d182089f8351b38bd2b0786fe145b3e3";
 
 export default node;

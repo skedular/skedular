@@ -9,7 +9,6 @@ public interface IBookingRepository : IRepository<Booking>
 {
     Task<Booking> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Booking>> GetAllAsync(CancellationToken cancellationToken);
     Booking Update(Booking booking);
     Booking Remove(Booking booking);
 }
@@ -26,16 +25,9 @@ public class BookingRepository(OrganizationDbContext dbContext, TimeProvider tim
 
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .Include(query => query.Organization)
             .Include(query => query.InvolvedOrganizations)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Booking>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.Booking
-            .Include(query => query.Organization)
-            .Include(query => query.InvolvedOrganizations)
-            .ToListAsync(cancellationToken);
-    
     public Booking Update(Booking booking)
     {
         var now = TimeProvider.GetUtcNow();

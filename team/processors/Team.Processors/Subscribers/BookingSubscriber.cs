@@ -51,20 +51,9 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
 
     private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(booking.Team.Id, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
         var involvedTeams =
             await repositoryFactory.TeamRepository.GetByIdsAsync(booking.InvolvedTeams.Select(item => item.Id).ToList(), cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, team, involvedTeams));
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, involvedTeams));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

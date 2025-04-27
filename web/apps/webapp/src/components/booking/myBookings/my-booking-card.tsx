@@ -64,7 +64,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
         from
         until
         notes
-        customer {
+        involvedCustomers {
           uniqueId
           name
           givenName
@@ -72,11 +72,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           familyName
           photoUrl
         }
-        location {
+        involvedLocations {
           uniqueId
           name
         }
-        team {
+        involvedTeams {
           uniqueId
           name
         }
@@ -145,9 +145,9 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
   };
 
   const handleRemoveBookingClick = () => {
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
-    if (bookingDetails.location) {
-      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
@@ -212,7 +212,9 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
         <CardHeader
           title={
             <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
-              <LeadIconTypography startElement={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+              {bookingDetails.involvedLocations.map((item) => (
+                <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+              ))}
             </Link>
           }
           action={
@@ -234,7 +236,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          {bookingDetails.involvedTeams.length === 0 && <SmallIconTypography startElement={<TeamIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
+          {bookingDetails.involvedTeams.length > 0 &&
+            bookingDetails.involvedTeams.map((item) => (
+              <SmallIconTypography key={item.uniqueId} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+            ))}
           <Divider />
           <Resources
             resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}

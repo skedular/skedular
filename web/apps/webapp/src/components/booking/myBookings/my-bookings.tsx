@@ -125,7 +125,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
               from
               until
               notes
-              customer {
+              involvedCustomers {
                 uniqueId
                 name
                 givenName
@@ -133,11 +133,11 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
                 familyName
                 photoUrl
               }
-              location {
+              involvedLocations {
                 uniqueId
                 name
               }
-              team {
+              involvedTeams {
                 uniqueId
                 name
               }
@@ -190,7 +190,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
   const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
   const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
-  const myBookings = useMemo(() => bookings.filter((booking) => booking.customer?.uniqueId === rootData.me?.id), [bookings, rootData.me?.id]);
+  const myBookings = useMemo(() => bookings.filter((booking) => booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)), [bookings, rootData.me?.id]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
 
@@ -260,9 +260,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
     }
 
     const shortDateFormatFrom = toShortDate(bookingDetails.from);
-    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
-    if (bookingDetails.location) {
-      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
     }
 
     bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
@@ -325,13 +325,17 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
     const key = convertDateToKey(myBooking.from);
     const teammates: CustomerDetails[] =
       groupedBookingsByFromDate[key]
-        ?.filter((booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId)
-        .map((booking) => booking.customer) ?? [];
+        ?.filter(
+          (booking) =>
+            booking.involvedCustomers.some((item) => item.uniqueId !== rootData.me?.id) &&
+            booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
+        )
+        .flatMap((booking) => booking.involvedCustomers) ?? [];
 
     return {
       id: myBooking.id,
-      location: myBooking.location,
-      team: myBooking.team,
+      location: myBooking.involvedLocations.length > 0 ? myBooking.involvedLocations[0] : null,
+      team: myBooking.involvedTeams.length > 0 ? myBooking.involvedTeams[0] : null,
       resources: myBooking.resources,
       customTags,
       zones,
@@ -443,18 +447,18 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
           <GridContainer>
             {myBookings.map((myBooking) => {
               const key = convertDateToKey(myBooking.from);
-              const otherTeammates = groupedBookingsByFromDate[key]?.filter(
-                (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
-              );
+              const otherTeammates =
+                groupedBookingsByFromDate[key]
+                  ?.filter(
+                    (booking) =>
+                      booking.involvedCustomers.some((item) => item.uniqueId !== rootData.me?.id) &&
+                      booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
+                  )
+                  .flatMap((booking) => booking.involvedCustomers) ?? [];
 
               return (
                 <Grid key={myBooking.id}>
-                  <MyBookingCard
-                    bookingDetailsRelay={myBooking}
-                    organizationId={organizationId}
-                    connectionIds={connectionIds}
-                    otherTeammates={otherTeammates!.map(({ customer }) => customer)}
-                  />
+                  <MyBookingCard bookingDetailsRelay={myBooking} organizationId={organizationId} connectionIds={connectionIds} otherTeammates={otherTeammates} />
                 </Grid>
               );
             })}

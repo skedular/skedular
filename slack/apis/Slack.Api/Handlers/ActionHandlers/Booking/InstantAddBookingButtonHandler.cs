@@ -91,27 +91,25 @@ public class InstantAddBookingButtonHandler(
                     Id = randomHelper.Generate(),
                     From = context.From.ToTimestamp(),
                     Until = context.Until.ToTimestamp(),
-                    Type = BookingType.WorkingFromOffice,
-                    CustomerId = customerId,
-                    OrganizationId = workspace.Organization.Id,
-                    LocationId = context.LocationId.ToSafeString(),
-                    TeamId = context.TeamId.ToSafeString()
+                    Type = BookingType.WorkingFromOffice
                 };
 
-                var booking = mapper.MapTo(await bookingServiceClient.AddAsync(
-                    addInput,
-                    bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                    cancellationToken: cancellationToken));
+                addInput.CustomerIds.Add(customerId);
+                addInput.OrganizationIds.Add(workspace.Organization.Id);
+                if (!string.IsNullOrWhiteSpace(context.TeamId.ToSafeString()))
+                {
+                    addInput.TeamIds.Add(context.TeamId);
+                }
+
+                var booking = mapper.MapTo(
+                    await bookingServiceClient.AddAsync(
+                        addInput,
+                        bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                        cancellationToken: cancellationToken));
+
                 var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
-                var bookingCardBlocks = bookingComponents.GetBookingCard(
-                    workspace,
-                    booking,
-                    Array.Empty<Shared.Models.Booking>(),
-                    booking.Customer,
-                    false,
-                    false,
-                    false,
-                    context.PageContext);
+                var bookingCardBlocks =
+                    bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, false, false, context.PageContext);
                 blocks.AddRange(bookingCardBlocks);
                 var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
                 await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
@@ -120,15 +118,8 @@ public class InstantAddBookingButtonHandler(
             {
                 var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
                 var booking = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).First();
-                var bookingCardBlocks = bookingComponents.GetBookingCard(
-                    workspace,
-                    booking,
-                    Array.Empty<Shared.Models.Booking>(),
-                    booking.Customer,
-                    false,
-                    false,
-                    false,
-                    context.PageContext);
+                var bookingCardBlocks =
+                    bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, false, false, context.PageContext);
                 blocks.AddRange(bookingCardBlocks);
 
                 var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
@@ -142,12 +133,15 @@ public class InstantAddBookingButtonHandler(
                 Id = randomHelper.Generate(),
                 From = context.From.ToTimestamp(),
                 Until = context.Until.ToTimestamp(),
-                Type = BookingType.WorkingFromOffice,
-                CustomerId = customerId,
-                OrganizationId = workspace.Organization.Id,
-                LocationId = context.LocationId.ToSafeString(),
-                TeamId = context.TeamId.ToSafeString()
+                Type = BookingType.WorkingFromOffice
             };
+
+            addInput.CustomerIds.Add(customerId);
+            addInput.OrganizationIds.Add(workspace.Organization.Id);
+            if (!string.IsNullOrWhiteSpace(context.TeamId.ToSafeString()))
+            {
+                addInput.TeamIds.Add(context.TeamId);
+            }
 
             await bookingServiceClient.AddAsync(
                 addInput,

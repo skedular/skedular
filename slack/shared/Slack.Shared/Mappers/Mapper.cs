@@ -102,11 +102,11 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
-            Customer = MapTo(src.Customer),
-            Organization = MapTo(src.Organization),
-            Location = MapTo(src.Location),
             Resources = MapTo(src.Resources).ToList(),
-            Team = MapTo(src.Team)
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList()
         };
 
     public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
@@ -342,4 +342,9 @@ public class Mapper : IMapper
 
     private static ResourceType MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.ResourceType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<Customer> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer> src) => src.Select(MapTo);
+    private static IEnumerable<Organization> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization> src) => src.Select(MapTo)!;
+    private static IEnumerable<Location> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Location> src) => src.Select(MapTo)!;
+    private static IEnumerable<Team> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Team> src) => src.Select(MapTo)!;
 }

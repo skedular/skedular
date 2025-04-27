@@ -26,7 +26,6 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
     public virtual ICollection<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];

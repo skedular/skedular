@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Sanitization;
@@ -62,60 +61,57 @@ public class BookingSubscriber(
 
     private async Task TrackActiveMembersAsync(Event @event, CancellationToken cancellationToken)
     {
-        var customerId = @event.Data.Booking.CustomerId;
-        var organizationId = @event.Data.Booking.OrganizationId;
+        var customerIds = @event.Data.Booking.InvolvedCustomerIds.RemoveInvalidIds()!.Distinct().ToList();
+        var organizationIds = @event.Data.Booking.InvolvedOrganizationIds.RemoveInvalidIds()!.Distinct().ToList();
 
-        if (string.IsNullOrWhiteSpace(customerId))
+        if (customerIds.Count == 0)
         {
             // The booking is not attached to any customer for whatever reason, ignoring it
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(organizationId))
+        if (organizationIds.Count == 0)
         {
             // Booking not attached to organization, ignoring it
             return;
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        foreach (var organization in organizations)
         {
-            // Organization not found, ignoring it
-            return;
-        }
-
-        var organizationOffering = organization.OrganizationOfferings.SingleOrDefault();
-        if (organizationOffering is null)
-        {
-            // Organization offering does not exist for whatever reason, ignoring it
-            return;
-        }
-
-        var organizationMember = organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
-        if (organizationMember is null)
-        {
-            // Customer isn't found ignoring it
-            return;
-        }
-
-        var organizationOfferingActiveMember = await repositoryFactory.OrganizationOfferingActiveMemberRepository.Query(
-            new Specification<OrganizationOfferingActiveMember>
+            var organizationOffering = organization.OrganizationOfferings.SingleOrDefault();
+            if (organizationOffering is null)
             {
-                Criteria = query =>
-                    query.OrganizationOffering.Id == organizationOffering.Id && query.OrganizationMember.Id == organizationMember.Id
-            }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+                // Organization offering does not exist for whatever reason, ignoring it
+                return;
+            }
 
-        _ = organizationOfferingActiveMember is null
-            ? repositoryFactory.OrganizationOfferingActiveMemberRepository.Add(
-                new OrganizationOfferingActiveMember
+            var organizationMember = organization.OrganizationMembers.SingleOrDefault(item => customerIds.Contains(item.Customer.Id));
+            if (organizationMember is null)
+            {
+                // Customer isn't found ignoring it
+                return;
+            }
+
+            var organizationOfferingActiveMember = await repositoryFactory.OrganizationOfferingActiveMemberRepository.Query(
+                new Specification<OrganizationOfferingActiveMember>
                 {
-                    Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
-                })
-            : repositoryFactory.OrganizationOfferingActiveMemberRepository.Update(organizationOfferingActiveMember);
+                    Criteria = query =>
+                        query.OrganizationOffering.Id == organizationOffering.Id && query.OrganizationMember.Id == organizationMember.Id
+                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
 
-        if (organizationOfferingActiveMember is null)
-        {
-            await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+            _ = organizationOfferingActiveMember is null
+                ? repositoryFactory.OrganizationOfferingActiveMemberRepository.Add(
+                    new OrganizationOfferingActiveMember
+                    {
+                        Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
+                    })
+                : repositoryFactory.OrganizationOfferingActiveMemberRepository.Update(organizationOfferingActiveMember);
+
+            if (organizationOfferingActiveMember is null)
+            {
+                await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+            }
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -123,16 +119,10 @@ public class BookingSubscriber(
 
     private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
         var involvedOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(
             booking.InvolvedOrganizations.Select(item => item.Id).ToList(),
             cancellationToken);
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization, involvedOrganizations));
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, involvedOrganizations));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -151,7 +141,6 @@ public class BookingSubscriber(
         {
             return;
         }
-
 
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

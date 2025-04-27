@@ -8,7 +8,6 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
-    public ICollection<Booking> Bookings { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> PreferredLocations { get; set; } = [];
     public ICollection<Resource> PreferredResources { get; set; } = [];

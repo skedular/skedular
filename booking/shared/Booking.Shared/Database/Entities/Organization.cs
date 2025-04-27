@@ -20,7 +20,6 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
     public virtual ICollection<Team> Teams { get; set; } = [];
-    public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];

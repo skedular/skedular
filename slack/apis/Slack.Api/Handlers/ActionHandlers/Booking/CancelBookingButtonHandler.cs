@@ -18,7 +18,6 @@ public class CancelBookingButtonHandler(
     SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
-    IBookingService bookingService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
@@ -32,7 +31,7 @@ public class CancelBookingButtonHandler(
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,
             cancellationToken);
@@ -40,19 +39,6 @@ public class CancelBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CancelBookingContext.Deserialize(action.Value);
-        var booking = mapper.MapTo(await bookingServiceClient.GetAsync(
-            new GetInput { Id = context.BookingId },
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken));
-
-        if (booking.Customer.Id != customerId)
-        {
-            var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
-            if (!permissions.CanDeleteBookingOnBehalf)
-            {
-                throw new Unauthorized();
-            }
-        }
 
         await bookingServiceClient.DeleteAsync(
             new DeleteInput { Id = context.BookingId },

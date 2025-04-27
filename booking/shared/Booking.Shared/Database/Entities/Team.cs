@@ -13,7 +13,6 @@ public class Team : ReplicatedEntityBaseWithDeleted
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
-    public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
 }
