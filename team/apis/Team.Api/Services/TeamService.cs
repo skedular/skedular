@@ -471,7 +471,6 @@ public class TeamService(
         }
 
         var mappedTeam = mapper.MapTo(team);
-
         if (customer is not null)
         {
             mappedTeam.Permissions = new Permissions
@@ -486,15 +485,14 @@ public class TeamService(
 
         var now = timeProvider.GetUtcNow();
         mappedTeam.HasFutureBooking = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking> { Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == team.Id && query.From >= now })
+            .Query(new Specification<Booking>
+            {
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.InvolvedTeams.Select(item => item.Id).Contains(team.Id) && query.From >= now
+            })
             .AnyAsync(cancellationToken);
 
-        if (customer is null)
-        {
-            return mappedTeam;
-        }
-
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
+        if (customer is null || teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
         {
             return mappedTeam;
         }

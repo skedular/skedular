@@ -28,6 +28,21 @@ namespace Team.Shared.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "hstore");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BookingTeam", b =>
+                {
+                    b.Property<string>("InvolvedBookingsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("InvolvedTeamsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("InvolvedBookingsId", "InvolvedTeamsId");
+
+                    b.HasIndex("InvolvedTeamsId");
+
+                    b.ToTable("BookingTeam");
+                });
+
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.Outbox", b =>
                 {
                     b.Property<string>("Id")
@@ -683,6 +698,21 @@ namespace Team.Shared.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("TeamMember");
+                });
+
+            modelBuilder.Entity("BookingTeam", b =>
+                {
+                    b.HasOne("Team.Shared.Database.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("InvolvedBookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Team.Shared.Database.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("InvolvedTeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Team.Shared.Database.Entities.Booking", b =>

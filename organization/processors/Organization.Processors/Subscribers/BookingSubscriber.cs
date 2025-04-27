@@ -3,6 +3,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Sanitization;
 using Microsoft.EntityFrameworkCore;
 using Organization.Processors.Mappers;
 using Organization.Shared.Database.Entities;
@@ -28,7 +29,7 @@ public class BookingSubscriber(
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(booking.Organization.Id))
+                    if (!booking.InvolvedOrganizations.Select(item => item.Id).RemoveInvalidIds()!.Any())
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
@@ -128,7 +129,10 @@ public class BookingSubscriber(
             throw new OrganizationNotFound();
         }
 
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization));
+        var involvedOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(
+            booking.InvolvedOrganizations.Select(item => item.Id).ToList(),
+            cancellationToken);
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization, involvedOrganizations));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -27,8 +27,9 @@ public interface IMapper
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
+        ICollection<Resource> resources,
         Shared.Database.Entities.Location location,
-        ICollection<Resource> resources);
+        ICollection<Shared.Database.Entities.Location> involvedLocations);
 
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -171,7 +172,8 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             From = booking.From.ToDateTimeOffset(),
             Until = booking.Until.ToDateTimeOffset(),
-            Location = new Shared.Models.Location { Id = booking.LocationId }
+            Location = new Shared.Models.Location { Id = booking.LocationId },
+            InvolvedLocations = booking.InvolvedLocationIds.Select(item => new Shared.Models.Location { Id = item }).ToList()
         };
     }
 
@@ -212,15 +214,17 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
+        ICollection<Resource> resources,
         Shared.Database.Entities.Location location,
-        ICollection<Resource> resources)
+        ICollection<Shared.Database.Entities.Location> involvedLocations)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
         dest.Until = src.Until;
-        dest.Location = location;
         dest.Resources = resources;
+        dest.Location = location;
+        dest.InvolvedLocations = involvedLocations;
         return dest;
     }
 

@@ -15,5 +15,6 @@ public static class Extensions
             .AddHostedService<OrganizationDailyMemberCountRecorderJob>()
             .AddHostedService<OrganizationOfferingRenewalJob>()
             .AddHostedService<RefreshAzureTenantMembersJob>()
-            .AddHostedService<BuiltInTagsSyncJob>();
+            .AddHostedService<BuiltInTagsSyncJob>()
+            .AddHostedService<BookingDataModelMigrationJob>();
 }

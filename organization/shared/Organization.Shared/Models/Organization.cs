@@ -32,6 +32,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public ICollection<Tag> Tags { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public ICollection<Booking> InvolvedBookings { get; set; } = [];
 
     public bool HasFutureBooking { get; set; }
     public bool HasLocation { get; set; }

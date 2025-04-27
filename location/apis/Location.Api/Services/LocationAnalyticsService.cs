@@ -106,8 +106,8 @@ public class LocationAnalyticsService(
     }
 
     private async Task<ICollection<LocationAnalytics>> GetAnalyticsAsync(
-        ICollection<string> locationIds,
-        IDictionary<string, string> locationNames,
+        List<string> locationIds,
+        Dictionary<string, string> locationNames,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken)
@@ -116,11 +116,13 @@ public class LocationAnalyticsService(
                 new Specification<Booking>
                     {
                         Criteria = query =>
-                            !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.From >= from &&
+                            !query.DeletedAt.HasValue && locationIds.Any(id => query.InvolvedLocations.Select(item => item.Id).Contains(id)) &&
+                            query.From >= from &&
                             query.Until <= until.AddDays(1)
                     }
                     .AddInclude(query => query.Resources)
-                    .AddInclude(query => query.Location))
+                    .AddInclude(query => query.Location)
+                    .AddInclude(query => query.InvolvedLocations))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
@@ -157,14 +159,13 @@ public class LocationAnalyticsService(
                         return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = 0 };
                     }
 
-                    var matchedBookingsCount = bookings.Count(
-                        booking =>
-                            item.Date.Year == booking.From.Year &&
-                            item.Date.Month == booking.From.Month &&
-                            item.Date.Day == booking.From.Day &&
-                            booking.Resources.Count(resource =>
-                                resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk)) >
-                            0);
+                    var matchedBookingsCount = bookings.Count(booking =>
+                        item.Date.Year == booking.From.Year &&
+                        item.Date.Month == booking.From.Month &&
+                        item.Date.Day == booking.From.Day &&
+                        booking.Resources.Count(resource =>
+                            resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk)) >
+                        0);
 
                     return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
                 }).ToList();
@@ -173,11 +174,10 @@ public class LocationAnalyticsService(
                 .Where(item => item.Location.Id == locationId)
                 .Select(item =>
                 {
-                    var matchedBookingsCount = bookings.Count(
-                        booking =>
-                            item.Date.Year == booking.From.Year &&
-                            item.Date.Month == booking.From.Month &&
-                            item.Date.Day == booking.From.Day);
+                    var matchedBookingsCount = bookings.Count(booking =>
+                        item.Date.Year == booking.From.Year &&
+                        item.Date.Month == booking.From.Month &&
+                        item.Date.Day == booking.From.Day);
 
                     return new LocationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
                 }).ToList();
@@ -191,14 +191,13 @@ public class LocationAnalyticsService(
                         return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = 0 };
                     }
 
-                    var matchedBookingsCount = bookings.Count(
-                        booking =>
-                            item.Date.Year == booking.From.Year &&
-                            item.Date.Month == booking.From.Month &&
-                            item.Date.Day == booking.From.Day &&
-                            booking.Resources.Count(resource =>
-                                resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom)) >
-                            0);
+                    var matchedBookingsCount = bookings.Count(booking =>
+                        item.Date.Year == booking.From.Year &&
+                        item.Date.Month == booking.From.Month &&
+                        item.Date.Day == booking.From.Day &&
+                        booking.Resources.Count(resource =>
+                            resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom)) >
+                        0);
 
                     return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
                 }).ToList();

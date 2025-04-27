@@ -35,6 +35,7 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
+    public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? PhysicalAddressId { get; set; }

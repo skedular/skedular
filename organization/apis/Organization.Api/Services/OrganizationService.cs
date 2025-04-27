@@ -443,7 +443,8 @@ public class OrganizationService(
         mappedOrganization.HasFutureBooking = await repositoryFactory.BookingRepository
             .Query(new Specification<Booking>
             {
-                Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.From >= now
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organization.Id) && query.From >= now
             })
             .AnyAsync(cancellationToken);
 

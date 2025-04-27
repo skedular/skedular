@@ -49,7 +49,8 @@ public class OrganizationAnalyticsService(
             .Query(new Specification<Booking>
             {
                 Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.From >= from && query.Until <= until.AddDays(1)
+                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organizationId) && query.From >= from &&
+                    query.Until <= until.AddDays(1)
             }).AsNoTracking().ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
@@ -69,22 +70,20 @@ public class OrganizationAnalyticsService(
                 return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = 0 };
             }
 
-            var matchedBookingsCount = bookings.Count(
-                booking =>
-                    item.Date.Year == booking.From.Year &&
-                    item.Date.Month == booking.From.Month &&
-                    item.Date.Day == booking.From.Day);
+            var matchedBookingsCount = bookings.Count(booking =>
+                item.Date.Year == booking.From.Year &&
+                item.Date.Month == booking.From.Month &&
+                item.Date.Day == booking.From.Day);
 
             return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
         }).ToList();
 
         var organizationDailyBookingsTotals = dailyMemberCounts.Select(item =>
         {
-            var matchedBookingsCount = bookings.Count(
-                booking =>
-                    item.Date.Year == booking.From.Year &&
-                    item.Date.Month == booking.From.Month &&
-                    item.Date.Day == booking.From.Day);
+            var matchedBookingsCount = bookings.Count(booking =>
+                item.Date.Year == booking.From.Year &&
+                item.Date.Month == booking.From.Month &&
+                item.Date.Day == booking.From.Day);
 
             return new OrganizationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
         }).ToList();

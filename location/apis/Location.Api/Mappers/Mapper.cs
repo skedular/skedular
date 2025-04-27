@@ -637,8 +637,7 @@ public class Mapper : IMapper
     private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
-    private static Booking MapTo(Shared.Database.Entities.Booking src,
-        Shared.Models.Location location) =>
+    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Location location) =>
         new()
         {
             Id = src.Id,

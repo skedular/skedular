@@ -53,7 +53,8 @@ public interface IMapper
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
-        Shared.Database.Entities.Organization organization);
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.Organization> involvedOrganizations);
 
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
@@ -146,7 +147,8 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             From = booking.From.ToDateTimeOffset(),
             Until = booking.Until.ToDateTimeOffset(),
-            Organization = new Shared.Models.Organization { Id = booking.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = booking.OrganizationId },
+            InvolvedOrganizations = booking.InvolvedOrganizationIds.Select(item => new Shared.Models.Organization { Id = item }).ToList()
         };
     }
 
@@ -222,13 +224,15 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
-        Shared.Database.Entities.Organization organization)
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.Organization> involvedOrganizations)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
         dest.Until = src.Until;
         dest.Organization = organization;
+        dest.InvolvedOrganizations = involvedOrganizations;
         return dest;
     }
 

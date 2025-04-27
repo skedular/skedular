@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Sanitization;
 using Team.Processors.Mappers;
 using Team.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
@@ -18,7 +19,7 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(booking.Team.Id))
+                    if (!booking.InvolvedTeams.Select(item => item.Id).RemoveInvalidIds()!.Any())
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
@@ -56,7 +57,14 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             throw new TeamNotFound();
         }
 
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, team));
+        var involvedTeams =
+            await repositoryFactory.TeamRepository.GetByIdsAsync(booking.InvolvedTeams.Select(item => item.Id).ToList(), cancellationToken);
+        if (team is null)
+        {
+            throw new TeamNotFound();
+        }
+
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, team, involvedTeams));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

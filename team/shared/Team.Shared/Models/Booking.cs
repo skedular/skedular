@@ -8,4 +8,5 @@ public class Booking : ReplicatedModelBaseWithDeleted
     public DateTimeOffset Until { get; set; }
 
     public Team Team { get; set; }
+    public ICollection<Team> InvolvedTeams { get; set; } = [];
 }

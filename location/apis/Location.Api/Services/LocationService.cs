@@ -356,7 +356,8 @@ public class LocationService(
         mappedLocation.HasFutureBooking = await repositoryFactory.BookingRepository
             .Query(new Specification<Booking>
             {
-                Criteria = query => !query.DeletedAt.HasValue && query.Location.Id == locationEdge.Id && query.From >= now
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(locationEdge.Id) && query.From >= now
             })
             .AnyAsync(cancellationToken);
 
