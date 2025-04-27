@@ -108,8 +108,7 @@ public class InstantAddBookingButtonHandler(
                         cancellationToken: cancellationToken));
 
                 var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
-                var bookingCardBlocks =
-                    bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, false, false, context.PageContext);
+                var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
                 blocks.AddRange(bookingCardBlocks);
                 var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
                 await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
@@ -118,8 +117,7 @@ public class InstantAddBookingButtonHandler(
             {
                 var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
                 var booking = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).First();
-                var bookingCardBlocks =
-                    bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, false, false, context.PageContext);
+                var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
                 blocks.AddRange(bookingCardBlocks);
 
                 var message = new Message { Channel = request.Channel.Id, Blocks = blocks };

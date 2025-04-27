@@ -589,11 +589,8 @@ type OrganizationBillingContactDetailsPayload {
 
 type OrganizationBookingPermissions {
   canAddBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
   canDeleteBooking: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
   canUpdateBooking: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
 }
 
 type OrganizationConnection {
@@ -1038,11 +1035,8 @@ type SubmitCustomerFeedbackPayload {
 
 type TeamBookingPermissions {
   canAddBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
   canDeleteBooking: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
   canUpdateBooking: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
 }
 
 type TeamConnection {

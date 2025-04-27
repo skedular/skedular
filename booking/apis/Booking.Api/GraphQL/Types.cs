@@ -170,13 +170,6 @@ public class OrganizationBookingPermissions
     [GraphQLName("canAddBooking")] public bool CanAddBooking { get; set; }
     [GraphQLName("canUpdateBooking")] public bool CanUpdateBooking { get; set; }
     [GraphQLName("canDeleteBooking")] public bool CanDeleteBooking { get; set; }
-    [GraphQLName("canAddBookingOnBehalf")] public bool CanAddBookingOnBehalf { get; set; }
-
-    [GraphQLName("canUpdateBookingOnBehalf")]
-    public bool CanUpdateBookingOnBehalf { get; set; }
-
-    [GraphQLName("canDeleteBookingOnBehalf")]
-    public bool CanDeleteBookingOnBehalf { get; set; }
 }
 
 [GraphQLName("TeamBookingPermissions")]
@@ -185,13 +178,6 @@ public class TeamBookingPermissions
     [GraphQLName("canAddBooking")] public bool CanAddBooking { get; set; }
     [GraphQLName("canUpdateBooking")] public bool CanUpdateBooking { get; set; }
     [GraphQLName("canDeleteBooking")] public bool CanDeleteBooking { get; set; }
-    [GraphQLName("canAddBookingOnBehalf")] public bool CanAddBookingOnBehalf { get; set; }
-
-    [GraphQLName("canUpdateBookingOnBehalf")]
-    public bool CanUpdateBookingOnBehalf { get; set; }
-
-    [GraphQLName("canDeleteBookingOnBehalf")]
-    public bool CanDeleteBookingOnBehalf { get; set; }
 }
 
 [GraphQLName("AvailableResourcesWhereInput")]

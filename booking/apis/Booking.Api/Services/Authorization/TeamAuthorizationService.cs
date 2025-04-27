@@ -10,9 +10,6 @@ public interface ITeamAuthorizationService
     bool CanAddBooking(Team team, Customer customer);
     bool CanUpdateBooking(Team team, Customer customer);
     bool CanDeleteBooking(Team team, Customer customer);
-    bool CanAddBookingOnBehalf(Team team, Customer customer);
-    bool CanUpdateBookingOnBehalf(Team team, Customer customer);
-    bool CanDeleteBookingOnBehalf(Team team, Customer customer);
     Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
 }
 
@@ -30,15 +27,6 @@ public class TeamAuthorizationService(
 
     public bool CanDeleteBooking(Team team, Customer customer) => organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
 
-    public bool CanAddBookingOnBehalf(Team team, Customer customer) =>
-        organizationAuthorizationService.CanAddBookingOnBehalf(team.Organization, customer);
-
-    public bool CanUpdateBookingOnBehalf(Team team, Customer customer) =>
-        organizationAuthorizationService.CanUpdateBookingOnBehalf(team.Organization, customer);
-
-    public bool CanDeleteBookingOnBehalf(Team team, Customer customer) =>
-        organizationAuthorizationService.CanDeleteBookingOnBehalf(team.Organization, customer);
-
     public async Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
@@ -51,10 +39,7 @@ public class TeamAuthorizationService(
             CanViewBookings = CanViewBookings(team, customer),
             CanAddBooking = CanAddBooking(team, customer),
             CanUpdateBooking = CanUpdateBooking(team, customer),
-            CanDeleteBooking = CanDeleteBooking(team, customer),
-            CanAddBookingOnBehalf = CanAddBookingOnBehalf(team, customer),
-            CanUpdateBookingOnBehalf = CanUpdateBookingOnBehalf(team, customer),
-            CanDeleteBookingOnBehalf = CanDeleteBookingOnBehalf(team, customer)
+            CanDeleteBooking = CanDeleteBooking(team, customer)
         };
     }
 }

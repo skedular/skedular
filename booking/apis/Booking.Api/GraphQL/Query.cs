@@ -109,15 +109,7 @@ public class Query(IMapper mapper)
     {
         if (string.IsNullOrWhiteSpace(organizationId))
         {
-            return new OrganizationBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
-            };
+            return new OrganizationBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
         }
 
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(organizationId, cancellationToken);
@@ -125,10 +117,7 @@ public class Query(IMapper mapper)
         {
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
+            CanDeleteBooking = permissions.CanDeleteBooking
         };
     }
 
@@ -144,10 +133,7 @@ public class Query(IMapper mapper)
             {
                 CanAddBooking = false,
                 CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
+                CanDeleteBooking = false
             };
         }
 
@@ -156,10 +142,7 @@ public class Query(IMapper mapper)
         {
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
+            CanDeleteBooking = permissions.CanDeleteBooking
         };
     }
 

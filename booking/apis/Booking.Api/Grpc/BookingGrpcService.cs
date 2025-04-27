@@ -173,10 +173,7 @@ public class BookingGrpcService(
             CanViewBookings = permissions.CanViewBookings,
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
+            CanDeleteBooking = permissions.CanDeleteBooking
         };
     }
 
@@ -190,10 +187,7 @@ public class BookingGrpcService(
             CanViewBookings = permissions.CanViewBookings,
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
+            CanDeleteBooking = permissions.CanDeleteBooking
         };
     }
 

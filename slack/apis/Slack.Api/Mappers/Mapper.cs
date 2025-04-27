@@ -330,10 +330,7 @@ public class Mapper : IMapper
             CanViewBookings = src.CanViewBookings,
             CanAddBooking = src.CanAddBooking,
             CanUpdateBooking = src.CanUpdateBooking,
-            CanDeleteBooking = src.CanDeleteBooking,
-            CanAddBookingOnBehalf = src.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = src.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = src.CanDeleteBookingOnBehalf
+            CanDeleteBooking = src.CanDeleteBooking
         };
 
     public TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src) =>
@@ -342,10 +339,7 @@ public class Mapper : IMapper
             CanViewBookings = src.CanViewBookings,
             CanAddBooking = src.CanAddBooking,
             CanUpdateBooking = src.CanUpdateBooking,
-            CanDeleteBooking = src.CanDeleteBooking,
-            CanAddBookingOnBehalf = src.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = src.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = src.CanDeleteBookingOnBehalf
+            CanDeleteBooking = src.CanDeleteBooking
         };
 
     public WorkspaceChannel MapTo(Conversation src, Workspace workspace) =>

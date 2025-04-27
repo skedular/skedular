@@ -140,9 +140,6 @@ type OrganizationBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
   canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
 }
 
 type PageInfo {
@@ -168,9 +165,6 @@ type TeamBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
   canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
 }
 
 type Version {

@@ -394,8 +394,6 @@ public class BookingsPage(
                 workspaceMember,
                 bookings,
                 myBookings,
-                permissions.CanUpdateBookingOnBehalf,
-                permissions.CanDeleteBookingOnBehalf,
                 commonPageContext.PageContext,
                 cancellationToken)
         ];

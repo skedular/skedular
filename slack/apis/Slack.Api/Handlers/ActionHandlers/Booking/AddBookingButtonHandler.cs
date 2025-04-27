@@ -257,11 +257,6 @@ public class AddBookingButtonHandler(
         CancellationToken cancellationToken)
     {
         var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
-        if (!permissions.CanAddBookingOnBehalf)
-        {
-            return [];
-        }
-
         if (context.CustomerId is null)
         {
             return

@@ -19,8 +19,6 @@ public interface IBookingComponents
         WorkspaceMember workspaceMember,
         ICollection<Booking> bookings,
         ICollection<Booking> myBookings,
-        bool canUpdateBookingOnBehalf,
-        bool canDeleteBookingOnBehalf,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
@@ -29,8 +27,6 @@ public interface IBookingComponents
         Booking booking,
         ICollection<Booking> myBookings,
         string loggedInCustomerId,
-        bool canUpdateBookingOnBehalf,
-        bool canDeleteBookingOnBehalf,
         bool includeActionButtons,
         PageContext pageContext);
 }
@@ -74,8 +70,6 @@ public class BookingComponents(
         WorkspaceMember workspaceMember,
         ICollection<Booking> bookings,
         ICollection<Booking> myBookings,
-        bool canUpdateBookingOnBehalf,
-        bool canDeleteBookingOnBehalf,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
@@ -83,8 +77,7 @@ public class BookingComponents(
         var blocks = new List<Block>();
         foreach (var booking in bookings)
         {
-            blocks.AddRange(
-                GetBookingCard(workspace, booking, myBookings, customer.Id, canUpdateBookingOnBehalf, canDeleteBookingOnBehalf, true, pageContext));
+            blocks.AddRange(GetBookingCard(workspace, booking, myBookings, customer.Id, true, pageContext));
             blocks.Add(new DividerBlock());
         }
 
@@ -96,8 +89,6 @@ public class BookingComponents(
         Booking booking,
         ICollection<Booking> myBookings,
         string loggedInCustomerId,
-        bool canUpdateBookingOnBehalf,
-        bool canDeleteBookingOnBehalf,
         bool includeActionButtons,
         PageContext pageContext)
     {
@@ -147,25 +138,20 @@ public class BookingComponents(
         }
         else
         {
-            if (canUpdateBookingOnBehalf)
-            {
-                buttons.Add(new Button
+            buttons.AddRange([
+                new Button
                 {
                     ActionId = BookingActionTypes.EditBooking,
                     Text = "Edit".ToPlainTextWithIcon(Icons.Edit),
                     Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize()
-                });
-            }
-
-            if (canDeleteBookingOnBehalf)
-            {
-                buttons.Add(new Button
+                },
+                new Button
                 {
                     ActionId = BookingActionTypes.CancelBooking,
                     Text = "Cancel".ToPlainTextWithIcon(Icons.Cancel),
                     Value = new CancelBookingContext(pageContext, booking.Id).Serialize()
-                });
-            }
+                }
+            ]);
 
             if (!myBookings.Any(item => item.From == booking.From && item.Until == booking.Until))
             {

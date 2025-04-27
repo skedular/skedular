@@ -187,9 +187,6 @@ message OrganizationPermissions {
     bool canAddBooking = 2;
     bool canUpdateBooking = 3;
     bool canDeleteBooking = 4;
-    bool canAddBookingOnBehalf = 5;
-    bool canUpdateBookingOnBehalf = 6;
-    bool canDeleteBookingOnBehalf = 7;
 }
 
 message GetTeamPermissionsInput {
@@ -201,9 +198,6 @@ message TeamPermissions {
     bool canAddBooking = 2;
     bool canUpdateBooking = 3;
     bool canDeleteBooking = 4;
-    bool canAddBookingOnBehalf = 5;
-    bool canUpdateBookingOnBehalf = 6;
-    bool canDeleteBookingOnBehalf = 7;
 }
 
 message GetInput {

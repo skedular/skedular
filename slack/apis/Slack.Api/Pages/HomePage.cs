@@ -613,8 +613,6 @@ public class HomePage(
                 workspaceMember,
                 bookings,
                 myBookings,
-                permissions.CanUpdateBookingOnBehalf,
-                permissions.CanDeleteBookingOnBehalf,
                 commonPageContext.PageContext,
                 cancellationToken));
 
