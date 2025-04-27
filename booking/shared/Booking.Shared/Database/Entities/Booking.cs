@@ -35,7 +35,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.Confirmed);
+        builder.Property(item => item.Status).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.Confirmed);
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
