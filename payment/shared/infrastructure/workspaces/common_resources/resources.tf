@@ -38,7 +38,11 @@ resource "stripe_webhook_endpoint" "webhook_connect_account" {
     "account.external_account.created",
     "account.external_account.updated",
     "account.external_account.deleted",
-    "account.updated"
+    "account.updated",
+    "checkout.session.completed",
+    "checkout.session.expired",
+    "checkout.session.async_payment_succeeded",
+    "checkout.session.async_payment_failed"
   ]
 }
 
