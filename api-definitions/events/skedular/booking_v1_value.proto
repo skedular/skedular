@@ -45,6 +45,7 @@ message Booking {
   string createdByCustomerId = 16;
   string lastModifiedByCustomerId = 17;
   string deletedByCustomerId = 18;
+  bool isPaymentRequired = 19;
 }
 
 enum BookingType

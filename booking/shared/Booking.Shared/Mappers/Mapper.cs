@@ -41,7 +41,8 @@ public class Mapper : IMapper
                 BookingStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
                 BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            IsPaymentRequired = src.IsPaymentRequired
         };
 
         booking.Resources.AddRange(MapTo(src.Resources));

@@ -38,6 +38,7 @@ type BookingDetails {
   involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
+  isPaymentRequired: Boolean!
   lastModifiedByCustomer: Booking_CustomerDetails
   notes: String
   paidByCustomer: Booking_CustomerDetails

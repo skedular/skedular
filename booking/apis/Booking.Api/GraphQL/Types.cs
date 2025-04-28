@@ -91,6 +91,7 @@ public class BookingDetails : Node
     public CustomerDetails? LastModifiedByCustomer { get; set; }
 
     [GraphQLName("deletedByCustomer")] public CustomerDetails? DeletedByCustomer { get; set; }
+    [GraphQLName("isPaymentRequired")] public bool IsPaymentRequired { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 

@@ -26,6 +26,7 @@ type BookingDetails {
   createdByCustomer: Booking_CustomerDetails
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
+  isPaymentRequired: Boolean!
   id: ID!
 }
 

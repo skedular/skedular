@@ -325,7 +325,7 @@ public class BookingService(
                     organizationIds = organizationCustomerPairs.Keys.ToList();
                 }
 
-                if (!organizationIds.Contains(location.Organization.Id))
+                if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
                 {
                     throw new Unauthorized();
                 }
@@ -347,7 +347,7 @@ public class BookingService(
                     organizationIds = organizationCustomerPairs.Keys.ToList();
                 }
 
-                if (!organizationIds.Contains(team.Organization.Id))
+                if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
                 {
                     throw new Unauthorized();
                 }

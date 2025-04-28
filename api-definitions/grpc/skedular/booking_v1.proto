@@ -141,6 +141,7 @@ message Booking {
     Customer createdByCustomer = 16;
     Customer lastModifiedByCustomer = 17;
     Customer deletedByCustomer = 18;
+    bool isPaymentRequired = 19;
 }
 
 message Customer {

@@ -15,6 +15,7 @@ public class Booking : ModelBaseWithDeleted
     public BookingType Type { get; set; }
     public BookingSchedules BookingSchedules { get; set; } = new([]);
     public BookingStatus Status { get; set; }
+    public bool IsPaymentRequired { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {

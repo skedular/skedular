@@ -71,6 +71,7 @@ public class Mapper : IMapper
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
             Status = src.Status.ToBookingStatus(),
+            IsPaymentRequired = src.IsPaymentRequired,
             BookingSchedules = src.BookingSchedules,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
@@ -115,6 +116,7 @@ public class Mapper : IMapper
             Notes = src.Notes,
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
             Status = new BookingStatusDetails { Type = src.Status, Name = src.Status.ToBookingStatusName() },
+            IsPaymentRequired = src.IsPaymentRequired,
             Resources = MapTo(src.Resources),
             InvolvedCustomers = MapTo(src.InvolvedCustomers),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations),
@@ -188,6 +190,7 @@ public class Mapper : IMapper
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
         dest.Status = src.Status.ToBookingStatus();
+        dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.BookingSchedules = src.BookingSchedules;
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
@@ -224,7 +227,8 @@ public class Mapper : IMapper
                 BookingStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Rejected,
                 BookingStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            IsPaymentRequired = src.IsPaymentRequired
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
