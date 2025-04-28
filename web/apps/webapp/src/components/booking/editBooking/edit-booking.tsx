@@ -123,7 +123,9 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           from
           until
           notes
-          type
+          type {
+            type
+          }
           involvedCustomers {
             uniqueId
             name
@@ -252,7 +254,6 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           from
           until
           notes
-          type
           involvedCustomers {
             uniqueId
             name
@@ -488,7 +489,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     const from = dateRange.from.toISOString();
     const until = dateRange.until.toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
-    const type = booking.type;
+    const type = booking.type.type;
 
     let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
     if (booking.involvedLocations.length > 0) {
@@ -546,7 +547,6 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             from,
             until,
             notes,
-            type,
             involvedCustomers: [
               {
                 uniqueId: '',

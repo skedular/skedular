@@ -195,7 +195,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           from
           until
           notes
-          type
           involvedCustomers {
             uniqueId
             name
@@ -423,7 +422,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
-            type,
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,

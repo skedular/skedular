@@ -25,6 +25,17 @@ public static class BookingStatusExtensions
             _ => throw new ArgumentOutOfRangeException()
         };
 
+    public static BookingStatus? ToNullableBookingStatus(this string? src) =>
+        string.IsNullOrWhiteSpace(src)
+            ? null
+            : src switch
+            {
+                BookingStatusConstants.Pending => BookingStatus.Pending,
+                BookingStatusConstants.Rejected => BookingStatus.Rejected,
+                BookingStatusConstants.Confirmed => BookingStatus.Confirmed,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
     public static string ToBookingStatus(this BookingStatus src) =>
         src switch
         {
@@ -33,6 +44,17 @@ public static class BookingStatusExtensions
             BookingStatus.Confirmed => BookingStatusConstants.Confirmed,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    public static string ToNullableBookingStatus(this BookingStatus? src) =>
+        src is null
+            ? string.Empty
+            : src switch
+            {
+                BookingStatus.Pending => BookingStatusConstants.Pending,
+                BookingStatus.Rejected => BookingStatusConstants.Rejected,
+                BookingStatus.Confirmed => BookingStatusConstants.Confirmed,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
     public static string ToBookingStatusName(this BookingStatus src) =>
         src switch

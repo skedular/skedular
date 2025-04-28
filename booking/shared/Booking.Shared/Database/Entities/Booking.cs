@@ -23,6 +23,11 @@ public class Booking : EntityBaseWithDeleted
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Location> InvolvedLocations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual Customer? PaidByCustomer { get; set; }
+    public virtual Organization? PaidByOrganization { get; set; }
+    public virtual Customer? CreatedByCustomer { get; set; }
+    public virtual Customer? LastModifiedByCustomer { get; set; }
+    public virtual Customer? DeletedByCustomer { get; set; }
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -44,6 +49,12 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedLocations).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedBookings);
+
+        builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidBookings);
+        builder.HasOne(item => item.PaidByOrganization).WithMany(item => item.PaidBookings);
+        builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedBookings);
+        builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedBookings);
+        builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedBookings);
 
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.Until);

@@ -13,14 +13,19 @@ type BookingDetails {
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingType!
-  status: BookingStatus!
+  type: BookingTypeDetails!
+  status: BookingStatusDetails!
   resources: [BookingResourceDetails!]!
   productVersions: [Booking_ProductVersionDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
+  paidByCustomer: Booking_CustomerDetails
+  paidByOrganization: Booking_OrganizationDetails
+  createdByCustomer: Booking_CustomerDetails
+  lastModifiedByCustomer: Booking_CustomerDetails
+  deletedByCustomer: Booking_CustomerDetails
   id: ID!
 }
 
@@ -45,6 +50,16 @@ type BookingResourceDetails {
   customTags: [Booking_OrganizationCustomTagDetails!]!
   zones: [Booking_OrganizationZoneDetails!]!
   customers: [Booking_CustomerDetails!]!
+}
+
+type BookingStatusDetails {
+  type: BookingStatus!
+  name: String!
+}
+
+type BookingTypeDetails {
+  type: BookingType!
+  name: String!
 }
 
 type Booking_CurrencyDetails {
@@ -153,6 +168,8 @@ type PageInfo {
 type Query {
   bookingVersion: Version!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
+  bookingTypes: [BookingTypeDetails!]!
+  bookingStatuses: [BookingStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
@@ -215,7 +232,8 @@ input BookingWhereInput {
   toLt: DateTime
   toLte: DateTime
   notesContains: String
-  type: String
+  type: BookingType
+  status: BookingStatus
   nameContains: String
   organizationIds: [String!]
   locationIds: [String!]
@@ -254,7 +272,8 @@ enum BookingOrderField {
   From
   To
   Notes
-  BookingType
+  Type
+  Status
 }
 
 enum BookingStatus {
@@ -268,8 +287,8 @@ enum BookingType {
   WorkingFromOffice
   SickLeave
   AnnualLeave
-  WellBeingLeave
-  ClientOffices
+  WellbeingLeave
+  ClientOffice
   Vacation
   TravelingForWork
   NonWorkingDay

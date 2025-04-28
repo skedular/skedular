@@ -6,8 +6,8 @@ public enum BookingType
     WorkingFromOffice,
     SickLeave,
     AnnualLeave,
-    WellBeingLeave,
-    ClientOffices,
+    WellbeingLeave,
+    ClientOffice,
     Vacation,
     TravelingForWork,
     NonWorkingDay
@@ -19,8 +19,8 @@ public static class BookingTypeConstants
     public const string WorkingFromOffice = "WORKING_FROM_OFFICE";
     public const string SickLeave = "SICK_LEAVE";
     public const string AnnualLeave = "ANNUAL_LEAVE";
-    public const string WellBeingLeave = "WELLBEING_LEAVE";
-    public const string ClientOffices = "CLIENT_OFFICE";
+    public const string WellbeingLeave = "WELLBEING_LEAVE";
+    public const string ClientOffice = "CLIENT_OFFICE";
     public const string Vacation = "VACATION";
     public const string TravelingForWork = "TRAVELING_FOR_WORK";
     public const string NonWorkingDay = "NON_WORKING_DAY";
@@ -35,8 +35,8 @@ public static class BookingTypeExtensions
             BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
             BookingTypeConstants.SickLeave => BookingType.SickLeave,
             BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
-            BookingTypeConstants.WellBeingLeave => BookingType.WellBeingLeave,
-            BookingTypeConstants.ClientOffices => BookingType.ClientOffices,
+            BookingTypeConstants.WellbeingLeave => BookingType.WellbeingLeave,
+            BookingTypeConstants.ClientOffice => BookingType.ClientOffice,
             BookingTypeConstants.Vacation => BookingType.Vacation,
             BookingTypeConstants.TravelingForWork => BookingType.TravelingForWork,
             BookingTypeConstants.NonWorkingDay => BookingType.NonWorkingDay,
@@ -52,8 +52,8 @@ public static class BookingTypeExtensions
                 BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
                 BookingTypeConstants.SickLeave => BookingType.SickLeave,
                 BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
-                BookingTypeConstants.WellBeingLeave => BookingType.WellBeingLeave,
-                BookingTypeConstants.ClientOffices => BookingType.ClientOffices,
+                BookingTypeConstants.WellbeingLeave => BookingType.WellbeingLeave,
+                BookingTypeConstants.ClientOffice => BookingType.ClientOffice,
                 BookingTypeConstants.Vacation => BookingType.Vacation,
                 BookingTypeConstants.TravelingForWork => BookingType.TravelingForWork,
                 BookingTypeConstants.NonWorkingDay => BookingType.NonWorkingDay,
@@ -67,8 +67,8 @@ public static class BookingTypeExtensions
             BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
             BookingType.SickLeave => BookingTypeConstants.SickLeave,
             BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
-            BookingType.WellBeingLeave => BookingTypeConstants.WellBeingLeave,
-            BookingType.ClientOffices => BookingTypeConstants.ClientOffices,
+            BookingType.WellbeingLeave => BookingTypeConstants.WellbeingLeave,
+            BookingType.ClientOffice => BookingTypeConstants.ClientOffice,
             BookingType.Vacation => BookingTypeConstants.Vacation,
             BookingType.TravelingForWork => BookingTypeConstants.TravelingForWork,
             BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
@@ -84,11 +84,41 @@ public static class BookingTypeExtensions
                 BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
                 BookingType.SickLeave => BookingTypeConstants.SickLeave,
                 BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
-                BookingType.WellBeingLeave => BookingTypeConstants.WellBeingLeave,
-                BookingType.ClientOffices => BookingTypeConstants.ClientOffices,
+                BookingType.WellbeingLeave => BookingTypeConstants.WellbeingLeave,
+                BookingType.ClientOffice => BookingTypeConstants.ClientOffice,
                 BookingType.Vacation => BookingTypeConstants.Vacation,
                 BookingType.TravelingForWork => BookingTypeConstants.TravelingForWork,
                 BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             };
+    
+    public static string ToBookingTypeName(this BookingType src) =>
+        src switch
+        {
+            BookingType.WorkingFromHome => "Working from home",
+            BookingType.WorkingFromOffice => "Working from office",
+            BookingType.SickLeave => "Sick leave",
+            BookingType.AnnualLeave => "Annual leave",
+            BookingType.WellbeingLeave => "Wellbeing leave",
+            BookingType.ClientOffice => "Client office",
+            BookingType.Vacation => "Vacation",
+            BookingType.TravelingForWork => "Traveling for work",
+            BookingType.NonWorkingDay => "Non working day",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public static string ToBookingTypeName(this string src) =>
+        src switch
+        {
+            BookingTypeConstants.WorkingFromHome => "Working from home",
+            BookingTypeConstants.WorkingFromOffice => "Working from office",
+            BookingTypeConstants.SickLeave => "Sick leave",
+            BookingTypeConstants.AnnualLeave => "Annual leave",
+            BookingTypeConstants.WellbeingLeave => "Wellbeing leave",
+            BookingTypeConstants.ClientOffice => "Client office",
+            BookingTypeConstants.Vacation => "Vacation",
+            BookingTypeConstants.TravelingForWork => "Traveling for work",
+            BookingTypeConstants.NonWorkingDay => "Non working day",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Pagination;
 
 namespace Booking.Shared.Models;
@@ -14,7 +15,8 @@ public class BookingSearchCriteria(
     DateTimeOffset? toLte,
     string? notesContains,
     string? nameContains,
-    string? bookingType,
+    BookingType? type,
+    BookingStatus? status,
     bool? includeMineOnly,
     bool? includeFutureBookingsOnly,
     IEnumerable<string> organizationIds,
@@ -34,7 +36,8 @@ public class BookingSearchCriteria(
     public string? NameContains { get; } = nameContains;
     public bool? IncludeMineOnly { get; } = includeMineOnly;
     public bool? IncludeFutureBookingsOnly { get; } = includeFutureBookingsOnly;
-    public string? BookingType { get; } = bookingType;
+    public BookingType? Type { get; } = type;
+    public BookingStatus? Status { get; } = status;
     public ICollection<string> OrganizationIds { get; set; } = organizationIds.ToList();
     public ICollection<string> LocationIds { get; set; } = locationIds.ToList();
     public ICollection<string> TeamIds { get; set; } = teamIds.ToList();
@@ -49,5 +52,6 @@ public enum BookingOrderField
     From,
     To,
     Notes,
-    BookingType
+    Type,
+    Status
 }

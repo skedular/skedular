@@ -1,5 +1,6 @@
 using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -59,7 +60,8 @@ public class BookingGrpcService(
                 request.Where.ToLte?.ToDateTimeOffset(),
                 request.Where.NotesContains,
                 request.Where.NameContains,
-                string.IsNullOrWhiteSpace(request.Where.Type) ? null : request.Where.Type,
+                request.Where.Type.ToNullableBookingType(),
+                request.Where.Status.ToNullableBookingStatus(),
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationIds,
@@ -76,7 +78,7 @@ public class BookingGrpcService(
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField.From,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Type => BookingOrderField.BookingType,
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Type => BookingOrderField.Type,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -122,7 +124,8 @@ public class BookingGrpcService(
                 request.Where.ToLte?.ToDateTimeOffset(),
                 request.Where.NotesContains,
                 request.Where.NameContains,
-                string.IsNullOrWhiteSpace(request.Where.Type) ? null : request.Where.Type,
+                request.Where.Type.ToNullableBookingType(),
+                request.Where.Status.ToNullableBookingStatus(),
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationIds,

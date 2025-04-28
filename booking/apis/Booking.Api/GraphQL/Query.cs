@@ -1,4 +1,5 @@
 using System.Reflection;
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -34,6 +35,28 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
+    public IEnumerable<BookingTypeDetails> BookingTypes() =>
+    [
+        new() { Type = BookingType.WorkingFromHome, Name = BookingTypeConstants.WorkingFromHome.ToBookingTypeName() },
+        new() { Type = BookingType.WorkingFromOffice, Name = BookingTypeConstants.WorkingFromOffice.ToBookingTypeName() },
+        new() { Type = BookingType.SickLeave, Name = BookingTypeConstants.SickLeave.ToBookingTypeName() },
+        new() { Type = BookingType.AnnualLeave, Name = BookingTypeConstants.AnnualLeave.ToBookingTypeName() },
+        new() { Type = BookingType.WellbeingLeave, Name = BookingTypeConstants.WellbeingLeave.ToBookingTypeName() },
+        new() { Type = BookingType.ClientOffice, Name = BookingTypeConstants.ClientOffice.ToBookingTypeName() },
+        new() { Type = BookingType.Vacation, Name = BookingTypeConstants.Vacation.ToBookingTypeName() },
+        new() { Type = BookingType.TravelingForWork, Name = BookingTypeConstants.TravelingForWork.ToBookingTypeName() },
+        new() { Type = BookingType.NonWorkingDay, Name = BookingTypeConstants.NonWorkingDay.ToBookingTypeName() },
+    ];
+
+    [UseResolverScope]
+    public IEnumerable<BookingStatusDetails> BookingStatuses() =>
+    [
+        new() { Type = BookingStatus.Pending, Name = BookingStatusConstants.Pending.ToBookingStatusName() },
+        new() { Type = BookingStatus.Rejected, Name = BookingStatusConstants.Rejected.ToBookingStatusName() },
+        new() { Type = BookingStatus.Confirmed, Name = BookingStatusConstants.Confirmed.ToBookingStatusName() },
+    ];
+
+    [UseResolverScope]
     public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
         mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
@@ -66,7 +89,8 @@ public class Query(IMapper mapper)
                 where.ToLte,
                 where.NotesContains,
                 where.NameContains,
-                string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
+                where.Type,
+                where.Status,
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.OrganizationIds.ToSafeCollection(),

@@ -77,6 +77,7 @@ message BookingWhereInput {
     bool includeMineOnly  = 15;
     bool includeFutureBookingsOnly  = 16;
     string type = 17;
+    string status = 18;
 }
 
 message BookingOrderInput {
@@ -97,8 +98,8 @@ enum BookingType
     WorkingFromOffice = 1;
     SickLeave = 2;
     AnnualLeave = 3;
-    WellBeingLeave = 4;
-    ClientOffices = 5;
+    WellbeingLeave = 4;
+    ClientOffice = 5;
     Vacation = 6;
     TravelingForWork = 7;
     NonWorkingDay = 8;
@@ -135,6 +136,11 @@ message Booking {
     repeated Location involvedLocations = 10;
     repeated Team involvedTeams = 11;
     repeated BookingSchedule Schedules = 12;
+    Customer paidByCustomer = 14;
+    Organization paidByOrganization = 15;
+    Customer createdByCustomer = 16;
+    Customer lastModifiedByCustomer = 17;
+    Customer deletedByCustomer = 18;
 }
 
 message Customer {

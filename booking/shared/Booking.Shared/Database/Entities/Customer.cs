@@ -21,6 +21,11 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
 
+    public virtual ICollection<Booking> PaidBookings { get; set; } = [];
+    public virtual ICollection<Booking> CreatedBookings { get; set; } = [];
+    public virtual ICollection<Booking> LastModifiedBookings { get; set; } = [];
+    public virtual ICollection<Booking> DeletedBookings { get; set; } = [];
+
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];

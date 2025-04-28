@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d8cb499f7c1950dba43121761ea7165>>
+ * @generated SignedSource<<7a8710fad5470bdb82c6e874c1d883d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editBooking_query$data = {
   readonly booking: {
@@ -51,7 +51,9 @@ export type editBooking_query$data = {
         readonly uniqueId: string;
       }>;
     }>;
-    readonly type: BookingType;
+    readonly type: {
+      readonly type: BookingType;
+    };
     readonly until: any;
   } | null | undefined;
   readonly locations: {
@@ -239,8 +241,19 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
+          "concreteType": "BookingTypeDetails",
+          "kind": "LinkedField",
           "name": "type",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -364,6 +377,6 @@ return {
 };
 })();
 
-(node as any).hash = "d182089f8351b38bd2b0786fe145b3e3";
+(node as any).hash = "11e131970dc0962ee92c96a74c2be012";
 
 export default node;

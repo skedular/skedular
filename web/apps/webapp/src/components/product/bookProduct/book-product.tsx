@@ -170,7 +170,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           from
           until
-          type
           involvedCustomers {
             uniqueId
             name
@@ -495,7 +494,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             id,
             from,
             until,
-            type,
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,

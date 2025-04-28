@@ -229,7 +229,6 @@ const NewBookingDialog = ({
           from
           until
           notes
-          type
           involvedCustomers {
             uniqueId
             name
@@ -501,7 +500,6 @@ const NewBookingDialog = ({
             from,
             until,
             notes,
-            type,
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,

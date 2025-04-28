@@ -75,14 +75,22 @@ public class BookingDetails : Node
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
-    [GraphQLName("type")] public BookingType Type { get; set; }
-    [GraphQLName("status")] public BookingStatus Status { get; set; }
+    [GraphQLName("type")] public BookingTypeDetails Type { get; set; } = new();
+    [GraphQLName("status")] public BookingStatusDetails Status { get; set; } = new();
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
     [GraphQLName("productVersions")] public IEnumerable<ProductVersionDetails> ProductVersions { get; set; } = [];
     [GraphQLName("involvedCustomers")] public IEnumerable<CustomerDetails> InvolvedCustomers { get; set; } = [];
     [GraphQLName("involvedOrganizations")] public IEnumerable<OrganizationDetails> InvolvedOrganizations { get; set; } = [];
     [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
     [GraphQLName("involvedTeams")] public IEnumerable<TeamDetails> InvolvedTeams { get; set; } = [];
+    [GraphQLName("paidByCustomer")] public CustomerDetails? PaidByCustomer { get; set; }
+    [GraphQLName("paidByOrganization")] public OrganizationDetails? PaidByOrganization { get; set; }
+    [GraphQLName("createdByCustomer")] public CustomerDetails? CreatedByCustomer { get; set; }
+
+    [GraphQLName("lastModifiedByCustomer")]
+    public CustomerDetails? LastModifiedByCustomer { get; set; }
+
+    [GraphQLName("deletedByCustomer")] public CustomerDetails? DeletedByCustomer { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -152,7 +160,8 @@ public class BookingWhereInput
     [GraphQLName("toLt")] public DateTimeOffset? ToLt { get; set; }
     [GraphQLName("toLte")] public DateTimeOffset? ToLte { get; set; }
     [GraphQLName("notesContains")] public string? NotesContains { get; set; }
-    [GraphQLName("type")] public string? Type { get; set; }
+    [GraphQLName("type")] public BookingType? Type { get; set; }
+    [GraphQLName("status")] public BookingStatus? Status { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; }
@@ -281,4 +290,18 @@ public class OrganizationTagDetails
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("tagType")] public string? TagType { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("BookingTypeDetails")]
+public class BookingTypeDetails
+{
+    [GraphQLName("type")] public BookingType Type { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("BookingStatusDetails")]
+public class BookingStatusDetails
+{
+    [GraphQLName("type")] public BookingStatus Type { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

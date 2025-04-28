@@ -30,17 +30,22 @@ type BookingConnection {
 }
 
 type BookingDetails {
+  createdByCustomer: Booking_CustomerDetails
+  deletedByCustomer: Booking_CustomerDetails
   from: DateTime!
   id: ID!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedTeams: [Booking_TeamDetails!]!
+  lastModifiedByCustomer: Booking_CustomerDetails
   notes: String
+  paidByCustomer: Booking_CustomerDetails
+  paidByOrganization: Booking_OrganizationDetails
   productVersions: [Booking_ProductVersionDetails!]!
   resources: [BookingResourceDetails!]!
-  status: BookingStatus!
-  type: BookingType!
+  status: BookingStatusDetails!
+  type: BookingTypeDetails!
   until: DateTime!
 }
 
@@ -65,6 +70,16 @@ type BookingResourceDetails {
   requireBookingApproval: Boolean!
   uniqueId: ID!
   zones: [Booking_OrganizationZoneDetails!]!
+}
+
+type BookingStatusDetails {
+  name: String!
+  type: BookingStatus!
+}
+
+type BookingTypeDetails {
+  name: String!
+  type: BookingType!
 }
 
 type Booking_CurrencyDetails {
@@ -899,6 +914,8 @@ type Query {
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection! @cost(weight: "10")
+  bookingStatuses: [BookingStatusDetails!]!
+  bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
@@ -1386,12 +1403,13 @@ input BookingWhereInput {
   nameContains: String
   notesContains: String
   organizationIds: [String!]
+  status: BookingStatus
   teamIds: [String!]
   toGt: DateTime
   toGte: DateTime
   toLt: DateTime
   toLte: DateTime
-  type: String
+  type: BookingType
 }
 
 input CancelInvitationToJoinOrganizationInput {
@@ -2056,10 +2074,11 @@ input ZoneOrganizationTagWhereInput {
 }
 
 enum BookingOrderField {
-  BookingType
   From
   Notes
+  Status
   To
+  Type
 }
 
 enum BookingStatus {
@@ -2070,12 +2089,12 @@ enum BookingStatus {
 
 enum BookingType {
   AnnualLeave
-  ClientOffices
+  ClientOffice
   NonWorkingDay
   SickLeave
   TravelingForWork
   Vacation
-  WellBeingLeave
+  WellbeingLeave
   WorkingFromHome
   WorkingFromOffice
 }

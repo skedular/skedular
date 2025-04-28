@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmciuwMKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcizwQKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -41,25 +41,29 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "ZWRPcmdhbml6YXRpb25JZHMYCSADKAkSGwoTaW52b2x2ZWRMb2NhdGlvbklk",
             "cxgKIAMoCRIXCg9pbnZvbHZlZFRlYW1JZHMYCyADKAkSJAoJcmVzb3VyY2Vz",
             "GAwgAygLMhEuYm9va2luZy5SZXNvdXJjZRIrCglTY2hlZHVsZXMYDSADKAsy",
-            "GC5ib29raW5nLkJvb2tpbmdTY2hlZHVsZSIrCghSZXNvdXJjZRIKCgJpZBgB",
-            "IAEoCRITCgtjdXN0b21lcklkcxgCIAMoCSJmCg9Cb29raW5nU2NoZWR1bGUS",
-            "KAoEZnJvbRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASKQoF",
-            "dW50aWwYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wKi8KBFR5",
-            "cGUSEwoPQm9va2luZ1Vwc2VydGVkEAASEgoOQm9va2luZ0RlbGV0ZWQQASq3",
-            "AQoLQm9va2luZ1R5cGUSEwoPV29ya2luZ0Zyb21Ib21lEAASFQoRV29ya2lu",
-            "Z0Zyb21PZmZpY2UQARINCglTaWNrTGVhdmUQAhIPCgtBbm51YWxMZWF2ZRAD",
-            "EhIKDldlbGxCZWluZ0xlYXZlEAQSEQoNQ2xpZW50T2ZmaWNlcxAFEgwKCFZh",
-            "Y2F0aW9uEAYSFAoQVHJhdmVsaW5nRm9yV29yaxAHEhEKDU5vbldvcmtpbmdE",
-            "YXkQCCo5Cg1Cb29raW5nU3RhdHVzEgsKB1BlbmRpbmcQABIMCghSZWplY3Rl",
-            "ZBABEg0KCUNvbmZpcm1lZBACQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZl",
-            "bnRzLlNrZWR1bGFyLkJvb2tpbmcuVjEuVmFsdWViBnByb3RvMw=="));
+            "GC5ib29raW5nLkJvb2tpbmdTY2hlZHVsZRIYChBwYWlkQnlDdXN0b21lcklk",
+            "GA4gASgJEhwKFHBhaWRCeU9yZ2FuaXphdGlvbklkGA8gASgJEhsKE2NyZWF0",
+            "ZWRCeUN1c3RvbWVySWQYECABKAkSIAoYbGFzdE1vZGlmaWVkQnlDdXN0b21l",
+            "cklkGBEgASgJEhsKE2RlbGV0ZWRCeUN1c3RvbWVySWQYEiABKAkiKwoIUmVz",
+            "b3VyY2USCgoCaWQYASABKAkSEwoLY3VzdG9tZXJJZHMYAiADKAkiZgoPQm9v",
+            "a2luZ1NjaGVkdWxlEigKBGZyb20YASABKAsyGi5nb29nbGUucHJvdG9idWYu",
+            "VGltZXN0YW1wEikKBXVudGlsGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcCovCgRUeXBlEhMKD0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tp",
+            "bmdEZWxldGVkEAEqtgEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9t",
+            "ZRAAEhUKEVdvcmtpbmdGcm9tT2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoL",
+            "QW5udWFsTGVhdmUQAxISCg5XZWxsYmVpbmdMZWF2ZRAEEhAKDENsaWVudE9m",
+            "ZmljZRAFEgwKCFZhY2F0aW9uEAYSFAoQVHJhdmVsaW5nRm9yV29yaxAHEhEK",
+            "DU5vbldvcmtpbmdEYXkQCCo5Cg1Cb29raW5nU3RhdHVzEgsKB1BlbmRpbmcQ",
+            "ABIMCghSZWplY3RlZBABEg0KCUNvbmZpcm1lZBACQjaqAjNBcGkuU2hhcmVk",
+            "LkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkJvb2tpbmcuVjEuVmFsdWViBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null)
           }));
@@ -78,8 +82,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [pbr::OriginalName("WorkingFromOffice")] WorkingFromOffice = 1,
     [pbr::OriginalName("SickLeave")] SickLeave = 2,
     [pbr::OriginalName("AnnualLeave")] AnnualLeave = 3,
-    [pbr::OriginalName("WellBeingLeave")] WellBeingLeave = 4,
-    [pbr::OriginalName("ClientOffices")] ClientOffices = 5,
+    [pbr::OriginalName("WellbeingLeave")] WellbeingLeave = 4,
+    [pbr::OriginalName("ClientOffice")] ClientOffice = 5,
     [pbr::OriginalName("Vacation")] Vacation = 6,
     [pbr::OriginalName("TravelingForWork")] TravelingForWork = 7,
     [pbr::OriginalName("NonWorkingDay")] NonWorkingDay = 8,
@@ -994,6 +998,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       involvedTeamIds_ = other.involvedTeamIds_.Clone();
       resources_ = other.resources_.Clone();
       schedules_ = other.schedules_.Clone();
+      paidByCustomerId_ = other.paidByCustomerId_;
+      paidByOrganizationId_ = other.paidByOrganizationId_;
+      createdByCustomerId_ = other.createdByCustomerId_;
+      lastModifiedByCustomerId_ = other.lastModifiedByCustomerId_;
+      deletedByCustomerId_ = other.deletedByCustomerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1153,6 +1162,66 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       get { return schedules_; }
     }
 
+    /// <summary>Field number for the "paidByCustomerId" field.</summary>
+    public const int PaidByCustomerIdFieldNumber = 14;
+    private string paidByCustomerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PaidByCustomerId {
+      get { return paidByCustomerId_; }
+      set {
+        paidByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "paidByOrganizationId" field.</summary>
+    public const int PaidByOrganizationIdFieldNumber = 15;
+    private string paidByOrganizationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PaidByOrganizationId {
+      get { return paidByOrganizationId_; }
+      set {
+        paidByOrganizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "createdByCustomerId" field.</summary>
+    public const int CreatedByCustomerIdFieldNumber = 16;
+    private string createdByCustomerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CreatedByCustomerId {
+      get { return createdByCustomerId_; }
+      set {
+        createdByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "lastModifiedByCustomerId" field.</summary>
+    public const int LastModifiedByCustomerIdFieldNumber = 17;
+    private string lastModifiedByCustomerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string LastModifiedByCustomerId {
+      get { return lastModifiedByCustomerId_; }
+      set {
+        lastModifiedByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "deletedByCustomerId" field.</summary>
+    public const int DeletedByCustomerIdFieldNumber = 18;
+    private string deletedByCustomerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DeletedByCustomerId {
+      get { return deletedByCustomerId_; }
+      set {
+        deletedByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1181,6 +1250,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if(!involvedTeamIds_.Equals(other.involvedTeamIds_)) return false;
       if(!resources_.Equals(other.resources_)) return false;
       if(!schedules_.Equals(other.schedules_)) return false;
+      if (PaidByCustomerId != other.PaidByCustomerId) return false;
+      if (PaidByOrganizationId != other.PaidByOrganizationId) return false;
+      if (CreatedByCustomerId != other.CreatedByCustomerId) return false;
+      if (LastModifiedByCustomerId != other.LastModifiedByCustomerId) return false;
+      if (DeletedByCustomerId != other.DeletedByCustomerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1201,6 +1275,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       hash ^= involvedTeamIds_.GetHashCode();
       hash ^= resources_.GetHashCode();
       hash ^= schedules_.GetHashCode();
+      if (PaidByCustomerId.Length != 0) hash ^= PaidByCustomerId.GetHashCode();
+      if (PaidByOrganizationId.Length != 0) hash ^= PaidByOrganizationId.GetHashCode();
+      if (CreatedByCustomerId.Length != 0) hash ^= CreatedByCustomerId.GetHashCode();
+      if (LastModifiedByCustomerId.Length != 0) hash ^= LastModifiedByCustomerId.GetHashCode();
+      if (DeletedByCustomerId.Length != 0) hash ^= DeletedByCustomerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1253,6 +1332,26 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       involvedTeamIds_.WriteTo(output, _repeated_involvedTeamIds_codec);
       resources_.WriteTo(output, _repeated_resources_codec);
       schedules_.WriteTo(output, _repeated_schedules_codec);
+      if (PaidByCustomerId.Length != 0) {
+        output.WriteRawTag(114);
+        output.WriteString(PaidByCustomerId);
+      }
+      if (PaidByOrganizationId.Length != 0) {
+        output.WriteRawTag(122);
+        output.WriteString(PaidByOrganizationId);
+      }
+      if (CreatedByCustomerId.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(CreatedByCustomerId);
+      }
+      if (LastModifiedByCustomerId.Length != 0) {
+        output.WriteRawTag(138, 1);
+        output.WriteString(LastModifiedByCustomerId);
+      }
+      if (DeletedByCustomerId.Length != 0) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(DeletedByCustomerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1297,6 +1396,26 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       involvedTeamIds_.WriteTo(ref output, _repeated_involvedTeamIds_codec);
       resources_.WriteTo(ref output, _repeated_resources_codec);
       schedules_.WriteTo(ref output, _repeated_schedules_codec);
+      if (PaidByCustomerId.Length != 0) {
+        output.WriteRawTag(114);
+        output.WriteString(PaidByCustomerId);
+      }
+      if (PaidByOrganizationId.Length != 0) {
+        output.WriteRawTag(122);
+        output.WriteString(PaidByOrganizationId);
+      }
+      if (CreatedByCustomerId.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(CreatedByCustomerId);
+      }
+      if (LastModifiedByCustomerId.Length != 0) {
+        output.WriteRawTag(138, 1);
+        output.WriteString(LastModifiedByCustomerId);
+      }
+      if (DeletedByCustomerId.Length != 0) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(DeletedByCustomerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1334,6 +1453,21 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       size += involvedTeamIds_.CalculateSize(_repeated_involvedTeamIds_codec);
       size += resources_.CalculateSize(_repeated_resources_codec);
       size += schedules_.CalculateSize(_repeated_schedules_codec);
+      if (PaidByCustomerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByCustomerId);
+      }
+      if (PaidByOrganizationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByOrganizationId);
+      }
+      if (CreatedByCustomerId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(CreatedByCustomerId);
+      }
+      if (LastModifiedByCustomerId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(LastModifiedByCustomerId);
+      }
+      if (DeletedByCustomerId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(DeletedByCustomerId);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1382,6 +1516,21 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       involvedTeamIds_.Add(other.involvedTeamIds_);
       resources_.Add(other.resources_);
       schedules_.Add(other.schedules_);
+      if (other.PaidByCustomerId.Length != 0) {
+        PaidByCustomerId = other.PaidByCustomerId;
+      }
+      if (other.PaidByOrganizationId.Length != 0) {
+        PaidByOrganizationId = other.PaidByOrganizationId;
+      }
+      if (other.CreatedByCustomerId.Length != 0) {
+        CreatedByCustomerId = other.CreatedByCustomerId;
+      }
+      if (other.LastModifiedByCustomerId.Length != 0) {
+        LastModifiedByCustomerId = other.LastModifiedByCustomerId;
+      }
+      if (other.DeletedByCustomerId.Length != 0) {
+        DeletedByCustomerId = other.DeletedByCustomerId;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1462,6 +1611,26 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             schedules_.AddEntriesFrom(input, _repeated_schedules_codec);
             break;
           }
+          case 114: {
+            PaidByCustomerId = input.ReadString();
+            break;
+          }
+          case 122: {
+            PaidByOrganizationId = input.ReadString();
+            break;
+          }
+          case 130: {
+            CreatedByCustomerId = input.ReadString();
+            break;
+          }
+          case 138: {
+            LastModifiedByCustomerId = input.ReadString();
+            break;
+          }
+          case 146: {
+            DeletedByCustomerId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1540,6 +1709,26 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 106: {
             schedules_.AddEntriesFrom(ref input, _repeated_schedules_codec);
+            break;
+          }
+          case 114: {
+            PaidByCustomerId = input.ReadString();
+            break;
+          }
+          case 122: {
+            PaidByOrganizationId = input.ReadString();
+            break;
+          }
+          case 130: {
+            CreatedByCustomerId = input.ReadString();
+            break;
+          }
+          case 138: {
+            LastModifiedByCustomerId = input.ReadString();
+            break;
+          }
+          case 146: {
+            DeletedByCustomerId = input.ReadString();
             break;
           }
         }

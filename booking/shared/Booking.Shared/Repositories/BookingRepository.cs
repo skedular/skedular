@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Models;
 using Enterprise.Shared.Database;
@@ -6,7 +7,7 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Team = Booking.Shared.Database.Entities.Team;
+using Customer = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Shared.Repositories;
 
@@ -27,7 +28,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, ICollection<Team>> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, Customer?> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -45,7 +46,12 @@ internal static class BookingExtensions
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.InvolvedLocations)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.InvolvedTeams);
+            .Include(query => query.InvolvedTeams)
+            .Include(query => query.PaidByCustomer)
+            .Include(query => query.PaidByOrganization)
+            .Include(query => query.CreatedByCustomer)
+            .Include(query => query.LastModifiedByCustomer)
+            .Include(query => query.DeletedByCustomer);
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,
@@ -105,9 +111,14 @@ internal static class BookingExtensions
                 !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
         }
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.BookingType))
+        if (searchCriteria.Type is not null)
         {
-            query = query.Where(item => item.Type == searchCriteria.BookingType);
+            query = query.Where(item => item.Type == searchCriteria.Type.Value.ToBookingType());
+        }
+
+        if (searchCriteria.Status is not null)
+        {
+            query = query.Where(item => item.Type == searchCriteria.Status.Value.ToBookingStatus());
         }
 
         if (searchCriteria.OrganizationIds.Count != 0)
@@ -169,9 +180,12 @@ internal static class BookingExtensions
             BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Notes)
                 : originalQuery.OrderByDescending(x => x.Notes),
-            BookingOrderField.BookingType => orderByField.Direction == OrderDirection.Ascending
+            BookingOrderField.Type => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Type)
                 : originalQuery.OrderByDescending(x => x.Type),
+            BookingOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Status)
+                : originalQuery.OrderByDescending(x => x.Status),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -185,9 +199,12 @@ internal static class BookingExtensions
                 BookingOrderField.Notes => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Notes)
                     : query.ThenByDescending(x => x.Notes),
-                BookingOrderField.BookingType => orderField.Direction == OrderDirection.Ascending
+                BookingOrderField.Type => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Type)
                     : query.ThenByDescending(x => x.Type),
+                BookingOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Status)
+                    : query.ThenByDescending(x => x.Status),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }
