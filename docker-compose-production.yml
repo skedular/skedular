@@ -163,6 +163,7 @@ services:
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -253,6 +254,7 @@ services:
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -346,6 +348,7 @@ services:
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -467,6 +470,7 @@ services:
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -557,6 +561,7 @@ services:
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -650,6 +655,7 @@ services:
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}

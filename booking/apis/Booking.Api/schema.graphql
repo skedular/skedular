@@ -170,6 +170,7 @@ type Query {
   bookingVersion: Version!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookingTypes: [BookingTypeDetails!]!
+  marketplaceBookingTypes: [BookingTypeDetails!]!
   bookingStatuses: [BookingStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection! @cost(weight: "10")
@@ -286,6 +287,7 @@ enum BookingStatus {
 enum BookingType {
   WorkingFromHome
   WorkingFromOffice
+  WorkingFromCoworkingSpace
   SickLeave
   AnnualLeave
   WellbeingLeave

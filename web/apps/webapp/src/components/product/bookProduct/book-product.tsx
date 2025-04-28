@@ -1,4 +1,5 @@
 import { LocationAvatar } from '@/components/avatars';
+import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -20,7 +21,7 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
+import type { BookingType, bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
 import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
@@ -40,7 +41,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, date, number, object } from 'yup';
+import { array, date, number, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: bookProduct_query$key;
@@ -80,6 +81,7 @@ type BookingDetails = {
   date: Date;
   quantity: number;
   resources: string[];
+  type: string;
 };
 
 const bookingSchema = (numberOfResourcesToBook: number) =>
@@ -94,6 +96,7 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
         `You can book only up to ${numberOfResourcesToBook} resources for this product`,
         (value) => value?.length <= numberOfResourcesToBook,
       ),
+    type: string().required('Type is required'),
   });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -129,6 +132,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           latestProductVersionId
         }
         openingHoursMinutesStep
+        ...singleChoiceMarketplaceBookingType_query
       }
     `,
     rootDataRelay,
@@ -170,6 +174,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           from
           until
+          type {
+            type
+            name
+          }
           involvedCustomers {
             uniqueId
             name
@@ -227,6 +235,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
+  const [bookingType, setBookingType] = useState<string>('WorkingFromCoworkingSpace');
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -280,7 +289,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
 
   const handleRefetchAvailableResources = useCallback(
-    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
+    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
       startTransition(() => {
         refetchAvailableResources(
           {
@@ -412,7 +421,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, quantity, resources: resourceIds }: BookingDetails) => {
+  const handleAddClick = ({ date, quantity, resources: resourceIds, type }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -430,7 +439,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const fromToPrint = toShortDate(dateRange.from);
     const customerId = rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
-    const type = 'WorkingFromOffice';
 
     commitAddBooking({
       variables: {
@@ -444,7 +452,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           organizationIds: [organizationId],
           teamIds: [],
           resourceIds,
-          type,
+          type: type as BookingType,
           productVersionIds: Array(quantity).fill(product.latestProductVersionId),
         },
       },
@@ -494,6 +502,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             id,
             from,
             until,
+            type: {
+              type: type as BookingType,
+              name: '',
+            },
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,
@@ -546,12 +558,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               date,
               resources: resourceIds,
               quantity,
+              type: bookingType,
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
               setDate(values.date);
               setResourceIds(values.resources);
               setQuantity(values.quantity);
+              setBookingType(values.type);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -579,6 +593,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
                     <FormFieldLabel label="Quantity">
                       <TextField name="quantity" required={requiredFields.quantity} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Type">
+                      <SingleChoiceMarketplaceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Filters">

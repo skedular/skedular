@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14aeac4d133bbfe79488a85ae8fa4343>>
+ * @generated SignedSource<<80871a64bbc1abde5af8dcddb67ac891>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookings_bookings_query$data = {
   readonly bookings: {

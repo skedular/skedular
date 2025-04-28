@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<edf4ba06fe5d5e648a56f312e4f81103>>
+ * @generated SignedSource<<dc610b0355a8b44743eaf601d3a9499a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,30 +11,30 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type singleChoiceBookingType_query$data = {
-  readonly bookingTypes: ReadonlyArray<{
+export type singleChoiceMarketplaceBookingType_query$data = {
+  readonly marketplaceBookingTypes: ReadonlyArray<{
     readonly name: string;
     readonly type: BookingType;
   }>;
-  readonly " $fragmentType": "singleChoiceBookingType_query";
+  readonly " $fragmentType": "singleChoiceMarketplaceBookingType_query";
 };
-export type singleChoiceBookingType_query$key = {
-  readonly " $data"?: singleChoiceBookingType_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
+export type singleChoiceMarketplaceBookingType_query$key = {
+  readonly " $data"?: singleChoiceMarketplaceBookingType_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceMarketplaceBookingType_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "singleChoiceBookingType_query",
+  "name": "singleChoiceMarketplaceBookingType_query",
   "selections": [
     {
       "alias": null,
       "args": null,
       "concreteType": "BookingTypeDetails",
       "kind": "LinkedField",
-      "name": "bookingTypes",
+      "name": "marketplaceBookingTypes",
       "plural": true,
       "selections": [
         {
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ee9d302412f92be233f4a65b2ec4bc2f";
+(node as any).hash = "d3d74291d563bf16a835eb2147f1020a";
 
 export default node;

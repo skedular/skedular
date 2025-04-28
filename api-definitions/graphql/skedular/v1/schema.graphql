@@ -935,6 +935,7 @@ type Query {
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
   locationVersion: Version!
+  marketplaceBookingTypes: [BookingTypeDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   marketplaceVersion: Version!
   me: CustomerDetails @cost(weight: "10")
@@ -2096,6 +2097,7 @@ enum BookingType {
   TravelingForWork
   Vacation
   WellbeingLeave
+  WorkingFromCoworkingSpace
   WorkingFromHome
   WorkingFromOffice
 }

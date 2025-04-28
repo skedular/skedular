@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b989825ff21515861a563b8e68b9cc5f>>
+ * @generated SignedSource<<20a15dc2a73d1209c06649e18cdf588a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
@@ -59,6 +59,10 @@ export type bookProduct_addBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -95,6 +99,10 @@ export type bookProduct_addBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -129,14 +137,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v4 = {
@@ -147,8 +155,8 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v2/*: any*/),
   (v3/*: any*/),
+  (v2/*: any*/),
   (v4/*: any*/)
 ],
 v6 = {
@@ -183,13 +191,32 @@ v6 = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "BookingTypeDetails",
+      "kind": "LinkedField",
+      "name": "type",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -229,8 +256,8 @@ v6 = {
       "name": "involvedOrganizations",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
-        (v3/*: any*/)
+        (v3/*: any*/),
+        (v2/*: any*/)
       ],
       "storageKey": null
     },
@@ -242,8 +269,8 @@ v6 = {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         (v4/*: any*/),
         {
           "alias": null,
@@ -336,16 +363,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6145d35a79e6c816ed641d5affa3e809",
+    "cacheID": "de6761518cf94230661c49f74b0711ee",
     "id": null,
     "metadata": {},
     "name": "bookProduct_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "913cf5af123292f280f155e37bc83fb8";
+(node as any).hash = "a0e44a19f87e8f4d769460f8e90bf3f6";
 
 export default node;

@@ -39,13 +39,22 @@ public class Query(IMapper mapper)
     [
         new() { Type = BookingType.WorkingFromHome, Name = BookingTypeConstants.WorkingFromHome.ToBookingTypeName() },
         new() { Type = BookingType.WorkingFromOffice, Name = BookingTypeConstants.WorkingFromOffice.ToBookingTypeName() },
+        new() { Type = BookingType.WorkingFromCoworkingSpace, Name = BookingTypeConstants.WorkingFromCoworkingSpace.ToBookingTypeName() },
         new() { Type = BookingType.SickLeave, Name = BookingTypeConstants.SickLeave.ToBookingTypeName() },
         new() { Type = BookingType.AnnualLeave, Name = BookingTypeConstants.AnnualLeave.ToBookingTypeName() },
         new() { Type = BookingType.WellbeingLeave, Name = BookingTypeConstants.WellbeingLeave.ToBookingTypeName() },
         new() { Type = BookingType.ClientOffice, Name = BookingTypeConstants.ClientOffice.ToBookingTypeName() },
         new() { Type = BookingType.Vacation, Name = BookingTypeConstants.Vacation.ToBookingTypeName() },
         new() { Type = BookingType.TravelingForWork, Name = BookingTypeConstants.TravelingForWork.ToBookingTypeName() },
-        new() { Type = BookingType.NonWorkingDay, Name = BookingTypeConstants.NonWorkingDay.ToBookingTypeName() },
+        new() { Type = BookingType.NonWorkingDay, Name = BookingTypeConstants.NonWorkingDay.ToBookingTypeName() }
+    ];
+
+    [UseResolverScope]
+    public IEnumerable<BookingTypeDetails> MarketplaceBookingTypes() =>
+    [
+        new() { Type = BookingType.WorkingFromOffice, Name = BookingTypeConstants.WorkingFromOffice.ToBookingTypeName() },
+        new() { Type = BookingType.WorkingFromCoworkingSpace, Name = BookingTypeConstants.WorkingFromCoworkingSpace.ToBookingTypeName() },
+        new() { Type = BookingType.ClientOffice, Name = BookingTypeConstants.ClientOffice.ToBookingTypeName() }
     ];
 
     [UseResolverScope]
@@ -53,7 +62,7 @@ public class Query(IMapper mapper)
     [
         new() { Type = BookingStatus.Pending, Name = BookingStatusConstants.Pending.ToBookingStatusName() },
         new() { Type = BookingStatus.Rejected, Name = BookingStatusConstants.Rejected.ToBookingStatusName() },
-        new() { Type = BookingStatus.Confirmed, Name = BookingStatusConstants.Confirmed.ToBookingStatusName() },
+        new() { Type = BookingStatus.Confirmed, Name = BookingStatusConstants.Confirmed.ToBookingStatusName() }
     ];
 
     [UseResolverScope]

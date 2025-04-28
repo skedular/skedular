@@ -26,6 +26,7 @@ public class Mapper : IMapper
             {
                 BookingType.WorkingFromHome => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome,
                 BookingType.WorkingFromOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromOffice,
+                BookingType.WorkingFromCoworkingSpace => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromCoworkingSpace,
                 BookingType.SickLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.SickLeave,
                 BookingType.AnnualLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.AnnualLeave,
                 BookingType.WellbeingLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WellbeingLeave,

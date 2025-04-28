@@ -49,14 +49,15 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "EwoLY3VzdG9tZXJJZHMYAiADKAkiZgoPQm9va2luZ1NjaGVkdWxlEigKBGZy",
             "b20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEikKBXVudGls",
             "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCovCgRUeXBlEhMK",
-            "D0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqtgEKC0Jv",
+            "D0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEq1QEKC0Jv",
             "b2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAAEhUKEVdvcmtpbmdGcm9t",
-            "T2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoLQW5udWFsTGVhdmUQAxISCg5X",
-            "ZWxsYmVpbmdMZWF2ZRAEEhAKDENsaWVudE9mZmljZRAFEgwKCFZhY2F0aW9u",
-            "EAYSFAoQVHJhdmVsaW5nRm9yV29yaxAHEhEKDU5vbldvcmtpbmdEYXkQCCo5",
-            "Cg1Cb29raW5nU3RhdHVzEgsKB1BlbmRpbmcQABIMCghSZWplY3RlZBABEg0K",
-            "CUNvbmZpcm1lZBACQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
-            "ZWR1bGFyLkJvb2tpbmcuVjEuVmFsdWViBnByb3RvMw=="));
+            "T2ZmaWNlEAESHQoZV29ya2luZ0Zyb21Db3dvcmtpbmdTcGFjZRACEg0KCVNp",
+            "Y2tMZWF2ZRADEg8KC0FubnVhbExlYXZlEAQSEgoOV2VsbGJlaW5nTGVhdmUQ",
+            "BRIQCgxDbGllbnRPZmZpY2UQBhIMCghWYWNhdGlvbhAHEhQKEFRyYXZlbGlu",
+            "Z0ZvcldvcmsQCBIRCg1Ob25Xb3JraW5nRGF5EAkqOQoNQm9va2luZ1N0YXR1",
+            "cxILCgdQZW5kaW5nEAASDAoIUmVqZWN0ZWQQARINCglDb25maXJtZWQQAkI2",
+            "qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5n",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -80,13 +81,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
   public enum BookingType {
     [pbr::OriginalName("WorkingFromHome")] WorkingFromHome = 0,
     [pbr::OriginalName("WorkingFromOffice")] WorkingFromOffice = 1,
-    [pbr::OriginalName("SickLeave")] SickLeave = 2,
-    [pbr::OriginalName("AnnualLeave")] AnnualLeave = 3,
-    [pbr::OriginalName("WellbeingLeave")] WellbeingLeave = 4,
-    [pbr::OriginalName("ClientOffice")] ClientOffice = 5,
-    [pbr::OriginalName("Vacation")] Vacation = 6,
-    [pbr::OriginalName("TravelingForWork")] TravelingForWork = 7,
-    [pbr::OriginalName("NonWorkingDay")] NonWorkingDay = 8,
+    [pbr::OriginalName("WorkingFromCoworkingSpace")] WorkingFromCoworkingSpace = 2,
+    [pbr::OriginalName("SickLeave")] SickLeave = 3,
+    [pbr::OriginalName("AnnualLeave")] AnnualLeave = 4,
+    [pbr::OriginalName("WellbeingLeave")] WellbeingLeave = 5,
+    [pbr::OriginalName("ClientOffice")] ClientOffice = 6,
+    [pbr::OriginalName("Vacation")] Vacation = 7,
+    [pbr::OriginalName("TravelingForWork")] TravelingForWork = 8,
+    [pbr::OriginalName("NonWorkingDay")] NonWorkingDay = 9,
   }
 
   public enum BookingStatus {

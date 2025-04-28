@@ -50,15 +50,16 @@ message Booking {
 
 enum BookingType
 {
-    WorkingFromHome = 0;
-    WorkingFromOffice = 1;
-    SickLeave = 2;
-    AnnualLeave = 3;
-    WellbeingLeave = 4;
-    ClientOffice = 5;
-    Vacation = 6;
-    TravelingForWork = 7;
-    NonWorkingDay = 8;
+  WorkingFromHome = 0;
+  WorkingFromOffice = 1;
+  WorkingFromCoworkingSpace = 2;
+  SickLeave = 3;
+  AnnualLeave = 4;
+  WellbeingLeave = 5;
+  ClientOffice = 6;
+  Vacation = 7;
+  TravelingForWork = 8;
+  NonWorkingDay = 9;
 }
 
 message Resource {

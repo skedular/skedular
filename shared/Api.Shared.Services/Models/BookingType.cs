@@ -4,6 +4,7 @@ public enum BookingType
 {
     WorkingFromHome,
     WorkingFromOffice,
+    WorkingFromCoworkingSpace,
     SickLeave,
     AnnualLeave,
     WellbeingLeave,
@@ -17,6 +18,7 @@ public static class BookingTypeConstants
 {
     public const string WorkingFromHome = "WORKING_FROM_HOME";
     public const string WorkingFromOffice = "WORKING_FROM_OFFICE";
+    public const string WorkingFromCoworkingSpace = "WORKING_FROM_COWORKING_SPACE";
     public const string SickLeave = "SICK_LEAVE";
     public const string AnnualLeave = "ANNUAL_LEAVE";
     public const string WellbeingLeave = "WELLBEING_LEAVE";
@@ -33,6 +35,7 @@ public static class BookingTypeExtensions
         {
             BookingTypeConstants.WorkingFromHome => BookingType.WorkingFromHome,
             BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
+            BookingTypeConstants.WorkingFromCoworkingSpace => BookingType.WorkingFromCoworkingSpace,
             BookingTypeConstants.SickLeave => BookingType.SickLeave,
             BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
             BookingTypeConstants.WellbeingLeave => BookingType.WellbeingLeave,
@@ -50,6 +53,7 @@ public static class BookingTypeExtensions
             {
                 BookingTypeConstants.WorkingFromHome => BookingType.WorkingFromHome,
                 BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
+                BookingTypeConstants.WorkingFromCoworkingSpace => BookingType.WorkingFromCoworkingSpace,
                 BookingTypeConstants.SickLeave => BookingType.SickLeave,
                 BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
                 BookingTypeConstants.WellbeingLeave => BookingType.WellbeingLeave,
@@ -65,6 +69,7 @@ public static class BookingTypeExtensions
         {
             BookingType.WorkingFromHome => BookingTypeConstants.WorkingFromHome,
             BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
+            BookingType.WorkingFromCoworkingSpace => BookingTypeConstants.WorkingFromCoworkingSpace,
             BookingType.SickLeave => BookingTypeConstants.SickLeave,
             BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
             BookingType.WellbeingLeave => BookingTypeConstants.WellbeingLeave,
@@ -82,6 +87,7 @@ public static class BookingTypeExtensions
             {
                 BookingType.WorkingFromHome => BookingTypeConstants.WorkingFromHome,
                 BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
+                BookingType.WorkingFromCoworkingSpace => BookingTypeConstants.WorkingFromCoworkingSpace,
                 BookingType.SickLeave => BookingTypeConstants.SickLeave,
                 BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
                 BookingType.WellbeingLeave => BookingTypeConstants.WellbeingLeave,
@@ -97,6 +103,7 @@ public static class BookingTypeExtensions
         {
             BookingType.WorkingFromHome => "Working from home",
             BookingType.WorkingFromOffice => "Working from office",
+            BookingType.WorkingFromCoworkingSpace => "Working from co-working space",
             BookingType.SickLeave => "Sick leave",
             BookingType.AnnualLeave => "Annual leave",
             BookingType.WellbeingLeave => "Wellbeing leave",
@@ -112,6 +119,7 @@ public static class BookingTypeExtensions
         {
             BookingTypeConstants.WorkingFromHome => "Working from home",
             BookingTypeConstants.WorkingFromOffice => "Working from office",
+            BookingTypeConstants.WorkingFromCoworkingSpace => "Working from co-working space",
             BookingTypeConstants.SickLeave => "Sick leave",
             BookingTypeConstants.AnnualLeave => "Annual leave",
             BookingTypeConstants.WellbeingLeave => "Wellbeing leave",

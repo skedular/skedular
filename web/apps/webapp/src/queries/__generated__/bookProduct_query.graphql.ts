@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d463d1681ad9c21b906470633ea7566>>
+ * @generated SignedSource<<0d5f7a6c6c163e240d0b6670c7b57f16>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,7 @@ export type bookProduct_query$data = {
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceMarketplaceBookingType_query">;
   readonly " $fragmentType": "bookProduct_query";
 };
 export type bookProduct_query$key = {
@@ -217,6 +218,11 @@ return {
       "kind": "ScalarField",
       "name": "openingHoursMinutesStep",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceMarketplaceBookingType_query"
     }
   ],
   "type": "Query",
@@ -224,6 +230,6 @@ return {
 };
 })();
 
-(node as any).hash = "12dbf5be71fd525ddb9d3a5d08fbc3f2";
+(node as any).hash = "3c24ae4fca6ecfbef8a1d5ab1d0b0019";
 
 export default node;
