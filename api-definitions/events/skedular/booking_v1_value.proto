@@ -34,18 +34,18 @@ message Booking {
   string notes = 5;
   BookingType type = 6;
   BookingStatus status = 7;
-  repeated string involvedCustomerIds = 8;
-  repeated string involvedOrganizationIds = 9;
-  repeated string involvedLocationIds = 10;
-  repeated string involvedTeamIds = 11;
-  repeated Resource resources = 12;
-  repeated BookingSchedule Schedules = 13;
-  string paidByCustomerId = 14;
-  string paidByOrganizationId = 15;
-  string createdByCustomerId = 16;
-  string lastModifiedByCustomerId = 17;
-  string deletedByCustomerId = 18;
-  bool isPaymentRequired = 19;
+  bool isPaymentRequired = 8;
+  repeated string involvedCustomerIds = 9;
+  repeated string involvedOrganizationIds = 10;
+  repeated string involvedLocationIds = 11;
+  repeated string involvedTeamIds = 12;
+  repeated Resource resources = 13;
+  repeated BookingSchedule Schedules = 14;
+  string paidByCustomerId = 15;
+  string paidByOrganizationId = 16;
+  string createdByCustomerId = 17;
+  string lastModifiedByCustomerId = 18;
+  string deletedByCustomerId = 19;
 }
 
 enum BookingType

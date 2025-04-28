@@ -131,17 +131,17 @@ message Booking {
     repeated Resource resources = 5;
     BookingType type = 6;
     BookingStatus status = 7;
-    repeated Customer involvedCustomers = 8;
-    repeated Organization involvedOrganizations = 9;
-    repeated Location involvedLocations = 10;
-    repeated Team involvedTeams = 11;
-    repeated BookingSchedule Schedules = 12;
+    bool isPaymentRequired = 8;
+    repeated Customer involvedCustomers = 9;
+    repeated Organization involvedOrganizations = 10;
+    repeated Location involvedLocations = 11;
+    repeated Team involvedTeams = 12;
+    repeated BookingSchedule Schedules = 13;
     Customer paidByCustomer = 14;
     Organization paidByOrganization = 15;
     Customer createdByCustomer = 16;
     Customer lastModifiedByCustomer = 17;
     Customer deletedByCustomer = 18;
-    bool isPaymentRequired = 19;
 }
 
 message Customer {

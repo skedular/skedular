@@ -42,9 +42,34 @@ public class Mapper : IMapper
                 BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsPaymentRequired = src.IsPaymentRequired
+            IsPaymentRequired = src.IsPaymentRequired,
         };
 
+        if (src.PaidByCustomer is not null)
+        {
+            booking.PaidByCustomerId = src.PaidByCustomer.Id;
+        }
+
+        if (src.PaidByOrganization is not null)
+        {
+            booking.PaidByOrganizationId = src.PaidByOrganization.Id;
+        }
+
+        if (src.CreatedByCustomer is not null)
+        {
+            booking.CreatedByCustomerId = src.CreatedByCustomer.Id;
+        }
+        
+        if (src.LastModifiedByCustomer is not null)
+        {
+            booking.LastModifiedByCustomerId = src.LastModifiedByCustomer.Id;
+        }
+        
+        if (src.DeletedByCustomer is not null)
+        {
+            booking.DeletedByCustomerId = src.DeletedByCustomer.Id;
+        }
+        
         booking.Resources.AddRange(MapTo(src.Resources));
         booking.Schedules.AddRange(MapTo(src.BookingSchedules));
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));

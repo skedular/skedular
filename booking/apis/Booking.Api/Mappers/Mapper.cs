@@ -34,7 +34,12 @@ public interface IMapper
         ICollection<Organization> involvedOrganizations,
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources);
+        ICollection<Shared.Database.Entities.Resource> resources,
+        Shared.Database.Entities.Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        Shared.Database.Entities.Customer? createdByCustomer,
+        Shared.Database.Entities.Customer? lastModifiedByCustomer,
+        Shared.Database.Entities.Customer? deletedByCustomer);
 
     Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -43,7 +48,12 @@ public interface IMapper
         ICollection<Organization> involvedOrganizations,
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources);
+        ICollection<Shared.Database.Entities.Resource> resources,
+        Shared.Database.Entities.Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        Shared.Database.Entities.Customer? createdByCustomer,
+        Shared.Database.Entities.Customer? lastModifiedByCustomer,
+        Shared.Database.Entities.Customer? deletedByCustomer);
 
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
@@ -77,7 +87,12 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList()
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            PaidByCustomer = MapTo(src.PaidByCustomer),
+            PaidByOrganization = MapTo(src.PaidByOrganization),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapTo(src.DeletedByCustomer)
         };
 
         return team;
@@ -121,7 +136,12 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations),
             InvolvedLocations = MapTo(src.InvolvedLocations),
-            InvolvedTeams = MapTo(src.InvolvedTeams)
+            InvolvedTeams = MapTo(src.InvolvedTeams),
+            PaidByCustomer = MapTo(src.PaidByCustomer),
+            PaidByOrganization = MapTo(src.PaidByOrganization),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapTo(src.DeletedByCustomer)
         };
 
     public Shared.Models.Booking MapTo(AddBookingInput src)
@@ -172,8 +192,25 @@ public class Mapper : IMapper
         ICollection<Organization> involvedOrganizations,
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources) =>
-        MergeTo(src, new Shared.Database.Entities.Booking(), involvedCustomers, involvedOrganizations, involvedLocations, involvedTeams, resources);
+        ICollection<Shared.Database.Entities.Resource> resources,
+        Shared.Database.Entities.Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        Shared.Database.Entities.Customer? createdByCustomer,
+        Shared.Database.Entities.Customer? lastModifiedByCustomer,
+        Shared.Database.Entities.Customer? deletedByCustomer) =>
+        MergeTo(
+            src,
+            new Shared.Database.Entities.Booking(),
+            involvedCustomers,
+            involvedOrganizations,
+            involvedLocations,
+            involvedTeams,
+            resources,
+            paidByCustomer,
+            paidByOrganization,
+            createdByCustomer,
+            lastModifiedByCustomer,
+            deletedByCustomer);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -182,7 +219,12 @@ public class Mapper : IMapper
         ICollection<Organization> involvedOrganizations,
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources)
+        ICollection<Shared.Database.Entities.Resource> resources,
+        Shared.Database.Entities.Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        Shared.Database.Entities.Customer? createdByCustomer,
+        Shared.Database.Entities.Customer? lastModifiedByCustomer,
+        Shared.Database.Entities.Customer? deletedByCustomer)
     {
         dest.Id = src.Id;
         dest.From = src.From;
@@ -192,11 +234,16 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToBookingStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.BookingSchedules = src.BookingSchedules;
+        dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedLocations = involvedLocations;
         dest.InvolvedTeams = involvedTeams;
-        dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        dest.PaidByCustomer = paidByCustomer;
+        dest.PaidByOrganization = paidByOrganization;
+        dest.CreatedByCustomer = createdByCustomer;
+        dest.LastModifiedByCustomer = lastModifiedByCustomer;
+        dest.DeletedByCustomer = deletedByCustomer;
         return dest;
     }
 
@@ -228,7 +275,12 @@ public class Mapper : IMapper
                 BookingStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsPaymentRequired = src.IsPaymentRequired
+            IsPaymentRequired = src.IsPaymentRequired,
+            PaidByCustomer = MapToGrpcResponse(src.PaidByCustomer),
+            PaidByOrganization = MapToGrpcResponse(src.PaidByOrganization),
+            CreatedByCustomer = MapToGrpcResponse(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
@@ -337,7 +389,7 @@ public class Mapper : IMapper
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer> MapToGrpcResponse(IEnumerable<Customer> src) =>
-        src.Select(MapToGrpcResponse);
+        src.Select(MapToGrpcResponse)!;
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization> MapToGrpcResponse(
         IEnumerable<Shared.Models.Organization> src) =>
@@ -350,8 +402,13 @@ public class Mapper : IMapper
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team> MapToGrpcResponse(IEnumerable<Shared.Models.Team> src) =>
         src.Select(MapToGrpcResponse)!;
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer MapToGrpcResponse(Customer src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer? MapToGrpcResponse(Customer? src)
     {
+        if (src is null)
+        {
+            return null;
+        }
+        
         var customer = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer
         {
             Id = src.Id,
@@ -400,24 +457,27 @@ public class Mapper : IMapper
     private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
-    private static CustomerDetails MapTo(Customer src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512
-        };
+    private static CustomerDetails? MapTo(Customer? src) =>
+        src is null
+            ? null
+            : new CustomerDetails
+            {
+                UniqueId = src.Id,
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512
+            };
 
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static OrganizationDetails? MapTo(Shared.Models.Organization? src) =>
+        src is null ? null : new OrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
@@ -554,8 +614,8 @@ public class Mapper : IMapper
     private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
     private IEnumerable<Shared.Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
     private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
-    private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
-    private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo);
+    private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo)!;
+    private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
     private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
     private static IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) => src.Select(MapTo);
 }

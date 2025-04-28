@@ -52,13 +52,13 @@ public class BookingService(
             throw new InvalidOperationException();
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(booking.Id))
         {
             var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
             if (existingBooking is not null)
             {
-                return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+                return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
             }
         }
         else
@@ -116,7 +116,18 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity = mapper.MapTo(booking, customerEntities, organizations, ResourcesToLocations(resources), teams, resources);
+        var bookingEntity = mapper.MapTo(
+            booking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            null,
+            null,
+            callingCustomerEntity,
+            null,
+            null);
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
@@ -149,21 +160,21 @@ public class BookingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
         if (existingBooking is null)
         {
             throw new BookingNotFound();
         }
 
-        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+        return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
         if (existingBooking is null)
         {
@@ -194,6 +205,7 @@ public class BookingService(
 
         RemoveAllSlotsFromBooking(existingBooking);
 
+        existingBooking.DeletedByCustomer = callingCustomerEntity;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
@@ -559,6 +571,7 @@ public class BookingService(
         Shared.Models.Booking booking,
         Shared.Database.Entities.Booking existingBooking,
         Shared.Models.Customer customer,
+        Customer callingCustomer,
         CancellationToken cancellationToken)
     {
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
@@ -605,8 +618,19 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity =
-            mapper.MergeTo(booking, existingBooking, customerEntities, organizations, ResourcesToLocations(resources), teams, resources);
+        var bookingEntity = mapper.MergeTo(
+            booking,
+            existingBooking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            null,
+            null,
+            existingBooking.CreatedByCustomer,
+            callingCustomer,
+            null);
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);

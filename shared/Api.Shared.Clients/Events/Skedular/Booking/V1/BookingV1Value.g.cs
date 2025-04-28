@@ -37,15 +37,15 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
             "c3RhbXASDQoFbm90ZXMYBSABKAkSIgoEdHlwZRgGIAEoDjIULmJvb2tpbmcu",
             "Qm9va2luZ1R5cGUSJgoGc3RhdHVzGAcgASgOMhYuYm9va2luZy5Cb29raW5n",
-            "U3RhdHVzEhsKE2ludm9sdmVkQ3VzdG9tZXJJZHMYCCADKAkSHwoXaW52b2x2",
-            "ZWRPcmdhbml6YXRpb25JZHMYCSADKAkSGwoTaW52b2x2ZWRMb2NhdGlvbklk",
-            "cxgKIAMoCRIXCg9pbnZvbHZlZFRlYW1JZHMYCyADKAkSJAoJcmVzb3VyY2Vz",
-            "GAwgAygLMhEuYm9va2luZy5SZXNvdXJjZRIrCglTY2hlZHVsZXMYDSADKAsy",
-            "GC5ib29raW5nLkJvb2tpbmdTY2hlZHVsZRIYChBwYWlkQnlDdXN0b21lcklk",
-            "GA4gASgJEhwKFHBhaWRCeU9yZ2FuaXphdGlvbklkGA8gASgJEhsKE2NyZWF0",
-            "ZWRCeUN1c3RvbWVySWQYECABKAkSIAoYbGFzdE1vZGlmaWVkQnlDdXN0b21l",
-            "cklkGBEgASgJEhsKE2RlbGV0ZWRCeUN1c3RvbWVySWQYEiABKAkSGQoRaXNQ",
-            "YXltZW50UmVxdWlyZWQYEyABKAgiKwoIUmVzb3VyY2USCgoCaWQYASABKAkS",
+            "U3RhdHVzEhkKEWlzUGF5bWVudFJlcXVpcmVkGAggASgIEhsKE2ludm9sdmVk",
+            "Q3VzdG9tZXJJZHMYCSADKAkSHwoXaW52b2x2ZWRPcmdhbml6YXRpb25JZHMY",
+            "CiADKAkSGwoTaW52b2x2ZWRMb2NhdGlvbklkcxgLIAMoCRIXCg9pbnZvbHZl",
+            "ZFRlYW1JZHMYDCADKAkSJAoJcmVzb3VyY2VzGA0gAygLMhEuYm9va2luZy5S",
+            "ZXNvdXJjZRIrCglTY2hlZHVsZXMYDiADKAsyGC5ib29raW5nLkJvb2tpbmdT",
+            "Y2hlZHVsZRIYChBwYWlkQnlDdXN0b21lcklkGA8gASgJEhwKFHBhaWRCeU9y",
+            "Z2FuaXphdGlvbklkGBAgASgJEhsKE2NyZWF0ZWRCeUN1c3RvbWVySWQYESAB",
+            "KAkSIAoYbGFzdE1vZGlmaWVkQnlDdXN0b21lcklkGBIgASgJEhsKE2RlbGV0",
+            "ZWRCeUN1c3RvbWVySWQYEyABKAkiKwoIUmVzb3VyY2USCgoCaWQYASABKAkS",
             "EwoLY3VzdG9tZXJJZHMYAiADKAkiZgoPQm9va2luZ1NjaGVkdWxlEigKBGZy",
             "b20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEikKBXVudGls",
             "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCovCgRUeXBlEhMK",
@@ -63,7 +63,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "IsPaymentRequired" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null)
           }));
@@ -992,6 +992,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       notes_ = other.notes_;
       type_ = other.type_;
       status_ = other.status_;
+      isPaymentRequired_ = other.isPaymentRequired_;
       involvedCustomerIds_ = other.involvedCustomerIds_.Clone();
       involvedOrganizationIds_ = other.involvedOrganizationIds_.Clone();
       involvedLocationIds_ = other.involvedLocationIds_.Clone();
@@ -1003,7 +1004,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       createdByCustomerId_ = other.createdByCustomerId_;
       lastModifiedByCustomerId_ = other.lastModifiedByCustomerId_;
       deletedByCustomerId_ = other.deletedByCustomerId_;
-      isPaymentRequired_ = other.isPaymentRequired_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1097,10 +1097,22 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "isPaymentRequired" field.</summary>
+    public const int IsPaymentRequiredFieldNumber = 8;
+    private bool isPaymentRequired_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsPaymentRequired {
+      get { return isPaymentRequired_; }
+      set {
+        isPaymentRequired_ = value;
+      }
+    }
+
     /// <summary>Field number for the "involvedCustomerIds" field.</summary>
-    public const int InvolvedCustomerIdsFieldNumber = 8;
+    public const int InvolvedCustomerIdsFieldNumber = 9;
     private static readonly pb::FieldCodec<string> _repeated_involvedCustomerIds_codec
-        = pb::FieldCodec.ForString(66);
+        = pb::FieldCodec.ForString(74);
     private readonly pbc::RepeatedField<string> involvedCustomerIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1109,9 +1121,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "involvedOrganizationIds" field.</summary>
-    public const int InvolvedOrganizationIdsFieldNumber = 9;
+    public const int InvolvedOrganizationIdsFieldNumber = 10;
     private static readonly pb::FieldCodec<string> _repeated_involvedOrganizationIds_codec
-        = pb::FieldCodec.ForString(74);
+        = pb::FieldCodec.ForString(82);
     private readonly pbc::RepeatedField<string> involvedOrganizationIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1120,9 +1132,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "involvedLocationIds" field.</summary>
-    public const int InvolvedLocationIdsFieldNumber = 10;
+    public const int InvolvedLocationIdsFieldNumber = 11;
     private static readonly pb::FieldCodec<string> _repeated_involvedLocationIds_codec
-        = pb::FieldCodec.ForString(82);
+        = pb::FieldCodec.ForString(90);
     private readonly pbc::RepeatedField<string> involvedLocationIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1131,9 +1143,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "involvedTeamIds" field.</summary>
-    public const int InvolvedTeamIdsFieldNumber = 11;
+    public const int InvolvedTeamIdsFieldNumber = 12;
     private static readonly pb::FieldCodec<string> _repeated_involvedTeamIds_codec
-        = pb::FieldCodec.ForString(90);
+        = pb::FieldCodec.ForString(98);
     private readonly pbc::RepeatedField<string> involvedTeamIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1142,9 +1154,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "resources" field.</summary>
-    public const int ResourcesFieldNumber = 12;
+    public const int ResourcesFieldNumber = 13;
     private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource> _repeated_resources_codec
-        = pb::FieldCodec.ForMessage(98, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser);
+        = pb::FieldCodec.ForMessage(106, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser);
     private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource> resources_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1153,9 +1165,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "Schedules" field.</summary>
-    public const int SchedulesFieldNumber = 13;
+    public const int SchedulesFieldNumber = 14;
     private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule> _repeated_schedules_codec
-        = pb::FieldCodec.ForMessage(106, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser);
+        = pb::FieldCodec.ForMessage(114, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser);
     private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule> schedules_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1164,7 +1176,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "paidByCustomerId" field.</summary>
-    public const int PaidByCustomerIdFieldNumber = 14;
+    public const int PaidByCustomerIdFieldNumber = 15;
     private string paidByCustomerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1176,7 +1188,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "paidByOrganizationId" field.</summary>
-    public const int PaidByOrganizationIdFieldNumber = 15;
+    public const int PaidByOrganizationIdFieldNumber = 16;
     private string paidByOrganizationId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1188,7 +1200,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "createdByCustomerId" field.</summary>
-    public const int CreatedByCustomerIdFieldNumber = 16;
+    public const int CreatedByCustomerIdFieldNumber = 17;
     private string createdByCustomerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1200,7 +1212,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "lastModifiedByCustomerId" field.</summary>
-    public const int LastModifiedByCustomerIdFieldNumber = 17;
+    public const int LastModifiedByCustomerIdFieldNumber = 18;
     private string lastModifiedByCustomerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1212,7 +1224,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "deletedByCustomerId" field.</summary>
-    public const int DeletedByCustomerIdFieldNumber = 18;
+    public const int DeletedByCustomerIdFieldNumber = 19;
     private string deletedByCustomerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1220,18 +1232,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       get { return deletedByCustomerId_; }
       set {
         deletedByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "isPaymentRequired" field.</summary>
-    public const int IsPaymentRequiredFieldNumber = 19;
-    private bool isPaymentRequired_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsPaymentRequired {
-      get { return isPaymentRequired_; }
-      set {
-        isPaymentRequired_ = value;
       }
     }
 
@@ -1257,6 +1257,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Notes != other.Notes) return false;
       if (Type != other.Type) return false;
       if (Status != other.Status) return false;
+      if (IsPaymentRequired != other.IsPaymentRequired) return false;
       if(!involvedCustomerIds_.Equals(other.involvedCustomerIds_)) return false;
       if(!involvedOrganizationIds_.Equals(other.involvedOrganizationIds_)) return false;
       if(!involvedLocationIds_.Equals(other.involvedLocationIds_)) return false;
@@ -1268,7 +1269,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId != other.CreatedByCustomerId) return false;
       if (LastModifiedByCustomerId != other.LastModifiedByCustomerId) return false;
       if (DeletedByCustomerId != other.DeletedByCustomerId) return false;
-      if (IsPaymentRequired != other.IsPaymentRequired) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1283,6 +1283,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Notes.Length != 0) hash ^= Notes.GetHashCode();
       if (Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) hash ^= Type.GetHashCode();
       if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending) hash ^= Status.GetHashCode();
+      if (IsPaymentRequired != false) hash ^= IsPaymentRequired.GetHashCode();
       hash ^= involvedCustomerIds_.GetHashCode();
       hash ^= involvedOrganizationIds_.GetHashCode();
       hash ^= involvedLocationIds_.GetHashCode();
@@ -1294,7 +1295,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId.Length != 0) hash ^= CreatedByCustomerId.GetHashCode();
       if (LastModifiedByCustomerId.Length != 0) hash ^= LastModifiedByCustomerId.GetHashCode();
       if (DeletedByCustomerId.Length != 0) hash ^= DeletedByCustomerId.GetHashCode();
-      if (IsPaymentRequired != false) hash ^= IsPaymentRequired.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1341,6 +1341,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(56);
         output.WriteEnum((int) Status);
       }
+      if (IsPaymentRequired != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsPaymentRequired);
+      }
       involvedCustomerIds_.WriteTo(output, _repeated_involvedCustomerIds_codec);
       involvedOrganizationIds_.WriteTo(output, _repeated_involvedOrganizationIds_codec);
       involvedLocationIds_.WriteTo(output, _repeated_involvedLocationIds_codec);
@@ -1348,28 +1352,24 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       resources_.WriteTo(output, _repeated_resources_codec);
       schedules_.WriteTo(output, _repeated_schedules_codec);
       if (PaidByCustomerId.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(PaidByCustomerId);
       }
       if (PaidByOrganizationId.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(PaidByOrganizationId);
       }
       if (CreatedByCustomerId.Length != 0) {
-        output.WriteRawTag(130, 1);
+        output.WriteRawTag(138, 1);
         output.WriteString(CreatedByCustomerId);
       }
       if (LastModifiedByCustomerId.Length != 0) {
-        output.WriteRawTag(138, 1);
+        output.WriteRawTag(146, 1);
         output.WriteString(LastModifiedByCustomerId);
       }
       if (DeletedByCustomerId.Length != 0) {
-        output.WriteRawTag(146, 1);
+        output.WriteRawTag(154, 1);
         output.WriteString(DeletedByCustomerId);
-      }
-      if (IsPaymentRequired != false) {
-        output.WriteRawTag(152, 1);
-        output.WriteBool(IsPaymentRequired);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1409,6 +1409,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(56);
         output.WriteEnum((int) Status);
       }
+      if (IsPaymentRequired != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsPaymentRequired);
+      }
       involvedCustomerIds_.WriteTo(ref output, _repeated_involvedCustomerIds_codec);
       involvedOrganizationIds_.WriteTo(ref output, _repeated_involvedOrganizationIds_codec);
       involvedLocationIds_.WriteTo(ref output, _repeated_involvedLocationIds_codec);
@@ -1416,28 +1420,24 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       resources_.WriteTo(ref output, _repeated_resources_codec);
       schedules_.WriteTo(ref output, _repeated_schedules_codec);
       if (PaidByCustomerId.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(PaidByCustomerId);
       }
       if (PaidByOrganizationId.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(PaidByOrganizationId);
       }
       if (CreatedByCustomerId.Length != 0) {
-        output.WriteRawTag(130, 1);
+        output.WriteRawTag(138, 1);
         output.WriteString(CreatedByCustomerId);
       }
       if (LastModifiedByCustomerId.Length != 0) {
-        output.WriteRawTag(138, 1);
+        output.WriteRawTag(146, 1);
         output.WriteString(LastModifiedByCustomerId);
       }
       if (DeletedByCustomerId.Length != 0) {
-        output.WriteRawTag(146, 1);
+        output.WriteRawTag(154, 1);
         output.WriteString(DeletedByCustomerId);
-      }
-      if (IsPaymentRequired != false) {
-        output.WriteRawTag(152, 1);
-        output.WriteBool(IsPaymentRequired);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1470,6 +1470,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
+      if (IsPaymentRequired != false) {
+        size += 1 + 1;
+      }
       size += involvedCustomerIds_.CalculateSize(_repeated_involvedCustomerIds_codec);
       size += involvedOrganizationIds_.CalculateSize(_repeated_involvedOrganizationIds_codec);
       size += involvedLocationIds_.CalculateSize(_repeated_involvedLocationIds_codec);
@@ -1480,7 +1483,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByCustomerId);
       }
       if (PaidByOrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByOrganizationId);
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(PaidByOrganizationId);
       }
       if (CreatedByCustomerId.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(CreatedByCustomerId);
@@ -1490,9 +1493,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (DeletedByCustomerId.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(DeletedByCustomerId);
-      }
-      if (IsPaymentRequired != false) {
-        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1536,6 +1536,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (other.Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending) {
         Status = other.Status;
       }
+      if (other.IsPaymentRequired != false) {
+        IsPaymentRequired = other.IsPaymentRequired;
+      }
       involvedCustomerIds_.Add(other.involvedCustomerIds_);
       involvedOrganizationIds_.Add(other.involvedOrganizationIds_);
       involvedLocationIds_.Add(other.involvedLocationIds_);
@@ -1556,9 +1559,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (other.DeletedByCustomerId.Length != 0) {
         DeletedByCustomerId = other.DeletedByCustomerId;
-      }
-      if (other.IsPaymentRequired != false) {
-        IsPaymentRequired = other.IsPaymentRequired;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1616,52 +1616,52 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             Status = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus) input.ReadEnum();
             break;
           }
-          case 66: {
-            involvedCustomerIds_.AddEntriesFrom(input, _repeated_involvedCustomerIds_codec);
+          case 64: {
+            IsPaymentRequired = input.ReadBool();
             break;
           }
           case 74: {
-            involvedOrganizationIds_.AddEntriesFrom(input, _repeated_involvedOrganizationIds_codec);
+            involvedCustomerIds_.AddEntriesFrom(input, _repeated_involvedCustomerIds_codec);
             break;
           }
           case 82: {
-            involvedLocationIds_.AddEntriesFrom(input, _repeated_involvedLocationIds_codec);
+            involvedOrganizationIds_.AddEntriesFrom(input, _repeated_involvedOrganizationIds_codec);
             break;
           }
           case 90: {
-            involvedTeamIds_.AddEntriesFrom(input, _repeated_involvedTeamIds_codec);
+            involvedLocationIds_.AddEntriesFrom(input, _repeated_involvedLocationIds_codec);
             break;
           }
           case 98: {
-            resources_.AddEntriesFrom(input, _repeated_resources_codec);
+            involvedTeamIds_.AddEntriesFrom(input, _repeated_involvedTeamIds_codec);
             break;
           }
           case 106: {
-            schedules_.AddEntriesFrom(input, _repeated_schedules_codec);
+            resources_.AddEntriesFrom(input, _repeated_resources_codec);
             break;
           }
           case 114: {
-            PaidByCustomerId = input.ReadString();
+            schedules_.AddEntriesFrom(input, _repeated_schedules_codec);
             break;
           }
           case 122: {
-            PaidByOrganizationId = input.ReadString();
+            PaidByCustomerId = input.ReadString();
             break;
           }
           case 130: {
-            CreatedByCustomerId = input.ReadString();
+            PaidByOrganizationId = input.ReadString();
             break;
           }
           case 138: {
-            LastModifiedByCustomerId = input.ReadString();
+            CreatedByCustomerId = input.ReadString();
             break;
           }
           case 146: {
-            DeletedByCustomerId = input.ReadString();
+            LastModifiedByCustomerId = input.ReadString();
             break;
           }
-          case 152: {
-            IsPaymentRequired = input.ReadBool();
+          case 154: {
+            DeletedByCustomerId = input.ReadString();
             break;
           }
         }
@@ -1720,52 +1720,52 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             Status = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus) input.ReadEnum();
             break;
           }
-          case 66: {
-            involvedCustomerIds_.AddEntriesFrom(ref input, _repeated_involvedCustomerIds_codec);
+          case 64: {
+            IsPaymentRequired = input.ReadBool();
             break;
           }
           case 74: {
-            involvedOrganizationIds_.AddEntriesFrom(ref input, _repeated_involvedOrganizationIds_codec);
+            involvedCustomerIds_.AddEntriesFrom(ref input, _repeated_involvedCustomerIds_codec);
             break;
           }
           case 82: {
-            involvedLocationIds_.AddEntriesFrom(ref input, _repeated_involvedLocationIds_codec);
+            involvedOrganizationIds_.AddEntriesFrom(ref input, _repeated_involvedOrganizationIds_codec);
             break;
           }
           case 90: {
-            involvedTeamIds_.AddEntriesFrom(ref input, _repeated_involvedTeamIds_codec);
+            involvedLocationIds_.AddEntriesFrom(ref input, _repeated_involvedLocationIds_codec);
             break;
           }
           case 98: {
-            resources_.AddEntriesFrom(ref input, _repeated_resources_codec);
+            involvedTeamIds_.AddEntriesFrom(ref input, _repeated_involvedTeamIds_codec);
             break;
           }
           case 106: {
-            schedules_.AddEntriesFrom(ref input, _repeated_schedules_codec);
+            resources_.AddEntriesFrom(ref input, _repeated_resources_codec);
             break;
           }
           case 114: {
-            PaidByCustomerId = input.ReadString();
+            schedules_.AddEntriesFrom(ref input, _repeated_schedules_codec);
             break;
           }
           case 122: {
-            PaidByOrganizationId = input.ReadString();
+            PaidByCustomerId = input.ReadString();
             break;
           }
           case 130: {
-            CreatedByCustomerId = input.ReadString();
+            PaidByOrganizationId = input.ReadString();
             break;
           }
           case 138: {
-            LastModifiedByCustomerId = input.ReadString();
+            CreatedByCustomerId = input.ReadString();
             break;
           }
           case 146: {
-            DeletedByCustomerId = input.ReadString();
+            LastModifiedByCustomerId = input.ReadString();
             break;
           }
-          case 152: {
-            IsPaymentRequired = input.ReadBool();
+          case 154: {
+            DeletedByCustomerId = input.ReadString();
             break;
           }
         }
