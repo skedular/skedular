@@ -16,7 +16,7 @@ type OrganizationTypeDetails = {
   readonly name: string;
 };
 
-const SingleChoicesOrganizationType = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoiceOrganizationType = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoiceOrganizationType_query$key>(
     graphql`
       fragment singleChoiceOrganizationType_query on Query {
@@ -57,4 +57,4 @@ const SingleChoicesOrganizationType = ({ rootDataRelay, name, required }: Props)
   );
 };
 
-export default memo(SingleChoicesOrganizationType);
+export default memo(SingleChoiceOrganizationType);

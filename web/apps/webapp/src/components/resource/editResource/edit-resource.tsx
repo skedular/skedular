@@ -10,7 +10,7 @@ import {
   StackRow,
 } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -608,7 +608,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Resource Type">
-                    <SingleChoicesResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
+                    <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Name">

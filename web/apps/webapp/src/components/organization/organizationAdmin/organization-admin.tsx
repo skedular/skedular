@@ -19,7 +19,7 @@ import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, Pref
 import { getOrganizationBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, SingleChoicesOrganizationMemberVisibilityPolicy, SingleChoicesOrganizationType } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries, SingleChoiceOrganizationMemberVisibilityPolicy, SingleChoiceOrganizationType } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -110,7 +110,7 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
-  type: string().required('Organization type is required'),
+  type: string().required('Type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
@@ -1717,11 +1717,11 @@ const OrganizationAdmin = ({
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Type">
-                      <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
+                      <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Member Visibility Policy">
-                      <SingleChoicesOrganizationMemberVisibilityPolicy
+                      <SingleChoiceOrganizationMemberVisibilityPolicy
                         rootDataRelay={rootData}
                         name="memberVisibilityPolicy"
                         required={requiredOrganizationDetailsFields.memberVisibilityPolicy}

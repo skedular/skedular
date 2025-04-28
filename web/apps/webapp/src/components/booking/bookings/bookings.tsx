@@ -134,6 +134,10 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
               from
               until
               notes
+              type {
+                type
+                name
+              }
               involvedCustomers {
                 uniqueId
                 name
@@ -195,6 +199,10 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           from
           until
           notes
+          type {
+            type
+            name
+          }
           involvedCustomers {
             uniqueId
             name
@@ -354,7 +362,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     const shortDateFormatFrom = toShortDate(bookingDetails.from);
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
-    const type = 'WorkingFromOffice';
 
     commitAddBooking({
       variables: {
@@ -368,8 +375,8 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
           teamIds: [],
           resourceIds: [],
-          type,
           productVersionIds: [],
+          type: bookingDetails.type.type,
         },
       },
       onCompleted: (response, errors) => {
@@ -422,6 +429,10 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
+            type: {
+              type: bookingDetails.type.type,
+              name: bookingDetails.type.name,
+            },
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,

@@ -16,7 +16,7 @@ type CurrencyDetails = {
   readonly name: string;
 };
 
-const SingleChoicesCurrency = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoiceCurrency = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoiceCurrency_query$key>(
     graphql`
       fragment singleChoiceCurrency_query on Query {
@@ -57,4 +57,4 @@ const SingleChoicesCurrency = ({ rootDataRelay, name, required }: Props) => {
   );
 };
 
-export default memo(SingleChoicesCurrency);
+export default memo(SingleChoiceCurrency);

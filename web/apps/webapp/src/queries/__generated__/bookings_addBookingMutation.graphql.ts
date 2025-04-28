@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1568fce8c949582843a779699a5dbeb1>>
+ * @generated SignedSource<<b91e416786933764a3e6a3fb6ad000eb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,6 +64,10 @@ export type bookings_addBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -105,6 +109,10 @@ export type bookings_addBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -139,19 +147,19 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v3/*: any*/),
+  (v2/*: any*/)
 ],
 v5 = {
   "alias": null,
@@ -161,8 +169,8 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v2/*: any*/),
   (v3/*: any*/),
+  (v2/*: any*/),
   (v5/*: any*/)
 ],
 v7 = {
@@ -204,13 +212,32 @@ v7 = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "BookingTypeDetails",
+      "kind": "LinkedField",
+      "name": "type",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -270,8 +297,8 @@ v7 = {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         (v5/*: any*/),
         {
           "alias": null,
@@ -364,16 +391,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b27509baeb482b201f429720659acfce",
+    "cacheID": "1bb6ca62a9ccddaf84c4e45ee6b6696d",
     "id": null,
     "metadata": {},
     "name": "bookings_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookings_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookings_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "95e60de2edb607adc7c7eff70c7eb31f";
+(node as any).hash = "8f742328cbfbf8b6ac4a2485d1fc8674";
 
 export default node;

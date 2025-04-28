@@ -17,7 +17,7 @@ type ResourceTypeDetails = {
   readonly color: string | null | undefined;
 };
 
-const SingleChoicesResourceType = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoiceResourceType = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoiceResourceType_query$key>(
     graphql`
       fragment singleChoiceResourceType_query on Query {
@@ -64,4 +64,4 @@ const SingleChoicesResourceType = ({ rootDataRelay, name, required }: Props) => 
   );
 };
 
-export default memo(SingleChoicesResourceType);
+export default memo(SingleChoiceResourceType);

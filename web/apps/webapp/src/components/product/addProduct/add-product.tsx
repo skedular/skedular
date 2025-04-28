@@ -4,9 +4,9 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import {
   MultipleChoicesLocationTags,
   MultipleChoicesProductTags,
+  SingleChoiceCurrency,
   SingleChoiceOrganizationStripeConnectAccount,
-  SingleChoicesCurrency,
-  SingleChoicesPriceUnit,
+  SingleChoicePriceUnit,
 } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
@@ -441,11 +441,11 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Price Unit">
-                      <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
+                      <SingleChoicePriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Currency">
-                      <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                      <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Minimum Duration (minutes)">

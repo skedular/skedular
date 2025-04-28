@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71598b9335e14ece8676cb0648e6771d>>
+ * @generated SignedSource<<eea438111d44054bd6ade9bd5f862038>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,6 +68,10 @@ export type newBookingDialog_addBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -113,6 +117,10 @@ export type newBookingDialog_addBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -147,19 +155,19 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
+  (v3/*: any*/),
+  (v2/*: any*/)
 ],
 v5 = {
   "alias": null,
@@ -169,8 +177,8 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v2/*: any*/),
   (v3/*: any*/),
+  (v2/*: any*/),
   (v5/*: any*/)
 ],
 v7 = {
@@ -212,13 +220,32 @@ v7 = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "BookingTypeDetails",
+      "kind": "LinkedField",
+      "name": "type",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -288,8 +315,8 @@ v7 = {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
         (v3/*: any*/),
+        (v2/*: any*/),
         (v5/*: any*/),
         {
           "alias": null,
@@ -382,16 +409,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a66b1743fd8ffdc15e2ac59ea38824cd",
+    "cacheID": "436268333433cea9c24e7f76ac3ebf01",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f96cbc4afd84a1a45b3bdaa48a320f2d";
+(node as any).hash = "7ff02776d0cc5cec804d9c2ee570996d";
 
 export default node;

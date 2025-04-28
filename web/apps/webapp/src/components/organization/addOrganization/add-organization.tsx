@@ -5,8 +5,8 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import {
   OrganizationMultipleChoicesIndustries,
   OrganizationTermsOfUse,
-  SingleChoicesOrganizationMemberVisibilityPolicy,
-  SingleChoicesOrganizationType,
+  SingleChoiceOrganizationMemberVisibilityPolicy,
+  SingleChoiceOrganizationType,
 } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
@@ -76,7 +76,7 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
-  type: string().required('Organization type is required'),
+  type: string().required('Type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
@@ -309,11 +309,11 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Type">
-                    <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Member Visibility Policy">
-                    <SingleChoicesOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
+                    <SingleChoiceOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Industry">

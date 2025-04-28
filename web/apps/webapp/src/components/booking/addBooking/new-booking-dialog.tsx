@@ -1,4 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
+import { SingleChoiceBookingType } from '@/components/booking';
 import { BodyIconTypography, DefaultDialogTitle, ErrorTypography, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import StackColumn from '@/components/commons/stack-column';
 import { CustomTags } from '@/components/customTag';
@@ -7,7 +8,7 @@ import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { getCustomerFullName, isMidnight, joinErrors, keyboardDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
+import type { BookingType, newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
 import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
@@ -96,6 +97,7 @@ type BookingDetails = {
   team: string | undefined;
   location: string | undefined;
   resources: string[];
+  type: string;
 };
 
 const bookingSchema = object({
@@ -106,6 +108,7 @@ const bookingSchema = object({
   team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
+  type: string().required('Type is required'),
 });
 
 const NewBookingDialog = ({
@@ -138,6 +141,7 @@ const NewBookingDialog = ({
           }
         }
         openingHoursMinutesStep
+        ...singleChoiceBookingType_query
       }
     `,
     rootDataRelay,
@@ -229,6 +233,10 @@ const NewBookingDialog = ({
           from
           until
           notes
+          type {
+            type
+            name
+          }
           involvedCustomers {
             uniqueId
             name
@@ -285,6 +293,7 @@ const NewBookingDialog = ({
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
+  const [bookingType, setBookingType] = useState<string>('WorkingFromOffice');
   const [resourceIds, setResourceIds] = useState<string[]>([]);
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
@@ -412,7 +421,7 @@ const NewBookingDialog = ({
     }
   }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
 
-  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, type }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -430,7 +439,6 @@ const NewBookingDialog = ({
     const fromToPrint = toShortDate(dateRange.from);
     const customerId = member ?? rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
-    const type = 'WorkingFromOffice';
 
     commitAddBooking({
       variables: {
@@ -441,11 +449,11 @@ const NewBookingDialog = ({
           from,
           until,
           notes,
+          type: type as BookingType,
           customerIds: [customerId],
           organizationIds: [organizationId],
           teamIds: teamId ? [teamId] : [],
           resourceIds,
-          type,
           productVersionIds: [],
         },
       },
@@ -500,6 +508,10 @@ const NewBookingDialog = ({
             from,
             until,
             notes,
+            type: {
+              type: type as BookingType,
+              name: '',
+            },
             involvedCustomers: [
               {
                 uniqueId: rootData.me.id,
@@ -572,6 +584,7 @@ const NewBookingDialog = ({
             team: teamId,
             location: locationId,
             resources: resourceIds,
+            type: bookingType,
           }}
           validate={validate}
           render={({ handleSubmit, values }) => {
@@ -579,6 +592,7 @@ const NewBookingDialog = ({
             setAllDay(values.allDay);
             setNotes(values.notes);
             setResourceIds(values.resources);
+            setBookingType(values.type);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -637,6 +651,10 @@ const NewBookingDialog = ({
 
                 <FormFieldLabel label="Notes" useWiderSpace>
                   <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Type" useWiderSpace>
+                  <SingleChoiceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Team" useWiderSpace>

@@ -10,7 +10,7 @@ import {
 } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
@@ -263,7 +263,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
               )}
 
               <FormFieldLabel label="Resource Type" useWiderSpace>
-                <SingleChoicesResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
+                <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Name" useWiderSpace>

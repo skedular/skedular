@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dde5fe64f7fa18c9ba2504b689988df8>>
+ * @generated SignedSource<<14aeac4d133bbfe79488a85ae8fa4343>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookings_bookings_query$data = {
   readonly bookings: {
@@ -52,6 +53,10 @@ export type bookings_bookings_query$data = {
             readonly uniqueId: string;
           }>;
         }>;
+        readonly type: {
+          readonly name: string;
+          readonly type: BookingType;
+        };
         readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
@@ -73,19 +78,19 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v2/*: any*/),
+  (v1/*: any*/)
 ],
 v4 = {
   "alias": null,
@@ -95,8 +100,8 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v1/*: any*/),
   (v2/*: any*/),
+  (v1/*: any*/),
   (v4/*: any*/)
 ];
 return {
@@ -276,13 +281,32 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "concreteType": "BookingTypeDetails",
+                  "kind": "LinkedField",
+                  "name": "type",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "type",
+                      "storageKey": null
+                    },
+                    (v1/*: any*/)
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "Booking_CustomerDetails",
                   "kind": "LinkedField",
                   "name": "involvedCustomers",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/),
                     (v2/*: any*/),
+                    (v1/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -322,7 +346,7 @@ return {
                   "name": "involvedOrganizations",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/)
+                    (v2/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -354,8 +378,8 @@ return {
                   "name": "resources",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/),
                     (v2/*: any*/),
+                    (v1/*: any*/),
                     (v4/*: any*/),
                     {
                       "alias": null,
@@ -451,6 +475,6 @@ return {
 };
 })();
 
-(node as any).hash = "38ccd122dd88047a07ffdf9443d0c9db";
+(node as any).hash = "1792c13de753f81706ab94081a505488";
 
 export default node;

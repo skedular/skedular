@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a9dced0f1f7055008ce770998e6020c>>
+ * @generated SignedSource<<2c35f56aa8810bf798d602e90250b469>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
   readonly from: any;
@@ -48,6 +49,10 @@ export type bookingCard_BookingDetails$data = {
       readonly uniqueId: string;
     }>;
   }>;
+  readonly type: {
+    readonly name: string;
+    readonly type: BookingType;
+  };
   readonly until: any;
   readonly " $fragmentType": "bookingCard_BookingDetails";
 };
@@ -61,19 +66,19 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
+  (v1/*: any*/),
+  (v0/*: any*/)
 ],
 v3 = {
   "alias": null,
@@ -83,8 +88,8 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v0/*: any*/),
   (v1/*: any*/),
+  (v0/*: any*/),
   (v3/*: any*/)
 ];
 return {
@@ -124,13 +129,32 @@ return {
     {
       "alias": null,
       "args": null,
+      "concreteType": "BookingTypeDetails",
+      "kind": "LinkedField",
+      "name": "type",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v0/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Booking_CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
         (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -170,7 +194,7 @@ return {
       "name": "involvedOrganizations",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v1/*: any*/)
       ],
       "storageKey": null
     },
@@ -202,8 +226,8 @@ return {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
         (v1/*: any*/),
+        (v0/*: any*/),
         (v3/*: any*/),
         {
           "alias": null,
@@ -234,6 +258,6 @@ return {
 };
 })();
 
-(node as any).hash = "9f3fcaa0271fd528631af457e23631e7";
+(node as any).hash = "40f729d43c1b0e4ccdbf97fa35d7116d";
 
 export default node;

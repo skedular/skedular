@@ -16,7 +16,7 @@ type PriceUnitDetails = {
   readonly name: string;
 };
 
-const SingleChoicesPriceUnit = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoicePriceUnit = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoicePriceUnit_query$key>(
     graphql`
       fragment singleChoicePriceUnit_query on Query {
@@ -57,4 +57,4 @@ const SingleChoicesPriceUnit = ({ rootDataRelay, name, required }: Props) => {
   );
 };
 
-export default memo(SingleChoicesPriceUnit);
+export default memo(SingleChoicePriceUnit);

@@ -16,7 +16,7 @@ type OrganizationMemberVisibilityPolicyDetails = {
   readonly name: string;
 };
 
-const SingleChoicesOrganizationMemberVisibilityPolicy = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoiceOrganizationMemberVisibilityPolicy = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoiceOrganizationMemberVisibilityPolicyquery$key>(
     graphql`
       fragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {
@@ -60,4 +60,4 @@ const SingleChoicesOrganizationMemberVisibilityPolicy = ({ rootDataRelay, name, 
   );
 };
 
-export default memo(SingleChoicesOrganizationMemberVisibilityPolicy);
+export default memo(SingleChoiceOrganizationMemberVisibilityPolicy);

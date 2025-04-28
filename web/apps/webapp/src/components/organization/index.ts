@@ -7,9 +7,9 @@ export { default as OrganizationMultipleChoicesIndustries } from './organization
 export { default as OrganizationPaymentMethodSetupForm } from './organization-payment-method-setup-form';
 export { default as OrganizationSingleChoiceMemberRole } from './organization-single-choice-member-role';
 export { default as OrganizationTermsOfUse } from './organization-terms-of-use';
-export { default as SingleChoicesCurrency } from './single-choice-currency';
-export { default as SingleChoicesOrganizationMemberVisibilityPolicy } from './single-choice-organization-member-visibility-policy';
+export { default as SingleChoiceCurrency } from './single-choice-currency';
+export { default as SingleChoiceOrganizationMemberVisibilityPolicy } from './single-choice-organization-member-visibility-policy';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
-export { default as SingleChoicesOrganizationType } from './single-choice-organization-type';
-export { default as SingleChoicesPriceUnit } from './single-choice-price-unit';
-export { default as SingleChoicesResourceType } from './single-choice-resource-type';
+export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
+export { default as SingleChoicePriceUnit } from './single-choice-price-unit';
+export { default as SingleChoiceResourceType } from './single-choice-resource-type';

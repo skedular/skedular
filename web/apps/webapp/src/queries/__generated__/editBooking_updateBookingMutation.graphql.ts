@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<559fce8fc02903bcbf27ef39541c34c6>>
+ * @generated SignedSource<<f4b5b0aafa20f31e92f9ba16b675b7fd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -67,6 +67,10 @@ export type editBooking_updateBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -112,6 +116,10 @@ export type editBooking_updateBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: BookingType;
+      };
       readonly until: any;
     };
   } | null | undefined;
@@ -134,19 +142,19 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+  (v2/*: any*/),
+  (v1/*: any*/)
 ],
 v4 = {
   "alias": null,
@@ -156,8 +164,8 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  (v1/*: any*/),
   (v2/*: any*/),
+  (v1/*: any*/),
   (v4/*: any*/)
 ],
 v6 = [
@@ -214,13 +222,32 @@ v6 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "BookingTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Booking_CustomerDetails",
             "kind": "LinkedField",
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
               (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -290,8 +317,8 @@ v6 = [
             "name": "resources",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
               (v2/*: any*/),
+              (v1/*: any*/),
               (v4/*: any*/),
               {
                 "alias": null,
@@ -341,16 +368,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "7fd243d392d18957a2e5e5ec895d00fe",
+    "cacheID": "e109abc0fa055058c5a8c03cbe7aa746",
     "id": null,
     "metadata": {},
     "name": "editBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2b1cc12cebbb9059a4a3a35eff2cf403";
+(node as any).hash = "b2d550c1efc13b9ffd339089b306c508";
 
 export default node;

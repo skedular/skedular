@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a8710fad5470bdb82c6e874c1d883d9>>
+ * @generated SignedSource<<b1fb10a4218a79702a17421fe221f124>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -67,6 +67,7 @@ export type editBooking_query$data = {
     readonly totalCount: number | null | undefined;
   };
   readonly openingHoursMinutesStep: number;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
   readonly " $fragmentType": "editBooking_query";
 };
 export type editBooking_query$key = {
@@ -370,6 +371,11 @@ return {
       "kind": "ScalarField",
       "name": "openingHoursMinutesStep",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceBookingType_query"
     }
   ],
   "type": "Query",
@@ -377,6 +383,6 @@ return {
 };
 })();
 
-(node as any).hash = "11e131970dc0962ee92c96a74c2be012";
+(node as any).hash = "63c645ee4323eb1f1e97e76d48f76590";
 
 export default node;
