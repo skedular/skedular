@@ -182,7 +182,7 @@ public class BookingService(
         }
 
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
-        if (organizationIds.Count == 0)
+        if (organizationIds.Count != 0)
         {
             var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
             if (!organizations.Any(item => organizationAuthorizationService.CanDeleteBooking(item, customer)))
@@ -192,7 +192,7 @@ public class BookingService(
         }
 
         var teamIds = existingBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count == 0)
+        if (teamIds.Count != 0)
         {
             var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
             if (!teams.Any(item => teamAuthorizationService.CanDeleteBooking(item, customer)))
