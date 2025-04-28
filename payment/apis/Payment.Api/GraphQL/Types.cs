@@ -86,6 +86,7 @@ public class AddOrganizationStripeConnectAccountInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("redirectUrl")] public string RedirectUrl { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateOrganizationStripeConnectAccountInput")]

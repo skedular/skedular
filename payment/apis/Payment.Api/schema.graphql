@@ -129,6 +129,7 @@ input AddOrganizationStripeConnectAccountInput {
   id: String
   organizationId: String!
   name: String!
+  redirectUrl: String!
 }
 
 input DeleteOrganizationStripeConnectAccountInput {

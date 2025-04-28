@@ -62,7 +62,8 @@ public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        var account = await organizationStripeConnectAccountService.AddAsync(input.Id, input.OrganizationId, input.Name, cancellationToken);
+        var account = await organizationStripeConnectAccountService.AddAsync(input.Id, input.OrganizationId, input.Name, input.RedirectUrl,
+            cancellationToken);
         return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
     }
 

@@ -10,6 +10,7 @@ namespace Payment.Shared.Database.Entities;
 public class OrganizationStripeConnectAccountRefreshCode : EntityBaseWithDeleted
 {
     public string Code { get; set; }
+    public string RedirectUrl { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationStripeConnectAccountId { get; set; }
@@ -24,6 +25,7 @@ public class OrganizationStripeConnectAccountRefreshCodeConfiguration : IEntityT
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Code).HasMaxLength(Constants.MaxStripeConnectAccountRefreshCodeLength);
+        builder.Property(item => item.RedirectUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder
             .HasOne(item => item.OrganizationStripeConnectAccount)

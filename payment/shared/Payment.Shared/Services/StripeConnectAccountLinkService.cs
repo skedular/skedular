@@ -15,6 +15,7 @@ public interface IStripeConnectAccountLinkService
     Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string organizationId,
+        string redirectUrl,
         OrganizationStripeConnectAccount accountEntity,
         CancellationToken cancellationToken);
 }
@@ -39,6 +40,7 @@ public class StripeConnectAccountLinkService(
     public async Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string organizationId,
+        string redirectUrl,
         OrganizationStripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
     {
@@ -48,7 +50,7 @@ public class StripeConnectAccountLinkService(
             {
                 Account = id,
                 RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, _refreshLinkBaseUrl.Value).SetQueryParam("code", code),
-                ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", accountEntity.Id),
+                ReturnUrl = redirectUrl,
                 Type = "account_onboarding"
             },
             new RequestOptions(),
@@ -56,7 +58,7 @@ public class StripeConnectAccountLinkService(
 
         var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(), Code = code, OrganizationStripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
         };
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);

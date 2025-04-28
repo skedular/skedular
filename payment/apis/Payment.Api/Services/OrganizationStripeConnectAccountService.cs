@@ -17,7 +17,13 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationStripeConnectAccountService
 {
-    Task<OrganizationStripeConnectAccount> AddAsync(string? id, string organizationId, string nickname, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount> AddAsync(
+        string? id,
+        string organizationId,
+        string nickname,
+        string redirectUrl,
+        CancellationToken cancellationToken);
+
     Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
@@ -49,6 +55,7 @@ public class OrganizationStripeConnectAccountService(
         string? id,
         string organizationId,
         string nickname,
+        string redirectUrl,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -99,6 +106,7 @@ public class OrganizationStripeConnectAccountService(
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             stripeConnectAccount.Id,
             organization.Id,
+            redirectUrl,
             accountEntity,
             cancellationToken);
         accountEntity.OnboardingUrl = url;
@@ -240,6 +248,7 @@ public class OrganizationStripeConnectAccountService(
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             accountRefreshCode.OrganizationStripeConnectAccount.StripeAccountId,
             accountRefreshCode.OrganizationStripeConnectAccount.Organization.Id,
+            accountRefreshCode.RedirectUrl,
             accountRefreshCode.OrganizationStripeConnectAccount,
             cancellationToken);
 

@@ -1302,6 +1302,7 @@ input AddOrganizationStripeConnectAccountInput {
   id: String
   name: String!
   organizationId: String!
+  redirectUrl: String!
 }
 
 input AddProductInput {
