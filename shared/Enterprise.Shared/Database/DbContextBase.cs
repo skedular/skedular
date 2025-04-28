@@ -33,7 +33,8 @@ public abstract class DbContextBase<TContext>(DbContextOptions<TContext> options
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<DateTimeOffset>(builder =>
-            builder.HaveConversion<DateTimeOffsetToUtcConverter>()
+            builder
+                .HaveConversion<DateTimeOffsetToUtcConverter>()
                 .HaveConversion<NullableDateTimeOffsetToUtcConverter>());
 
         base.ConfigureConventions(configurationBuilder);

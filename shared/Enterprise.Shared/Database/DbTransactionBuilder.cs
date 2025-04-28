@@ -12,10 +12,8 @@ public interface IDbTransactionBuilder
 
 public class DbTransactionBuilder : IDbTransactionBuilder
 {
-    public IDbContextTransaction BeginTransaction(IUnitOfWork unit) =>
-        ((DbContext)unit).Database.BeginTransaction(IsolationLevel.ReadCommitted);
+    public IDbContextTransaction BeginTransaction(IUnitOfWork unit) => ((DbContext)unit).Database.BeginTransaction(IsolationLevel.ReadCommitted);
 
-    public async Task<IDbContextTransaction>
-        BeginTransactionAsync(IUnitOfWork unit, CancellationToken cancellationToken) =>
+    public async Task<IDbContextTransaction> BeginTransactionAsync(IUnitOfWork unit, CancellationToken cancellationToken) =>
         await ((DbContext)unit).Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
 }

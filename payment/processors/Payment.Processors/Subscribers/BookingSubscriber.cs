@@ -1,14 +1,29 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using Api.Shared.Services.Models;
+using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
+using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
+using Payment.Shared.Services;
+using Stripe;
+using Stripe.Checkout;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
 using Booking = Payment.Shared.Database.Entities.Booking;
 using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 
-public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class BookingSubscriber(
+    ApplicationConfiguration applicationConfiguration,
+    ILogger<BookingSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    IRandomHelper randomHelper,
+    IOrganizationStripeConnectAccountHelper organizationStripeConnectAccountHelper,
+    ICreatable<Session, SessionCreateOptions> sessionCreateService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -17,7 +32,8 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (!booking.IsPaymentRequired)
+                    if (!booking.IsPaymentRequired || booking.LineItems.Count == 0 ||
+                        (booking.PaidByCustomer is null && booking.PaidByOrganization is null))
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
@@ -49,7 +65,101 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
 
     private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking));
+        StripeCustomer stripeCustomer;
+        if (booking.PaidByCustomer is not null)
+        {
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, cancellationToken);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
+
+            ArgumentNullException.ThrowIfNull(customer.StripeCustomer);
+
+            stripeCustomer = customer.StripeCustomer ?? throw new CustomerStripeCustomerRelationshipIsNotSetYet();
+        }
+        else if (booking.PaidByOrganization is not null)
+        {
+            var organization =
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken);
+            if (organization is null)
+            {
+                throw new OrganizationNotFound();
+            }
+
+            stripeCustomer = organization.StripeCustomer ?? throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
+
+        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+        if (productVersions.Count != productVersionIds.Count)
+        {
+            throw new InvalidOperationException();
+        }
+
+        if (productVersions.Any(item => item.StripePrice is null))
+        {
+            throw new StripePriceRelationshipIsNotSetYet();
+        }
+
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+        if (organizationIds.Count > 1)
+        {
+            throw new CrossOrganizationProductBookingNotAllowed();
+        }
+
+        var stripeConnectAccount = organizationStripeConnectAccountHelper.GetStripeAccount(productVersions.First().Product.Organization);
+        var lineItems = booking.LineItems.SelectMany(item =>
+        {
+            var productVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
+            return booking.Schedules.Select(schedule =>
+            {
+                var quantity = productVersion.PriceUnit switch
+                {
+                    PriceUnitConstants.PerMinute => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * item.Quantity,
+                    PriceUnitConstants.PerHour => Convert.ToInt32((schedule.Until - schedule.From).TotalHours) * item.Quantity,
+                    PriceUnitConstants.PerUse => item.Quantity,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new SessionLineItemOptions { Price = productVersion.StripePrice!.StripePriceId, Quantity = quantity };
+            });
+        }).ToList();
+
+        StripeCheckoutSession stripeCheckoutSession;
+        if (existingBooking.StripeCheckoutSession is null)
+        {
+            var session = await sessionCreateService.CreateAsync(
+                new SessionCreateOptions
+                {
+                    Customer = stripeCustomer.StripeCustomerId,
+                    LineItems = lineItems,
+                    Mode = "payment",
+                    UiMode = "hosted",
+                    PaymentMethodTypes = ["card"],
+                    ClientReferenceId = booking.Id,
+                    SuccessUrl = applicationConfiguration.WebAppBaseDomain,
+                    CancelUrl = applicationConfiguration.WebAppBaseDomain
+                },
+                new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = stripeConnectAccount.StripeAccountId },
+                cancellationToken);
+            stripeCheckoutSession = new StripeCheckoutSession
+            {
+                Id = randomHelper.Generate(), StripeCheckoutSessionId = session.Id, Url = session.Url, PaymentStatus = session.PaymentStatus
+            };
+
+            stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
+        }
+        else
+        {
+            stripeCheckoutSession = existingBooking.StripeCheckoutSession;
+        }
+
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, stripeCheckoutSession));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

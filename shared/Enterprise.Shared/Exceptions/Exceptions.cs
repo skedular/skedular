@@ -69,3 +69,7 @@ public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("
 public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
 
 public class CustomerStripeCustomerRelationshipIsNotSetYet() : Exception("Customer Stripe customer relationship is not set yet");
+
+public class StripePriceRelationshipIsNotSetYet() : Exception("Stripe price relationship is not set yet");
+
+public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross organization product booking not allowed");

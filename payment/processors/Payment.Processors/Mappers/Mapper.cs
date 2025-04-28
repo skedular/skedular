@@ -97,8 +97,7 @@ public interface IMapper
     ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId);
-
-    Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest);
+    Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest, StripeCheckoutSession stripeCheckoutSession);
 }
 
 public class Mapper : IMapper
@@ -217,7 +216,11 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             IsPaymentRequired = booking.IsPaymentRequired,
             Schedules = booking.Schedules.Select(item => new BookingSchedule(item.From.ToDateTimeOffset(), item.Until.ToDateTimeOffset())).ToList(),
-            LineItems = booking.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList()
+            LineItems = booking.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
+            PaidByCustomer = string.IsNullOrWhiteSpace(booking.PaidByCustomerId) ? null : new Customer { Id = booking.PaidByCustomerId },
+            PaidByOrganization = string.IsNullOrWhiteSpace(booking.PaidByOrganizationId)
+                ? null
+                : new Organization { Id = booking.PaidByOrganizationId }
         };
     }
 
@@ -507,12 +510,16 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
 
-    public Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest)
+    public Shared.Database.Entities.Booking MergeToEntity(
+        Booking src, 
+        Shared.Database.Entities.Booking dest,
+        StripeCheckoutSession stripeCheckoutSession)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
+        dest.StripeCheckoutSession = stripeCheckoutSession;
         return dest;
     }
 

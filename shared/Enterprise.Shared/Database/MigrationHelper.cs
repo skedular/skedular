@@ -63,11 +63,9 @@ public static class MigrationHelper
             var dbConnection = dbContext.Database.GetDbConnection();
             var connectionString = dbConnection.ConnectionString;
             var connectionStringParts = connectionString.Split(";", StringSplitOptions.RemoveEmptyEntries);
-            var serverPart = connectionStringParts.FirstOrDefault(part =>
-                part.StartsWith("Server=", StringComparison.InvariantCultureIgnoreCase));
+            var serverPart = connectionStringParts.FirstOrDefault(part => part.StartsWith("Server=", StringComparison.InvariantCultureIgnoreCase));
 
-            Console.WriteLine(
-                $"### {s_assemblyName} -- MIGRATING. {serverPart} - Database: {dbConnection.Database}");
+            Console.WriteLine($"### {s_assemblyName} -- MIGRATING. {serverPart} - Database: {dbConnection.Database}");
             await dbContext.Database.MigrateAsync(cancellationToken);
         }
         catch (Exception ex)

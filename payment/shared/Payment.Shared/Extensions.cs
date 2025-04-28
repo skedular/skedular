@@ -5,6 +5,7 @@ using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Payment.Shared.Services;
 using Stripe;
+using Stripe.Checkout;
 using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
 
 namespace Payment.Shared;
@@ -16,7 +17,8 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
-            .AddScoped<IStripeConnectAccountLinkService, StripeConnectAccountLinkService>();
+            .AddScoped<IStripeConnectAccountLinkService, StripeConnectAccountLinkService>()
+            .AddSingleton<IOrganizationStripeConnectAccountHelper, OrganizationStripeConnectAccountHelper>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -32,15 +34,16 @@ public static class Extensions
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
-            .AddScoped<IStripeConnectAccountRepository, StripeConnectAccountRepository>()
-            .AddScoped<IStripeConnectAccountRefreshCodeRepository, StripeConnectAccountRefreshCodeRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
             .AddScoped<IProductVersionRepository, ProductVersionRepository>()
+            .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>()
+            .AddScoped<IStripeConnectAccountRefreshCodeRepository, StripeConnectAccountRefreshCodeRepository>()
+            .AddScoped<IStripeConnectAccountRepository, StripeConnectAccountRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
             .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()
             .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>()
-            .AddScoped<IStripeProductRepository, StripeProductRepository>()
-            .AddScoped<IStripePriceRepository, StripePriceRepository>();
+            .AddScoped<IStripePriceRepository, StripePriceRepository>()
+            .AddScoped<IStripeProductRepository, StripeProductRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
@@ -84,6 +87,10 @@ public static class Extensions
             .AddSingleton<ICreatable<Price, PriceCreateOptions>, PriceService>()
             .AddSingleton<IUpdatable<Price, PriceUpdateOptions>, PriceService>()
             .AddSingleton<IRetrievable<Price, PriceGetOptions>, PriceService>()
+            .AddSingleton<ICreatable<Session, SessionCreateOptions>, SessionService>()
+            .AddSingleton<IListable<Session, SessionListOptions>, SessionService>()
+            .AddSingleton<IRetrievable<Session, SessionGetOptions>, SessionService>()
+            .AddSingleton<IUpdatable<Session, SessionUpdateOptions>, SessionService>()
             .AddSingleton<PaymentMethodService>();
     }
 }

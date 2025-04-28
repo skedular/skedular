@@ -93,8 +93,14 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
       .required('Resource is required')
       .test(
         'less-equal-number-of-resources-to-book',
-        `You can book only up to ${numberOfResourcesToBook} resources for this product`,
-        (value) => value?.length <= numberOfResourcesToBook,
+        `You have selected more resources than allowed for this product.`, function(value) {
+          const { quantity } = this.parent;
+          if (!quantity) {
+            return true;
+          }
+
+          return value?.length <= (numberOfResourcesToBook * quantity);
+        },
       ),
     type: string().required('Type is required'),
   });
@@ -453,7 +459,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           teamIds: [],
           resourceIds,
           type: type as BookingType,
-          lineItems: [{ productVersionId: product.latestProductVersionId, quantity }],
+          lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
         },
       },
       onCompleted: (response, errors) => {

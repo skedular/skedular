@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -13,9 +14,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430120341_DropStripeCheckoutSessionFromBooking")]
+    partial class DropStripeCheckoutSessionFromBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +166,6 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<ICollection<BookingSchedule>>("Schedules")
                         .HasColumnType("jsonb");
 
-                    b.Property<string>("StripeCheckoutSessionId")
-                        .HasColumnType("character varying(100)");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -179,9 +179,6 @@ namespace Payment.Shared.Database.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("StripeCheckoutSessionId")
-                        .IsUnique();
 
                     b.ToTable("Booking");
                 });
@@ -1144,15 +1141,6 @@ namespace Payment.Shared.Database.Migrations
                     b.ToTable("StripeProduct");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Booking", b =>
-                {
-                    b.HasOne("Payment.Shared.Database.Entities.StripeCheckoutSession", "StripeCheckoutSession")
-                        .WithOne("Booking")
-                        .HasForeignKey("Payment.Shared.Database.Entities.Booking", "StripeCheckoutSessionId");
-
-                    b.Navigation("StripeCheckoutSession");
-                });
-
             modelBuilder.Entity("Payment.Shared.Database.Entities.Customer", b =>
                 {
                     b.HasOne("Payment.Shared.Database.Entities.StripeCustomer", "StripeCustomer")
@@ -1358,11 +1346,6 @@ namespace Payment.Shared.Database.Migrations
             modelBuilder.Entity("Payment.Shared.Database.Entities.Product", b =>
                 {
                     b.Navigation("ProductVersions");
-                });
-
-            modelBuilder.Entity("Payment.Shared.Database.Entities.StripeCheckoutSession", b =>
-                {
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.StripeConnectAccount", b =>

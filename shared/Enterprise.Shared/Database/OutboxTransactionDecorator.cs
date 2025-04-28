@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Enterprise.Shared.Database;
 
-public class TransactionDecorator(IDbContextTransaction dbContextTransaction) : IDbContextTransaction
+public class OutboxTransactionDecorator(IDbContextTransaction dbContextTransaction) : IDbContextTransaction
 {
     private bool _disposed;
 
@@ -29,8 +29,7 @@ public class TransactionDecorator(IDbContextTransaction dbContextTransaction) : 
 
     public void Rollback() => dbContextTransaction.Rollback();
 
-    public Task RollbackAsync(CancellationToken cancellationToken) =>
-        dbContextTransaction.RollbackAsync(cancellationToken);
+    public Task RollbackAsync(CancellationToken cancellationToken) => dbContextTransaction.RollbackAsync(cancellationToken);
 
     public void CreateSavepoint(string name) => dbContextTransaction.CreateSavepoint(name);
 
@@ -66,5 +65,5 @@ public class TransactionDecorator(IDbContextTransaction dbContextTransaction) : 
         _disposed = true;
     }
 
-    ~TransactionDecorator() => Dispose(false);
+    ~OutboxTransactionDecorator() => Dispose(false);
 }

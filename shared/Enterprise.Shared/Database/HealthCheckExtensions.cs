@@ -8,7 +8,7 @@ namespace Enterprise.Shared.Database;
 public static class HealthCheckExtensions
 {
     /// <summary>
-    ///     Checks for Sql Server connectivity
+    ///     Checks for SQL Server connectivity
     ///     This binds to the "services" tag that outputs to /health/readiness
     /// </summary>
     public static IHealthChecksBuilder AddDatabaseHealthCheck(

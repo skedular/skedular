@@ -123,6 +123,9 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
+        booking.IsPaymentRequired = booking.LineItems.Count != 0;
+        booking.Status = booking.LineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
+
         var bookingEntity = mapper.MapTo(
             booking,
             customerEntities,
@@ -130,14 +133,13 @@ public class BookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            null,
+            booking.IsPaymentRequired ? callingCustomerEntity : null,
             null,
             callingCustomerEntity,
             null,
             null,
             productVersions);
 
-        bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
 
@@ -627,6 +629,10 @@ public class BookingService(
         }
 
         var existingLineItems = existingBooking.LineItems;
+
+        booking.IsPaymentRequired = existingLineItems.Count != 0;
+        booking.Status = existingLineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
+        
         var bookingEntity = mapper.MergeTo(
             booking,
             existingBooking,

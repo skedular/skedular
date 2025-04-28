@@ -9,6 +9,7 @@ namespace Payment.Shared.Repositories;
 public interface IProductVersionRepository : IRepository<ProductVersion>
 {
     Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<ProductVersion>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     ProductVersion Add(ProductVersion product);
     ProductVersion Update(ProductVersion product);
 }
@@ -20,6 +21,7 @@ internal static class ProductVersionExtensions
         originalQuery
             .Include(query => query.Product)
             .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query.StripeConnectAccounts)
             .Include(query => query.StripeProduct)
             .Include(query => query.StripePrice);
 }
@@ -31,6 +33,12 @@ public class ProductVersionRepository(PaymentDbContext dbContext, TimeProvider t
         await DbContext.ProductVersion
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<ProductVersion>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.ProductVersion
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public ProductVersion Add(ProductVersion product)
     {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Services;
 using Payment.Shared.Publishers;
 using Stripe;
+using Stripe.Checkout;
 using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
 
 namespace Payment.Api.Controllers;
@@ -116,6 +117,14 @@ public class PaymentController(
                             cancellationToken);
                     }
 
+                    break;
+
+                case EventTypes.CheckoutSessionCompleted:
+                case EventTypes.CheckoutSessionExpired:
+                case EventTypes.CheckoutSessionAsyncPaymentSucceeded:
+                case EventTypes.CheckoutSessionAsyncPaymentFailed:
+                    var session = stripeEvent.Data.Object as Session;
+                    ArgumentNullException.ThrowIfNull(session);
                     break;
             }
 

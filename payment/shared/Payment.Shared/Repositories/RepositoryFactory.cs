@@ -15,15 +15,16 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
-    IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
+    IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
+    IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
+    IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
     IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
-    IStripeProductRepository StripeProductRepository { get; }
     IStripePriceRepository StripePriceRepository { get; }
+    IStripeProductRepository StripeProductRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -42,16 +43,17 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        StripeConnectAccountRepository = new StripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
-        StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
+        StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
+        StripeConnectAccountRepository = new StripeConnectAccountRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
         StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
         StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
-        StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
         StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
+        StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -69,15 +71,16 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    public IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
-    public IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
+    public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
+    public IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
+    public IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }
     public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
-    public IStripeProductRepository StripeProductRepository { get; }
     public IStripePriceRepository StripePriceRepository { get; }
+    public IStripeProductRepository StripeProductRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

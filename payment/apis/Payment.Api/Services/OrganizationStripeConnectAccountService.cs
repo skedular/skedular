@@ -60,6 +60,7 @@ public class OrganizationStripeConnectAccountService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
         ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
+        ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);

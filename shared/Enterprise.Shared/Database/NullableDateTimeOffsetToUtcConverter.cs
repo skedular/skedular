@@ -6,11 +6,9 @@ namespace Enterprise.Shared.Database;
 public class NullableDateTimeOffsetToUtcConverter()
     : ValueConverter<DateTimeOffset?, DateTimeOffset?>(ToProvider, FromProvider)
 {
-    private static readonly Expression<Func<DateTimeOffset?, DateTimeOffset?>> ToProvider =
-        offset => ConvertIfNeeded(offset);
+    private static readonly Expression<Func<DateTimeOffset?, DateTimeOffset?>> ToProvider = offset => ConvertIfNeeded(offset);
 
-    private static readonly Expression<Func<DateTimeOffset?, DateTimeOffset?>> FromProvider =
-        offset => offset;
+    private static readonly Expression<Func<DateTimeOffset?, DateTimeOffset?>> FromProvider = offset => offset;
 
     private static DateTimeOffset? ConvertIfNeeded(DateTimeOffset? dateTimeOffset) =>
         dateTimeOffset switch

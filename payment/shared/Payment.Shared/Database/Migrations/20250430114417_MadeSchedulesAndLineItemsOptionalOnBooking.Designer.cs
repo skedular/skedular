@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -13,9 +14,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430114417_MadeSchedulesAndLineItemsOptionalOnBooking")]
+    partial class MadeSchedulesAndLineItemsOptionalOnBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,6 +167,7 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnType("jsonb");
 
                     b.Property<string>("StripeCheckoutSessionId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -1148,7 +1152,9 @@ namespace Payment.Shared.Database.Migrations
                 {
                     b.HasOne("Payment.Shared.Database.Entities.StripeCheckoutSession", "StripeCheckoutSession")
                         .WithOne("Booking")
-                        .HasForeignKey("Payment.Shared.Database.Entities.Booking", "StripeCheckoutSessionId");
+                        .HasForeignKey("Payment.Shared.Database.Entities.Booking", "StripeCheckoutSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("StripeCheckoutSession");
                 });

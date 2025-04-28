@@ -128,4 +128,7 @@ public static class Constants
     public const int MaxStripePaymentMethodStatusLength = 50;
     public const int StripeProductIdLength = 100;
     public const int StripePriceIdLength = 100;
+    public const int StripeCheckoutSessionIdLength = 100;
+    public const int StripeCheckoutSessionPaymentStatusLength = 50;
+
 }

@@ -22,6 +22,9 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
+        builder.Property(item => item.From).HasDefaultValue(DateTimeOffset.MinValue);
+        builder.Property(item => item.Until).HasDefaultValue(DateTimeOffset.MinValue);
+
         builder.HasMany(item => item.Resources).WithMany(item => item.Bookings);
         builder.HasMany(item => item.InvolvedLocations).WithMany(item => item.InvolvedBookings);
 

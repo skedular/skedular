@@ -5,9 +5,7 @@ namespace Enterprise.Shared.Database;
 
 public class DatabaseSetup
 {
-    protected internal DatabaseSetup(
-        IServiceCollection serviceCollection,
-        NpgsqlDataSource npgsqlDataSource)
+    protected internal DatabaseSetup(IServiceCollection serviceCollection, NpgsqlDataSource npgsqlDataSource)
     {
         ServiceCollection = serviceCollection;
         NpgsqlDataSource = npgsqlDataSource;

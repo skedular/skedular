@@ -1,0 +1,43 @@
+using Api.Shared;
+using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Stripe.Checkout;
+
+namespace Payment.Shared.Database.Entities;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+public class StripeCheckoutSession : EntityBase
+{
+    public string StripeCheckoutSessionId { get; set; }
+    public string Url { get; set; }
+    public string? PaymentStatus { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string StripeCustomerCustomerId { get; set; }
+    public virtual StripeCustomer StripeCustomer { get; set; }
+
+    public virtual Booking? Booking { get; set; }
+}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<StripeCheckoutSession>
+{
+    public void Configure(EntityTypeBuilder<StripeCheckoutSession> builder)
+    {
+        builder.ConfigureEntityBase();
+
+        builder.Property(item => item.StripeCheckoutSessionId).HasMaxLength(Constants.StripeCheckoutSessionIdLength);
+        builder.Property(item => item.Url).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.StripeCheckoutSessionPaymentStatusLength);
+
+        builder
+            .HasOne(item => item.StripeCustomer)
+            .WithMany(item => item.StripeCheckoutSessions)
+            .HasForeignKey(item => item.StripeCustomerCustomerId);
+
+        builder.HasIndex(item => item.StripeCheckoutSessionId);
+        builder.HasIndex(item => item.PaymentStatus);
+    }
+}

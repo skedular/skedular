@@ -16,10 +16,7 @@ public static class PostgreSqlConfigurationExtensions
                 return dataSource;
             }
 
-            s_dataSources[configuration.DefaultConnection] =
-                new NpgsqlDataSourceBuilder(configuration.DefaultConnection)
-                    .EnableDynamicJson()
-                    .Build();
+            s_dataSources[configuration.DefaultConnection] = new NpgsqlDataSourceBuilder(configuration.DefaultConnection).EnableDynamicJson().Build();
             return s_dataSources[configuration.DefaultConnection];
         }
         catch (Exception ex)

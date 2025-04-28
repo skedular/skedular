@@ -3,8 +3,7 @@ using Npgsql;
 
 namespace Enterprise.Shared.Database;
 
-public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, TimeProvider timeProvider)
-    : IRepository<TEntity>
+public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
     where TContext : DbContextBase<TContext>
     where TEntity : EntityBase
 {

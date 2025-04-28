@@ -1,9 +1,9 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
+using Payment.Shared.Services;
 using Stripe;
 using Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event;
 using IMapper = Payment.Processors.Mappers.IMapper;
@@ -18,6 +18,7 @@ public class MarketplaceSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    IOrganizationStripeConnectAccountHelper organizationStripeConnectAccountHelper,
     ICreatable<Stripe.Product, ProductCreateOptions> productCreateService,
     IUpdatable<Stripe.Product, ProductUpdateOptions> productUpdateService,
     ICreatable<Price, PriceCreateOptions> priceCreateService)
@@ -33,16 +34,7 @@ public class MarketplaceSubscriber(
 
                     var product = mapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(product.Organization.Id, cancellationToken);
-
-                    // TODO: 20250530 - Morteza: Need to implement default stripe account and pick that instead of first random one 
-                    var accountEntity = organization.StripeConnectAccounts
-                        .OrderByDescending(item => item.CreatedAt)
-                        .FirstOrDefault(item => item.DeletedAt is null);
-                    if (accountEntity is null)
-                    {
-                        throw new NoStripeConnectAccountFoundForOrganization();
-                    }
-
+                    var accountEntity = organizationStripeConnectAccountHelper.GetStripeAccount(organization);
                     var existingProduct = await repositoryFactory.ProductRepository.UpsertNakedAsync(product.Id, organization, cancellationToken);
                     if (existingProduct.EventRaisedAt > product.EventRaisedAt)
                     {

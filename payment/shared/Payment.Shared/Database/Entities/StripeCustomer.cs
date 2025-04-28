@@ -12,6 +12,7 @@ public class StripeCustomer : EntityBaseWithDeleted
     public string StripeCustomerId { get; set; }
     public virtual Organization? Organization { get; set; }
     public virtual Customer? Customer { get; set; }
+    public virtual ICollection<StripeCheckoutSession> StripeCheckoutSessions { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
