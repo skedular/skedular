@@ -17,7 +17,7 @@ public class Booking : EntityBaseWithDeleted
     public ICollection<BookingSchedule> Schedules { get; set; }
     public string Status { get; set; }
     public bool IsPaymentRequired { get; set; }
-    public ICollection<ProductVersionLineItem>? LineItems { get; set; }
+    public ICollection<ProductVersionLineItem> LineItems { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];

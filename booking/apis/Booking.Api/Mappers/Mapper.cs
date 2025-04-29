@@ -88,7 +88,7 @@ public class Mapper : IMapper
             Status = src.Status.ToBookingStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
-            LineItems = src.LineItems ?? [],
+            LineItems = src.LineItems,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
