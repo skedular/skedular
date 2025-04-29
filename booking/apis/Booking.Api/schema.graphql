@@ -16,7 +16,7 @@ type BookingDetails {
   type: BookingTypeDetails!
   status: BookingStatusDetails!
   resources: [BookingResourceDetails!]!
-  productVersions: [Booking_ProductVersionDetails!]!
+  lineItems: [LineItem!]!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
@@ -99,13 +99,6 @@ type Booking_OrganizationDetails {
   name: String!
 }
 
-type Booking_OrganizationTagDetails {
-  uniqueId: ID!
-  name: String
-  tagType: String
-  color: String
-}
-
 type Booking_OrganizationZoneDetails {
   uniqueId: ID!
   name: String
@@ -120,26 +113,21 @@ type Booking_PriceUnitDetails {
 type Booking_ProductVersionDetails {
   uniqueId: ID!
   name: String!
-  description: String
   price: String!
   priceToDisplay: String!
   priceUnit: Booking_PriceUnitDetails!
   currency: Booking_CurrencyDetails!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
-  numberOfResourcesToBook: Int!
-  productTags: [Booking_OrganizationTagDetails!]!
-  locationTags: [Booking_OrganizationTagDetails!]!
   organization: Booking_OrganizationDetails!
 }
 
 type Booking_TeamDetails {
   uniqueId: ID!
   name: String!
+}
+
+type LineItem {
+  productVersion: Booking_ProductVersionDetails!
+  quantity: Int!
 }
 
 type Mutation {
@@ -205,7 +193,7 @@ input AddBookingInput {
   notes: String
   type: BookingType!
   resourceIds: [String!]!
-  productVersionIds: [String!]!
+  lineItems: [LineItemInput!]!
 }
 
 input AvailableResourcesWhereInput {
@@ -250,6 +238,11 @@ input DeleteBookingInput {
   id: String!
 }
 
+input LineItemInput {
+  productVersionId: String!
+  quantity: Int!
+}
+
 input OrganizationAvailableResourcesWhereInput {
   organizationId: String!
   from: DateTime!
@@ -267,7 +260,6 @@ input UpdateBookingInput {
   notes: String
   type: BookingType!
   resourceIds: [String!]!
-  productVersionIds: [String!]!
 }
 
 enum BookingOrderField {

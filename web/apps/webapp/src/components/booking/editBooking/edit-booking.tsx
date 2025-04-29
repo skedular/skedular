@@ -520,7 +520,6 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           organizationIds: booking.involvedOrganizations.map(({ uniqueId }) => uniqueId),
           teamIds: teamId ? [teamId] : [],
           resourceIds,
-          productVersionIds: [],
         },
       },
       onCompleted: (_, errors) => {

@@ -453,7 +453,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           teamIds: [],
           resourceIds,
           type: type as BookingType,
-          productVersionIds: Array(quantity).fill(product.latestProductVersionId),
+          lineItems: [{ productVersionId: product.latestProductVersionId, quantity }],
         },
       },
       onCompleted: (response, errors) => {

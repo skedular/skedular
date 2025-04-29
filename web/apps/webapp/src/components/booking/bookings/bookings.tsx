@@ -375,7 +375,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
           teamIds: [],
           resourceIds: [],
-          productVersionIds: [],
+          lineItems: [],
           type: bookingDetails.type.type,
         },
       },

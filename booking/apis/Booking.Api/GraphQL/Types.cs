@@ -10,6 +10,20 @@ using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL;
 
+[GraphQLName("LineItemInput")]
+public class LineItemInput
+{
+    [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
+    [GraphQLName("quantity")] public int Quantity { get; set; }
+}
+
+[GraphQLName("LineItem")]
+public class LineItem
+{
+    [GraphQLName("productVersion")] public ProductVersionDetails ProductVersionDetails { get; set; } = new();
+    [GraphQLName("quantity")] public int Quantity { get; set; }
+}
+
 [GraphQLName("AddBookingInput")]
 public class AddBookingInput
 {
@@ -23,7 +37,7 @@ public class AddBookingInput
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingType Type { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
-    [GraphQLName("productVersionIds")] public IEnumerable<string> ProductVersionIds { get; set; } = [];
+    [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
 }
 
 [GraphQLName("UpdateBookingInput")]
@@ -39,7 +53,6 @@ public class UpdateBookingInput
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingType Type { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
-    [GraphQLName("productVersionIds")] public IEnumerable<string> ProductVersionIds { get; set; } = [];
 }
 
 [GraphQLName("DeleteBookingInput")]
@@ -78,7 +91,7 @@ public class BookingDetails : Node
     [GraphQLName("type")] public BookingTypeDetails Type { get; set; } = new();
     [GraphQLName("status")] public BookingStatusDetails Status { get; set; } = new();
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("productVersions")] public IEnumerable<ProductVersionDetails> ProductVersions { get; set; } = [];
+    [GraphQLName("lineItems")] public IEnumerable<LineItem> LineItems { get; set; } = [];
     [GraphQLName("involvedCustomers")] public IEnumerable<CustomerDetails> InvolvedCustomers { get; set; } = [];
     [GraphQLName("involvedOrganizations")] public IEnumerable<OrganizationDetails> InvolvedOrganizations { get; set; } = [];
     [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
@@ -243,30 +256,10 @@ public class ProductVersionDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public string Price { get; set; } = string.Empty;
     [GraphQLName("priceToDisplay")] public string PriceToDisplay { get; set; } = string.Empty;
     [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; } = new();
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
-    [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
-    [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
-
-    [GraphQLName("bookAllLocationResources")]
-    public bool BookAllLocationResources { get; set; }
-
-    [GraphQLName("recurrenceWindowDays")] public int RecurrenceWindowDays { get; set; }
-
-    [GraphQLName("requireConsecutiveDays")]
-    public bool RequireConsecutiveDays { get; set; }
-
-    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
-
-    [GraphQLName("numberOfResourcesToBook")]
-    public int NumberOfResourcesToBook { get; set; }
-
-    [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
-    [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
-
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
 }
 
@@ -282,15 +275,6 @@ public class PriceUnitDetails
 {
     [GraphQLName("type")] public PriceUnit Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-}
-
-[GraphQLName("Booking_OrganizationTagDetails")]
-public class OrganizationTagDetails
-{
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-    [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("tagType")] public string? TagType { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("BookingTypeDetails")]

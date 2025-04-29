@@ -59,7 +59,7 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.PlatformAccountWebhookKey);
+            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.PlatformAccountWebhookKey, throwOnApiVersionMismatch: false);
 
             return Ok();
         }
@@ -85,7 +85,11 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.ConnectAccountWebhookKey);
+            var stripeEvent = EventUtility.ConstructEvent(
+                json, 
+                stripe_Signature, 
+                stripeConfiguration.ConnectAccountWebhookKey,
+                throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
             {
                 case EventTypes.AccountApplicationAuthorized:

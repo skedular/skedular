@@ -40,10 +40,10 @@ type BookingDetails {
   involvedTeams: [Booking_TeamDetails!]!
   isPaymentRequired: Boolean!
   lastModifiedByCustomer: Booking_CustomerDetails
+  lineItems: [LineItem!]!
   notes: String
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
-  productVersions: [Booking_ProductVersionDetails!]!
   resources: [BookingResourceDetails!]!
   status: BookingStatusDetails!
   type: BookingTypeDetails!
@@ -119,13 +119,6 @@ type Booking_OrganizationDetails {
   uniqueId: ID!
 }
 
-type Booking_OrganizationTagDetails {
-  color: String
-  name: String
-  tagType: String
-  uniqueId: ID!
-}
-
 type Booking_OrganizationZoneDetails {
   color: String
   name: String
@@ -138,22 +131,12 @@ type Booking_PriceUnitDetails {
 }
 
 type Booking_ProductVersionDetails {
-  bookAllLocationResources: Boolean!
   currency: Booking_CurrencyDetails!
-  description: String
-  locationTags: [Booking_OrganizationTagDetails!]!
-  maxBookingSpreadDays: Int
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
   name: String!
-  numberOfResourcesToBook: Int!
   organization: Booking_OrganizationDetails!
   price: String!
   priceToDisplay: String!
   priceUnit: Booking_PriceUnitDetails!
-  productTags: [Booking_OrganizationTagDetails!]!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
   uniqueId: ID!
 }
 
@@ -289,6 +272,11 @@ type InviteCustomersToJoinOrganizationPayload {
 
 type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
+}
+
+type LineItem {
+  productVersion: Booking_ProductVersionDetails!
+  quantity: Int!
 }
 
 type LocationAddressDetails {
@@ -1212,9 +1200,9 @@ input AddBookingInput {
   customerIds: [String!]!
   from: DateTime!
   id: String
+  lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]!
-  productVersionIds: [String!]!
   resourceIds: [String!]!
   teamIds: [String!]!
   type: BookingType!
@@ -1616,6 +1604,11 @@ input InviteCustomersToJoinTeamInput {
   teamId: String!
 }
 
+input LineItemInput {
+  productVersionId: String!
+  quantity: Int!
+}
+
 input LocationAddressDetailsInput {
   addressLine1: String!
   addressLine2: String
@@ -1848,7 +1841,6 @@ input UpdateBookingInput {
   id: String!
   notes: String
   organizationIds: [String!]!
-  productVersionIds: [String!]!
   resourceIds: [String!]!
   teamIds: [String!]!
   type: BookingType!

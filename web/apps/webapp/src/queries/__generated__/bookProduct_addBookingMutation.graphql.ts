@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20a15dc2a73d1209c06649e18cdf588a>>
+ * @generated SignedSource<<f20b8364cbb93ce4a24d5f0322b68925>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,13 +15,17 @@ export type AddBookingInput = {
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
+  lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds: ReadonlyArray<string>;
-  productVersionIds: ReadonlyArray<string>;
   resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
   type: BookingType;
   until: any;
+};
+export type LineItemInput = {
+  productVersionId: string;
+  quantity: number;
 };
 export type bookProduct_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;

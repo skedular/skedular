@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Resource = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -49,7 +50,12 @@ public class BookingService(
     {
         if (booking.InvolvedCustomers.Count == 0)
         {
-            throw new InvalidOperationException();
+            throw new ArgumentException(nameof(booking.InvolvedCustomers));
+        }
+
+        if (booking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
+        {
+            throw new ArgumentException(nameof(booking.LineItems));
         }
 
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
@@ -81,6 +87,7 @@ public class BookingService(
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
+        var productVersions = await GetProductVersionsAsync(booking.LineItems.Select(item => item.ProductVersionId).ToList(), cancellationToken);
 
         if (booking.InvolvedCustomers.Count == 1)
         {
@@ -127,7 +134,8 @@ public class BookingService(
             null,
             callingCustomerEntity,
             null,
-            null);
+            null,
+            productVersions);
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
@@ -618,6 +626,7 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
+        var existingLineItems = existingBooking.LineItems;
         var bookingEntity = mapper.MergeTo(
             booking,
             existingBooking,
@@ -630,7 +639,9 @@ public class BookingService(
             null,
             existingBooking.CreatedByCustomer,
             callingCustomer,
-            null);
+            null,
+            existingBooking.ProductVersions);
+        bookingEntity.LineItems = existingLineItems;
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
@@ -822,6 +833,21 @@ public class BookingService(
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(booking.ResourceBookingSlots);
         booking.ResourceBookingSlots.Clear();
         repositoryFactory.BookingRepository.Update(booking);
+    }
+
+    private async Task<ICollection<ProductVersion>> GetProductVersionsAsync(List<string> productVersionIds, CancellationToken cancellationToken)
+    {
+        if (productVersionIds.Count == 0)
+        {
+            return [];
+        }
+
+        productVersionIds = productVersionIds.Distinct().ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+
+        return productVersions.Count != productVersionIds.Count || !productVersions.All(item => productVersionIds.Contains(item.Id))
+            ? throw new ProductNotFound()
+            : productVersions;
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<602dd37ab3015ccb27a7f3abbb85e6e7>>
+ * @generated SignedSource<<b0f34c193c38cab49113bed3848b4e47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type UpdateBookingInput = {
   id: string;
   notes?: string | null | undefined;
   organizationIds: ReadonlyArray<string>;
-  productVersionIds: ReadonlyArray<string>;
   resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
   type: BookingType;

@@ -14,6 +14,8 @@ using Customer = Booking.Shared.Models.Customer;
 using Identity = Booking.Shared.Models.Identity;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using OrganizationTag = Booking.Shared.Models.OrganizationTag;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Team = Booking.Shared.Database.Entities.Team;
 using Resource = Booking.Shared.Models.Resource;
 
@@ -39,7 +41,8 @@ public interface IMapper
         Organization? paidByOrganization,
         Shared.Database.Entities.Customer? createdByCustomer,
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer);
+        Shared.Database.Entities.Customer? deletedByCustomer,
+        ICollection<ProductVersion> productVersions);
 
     Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -53,7 +56,8 @@ public interface IMapper
         Organization? paidByOrganization,
         Shared.Database.Entities.Customer? createdByCustomer,
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer);
+        Shared.Database.Entities.Customer? deletedByCustomer,
+        ICollection<ProductVersion> productVersions);
 
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
@@ -83,6 +87,7 @@ public class Mapper : IMapper
             Status = src.Status.ToBookingStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             BookingSchedules = src.BookingSchedules,
+            LineItems = src.LineItems ?? [],
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -141,7 +146,12 @@ public class Mapper : IMapper
             PaidByOrganization = MapTo(src.PaidByOrganization),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapTo(src.DeletedByCustomer)
+            DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            LineItems = src.LineItems.Select(item => new LineItem
+            {
+                ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
+                Quantity = item.Quantity
+            })
         };
 
     public Shared.Models.Booking MapTo(AddBookingInput src)
@@ -161,7 +171,7 @@ public class Mapper : IMapper
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion { Id = item }).ToList()
+            LineItems = src.LineItems.Select(item => new BookingProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList()
         };
     }
 
@@ -181,8 +191,7 @@ public class Mapper : IMapper
             InvolvedLocations = [],
             InvolvedOrganizations = src.OrganizationIds.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion { Id = item }).ToList()
+            Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
@@ -197,7 +206,8 @@ public class Mapper : IMapper
         Organization? paidByOrganization,
         Shared.Database.Entities.Customer? createdByCustomer,
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer) =>
+        Shared.Database.Entities.Customer? deletedByCustomer,
+        ICollection<ProductVersion> productVersions) =>
         MergeTo(
             src,
             new Shared.Database.Entities.Booking(),
@@ -210,7 +220,8 @@ public class Mapper : IMapper
             paidByOrganization,
             createdByCustomer,
             lastModifiedByCustomer,
-            deletedByCustomer);
+            deletedByCustomer,
+            productVersions);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -224,7 +235,8 @@ public class Mapper : IMapper
         Organization? paidByOrganization,
         Shared.Database.Entities.Customer? createdByCustomer,
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer)
+        Shared.Database.Entities.Customer? deletedByCustomer,
+        ICollection<ProductVersion> productVersions)
     {
         dest.Id = src.Id;
         dest.From = src.From;
@@ -234,6 +246,7 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToBookingStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.BookingSchedules = src.BookingSchedules;
+        dest.LineItems = src.LineItems;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
@@ -244,6 +257,7 @@ public class Mapper : IMapper
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
+        dest.ProductVersions = productVersions;
         return dest;
     }
 
@@ -281,7 +295,7 @@ public class Mapper : IMapper
             PaidByOrganization = MapToGrpcResponse(src.PaidByOrganization),
             CreatedByCustomer = MapToGrpcResponse(src.CreatedByCustomer),
             LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
+            DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer)
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
@@ -386,6 +400,16 @@ public class Mapper : IMapper
     public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
         src.Select(item => MapToGrpcResponse(item, []));
 
+    private static ProductVersionDetails MapTo(Shared.Models.ProductVersion src) =>
+        new()
+        {
+            UniqueId = src.Id,
+            Name = src.Name,
+            Price = src.Price.ToRoundedPrice(),
+            PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
+            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() }
+        };
+
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
@@ -411,7 +435,7 @@ public class Mapper : IMapper
         {
             return null;
         }
-        
+
         var customer = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer
         {
             Id = src.Id,

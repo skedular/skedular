@@ -272,7 +272,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           teamIds: bookingDetails.involvedTeams.map(({ uniqueId }) => uniqueId),
           resourceIds: [],
           type: bookingDetails.type.type,
-          productVersionIds: [],
+          lineItems: [],
         },
       },
       onCompleted: (response, errors) => {
