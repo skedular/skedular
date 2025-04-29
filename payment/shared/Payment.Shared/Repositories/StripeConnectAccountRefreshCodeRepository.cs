@@ -20,7 +20,6 @@ public class StripeConnectAccountRefreshCodeRepository(PaymentDbContext dbContex
     public async Task<StripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken) =>
         await DbContext.StripeConnectAccountRefreshCode
             .Include(query => query.StripeConnectAccount)
-            .ThenInclude(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Code == code, cancellationToken);
 
     public StripeConnectAccountRefreshCode Add(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode)

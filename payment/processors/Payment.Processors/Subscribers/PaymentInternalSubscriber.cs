@@ -59,8 +59,7 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
     private async Task HandleAccountApplicationAuthorizedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
     {
-        var account =
-            await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeEvent.Account, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeEvent.Account, cancellationToken);
         if (account is null)
         {
             return;
@@ -75,8 +74,7 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
     private async Task HandleAccountApplicationDeauthorizedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
     {
-        var account =
-            await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeEvent.Account, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeEvent.Account, cancellationToken);
         if (account is null)
         {
             return;
@@ -114,8 +112,7 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
         var stripeAccount = stripeEvent.Data.Object as Account;
         ArgumentNullException.ThrowIfNull(stripeAccount);
 
-        var account =
-            await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeAccount.Id, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByStripeAccountIdAsync(stripeAccount.Id, cancellationToken);
         if (account is null)
         {
             return;

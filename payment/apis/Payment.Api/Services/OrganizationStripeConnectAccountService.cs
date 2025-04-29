@@ -105,7 +105,6 @@ public class OrganizationStripeConnectAccountService(
         var accountEntity = mapper.MapTo(stripeConnectAccount, id, nickname, organization);
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             stripeConnectAccount.Id,
-            organization.Id,
             redirectUrl,
             accountEntity,
             cancellationToken);
@@ -260,15 +259,8 @@ public class OrganizationStripeConnectAccountService(
             throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
         }
 
-        var organization = accountRefreshCode.StripeConnectAccount.Organization;
-        if (organization == null)
-        {
-            throw new InvalidOperationException();
-        }
-
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             accountRefreshCode.StripeConnectAccount.StripeAccountId,
-            organization.Id,
             accountRefreshCode.RedirectUrl,
             accountRefreshCode.StripeConnectAccount,
             cancellationToken);

@@ -349,7 +349,7 @@ public class Mapper : IMapper
         dest.Country = src.Country.ToSafeString();
         dest.DefaultCurrency = src.DefaultCurrency.ToSafeString();
         dest.BusinessType = src.BusinessType.ToSafeString();
-        dest.CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString();
+        dest.CompanyName = src.BusinessProfile is null ? string.Empty : src.BusinessProfile.Name.ToSafeString();
         dest.Email = src.Email.ToSafeString();
         dest.Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString();
         dest.DetailsSubmitted = src.DetailsSubmitted;

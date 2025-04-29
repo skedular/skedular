@@ -67,6 +67,10 @@ public class Mapper : IMapper
     public AccountCreateOptions MapToStripeAccountRequest(Organization src) =>
         new()
         {
+            BusinessProfile = new AccountBusinessProfileOptions
+            {
+                Name = src.Name,
+            },
             Company = new AccountCompanyOptions
             {
                 Name = src.Name,

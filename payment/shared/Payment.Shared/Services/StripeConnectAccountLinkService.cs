@@ -14,7 +14,6 @@ public interface IStripeConnectAccountLinkService
 {
     Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
-        string organizationId,
         string redirectUrl,
         StripeConnectAccount accountEntity,
         CancellationToken cancellationToken);
@@ -39,7 +38,6 @@ public class StripeConnectAccountLinkService(
 
     public async Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
-        string organizationId,
         string redirectUrl,
         StripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
