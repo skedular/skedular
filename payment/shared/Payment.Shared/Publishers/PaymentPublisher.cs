@@ -6,14 +6,14 @@ using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Payment.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event;
-using OrganizationStripeConnectAccount = Payment.Shared.Models.OrganizationStripeConnectAccount;
+using StripeConnectAccount = Payment.Shared.Models.StripeConnectAccount;
 using Type = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type;
 
 namespace Payment.Shared.Publishers;
 
 public interface IPaymentPublisher
 {
-    Task PublishOrganizationStripeConnectAccountsAsync(IEnumerable<OrganizationStripeConnectAccount> accounts, CancellationToken cancellationToken);
+    Task PublishOrganizationStripeConnectAccountsAsync(IEnumerable<StripeConnectAccount> accounts, CancellationToken cancellationToken);
 }
 
 public class PaymentPublisher(
@@ -24,7 +24,7 @@ public class PaymentPublisher(
     : IPaymentPublisher
 {
     public async Task PublishOrganizationStripeConnectAccountsAsync(
-        IEnumerable<OrganizationStripeConnectAccount> accounts,
+        IEnumerable<StripeConnectAccount> accounts,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(accounts.Select(account => publisher.PublishAsync(
             new Key { OrganizationId = account.Id },
@@ -35,7 +35,7 @@ public class PaymentPublisher(
                     applicationConfiguration.AppSource,
                     account.IsNotDeleted() ? Type.OrganizationStripeConnectAccountUpserted : Type.OrganizationStripeConnectAccountDeleted,
                     context.GetCorrelationId()),
-                Data = new Data { OrganizationStripeConnectAccount = mapper.MapTo(account) }
+                Data = new Data { StripeConnectAccount = mapper.MapTo(account) }
             },
             cancellationToken)));
 }

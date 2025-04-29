@@ -16,7 +16,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public ICollection<OrganizationStripeConnectAccount> StripeConnectAccounts { get; set; } = [];
+    public ICollection<StripeConnectAccount> StripeConnectAccounts { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public ICollection<Product> Products { get; set; } = [];
     public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];

@@ -2,10 +2,12 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Marketplace.Api.GraphQL;
-using Marketplace.Shared.Models;
+using Customer = Marketplace.Shared.Models.Customer;
 using Organization = Marketplace.Shared.Database.Entities.Organization;
-using OrganizationStripeConnectAccount = Marketplace.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
+using Product = Marketplace.Shared.Models.Product;
+using ProductVersion = Marketplace.Shared.Models.ProductVersion;
+using StripeConnectAccount = Marketplace.Shared.Database.Entities.StripeConnectAccount;
 
 namespace Marketplace.Api.Mappers;
 
@@ -23,7 +25,7 @@ public interface IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+        StripeConnectAccount? organizationStripeConnectAccount);
 
     Shared.Database.Entities.Product MergeTo(
         ProductVersion src,
@@ -31,7 +33,7 @@ public interface IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+        StripeConnectAccount? organizationStripeConnectAccount);
 
     ProductEdge MapTo(Edge<Product> src);
     Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization);
@@ -42,7 +44,7 @@ public interface IMapper
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+        StripeConnectAccount? organizationStripeConnectAccount);
 }
 
 public class Mapper : IMapper
@@ -106,7 +108,7 @@ public class Mapper : IMapper
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.OrganizationStripeConnectAccountId)
                 ? null
-                : new Shared.Models.OrganizationStripeConnectAccount { Id = src.OrganizationStripeConnectAccountId }
+                : new Shared.Models.StripeConnectAccount { Id = src.OrganizationStripeConnectAccountId }
         };
 
     public ProductVersion MapTo(UpdateProductInput src) =>
@@ -128,7 +130,7 @@ public class Mapper : IMapper
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.OrganizationStripeConnectAccountId)
                 ? null
-                : new Shared.Models.OrganizationStripeConnectAccount { Id = src.OrganizationStripeConnectAccountId }
+                : new Shared.Models.StripeConnectAccount { Id = src.OrganizationStripeConnectAccountId }
         };
 
     public ProductDetails? MapTo(Product? src)
@@ -172,7 +174,7 @@ public class Mapper : IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount) =>
+        StripeConnectAccount? organizationStripeConnectAccount) =>
         MergeTo(
             src,
             productVersion,
@@ -188,7 +190,7 @@ public class Mapper : IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount)
+        StripeConnectAccount? organizationStripeConnectAccount)
     {
         dest.Organization = organization;
         dest.Name = src.Name;
@@ -254,12 +256,12 @@ public class Mapper : IMapper
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount) =>
+        StripeConnectAccount? organizationStripeConnectAccount) =>
         MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags, organizationStripeConnectAccount);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id };
 
-    private static OrganizationStripeConnectAccountDetails? MapToGraphQl(Shared.Models.OrganizationStripeConnectAccount? src) =>
+    private static OrganizationStripeConnectAccountDetails? MapToGraphQl(Shared.Models.StripeConnectAccount? src) =>
         src is null ? null : new OrganizationStripeConnectAccountDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
@@ -313,7 +315,7 @@ public class Mapper : IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount)
+        StripeConnectAccount? organizationStripeConnectAccount)
     {
         dest.Id = src.Id;
         dest.Inactive = src.Inactive;
@@ -343,7 +345,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount)
+        StripeConnectAccount? organizationStripeConnectAccount)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -365,10 +367,10 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private static Shared.Models.OrganizationStripeConnectAccount? MapTo(OrganizationStripeConnectAccount? src) =>
+    private static Shared.Models.StripeConnectAccount? MapTo(StripeConnectAccount? src) =>
         src is null
             ? null
-            : new Shared.Models.OrganizationStripeConnectAccount
+            : new Shared.Models.StripeConnectAccount
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
@@ -377,10 +379,10 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    private static OrganizationStripeConnectAccount? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
+    private static StripeConnectAccount? MapTo(Shared.Models.StripeConnectAccount? src) =>
         src is null
             ? null
-            : new OrganizationStripeConnectAccount
+            : new StripeConnectAccount
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,

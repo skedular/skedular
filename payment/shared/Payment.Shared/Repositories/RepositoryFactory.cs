@@ -15,8 +15,8 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
-    IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
+    IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
@@ -42,9 +42,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
+        StripeConnectAccountRepository = new StripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
-        OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
+        StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
@@ -69,8 +69,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
-    public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    public IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
+    public IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }

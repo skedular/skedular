@@ -29,7 +29,7 @@ public static class Extensions
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
             .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-            .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>();
+            .AddScoped<IStripeConnectAccountRepository, StripeConnectAccountRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

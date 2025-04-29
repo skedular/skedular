@@ -8,9 +8,9 @@ using Identity = Marketplace.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
-using OrganizationStripeConnectAccount = Marketplace.Shared.Models.OrganizationStripeConnectAccount;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using OrganizationTag = Marketplace.Shared.Models.OrganizationTag;
+using StripeConnectAccount = Marketplace.Shared.Models.StripeConnectAccount;
 
 namespace Marketplace.Processors.Mappers;
 
@@ -49,11 +49,11 @@ public interface IMapper
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
 
-    OrganizationStripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src);
+    StripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src);
 
-    Shared.Database.Entities.OrganizationStripeConnectAccount MergeToEntity(
-        OrganizationStripeConnectAccount src,
-        Shared.Database.Entities.OrganizationStripeConnectAccount dest,
+    Shared.Database.Entities.StripeConnectAccount MergeToEntity(
+        StripeConnectAccount src,
+        Shared.Database.Entities.StripeConnectAccount dest,
         Shared.Database.Entities.Organization organization);
 }
 
@@ -242,13 +242,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationStripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src)
+    public StripeConnectAccount MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src)
     {
-        var account = src.Data.OrganizationStripeConnectAccount;
+        var account = src.Data.StripeConnectAccount;
         var deletedAt = account.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
-        return new OrganizationStripeConnectAccount
+        return new StripeConnectAccount
         {
             Id = account.Id,
             DeletedAt = deletedAt,
@@ -258,9 +258,9 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.OrganizationStripeConnectAccount MergeToEntity(
-        OrganizationStripeConnectAccount src,
-        Shared.Database.Entities.OrganizationStripeConnectAccount dest,
+    public Shared.Database.Entities.StripeConnectAccount MergeToEntity(
+        StripeConnectAccount src,
+        Shared.Database.Entities.StripeConnectAccount dest,
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;

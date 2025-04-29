@@ -30,7 +30,7 @@ public class Product : EntityBaseWithDeleted
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationStripeConnectAccountId { get; set; }
-    public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
+    public virtual StripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];

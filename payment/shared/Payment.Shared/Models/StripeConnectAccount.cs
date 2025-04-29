@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Payment.Shared.Models;
 
-public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
+public class StripeConnectAccount : ModelBaseWithDeleted
 {
     public string StripeAccountId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
@@ -22,6 +22,6 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string OnboardingUrl { get; set; } = string.Empty;
     public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized && ChargesEnabled && PayoutsEnabled;
 
-    public Organization Organization { get; set; } = new();
+    public Organization? Organization { get; set; }
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
 }

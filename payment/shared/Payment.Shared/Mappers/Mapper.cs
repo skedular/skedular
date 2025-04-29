@@ -5,16 +5,16 @@ namespace Payment.Shared.Mappers;
 
 public interface IMapper
 {
-    OrganizationStripeConnectAccount MapTo(Models.OrganizationStripeConnectAccount src);
+    StripeConnectAccount MapTo(Models.StripeConnectAccount src);
 }
 
 public class Mapper : IMapper
 {
-    public OrganizationStripeConnectAccount MapTo(Models.OrganizationStripeConnectAccount src) =>
+    public StripeConnectAccount MapTo(Models.StripeConnectAccount src) =>
         new()
         {
             Id = src.Id,
-            OrganizationId = src.Organization.Id,
+            OrganizationId = src.Organization is null ? string.Empty : src.Organization.Id,
             StripeAccountId = src.StripeAccountId,
             Name = src.Name.ToSafeString(),
             ChargesEnabled = src.ChargesEnabled,

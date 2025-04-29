@@ -26,7 +26,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 3,
     deadLetterTopicName: "payment.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package payment;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Payment.V1.Key\";message Key {  string organizationId = 1;  string customerId = 2;}")]
+    protobufSchema: "syntax = \"proto3\";package payment;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Payment.V1.Key\";message Key {  string organizationId = 1;  string customerId = 2;  string stripeConnectAccountId = 3;}")]
 public partial class Key : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

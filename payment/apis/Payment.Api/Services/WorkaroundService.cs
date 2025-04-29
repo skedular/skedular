@@ -13,7 +13,7 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
 {
     public async Task RepublishAllOrganizationStripeConnectAccountsAsync(CancellationToken cancellationToken)
     {
-        var accounts = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetAllAsync(cancellationToken);
+        var accounts = await repositoryFactory.StripeConnectAccountRepository.GetAllAsync(cancellationToken);
         await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync(accounts.Select(mapper.MapTo), cancellationToken);
     }
 }

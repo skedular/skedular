@@ -7,7 +7,7 @@ namespace Payment.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class OrganizationStripeConnectAccount : EntityBaseWithDeleted
+public class StripeConnectAccount : EntityBaseWithDeleted
 {
     public string StripeAccountId { get; set; }
     public string Name { get; set; }
@@ -26,18 +26,15 @@ public class OrganizationStripeConnectAccount : EntityBaseWithDeleted
     public string CapabilitiesTransfers { get; set; }
     public string OnboardingUrl { get; set; }
 
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; }
-    public virtual Organization Organization { get; set; }
-
-    public virtual ICollection<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCodes { get; set; } = [];
+    public virtual Organization? Organization { get; set; }
+    public virtual ICollection<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCodes { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfiguration<OrganizationStripeConnectAccount>
+public class StripeConnectAccountConfiguration : IEntityTypeConfiguration<StripeConnectAccount>
 {
-    public void Configure(EntityTypeBuilder<OrganizationStripeConnectAccount> builder)
+    public void Configure(EntityTypeBuilder<StripeConnectAccount> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
 
@@ -57,8 +54,6 @@ public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfigur
         builder.Property(item => item.CapabilitiesCardPayments).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
         builder.Property(item => item.CapabilitiesTransfers).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
         builder.Property(item => item.OnboardingUrl).HasMaxLength(Constants.MaxUrlLength);
-
-        builder.HasOne(item => item.Organization).WithMany(item => item.StripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
 
         builder.HasIndex(item => item.StripeAccountId);
         builder.HasIndex(item => item.Name);

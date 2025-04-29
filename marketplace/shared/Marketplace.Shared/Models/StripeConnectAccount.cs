@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Marketplace.Shared.Models;
 
-public class OrganizationStripeConnectAccount : ReplicatedModelBaseWithDeleted
+public class StripeConnectAccount : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; } = string.Empty;
 

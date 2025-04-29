@@ -13,7 +13,6 @@ using Organization = Payment.Shared.Models.Organization;
 using OrganizationMember = Payment.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Payment.Shared.Database.Entities.OrganizationOffering;
 using OrganizationSsoSetting = Payment.Shared.Database.Entities.OrganizationSsoSetting;
-using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using Product = Payment.Shared.Models.Product;
 
 namespace Payment.Processors.Mappers;
@@ -71,20 +70,20 @@ public interface IMapper
         Shared.Database.Entities.Address dest,
         Shared.Database.Entities.Organization organization);
 
-    OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
-    Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
+    StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest);
+    Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
     Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
 
     ProductVersion MapToEntity(
         Shared.Models.ProductVersion src,
         Shared.Database.Entities.Product product,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+        StripeConnectAccount? organizationStripeConnectAccount);
 
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount);
+        StripeConnectAccount? organizationStripeConnectAccount);
 
     Shared.Database.Entities.Product MergeToEntity(
         Product src,
@@ -341,7 +340,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
+    public StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest)
     {
         dest.StripeAccountId = src.Id;
         dest.ChargesEnabled = src.ChargesEnabled;
@@ -359,7 +358,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+    public Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src) =>
         new()
         {
             Id = src.Id,
@@ -382,7 +381,7 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = new Organization { Id = src.Organization.Id }
+            Organization = MapTo(src.Organization)
         };
 
     public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
@@ -407,14 +406,14 @@ public class Mapper : IMapper
     public ProductVersion MapToEntity(
         Shared.Models.ProductVersion src,
         Shared.Database.Entities.Product product,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount) =>
+        StripeConnectAccount? organizationStripeConnectAccount) =>
         MergeToEntity(src, new ProductVersion(), product, organizationStripeConnectAccount);
 
     public ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        OrganizationStripeConnectAccount? organizationStripeConnectAccount)
+        StripeConnectAccount? organizationStripeConnectAccount)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -536,6 +535,21 @@ public class Mapper : IMapper
             Product = product,
             OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.StripeConnectAccountId)
                 ? null
-                : new Shared.Models.OrganizationStripeConnectAccount { Id = src.StripeConnectAccountId }
+                : new Shared.Models.StripeConnectAccount { Id = src.StripeConnectAccountId }
         };
+
+    private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>
+        src is null
+            ? null
+            : new Organization
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                DeletedAt = src.DeletedAt,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone
+            };
 }

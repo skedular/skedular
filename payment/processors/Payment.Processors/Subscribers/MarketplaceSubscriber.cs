@@ -33,11 +33,11 @@ public class MarketplaceSubscriber(
 
                     var product = mapper.MapTo(@event);
                     var account = product.ProductVersions.Single().OrganizationStripeConnectAccount;
-                    OrganizationStripeConnectAccount? accountEntity = null;
+                    StripeConnectAccount? accountEntity = null;
                     if (account is not null)
                     {
                         accountEntity =
-                            await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(account.Id, cancellationToken);
+                            await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(account.Id, cancellationToken);
                         if (accountEntity is null)
                         {
                             throw new OrganizationStripeConnectAccountNotFound();
@@ -92,7 +92,7 @@ public class MarketplaceSubscriber(
         Product product,
         Shared.Database.Entities.Product existingProduct,
         Organization organization,
-        OrganizationStripeConnectAccount? accountEntity,
+        StripeConnectAccount? accountEntity,
         CancellationToken cancellationToken)
     {
         var productVersions = new List<ProductVersion>();

@@ -1,10 +1,10 @@
 using Api.Shared.Clients.Events.Skedular.Payment.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Marketplace.Processors.Mappers;
-using Marketplace.Shared.Database.Entities;
+using Marketplace.Shared.Models;
 using Marketplace.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event;
-using OrganizationStripeConnectAccount = Marketplace.Shared.Database.Entities.OrganizationStripeConnectAccount;
+using Organization = Marketplace.Shared.Database.Entities.Organization;
 using Type = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type;
 
 namespace Marketplace.Processors.Subscribers;
@@ -17,12 +17,12 @@ public class PaymentSubscriber(ILogger<PaymentSubscriber> logger, IMapper mapper
         {
             case Type.OrganizationStripeConnectAccountUpserted:
                 {
-                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.OrganizationStripeConnectAccount.OrganizationId);
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.StripeConnectAccount.OrganizationId);
 
                     var account = mapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(account.Organization.Id, cancellationToken);
                     var existingAccount =
-                        await repositoryFactory.OrganizationStripeConnectAccountRepository.UpsertNakedAsync(account.Id, organization,
+                        await repositoryFactory.StripeConnectAccountRepository.UpsertNakedAsync(account.Id, organization,
                             cancellationToken);
                     if (existingAccount.EventRaisedAt > account.EventRaisedAt)
                     {
@@ -39,7 +39,7 @@ public class PaymentSubscriber(ILogger<PaymentSubscriber> logger, IMapper mapper
                 {
                     var location = mapper.MapTo(@event);
                     var existingLocation =
-                        await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(location.Id, cancellationToken);
+                        await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(location.Id, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Payment event. Event timestamp is older that what is already processed.");
@@ -61,19 +61,19 @@ public class PaymentSubscriber(ILogger<PaymentSubscriber> logger, IMapper mapper
     }
 
     private async Task HandleOrganizationStripeConnectAccountUpsertedEventAsync(
-        Shared.Models.OrganizationStripeConnectAccount account,
-        OrganizationStripeConnectAccount existingAccount,
+        StripeConnectAccount account,
+        Shared.Database.Entities.StripeConnectAccount existingAccount,
         Organization organization,
         CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(mapper.MergeToEntity(account, existingAccount, organization));
+        _ = repositoryFactory.StripeConnectAccountRepository.Update(mapper.MergeToEntity(account, existingAccount, organization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleOrganizationStripeConnectAccountDeletedEventAsync(OrganizationStripeConnectAccount existingAccount,
+    private async Task HandleOrganizationStripeConnectAccountDeletedEventAsync(Shared.Database.Entities.StripeConnectAccount existingAccount,
         CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(existingAccount);
+        _ = repositoryFactory.StripeConnectAccountRepository.Remove(existingAccount);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

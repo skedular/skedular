@@ -18,15 +18,15 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }
-    public DbSet<StripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
-    public DbSet<OrganizationStripeConnectAccount> OrganizationStripeConnectAccount { get; set; }
-    public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
-    public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
+    public DbSet<StripeConnectAccount> StripeConnectAccount { get; set; }
+    public DbSet<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCode { get; set; }
+    public DbSet<StripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
+    public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
-    public DbSet<StripeProduct> StripeProduct { get; set; }
     public DbSet<StripePrice> StripePrice { get; set; }
+    public DbSet<StripeProduct> StripeProduct { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>

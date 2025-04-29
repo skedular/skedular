@@ -30,7 +30,7 @@ message Data {
   oneof payload {
     OrganizationPaymentMethod organizationPaymentMethod = 1;
     CustomerPaymentMethod customerPaymentMethod = 2;
-    OrganizationStripeConnectAccount organizationStripeConnectAccount = 3;
+    StripeConnectAccount stripeConnectAccount = 3;
   }
 }
 
@@ -44,7 +44,7 @@ message CustomerPaymentMethod {
   bool hasAttachedPaymentMethod = 2;
 }
 
-message OrganizationStripeConnectAccount {
+message StripeConnectAccount {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
   string organizationId = 3;

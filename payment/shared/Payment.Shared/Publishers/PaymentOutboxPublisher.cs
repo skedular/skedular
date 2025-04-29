@@ -7,7 +7,7 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
 using Payment.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event;
-using OrganizationStripeConnectAccount = Payment.Shared.Models.OrganizationStripeConnectAccount;
+using StripeConnectAccount = Payment.Shared.Models.StripeConnectAccount;
 using Type = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type;
 
 namespace Payment.Shared.Publishers;
@@ -16,7 +16,7 @@ public interface IPaymentOutboxPublisher
 {
     void PublishOrganizationPaymentMethodState(string organizationId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork);
     void PublishCustomerPaymentMethodState(string customerId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork);
-    void PublishOrganizationStripeConnectAccounts(IEnumerable<OrganizationStripeConnectAccount> accounts, IUnitOfWork unitOfWork);
+    void PublishOrganizationStripeConnectAccounts(IEnumerable<StripeConnectAccount> accounts, IUnitOfWork unitOfWork);
 }
 
 public class PaymentOutboxPublisher(
@@ -62,12 +62,12 @@ public class PaymentOutboxPublisher(
             },
             unitOfWork);
 
-    public void PublishOrganizationStripeConnectAccounts(IEnumerable<OrganizationStripeConnectAccount> accounts, IUnitOfWork unitOfWork)
+    public void PublishOrganizationStripeConnectAccounts(IEnumerable<StripeConnectAccount> accounts, IUnitOfWork unitOfWork)
     {
         foreach (var account in accounts)
         {
             publisher.Publish(
-                new Key { OrganizationId = account.Organization.Id },
+                new Key { OrganizationId = account.Id },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -75,7 +75,7 @@ public class PaymentOutboxPublisher(
                         applicationConfiguration.AppSource,
                         account.IsNotDeleted() ? Type.OrganizationStripeConnectAccountUpserted : Type.OrganizationStripeConnectAccountDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { OrganizationStripeConnectAccount = mapper.MapTo(account) }
+                    Data = new Data { StripeConnectAccount = mapper.MapTo(account) }
                 },
                 unitOfWork);
         }

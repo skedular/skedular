@@ -17,20 +17,20 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationStripeConnectAccountService
 {
-    Task<OrganizationStripeConnectAccount> AddAsync(
+    Task<StripeConnectAccount> AddAsync(
         string? id,
         string organizationId,
         string nickname,
         string redirectUrl,
         CancellationToken cancellationToken);
 
-    Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
-    Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<StripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
+    Task<StripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<StripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<StripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
@@ -51,7 +51,7 @@ public class OrganizationStripeConnectAccountService(
     IPaymentOutboxPublisher paymentOutboxPublisher,
     IStripeConnectAccountLinkService stripeConnectAccountLinkService) : IOrganizationStripeConnectAccountService
 {
-    public async Task<OrganizationStripeConnectAccount> AddAsync(
+    public async Task<StripeConnectAccount> AddAsync(
         string? id,
         string organizationId,
         string nickname,
@@ -80,12 +80,12 @@ public class OrganizationStripeConnectAccountService(
 
         if (!string.IsNullOrWhiteSpace(id))
         {
-            var existingAccount = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
+            var existingAccount = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
             if (existingAccount is not null)
             {
-                if (existingAccount.Organization.Id != organizationId)
+                if (existingAccount.Organization == null || existingAccount.Organization.Id != organizationId)
                 {
-                    throw new InvalidOperationException();
+                    throw new Unauthorized();
                 }
 
                 return await UpdateInternalAsync(nickname, existingAccount, customer, cancellationToken);
@@ -111,8 +111,8 @@ public class OrganizationStripeConnectAccountService(
             cancellationToken);
         accountEntity.OnboardingUrl = url;
 
-        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
-        var account = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
+        _ = repositoryFactory.StripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
+        var account = repositoryFactory.StripeConnectAccountRepository.Add(accountEntity);
         var mappedAccount = mapper.MapTo(account);
 
         paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts([mappedAccount], repositoryFactory.UnitOfWork);
@@ -123,13 +123,13 @@ public class OrganizationStripeConnectAccountService(
         return mappedAccount;
     }
 
-    public async Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken)
+    public async Task<StripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
         ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
         {
             throw new OrganizationStripeConnectAccountNotFound();
@@ -138,15 +138,20 @@ public class OrganizationStripeConnectAccountService(
         return await UpdateInternalAsync(nickname, account, customer, cancellationToken);
     }
 
-    public async Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken)
+    public async Task<StripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
         {
             throw new OrganizationStripeConnectAccountNotFound();
+        }
+
+        if (account.Organization == null)
+        {
+            throw new InvalidOperationException();
         }
 
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(account.Organization, customer))
@@ -165,7 +170,7 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
+        account = repositoryFactory.StripeConnectAccountRepository.Remove(account);
         var deletedAccount = mapper.MapTo(account);
 
         paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts([deletedAccount], repositoryFactory.UnitOfWork);
@@ -176,7 +181,7 @@ public class OrganizationStripeConnectAccountService(
         return deletedAccount;
     }
 
-    public async Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    public async Task<ICollection<StripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
         {
@@ -184,8 +189,14 @@ public class OrganizationStripeConnectAccountService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var accounts = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdsAsync(ids, cancellationToken);
-        var organizationIds = accounts.Select(item => item.Organization.Id).ToList();
+        var accounts = await repositoryFactory.StripeConnectAccountRepository.GetByIdsAsync(ids, cancellationToken);
+
+        if (accounts.Any(item => item.Organization == null))
+        {
+            throw new InvalidOperationException();
+        }
+
+        var organizationIds = accounts.Select(item => item.Id).ToList();
         var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
 
         if (existingOrganizations.Any(existingOrganization =>
@@ -206,7 +217,7 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.OrganizationStripeConnectAccountRepository.RemoveRange(accounts);
+        repositoryFactory.StripeConnectAccountRepository.RemoveRange(accounts);
         var deletedAccounts = accounts.Select(mapper.MapTo).ToList();
 
         paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts(deletedAccounts, repositoryFactory.UnitOfWork);
@@ -215,15 +226,20 @@ public class OrganizationStripeConnectAccountService(
         return deletedAccounts;
     }
 
-    public async Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<StripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
         if (account is null)
         {
             return null;
+        }
+
+        if (account.Organization == null)
+        {
+            throw new InvalidOperationException();
         }
 
         if (!organizationAuthorizationService.CanViewStripeConnectAccount(account.Organization, customer))
@@ -238,33 +254,38 @@ public class OrganizationStripeConnectAccountService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(code);
 
-        var accountRefreshCode =
-            await repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.GetByCodeAsync(code, cancellationToken);
+        var accountRefreshCode = await repositoryFactory.StripeConnectAccountRefreshCodeRepository.GetByCodeAsync(code, cancellationToken);
         if (accountRefreshCode is null)
         {
             throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
         }
 
+        var organization = accountRefreshCode.StripeConnectAccount.Organization;
+        if (organization == null)
+        {
+            throw new InvalidOperationException();
+        }
+
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
-            accountRefreshCode.OrganizationStripeConnectAccount.StripeAccountId,
-            accountRefreshCode.OrganizationStripeConnectAccount.Organization.Id,
+            accountRefreshCode.StripeConnectAccount.StripeAccountId,
+            organization.Id,
             accountRefreshCode.RedirectUrl,
-            accountRefreshCode.OrganizationStripeConnectAccount,
+            accountRefreshCode.StripeConnectAccount,
             cancellationToken);
 
-        accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl = url;
+        accountRefreshCode.StripeConnectAccount.OnboardingUrl = url;
 
-        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Remove(accountRefreshCode);
-        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
-        accountRefreshCode.OrganizationStripeConnectAccount =
-            repositoryFactory.OrganizationStripeConnectAccountRepository.Update(accountRefreshCode.OrganizationStripeConnectAccount);
+        _ = repositoryFactory.StripeConnectAccountRefreshCodeRepository.Remove(accountRefreshCode);
+        _ = repositoryFactory.StripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
+        accountRefreshCode.StripeConnectAccount =
+            repositoryFactory.StripeConnectAccountRepository.Update(accountRefreshCode.StripeConnectAccount);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl;
+        return accountRefreshCode.StripeConnectAccount.OnboardingUrl;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedTeamsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
@@ -285,23 +306,28 @@ public class OrganizationStripeConnectAccountService(
             throw new Unauthorized();
         }
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetPaginatedAccountsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.StripeConnectAccountRepository.GetPaginatedAccountsAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
             cancellationToken);
 
-        var mappedAccounts = edges.Select(edge => new Edge<OrganizationStripeConnectAccount>(mapper.MapTo(edge.Node), edge.Cursor)).ToList();
+        var mappedAccounts = edges.Select(edge => new Edge<StripeConnectAccount>(mapper.MapTo(edge.Node), edge.Cursor)).ToList();
 
         return (paginatedInfo, mappedAccounts, totalCount);
     }
 
-    private async Task<OrganizationStripeConnectAccount> UpdateInternalAsync(
+    private async Task<StripeConnectAccount> UpdateInternalAsync(
         string nickname,
-        Shared.Database.Entities.OrganizationStripeConnectAccount account,
+        Shared.Database.Entities.StripeConnectAccount account,
         Customer customer,
         CancellationToken cancellationToken)
     {
+        if (account.Organization == null)
+        {
+            throw new InvalidOperationException();
+        }
+
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(account.Organization, customer))
         {
             throw new Unauthorized();
@@ -310,7 +336,7 @@ public class OrganizationStripeConnectAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         account.Name = nickname;
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
+        account = repositoryFactory.StripeConnectAccountRepository.Update(account);
         var mappedAccount = mapper.MapTo(account);
 
         paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts([mappedAccount], repositoryFactory.UnitOfWork);

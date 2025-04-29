@@ -2,13 +2,14 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Payment.Api.GraphQL;
-using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
 using Organization = Payment.Shared.Database.Entities.Organization;
-using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using PaymentMethod = Payment.Api.GraphQL.PaymentMethod;
+using StripeConnectAccount = Payment.Shared.Database.Entities.StripeConnectAccount;
+using StripeCustomer = Payment.Shared.Models.StripeCustomer;
+using StripePaymentMethod = Payment.Shared.Models.StripePaymentMethod;
 
 namespace Payment.Api.Mappers;
 
@@ -19,10 +20,10 @@ public interface IMapper
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
-    OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
-    Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
-    OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
-    OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
+    StripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
+    Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
+    OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.StripeConnectAccount? src);
+    OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.StripeConnectAccount> src);
 }
 
 public class Mapper : IMapper
@@ -94,7 +95,7 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "organizationId", src.Id } }
         };
 
-    public OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Organization organization) =>
+    public StripeConnectAccount MapTo(Account src, string id, string name, Organization organization) =>
         new()
         {
             Id = id,
@@ -115,7 +116,7 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+    public Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src) =>
         new()
         {
             Id = src.Id,
@@ -138,10 +139,10 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization!)
         };
 
-    public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
+    public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.StripeConnectAccount? src) =>
         src is null
             ? null
             : new OrganizationStripeConnectAccountDetails
@@ -161,10 +162,10 @@ public class Mapper : IMapper
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
                 OnboardingUrl = src.OnboardingUrl,
                 OnboardingCompleted = src.OnboardingCompleted,
-                Organization = MapTo(src.Organization)
+                Organization = MapTo(src.Organization!)
             };
 
-    public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+    public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.StripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
     private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src) =>
         new()

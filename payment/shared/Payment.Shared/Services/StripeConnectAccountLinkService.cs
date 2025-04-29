@@ -12,11 +12,11 @@ namespace Payment.Shared.Services;
 
 public interface IStripeConnectAccountLinkService
 {
-    Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
+    Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string organizationId,
         string redirectUrl,
-        OrganizationStripeConnectAccount accountEntity,
+        StripeConnectAccount accountEntity,
         CancellationToken cancellationToken);
 }
 
@@ -37,11 +37,11 @@ public class StripeConnectAccountLinkService(
         return routeAttribute.Template;
     });
 
-    public async Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
+    public async Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string organizationId,
         string redirectUrl,
-        OrganizationStripeConnectAccount accountEntity,
+        StripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
     {
         var code = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
@@ -56,12 +56,12 @@ public class StripeConnectAccountLinkService(
             new RequestOptions(),
             cancellationToken);
 
-        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
+        var accountRefreshCodeEntity = new StripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, StripeConnectAccount = accountEntity
         };
 
-        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
+        _ = repositoryFactory.StripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
 
         return (accountRefreshCodeEntity, accountLink.Url);
     }

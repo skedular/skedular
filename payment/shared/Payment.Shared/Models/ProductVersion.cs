@@ -10,7 +10,7 @@ public class ProductVersion : ModelBase
     public PriceUnit PriceUnit { get; set; }
     public Currency Currency { get; set; }
     public Product Product { get; set; } = new();
-    public OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
+    public StripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
     public virtual StripeProduct? StripeProduct { get; set; }
     public virtual StripePrice? StripePrice { get; set; }
 }

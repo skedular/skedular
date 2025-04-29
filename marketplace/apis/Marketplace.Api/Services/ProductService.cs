@@ -11,6 +11,7 @@ using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
+using StripeConnectAccount = Marketplace.Shared.Database.Entities.StripeConnectAccount;
 
 namespace Marketplace.Api.Services;
 
@@ -86,11 +87,11 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        Shared.Database.Entities.OrganizationStripeConnectAccount? existingOrganizationStripeConnectAccount = null;
+        StripeConnectAccount? existingOrganizationStripeConnectAccount = null;
         if (productVersion.OrganizationStripeConnectAccount is not null)
         {
             existingOrganizationStripeConnectAccount =
-                await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(
+                await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(
                     productVersion.OrganizationStripeConnectAccount.Id,
                     cancellationToken);
             if (existingOrganizationStripeConnectAccount is null)
@@ -292,11 +293,11 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        Shared.Database.Entities.OrganizationStripeConnectAccount? existingOrganizationStripeConnectAccount = null;
+        StripeConnectAccount? existingOrganizationStripeConnectAccount = null;
         if (productVersion.OrganizationStripeConnectAccount is not null)
         {
             existingOrganizationStripeConnectAccount =
-                await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(
+                await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(
                     productVersion.OrganizationStripeConnectAccount.Id,
                     cancellationToken);
             if (existingOrganizationStripeConnectAccount is null)

@@ -20,7 +20,7 @@ public class ProductVersion : EntityBase
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationStripeConnectAccountId { get; set; }
-    public virtual OrganizationStripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
+    public virtual StripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? StripeProductId { get; set; }

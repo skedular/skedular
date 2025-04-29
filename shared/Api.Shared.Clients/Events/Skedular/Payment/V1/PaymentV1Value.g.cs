@@ -30,41 +30,40 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "dC5EYXRhIp0BCghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3Vy",
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5w",
             "YXltZW50LlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSLyAQoERGF0YRJHChlv",
+            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSLaAQoERGF0YRJHChlv",
             "cmdhbml6YXRpb25QYXltZW50TWV0aG9kGAEgASgLMiIucGF5bWVudC5Pcmdh",
             "bml6YXRpb25QYXltZW50TWV0aG9kSAASPwoVY3VzdG9tZXJQYXltZW50TWV0",
-            "aG9kGAIgASgLMh4ucGF5bWVudC5DdXN0b21lclBheW1lbnRNZXRob2RIABJV",
-            "CiBvcmdhbml6YXRpb25TdHJpcGVDb25uZWN0QWNjb3VudBgDIAEoCzIpLnBh",
-            "eW1lbnQuT3JnYW5pemF0aW9uU3RyaXBlQ29ubmVjdEFjY291bnRIAEIJCgdw",
-            "YXlsb2FkIlUKGU9yZ2FuaXphdGlvblBheW1lbnRNZXRob2QSFgoOb3JnYW5p",
-            "emF0aW9uSWQYASABKAkSIAoYaGFzQXR0YWNoZWRQYXltZW50TWV0aG9kGAIg",
-            "ASgIIk0KFUN1c3RvbWVyUGF5bWVudE1ldGhvZBISCgpjdXN0b21lcklkGAEg",
-            "ASgJEiAKGGhhc0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCLCAwogT3Jn",
-            "YW5pemF0aW9uU3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkSLQoJ",
-            "ZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIW",
-            "Cg5vcmdhbml6YXRpb25JZBgDIAEoCRIXCg9zdHJpcGVBY2NvdW50SWQYBCAB",
-            "KAkSDAoEbmFtZRgFIAEoCRIWCg5jaGFyZ2VzRW5hYmxlZBgGIAEoCBIWCg5w",
-            "YXlvdXRzRW5hYmxlZBgHIAEoCBIMCgR0eXBlGAggASgJEg8KB2NvdW50cnkY",
-            "CSABKAkSFwoPZGVmYXVsdEN1cnJlbmN5GAogASgJEhQKDGJ1c2luZXNzVHlw",
-            "ZRgLIAEoCRITCgtjb21wYW55TmFtZRgMIAEoCRINCgVlbWFpbBgNIAEoCRIN",
-            "CgVwaG9uZRgOIAEoCRIdChVjYXBhYmlsaXRpZXNUcmFuc2ZlcnMYDyABKAkS",
-            "IAoYY2FwYWJpbGl0aWVzQ2FyZFBheW1lbnRzGBAgASgJEhUKDW9uYm9hcmRp",
-            "bmdVcmwYESABKAkSGwoTb25ib2FyZGluZ0NvbXBsZXRlZBgSIAEoCCqrAQoE",
-            "VHlwZRIlCiFPcmdhbml6YXRpb25QYXltZW50TWV0aG9kc1VwZGF0ZWQQABIh",
-            "Ch1DdXN0b21lclBheW1lbnRNZXRob2RzVXBkYXRlZBABEiwKKE9yZ2FuaXph",
-            "dGlvblN0cmlwZUNvbm5lY3RBY2NvdW50VXBzZXJ0ZWQQAhIrCidPcmdhbml6",
-            "YXRpb25TdHJpcGVDb25uZWN0QWNjb3VudERlbGV0ZWQQA0I2qgIzQXBpLlNo",
-            "YXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5QYXltZW50LlYxLlZhbHVl",
-            "YgZwcm90bzM="));
+            "aG9kGAIgASgLMh4ucGF5bWVudC5DdXN0b21lclBheW1lbnRNZXRob2RIABI9",
+            "ChRzdHJpcGVDb25uZWN0QWNjb3VudBgDIAEoCzIdLnBheW1lbnQuU3RyaXBl",
+            "Q29ubmVjdEFjY291bnRIAEIJCgdwYXlsb2FkIlUKGU9yZ2FuaXphdGlvblBh",
+            "eW1lbnRNZXRob2QSFgoOb3JnYW5pemF0aW9uSWQYASABKAkSIAoYaGFzQXR0",
+            "YWNoZWRQYXltZW50TWV0aG9kGAIgASgIIk0KFUN1c3RvbWVyUGF5bWVudE1l",
+            "dGhvZBISCgpjdXN0b21lcklkGAEgASgJEiAKGGhhc0F0dGFjaGVkUGF5bWVu",
+            "dE1ldGhvZBgCIAEoCCK2AwoUU3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQY",
+            "ASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcBIWCg5vcmdhbml6YXRpb25JZBgDIAEoCRIXCg9zdHJpcGVBY2Nv",
+            "dW50SWQYBCABKAkSDAoEbmFtZRgFIAEoCRIWCg5jaGFyZ2VzRW5hYmxlZBgG",
+            "IAEoCBIWCg5wYXlvdXRzRW5hYmxlZBgHIAEoCBIMCgR0eXBlGAggASgJEg8K",
+            "B2NvdW50cnkYCSABKAkSFwoPZGVmYXVsdEN1cnJlbmN5GAogASgJEhQKDGJ1",
+            "c2luZXNzVHlwZRgLIAEoCRITCgtjb21wYW55TmFtZRgMIAEoCRINCgVlbWFp",
+            "bBgNIAEoCRINCgVwaG9uZRgOIAEoCRIdChVjYXBhYmlsaXRpZXNUcmFuc2Zl",
+            "cnMYDyABKAkSIAoYY2FwYWJpbGl0aWVzQ2FyZFBheW1lbnRzGBAgASgJEhUK",
+            "DW9uYm9hcmRpbmdVcmwYESABKAkSGwoTb25ib2FyZGluZ0NvbXBsZXRlZBgS",
+            "IAEoCCqrAQoEVHlwZRIlCiFPcmdhbml6YXRpb25QYXltZW50TWV0aG9kc1Vw",
+            "ZGF0ZWQQABIhCh1DdXN0b21lclBheW1lbnRNZXRob2RzVXBkYXRlZBABEiwK",
+            "KE9yZ2FuaXphdGlvblN0cmlwZUNvbm5lY3RBY2NvdW50VXBzZXJ0ZWQQAhIr",
+            "CidPcmdhbml6YXRpb25TdHJpcGVDb25uZWN0QWNjb3VudERlbGV0ZWQQA0I2",
+            "qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5QYXltZW50",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod", "CustomerPaymentMethod", "OrganizationStripeConnectAccount" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod", "CustomerPaymentMethod", "StripeConnectAccount" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.CustomerPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.CustomerPaymentMethod.Parser, new[]{ "CustomerId", "HasAttachedPaymentMethod" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "StripeAccountId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompleted" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "StripeAccountId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -768,8 +767,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         case PayloadOneofCase.CustomerPaymentMethod:
           CustomerPaymentMethod = other.CustomerPaymentMethod.Clone();
           break;
-        case PayloadOneofCase.OrganizationStripeConnectAccount:
-          OrganizationStripeConnectAccount = other.OrganizationStripeConnectAccount.Clone();
+        case PayloadOneofCase.StripeConnectAccount:
+          StripeConnectAccount = other.StripeConnectAccount.Clone();
           break;
       }
 
@@ -806,15 +805,15 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "organizationStripeConnectAccount" field.</summary>
-    public const int OrganizationStripeConnectAccountFieldNumber = 3;
+    /// <summary>Field number for the "stripeConnectAccount" field.</summary>
+    public const int StripeConnectAccountFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount OrganizationStripeConnectAccount {
-      get { return payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount ? (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount StripeConnectAccount {
+      get { return payloadCase_ == PayloadOneofCase.StripeConnectAccount ? (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OrganizationStripeConnectAccount;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.StripeConnectAccount;
       }
     }
 
@@ -824,7 +823,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       None = 0,
       OrganizationPaymentMethod = 1,
       CustomerPaymentMethod = 2,
-      OrganizationStripeConnectAccount = 3,
+      StripeConnectAccount = 3,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -857,7 +856,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (!object.Equals(OrganizationPaymentMethod, other.OrganizationPaymentMethod)) return false;
       if (!object.Equals(CustomerPaymentMethod, other.CustomerPaymentMethod)) return false;
-      if (!object.Equals(OrganizationStripeConnectAccount, other.OrganizationStripeConnectAccount)) return false;
+      if (!object.Equals(StripeConnectAccount, other.StripeConnectAccount)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -868,7 +867,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       int hash = 1;
       if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) hash ^= OrganizationPaymentMethod.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.CustomerPaymentMethod) hash ^= CustomerPaymentMethod.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) hash ^= OrganizationStripeConnectAccount.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) hash ^= StripeConnectAccount.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -896,9 +895,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(18);
         output.WriteMessage(CustomerPaymentMethod);
       }
-      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+      if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) {
         output.WriteRawTag(26);
-        output.WriteMessage(OrganizationStripeConnectAccount);
+        output.WriteMessage(StripeConnectAccount);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -918,9 +917,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(18);
         output.WriteMessage(CustomerPaymentMethod);
       }
-      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+      if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) {
         output.WriteRawTag(26);
-        output.WriteMessage(OrganizationStripeConnectAccount);
+        output.WriteMessage(StripeConnectAccount);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -938,8 +937,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (payloadCase_ == PayloadOneofCase.CustomerPaymentMethod) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(CustomerPaymentMethod);
       }
-      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationStripeConnectAccount);
+      if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(StripeConnectAccount);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -966,11 +965,11 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
           }
           CustomerPaymentMethod.MergeFrom(other.CustomerPaymentMethod);
           break;
-        case PayloadOneofCase.OrganizationStripeConnectAccount:
-          if (OrganizationStripeConnectAccount == null) {
-            OrganizationStripeConnectAccount = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
+        case PayloadOneofCase.StripeConnectAccount:
+          if (StripeConnectAccount == null) {
+            StripeConnectAccount = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount();
           }
-          OrganizationStripeConnectAccount.MergeFrom(other.OrganizationStripeConnectAccount);
+          StripeConnectAccount.MergeFrom(other.StripeConnectAccount);
           break;
       }
 
@@ -1012,12 +1011,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             break;
           }
           case 26: {
-            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
-            if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
-              subBuilder.MergeFrom(OrganizationStripeConnectAccount);
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount();
+            if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) {
+              subBuilder.MergeFrom(StripeConnectAccount);
             }
             input.ReadMessage(subBuilder);
-            OrganizationStripeConnectAccount = subBuilder;
+            StripeConnectAccount = subBuilder;
             break;
           }
         }
@@ -1058,12 +1057,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             break;
           }
           case 26: {
-            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
-            if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
-              subBuilder.MergeFrom(OrganizationStripeConnectAccount);
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount();
+            if (payloadCase_ == PayloadOneofCase.StripeConnectAccount) {
+              subBuilder.MergeFrom(StripeConnectAccount);
             }
             input.ReadMessage(subBuilder);
-            OrganizationStripeConnectAccount = subBuilder;
+            StripeConnectAccount = subBuilder;
             break;
           }
         }
@@ -1544,16 +1543,16 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class OrganizationStripeConnectAccount : pb::IMessage<OrganizationStripeConnectAccount>
+  public sealed partial class StripeConnectAccount : pb::IMessage<StripeConnectAccount>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<OrganizationStripeConnectAccount> _parser = new pb::MessageParser<OrganizationStripeConnectAccount>(() => new OrganizationStripeConnectAccount());
+    private static readonly pb::MessageParser<StripeConnectAccount> _parser = new pb::MessageParser<StripeConnectAccount>(() => new StripeConnectAccount());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<OrganizationStripeConnectAccount> Parser { get { return _parser; } }
+    public static pb::MessageParser<StripeConnectAccount> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1569,7 +1568,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationStripeConnectAccount() {
+    public StripeConnectAccount() {
       OnConstruction();
     }
 
@@ -1577,7 +1576,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationStripeConnectAccount(OrganizationStripeConnectAccount other) : this() {
+    public StripeConnectAccount(StripeConnectAccount other) : this() {
       id_ = other.id_;
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
       organizationId_ = other.organizationId_;
@@ -1601,8 +1600,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationStripeConnectAccount Clone() {
-      return new OrganizationStripeConnectAccount(this);
+    public StripeConnectAccount Clone() {
+      return new StripeConnectAccount(this);
     }
 
     /// <summary>Field number for the "id" field.</summary>
@@ -1824,12 +1823,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as OrganizationStripeConnectAccount);
+      return Equals(other as StripeConnectAccount);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(OrganizationStripeConnectAccount other) {
+    public bool Equals(StripeConnectAccount other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -2123,7 +2122,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(OrganizationStripeConnectAccount other) {
+    public void MergeFrom(StripeConnectAccount other) {
       if (other == null) {
         return;
       }
