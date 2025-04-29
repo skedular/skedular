@@ -87,8 +87,7 @@ public class Mapper : IMapper
             Type = src.Type.ToBookingType(),
             Status = src.Status.ToBookingStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
-            BookingSchedules = src.BookingSchedules,
-            Schedules = src.Schedules ?? [],
+            Schedules = src.Schedules,
             LineItems = src.LineItems ?? [],
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
@@ -167,7 +166,6 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
-            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -189,7 +187,6 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
-            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -249,7 +246,6 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToBookingType();
         dest.Status = src.Status.ToBookingStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
-        dest.BookingSchedules = src.BookingSchedules;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
@@ -308,7 +304,7 @@ public class Mapper : IMapper
         booking.InvolvedLocations.AddRange(MapToGrpcResponse(src.InvolvedLocations));
         booking.InvolvedTeams.AddRange(MapToGrpcResponse(src.InvolvedTeams));
         booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
-        booking.Schedules.AddRange(MapToGrpcResponse(src.BookingSchedules));
+        booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
         booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
 
         return booking;
@@ -338,7 +334,6 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
@@ -372,7 +367,6 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
@@ -638,8 +632,9 @@ public class Mapper : IMapper
         MapToGrpcResponse(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapToGrpcResponse(item.Resource, item.Customers));
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(BookingSchedules src) =>
-        src.Schedules.Select(MapToGrpcResponse);
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(
+        IEnumerable<BookingSchedule> src) =>
+        src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };

@@ -2,9 +2,9 @@ using Booking.Shared.Repositories;
 
 namespace Booking.Jobs.Jobs;
 
-public class BookingScheduleMigrationJob(IServiceProvider serviceProvider, ILogger<BookingScheduleMigrationJob> logger) : BackgroundService
+public class BookingLineItemMigrationJob(IServiceProvider serviceProvider, ILogger<BookingLineItemMigrationJob> logger) : BackgroundService
 {
-    private readonly string _jobName = typeof(BookingScheduleMigrationJob).FullName!;
+    private readonly string _jobName = typeof(BookingLineItemMigrationJob).FullName!;
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -17,7 +17,7 @@ public class BookingScheduleMigrationJob(IServiceProvider serviceProvider, ILogg
                 var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
                 foreach (var booking in bookings)
                 {
-                    booking.Schedules = booking.BookingSchedules.Schedules;
+                    booking.LineItems ??= [];
                     repositoryFactory.BookingRepository.Update(booking);
                 }
 

@@ -73,7 +73,7 @@ public class Mapper : IMapper
         }
 
         booking.Resources.AddRange(MapTo(src.Resources));
-        booking.Schedules.AddRange(MapTo(src.BookingSchedules));
+        booking.Schedules.AddRange(MapTo(src.Schedules));
         booking.LineItems.AddRange(MapTo(src.LineItems));
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
@@ -93,7 +93,7 @@ public class Mapper : IMapper
             return resource;
         });
 
-    private static IEnumerable<BookingSchedule> MapTo(BookingSchedules src) => src.Schedules.Select(MapTo);
+    private static IEnumerable<BookingSchedule> MapTo(IEnumerable<Api.Shared.Services.Models.BookingSchedule> src) => src.Select(MapTo);
 
     private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };

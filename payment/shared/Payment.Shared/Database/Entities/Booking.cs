@@ -10,7 +10,7 @@ namespace Payment.Shared.Database.Entities;
 public class Booking : ReplicatedEntityBaseWithDeleted
 {
     public ICollection<BookingSchedule> Schedules { get; set; } = [];
-    public ICollection<ProductVersionLineItem>? LineItems { get; set; }
+    public ICollection<ProductVersionLineItem> LineItems { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

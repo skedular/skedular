@@ -14,8 +14,7 @@ public class Booking : EntityBaseWithDeleted
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
     public string Type { get; set; }
-    public BookingSchedules BookingSchedules { get; set; }
-    public ICollection<BookingSchedule>? Schedules { get; set; }
+    public ICollection<BookingSchedule> Schedules { get; set; }
     public string Status { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem>? LineItems { get; set; }
@@ -48,7 +47,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
-        builder.Property(item => item.BookingSchedules).HasColumnType("jsonb");
         builder.Property(item => item.Schedules).HasColumnType("jsonb");
         builder.Property(item => item.LineItems).HasColumnType("jsonb");
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedBookings);
