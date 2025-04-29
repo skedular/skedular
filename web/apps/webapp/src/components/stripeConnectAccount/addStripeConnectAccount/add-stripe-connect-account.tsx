@@ -65,7 +65,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
           id,
           name,
           organizationId,
-          redirectUrl: new URL(`${organizationId}/stripe-connect-accounts/${id}`, process.env.NEXT_PUBLIC_SITE_URL).toString(),
+          redirectUrl: new URL(`organizations/${organizationId}/stripe-connect-accounts/${id}`, process.env.NEXT_PUBLIC_SITE_URL).toString(),
         },
       },
       onCompleted: (_, errors) => {

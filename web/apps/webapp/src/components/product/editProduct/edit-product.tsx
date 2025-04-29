@@ -54,7 +54,14 @@ const productSchema = (openingHoursMinutesStep: number) =>
     description: string().nullable(),
     price: string()
       .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
-      .required('Price is required.'),
+      .required('Price is required.')
+      .test('is-greater-than-zero', 'Price must be greater than zero.', (value) => {
+        if (typeof value !== 'number') {
+          return true;
+        }
+
+        return value > 0;
+      }),
     priceUnit: string().required('Price Unit is required.'),
     currency: string().required('Currency is required.'),
     numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0.'),
