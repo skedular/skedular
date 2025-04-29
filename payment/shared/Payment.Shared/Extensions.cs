@@ -25,6 +25,7 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
             .AddScoped<IAddressRepository, AddressRepository>()
+            .AddScoped<IBookingRepository, BookingRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()

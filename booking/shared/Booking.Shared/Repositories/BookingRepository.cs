@@ -221,7 +221,6 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 
     public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
 

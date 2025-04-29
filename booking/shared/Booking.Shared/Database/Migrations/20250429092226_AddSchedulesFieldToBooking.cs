@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Booking.Shared.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBookingProductVersionLineItemsToBookingDataModel : Migration
+    public partial class AddSchedulesFieldToBooking : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<ICollection<ProductVersionLineItem>>(
-                name: "LineItems",
+            migrationBuilder.AddColumn<ICollection<BookingSchedule>>(
+                name: "Schedules",
                 table: "Booking",
                 type: "jsonb",
                 nullable: true);
@@ -23,7 +23,7 @@ namespace Booking.Shared.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "LineItems",
+                name: "Schedules",
                 table: "Booking");
         }
     }

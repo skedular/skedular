@@ -64,7 +64,7 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("LastModifiedByCustomerId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<ICollection<BookingProductVersionLineItem>>("LineItems")
+                    b.Property<ICollection<ProductVersionLineItem>>("LineItems")
                         .HasColumnType("jsonb");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")

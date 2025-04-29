@@ -143,6 +143,7 @@ message Booking {
     Customer createdByCustomer = 16;
     Customer lastModifiedByCustomer = 17;
     Customer deletedByCustomer = 18;
+    repeated LineItem lineItems = 19;
 }
 
 message Customer {
@@ -284,4 +285,9 @@ message ResourceType {
 message BookingSchedule {
     google.protobuf.Timestamp from = 1;
     google.protobuf.Timestamp until = 2;
+}
+
+message LineItem {
+    string productVersionId = 1;
+    int32 quantity = 2;
 }

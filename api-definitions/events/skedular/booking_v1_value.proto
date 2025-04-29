@@ -46,6 +46,7 @@ message Booking {
   string createdByCustomerId = 17;
   string lastModifiedByCustomerId = 18;
   string deletedByCustomerId = 19;
+  repeated LineItem lineItems = 20;
 }
 
 enum BookingType
@@ -77,4 +78,9 @@ enum BookingStatus
   Pending = 0;
   Rejected = 1;
   Confirmed = 2;
+}
+
+message LineItem {
+  string productVersionId = 1;
+  int32 quantity = 2;
 }

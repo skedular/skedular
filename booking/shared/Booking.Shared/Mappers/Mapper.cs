@@ -3,6 +3,7 @@ using Booking.Shared.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule;
+using LineItem = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem;
 using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
 
 namespace Booking.Shared.Mappers;
@@ -43,7 +44,7 @@ public class Mapper : IMapper
                 BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsPaymentRequired = src.IsPaymentRequired,
+            IsPaymentRequired = src.IsPaymentRequired
         };
 
         if (src.PaidByCustomer is not null)
@@ -60,19 +61,20 @@ public class Mapper : IMapper
         {
             booking.CreatedByCustomerId = src.CreatedByCustomer.Id;
         }
-        
+
         if (src.LastModifiedByCustomer is not null)
         {
             booking.LastModifiedByCustomerId = src.LastModifiedByCustomer.Id;
         }
-        
+
         if (src.DeletedByCustomer is not null)
         {
             booking.DeletedByCustomerId = src.DeletedByCustomer.Id;
         }
-        
+
         booking.Resources.AddRange(MapTo(src.Resources));
         booking.Schedules.AddRange(MapTo(src.BookingSchedules));
+        booking.LineItems.AddRange(MapTo(src.LineItems));
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
@@ -95,4 +97,9 @@ public class Mapper : IMapper
 
     private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
+
+    private static IEnumerable<LineItem> MapTo(IEnumerable<ProductVersionLineItem> src) => src.Select(MapTo);
+
+    private static LineItem MapTo(ProductVersionLineItem src) =>
+        new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
 }

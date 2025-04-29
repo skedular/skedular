@@ -1,13 +1,12 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
-using Enterprise.Shared.Sanitization;
-using Team.Processors.Mappers;
-using Team.Shared.Repositories;
+using Payment.Processors.Mappers;
+using Payment.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
-using Booking = Team.Shared.Database.Entities.Booking;
+using Booking = Payment.Shared.Database.Entities.Booking;
 using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
 
-namespace Team.Processors.Subscribers;
+namespace Payment.Processors.Subscribers;
 
 public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
@@ -18,7 +17,7 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (!booking.InvolvedTeams.Select(item => item.Id).RemoveInvalidIds()!.Any())
+                    if (!booking.IsPaymentRequired)
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
@@ -50,9 +49,7 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
 
     private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        var involvedTeams =
-            await repositoryFactory.TeamRepository.GetByIdsAsync(booking.InvolvedTeams.Select(item => item.Id).ToList(), cancellationToken);
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, involvedTeams));
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

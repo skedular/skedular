@@ -11,6 +11,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     : DbContextBase<PaymentDbContext>(options, customDbContextOptions)
 {
     public DbSet<Address> Address { get; set; }
+    public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Organization> Organization { get; set; }

@@ -12,6 +12,7 @@ using BookingType = Api.Shared.Services.Models.BookingType;
 using BookingStatus = Api.Shared.Services.Models.BookingStatus;
 using Customer = Booking.Shared.Models.Customer;
 using Identity = Booking.Shared.Models.Identity;
+using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
@@ -87,6 +88,7 @@ public class Mapper : IMapper
             Status = src.Status.ToBookingStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             BookingSchedules = src.BookingSchedules,
+            Schedules = src.Schedules ?? [],
             LineItems = src.LineItems ?? [],
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
@@ -147,7 +149,7 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            LineItems = src.LineItems.Select(item => new LineItem
+            LineItems = src.LineItems.Select(item => new GraphQL.LineItem
             {
                 ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
                 Quantity = item.Quantity
@@ -166,12 +168,13 @@ public class Mapper : IMapper
             Notes = src.Notes,
             Type = src.Type,
             BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
+            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            LineItems = src.LineItems.Select(item => new BookingProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList()
+            LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList()
         };
     }
 
@@ -187,6 +190,7 @@ public class Mapper : IMapper
             Notes = src.Notes,
             Type = src.Type,
             BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
+            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations = src.OrganizationIds.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
@@ -246,6 +250,7 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToBookingStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.BookingSchedules = src.BookingSchedules;
+        dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
@@ -304,6 +309,7 @@ public class Mapper : IMapper
         booking.InvolvedTeams.AddRange(MapToGrpcResponse(src.InvolvedTeams));
         booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
         booking.Schedules.AddRange(MapToGrpcResponse(src.BookingSchedules));
+        booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
 
         return booking;
     }
@@ -333,6 +339,7 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
+            Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedLocations = [],
@@ -366,6 +373,7 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
+            Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedLocations = [],
@@ -635,6 +643,12 @@ public class Mapper : IMapper
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
+
+    private static IEnumerable<LineItem> MapToGrpcResponse(IEnumerable<ProductVersionLineItem> src) =>
+        src.Select(MapToGrpcResponse);
+
+    private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
+        new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
 
     private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
     private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;

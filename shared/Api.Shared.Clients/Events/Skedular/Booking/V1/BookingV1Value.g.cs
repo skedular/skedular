@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmci6gQKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcikAUKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -45,28 +45,31 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2hlZHVsZRIYChBwYWlkQnlDdXN0b21lcklkGA8gASgJEhwKFHBhaWRCeU9y",
             "Z2FuaXphdGlvbklkGBAgASgJEhsKE2NyZWF0ZWRCeUN1c3RvbWVySWQYESAB",
             "KAkSIAoYbGFzdE1vZGlmaWVkQnlDdXN0b21lcklkGBIgASgJEhsKE2RlbGV0",
-            "ZWRCeUN1c3RvbWVySWQYEyABKAkiKwoIUmVzb3VyY2USCgoCaWQYASABKAkS",
-            "EwoLY3VzdG9tZXJJZHMYAiADKAkiZgoPQm9va2luZ1NjaGVkdWxlEigKBGZy",
-            "b20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEikKBXVudGls",
-            "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCovCgRUeXBlEhMK",
-            "D0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEq1QEKC0Jv",
-            "b2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAAEhUKEVdvcmtpbmdGcm9t",
-            "T2ZmaWNlEAESHQoZV29ya2luZ0Zyb21Db3dvcmtpbmdTcGFjZRACEg0KCVNp",
-            "Y2tMZWF2ZRADEg8KC0FubnVhbExlYXZlEAQSEgoOV2VsbGJlaW5nTGVhdmUQ",
-            "BRIQCgxDbGllbnRPZmZpY2UQBhIMCghWYWNhdGlvbhAHEhQKEFRyYXZlbGlu",
-            "Z0ZvcldvcmsQCBIRCg1Ob25Xb3JraW5nRGF5EAkqOQoNQm9va2luZ1N0YXR1",
-            "cxILCgdQZW5kaW5nEAASDAoIUmVqZWN0ZWQQARINCglDb25maXJtZWQQAkI2",
-            "qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5n",
-            "LlYxLlZhbHVlYgZwcm90bzM="));
+            "ZWRCeUN1c3RvbWVySWQYEyABKAkSJAoJbGluZUl0ZW1zGBQgAygLMhEuYm9v",
+            "a2luZy5MaW5lSXRlbSIrCghSZXNvdXJjZRIKCgJpZBgBIAEoCRITCgtjdXN0",
+            "b21lcklkcxgCIAMoCSJmCg9Cb29raW5nU2NoZWR1bGUSKAoEZnJvbRgBIAEo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASKQoFdW50aWwYAiABKAsy",
+            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIjYKCExpbmVJdGVtEhgKEHBy",
+            "b2R1Y3RWZXJzaW9uSWQYASABKAkSEAoIcXVhbnRpdHkYAiABKAUqLwoEVHlw",
+            "ZRITCg9Cb29raW5nVXBzZXJ0ZWQQABISCg5Cb29raW5nRGVsZXRlZBABKtUB",
+            "CgtCb29raW5nVHlwZRITCg9Xb3JraW5nRnJvbUhvbWUQABIVChFXb3JraW5n",
+            "RnJvbU9mZmljZRABEh0KGVdvcmtpbmdGcm9tQ293b3JraW5nU3BhY2UQAhIN",
+            "CglTaWNrTGVhdmUQAxIPCgtBbm51YWxMZWF2ZRAEEhIKDldlbGxiZWluZ0xl",
+            "YXZlEAUSEAoMQ2xpZW50T2ZmaWNlEAYSDAoIVmFjYXRpb24QBxIUChBUcmF2",
+            "ZWxpbmdGb3JXb3JrEAgSEQoNTm9uV29ya2luZ0RheRAJKjkKDUJvb2tpbmdT",
+            "dGF0dXMSCwoHUGVuZGluZxAAEgwKCFJlamVjdGVkEAESDQoJQ29uZmlybWVk",
+            "EAJCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQm9v",
+            "a2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "Status", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser, new[]{ "ProductVersionId", "Quantity" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1006,6 +1009,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       createdByCustomerId_ = other.createdByCustomerId_;
       lastModifiedByCustomerId_ = other.lastModifiedByCustomerId_;
       deletedByCustomerId_ = other.deletedByCustomerId_;
+      lineItems_ = other.lineItems_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1237,6 +1241,17 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "lineItems" field.</summary>
+    public const int LineItemsFieldNumber = 20;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> _repeated_lineItems_codec
+        = pb::FieldCodec.ForMessage(162, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> lineItems_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> LineItems {
+      get { return lineItems_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1271,6 +1286,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId != other.CreatedByCustomerId) return false;
       if (LastModifiedByCustomerId != other.LastModifiedByCustomerId) return false;
       if (DeletedByCustomerId != other.DeletedByCustomerId) return false;
+      if(!lineItems_.Equals(other.lineItems_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1297,6 +1313,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId.Length != 0) hash ^= CreatedByCustomerId.GetHashCode();
       if (LastModifiedByCustomerId.Length != 0) hash ^= LastModifiedByCustomerId.GetHashCode();
       if (DeletedByCustomerId.Length != 0) hash ^= DeletedByCustomerId.GetHashCode();
+      hash ^= lineItems_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1373,6 +1390,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(154, 1);
         output.WriteString(DeletedByCustomerId);
       }
+      lineItems_.WriteTo(output, _repeated_lineItems_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1441,6 +1459,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(154, 1);
         output.WriteString(DeletedByCustomerId);
       }
+      lineItems_.WriteTo(ref output, _repeated_lineItems_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1496,6 +1515,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (DeletedByCustomerId.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(DeletedByCustomerId);
       }
+      size += lineItems_.CalculateSize(_repeated_lineItems_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1562,6 +1582,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (other.DeletedByCustomerId.Length != 0) {
         DeletedByCustomerId = other.DeletedByCustomerId;
       }
+      lineItems_.Add(other.lineItems_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1666,6 +1687,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             DeletedByCustomerId = input.ReadString();
             break;
           }
+          case 162: {
+            lineItems_.AddEntriesFrom(input, _repeated_lineItems_codec);
+            break;
+          }
         }
       }
     #endif
@@ -1768,6 +1793,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 154: {
             DeletedByCustomerId = input.ReadString();
+            break;
+          }
+          case 162: {
+            lineItems_.AddEntriesFrom(ref input, _repeated_lineItems_codec);
             break;
           }
         }
@@ -2245,6 +2274,241 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
               Until = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }
             input.ReadMessage(Until);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class LineItem : pb::IMessage<LineItem>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<LineItem> _parser = new pb::MessageParser<LineItem>(() => new LineItem());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<LineItem> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LineItem() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LineItem(LineItem other) : this() {
+      productVersionId_ = other.productVersionId_;
+      quantity_ = other.quantity_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LineItem Clone() {
+      return new LineItem(this);
+    }
+
+    /// <summary>Field number for the "productVersionId" field.</summary>
+    public const int ProductVersionIdFieldNumber = 1;
+    private string productVersionId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ProductVersionId {
+      get { return productVersionId_; }
+      set {
+        productVersionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "quantity" field.</summary>
+    public const int QuantityFieldNumber = 2;
+    private int quantity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Quantity {
+      get { return quantity_; }
+      set {
+        quantity_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as LineItem);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(LineItem other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ProductVersionId != other.ProductVersionId) return false;
+      if (Quantity != other.Quantity) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ProductVersionId.Length != 0) hash ^= ProductVersionId.GetHashCode();
+      if (Quantity != 0) hash ^= Quantity.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (ProductVersionId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ProductVersionId);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Quantity);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (ProductVersionId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ProductVersionId);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Quantity);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (ProductVersionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ProductVersionId);
+      }
+      if (Quantity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Quantity);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(LineItem other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ProductVersionId.Length != 0) {
+        ProductVersionId = other.ProductVersionId;
+      }
+      if (other.Quantity != 0) {
+        Quantity = other.Quantity;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            ProductVersionId = input.ReadString();
+            break;
+          }
+          case 16: {
+            Quantity = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            ProductVersionId = input.ReadString();
+            break;
+          }
+          case 16: {
+            Quantity = input.ReadInt32();
             break;
           }
         }

@@ -13,10 +13,11 @@ public class Booking : ModelBaseWithDeleted
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
     public BookingType Type { get; set; }
+    public ICollection<BookingSchedule> Schedules { get; set; } = [];
     public BookingSchedules BookingSchedules { get; set; } = new([]);
     public BookingStatus Status { get; set; }
     public bool IsPaymentRequired { get; set; }
-    public ICollection<BookingProductVersionLineItem> LineItems { get; set; } = [];
+    public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {

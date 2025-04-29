@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Payment.Shared.Database.Entities;
 using Stripe;
 using Address = Payment.Shared.Models.Address;
+using Booking = Payment.Shared.Models.Booking;
 using Customer = Payment.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Payment.Shared.Models.Identity;
@@ -21,6 +22,7 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
@@ -98,6 +100,8 @@ public interface IMapper
     ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId);
+
+    Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest);
 }
 
 public class Mapper : IMapper
@@ -199,6 +203,23 @@ public class Mapper : IMapper
             };
 
         return organization;
+    }
+
+    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
+    {
+        var booking = src.Data.Booking;
+        var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new Booking
+        {
+            Id = booking.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            IsPaymentRequired = booking.IsPaymentRequired,
+            Schedules = booking.Schedules.Select(item => new BookingSchedule(item.From.ToDateTimeOffset(), item.Until.ToDateTimeOffset())).ToList(),
+            LineItems = booking.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList()
+        };
     }
 
     public Shared.Database.Entities.Customer MergeToEntity(
@@ -479,6 +500,15 @@ public class Mapper : IMapper
             Product = stripeProductId,
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
+
+    public Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Schedules = src.Schedules;
+        dest.LineItems = src.LineItems;
+        return dest;
+    }
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null
