@@ -2,9 +2,8 @@
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
-using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
-using Stripe;
+using Payment.Shared.Services;
 using Customer = Payment.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
@@ -16,8 +15,7 @@ public class CustomerSubscriber(
     IMapper mapper,
     IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
-    ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
-    IUpdatable<Stripe.Customer, CustomerUpdateOptions> customerUpdateService)
+    IStripeCustomerService stripeCustomerService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -69,49 +67,18 @@ public class CustomerSubscriber(
         Shared.Database.Entities.Customer? existingCustomer,
         CancellationToken cancellationToken)
     {
+        var stripeCustomer =
+            await stripeCustomerService.UpsertCustomerAsync(customer, existingCustomer?.StripeCustomer, null, @event.Metadata.Id, cancellationToken);
+
         if (existingCustomer is null)
         {
-            existingCustomer = new Shared.Database.Entities.Customer { Id = customer.Id };
-
-            var stripeCustomer = await customerCreateService.CreateAsync(
-                mapper.MapTo(customer),
-                new RequestOptions { IdempotencyKey = customer.Id },
-                cancellationToken);
-
-            var stripeCustomerEntity = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
-            {
-                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
-            });
-
-            existingCustomer.StripeCustomer = stripeCustomerEntity;
+            existingCustomer = mapper.MapToEntity(customer, stripeCustomer);
             existingCustomer = RebuildIdentities(customer, existingCustomer);
             _ = repositoryFactory.CustomerRepository.Add(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }
         else
         {
-            if (existingCustomer.StripeCustomer is null)
-            {
-                var stripeCustomer = await customerCreateService.CreateAsync(
-                    mapper.MapTo(customer),
-                    new RequestOptions { IdempotencyKey = customer.Id },
-                    cancellationToken);
-                existingCustomer.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
-                {
-                    Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id
-                });
-            }
-            else
-            {
-                var stripeCustomer = await customerUpdateService.UpdateAsync(
-                    existingCustomer.StripeCustomer.StripeCustomerId,
-                    mapper.MergeTo(customer),
-                    new RequestOptions { IdempotencyKey = @event.Metadata.Id },
-                    cancellationToken);
-
-                existingCustomer.StripeCustomer.StripeCustomerId = stripeCustomer.Id;
-                existingCustomer.StripeCustomer = repositoryFactory.StripeCustomerRepository.Update(existingCustomer.StripeCustomer);
-            }
-
+            existingCustomer = mapper.MergeToEntity(customer, existingCustomer, stripeCustomer);
             existingCustomer = RebuildIdentities(customer, existingCustomer);
             _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }

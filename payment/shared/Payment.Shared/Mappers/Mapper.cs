@@ -1,11 +1,19 @@
-using Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Payment.Shared.Models;
+using Stripe;
+using Customer = Payment.Shared.Models.Customer;
+using StripeConnectAccount = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount;
 
 namespace Payment.Shared.Mappers;
 
 public interface IMapper
 {
     StripeConnectAccount MapTo(Models.StripeConnectAccount src);
+    CustomerCreateOptions MapTo(Organization src);
+    CustomerUpdateOptions MergeTo(Organization src);
+    CustomerCreateOptions MapTo(Customer src);
+    CustomerUpdateOptions MergeTo(Customer src);
 }
 
 public class Mapper : IMapper
@@ -32,5 +40,43 @@ public class Mapper : IMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
             OnboardingUrl = src.OnboardingUrl.ToSafeString(),
             OnboardingCompleted = src.OnboardingCompleted
+        };
+
+    public CustomerCreateOptions MapTo(Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
+
+    public CustomerUpdateOptions MergeTo(Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
+
+    public CustomerCreateOptions MapTo(Customer src) =>
+        new()
+        {
+            Name = src.ToDisplayableName(),
+            Email = src.Identities.ToSingleEmail(),
+            Phone = src.PhoneNumber.ToSafeString(),
+            PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
+            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
+
+    public CustomerUpdateOptions MergeTo(Customer src) =>
+        new()
+        {
+            Name = src.ToDisplayableName(),
+            Email = src.Identities.ToSingleEmail(),
+            Phone = src.PhoneNumber.ToSafeString(),
+            PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
+            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
         };
 }

@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Team.Api.GraphQL;
-using Booking = Team.Shared.Models.Booking;
 using Customer = Team.Shared.Models.Customer;
 using Identity = Team.Shared.Models.Identity;
 using JoinInvitation = Team.Shared.Models.JoinInvitation;
@@ -451,7 +450,7 @@ public class Mapper : IMapper
         new()
         {
             UniqueId = src.Id,
-            Email = src.Identities.ToSingleEmail(),
+            Email = src.Identities.ToFirstEmail(),
             Name = src.Name,
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,

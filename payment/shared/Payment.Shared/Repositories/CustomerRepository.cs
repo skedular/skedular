@@ -22,6 +22,7 @@ internal static class CustomerExtensions
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.StripeCustomer)
+            .ThenInclude(query => query.StripeConnectAccount)
             .Include(query =>
                 query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
 }

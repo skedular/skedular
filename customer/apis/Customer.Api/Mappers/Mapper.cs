@@ -115,7 +115,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
-            Email = src.Identities.ToSingleEmail(),
+            Email = src.Identities.ToFirstEmail(),
             Identities = MapTo(src.Identities),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,

@@ -18,6 +18,7 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddScoped<IStripeConnectAccountLinkService, StripeConnectAccountLinkService>()
+            .AddScoped<IStripeCustomerService, StripeCustomerService>()
             .AddSingleton<IOrganizationStripeConnectAccountHelper, OrganizationStripeConnectAccountHelper>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>

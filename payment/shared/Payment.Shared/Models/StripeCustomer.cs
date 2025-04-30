@@ -8,4 +8,5 @@ public class StripeCustomer : ModelBaseWithDeleted
     public Organization Organization { get; set; } = new();
     public Customer Customer { get; set; } = new();
     public ICollection<StripeCheckoutSession> StripeCheckoutSessions { get; set; } = [];
+    public StripeConnectAccount? StripeConnectAccount { get; set; }
 }

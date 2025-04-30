@@ -1,3 +1,4 @@
+using Api.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,6 +9,13 @@ namespace Payment.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : ReplicatedEntityBaseWithDeleted
 {
+    public string? Locale { get; set; }
+    public string? Name { get; set; }
+    public string? GivenName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? FamilyName { get; set; }
+    public string? PhoneNumber { get; set; }
+
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? StripeCustomerId { get; set; }
     public virtual StripeCustomer? StripeCustomer { get; set; }
@@ -23,6 +31,13 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);
+        builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
+        builder.Property(item => item.MiddleName).HasMaxLength(Constants.MaxMiddleNameLength);
+        builder.Property(item => item.FamilyName).HasMaxLength(Constants.MaxFamilyNameLength);
+        builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
+        builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Customer).HasForeignKey<Customer>(item => item.StripeCustomerId);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);

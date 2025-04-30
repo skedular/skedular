@@ -9,7 +9,6 @@ using Organization.Shared.Models;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
 using Address = Organization.Shared.Database.Entities.Address;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
-using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
 using Identity = Organization.Shared.Models.Identity;
@@ -876,7 +875,7 @@ public class Mapper : IMapper
         new()
         {
             UniqueId = src.Id,
-            Email = src.Identities.ToSingleEmail(),
+            Email = src.Identities.ToFirstEmail(),
             Name = src.Name,
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,

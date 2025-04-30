@@ -25,4 +25,6 @@ public class StripeConnectAccount : ModelBaseWithDeleted
     public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized && ChargesEnabled && PayoutsEnabled;
 
     public Organization? Organization { get; set; }
+    public ICollection<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCodes { get; set; } = [];
+    public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
 }

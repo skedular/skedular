@@ -35,8 +35,10 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Organization MapToEntity(Organization src);
-    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
+    Shared.Database.Entities.Customer MapToEntity(Customer src, StripeCustomer stripeCustomer);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, StripeCustomer stripeCustomer);
+    Shared.Database.Entities.Organization MapToEntity(Organization src, StripeCustomer stripeCustomer);
+    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest, StripeCustomer stripeCustomer);
 
     OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
@@ -116,6 +118,10 @@ public class Mapper : IMapper
             Identities = customer.Identities
                 .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList(),
+            Designation = customer.Designation,
+            Title = customer.Title,
+            Timezone = customer.Timezone,
+            Locale = customer.Locale,
             Name = customer.Name,
             GivenName = customer.GivenName,
             MiddleName = customer.MiddleName,
@@ -251,9 +257,28 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Customer MapToEntity(Customer src, StripeCustomer stripeCustomer) =>
+        MergeToEntity(src, new Shared.Database.Entities.Customer(), stripeCustomer);
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, StripeCustomer stripeCustomer)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Locale = src.Locale;
+        dest.Name = src.Name;
+        dest.GivenName = src.GivenName;
+        dest.MiddleName = src.MiddleName;
+        dest.FamilyName = src.FamilyName;
+        dest.PhoneNumber = src.PhoneNumber;
+        dest.StripeCustomer = stripeCustomer;
+        return dest;
+    }
+
+    public Shared.Database.Entities.Organization MapToEntity(Organization src, StripeCustomer stripeCustomer) =>
+        MergeToEntity(src, new Shared.Database.Entities.Organization(), stripeCustomer);
+
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest,
+        StripeCustomer stripeCustomer)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -263,6 +288,7 @@ public class Mapper : IMapper
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.StripeCustomer = stripeCustomer;
         return dest;
     }
 
@@ -511,7 +537,7 @@ public class Mapper : IMapper
         };
 
     public Shared.Database.Entities.Booking MergeToEntity(
-        Booking src, 
+        Booking src,
         Shared.Database.Entities.Booking dest,
         StripeCheckoutSession stripeCheckoutSession)
     {
