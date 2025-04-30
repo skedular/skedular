@@ -12,6 +12,7 @@ public class OrganizationSsoSetting : ReplicatedEntityBase
     public string EntityId { get; set; }
     public string LoginUrl { get; set; }
     public string AppFederationMetadataUrl { get; set; }
+    public bool IsActive { get; set; } 
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -28,6 +29,7 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
         builder.Property(item => item.EntityId).HasMaxLength(Constants.MaxSsoEntityIdLength);
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.IsActive).HasDefaultValue(false); 
 
         builder
             .HasOne(item => item.Organization)

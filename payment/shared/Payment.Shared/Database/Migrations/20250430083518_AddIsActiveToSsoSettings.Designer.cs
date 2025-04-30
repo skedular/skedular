@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -13,9 +14,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430083518_AddIsActiveToSsoSettings")]
+    partial class AddIsActiveToSsoSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,10 +318,6 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<string>("Website")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -581,6 +580,9 @@ namespace Payment.Shared.Database.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<string>("OrganizationStripeConnectAccountId")
+                        .HasColumnType("character varying(100)");
+
                     b.Property<decimal?>("Price")
                         .HasColumnType("DECIMAL(18,4)");
 
@@ -614,6 +616,8 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("OrganizationStripeConnectAccountId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StripePriceId")
@@ -637,6 +641,7 @@ namespace Payment.Shared.Database.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("BusinessType")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -656,18 +661,12 @@ namespace Payment.Shared.Database.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("CompanyName")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("ContactEmail")
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
-
-                    b.Property<string>("ContactPhone")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -675,6 +674,7 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DefaultCurrency")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
@@ -685,6 +685,11 @@ namespace Payment.Shared.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -707,23 +712,20 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("StripeAccountId")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("SupportUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -734,6 +736,8 @@ namespace Payment.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationAuthorized");
+
+                    b.HasIndex("BusinessType");
 
                     b.HasIndex("CapabilitiesCardPayments");
 
@@ -751,6 +755,8 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("DetailsSubmitted");
 
+                    b.HasIndex("Email");
+
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
@@ -758,6 +764,8 @@ namespace Payment.Shared.Database.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("PayoutsEnabled");
+
+                    b.HasIndex("Phone");
 
                     b.HasIndex("StripeAccountId");
 
@@ -1184,6 +1192,10 @@ namespace Payment.Shared.Database.Migrations
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.ProductVersion", b =>
                 {
+                    b.HasOne("Payment.Shared.Database.Entities.StripeConnectAccount", "OrganizationStripeConnectAccount")
+                        .WithMany("ProductVersions")
+                        .HasForeignKey("OrganizationStripeConnectAccountId");
+
                     b.HasOne("Payment.Shared.Database.Entities.Product", "Product")
                         .WithMany("ProductVersions")
                         .HasForeignKey("ProductId")
@@ -1197,6 +1209,8 @@ namespace Payment.Shared.Database.Migrations
                     b.HasOne("Payment.Shared.Database.Entities.StripeProduct", "StripeProduct")
                         .WithOne("ProductVersion")
                         .HasForeignKey("Payment.Shared.Database.Entities.ProductVersion", "StripeProductId");
+
+                    b.Navigation("OrganizationStripeConnectAccount");
 
                     b.Navigation("Product");
 
@@ -1287,6 +1301,8 @@ namespace Payment.Shared.Database.Migrations
 
             modelBuilder.Entity("Payment.Shared.Database.Entities.StripeConnectAccount", b =>
                 {
+                    b.Navigation("ProductVersions");
+
                     b.Navigation("StripeConnectAccountRefreshCodes");
                 });
 

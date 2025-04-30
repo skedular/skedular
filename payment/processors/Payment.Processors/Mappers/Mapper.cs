@@ -197,6 +197,7 @@ public class Mapper : IMapper
                 EntityId = organizationAfterState.SsoSettings.EntityId,
                 LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
                 AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
+                IsActive = organizationAfterState.SsoSettings.IsActive,
                 Organization = organization
             };
 
@@ -313,6 +314,7 @@ public class Mapper : IMapper
         dest.EntityId = src.EntityId;
         dest.LoginUrl = src.LoginUrl;
         dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.IsActive = src.IsActive;
         dest.Organization = organization;
 
         return dest;
