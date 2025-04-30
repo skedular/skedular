@@ -64,10 +64,10 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(organizationId);
+  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(organizationId);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(organizationId);
   const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(organizationId);
-  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(organizationId);
+  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(organizationId);
 
   return (
     <List
@@ -82,17 +82,23 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
       }}
     >
       <ListItem disablePadding>
-        <Link component={NextLink} href={productsLink}>
-          <ListItemButton selected={fullPath === productsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productsLink) }}>
+        <Link component={NextLink} href={stripeConnectAccountsLink}>
+          <ListItemButton
+            selected={fullPath === stripeConnectAccountsLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === stripeConnectAccountsLink) }}
+          >
             {collapsed && (
-              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'} />
+              <BodyIconTypography
+                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
+                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
+              />
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Product"
-                startElement={!hideIcons && <ProductIcon excludeTooltip color="inherit" />}
+                label="Stripe Connect Account"
+                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
                 spacing={3}
-                invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'}
+                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}
@@ -139,23 +145,17 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href={stripeConnectAccountsLink}>
-          <ListItemButton
-            selected={fullPath === stripeConnectAccountsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === stripeConnectAccountsLink) }}
-          >
+        <Link component={NextLink} href={productsLink}>
+          <ListItemButton selected={fullPath === productsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productsLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
-                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Stripe Connect Account"
-                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
+                label="Product"
+                startElement={!hideIcons && <ProductIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
+                invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

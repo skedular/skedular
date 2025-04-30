@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4534029302f6af65ee4fe41d0c332428>>
+ * @generated SignedSource<<913460c12178d553c3c8f0cfb1b57381>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,10 +36,6 @@ export type editProduct_query$data = {
     readonly organization: {
       readonly uniqueId: string;
     };
-    readonly organizationStripeConnectAccountDetails: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
     readonly price: string;
     readonly priceUnit: {
       readonly name: string;
@@ -53,7 +49,7 @@ export type editProduct_query$data = {
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceOrganizationStripeConnectAccount_query" | "singleChoicePriceUnit_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -251,19 +247,6 @@ return {
             (v2/*: any*/)
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Marketplace_OrganizationStripeConnectAccountDetails",
-          "kind": "LinkedField",
-          "name": "organizationStripeConnectAccountDetails",
-          "plural": false,
-          "selections": [
-            (v2/*: any*/),
-            (v0/*: any*/)
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -294,11 +277,6 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceCurrency_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceOrganizationStripeConnectAccount_query"
     }
   ],
   "type": "Query",
@@ -306,6 +284,6 @@ return {
 };
 })();
 
-(node as any).hash = "c64803e15e029bc1d0d8c6f8edebdbce";
+(node as any).hash = "08ad10dc9192ec92a5fec77411e2e698";
 
 export default node;

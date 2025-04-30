@@ -76,14 +76,12 @@ public interface IMapper
 
     ProductVersion MapToEntity(
         Shared.Models.ProductVersion src,
-        Shared.Database.Entities.Product product,
-        StripeConnectAccount? organizationStripeConnectAccount);
+        Shared.Database.Entities.Product product);
 
     ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
-        Shared.Database.Entities.Product product,
-        StripeConnectAccount? organizationStripeConnectAccount);
+        Shared.Database.Entities.Product product);
 
     Shared.Database.Entities.Product MergeToEntity(
         Product src,
@@ -409,17 +407,13 @@ public class Mapper : IMapper
         return product;
     }
 
-    public ProductVersion MapToEntity(
-        Shared.Models.ProductVersion src,
-        Shared.Database.Entities.Product product,
-        StripeConnectAccount? organizationStripeConnectAccount) =>
-        MergeToEntity(src, new ProductVersion(), product, organizationStripeConnectAccount);
+    public ProductVersion MapToEntity(Shared.Models.ProductVersion src, Shared.Database.Entities.Product product) =>
+        MergeToEntity(src, new ProductVersion(), product);
 
     public ProductVersion MergeToEntity(
         Shared.Models.ProductVersion src,
         ProductVersion dest,
-        Shared.Database.Entities.Product product,
-        StripeConnectAccount? organizationStripeConnectAccount)
+        Shared.Database.Entities.Product product)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -427,7 +421,6 @@ public class Mapper : IMapper
         dest.PriceUnit = src.PriceUnit.ToPriceUnit();
         dest.Currency = src.Currency.ToCurrency();
         dest.Product = product;
-        dest.OrganizationStripeConnectAccount = organizationStripeConnectAccount;
         return dest;
     }
 
@@ -485,7 +478,10 @@ public class Mapper : IMapper
         {
             Name = src.Name.ToSafeString(),
             UnitLabel = src.PriceUnit.ToPriceUnitName(),
-            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
+            }
         };
 
     public ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
@@ -493,7 +489,10 @@ public class Mapper : IMapper
         {
             Name = src.Name.ToSafeString(),
             UnitLabel = src.PriceUnit.ToPriceUnitName(),
-            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
+            }
         };
 
     public PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId) =>
@@ -538,10 +537,7 @@ public class Mapper : IMapper
             Price = src.Price.FromRoundedPrice(),
             PriceUnit = src.PriceUnit.ToPriceUnit(),
             Currency = src.Currency.ToCurrency(),
-            Product = product,
-            OrganizationStripeConnectAccount = string.IsNullOrWhiteSpace(src.StripeConnectAccountId)
-                ? null
-                : new Shared.Models.StripeConnectAccount { Id = src.StripeConnectAccountId }
+            Product = product
         };
 
     private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>

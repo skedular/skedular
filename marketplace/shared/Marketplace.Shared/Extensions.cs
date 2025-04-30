@@ -28,8 +28,7 @@ public static class Extensions
             .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
-            .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-            .AddScoped<IStripeConnectAccountRepository, StripeConnectAccountRepository>();
+            .AddScoped<IProductVersionRepository, ProductVersionRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

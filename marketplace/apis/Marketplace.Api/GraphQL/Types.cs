@@ -87,10 +87,6 @@ public class ProductDetails : Node
     public string LatestProductVersionId { get; set; } = string.Empty;
 
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
-
-    [GraphQLName("organizationStripeConnectAccountDetails")]
-    public OrganizationStripeConnectAccountDetails? OrganizationStripeConnectAccountDetails { get; set; }
-
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -138,9 +134,6 @@ public class AddProductInput
 
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-
-    [GraphQLName("organizationStripeConnectAccountId")]
-    public string? OrganizationStripeConnectAccountId { get; set; }
 }
 
 [GraphQLName("UpdateProductInput")]
@@ -172,9 +165,6 @@ public class UpdateProductInput
 
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-
-    [GraphQLName("organizationStripeConnectAccountId")]
-    public string? OrganizationStripeConnectAccountId { get; set; }
 }
 
 [GraphQLName("DeleteProductsInput")]
@@ -203,11 +193,4 @@ public class ProductsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("products")] public IEnumerable<ProductDetails> Products { get; set; } = [];
-}
-
-[GraphQLName("Marketplace_OrganizationStripeConnectAccountDetails")]
-public class OrganizationStripeConnectAccountDetails
-{
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

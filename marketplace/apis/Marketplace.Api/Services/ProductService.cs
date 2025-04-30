@@ -11,7 +11,6 @@ using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
-using StripeConnectAccount = Marketplace.Shared.Database.Entities.StripeConnectAccount;
 
 namespace Marketplace.Api.Services;
 
@@ -87,24 +86,6 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        StripeConnectAccount? existingOrganizationStripeConnectAccount = null;
-        if (productVersion.OrganizationStripeConnectAccount is not null)
-        {
-            existingOrganizationStripeConnectAccount =
-                await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(
-                    productVersion.OrganizationStripeConnectAccount.Id,
-                    cancellationToken);
-            if (existingOrganizationStripeConnectAccount is null)
-            {
-                throw new OrganizationStripeConnectAccountNotFound();
-            }
-
-            if (existingOrganizationStripeConnectAccount.Organization.Id != organizationId)
-            {
-                throw new InvalidOperationException();
-            }
-        }
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
@@ -114,10 +95,9 @@ public class ProductService(
             productVersion,
             existingOrganization,
             productTags,
-            locationTags,
-            existingOrganizationStripeConnectAccount);
+            locationTags);
 
-        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags, existingOrganizationStripeConnectAccount);
+        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
@@ -293,39 +273,13 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        StripeConnectAccount? existingOrganizationStripeConnectAccount = null;
-        if (productVersion.OrganizationStripeConnectAccount is not null)
-        {
-            existingOrganizationStripeConnectAccount =
-                await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(
-                    productVersion.OrganizationStripeConnectAccount.Id,
-                    cancellationToken);
-            if (existingOrganizationStripeConnectAccount is null)
-            {
-                throw new OrganizationStripeConnectAccountNotFound();
-            }
-
-            if (existingOrganizationStripeConnectAccount.Organization.Id != existingProduct.Organization.Id)
-            {
-                throw new InvalidOperationException();
-            }
-        }
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(
-            mapper.MapTo(productVersion, existingProduct, productTags, locationTags, existingOrganizationStripeConnectAccount));
-
-        existingProduct = mapper.MergeTo(
-            productVersion,
-            existingProduct,
-            existingProduct.Organization,
-            productTags,
-            locationTags,
-            existingOrganizationStripeConnectAccount);
+        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags));
+        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 

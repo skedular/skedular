@@ -32,19 +32,17 @@ public class MarketplaceSubscriber(
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Product.OrganizationId);
 
                     var product = mapper.MapTo(@event);
-                    var account = product.ProductVersions.Single().OrganizationStripeConnectAccount;
-                    StripeConnectAccount? accountEntity = null;
-                    if (account is not null)
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(product.Organization.Id, cancellationToken);
+
+                    // TODO: 20250530 - Morteza: Need to implement default stripe account and pick that instead of first random one 
+                    var accountEntity = organization.StripeConnectAccounts
+                        .OrderByDescending(item => item.CreatedAt)
+                        .FirstOrDefault(item => item.DeletedAt is null);
+                    if (accountEntity is null)
                     {
-                        accountEntity =
-                            await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(account.Id, cancellationToken);
-                        if (accountEntity is null)
-                        {
-                            throw new OrganizationStripeConnectAccountNotFound();
-                        }
+                        throw new NoStripeConnectAccountFoundForOrganization();
                     }
 
-                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(product.Organization.Id, cancellationToken);
                     var existingProduct = await repositoryFactory.ProductRepository.UpsertNakedAsync(product.Id, organization, cancellationToken);
                     if (existingProduct.EventRaisedAt > product.EventRaisedAt)
                     {
@@ -92,7 +90,7 @@ public class MarketplaceSubscriber(
         Product product,
         Shared.Database.Entities.Product existingProduct,
         Organization organization,
-        StripeConnectAccount? accountEntity,
+        StripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
     {
         var productVersions = new List<ProductVersion>();
@@ -101,9 +99,36 @@ public class MarketplaceSubscriber(
             var existingProductVersionEntity = await repositoryFactory.ProductVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken);
             if (existingProductVersionEntity is null)
             {
-                existingProductVersionEntity = mapper.MapToEntity(productVersion, existingProduct, accountEntity);
+                existingProductVersionEntity = mapper.MapToEntity(productVersion, existingProduct);
 
-                if (accountEntity is not null)
+                var stripeProduct = await productCreateService.CreateAsync(
+                    mapper.MapToProduct(productVersion, product, organization.Id),
+                    new RequestOptions { IdempotencyKey = productVersion.Id, StripeAccount = accountEntity.StripeAccountId },
+                    cancellationToken);
+
+                var stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
+                {
+                    Id = randomHelper.Generate(), StripeProductId = stripeProduct.Id
+                });
+
+                var stripePrice = await priceCreateService.CreateAsync(
+                    mapper.MapToPrice(productVersion, product, organization.Id, stripeProduct.Id),
+                    new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
+                    cancellationToken);
+
+                var stripePriceEntity = repositoryFactory.StripePriceRepository.Add(new StripePrice
+                {
+                    Id = randomHelper.Generate(), StripePriceId = stripePrice.Id
+                });
+
+                existingProductVersionEntity.StripeProduct = stripeProductEntity;
+                existingProductVersionEntity.StripePrice = stripePriceEntity;
+                existingProductVersionEntity = repositoryFactory.ProductVersionRepository.Add(existingProductVersionEntity);
+            }
+            else
+            {
+                existingProductVersionEntity = mapper.MergeToEntity(productVersion, existingProductVersionEntity, existingProduct);
+                if (existingProductVersionEntity.StripeProduct is null)
                 {
                     var stripeProduct = await productCreateService.CreateAsync(
                         mapper.MapToProduct(productVersion, product, organization.Id),
@@ -128,54 +153,17 @@ public class MarketplaceSubscriber(
                     existingProductVersionEntity.StripeProduct = stripeProductEntity;
                     existingProductVersionEntity.StripePrice = stripePriceEntity;
                 }
-
-                existingProductVersionEntity = repositoryFactory.ProductVersionRepository.Add(existingProductVersionEntity);
-            }
-            else
-            {
-                existingProductVersionEntity = mapper.MergeToEntity(productVersion, existingProductVersionEntity, existingProduct, accountEntity);
-                if (existingProductVersionEntity.StripeProduct is null)
-                {
-                    if (accountEntity is not null)
-                    {
-                        var stripeProduct = await productCreateService.CreateAsync(
-                            mapper.MapToProduct(productVersion, product, organization.Id),
-                            new RequestOptions { IdempotencyKey = productVersion.Id, StripeAccount = accountEntity.StripeAccountId },
-                            cancellationToken);
-
-                        var stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
-                        {
-                            Id = randomHelper.Generate(), StripeProductId = stripeProduct.Id
-                        });
-
-                        var stripePrice = await priceCreateService.CreateAsync(
-                            mapper.MapToPrice(productVersion, product, organization.Id, stripeProduct.Id),
-                            new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
-                            cancellationToken);
-
-                        var stripePriceEntity = repositoryFactory.StripePriceRepository.Add(new StripePrice
-                        {
-                            Id = randomHelper.Generate(), StripePriceId = stripePrice.Id
-                        });
-
-                        existingProductVersionEntity.StripeProduct = stripeProductEntity;
-                        existingProductVersionEntity.StripePrice = stripePriceEntity;
-                    }
-                }
                 else
                 {
-                    if (accountEntity is not null)
-                    {
-                        var stripeProduct = await productUpdateService.UpdateAsync(
-                            existingProductVersionEntity.StripeProduct.StripeProductId,
-                            mapper.MergeToProduct(productVersion, product, organization.Id),
-                            new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
-                            cancellationToken);
+                    var stripeProduct = await productUpdateService.UpdateAsync(
+                        existingProductVersionEntity.StripeProduct.StripeProductId,
+                        mapper.MergeToProduct(productVersion, product, organization.Id),
+                        new RequestOptions { IdempotencyKey = @event.Metadata.Id, StripeAccount = accountEntity.StripeAccountId },
+                        cancellationToken);
 
-                        existingProductVersionEntity.StripeProduct.StripeProductId = stripeProduct.Id;
-                        existingProductVersionEntity.StripeProduct =
-                            repositoryFactory.StripeProductRepository.Update(existingProductVersionEntity.StripeProduct);
-                    }
+                    existingProductVersionEntity.StripeProduct.StripeProductId = stripeProduct.Id;
+                    existingProductVersionEntity.StripeProduct =
+                        repositoryFactory.StripeProductRepository.Update(existingProductVersionEntity.StripeProduct);
                 }
 
                 existingProductVersionEntity = repositoryFactory.ProductVersionRepository.Update(existingProductVersionEntity);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<152d852fa330bf481071e8c89ffbb4d0>>
+ * @generated SignedSource<<cdb34e899e61501749c9fa418934b5b4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,6 @@ export type UpdateProductInput = {
   name: string;
   numberOfResourcesToBook: number;
   organizationId: string;
-  organizationStripeConnectAccountId?: string | null | undefined;
   price: string;
   priceUnit: PriceUnit;
   productTagIds: ReadonlyArray<string>;
@@ -55,10 +54,6 @@ export type editProduct_updateProductMutation$data = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly numberOfResourcesToBook: number;
-      readonly organizationStripeConnectAccountDetails: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -95,10 +90,6 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly numberOfResourcesToBook: number;
-      readonly organizationStripeConnectAccountDetails: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -145,15 +136,14 @@ v2 = [
   },
   (v1/*: any*/)
 ],
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v4 = [
-  (v3/*: any*/),
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  },
   (v1/*: any*/),
   {
     "alias": null,
@@ -163,7 +153,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -291,7 +281,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -301,20 +291,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Marketplace_OrganizationStripeConnectAccountDetails",
-            "kind": "LinkedField",
-            "name": "organizationStripeConnectAccountDetails",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              (v1/*: any*/)
-            ],
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -330,7 +307,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -339,19 +316,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "297b2e78dcd30b7e1671f84839fe8d75",
+    "cacheID": "c64a8f45259f5eb94af1b81c5fa643a1",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      organizationStripeConnectAccountDetails {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "debc1b08f9f4834e243f2ecd279323b4";
+(node as any).hash = "0852dde3cf5db088b9561150386be4f5";
 
 export default node;

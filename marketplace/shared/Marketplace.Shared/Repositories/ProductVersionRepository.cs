@@ -19,7 +19,6 @@ internal static class ProductVersionExtensions
         originalQuery
             .Include(query => query.Product)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.OrganizationStripeConnectAccount)
             .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
 }

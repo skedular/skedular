@@ -67,7 +67,6 @@ type ProductRowType = {
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
   maxBookingSpreadDays: number | null | undefined;
-  organizationStripeConnectAccountName: string | null | undefined;
   status: boolean;
 };
 
@@ -137,10 +136,6 @@ const OrganizationMarketplaceSetup = ({
               maxBookingSpreadDays
               organization {
                 uniqueId
-              }
-              organizationStripeConnectAccountDetails {
-                uniqueId
-                name
               }
             }
           }
@@ -482,7 +477,7 @@ const OrganizationMarketplaceSetup = ({
   );
 
   useEffect(() => {
-    if (!section || section === 'product-setup') {
+    if (!section || section === 'stripe-connect-accounts-setup') {
       return;
     }
 
@@ -1112,7 +1107,6 @@ const OrganizationMarketplaceSetup = ({
     recurrenceWindowDays: product.recurrenceWindowDays,
     requireConsecutiveDays: product.requireConsecutiveDays,
     maxBookingSpreadDays: product.maxBookingSpreadDays,
-    organizationStripeConnectAccountName: product.organizationStripeConnectAccountDetails?.name,
     status: !product.inactive,
   }));
 
@@ -1192,14 +1186,6 @@ const OrganizationMarketplaceSetup = ({
       renderCell: (params) => <SmallIconTypography label={params.value ? params.value.toString() : 'No limit'} />,
       display: 'flex',
       minWidth: 50,
-    },
-    {
-      field: 'organizationStripeConnectAccountName',
-      headerName: 'Stripe Connect account',
-      editable: false,
-      renderCell: (params) => (params.value ? <SmallIconTypography label={params.value} /> : <></>),
-      display: 'flex',
-      minWidth: 150,
     },
     {
       field: 'status',
@@ -1486,234 +1472,6 @@ const OrganizationMarketplaceSetup = ({
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
-                sectionRefs.current['product-setup'] = divElement;
-              }}
-            >
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Product" />
-                  <BodyIconTypography label="Edit your organization products details" />
-                </Grid>
-
-                <Grid>
-                  <NewProductButton organizationId={organizationId} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for product" defaultValue={productNameSearchText} onChange={handleProductsSearchTextChange} />
-            </GridContainer>
-
-            {seledctedProducts.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedProducts.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateProductsClick} sx={defaultButtonStyle}>
-                      Deactivate Product
-                    </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateProductsClick} sx={defaultButtonStyle}>
-                      Activate Product
-                    </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductsClick} sx={{ textTransform: 'none' }}>
-                      Remove Product
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedProducts}
-                onRowSelectionModelChange={handleSelectedProductsChanged}
-                rows={productRows}
-                columns={productColumns}
-                hideFooterPagination={productRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: productRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No product found' }}
-              />
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['product-tags-setup'] = divElement;
-              }}
-            >
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Product Tags" />
-                  <BodyIconTypography label="Edit your organization product tags details" />
-                </Grid>
-
-                <Grid>
-                  <AddOrganizationProductTagButton organizationId={organizationId} connectionIds={productTagsConnectionIds} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
-            </GridContainer>
-
-            {seledctedProductTags.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedProductTags.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Product Tag
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedProductTags}
-                onRowSelectionModelChange={handleSelectedProductTagsChanged}
-                rows={productTagRows}
-                columns={productTagColumns}
-                hideFooterPagination={productTagRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: productTagRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No product tag found' }}
-              />
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['location-tags-setup'] = divElement;
-              }}
-            >
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Location Tags" />
-                  <BodyIconTypography label="Edit your organization location tags details" />
-                </Grid>
-
-                <Grid>
-                  <AddOrganizationLocationTagButton organizationId={organizationId} connectionIds={locationTagsConnectionIds} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for location tags" defaultValue={locationTagNameSearchText} onChange={handleLocationTagsSearchTextChange} />
-            </GridContainer>
-
-            {seledctedLocationTags.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedLocationTags.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Location Tag
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedLocationTags}
-                onRowSelectionModelChange={handleSelectedLocationTagsChanged}
-                rows={locationTagRows}
-                columns={locationTagColumns}
-                hideFooterPagination={locationTagRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: locationTagRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No location tag found' }}
-              />
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
                 sectionRefs.current['stripe-connect-accounts-setup'] = divElement;
               }}
             >
@@ -1729,7 +1487,6 @@ const OrganizationMarketplaceSetup = ({
               </GridContainer>
               <Divider />
             </StackColumn>
-
             <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
               <PushToRight />
               <Search
@@ -1739,7 +1496,6 @@ const OrganizationMarketplaceSetup = ({
                 onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
               />
             </GridContainer>
-
             {seledctedOrganizationStripeConnectAccounts.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
@@ -1769,7 +1525,6 @@ const OrganizationMarketplaceSetup = ({
                 </Box>
               </StackRow>
             )}
-
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid
                 checkboxSelection
@@ -1796,6 +1551,222 @@ const OrganizationMarketplaceSetup = ({
                 localeText={{ noRowsLabel: 'No Stripe Connect account found' }}
               />
             </StackRow>
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['product-tags-setup'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Product Tags" />
+                  <BodyIconTypography label="Edit your organization product tags details" />
+                </Grid>
+
+                <Grid>
+                  <AddOrganizationProductTagButton organizationId={organizationId} connectionIds={productTagsConnectionIds} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
+            </GridContainer>
+            {seledctedProductTags.ids.size > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedProductTags.ids.size} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
+                      Remove Product Tag
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedProductTags}
+                onRowSelectionModelChange={handleSelectedProductTagsChanged}
+                rows={productTagRows}
+                columns={productTagColumns}
+                hideFooterPagination={productTagRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: productTagRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No product tag found' }}
+              />
+            </StackRow>
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['location-tags-setup'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Location Tags" />
+                  <BodyIconTypography label="Edit your organization location tags details" />
+                </Grid>
+
+                <Grid>
+                  <AddOrganizationLocationTagButton organizationId={organizationId} connectionIds={locationTagsConnectionIds} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search size="small" placeholder="Search for location tags" defaultValue={locationTagNameSearchText} onChange={handleLocationTagsSearchTextChange} />
+            </GridContainer>
+            {seledctedLocationTags.ids.size > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedLocationTags.ids.size} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationTagsClick} sx={{ textTransform: 'none' }}>
+                      Remove Location Tag
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedLocationTags}
+                onRowSelectionModelChange={handleSelectedLocationTagsChanged}
+                rows={locationTagRows}
+                columns={locationTagColumns}
+                hideFooterPagination={locationTagRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: locationTagRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No location tag found' }}
+              />
+            </StackRow>
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['product-setup'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Product" />
+                  <BodyIconTypography label="Edit your organization products details" />
+                </Grid>
+
+                <Grid>
+                  <NewProductButton organizationId={organizationId} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search size="small" placeholder="Search for product" defaultValue={productNameSearchText} onChange={handleProductsSearchTextChange} />
+            </GridContainer>
+            {seledctedProducts.ids.size > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedProducts.ids.size} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateProductsClick} sx={defaultButtonStyle}>
+                      Deactivate Product
+                    </Button>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateProductsClick} sx={defaultButtonStyle}>
+                      Activate Product
+                    </Button>
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductsClick} sx={{ textTransform: 'none' }}>
+                      Remove Product
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedProducts}
+                onRowSelectionModelChange={handleSelectedProductsChanged}
+                rows={productRows}
+                columns={productColumns}
+                hideFooterPagination={productRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: productRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No product found' }}
+              />
+            </StackRow>{' '}
           </AppBarWithStackColumn>
         </Box>
       </Box>

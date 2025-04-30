@@ -24,8 +24,6 @@ internal static class ProductExtensions
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-            .ThenInclude(query => query.OrganizationStripeConnectAccount)
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
             .ThenInclude(query => query.StripeProduct)
             .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
             .ThenInclude(query => query.StripePrice);

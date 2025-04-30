@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70eaf7c5aae38eac9a532911fd3e1c39>>
+ * @generated SignedSource<<13cf3dfcae41ae1f84c4ac02cd075c0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,10 +27,6 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly organization: {
           readonly uniqueId: string;
         };
-        readonly organizationStripeConnectAccountDetails: {
-          readonly name: string;
-          readonly uniqueId: string;
-        } | null | undefined;
         readonly priceToDisplay: string;
         readonly priceUnit: {
           readonly name: string;
@@ -57,13 +53,6 @@ v1 = {
   "args": null,
   "kind": "ScalarField",
   "name": "name",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
   "storageKey": null
 };
 return {
@@ -279,20 +268,13 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v2/*: any*/)
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Marketplace_OrganizationStripeConnectAccountDetails",
-                  "kind": "LinkedField",
-                  "name": "organizationStripeConnectAccountDetails",
-                  "plural": false,
-                  "selections": [
-                    (v2/*: any*/),
-                    (v1/*: any*/)
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
                   ],
                   "storageKey": null
                 },
@@ -362,6 +344,6 @@ return {
 };
 })();
 
-(node as any).hash = "123e0b9de6a88b0820933b87ae60f1f4";
+(node as any).hash = "925ee562e9c9c4b54240e786a820939f";
 
 export default node;

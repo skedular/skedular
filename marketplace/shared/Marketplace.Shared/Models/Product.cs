@@ -20,7 +20,6 @@ public class Product : ModelBaseWithDeleted
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
     public Organization Organization { get; set; } = new();
-    public StripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];

@@ -39,11 +39,6 @@ public class Mapper : IMapper
             NumberOfResourcesToBook = src.NumberOfResourcesToBook
         };
 
-        if (src.OrganizationStripeConnectAccount is not null)
-        {
-            productVersion.StripeConnectAccountId = src.OrganizationStripeConnectAccount.Id;
-        }
-
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
         productVersion.LocationTagIds.AddRange(src.LocationTags.Select(item => item.Id));
 

@@ -19,10 +19,6 @@ public class ProductVersion : EntityBase
     public virtual Product Product { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? OrganizationStripeConnectAccountId { get; set; }
-    public virtual StripeConnectAccount? OrganizationStripeConnectAccount { get; set; }
-
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? StripeProductId { get; set; }
     public virtual StripeProduct? StripeProduct { get; set; }
 
@@ -44,11 +40,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
-        builder
-            .HasOne(item => item.OrganizationStripeConnectAccount)
-            .WithMany(item => item.ProductVersions)
-            .HasForeignKey(item => item.OrganizationStripeConnectAccountId);
-
         builder.HasOne(item => item.StripeProduct).WithOne(item => item.ProductVersion).HasForeignKey<ProductVersion>(item => item.StripeProductId);
         builder.HasOne(item => item.StripePrice).WithOne(item => item.ProductVersion).HasForeignKey<ProductVersion>(item => item.StripePriceId);
 

@@ -20,7 +20,6 @@ internal static class ProductVersionExtensions
         originalQuery
             .Include(query => query.Product)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.OrganizationStripeConnectAccount)
             .Include(query => query.StripeProduct)
             .Include(query => query.StripePrice);
 }

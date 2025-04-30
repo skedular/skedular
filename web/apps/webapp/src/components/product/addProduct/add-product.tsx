@@ -1,13 +1,7 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import {
-  MultipleChoicesLocationTags,
-  MultipleChoicesProductTags,
-  SingleChoiceCurrency,
-  SingleChoiceOrganizationStripeConnectAccount,
-  SingleChoicePriceUnit,
-} from '@/components/organization';
+import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
@@ -41,14 +35,12 @@ const RootQuery = graphql`
     $organizationId: String!
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
-    $singleChoiceOrganizationStripeConnectAccountSortingValues: [OrganizationStripeConnectAccountOrderInput!]
   ) {
     openingHoursMinutesStep
     ...multipleChoicesProductTags_query
     ...multipleChoicesLocationTags_query
     ...singleChoicePriceUnit_query
     ...singleChoiceCurrency_query
-    ...singleChoiceOrganizationStripeConnectAccount_query
   }
 `;
 
@@ -67,7 +59,6 @@ type ProductDetails = {
   maxBookingSpreadDays: number | null;
   productTagIds: string[];
   locationTagIds: string[];
-  organizationStripeConnectAccountId?: string;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -78,11 +69,12 @@ const productSchema = (openingHoursMinutesStep: number) =>
       .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
       .required('Price is required.')
       .test('is-greater-than-zero', 'Price must be greater than zero.', function (value) {
-        if (typeof value !== 'number') {
+        var price = Number(value);
+        if (isNaN(price)) {
           return true;
         }
 
-        return value > 0;
+        return price > 0;
       }),
     priceUnit: string().required('Price Unit is required.'),
     currency: string().required('Currency is required.'),
@@ -208,7 +200,6 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
-    organizationStripeConnectAccountId: string().nullable(),
   });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
@@ -237,10 +228,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           recurrenceWindowDays
           requireConsecutiveDays
           maxBookingSpreadDays
-          organizationStripeConnectAccountDetails {
-            uniqueId
-            name
-          }
           productTags {
             uniqueId
             name
@@ -274,7 +261,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(1);
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
-  const [organizationStripeConnectAccountId, setOrganizationStripeConnectAccountId] = useState<string | null | undefined>();
 
   const handleCloseClick = () => {
     onCancel();
@@ -296,7 +282,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
-    organizationStripeConnectAccountId,
   }: ProductDetails) => {
     const id = nanoid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
@@ -326,7 +311,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           productTagIds,
           locationTagIds,
           organizationId,
-          organizationStripeConnectAccountId,
         },
       },
       onCompleted: (_, errors) => {
@@ -378,7 +362,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            organizationStripeConnectAccountDetails: null,
           },
         },
       },
@@ -406,7 +389,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               numberOfResourcesToBook,
               productTagIds,
               locationTagIds,
-              organizationStripeConnectAccountId,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -424,7 +406,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               setNumberOfResourcesToBook(values.numberOfResourcesToBook);
               setProductTagIds(values.productTagIds);
               setLocationTagIds(values.locationTagIds);
-              setOrganizationStripeConnectAccountId(values.organizationStripeConnectAccountId);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -469,14 +450,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
                     <FormFieldLabel label="Location Tags">
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Stripe Connect Account">
-                      <SingleChoiceOrganizationStripeConnectAccount
-                        rootDataRelay={rootData}
-                        name="organizationStripeConnectAccountId"
-                        required={requiredFields.organizationStripeConnectAccountId}
-                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel>
@@ -573,12 +546,6 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
           },
         ],
         multipleChoicesLocationTagsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
-        singleChoiceOrganizationStripeConnectAccountSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',
