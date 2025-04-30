@@ -728,22 +728,24 @@ type OrganizationStripeConnectAccountConnection {
 }
 
 type OrganizationStripeConnectAccountDetails {
-  businessType: String!
+  businessType: String
   capabilitiesCardPayments: String!
   capabilitiesTransfers: String!
   chargesEnabled: Boolean!
-  companyName: String!
-  country: String!
-  defaultCurrency: String!
-  email: String!
+  companyName: String
+  contactEmail: String
+  contactPhone: String
+  country: String
+  defaultCurrency: String
   id: ID!
   name: String!
   onboardingCompleted: Boolean!
   onboardingUrl: String!
   organization: Payment_OrganizationDetails!
   payoutsEnabled: Boolean!
-  phone: String!
+  supportUrl: String
   type: String!
+  url: String
 }
 
 type OrganizationStripeConnectAccountEdge {
@@ -840,6 +842,7 @@ type PaymentMethod {
 type Payment_OrganizationDetails {
   name: String!
   uniqueId: ID!
+  website: String
 }
 
 type PriceUnitDetails {

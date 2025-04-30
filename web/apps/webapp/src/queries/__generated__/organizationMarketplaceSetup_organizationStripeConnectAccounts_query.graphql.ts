@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f3322ea6b42d7b57a36139de640f6ad>>
+ * @generated SignedSource<<78fb9da6a6c80e0715c84e362cbdf347>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,12 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly businessType: string;
-        readonly companyName: string;
-        readonly country: string;
-        readonly defaultCurrency: string;
-        readonly email: string;
+        readonly businessType: string | null | undefined;
+        readonly companyName: string | null | undefined;
+        readonly contactEmail: string | null | undefined;
+        readonly contactPhone: string | null | undefined;
+        readonly country: string | null | undefined;
+        readonly defaultCurrency: string | null | undefined;
         readonly id: string;
         readonly name: string;
         readonly onboardingCompleted: boolean;
@@ -27,7 +28,8 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly organization: {
           readonly uniqueId: string;
         };
-        readonly phone: string;
+        readonly supportUrl: string | null | undefined;
+        readonly url: string | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -193,14 +195,28 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "email",
+                  "name": "url",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "phone",
+                  "name": "supportUrl",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "contactEmail",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "contactPhone",
                   "storageKey": null
                 },
                 {
@@ -301,6 +317,6 @@ return {
 };
 })();
 
-(node as any).hash = "cb121b2f5cb86471c6255c6aa9f9cacd";
+(node as any).hash = "f803e0ff8457c312a9840ed16f7651c2";
 
 export default node;

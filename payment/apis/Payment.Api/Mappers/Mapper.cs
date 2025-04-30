@@ -70,6 +70,10 @@ public class Mapper : IMapper
             BusinessProfile = new AccountBusinessProfileOptions
             {
                 Name = src.Name,
+                Url = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
+                SupportUrl = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
+                SupportEmail = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+                SupportPhone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
             },
             Company = new AccountCompanyOptions
             {
@@ -108,12 +112,14 @@ public class Mapper : IMapper
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
             Type = src.Type.ToSafeString(),
-            Country = src.Country.ToSafeString(),
-            DefaultCurrency = src.DefaultCurrency.ToSafeString(),
-            BusinessType = src.BusinessType.ToSafeString(),
-            CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString(),
-            Email = src.Email.ToSafeString(),
-            Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString(),
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            CompanyName = src.Company?.Name,
+            Url = organization.Website,
+            SupportUrl = organization.Website,
+            ContactEmail = src.Email,
+            ContactPhone = src.Company?.Phone,
             DetailsSubmitted = src.DetailsSubmitted,
             CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString(),
             CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString(),
@@ -135,9 +141,11 @@ public class Mapper : IMapper
             Country = src.Country,
             DefaultCurrency = src.DefaultCurrency,
             BusinessType = src.BusinessType,
+            Url = src.Url,
+            SupportUrl = src.SupportUrl,
             CompanyName = src.CompanyName,
-            Email = src.Email,
-            Phone = src.Phone,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
             DetailsSubmitted = src.DetailsSubmitted,
             ApplicationAuthorized = src.ApplicationAuthorized,
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
@@ -160,8 +168,10 @@ public class Mapper : IMapper
                 DefaultCurrency = src.DefaultCurrency,
                 BusinessType = src.BusinessType,
                 CompanyName = src.CompanyName,
-                Email = src.Email,
-                Phone = src.Phone,
+                Url = src.Url,
+                SupportUrl = src.SupportUrl,
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone,
                 CapabilitiesCardPayments = src.CapabilitiesCardPayments,
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
                 OnboardingUrl = src.OnboardingUrl,
@@ -216,7 +226,8 @@ public class Mapper : IMapper
             ? null
             : new Shared.Models.Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
 
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
+        new() { UniqueId = src.Id, Name = src.Name.ToSafeString(), Website = src.Website };
 
     private static Shared.Models.Organization MapTo(Organization src) =>
         new()
@@ -227,6 +238,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
+            Website = src.Website,
             Type = src.Type.ToOrganizationType(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };

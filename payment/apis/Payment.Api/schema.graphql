@@ -37,12 +37,14 @@ type OrganizationStripeConnectAccountDetails {
   chargesEnabled: Boolean!
   payoutsEnabled: Boolean!
   type: String!
-  country: String!
-  defaultCurrency: String!
-  businessType: String!
-  companyName: String!
-  email: String!
-  phone: String!
+  country: String
+  defaultCurrency: String
+  businessType: String
+  companyName: String
+  url: String
+  supportUrl: String
+  contactEmail: String
+  contactPhone: String
   capabilitiesTransfers: String!
   capabilitiesCardPayments: String!
   onboardingUrl: String!
@@ -89,6 +91,7 @@ type PaymentMethod {
 type Payment_OrganizationDetails {
   uniqueId: ID!
   name: String!
+  website: String
 }
 
 type Query {

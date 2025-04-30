@@ -89,9 +89,10 @@ type OrganizationStripeConnectAccountRowType = {
   country: string;
   defaultCurrency: string;
   businessType: string;
-  companyName: string;
-  email: string;
-  phone: string;
+  website: string;
+  supportLink: string;
+  contcatEmail: string;
+  contcatPhone: string;
   requiresOnboarding: boolean;
 };
 
@@ -232,8 +233,10 @@ const OrganizationMarketplaceSetup = ({
               defaultCurrency
               businessType
               companyName
-              email
-              phone
+              url
+              supportUrl
+              contactEmail
+              contactPhone
               onboardingUrl
               onboardingCompleted
               organization {
@@ -1352,8 +1355,10 @@ const OrganizationMarketplaceSetup = ({
     defaultCurrency: account.defaultCurrency,
     businessType: account.businessType,
     companyName: account.companyName,
-    email: account.email,
-    phone: account.phone,
+    website: account.url,
+    supportLink: account.supportUrl,
+    contactEmail: account.contactEmail,
+    contactPhone: account.contactPhone,
     requiresOnboarding: !account.onboardingCompleted,
   }));
 
@@ -1399,16 +1404,32 @@ const OrganizationMarketplaceSetup = ({
       minWidth: 100,
     },
     {
-      field: 'email',
-      headerName: 'Email',
+      field: 'website',
+      headerName: 'Website',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
       minWidth: 100,
     },
     {
-      field: 'phone',
-      headerName: 'Phone',
+      field: 'supportLink',
+      headerName: 'Support Link',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'contactEmail',
+      headerName: 'Contact Email',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'contactPhone',
+      headerName: 'Contact Phone',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',

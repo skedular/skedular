@@ -6,6 +6,7 @@ namespace Payment.Shared.Models;
 public class Organization : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
+    public string? Website { get; set; }
     public OrganizationType Type { get; set; }
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
     public string? ContactEmail { get; set; }

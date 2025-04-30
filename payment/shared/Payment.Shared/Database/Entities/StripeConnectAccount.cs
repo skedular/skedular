@@ -14,12 +14,14 @@ public class StripeConnectAccount : EntityBaseWithDeleted
     public bool ChargesEnabled { get; set; }
     public bool PayoutsEnabled { get; set; }
     public string Type { get; set; }
-    public string Country { get; set; }
-    public string DefaultCurrency { get; set; }
-    public string BusinessType { get; set; }
-    public string CompanyName { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
+    public string? Country { get; set; }
+    public string? DefaultCurrency { get; set; }
+    public string? BusinessType { get; set; }
+    public string? CompanyName { get; set; }
+    public string? Url { get; set; }
+    public string? SupportUrl { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
     public bool DetailsSubmitted { get; set; }
     public bool ApplicationAuthorized { get; set; }
     public string CapabilitiesCardPayments { get; set; }
@@ -47,8 +49,10 @@ public class StripeConnectAccountConfiguration : IEntityTypeConfiguration<Stripe
         builder.Property(item => item.DefaultCurrency).HasMaxLength(Constants.MaxStripeCurrencyLength);
         builder.Property(item => item.BusinessType).HasMaxLength(Constants.MaxStripeBusinessTypeLength);
         builder.Property(item => item.CompanyName).HasMaxLength(Constants.MaxStripeConnectAccountCompanyNameLength);
-        builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.Phone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.Url).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.SupportUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.DetailsSubmitted).HasDefaultValue(false);
         builder.Property(item => item.ApplicationAuthorized).HasDefaultValue(false);
         builder.Property(item => item.CapabilitiesCardPayments).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
@@ -62,9 +66,6 @@ public class StripeConnectAccountConfiguration : IEntityTypeConfiguration<Stripe
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Country);
         builder.HasIndex(item => item.DefaultCurrency);
-        builder.HasIndex(item => item.BusinessType);
-        builder.HasIndex(item => item.Email);
-        builder.HasIndex(item => item.Phone);
         builder.HasIndex(item => item.DetailsSubmitted);
         builder.HasIndex(item => item.ApplicationAuthorized);
         builder.HasIndex(item => item.CapabilitiesTransfers);

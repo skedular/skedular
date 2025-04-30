@@ -132,12 +132,14 @@ public class OrganizationStripeConnectAccountDetails : Node
     [GraphQLName("chargesEnabled")] public bool ChargesEnabled { get; set; }
     [GraphQLName("payoutsEnabled")] public bool PayoutsEnabled { get; set; }
     [GraphQLName("type")] public string Type { get; set; } = string.Empty;
-    [GraphQLName("country")] public string Country { get; set; } = string.Empty;
-    [GraphQLName("defaultCurrency")] public string DefaultCurrency { get; set; } = string.Empty;
-    [GraphQLName("businessType")] public string BusinessType { get; set; } = string.Empty;
-    [GraphQLName("companyName")] public string CompanyName { get; set; } = string.Empty;
-    [GraphQLName("email")] public string Email { get; set; } = string.Empty;
-    [GraphQLName("phone")] public string Phone { get; set; } = string.Empty;
+    [GraphQLName("country")] public string? Country { get; set; } = string.Empty;
+    [GraphQLName("defaultCurrency")] public string? DefaultCurrency { get; set; } = string.Empty;
+    [GraphQLName("businessType")] public string? BusinessType { get; set; } = string.Empty;
+    [GraphQLName("companyName")] public string? CompanyName { get; set; }
+    [GraphQLName("url")] public string? Url { get; set; }
+    [GraphQLName("supportUrl")] public string? SupportUrl { get; set; }
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("capabilitiesTransfers")] public string CapabilitiesTransfers { get; set; } = string.Empty;
 
     [GraphQLName("capabilitiesCardPayments")]
@@ -176,4 +178,5 @@ public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("website")] public string? Website { get; set; }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<243011e89c0039da764bf59264f1febf>>
+ * @generated SignedSource<<1e1791b53bd6e46e6a66eb9d50786888>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -128,14 +128,28 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "email",
+            "name": "url",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "phone",
+            "name": "supportUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "contactEmail",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "contactPhone",
             "storageKey": null
           },
           {
@@ -158,12 +172,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "dcb13f6ab3c029e0c1963d6721208f44",
+    "cacheID": "1f2d3b276f55e853e9d9237b8f09b28e",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationStripeConnectAccount_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationStripeConnectAccount_rootQuery(\n  $organizationStripeConnectAccountId: String!\n) {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    name\n    id\n  }\n  ...editStripeConnectAccount_query\n}\n\nfragment editStripeConnectAccount_query on Query {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    id\n    name\n    country\n    defaultCurrency\n    businessType\n    companyName\n    email\n    phone\n    onboardingUrl\n    onboardingCompleted\n  }\n}\n"
+    "text": "query pageOrganizationStripeConnectAccount_rootQuery(\n  $organizationStripeConnectAccountId: String!\n) {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    name\n    id\n  }\n  ...editStripeConnectAccount_query\n}\n\nfragment editStripeConnectAccount_query on Query {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    id\n    name\n    country\n    defaultCurrency\n    businessType\n    companyName\n    url\n    supportUrl\n    contactEmail\n    contactPhone\n    onboardingUrl\n    onboardingCompleted\n  }\n}\n"
   }
 };
 })();

@@ -57,10 +57,12 @@ message StripeConnectAccount {
   string defaultCurrency = 10;
   string businessType = 11;
   string companyName = 12;
-  string email = 13;
-  string phone = 14;
-  string capabilitiesTransfers = 15;
-  string capabilitiesCardPayments = 16;
-  string onboardingUrl = 17;
-  bool onboardingCompleted = 18;
+  string url = 13;
+  string supportUrl = 14;
+  string contactEmail = 15;
+  string contactPhone = 16;
+  string capabilitiesTransfers = 17;
+  string capabilitiesCardPayments = 18;
+  string onboardingUrl = 19;
+  bool onboardingCompleted = 20;
 }

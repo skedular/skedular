@@ -56,8 +56,10 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
           defaultCurrency
           businessType
           companyName
-          email
-          phone
+          url
+          supportUrl
+          contactEmail
+          contactPhone
           onboardingUrl
           onboardingCompleted
         }
@@ -193,12 +195,20 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
                       <SmallIconTypography label={account.companyName} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Email">
-                      <SmallIconTypography label={account.email} />
+                    <FormFieldLabel label="Website">
+                      <SmallIconTypography label={account.url} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Phone">
-                      <SmallIconTypography label={account.phone} />
+                    <FormFieldLabel label="Support Link">
+                      <SmallIconTypography label={account.supportUrl} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Contact Email">
+                      <SmallIconTypography label={account.contactEmail} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Contact Phone">
+                      <SmallIconTypography label={account.contactPhone} />
                     </FormFieldLabel>
                   </StackColumn>
 

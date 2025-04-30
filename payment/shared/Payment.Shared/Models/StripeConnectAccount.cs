@@ -9,12 +9,14 @@ public class StripeConnectAccount : ModelBaseWithDeleted
     public bool ChargesEnabled { get; set; }
     public bool PayoutsEnabled { get; set; }
     public string Type { get; set; } = string.Empty;
-    public string Country { get; set; } = string.Empty;
-    public string DefaultCurrency { get; set; } = string.Empty;
-    public string BusinessType { get; set; } = string.Empty;
-    public string CompanyName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
+    public string? Country { get; set; }
+    public string? DefaultCurrency { get; set; }
+    public string? BusinessType { get; set; }
+    public string? CompanyName { get; set; }
+    public string? Url { get; set; }
+    public string? SupportUrl { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
     public bool DetailsSubmitted { get; set; }
     public bool ApplicationAuthorized { get; set; }
     public string CapabilitiesTransfers { get; set; } = string.Empty;
