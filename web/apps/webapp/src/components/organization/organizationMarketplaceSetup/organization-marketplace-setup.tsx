@@ -86,13 +86,14 @@ type LocationTagRowType = {
 type OrganizationStripeConnectAccountRowType = {
   id: string;
   name: string;
-  country: string;
-  defaultCurrency: string;
-  businessType: string;
-  website: string;
-  supportLink: string;
-  contcatEmail: string;
-  contcatPhone: string;
+  companyName: string | null | undefined;
+  country: string | null | undefined;
+  defaultCurrency: string | null | undefined;
+  businessType: string | null | undefined;
+  website: string | null | undefined;
+  supportLink: string | null | undefined;
+  contactEmail: string | null | undefined;
+  contactPhone: string | null | undefined;
   requiresOnboarding: boolean;
 };
 
@@ -1351,10 +1352,10 @@ const OrganizationMarketplaceSetup = ({
   const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((account) => ({
     id: account.id,
     name: account.name,
+    companyName: account.companyName,
     country: getCountryData(account.country as TCountryCode).name,
     defaultCurrency: account.defaultCurrency,
     businessType: account.businessType,
-    companyName: account.companyName,
     website: account.url,
     supportLink: account.supportUrl,
     contactEmail: account.contactEmail,
