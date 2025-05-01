@@ -6,6 +6,7 @@ using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
 using Payment.Shared.Database.Entities;
+using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Payment.Shared.Services;
 using Stripe;
@@ -24,7 +25,8 @@ public class BookingSubscriber(
     IRandomHelper randomHelper,
     IOrganizationStripeConnectAccountHelper organizationStripeConnectAccountHelper,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
-    IStripeCustomerService stripeCustomerService) : IEventSubscriber<Key, Event>
+    IStripeCustomerService stripeCustomerService,
+    IPaymentPublisher paymentPublisher) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -179,6 +181,15 @@ public class BookingSubscriber(
         _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, stripeCheckoutSession));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (stripeCheckoutSession.PaymentStatus is "no_payment_required" or "paid")
+        {
+            await paymentPublisher.PublishBookingPaymentCompletedAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+        }
+        else
+        {
+            await paymentPublisher.PublishBookingPaymentCreatedAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+        }
     }
 
     private async Task HandleBookingDeletedEventAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)

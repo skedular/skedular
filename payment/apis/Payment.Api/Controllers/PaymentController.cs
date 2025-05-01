@@ -1,3 +1,4 @@
+using System.Globalization;
 using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
 using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Services;
@@ -16,8 +17,11 @@ public class PaymentController(
     ICustomerPaymentService customerPaymentService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IPaymentInternalPublisher paymentInternalPublisher,
-    ILogger<PaymentController> logger) : PaymentControllerBase
+    ILogger<PaymentController> logger,
+    TimeProvider timeProvider) : PaymentControllerBase
 {
+    private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
     public override async Task<IActionResult> AddOrganizationPaymentMethod(
         // ReSharper disable InconsistentNaming
         string setup_intent,
@@ -60,6 +64,17 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+
+            if (stripeConfiguration.LogStripPlatformAccountWebhookMessages)
+            {
+                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/platform");
+                Directory.CreateDirectory(tempFileDirectoryPath);
+                var tempFilePath = Path.Combine(tempFileDirectoryPath,
+                    $"{timeProvider.GetUtcNow().ToString("o", CultureInfo.InvariantCulture)}.json");
+                await System.IO.File.WriteAllTextAsync(tempFilePath, json, cancellationToken);
+                logger.LogInformation("Stripe Platform account event JSON logged to file: {FilePath}", tempFilePath);
+            }
+
             _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.PlatformAccountWebhookKey, throwOnApiVersionMismatch: false);
 
             return Ok();
@@ -86,9 +101,20 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+
+            if (stripeConfiguration.LogStripeConnectAccountWebhookMessages)
+            {
+                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/connect");
+                Directory.CreateDirectory(tempFileDirectoryPath);
+                var tempFilePath = Path.Combine(tempFileDirectoryPath,
+                    $"{timeProvider.GetUtcNow().ToString("o", CultureInfo.InvariantCulture)}.json");
+                await System.IO.File.WriteAllTextAsync(tempFilePath, json, cancellationToken);
+                logger.LogInformation("Stripe Connect account event JSON logged to file: {FilePath}", tempFilePath);
+            }
+
             var stripeEvent = EventUtility.ConstructEvent(
-                json, 
-                stripe_Signature, 
+                json,
+                stripe_Signature,
                 stripeConfiguration.ConnectAccountWebhookKey,
                 throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
@@ -124,6 +150,8 @@ public class PaymentController(
                 case EventTypes.CustomerDeleted:
                     var customer = stripeEvent.Data.Object as Customer;
                     ArgumentNullException.ThrowIfNull(customer);
+
+                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(customer.Id, json, cancellationToken);
                     break;
 
                 case EventTypes.ChargePending:
@@ -133,6 +161,8 @@ public class PaymentController(
                 case EventTypes.ChargeFailed:
                     var charge = stripeEvent.Data.Object as Charge;
                     ArgumentNullException.ThrowIfNull(charge);
+
+                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(charge.Id, json, cancellationToken);
                     break;
 
                 case EventTypes.CheckoutSessionCompleted:
@@ -141,6 +171,8 @@ public class PaymentController(
                 case EventTypes.CheckoutSessionAsyncPaymentFailed:
                     var session = stripeEvent.Data.Object as Session;
                     ArgumentNullException.ThrowIfNull(session);
+
+                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(session.Id, json, cancellationToken);
                     break;
             }
 

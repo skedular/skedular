@@ -4,5 +4,5 @@ package paymentinternal;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key";
 
 message Key {
-  string stripeAccountId = 1;
+  string stripeConnectAccountWebhookKey = 1;
 }

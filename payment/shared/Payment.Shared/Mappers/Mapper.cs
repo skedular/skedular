@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Payment.Shared.Models;
@@ -14,6 +15,8 @@ public interface IMapper
     CustomerUpdateOptions MergeTo(Organization src);
     CustomerCreateOptions MapTo(Customer src);
     CustomerUpdateOptions MergeTo(Customer src);
+    BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src);
+    BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src);
 }
 
 public class Mapper : IMapper
@@ -78,5 +81,22 @@ public class Mapper : IMapper
             Phone = src.PhoneNumber.ToSafeString(),
             PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
             Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
+
+    public BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src) =>
+        new() { Id = src.Booking!.Id, PaymentReferenceId = src.Id, CheckoutUrl = src.Url.ToSafeString()};
+
+    public BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src) =>
+        new()
+        {
+            Id = src.Booking!.Id,
+            PaymentReferenceId = src.Id,
+            PaymentStatus = src.PaymentStatus switch
+            {
+                "no_payment_required" => PaymentStatus.NoPaymentRequired,
+                "paid" => PaymentStatus.Paid,
+                "unpaid" => PaymentStatus.Unpaid,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 }

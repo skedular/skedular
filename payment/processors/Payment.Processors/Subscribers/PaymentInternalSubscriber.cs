@@ -4,6 +4,7 @@ using Payment.Processors.Mappers;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Stripe;
+using Stripe.Checkout;
 using Event = Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Type;
 
@@ -53,6 +54,14 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
             case EventTypes.AccountUpdated:
                 await HandleAccountUpdatedAsync(stripeEvent, cancellationToken);
+                break;
+
+            case EventTypes.CheckoutSessionCompleted:
+                await HandleCheckoutSessionCompletedAsync(stripeEvent, cancellationToken);
+                break;
+
+            case EventTypes.CheckoutSessionExpired:
+                await HandleCheckoutSessionExpiredAsync(stripeEvent, cancellationToken);
                 break;
         }
     }
@@ -122,5 +131,39 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
+    }
+
+    private async Task HandleCheckoutSessionCompletedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
+    {
+        var session = stripeEvent.Data.Object as Session;
+        ArgumentNullException.ThrowIfNull(session);
+
+        var stripeCheckoutSession =
+            await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(session.Id, cancellationToken);
+        if (stripeCheckoutSession is null)
+        {
+            return;
+        }
+
+        stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await paymentPublisher.PublishBookingPaymentCompletedAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+    }
+
+    private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
+    {
+        var session = stripeEvent.Data.Object as Session;
+        ArgumentNullException.ThrowIfNull(session);
+
+        var stripeCheckoutSession =
+            await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(session.Id, cancellationToken);
+        if (stripeCheckoutSession is null)
+        {
+            return;
+        }
+
+        stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await paymentPublisher.PublishBookingPaymentExpiredAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }
 }

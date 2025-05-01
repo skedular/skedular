@@ -25,13 +25,13 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch1wYXltZW50X2ludGVybmFsX3YxX2tleS5wcm90bxIPcGF5bWVudGludGVy",
-            "bmFsIh4KA0tleRIXCg9zdHJpcGVBY2NvdW50SWQYASABKAlCPKoCOUFwaS5T",
-            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudEludGVybmFs",
-            "LlYxLktleWIGcHJvdG8z"));
+            "bmFsIi0KA0tleRImCh5zdHJpcGVDb25uZWN0QWNjb3VudFdlYmhvb2tLZXkY",
+            "ASABKAlCPKoCOUFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
+            "UGF5bWVudEludGVybmFsLlYxLktleWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key.Parser, new[]{ "StripeAccountId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key.Parser, new[]{ "StripeConnectAccountWebhookKey" }, null, null, null, null)
           }));
     }
     #endregion
@@ -73,7 +73,7 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
-      stripeAccountId_ = other.stripeAccountId_;
+      stripeConnectAccountWebhookKey_ = other.stripeConnectAccountWebhookKey_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -83,15 +83,15 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
       return new Key(this);
     }
 
-    /// <summary>Field number for the "stripeAccountId" field.</summary>
-    public const int StripeAccountIdFieldNumber = 1;
-    private string stripeAccountId_ = "";
+    /// <summary>Field number for the "stripeConnectAccountWebhookKey" field.</summary>
+    public const int StripeConnectAccountWebhookKeyFieldNumber = 1;
+    private string stripeConnectAccountWebhookKey_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string StripeAccountId {
-      get { return stripeAccountId_; }
+    public string StripeConnectAccountWebhookKey {
+      get { return stripeConnectAccountWebhookKey_; }
       set {
-        stripeAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        stripeConnectAccountWebhookKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -110,7 +110,7 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (StripeAccountId != other.StripeAccountId) return false;
+      if (StripeConnectAccountWebhookKey != other.StripeConnectAccountWebhookKey) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -118,7 +118,7 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (StripeAccountId.Length != 0) hash ^= StripeAccountId.GetHashCode();
+      if (StripeConnectAccountWebhookKey.Length != 0) hash ^= StripeConnectAccountWebhookKey.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -137,9 +137,9 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (StripeAccountId.Length != 0) {
+      if (StripeConnectAccountWebhookKey.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(StripeAccountId);
+        output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -151,9 +151,9 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (StripeAccountId.Length != 0) {
+      if (StripeConnectAccountWebhookKey.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(StripeAccountId);
+        output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -165,8 +165,8 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (StripeAccountId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeAccountId);
+      if (StripeConnectAccountWebhookKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -180,8 +180,8 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
       if (other == null) {
         return;
       }
-      if (other.StripeAccountId.Length != 0) {
-        StripeAccountId = other.StripeAccountId;
+      if (other.StripeConnectAccountWebhookKey.Length != 0) {
+        StripeConnectAccountWebhookKey = other.StripeConnectAccountWebhookKey;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -203,7 +203,7 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            StripeAccountId = input.ReadString();
+            StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
         }
@@ -226,7 +226,7 @@ namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            StripeAccountId = input.ReadString();
+            StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
         }

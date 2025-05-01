@@ -10,6 +10,9 @@ enum Type {
   CustomerPaymentMethodsUpdated = 1;
   OrganizationStripeConnectAccountUpserted = 2;
   OrganizationStripeConnectAccountDeleted = 3;
+  BookingPaymentCreated = 4;
+  BookingPaymentCompleted = 5;
+  BookingPaymentExpired = 6;
 }
 
 message Event {
@@ -31,6 +34,8 @@ message Data {
     OrganizationPaymentMethod organizationPaymentMethod = 1;
     CustomerPaymentMethod customerPaymentMethod = 2;
     StripeConnectAccount stripeConnectAccount = 3;
+    BookingPaymentCreatedDetails bookingPaymentCreated = 4;
+    BookingPaymentDetails bookingPayment = 5;
   }
 }
 
@@ -65,4 +70,22 @@ message StripeConnectAccount {
   string capabilitiesCardPayments = 18;
   string onboardingUrl = 19;
   bool onboardingCompleted = 20;
+}
+
+message BookingPaymentCreatedDetails {
+  string id = 1;
+  string paymentReferenceId = 2;
+  string checkoutUrl = 3;
+}
+
+message BookingPaymentDetails {
+  string id = 1;
+  string paymentReferenceId = 2;
+  PaymentStatus paymentStatus = 3;
+}
+
+enum PaymentStatus {
+  NoPaymentRequired = 0;
+  Paid = 1;
+  Unpaid = 2;
 }

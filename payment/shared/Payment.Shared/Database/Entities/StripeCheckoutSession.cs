@@ -2,7 +2,6 @@ using Api.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Stripe.Checkout;
 
 namespace Payment.Shared.Database.Entities;
 

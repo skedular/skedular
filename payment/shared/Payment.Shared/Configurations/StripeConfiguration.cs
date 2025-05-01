@@ -9,4 +9,6 @@ public class StripeConfiguration
     public string PlatformAccountWebhookKey { get; set; } = string.Empty;
     public string ConnectAccountWebhookKey { get; set; } = string.Empty;
     public bool RemoveStripeConnectAccountFromStripe { get; set; }
+    public bool LogStripPlatformAccountWebhookMessages { get; set; }
+    public bool LogStripeConnectAccountWebhookMessages { get; set; }
 }

@@ -4,6 +4,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Payment.Shared.Database.Entities;
 using Stripe;
+using Stripe.Checkout;
 using Address = Payment.Shared.Models.Address;
 using Booking = Payment.Shared.Models.Booking;
 using Customer = Payment.Shared.Models.Customer;
@@ -98,6 +99,8 @@ public interface IMapper
 
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization? MapTo(Shared.Database.Entities.Organization? src);
+    StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest);
+    Shared.Models.StripeCheckoutSession MapTo(StripeCheckoutSession src);
 }
 
 public class Mapper : IMapper
@@ -534,6 +537,36 @@ public class Mapper : IMapper
                 MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone
+            };
+
+    public StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest)
+    {
+        dest.PaymentStatus = src.PaymentStatus;
+        return dest;
+    }
+
+    public Shared.Models.StripeCheckoutSession MapTo(StripeCheckoutSession src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            StripeCheckoutSessionId = src.StripeCheckoutSessionId,
+            Url = src.Url,
+            PaymentStatus = src.PaymentStatus,
+            Booking = MapTo(src.Booking)
+        };
+
+    private static Booking? MapTo(Shared.Database.Entities.Booking? src) =>
+        src is null
+            ? null
+            : new Booking
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                LineItems = src.LineItems ?? [],
+                Schedules = src.Schedules ?? []
             };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>

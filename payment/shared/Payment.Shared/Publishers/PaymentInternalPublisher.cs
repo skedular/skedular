@@ -10,20 +10,15 @@ namespace Payment.Shared.Publishers;
 
 public interface IPaymentInternalPublisher
 {
-    Task PublishStripeConnectAccountWebhookEventReceivedAsync(string stripeAccountId, string payload, CancellationToken cancellationToken);
+    Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
-public class PaymentInternalPublisher(
-    ApplicationConfiguration applicationConfiguration,
-    IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+public class PaymentInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : IPaymentInternalPublisher
 {
-    public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(
-        string stripeAccountId, string payload,
-        CancellationToken cancellationToken)
+    public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
     {
-        var key = new Key { StripeAccountId = stripeAccountId };
+        var key = new Key { StripeConnectAccountWebhookKey = id };
         var @event = new Event
         {
             Metadata = Event.NewMetadata(
