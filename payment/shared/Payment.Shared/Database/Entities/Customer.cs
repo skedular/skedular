@@ -16,15 +16,10 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public string? FamilyName { get; set; }
     public string? PhoneNumber { get; set; }
 
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? StripeCustomerId { get; set; }
-    public virtual StripeCustomer? StripeCustomer { get; set; }
-
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
-    //public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -41,7 +36,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
 
-        builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Customer).HasForeignKey<Customer>(item => item.StripeCustomerId);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);
     }
 }

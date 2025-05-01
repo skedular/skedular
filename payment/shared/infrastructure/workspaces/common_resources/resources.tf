@@ -42,7 +42,15 @@ resource "stripe_webhook_endpoint" "webhook_connect_account" {
     "checkout.session.completed",
     "checkout.session.expired",
     "checkout.session.async_payment_succeeded",
-    "checkout.session.async_payment_failed"
+    "checkout.session.async_payment_failed",
+    "customer.created",
+    "customer.updated",
+    "customer.deleted",
+    "charge.pending",
+    "charge.succeeded",
+    "charge.updated",
+    "charge.expired",
+    "charge.failed",
   ]
 }
 

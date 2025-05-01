@@ -1,6 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
-using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
 using Payment.Shared.Repositories;
 using Payment.Shared.Services;
@@ -13,7 +12,6 @@ namespace Payment.Processors.Subscribers;
 public class CustomerSubscriber(
     ILogger<CustomerSubscriber> logger,
     IMapper mapper,
-    IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
     IStripeCustomerService stripeCustomerService)
     : IEventSubscriber<Key, Event>
@@ -67,22 +65,20 @@ public class CustomerSubscriber(
         Shared.Database.Entities.Customer? existingCustomer,
         CancellationToken cancellationToken)
     {
-        var stripeCustomer =
-            await stripeCustomerService.UpsertCustomerAsync(customer, existingCustomer?.StripeCustomer, null, @event.Metadata.Id, cancellationToken);
-
         if (existingCustomer is null)
         {
-            existingCustomer = mapper.MapToEntity(customer, stripeCustomer);
+            existingCustomer = mapper.MapToEntity(customer);
             existingCustomer = RebuildIdentities(customer, existingCustomer);
             _ = repositoryFactory.CustomerRepository.Add(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }
         else
         {
-            existingCustomer = mapper.MergeToEntity(customer, existingCustomer, stripeCustomer);
+            existingCustomer = mapper.MergeToEntity(customer, existingCustomer);
             existingCustomer = RebuildIdentities(customer, existingCustomer);
             _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }
 
+        _ = await stripeCustomerService.UpsertCustomerAsync(customer, existingCustomer, null, @event.Metadata.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

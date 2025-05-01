@@ -35,10 +35,10 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Customer MapToEntity(Customer src, StripeCustomer stripeCustomer);
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, StripeCustomer stripeCustomer);
-    Shared.Database.Entities.Organization MapToEntity(Organization src, StripeCustomer stripeCustomer);
-    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest, StripeCustomer stripeCustomer);
+    Shared.Database.Entities.Customer MapToEntity(Customer src);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest);
+    Shared.Database.Entities.Organization MapToEntity(Organization src);
+    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
@@ -91,15 +91,13 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         ICollection<ProductVersion> productVersions);
 
-    CustomerCreateOptions MapTo(Organization src);
-    CustomerUpdateOptions MergeTo(Organization src);
-    CustomerCreateOptions MapTo(Customer src);
-    CustomerUpdateOptions MergeTo(Customer src);
-
     ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
     PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId);
     Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest, StripeCheckoutSession stripeCheckoutSession);
+
+    Customer MapTo(Shared.Database.Entities.Customer src);
+    Organization? MapTo(Shared.Database.Entities.Organization? src);
 }
 
 public class Mapper : IMapper
@@ -257,10 +255,9 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Customer MapToEntity(Customer src, StripeCustomer stripeCustomer) =>
-        MergeToEntity(src, new Shared.Database.Entities.Customer(), stripeCustomer);
+    public Shared.Database.Entities.Customer MapToEntity(Customer src) => MergeToEntity(src, new Shared.Database.Entities.Customer());
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, StripeCustomer stripeCustomer)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -270,15 +267,12 @@ public class Mapper : IMapper
         dest.MiddleName = src.MiddleName;
         dest.FamilyName = src.FamilyName;
         dest.PhoneNumber = src.PhoneNumber;
-        dest.StripeCustomer = stripeCustomer;
         return dest;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src, StripeCustomer stripeCustomer) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization(), stripeCustomer);
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest,
-        StripeCustomer stripeCustomer)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -288,7 +282,6 @@ public class Mapper : IMapper
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.StripeCustomer = stripeCustomer;
         return dest;
     }
 
@@ -468,42 +461,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public CustomerCreateOptions MapTo(Organization src) =>
-        new()
-        {
-            Name = src.Name,
-            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
-            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
-            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
-        };
-
-    public CustomerUpdateOptions MergeTo(Organization src) =>
-        new()
-        {
-            Name = src.Name,
-            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
-            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
-            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
-        };
-
-    public CustomerCreateOptions MapTo(Customer src) =>
-        new()
-        {
-            Name = src.ToDisplayableName(),
-            Email = src.Identities.ToSingleEmail(),
-            Phone = src.PhoneNumber.ToSafeString(),
-            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
-        };
-
-    public CustomerUpdateOptions MergeTo(Customer src) =>
-        new()
-        {
-            Name = src.ToDisplayableName(),
-            Email = src.Identities.ToSingleEmail(),
-            Phone = src.PhoneNumber.ToSafeString(),
-            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
-        };
-
     public ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
         new()
         {
@@ -549,6 +506,36 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public Customer MapTo(Shared.Database.Entities.Customer src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Locale = src.Locale,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            MiddleName = src.MiddleName,
+            FamilyName = src.FamilyName,
+            PhoneNumber = src.PhoneNumber
+        };
+
+    public Organization? MapTo(Shared.Database.Entities.Organization? src) =>
+        src is null
+            ? null
+            : new Organization
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                DeletedAt = src.DeletedAt,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone
+            };
+
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null
             ? null
@@ -574,19 +561,4 @@ public class Mapper : IMapper
             Currency = src.Currency.ToCurrency(),
             Product = product
         };
-
-    private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>
-        src is null
-            ? null
-            : new Organization
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                DeletedAt = src.DeletedAt,
-                Type = src.Type.ToOrganizationType(),
-                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone
-            };
 }

@@ -40,14 +40,15 @@ public class CustomerPaymentService(
 {
     public async Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken)
     {
-        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        if (customer.StripeCustomer is null)
+        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var stripeCustomers = customerEntity.StripeCustomers.Where(item => item.StripeConnectAccount is null).ToList();
+        if (stripeCustomers.Count != 1)
         {
             throw new CustomerStripeCustomerRelationshipIsNotSetYet();
         }
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = customer.StripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions { Customer = stripeCustomers.Single().StripeCustomerId, PaymentMethodTypes = ["card"] },
             new RequestOptions(),
             cancellationToken);
 

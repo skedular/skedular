@@ -21,18 +21,13 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? PhysicalAddressId { get; set; }
     public virtual Address? PhysicalAddress { get; set; }
 
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? StripeCustomerId { get; set; }
-    public virtual StripeCustomer? StripeCustomer { get; set; }
-
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
     public virtual ICollection<StripeConnectAccount> StripeConnectAccounts { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
-
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
-    //public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -53,7 +48,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
-        builder.HasOne(item => item.StripeCustomer).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.StripeCustomerId);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Organization);
         builder.HasMany(item => item.StripeConnectAccounts).WithOne(item => item.Organization);
 

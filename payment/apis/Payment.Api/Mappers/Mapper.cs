@@ -58,8 +58,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Id = src.Id,
-            Identities = MapTo(src.Identities).ToList(),
-            StripeCustomer = MapTo(src.StripeCustomer)
+            Identities = MapTo(src.Identities).ToList()
         };
 
     public IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) => src.Select(MapTo);

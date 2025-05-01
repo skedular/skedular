@@ -12,14 +12,14 @@ public interface IStripeCustomerService
 {
     Task<StripeCustomer> UpsertCustomerAsync(
         Organization organization,
-        StripeCustomer? existingStripeCustomer,
+        Database.Entities.Organization organizationEntity,
         StripeConnectAccount? stripeConnectAccount,
         string? idempotencyKey,
         CancellationToken cancellationToken);
 
     Task<StripeCustomer> UpsertCustomerAsync(
         Customer customer,
-        StripeCustomer? existingStripeCustomer,
+        Database.Entities.Customer customerEntity,
         StripeConnectAccount? stripeConnectAccount,
         string? idempotencyKey,
         CancellationToken cancellationToken);
@@ -34,11 +34,15 @@ public class StripeCustomerService(
 {
     public async Task<StripeCustomer> UpsertCustomerAsync(
         Organization organization,
-        StripeCustomer? existingStripeCustomer,
+        Database.Entities.Organization organizationEntity,
         StripeConnectAccount? stripeConnectAccount,
         string? idempotencyKey,
         CancellationToken cancellationToken)
     {
+        var existingStripeCustomer = stripeConnectAccount is null
+            ? organizationEntity.StripeCustomers.SingleOrDefault(item => item.StripeConnectAccount is null)
+            : organizationEntity.StripeCustomers.SingleOrDefault(item => item.StripeConnectAccount?.Id == stripeConnectAccount.Id);
+
         var requestOptions = existingStripeCustomer is null
             ? new RequestOptions
             {
@@ -56,7 +60,10 @@ public class StripeCustomerService(
 
             return repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
             {
-                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, StripeConnectAccount = stripeConnectAccount
+                Id = randomHelper.Generate(),
+                StripeCustomerId = stripeCustomer.Id,
+                StripeConnectAccount = stripeConnectAccount,
+                Organization = organizationEntity
             });
         }
 
@@ -71,11 +78,15 @@ public class StripeCustomerService(
 
     public async Task<StripeCustomer> UpsertCustomerAsync(
         Customer customer,
-        StripeCustomer? existingStripeCustomer,
+        Database.Entities.Customer customerEntity,
         StripeConnectAccount? stripeConnectAccount,
         string? idempotencyKey,
         CancellationToken cancellationToken)
     {
+        var existingStripeCustomer = stripeConnectAccount is null
+            ? customerEntity.StripeCustomers.SingleOrDefault(item => item.StripeConnectAccount is null)
+            : customerEntity.StripeCustomers.SingleOrDefault(item => item.StripeConnectAccount?.Id == stripeConnectAccount.Id);
+
         var requestOptions = existingStripeCustomer is null
             ? new RequestOptions
             {
@@ -93,7 +104,10 @@ public class StripeCustomerService(
 
             return repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
             {
-                Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, StripeConnectAccount = stripeConnectAccount
+                Id = randomHelper.Generate(),
+                StripeCustomerId = stripeCustomer.Id,
+                StripeConnectAccount = stripeConnectAccount,
+                Customer = customerEntity
             });
         }
 

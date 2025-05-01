@@ -54,13 +54,14 @@ public class OrganizationPaymentService(
             throw new Unauthorized();
         }
 
-        if (organization.StripeCustomer is null)
+        var stripeCustomers = organization.StripeCustomers.Where(item => item.StripeConnectAccount is null).ToList();
+        if (stripeCustomers.Count != 1)
         {
             throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
         }
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = organization.StripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions { Customer = stripeCustomers.Single().StripeCustomerId, PaymentMethodTypes = ["card"] },
             new RequestOptions(),
             cancellationToken);
 

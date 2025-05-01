@@ -21,7 +21,7 @@ internal static class CustomerExtensions
     internal static IIncludableQueryable<Customer, IEnumerable<StripePaymentMethod>> AddDependentObjects(this IQueryable<Customer> originalQuery) =>
         originalQuery
             .Include(query => query.Identities)
-            .Include(query => query.StripeCustomer)
+            .Include(query => query.StripeCustomers)
             .ThenInclude(query => query.StripeConnectAccount)
             .Include(query =>
                 query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));

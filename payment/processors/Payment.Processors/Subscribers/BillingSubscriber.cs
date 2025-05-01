@@ -75,6 +75,7 @@ public class BillingSubscriber(
         var organization = await repositoryFactory.OrganizationRepository
             .Query(new Specification<Organization> { Criteria = query => query.Id == organizationOfferingBilling.OrganizationId }
                 .ApplyOrderBy(query => query.Id))
+            .Include(query => query.StripeCustomers.Where(item => item.StripeConnectAccount == null))
             .FirstOrDefaultAsync(cancellationToken);
         if (organization is null)
         {
@@ -98,7 +99,7 @@ public class BillingSubscriber(
             return;
         }
 
-        if (organization.StripeCustomer is null)
+        if (organization.StripeCustomers.Count != 1)
         {
             throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
         }
@@ -109,7 +110,7 @@ public class BillingSubscriber(
         var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
-                Customer = organization.StripeCustomer.StripeCustomerId,
+                Customer = organization.StripeCustomers.Single().StripeCustomerId,
                 PaymentMethod = stripePaymentMethod.PaymentMethodId,
                 Amount = amount,
                 // TODO: 20240601 : Morteza: Currency should not be probably hard-coded

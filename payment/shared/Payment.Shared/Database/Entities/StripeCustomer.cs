@@ -11,12 +11,8 @@ public class StripeCustomer : EntityBaseWithDeleted
 {
     public string StripeCustomerId { get; set; }
 
-    public string? OrganizationId { get; set; }
-    public string? CustomerId { get; set; }
-
     public virtual Organization? Organization { get; set; }
     public virtual Customer? Customer { get; set; }
-
     public virtual StripeConnectAccount? StripeConnectAccount { get; set; }
     public virtual ICollection<StripeCheckoutSession> StripeCheckoutSessions { get; set; } = [];
 }
@@ -30,12 +26,9 @@ public class StripeCustomerConfiguration : IEntityTypeConfiguration<StripeCustom
 
         builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
 
-        builder.Property(item => item.OrganizationId).HasMaxLength(Constants.MaxUniqueIdLength);
-        builder.Property(item => item.CustomerId).HasMaxLength(Constants.MaxUniqueIdLength);
-
         builder.HasOne(item => item.StripeConnectAccount).WithMany(item => item.StripeCustomers);
-        // builder.HasOne(item => item.Organization).WithMany(item => item.StripeCustomers);
-        // builder.HasOne(item => item.Customer).WithMany(item => item.StripeCustomers);
+        builder.HasOne(item => item.Organization).WithMany(item => item.StripeCustomers);
+        builder.HasOne(item => item.Customer).WithMany(item => item.StripeCustomers);
 
         builder.HasIndex(item => item.StripeCustomerId);
     }

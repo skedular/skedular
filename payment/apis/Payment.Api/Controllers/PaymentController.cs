@@ -119,6 +119,22 @@ public class PaymentController(
 
                     break;
 
+                case EventTypes.CustomerCreated:
+                case EventTypes.CustomerUpdated:
+                case EventTypes.CustomerDeleted:
+                    var customer = stripeEvent.Data.Object as Customer;
+                    ArgumentNullException.ThrowIfNull(customer);
+                    break;
+
+                case EventTypes.ChargePending:
+                case EventTypes.ChargeSucceeded:
+                case EventTypes.ChargeUpdated:
+                case EventTypes.ChargeExpired:
+                case EventTypes.ChargeFailed:
+                    var charge = stripeEvent.Data.Object as Charge;
+                    ArgumentNullException.ThrowIfNull(charge);
+                    break;
+
                 case EventTypes.CheckoutSessionCompleted:
                 case EventTypes.CheckoutSessionExpired:
                 case EventTypes.CheckoutSessionAsyncPaymentSucceeded:

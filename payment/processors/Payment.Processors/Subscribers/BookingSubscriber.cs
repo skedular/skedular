@@ -23,7 +23,8 @@ public class BookingSubscriber(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationStripeConnectAccountHelper organizationStripeConnectAccountHelper,
-    ICreatable<Session, SessionCreateOptions> sessionCreateService) : IEventSubscriber<Key, Event>
+    ICreatable<Session, SessionCreateOptions> sessionCreateService,
+    IStripeCustomerService stripeCustomerService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -47,7 +48,7 @@ public class BookingSubscriber(
                             return EventSubscriberResults.Success;
                         }
 
-                        await HandleBookingUpsertedEventAsync(booking, existingBooking, cancellationToken);
+                        await HandleBookingUpsertedEventAsync(@event, booking, existingBooking, cancellationToken);
                     }
                 }
                 break;
@@ -63,37 +64,12 @@ public class BookingSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
+    private async Task HandleBookingUpsertedEventAsync(
+        Event @event,
+        Shared.Models.Booking booking,
+        Booking existingBooking,
+        CancellationToken cancellationToken)
     {
-        StripeCustomer stripeCustomer;
-        if (booking.PaidByCustomer is not null)
-        {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
-            ArgumentNullException.ThrowIfNull(customer.StripeCustomer);
-
-            stripeCustomer = customer.StripeCustomer ?? throw new CustomerStripeCustomerRelationshipIsNotSetYet();
-        }
-        else if (booking.PaidByOrganization is not null)
-        {
-            var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken);
-            if (organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
-            stripeCustomer = organization.StripeCustomer ?? throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
-        }
-        else
-        {
-            throw new InvalidOperationException();
-        }
-
         var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         if (productVersions.Count != productVersionIds.Count)
@@ -130,6 +106,43 @@ public class BookingSubscriber(
             });
         }).ToList();
 
+        StripeCustomer stripeCustomer;
+        if (booking.PaidByCustomer is not null)
+        {
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, cancellationToken);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
+
+            stripeCustomer = await stripeCustomerService.UpsertCustomerAsync(
+                mapper.MapTo(customer),
+                customer,
+                stripeConnectAccount,
+                @event.Metadata.Id,
+                cancellationToken);
+        }
+        else if (booking.PaidByOrganization is not null)
+        {
+            var organization =
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken);
+            if (organization is null)
+            {
+                throw new OrganizationNotFound();
+            }
+
+            stripeCustomer = await stripeCustomerService.UpsertCustomerAsync(
+                mapper.MapTo(organization)!,
+                organization,
+                stripeConnectAccount,
+                @event.Metadata.Id,
+                cancellationToken);
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
+
         StripeCheckoutSession stripeCheckoutSession;
         if (existingBooking.StripeCheckoutSession is null)
         {
@@ -149,7 +162,11 @@ public class BookingSubscriber(
                 cancellationToken);
             stripeCheckoutSession = new StripeCheckoutSession
             {
-                Id = randomHelper.Generate(), StripeCheckoutSessionId = session.Id, Url = session.Url, PaymentStatus = session.PaymentStatus
+                Id = randomHelper.Generate(),
+                StripeCheckoutSessionId = session.Id,
+                Url = session.Url,
+                PaymentStatus = session.PaymentStatus,
+                StripeCustomer = stripeCustomer
             };
 
             stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);

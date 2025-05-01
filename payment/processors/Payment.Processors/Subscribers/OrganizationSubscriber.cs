@@ -1,6 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
-using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;
@@ -16,7 +15,6 @@ namespace Payment.Processors.Subscribers;
 public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
-    IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
     IStripeCustomerService stripeCustomerService)
     : IEventSubscriber<Key, Event>
@@ -77,16 +75,11 @@ public class OrganizationSubscriber(
         Organization? existingOrganization,
         CancellationToken cancellationToken)
     {
-        var stripeCustomer = await stripeCustomerService.UpsertCustomerAsync(
-            organization,
-            existingOrganization?.StripeCustomer,
-            null,
-            @event.Metadata.Id,
-            cancellationToken);
-
         existingOrganization = existingOrganization is null
-            ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization, stripeCustomer))
-            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization, stripeCustomer));
+            ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
+            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
+
+        _ = await stripeCustomerService.UpsertCustomerAsync(organization, existingOrganization, null, @event.Metadata.Id, cancellationToken);
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);

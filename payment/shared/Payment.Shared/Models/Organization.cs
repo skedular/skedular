@@ -13,7 +13,6 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public string? ContactPhone { get; set; }
 
     public Address? PhysicalAddress { get; set; }
-    public StripeCustomer? StripeCustomer { get; set; }
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -21,4 +20,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public ICollection<Product> Products { get; set; } = [];
     public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
 }

@@ -12,7 +12,7 @@ public class OrganizationStripeConnectAccountHelper : IOrganizationStripeConnect
 {
     public StripeConnectAccount GetStripeAccount(Organization organization)
     {
-        // TODO: 20250530 - Morteza: Need to implement default stripe account and pick that instead of first random one 
+        // TODO: 20250530 - Morteza: Need to implement the default Stripe Connect account and pick that instead of the first random one 
         var account = organization.StripeConnectAccounts.OrderByDescending(item => item.CreatedAt).FirstOrDefault(item => item.DeletedAt is null);
         if (account is null)
         {

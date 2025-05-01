@@ -1,5 +1,3 @@
-using Payment.Jobs.Jobs;
-
 namespace Payment.Jobs;
 
 public static class Extensions
@@ -11,6 +9,5 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<StripeCustomerMigrationJob>();
+        services;
 }
