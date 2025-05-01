@@ -7,7 +7,7 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
+using BookingCheckoutSession = Booking.Shared.Database.Entities.BookingCheckoutSession;
 
 namespace Booking.Shared.Repositories;
 
@@ -28,7 +28,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, ICollection<ProductVersion>> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, BookingCheckoutSession?> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -52,7 +52,8 @@ internal static class BookingExtensions
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer)
-            .Include(query => query.ProductVersions);
+            .Include(query => query.ProductVersions)
+            .Include(query => query.BookingCheckoutSession);
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,

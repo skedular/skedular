@@ -62,7 +62,9 @@ public class Query(IMapper mapper)
     [
         new() { Type = BookingStatus.Pending, Name = BookingStatusConstants.Pending.ToBookingStatusName() },
         new() { Type = BookingStatus.Rejected, Name = BookingStatusConstants.Rejected.ToBookingStatusName() },
-        new() { Type = BookingStatus.Confirmed, Name = BookingStatusConstants.Confirmed.ToBookingStatusName() }
+        new() { Type = BookingStatus.Confirmed, Name = BookingStatusConstants.Confirmed.ToBookingStatusName() },
+        new() { Type = BookingStatus.PaymentExpired, Name = BookingStatusConstants.PaymentExpired.ToBookingStatusName() },
+        new() { Type = BookingStatus.PaymentRecordNeverCreated, Name = BookingStatusConstants.PaymentRecordNeverCreated.ToBookingStatusName() }
     ];
 
     [UseResolverScope]

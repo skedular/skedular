@@ -27,9 +27,9 @@ public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<Strip
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.StripeCheckoutSessionId).HasMaxLength(Constants.StripeCheckoutSessionIdLength);
+        builder.Property(item => item.StripeCheckoutSessionId).HasMaxLength(Constants.MaxStripeCheckoutSessionIdLength);
         builder.Property(item => item.Url).HasMaxLength(Constants.MaxUrlLength);
-        builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.StripeCheckoutSessionPaymentStatusLength);
+        builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.MaxStripeCheckoutSessionPaymentStatusLength);
 
         builder
             .HasOne(item => item.StripeCustomer)

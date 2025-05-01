@@ -88,6 +88,7 @@ public static class Constants
     public const int MaxNotificationTypeLength = 128;
     public const int MaxBookingTypeLength = 32;
     public const int MaxBookingStatusLength = 32;
+    public const int MaxPaymentStatusLength = 32;
 
     public const int MaxOrganizationMemberStatusLength = 64;
     public const int MaxTeamMemberStatusLength = 64;
@@ -126,9 +127,8 @@ public static class Constants
     public const int MaxStripeCardIssuerLength = 20;
     public const int MaxStripeCardLastFourDigitLength = 10;
     public const int MaxStripePaymentMethodStatusLength = 50;
-    public const int StripeProductIdLength = 100;
-    public const int StripePriceIdLength = 100;
-    public const int StripeCheckoutSessionIdLength = 100;
-    public const int StripeCheckoutSessionPaymentStatusLength = 50;
-
+    public const int MaxStripeProductIdLength = 100;
+    public const int MaxStripePriceIdLength = 100;
+    public const int MaxStripeCheckoutSessionIdLength = 100;
+    public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
 }

@@ -23,6 +23,13 @@ type AddOrganizationPaymentMethodIntentPayload {
   publishedKeys: String!
 }
 
+type BookingCheckoutSessionDetails {
+  checkoutUrl: String!
+  id: ID!
+  paymentReferenceId: String!
+  paymentStatus: String!
+}
+
 type BookingConnection {
   edges: [BookingEdge!]!
   pageInfo: PageInfo!
@@ -30,6 +37,7 @@ type BookingConnection {
 }
 
 type BookingDetails {
+  bookingCheckoutSession: BookingCheckoutSessionDetails
   createdByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   from: DateTime!
@@ -40,7 +48,7 @@ type BookingDetails {
   involvedTeams: [Booking_TeamDetails!]!
   isPaymentRequired: Boolean!
   lastModifiedByCustomer: Booking_CustomerDetails
-  lineItems: [LineItem!]!
+  lineItems: [LineItemDetails!]!
   notes: String
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
@@ -274,7 +282,7 @@ type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
 }
 
-type LineItem {
+type LineItemDetails {
   productVersion: Booking_ProductVersionDetails!
   quantity: Int!
 }
@@ -2073,6 +2081,8 @@ enum BookingOrderField {
 
 enum BookingStatus {
   Confirmed
+  PaymentExpired
+  PaymentRecordNeverCreated
   Pending
   Rejected
 }

@@ -42,6 +42,9 @@ public class Mapper : IMapper
                 BookingStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending,
                 BookingStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
                 BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
+                BookingStatus.PaymentExpired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentExpired,
+                BookingStatus.PaymentRecordNeverCreated =>
+                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired

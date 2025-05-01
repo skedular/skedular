@@ -51,4 +51,5 @@ public class Booking : ModelBaseWithDeleted
     public Customer? CreatedByCustomer { get; set; }
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
+    public BookingCheckoutSession? BookingCheckoutSession { get; set; }
 }

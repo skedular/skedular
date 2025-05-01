@@ -11,6 +11,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     : DbContextBase<BookingDbContext>(options, customDbContextOptions)
 {
     public DbSet<Entities.Booking> Booking { get; set; }
+    public DbSet<BookingCheckoutSession> BookingCheckoutSession { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }

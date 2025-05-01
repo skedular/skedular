@@ -47,6 +47,7 @@ message Booking {
   string lastModifiedByCustomerId = 18;
   string deletedByCustomerId = 19;
   repeated LineItem lineItems = 20;
+  BookingCheckoutSession bookingCheckoutSession = 21;
 }
 
 enum BookingType
@@ -78,9 +79,26 @@ enum BookingStatus
   Pending = 0;
   Rejected = 1;
   Confirmed = 2;
+  PaymentExpired = 3;
+  PaymentRecordNeverCreated = 4;
 }
 
 message LineItem {
   string productVersionId = 1;
   int32 quantity = 2;
+}
+
+enum PaymentStatus
+{
+  NoPaymentRequired = 0;
+  Paid = 1;
+  Unpaid = 2;
+}
+
+message BookingCheckoutSession
+{
+  string id = 1;
+  string paymentReferenceId = 2;
+  string checkoutUrl = 3;
+  PaymentStatus paymentStatus = 4;
 }

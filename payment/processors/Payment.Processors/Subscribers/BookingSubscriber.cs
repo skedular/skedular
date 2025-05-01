@@ -26,7 +26,8 @@ public class BookingSubscriber(
     IOrganizationStripeConnectAccountHelper organizationStripeConnectAccountHelper,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IStripeCustomerService stripeCustomerService,
-    IPaymentPublisher paymentPublisher) : IEventSubscriber<Key, Event>
+    IPaymentPublisher paymentPublisher,
+    IStripeProductPricingService stripeProductPricingService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -91,6 +92,25 @@ public class BookingSubscriber(
         }
 
         var stripeConnectAccount = organizationStripeConnectAccountHelper.GetStripeAccount(productVersions.First().Product.Organization);
+
+        foreach (var productVersion in productVersions)
+        {
+            if (productVersion.StripeProduct is not null && productVersion.StripePrice is not null)
+            {
+                continue;
+            }
+
+            var (stripeProduct, stripePrice) = await stripeProductPricingService.UpsertProductPricingAsync(
+                mapper.MapTo(productVersion),
+                productVersion,
+                stripeConnectAccount,
+                cancellationToken);
+
+            productVersion.StripeProduct = stripeProduct;
+            productVersion.StripePrice = stripePrice;
+            _ = repositoryFactory.ProductVersionRepository.Update(productVersion);
+        }
+
         var lineItems = booking.LineItems.SelectMany(item =>
         {
             var productVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);

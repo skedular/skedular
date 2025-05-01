@@ -20,7 +20,7 @@ public class StripeProductConfiguration : IEntityTypeConfiguration<StripeProduct
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.StripeProductId).HasMaxLength(Constants.StripeProductIdLength);
+        builder.Property(item => item.StripeProductId).HasMaxLength(Constants.MaxStripeProductIdLength);
 
         builder.HasIndex(item => item.StripeProductId);
     }

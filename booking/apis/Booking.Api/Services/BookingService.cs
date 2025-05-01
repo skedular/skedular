@@ -138,7 +138,8 @@ public class BookingService(
             callingCustomerEntity,
             null,
             null,
-            productVersions);
+            productVersions,
+            null);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -632,7 +633,7 @@ public class BookingService(
 
         booking.IsPaymentRequired = existingLineItems.Count != 0;
         booking.Status = existingLineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
-        
+
         var bookingEntity = mapper.MergeTo(
             booking,
             existingBooking,
@@ -646,7 +647,8 @@ public class BookingService(
             existingBooking.CreatedByCustomer,
             callingCustomer,
             null,
-            existingBooking.ProductVersions);
+            existingBooking.ProductVersions,
+            existingBooking.BookingCheckoutSession);
         bookingEntity.LineItems = existingLineItems;
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;

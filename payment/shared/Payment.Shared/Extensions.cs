@@ -19,6 +19,7 @@ public static class Extensions
         services
             .AddScoped<IStripeConnectAccountLinkService, StripeConnectAccountLinkService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
+            .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
             .AddSingleton<IOrganizationStripeConnectAccountHelper, OrganizationStripeConnectAccountHelper>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>

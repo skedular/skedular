@@ -17,8 +17,8 @@ public class LineItemInput
     [GraphQLName("quantity")] public int Quantity { get; set; }
 }
 
-[GraphQLName("LineItem")]
-public class LineItem
+[GraphQLName("LineItemDetails")]
+public class LineItemDetails
 {
     [GraphQLName("productVersion")] public ProductVersionDetails ProductVersionDetails { get; set; } = new();
     [GraphQLName("quantity")] public int Quantity { get; set; }
@@ -91,7 +91,7 @@ public class BookingDetails : Node
     [GraphQLName("type")] public BookingTypeDetails Type { get; set; } = new();
     [GraphQLName("status")] public BookingStatusDetails Status { get; set; } = new();
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("lineItems")] public IEnumerable<LineItem> LineItems { get; set; } = [];
+    [GraphQLName("lineItems")] public IEnumerable<LineItemDetails> LineItems { get; set; } = [];
     [GraphQLName("involvedCustomers")] public IEnumerable<CustomerDetails> InvolvedCustomers { get; set; } = [];
     [GraphQLName("involvedOrganizations")] public IEnumerable<OrganizationDetails> InvolvedOrganizations { get; set; } = [];
     [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
@@ -105,6 +105,10 @@ public class BookingDetails : Node
 
     [GraphQLName("deletedByCustomer")] public CustomerDetails? DeletedByCustomer { get; set; }
     [GraphQLName("isPaymentRequired")] public bool IsPaymentRequired { get; set; }
+
+    [GraphQLName("bookingCheckoutSession")]
+    public BookingCheckoutSessionDetails? BookingCheckoutSession { get; set; }
+
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -289,4 +293,13 @@ public class BookingStatusDetails
 {
     [GraphQLName("type")] public BookingStatus Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("BookingCheckoutSessionDetails")]
+public class BookingCheckoutSessionDetails : Node
+{
+    [GraphQLName("paymentReferenceId")] public string PaymentReferenceId { get; set; } = string.Empty;
+    [GraphQLName("checkoutUrl")] public string CheckoutUrl { get; set; } = string.Empty;
+    [GraphQLName("paymentStatus")] public string PaymentStatus { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

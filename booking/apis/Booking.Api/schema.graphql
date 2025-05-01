@@ -3,6 +3,13 @@
   mutation: Mutation
 }
 
+type BookingCheckoutSessionDetails {
+  paymentReferenceId: String!
+  checkoutUrl: String!
+  paymentStatus: String!
+  id: ID!
+}
+
 type BookingConnection {
   pageInfo: PageInfo!
   edges: [BookingEdge!]!
@@ -16,7 +23,7 @@ type BookingDetails {
   type: BookingTypeDetails!
   status: BookingStatusDetails!
   resources: [BookingResourceDetails!]!
-  lineItems: [LineItem!]!
+  lineItems: [LineItemDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
@@ -27,6 +34,7 @@ type BookingDetails {
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
+  bookingCheckoutSession: BookingCheckoutSessionDetails
   id: ID!
 }
 
@@ -125,7 +133,7 @@ type Booking_TeamDetails {
   name: String!
 }
 
-type LineItem {
+type LineItemDetails {
   productVersion: Booking_ProductVersionDetails!
   quantity: Int!
 }
@@ -274,6 +282,8 @@ enum BookingStatus {
   Pending
   Rejected
   Confirmed
+  PaymentExpired
+  PaymentRecordNeverCreated
 }
 
 enum BookingType {

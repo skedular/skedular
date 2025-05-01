@@ -92,15 +92,13 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         ICollection<ProductVersion> productVersions);
 
-    ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
-    ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId);
-    PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId);
     Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest, StripeCheckoutSession stripeCheckoutSession);
 
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization? MapTo(Shared.Database.Entities.Organization? src);
     StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest);
     Shared.Models.StripeCheckoutSession MapTo(StripeCheckoutSession src);
+    Shared.Models.ProductVersion MapTo(ProductVersion src);
 }
 
 public class Mapper : IMapper
@@ -464,38 +462,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public ProductCreateOptions MapToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
-        new()
-        {
-            Name = src.Name.ToSafeString(),
-            UnitLabel = src.PriceUnit.ToPriceUnitName(),
-            Metadata = new Dictionary<string, string>
-            {
-                { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
-            }
-        };
-
-    public ProductUpdateOptions MergeToProduct(Shared.Models.ProductVersion src, Product product, string organizationId) =>
-        new()
-        {
-            Name = src.Name.ToSafeString(),
-            UnitLabel = src.PriceUnit.ToPriceUnitName(),
-            Metadata = new Dictionary<string, string>
-            {
-                { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
-            }
-        };
-
-    public PriceCreateOptions MapToPrice(Shared.Models.ProductVersion src, Product product, string organizationId, string stripeProductId) =>
-        new()
-        {
-            Currency = src.Currency.ToCurrency(),
-            BillingScheme = "per_unit",
-            UnitAmountDecimal = src.Price * 100,
-            Product = stripeProductId,
-            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
-        };
-
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
@@ -555,6 +521,18 @@ public class Mapper : IMapper
             Url = src.Url,
             PaymentStatus = src.PaymentStatus,
             Booking = MapTo(src.Booking)
+        };
+
+    public Shared.Models.ProductVersion MapTo(ProductVersion src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name.ToSafeString(),
+            Price = src.Price ?? 0,
+            PriceUnit = src.PriceUnit!.ToPriceUnit(),
+            Currency = src.Currency!.ToCurrency()
         };
 
     private static Booking? MapTo(Shared.Database.Entities.Booking? src) =>

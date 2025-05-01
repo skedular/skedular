@@ -30,6 +30,7 @@ public class Booking : EntityBaseWithDeleted
     public virtual Customer? CreatedByCustomer { get; set; }
     public virtual Customer? LastModifiedByCustomer { get; set; }
     public virtual Customer? DeletedByCustomer { get; set; }
+    public virtual BookingCheckoutSession? BookingCheckoutSession { get; set; }
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

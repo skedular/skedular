@@ -4,6 +4,8 @@ using Enterprise.Shared;
 using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
+using PaymentStatus = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus;
+using Product = Payment.Shared.Models.Product;
 using StripeConnectAccount = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount;
 
 namespace Payment.Shared.Mappers;
@@ -17,6 +19,8 @@ public interface IMapper
     CustomerUpdateOptions MergeTo(Customer src);
     BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src);
     BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src);
+    ProductCreateOptions MapToProduct(ProductVersion src, Product product, string organizationId);
+    PriceCreateOptions MapToPrice(ProductVersion src, Product product, string organizationId, string stripeProductId);
 }
 
 public class Mapper : IMapper
@@ -84,7 +88,7 @@ public class Mapper : IMapper
         };
 
     public BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src) =>
-        new() { Id = src.Booking!.Id, PaymentReferenceId = src.Id, CheckoutUrl = src.Url.ToSafeString()};
+        new() { Id = src.Booking!.Id, PaymentReferenceId = src.Id, CheckoutUrl = src.Url.ToSafeString() };
 
     public BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src) =>
         new()
@@ -98,5 +102,26 @@ public class Mapper : IMapper
                 "unpaid" => PaymentStatus.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
             }
+        };
+
+    public ProductCreateOptions MapToProduct(ProductVersion src, Product product, string organizationId) =>
+        new()
+        {
+            Name = src.Name.ToSafeString(),
+            UnitLabel = src.PriceUnit.ToPriceUnitName(),
+            Metadata = new Dictionary<string, string>
+            {
+                { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
+            }
+        };
+
+    public PriceCreateOptions MapToPrice(ProductVersion src, Product product, string organizationId, string stripeProductId) =>
+        new()
+        {
+            Currency = src.Currency.ToCurrency(),
+            BillingScheme = "per_unit",
+            UnitAmountDecimal = src.Price * 100,
+            Product = stripeProductId,
+            Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
 }
