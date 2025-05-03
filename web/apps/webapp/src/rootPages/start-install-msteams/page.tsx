@@ -1,5 +1,3 @@
-'use client';
-
 import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';

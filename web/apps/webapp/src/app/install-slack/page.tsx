@@ -1,13 +1,8 @@
 'use client';
 
-import { StackRow } from '@/components/commons';
-import { SlackButton } from '@/components/slackButtons';
+import Page from '@/rootPages/install-slack/page';
 import { memo } from 'react';
 
-const RootPage = () => (
-  <StackRow>
-    <SlackButton />
-  </StackRow>
-);
+const RootPage = () => <Page />;
 
 export default memo(RootPage);

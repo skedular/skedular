@@ -142,7 +142,7 @@ const RootShell = ({
     }
 
     if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
-      router.push('/install-msteams');
+      router.push('/msteams/install-msteams');
     }
   }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, router]);
 

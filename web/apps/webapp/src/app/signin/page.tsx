@@ -1,21 +1,8 @@
 'use client';
 
-import { getSignInUrlAction } from '@/components/authActions';
-import { useRouter } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import Page from '@/rootPages/signin/page';
+import { memo } from 'react';
 
-const RootPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    async function load() {
-      router.push(await getSignInUrlAction());
-    }
-
-    load();
-  }, [router]);
-
-  return <></>;
-};
+const RootPage = () => <Page />;
 
 export default memo(RootPage);

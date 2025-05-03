@@ -29,8 +29,8 @@
     {
       "entityId": "index",
       "name": "Skedular",
-      "contentUrl": "https://skedular.app",
-      "websiteUrl": "https://skedular.app",
+      "contentUrl": "https://skedular.app/msteams",
+      "websiteUrl": "https://skedular.app/msteams",
       "scopes": ["personal", "team", "groupChat"]
     }
   ],

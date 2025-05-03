@@ -29,8 +29,8 @@
     {
       "entityId": "index",
       "name": "Skedular Home",
-      "contentUrl": "https://localhost:15000",
-      "websiteUrl": "https://localhost:15000",
+      "contentUrl": "https://localhost:15000/msteams",
+      "websiteUrl": "https://localhost:15000/msteams",
       "scopes": ["personal", "team", "groupChat"]
     }
   ],
