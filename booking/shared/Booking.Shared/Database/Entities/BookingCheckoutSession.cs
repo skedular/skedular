@@ -9,7 +9,6 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class BookingCheckoutSession : ReplicatedEntityBaseWithDeleted
 {
-    public string? PaymentReferenceId { get; set; }
     public string? CheckoutUrl { get; set; }
     public string? PaymentStatus { get; set; }
 
@@ -26,7 +25,6 @@ public class BookingCheckoutSessionConfiguration : IEntityTypeConfiguration<Book
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.PaymentReferenceId).HasMaxLength(Constants.MaxUniqueIdLength);
         builder.Property(item => item.CheckoutUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.MaxPaymentStatusLength);
 

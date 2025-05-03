@@ -4,10 +4,9 @@
 }
 
 type BookingCheckoutSessionDetails {
-  paymentReferenceId: String!
+  uniqueId: ID!
   checkoutUrl: String!
   paymentStatus: PaymentStatus!
-  id: ID!
 }
 
 type BookingConnection {

@@ -296,10 +296,9 @@ public class BookingStatusDetails
 }
 
 [GraphQLName("BookingCheckoutSessionDetails")]
-public class BookingCheckoutSessionDetails : Node
+public class BookingCheckoutSessionDetails
 {
-    [GraphQLName("paymentReferenceId")] public string PaymentReferenceId { get; set; } = string.Empty;
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("checkoutUrl")] public string CheckoutUrl { get; set; } = string.Empty;
     [GraphQLName("paymentStatus")] public PaymentStatus PaymentStatus { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

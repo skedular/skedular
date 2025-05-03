@@ -18,7 +18,7 @@ public interface IMapper
     CustomerUpdateOptions MergeTo(Organization src);
     CustomerCreateOptions MapTo(Customer src);
     CustomerUpdateOptions MergeTo(Customer src);
-    BookingPaymentDetails MapTo(StripeCheckoutSession src);
+    BookingCheckoutSessionDetails MapTo(StripeCheckoutSession src);
     ProductCreateOptions MapToProduct(ProductVersion src, Product product, string organizationId);
     PriceCreateOptions MapToPrice(ProductVersion src, Product product, string organizationId, string stripeProductId);
 }
@@ -88,12 +88,13 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
         };
 
-    public BookingPaymentDetails MapTo(StripeCheckoutSession src) =>
+    public BookingCheckoutSessionDetails MapTo(StripeCheckoutSession src) =>
         new()
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
-            BookingId = src.Booking!.Id,
+            BookingId = src.Booking is null ? string.Empty : src.Booking.Id,
+            CheckoutUrl = src.CheckoutUrl.ToSafeString(),
             PaymentStatus = src.PaymentStatus switch
             {
                 Api.Shared.Services.Models.PaymentStatus.NoPaymentRequired => PaymentStatus.NoPaymentRequired,

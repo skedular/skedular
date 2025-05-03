@@ -15,7 +15,7 @@ namespace Payment.Shared.Publishers;
 public interface IPaymentPublisher
 {
     Task PublishOrganizationStripeConnectAccountsAsync(IEnumerable<StripeConnectAccount> accounts, CancellationToken cancellationToken);
-    Task PublishBookingPaymentAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
+    Task PublishBookingCheckoutSessionAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
 }
 
 public class PaymentPublisher(
@@ -41,17 +41,17 @@ public class PaymentPublisher(
             },
             cancellationToken)));
 
-    public async Task PublishBookingPaymentAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
+    public async Task PublishBookingCheckoutSessionAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
         await Task.WhenAll(sessions.Select(session => publisher.PublishAsync(
-            new Key { BookingId = session.Booking!.Id },
+            new Key { BookingCheckoutSessionId = session.Booking!.Id },
             new Event
             {
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    session.IsNotDeleted() ? Type.BookingPaymentUpserted : Type.BookingPaymentDeleted,
+                    session.IsNotDeleted() ? Type.BookingCheckoutSessionUpserted : Type.BookingCheckoutSessionDeleted,
                     context.GetCorrelationId()),
-                Data = new Data { BookingPayment = mapper.MapTo(session) }
+                Data = new Data { BookingCheckoutSession = mapper.MapTo(session) }
             },
             cancellationToken)));
 }

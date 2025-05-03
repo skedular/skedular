@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
+using BookingCheckoutSession = Booking.Shared.Models.BookingCheckoutSession;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;
@@ -10,6 +11,7 @@ using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
+using PaymentStatus = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
@@ -94,6 +96,13 @@ public interface IMapper
         OrganizationSsoSetting src,
         Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
+
+    BookingCheckoutSession MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src);
+
+    Shared.Database.Entities.BookingCheckoutSession MergeToEntity(
+        BookingCheckoutSession src,
+        Shared.Database.Entities.BookingCheckoutSession dest,
+        Shared.Database.Entities.Booking booking);
 }
 
 public class Mapper : IMapper
@@ -530,6 +539,43 @@ public class Mapper : IMapper
         dest.IsActive = src.IsActive;
         dest.Organization = organization;
 
+        return dest;
+    }
+
+    public BookingCheckoutSession MapTo(Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event src)
+    {
+        var bookingCheckoutSession = src.Data.BookingCheckoutSession;
+        var deletedAt = bookingCheckoutSession.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new BookingCheckoutSession
+        {
+            Id = bookingCheckoutSession.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            CheckoutUrl = bookingCheckoutSession.CheckoutUrl,
+            PaymentStatus = bookingCheckoutSession.PaymentStatus switch
+            {
+                PaymentStatus.NoPaymentRequired => Api.Shared.Services.Models.PaymentStatus.NoPaymentRequired,
+                PaymentStatus.Pending => Api.Shared.Services.Models.PaymentStatus.Pending,
+                PaymentStatus.Paid => Api.Shared.Services.Models.PaymentStatus.Paid,
+                PaymentStatus.Unpaid => Api.Shared.Services.Models.PaymentStatus.Unpaid,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Booking = new Shared.Models.Booking { Id = bookingCheckoutSession.BookingId }
+        };
+    }
+
+    public Shared.Database.Entities.BookingCheckoutSession MergeToEntity(
+        BookingCheckoutSession src,
+        Shared.Database.Entities.BookingCheckoutSession dest,
+        Shared.Database.Entities.Booking booking)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.CheckoutUrl = src.CheckoutUrl;
+        dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
+        dest.Booking = booking;
         return dest;
     }
 

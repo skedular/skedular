@@ -10,8 +10,8 @@ enum Type {
   CustomerPaymentMethodsUpdated = 1;
   OrganizationStripeConnectAccountUpserted = 2;
   OrganizationStripeConnectAccountDeleted = 3;
-  BookingPaymentUpserted = 4;
-  BookingPaymentDeleted = 5;
+  BookingCheckoutSessionUpserted = 4;
+  BookingCheckoutSessionDeleted = 5;
 }
 
 message Event {
@@ -33,7 +33,7 @@ message Data {
     OrganizationPaymentMethod organizationPaymentMethod = 1;
     CustomerPaymentMethod customerPaymentMethod = 2;
     StripeConnectAccount stripeConnectAccount = 3;
-    BookingPaymentDetails bookingPayment = 4;
+    BookingCheckoutSessionDetails bookingCheckoutSession = 4;
   }
 }
 
@@ -70,7 +70,7 @@ message StripeConnectAccount {
   bool onboardingCompleted = 20;
 }
 
-message BookingPaymentDetails {
+message BookingCheckoutSessionDetails {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
   string bookingId = 3;

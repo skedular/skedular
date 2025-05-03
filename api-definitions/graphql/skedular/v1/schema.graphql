@@ -25,9 +25,8 @@ type AddOrganizationPaymentMethodIntentPayload {
 
 type BookingCheckoutSessionDetails {
   checkoutUrl: String!
-  id: ID!
-  paymentReferenceId: String!
   paymentStatus: PaymentStatus!
+  uniqueId: ID!
 }
 
 type BookingConnection {

@@ -672,10 +672,7 @@ public class Mapper : IMapper
     private static BookingCheckoutSessionDetails? MapTo(Shared.Models.BookingCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSessionDetails
-            {
-                Id = src.Id, PaymentReferenceId = src.PaymentReferenceId, CheckoutUrl = src.CheckoutUrl, PaymentStatus = src.PaymentStatus
-            };
+            : new BookingCheckoutSessionDetails { UniqueId = src.Id, CheckoutUrl = src.CheckoutUrl, PaymentStatus = src.PaymentStatus };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession? MapToGrpcResponse(
         Shared.Models.BookingCheckoutSession? src) =>
@@ -684,7 +681,6 @@ public class Mapper : IMapper
             : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession
             {
                 Id = src.Id,
-                PaymentReferenceId = src.PaymentReferenceId,
                 PaymentStatus = src.PaymentStatus switch
                 {
                     PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
@@ -706,7 +702,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                PaymentReferenceId = src.PaymentReferenceId.ToSafeString(),
                 PaymentStatus = src.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.Pending,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()
             };

@@ -94,10 +94,8 @@ enum PaymentStatus {
   PaymentStatusUnpaid = 3;
 }
 
-message BookingCheckoutSession
-{
+message BookingCheckoutSession {
   string id = 1;
-  string paymentReferenceId = 2;
-  string checkoutUrl = 3;
-  PaymentStatus paymentStatus = 4;
+  string checkoutUrl = 2;
+  PaymentStatus paymentStatus = 3;
 }

@@ -207,7 +207,7 @@ public class BookingSubscriber(
         _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, stripeCheckoutSession));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await paymentPublisher.PublishBookingPaymentAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+        await paymentPublisher.PublishBookingCheckoutSessionAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }
 
     private async Task HandleBookingDeletedEventAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)

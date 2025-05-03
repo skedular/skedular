@@ -24,15 +24,15 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
     static PaymentV1KeyReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChRwYXltZW50X3YxX2tleS5wcm90bxIHcGF5bWVudCJkCgNLZXkSFgoOb3Jn",
-            "YW5pemF0aW9uSWQYASABKAkSEgoKY3VzdG9tZXJJZBgCIAEoCRIRCglib29r",
-            "aW5nSWQYAyABKAkSHgoWc3RyaXBlQ29ubmVjdEFjY291bnRJZBgEIAEoCUI0",
-            "qgIxQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5QYXltZW50",
-            "LlYxLktleWIGcHJvdG8z"));
+            "ChRwYXltZW50X3YxX2tleS5wcm90bxIHcGF5bWVudCJzCgNLZXkSFgoOb3Jn",
+            "YW5pemF0aW9uSWQYASABKAkSEgoKY3VzdG9tZXJJZBgCIAEoCRIgChhib29r",
+            "aW5nQ2hlY2tvdXRTZXNzaW9uSWQYAyABKAkSHgoWc3RyaXBlQ29ubmVjdEFj",
+            "Y291bnRJZBgEIAEoCUI0qgIxQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
+            "a2VkdWxhci5QYXltZW50LlYxLktleWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key.Parser, new[]{ "OrganizationId", "CustomerId", "BookingId", "StripeConnectAccountId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key.Parser, new[]{ "OrganizationId", "CustomerId", "BookingCheckoutSessionId", "StripeConnectAccountId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -76,7 +76,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
     public Key(Key other) : this() {
       organizationId_ = other.organizationId_;
       customerId_ = other.customerId_;
-      bookingId_ = other.bookingId_;
+      bookingCheckoutSessionId_ = other.bookingCheckoutSessionId_;
       stripeConnectAccountId_ = other.stripeConnectAccountId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -111,15 +111,15 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
       }
     }
 
-    /// <summary>Field number for the "bookingId" field.</summary>
-    public const int BookingIdFieldNumber = 3;
-    private string bookingId_ = "";
+    /// <summary>Field number for the "bookingCheckoutSessionId" field.</summary>
+    public const int BookingCheckoutSessionIdFieldNumber = 3;
+    private string bookingCheckoutSessionId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string BookingId {
-      get { return bookingId_; }
+    public string BookingCheckoutSessionId {
+      get { return bookingCheckoutSessionId_; }
       set {
-        bookingId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        bookingCheckoutSessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -152,7 +152,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
       }
       if (OrganizationId != other.OrganizationId) return false;
       if (CustomerId != other.CustomerId) return false;
-      if (BookingId != other.BookingId) return false;
+      if (BookingCheckoutSessionId != other.BookingCheckoutSessionId) return false;
       if (StripeConnectAccountId != other.StripeConnectAccountId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -163,7 +163,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
       int hash = 1;
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
-      if (BookingId.Length != 0) hash ^= BookingId.GetHashCode();
+      if (BookingCheckoutSessionId.Length != 0) hash ^= BookingCheckoutSessionId.GetHashCode();
       if (StripeConnectAccountId.Length != 0) hash ^= StripeConnectAccountId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -191,9 +191,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(CustomerId);
       }
-      if (BookingId.Length != 0) {
+      if (BookingCheckoutSessionId.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(BookingId);
+        output.WriteString(BookingCheckoutSessionId);
       }
       if (StripeConnectAccountId.Length != 0) {
         output.WriteRawTag(34);
@@ -217,9 +217,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(CustomerId);
       }
-      if (BookingId.Length != 0) {
+      if (BookingCheckoutSessionId.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(BookingId);
+        output.WriteString(BookingCheckoutSessionId);
       }
       if (StripeConnectAccountId.Length != 0) {
         output.WriteRawTag(34);
@@ -241,8 +241,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
       if (CustomerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomerId);
       }
-      if (BookingId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(BookingId);
+      if (BookingCheckoutSessionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BookingCheckoutSessionId);
       }
       if (StripeConnectAccountId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountId);
@@ -265,8 +265,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
       if (other.CustomerId.Length != 0) {
         CustomerId = other.CustomerId;
       }
-      if (other.BookingId.Length != 0) {
-        BookingId = other.BookingId;
+      if (other.BookingCheckoutSessionId.Length != 0) {
+        BookingCheckoutSessionId = other.BookingCheckoutSessionId;
       }
       if (other.StripeConnectAccountId.Length != 0) {
         StripeConnectAccountId = other.StripeConnectAccountId;
@@ -299,7 +299,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
             break;
           }
           case 26: {
-            BookingId = input.ReadString();
+            BookingCheckoutSessionId = input.ReadString();
             break;
           }
           case 34: {
@@ -334,7 +334,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Key {
             break;
           }
           case 26: {
-            BookingId = input.ReadString();
+            BookingCheckoutSessionId = input.ReadString();
             break;
           }
           case 34: {

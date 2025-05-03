@@ -147,7 +147,7 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await paymentPublisher.PublishBookingPaymentAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+        await paymentPublisher.PublishBookingCheckoutSessionAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -164,6 +164,6 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await paymentPublisher.PublishBookingPaymentAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
+        await paymentPublisher.PublishBookingCheckoutSessionAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }
 }

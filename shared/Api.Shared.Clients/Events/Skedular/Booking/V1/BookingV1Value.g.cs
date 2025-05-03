@@ -52,22 +52,22 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2hlZHVsZRIoCgRmcm9tGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
             "dGFtcBIpCgV1bnRpbBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXAiNgoITGluZUl0ZW0SGAoQcHJvZHVjdFZlcnNpb25JZBgBIAEoCRIQCghx",
-            "dWFudGl0eRgCIAEoBSKEAQoWQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhIKCgJp",
-            "ZBgBIAEoCRIaChJwYXltZW50UmVmZXJlbmNlSWQYAiABKAkSEwoLY2hlY2tv",
-            "dXRVcmwYAyABKAkSLQoNcGF5bWVudFN0YXR1cxgEIAEoDjIWLmJvb2tpbmcu",
-            "UGF5bWVudFN0YXR1cyovCgRUeXBlEhMKD0Jvb2tpbmdVcHNlcnRlZBAAEhIK",
-            "DkJvb2tpbmdEZWxldGVkEAEq1QEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdG",
-            "cm9tSG9tZRAAEhUKEVdvcmtpbmdGcm9tT2ZmaWNlEAESHQoZV29ya2luZ0Zy",
-            "b21Db3dvcmtpbmdTcGFjZRACEg0KCVNpY2tMZWF2ZRADEg8KC0FubnVhbExl",
-            "YXZlEAQSEgoOV2VsbGJlaW5nTGVhdmUQBRIQCgxDbGllbnRPZmZpY2UQBhIM",
-            "CghWYWNhdGlvbhAHEhQKEFRyYXZlbGluZ0ZvcldvcmsQCBIRCg1Ob25Xb3Jr",
-            "aW5nRGF5EAkqbAoNQm9va2luZ1N0YXR1cxILCgdQZW5kaW5nEAASDAoIUmVq",
-            "ZWN0ZWQQARINCglDb25maXJtZWQQAhISCg5QYXltZW50RXhwaXJlZBADEh0K",
-            "GVBheW1lbnRSZWNvcmROZXZlckNyZWF0ZWQQBCp9Cg1QYXltZW50U3RhdHVz",
-            "EiIKHlBheW1lbnRTdGF0dXNOb1BheW1lbnRSZXF1aXJlZBAAEhgKFFBheW1l",
-            "bnRTdGF0dXNQZW5kaW5nEAESFQoRUGF5bWVudFN0YXR1c1BhaWQQAhIXChNQ",
-            "YXltZW50U3RhdHVzVW5wYWlkEANCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
+            "dWFudGl0eRgCIAEoBSJoChZCb29raW5nQ2hlY2tvdXRTZXNzaW9uEgoKAmlk",
+            "GAEgASgJEhMKC2NoZWNrb3V0VXJsGAIgASgJEi0KDXBheW1lbnRTdGF0dXMY",
+            "AyABKA4yFi5ib29raW5nLlBheW1lbnRTdGF0dXMqLwoEVHlwZRITCg9Cb29r",
+            "aW5nVXBzZXJ0ZWQQABISCg5Cb29raW5nRGVsZXRlZBABKtUBCgtCb29raW5n",
+            "VHlwZRITCg9Xb3JraW5nRnJvbUhvbWUQABIVChFXb3JraW5nRnJvbU9mZmlj",
+            "ZRABEh0KGVdvcmtpbmdGcm9tQ293b3JraW5nU3BhY2UQAhINCglTaWNrTGVh",
+            "dmUQAxIPCgtBbm51YWxMZWF2ZRAEEhIKDldlbGxiZWluZ0xlYXZlEAUSEAoM",
+            "Q2xpZW50T2ZmaWNlEAYSDAoIVmFjYXRpb24QBxIUChBUcmF2ZWxpbmdGb3JX",
+            "b3JrEAgSEQoNTm9uV29ya2luZ0RheRAJKmwKDUJvb2tpbmdTdGF0dXMSCwoH",
+            "UGVuZGluZxAAEgwKCFJlamVjdGVkEAESDQoJQ29uZmlybWVkEAISEgoOUGF5",
+            "bWVudEV4cGlyZWQQAxIdChlQYXltZW50UmVjb3JkTmV2ZXJDcmVhdGVkEAQq",
+            "fQoNUGF5bWVudFN0YXR1cxIiCh5QYXltZW50U3RhdHVzTm9QYXltZW50UmVx",
+            "dWlyZWQQABIYChRQYXltZW50U3RhdHVzUGVuZGluZxABEhUKEVBheW1lbnRT",
+            "dGF0dXNQYWlkEAISFwoTUGF5bWVudFN0YXR1c1VucGFpZBADQjaqAjNBcGku",
+            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkJvb2tpbmcuVjEuVmFs",
+            "dWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -78,7 +78,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser, new[]{ "ProductVersionId", "Quantity" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession.Parser, new[]{ "Id", "PaymentReferenceId", "CheckoutUrl", "PaymentStatus" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession.Parser, new[]{ "Id", "CheckoutUrl", "PaymentStatus" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2618,7 +2618,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public BookingCheckoutSession(BookingCheckoutSession other) : this() {
       id_ = other.id_;
-      paymentReferenceId_ = other.paymentReferenceId_;
       checkoutUrl_ = other.checkoutUrl_;
       paymentStatus_ = other.paymentStatus_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -2642,20 +2641,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "paymentReferenceId" field.</summary>
-    public const int PaymentReferenceIdFieldNumber = 2;
-    private string paymentReferenceId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string PaymentReferenceId {
-      get { return paymentReferenceId_; }
-      set {
-        paymentReferenceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "checkoutUrl" field.</summary>
-    public const int CheckoutUrlFieldNumber = 3;
+    public const int CheckoutUrlFieldNumber = 2;
     private string checkoutUrl_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2667,7 +2654,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "paymentStatus" field.</summary>
-    public const int PaymentStatusFieldNumber = 4;
+    public const int PaymentStatusFieldNumber = 3;
     private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus paymentStatus_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2694,7 +2681,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (PaymentReferenceId != other.PaymentReferenceId) return false;
       if (CheckoutUrl != other.CheckoutUrl) return false;
       if (PaymentStatus != other.PaymentStatus) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -2705,7 +2691,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (PaymentReferenceId.Length != 0) hash ^= PaymentReferenceId.GetHashCode();
       if (CheckoutUrl.Length != 0) hash ^= CheckoutUrl.GetHashCode();
       if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired) hash ^= PaymentStatus.GetHashCode();
       if (_unknownFields != null) {
@@ -2730,16 +2715,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (PaymentReferenceId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(PaymentReferenceId);
-      }
       if (CheckoutUrl.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(CheckoutUrl);
       }
       if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(24);
         output.WriteEnum((int) PaymentStatus);
       }
       if (_unknownFields != null) {
@@ -2756,16 +2737,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (PaymentReferenceId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(PaymentReferenceId);
-      }
       if (CheckoutUrl.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(CheckoutUrl);
       }
       if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(24);
         output.WriteEnum((int) PaymentStatus);
       }
       if (_unknownFields != null) {
@@ -2780,9 +2757,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       int size = 0;
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (PaymentReferenceId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaymentReferenceId);
       }
       if (CheckoutUrl.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CheckoutUrl);
@@ -2804,9 +2778,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (other.Id.Length != 0) {
         Id = other.Id;
-      }
-      if (other.PaymentReferenceId.Length != 0) {
-        PaymentReferenceId = other.PaymentReferenceId;
       }
       if (other.CheckoutUrl.Length != 0) {
         CheckoutUrl = other.CheckoutUrl;
@@ -2838,14 +2809,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             break;
           }
           case 18: {
-            PaymentReferenceId = input.ReadString();
-            break;
-          }
-          case 26: {
             CheckoutUrl = input.ReadString();
             break;
           }
-          case 32: {
+          case 24: {
             PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus) input.ReadEnum();
             break;
           }
@@ -2873,14 +2840,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             break;
           }
           case 18: {
-            PaymentReferenceId = input.ReadString();
-            break;
-          }
-          case 26: {
             CheckoutUrl = input.ReadString();
             break;
           }
-          case 32: {
+          case 24: {
             PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus) input.ReadEnum();
             break;
           }
