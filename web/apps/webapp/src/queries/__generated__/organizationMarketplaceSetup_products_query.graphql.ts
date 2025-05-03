@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<13cf3dfcae41ae1f84c4ac02cd075c0a>>
+ * @generated SignedSource<<5f6700962531526308efdb50d03c2738>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,6 +43,8 @@ export type organizationMarketplaceSetup_products_query$key = {
   readonly " $data"?: organizationMarketplaceSetup_products_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_products_query">;
 };
+
+import organizationMarketplaceSetup_products_refetchableFragment_graphql from './organizationMarketplaceSetup_products_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -96,7 +98,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMarketplaceSetup_products_refetchableFragment.graphql')
+      "operation": organizationMarketplaceSetup_products_refetchableFragment_graphql
     }
   },
   "name": "organizationMarketplaceSetup_products_query",

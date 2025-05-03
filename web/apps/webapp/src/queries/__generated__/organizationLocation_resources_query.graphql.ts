@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8aabd4f36ef9c0987f2b1b2c4c61e15>>
+ * @generated SignedSource<<78696c7e820251091d1965e4e3986f3a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,6 +51,8 @@ export type organizationLocation_resources_query$key = {
   readonly " $data"?: organizationLocation_resources_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationLocation_resources_query">;
 };
+
+import organizationLocation_resources_refetchableFragment_graphql from './organizationLocation_resources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -130,7 +132,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationLocation_resources_refetchableFragment.graphql')
+      "operation": organizationLocation_resources_refetchableFragment_graphql
     }
   },
   "name": "organizationLocation_resources_query",

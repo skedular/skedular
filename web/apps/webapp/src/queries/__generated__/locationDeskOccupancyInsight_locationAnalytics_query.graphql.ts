@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86958d6174c77334ec6e6fd6fc901460>>
+ * @generated SignedSource<<fa170187ff31307cf458738bf77791eb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type locationDeskOccupancyInsight_locationAnalytics_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"locationDeskOccupancyInsight_locationAnalytics_query">;
 };
 
+import locationDeskOccupancyInsight_locationAnalytics_refetchableFragment_graphql from './locationDeskOccupancyInsight_locationAnalytics_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -44,7 +46,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./locationDeskOccupancyInsight_locationAnalytics_refetchableFragment.graphql')
+      "operation": locationDeskOccupancyInsight_locationAnalytics_refetchableFragment_graphql
     }
   },
   "name": "locationDeskOccupancyInsight_locationAnalytics_query",

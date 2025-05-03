@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<34c012df1737b4132bdd8f0cf85c118d>>
+ * @generated SignedSource<<7c590b22ebdc029fc9c4da5011b7e3a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,6 +55,8 @@ export type organizationLocations_locations_availableOrganizationResources_query
   readonly " $data"?: organizationLocations_locations_availableOrganizationResources_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationLocations_locations_availableOrganizationResources_query">;
 };
+
+import organizationLocations_locations_availableOrganizationResources_refetchableFragment_graphql from './organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -167,7 +169,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql')
+      "operation": organizationLocations_locations_availableOrganizationResources_refetchableFragment_graphql
     }
   },
   "name": "organizationLocations_locations_availableOrganizationResources_query",

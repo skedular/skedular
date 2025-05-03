@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80871a64bbc1abde5af8dcddb67ac891>>
+ * @generated SignedSource<<00fcfbe1742e0db25dbd91c8fb8ff3d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,6 +69,8 @@ export type bookings_bookings_query$key = {
   readonly " $data"?: bookings_bookings_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"bookings_bookings_query">;
 };
+
+import bookings_bookings_refetchableFragment_graphql from './bookings_bookings_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -161,7 +163,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./bookings_bookings_refetchableFragment.graphql')
+      "operation": bookings_bookings_refetchableFragment_graphql
     }
   },
   "name": "bookings_bookings_query",

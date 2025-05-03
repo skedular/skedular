@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75d1e3a14af059c4644959ceb7df0948>>
+ * @generated SignedSource<<5e3606d7bff8f17a1c6eb35d17cd07d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,8 @@ export type editBooking_organizationMembers_query$key = {
   readonly " $data"?: editBooking_organizationMembers_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"editBooking_organizationMembers_query">;
 };
+
+import editBooking_organizationMembers_refetchableFragment_graphql from './editBooking_organizationMembers_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -84,7 +86,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./editBooking_organizationMembers_refetchableFragment.graphql')
+      "operation": editBooking_organizationMembers_refetchableFragment_graphql
     }
   },
   "name": "editBooking_organizationMembers_query",

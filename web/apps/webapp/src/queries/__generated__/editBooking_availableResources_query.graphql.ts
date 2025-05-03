@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0de061cdbb8a18d1ff80073f8bca4778>>
+ * @generated SignedSource<<781764f3f28fa112207d5e171a05398d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,6 +31,8 @@ export type editBooking_availableResources_query$key = {
   readonly " $data"?: editBooking_availableResources_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"editBooking_availableResources_query">;
 };
+
+import editBooking_availableResources_refetchableFragment_graphql from './editBooking_availableResources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -82,7 +84,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./editBooking_availableResources_refetchableFragment.graphql')
+      "operation": editBooking_availableResources_refetchableFragment_graphql
     }
   },
   "name": "editBooking_availableResources_query",

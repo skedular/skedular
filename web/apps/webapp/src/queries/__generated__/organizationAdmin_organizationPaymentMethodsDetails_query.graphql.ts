@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d5a1c6fc6f7d3195e4763b26dea28632>>
+ * @generated SignedSource<<e0c666cf25c852b1ef77e6007cab3b00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,8 @@ export type organizationAdmin_organizationPaymentMethodsDetails_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_organizationPaymentMethodsDetails_query">;
 };
 
+import organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment_graphql from './organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -37,7 +39,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql')
+      "operation": organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment_graphql
     }
   },
   "name": "organizationAdmin_organizationPaymentMethodsDetails_query",

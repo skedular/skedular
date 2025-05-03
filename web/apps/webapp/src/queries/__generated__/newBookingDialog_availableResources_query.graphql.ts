@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f5ed1f5a9e20ca629e97beff816b0a29>>
+ * @generated SignedSource<<abd14a34c64850656ec95a41eaac6645>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,6 +31,8 @@ export type newBookingDialog_availableResources_query$key = {
   readonly " $data"?: newBookingDialog_availableResources_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_availableResources_query">;
 };
+
+import newBookingDialog_availableResources_refetchableFragment_graphql from './newBookingDialog_availableResources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -82,7 +84,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./newBookingDialog_availableResources_refetchableFragment.graphql')
+      "operation": newBookingDialog_availableResources_refetchableFragment_graphql
     }
   },
   "name": "newBookingDialog_availableResources_query",

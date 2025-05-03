@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78fb9da6a6c80e0715c84e362cbdf347>>
+ * @generated SignedSource<<ea98376a1aeef9741c7e224dd7f73d75>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,8 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
   readonly " $data"?: organizationMarketplaceSetup_organizationStripeConnectAccounts_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_organizationStripeConnectAccounts_query">;
 };
+
+import organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment_graphql from './organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -86,7 +88,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment.graphql')
+      "operation": organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment_graphql
     }
   },
   "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_query",

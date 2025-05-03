@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3397bda22de28bfdec5efdf5b4f97f3>>
+ * @generated SignedSource<<2130ffc65d8618ee3c91334830bf71ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,6 +35,8 @@ export type bookProduct_availableResources_query$key = {
   readonly " $data"?: bookProduct_availableResources_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"bookProduct_availableResources_query">;
 };
+
+import bookProduct_availableResources_refetchableFragment_graphql from './bookProduct_availableResources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -86,7 +88,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./bookProduct_availableResources_refetchableFragment.graphql')
+      "operation": bookProduct_availableResources_refetchableFragment_graphql
     }
   },
   "name": "bookProduct_availableResources_query",

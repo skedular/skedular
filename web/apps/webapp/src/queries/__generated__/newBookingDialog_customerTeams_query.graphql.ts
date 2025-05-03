@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8eac0579bba1abd84978cec124420c62>>
+ * @generated SignedSource<<66bf28e460c1a7f430209027f3d4cf57>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,6 +28,8 @@ export type newBookingDialog_customerTeams_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_customerTeams_query">;
 };
 
+import newBookingDialog_customerTeams_refetchableFragment_graphql from './newBookingDialog_customerTeams_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -52,7 +54,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./newBookingDialog_customerTeams_refetchableFragment.graphql')
+      "operation": newBookingDialog_customerTeams_refetchableFragment_graphql
     }
   },
   "name": "newBookingDialog_customerTeams_query",

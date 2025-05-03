@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<415462f0c831223e27583dd1734433c3>>
+ * @generated SignedSource<<075b1ff947b3ced7e06478c141a7687b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type organizationMemberAttendancyInsight_organizationAnalytics_query$key 
   readonly " $fragmentSpreads": FragmentRefs<"organizationMemberAttendancyInsight_organizationAnalytics_query">;
 };
 
+import organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment_graphql from './organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -44,7 +46,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment.graphql')
+      "operation": organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment_graphql
     }
   },
   "name": "organizationMemberAttendancyInsight_organizationAnalytics_query",

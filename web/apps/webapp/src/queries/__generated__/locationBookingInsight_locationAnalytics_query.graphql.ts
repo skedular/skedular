@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c9d3317b5ce86d64a39bacb41f3e625>>
+ * @generated SignedSource<<093eac1ef8166a927963ff191e5fb471>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type locationBookingInsight_locationAnalytics_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"locationBookingInsight_locationAnalytics_query">;
 };
 
+import locationBookingInsight_locationAnalytics_refetchableFragment_graphql from './locationBookingInsight_locationAnalytics_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -44,7 +46,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./locationBookingInsight_locationAnalytics_refetchableFragment.graphql')
+      "operation": locationBookingInsight_locationAnalytics_refetchableFragment_graphql
     }
   },
   "name": "locationBookingInsight_locationAnalytics_query",

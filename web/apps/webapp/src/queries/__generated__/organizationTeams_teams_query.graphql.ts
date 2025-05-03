@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9de026acab6cbb33753419699959ca0e>>
+ * @generated SignedSource<<5b319293d46ceb468b070939375c0fd3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,8 @@ export type organizationTeams_teams_query$key = {
   readonly " $data"?: organizationTeams_teams_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationTeams_teams_query">;
 };
+
+import organizationTeams_teams_refetchableFragment_graphql from './organizationTeams_teams_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -111,7 +113,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationTeams_teams_refetchableFragment.graphql')
+      "operation": organizationTeams_teams_refetchableFragment_graphql
     }
   },
   "name": "organizationTeams_teams_query",

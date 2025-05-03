@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<59030df29aeaf04246f8056cf87b4b49>>
+ * @generated SignedSource<<a43cf6b25a61475b2719a70d76bc4308>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,8 @@ export type organizationAdmin_zones_query$key = {
   readonly " $data"?: organizationAdmin_zones_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_zones_query">;
 };
+
+import organizationAdmin_zones_refetchableFragment_graphql from './organizationAdmin_zones_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -75,7 +77,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationAdmin_zones_refetchableFragment.graphql')
+      "operation": organizationAdmin_zones_refetchableFragment_graphql
     }
   },
   "name": "organizationAdmin_zones_query",

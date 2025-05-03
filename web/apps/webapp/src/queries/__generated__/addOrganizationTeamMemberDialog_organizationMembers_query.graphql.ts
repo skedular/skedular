@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18907e39974745b0d9bb076232d9fdc7>>
+ * @generated SignedSource<<d04ad0365ca1337d034dfbda78953429>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,8 @@ export type addOrganizationTeamMemberDialog_organizationMembers_query$key = {
   readonly " $data"?: addOrganizationTeamMemberDialog_organizationMembers_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"addOrganizationTeamMemberDialog_organizationMembers_query">;
 };
+
+import addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment_graphql from './addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -84,7 +86,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql')
+      "operation": addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment_graphql
     }
   },
   "name": "addOrganizationTeamMemberDialog_organizationMembers_query",

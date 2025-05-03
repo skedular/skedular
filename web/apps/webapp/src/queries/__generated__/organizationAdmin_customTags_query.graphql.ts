@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71661d6e9ef556b6869073823d4a5012>>
+ * @generated SignedSource<<8fc624227920f4bcc14633c769ec7463>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,8 @@ export type organizationAdmin_customTags_query$key = {
   readonly " $data"?: organizationAdmin_customTags_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_customTags_query">;
 };
+
+import organizationAdmin_customTags_refetchableFragment_graphql from './organizationAdmin_customTags_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -75,7 +77,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationAdmin_customTags_refetchableFragment.graphql')
+      "operation": organizationAdmin_customTags_refetchableFragment_graphql
     }
   },
   "name": "organizationAdmin_customTags_query",

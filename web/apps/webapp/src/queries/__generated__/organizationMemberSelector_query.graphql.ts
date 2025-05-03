@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f1f908d038ce5cda540d2e44b1ec55cf>>
+ * @generated SignedSource<<614bacea28efa44c9a90a4e1cd6bfdd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,8 @@ export type organizationMemberSelector_query$key = {
   readonly " $data"?: organizationMemberSelector_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMemberSelector_query">;
 };
+
+import organizationMemberSelector_refetchableFragment_graphql from './organizationMemberSelector_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -88,7 +90,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMemberSelector_refetchableFragment.graphql')
+      "operation": organizationMemberSelector_refetchableFragment_graphql
     }
   },
   "name": "organizationMemberSelector_query",

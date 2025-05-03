@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96b54250a2506e833f0b407246dc0514>>
+ * @generated SignedSource<<25493619c13bd8933aaad4c60641e3af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type organizationBookingInsight_organizationAnalytics_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationBookingInsight_organizationAnalytics_query">;
 };
 
+import organizationBookingInsight_organizationAnalytics_refetchableFragment_graphql from './organizationBookingInsight_organizationAnalytics_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
@@ -44,7 +46,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationBookingInsight_organizationAnalytics_refetchableFragment.graphql')
+      "operation": organizationBookingInsight_organizationAnalytics_refetchableFragment_graphql
     }
   },
   "name": "organizationBookingInsight_organizationAnalytics_query",

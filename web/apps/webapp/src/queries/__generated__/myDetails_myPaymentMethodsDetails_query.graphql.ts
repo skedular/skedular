@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1dd75dd69437ea99d1094354d822e9a9>>
+ * @generated SignedSource<<a64695a560ffa1d165a2860ef671231b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,8 @@ export type myDetails_myPaymentMethodsDetails_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"myDetails_myPaymentMethodsDetails_query">;
 };
 
+import myDetails_myPaymentMethodsDetails_refetchableFragment_graphql from './myDetails_myPaymentMethodsDetails_refetchableFragment.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -32,7 +34,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./myDetails_myPaymentMethodsDetails_refetchableFragment.graphql')
+      "operation": myDetails_myPaymentMethodsDetails_refetchableFragment_graphql
     }
   },
   "name": "myDetails_myPaymentMethodsDetails_query",

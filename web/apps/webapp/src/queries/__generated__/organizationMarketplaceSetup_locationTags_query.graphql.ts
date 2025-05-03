@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d5e480ac4ad2e6674895bf3d4d0c0aea>>
+ * @generated SignedSource<<aa25336e75d358b53f4de640ca1ae911>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,8 @@ export type organizationMarketplaceSetup_locationTags_query$key = {
   readonly " $data"?: organizationMarketplaceSetup_locationTags_query$data;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_locationTags_query">;
 };
+
+import organizationMarketplaceSetup_locationTags_refetchableFragment_graphql from './organizationMarketplaceSetup_locationTags_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -75,7 +77,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMarketplaceSetup_locationTags_refetchableFragment.graphql')
+      "operation": organizationMarketplaceSetup_locationTags_refetchableFragment_graphql
     }
   },
   "name": "organizationMarketplaceSetup_locationTags_query",
