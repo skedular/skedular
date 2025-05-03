@@ -31,7 +31,7 @@ const RootQuery = graphql`
   }
 `;
 
-const AnalyticsPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAnalytics_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -60,9 +60,9 @@ const AnalyticsPage = ({ queryReference, onReloadRequired, organizationId }: Pro
   );
 };
 
-const MemoAnalyticsPage = memo(AnalyticsPage);
+const MemoRootPage = memo(RootPage);
 
-const AnalyticsPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAnalytics_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -110,9 +110,9 @@ const AnalyticsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAnalyticsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(AnalyticsPageWithRelay);
+export default memo(RootPageWithRelay);

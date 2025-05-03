@@ -5,7 +5,7 @@ import { AddTeam } from '@/components/team/addTeam';
 import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-const AddTeamPage = () => {
+const RootPage = () => {
   const router = useRouter();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
@@ -39,4 +39,4 @@ const AddTeamPage = () => {
   );
 };
 
-export default memo(AddTeamPage);
+export default memo(RootPage);

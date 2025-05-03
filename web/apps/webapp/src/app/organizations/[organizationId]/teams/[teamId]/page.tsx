@@ -33,7 +33,7 @@ type Props = {
   teamId: string;
 };
 
-const TeamPage = ({ queryReference, onReloadRequired, organizationId, teamId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationTeam_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -62,9 +62,9 @@ const TeamPage = ({ queryReference, onReloadRequired, organizationId, teamId }: 
   );
 };
 
-const MemoTeamPage = memo(TeamPage);
+const MemoRootPage = memo(RootPage);
 
-const TeamPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -122,9 +122,9 @@ const TeamPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} teamId={finalTeamId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} teamId={finalTeamId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(TeamPageWithRelay);
+export default memo(RootPageWithRelay);

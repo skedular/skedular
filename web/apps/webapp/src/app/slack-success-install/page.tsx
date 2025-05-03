@@ -36,10 +36,10 @@ const SlackSuccessInstall = () => {
   );
 };
 
-const SlackSuccessInstallWithSuspense = () => (
+const RootPage = () => (
   <Suspense>
     <SlackSuccessInstall />
   </Suspense>
 );
 
-export default memo(SlackSuccessInstallWithSuspense);
+export default memo(RootPage);

@@ -4,7 +4,7 @@ import { MyDetails } from '@/components/myDetails';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
-const MePage = () => {
+const RootPage = () => {
   const handleReloadRequired = () => {};
 
   return (
@@ -14,4 +14,4 @@ const MePage = () => {
   );
 };
 
-export default memo(MePage);
+export default memo(RootPage);

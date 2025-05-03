@@ -5,7 +5,7 @@ import { AddStripeConnectAccount } from '@/components/stripeConnectAccount/addSt
 import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-const AddStripeConnectAccountPage = () => {
+const RootPage = () => {
   const router = useRouter();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
@@ -39,4 +39,4 @@ const AddStripeConnectAccountPage = () => {
   );
 };
 
-export default memo(AddStripeConnectAccountPage);
+export default memo(RootPage);

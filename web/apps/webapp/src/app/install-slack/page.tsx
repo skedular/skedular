@@ -4,10 +4,10 @@ import { StackRow } from '@/components/commons';
 import { SlackButton } from '@/components/slackButtons';
 import { memo } from 'react';
 
-const InstallSlack = () => (
+const RootPage = () => (
   <StackRow>
     <SlackButton />
   </StackRow>
 );
 
-export default memo(InstallSlack);
+export default memo(RootPage);

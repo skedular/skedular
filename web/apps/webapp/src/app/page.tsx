@@ -3,6 +3,6 @@
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
-const Home = () => <RootShell />;
+const RootPage = () => <RootShell />;
 
-export default memo(Home);
+export default memo(RootPage);

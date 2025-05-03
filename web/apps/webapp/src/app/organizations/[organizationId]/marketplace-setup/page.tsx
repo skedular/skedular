@@ -40,7 +40,7 @@ const RootQuery = graphql`
   }
 `;
 
-const MarketplaceSetupPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -76,9 +76,9 @@ const MarketplaceSetupPage = ({ queryReference, onReloadRequired, organizationId
   );
 };
 
-const MemoMarketplaceSetupPage = memo(MarketplaceSetupPage);
+const MemoRootPage = memo(RootPage);
 
-const MarketplaceSetupPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -120,9 +120,9 @@ const MarketplaceSetupPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoMarketplaceSetupPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(MarketplaceSetupPageWithRelay);
+export default memo(RootPageWithRelay);

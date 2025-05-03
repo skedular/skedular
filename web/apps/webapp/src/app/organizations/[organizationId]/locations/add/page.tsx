@@ -5,7 +5,7 @@ import { RootShell } from '@/components/rootShell';
 import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-const AddLocationPage = () => {
+const RootPage = () => {
   const router = useRouter();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
@@ -39,4 +39,4 @@ const AddLocationPage = () => {
   );
 };
 
-export default memo(AddLocationPage);
+export default memo(RootPage);

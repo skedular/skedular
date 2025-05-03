@@ -20,7 +20,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const StartInstallMsTeamsPage = ({ queryReference, onReloadRequired }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageStartInstallMsTeams_rootQuery>(RootQuery, queryReference);
   const hasOpened = useRef(false);
 
@@ -34,9 +34,9 @@ const StartInstallMsTeamsPage = ({ queryReference, onReloadRequired }: Props) =>
   return <></>;
 };
 
-const MemoStartInstallMsTeamsPage = memo(StartInstallMsTeamsPage);
+const MemoRootPage = memo(RootPage);
 
-const StartInstallMsTeamsPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageStartInstallMsTeams_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -62,9 +62,9 @@ const StartInstallMsTeamsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoStartInstallMsTeamsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
 
-export default memo(StartInstallMsTeamsPageWithRelay);
+export default memo(RootPageWithRelay);

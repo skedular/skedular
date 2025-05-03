@@ -39,7 +39,7 @@ type Props = {
   productId: string;
 };
 
-const OrganizationProductBookPage = ({ queryReference, onReloadRequired, organizationId, productId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId, productId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationProductBook_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -72,9 +72,9 @@ const OrganizationProductBookPage = ({ queryReference, onReloadRequired, organiz
   );
 };
 
-const MemoOrganizationProductBookPage = memo(OrganizationProductBookPage);
+const MemoRootPage = memo(RootPage);
 
-const OrganizationProductBookPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationProductBook_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -137,9 +137,9 @@ const OrganizationProductBookPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationProductBookPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} productId={finalProductId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} productId={finalProductId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationProductBookPageWithRelay);
+export default memo(RootPageWithRelay);

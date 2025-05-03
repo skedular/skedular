@@ -35,7 +35,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationSigninPage = ({ queryReference }: Props) => {
+const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationSsoSignin_rootQuery>(RootQuery, queryReference);
   const paletteMode = useContext(PaletteModeContext);
 
@@ -55,9 +55,9 @@ const OrganizationSigninPage = ({ queryReference }: Props) => {
   );
 };
 
-const MemoOrganizationSigninPage = memo(OrganizationSigninPage);
+const MemoRootPage = memo(RootPage);
 
-const OrganizationSigninPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationSsoSignin_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -102,9 +102,9 @@ const OrganizationSigninPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationSigninPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationSigninPageWithRelay);
+export default memo(RootPageWithRelay);

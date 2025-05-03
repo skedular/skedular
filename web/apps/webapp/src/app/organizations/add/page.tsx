@@ -6,7 +6,7 @@ import { RootShell } from '@/components/rootShell';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-const AddOrganizationPage = () => {
+const RootPage = () => {
   const router = useRouter();
 
   const handleAdded = (id: string) => {
@@ -26,4 +26,4 @@ const AddOrganizationPage = () => {
   );
 };
 
-export default memo(AddOrganizationPage);
+export default memo(RootPage);

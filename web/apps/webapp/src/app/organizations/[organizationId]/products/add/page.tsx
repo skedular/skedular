@@ -5,7 +5,7 @@ import { RootShell } from '@/components/rootShell';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
-const AddProductPage = () => {
+const RootPage = () => {
   const router = useRouter();
 
   const handleAdded = () => {
@@ -25,4 +25,4 @@ const AddProductPage = () => {
   );
 };
 
-export default memo(AddProductPage);
+export default memo(RootPage);

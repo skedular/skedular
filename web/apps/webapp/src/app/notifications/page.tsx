@@ -4,10 +4,10 @@ import { Notifications } from '@/components/notification/notifications';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
-const NotificationsPage = () => (
+const RootPage = () => (
   <RootShell hideOrganizationSelector>
     <Notifications />
   </RootShell>
 );
 
-export default memo(NotificationsPage);
+export default memo(RootPage);

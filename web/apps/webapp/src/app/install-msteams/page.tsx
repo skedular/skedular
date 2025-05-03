@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { memo } from 'react';
 
-const InstallMsTeams = () => (
+const RootPage = () => (
   <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
     <SmallHeadingIconTypography label="Your administrator needs to install Skedular for you. This is a one-time setup. Please click the button below to start the installation." />
     <Button LinkComponent={Link} variant="contained" href="/start-install-msteams" startIcon={<InstallIcon />}>
@@ -16,4 +16,4 @@ const InstallMsTeams = () => (
   </Box>
 );
 
-export default memo(InstallMsTeams);
+export default memo(RootPage);

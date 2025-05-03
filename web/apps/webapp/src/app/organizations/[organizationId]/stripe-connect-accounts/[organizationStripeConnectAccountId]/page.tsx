@@ -30,7 +30,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const StripeConnectAccountPage = ({ queryReference, onReloadRequired }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationStripeConnectAccount_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -63,9 +63,9 @@ const StripeConnectAccountPage = ({ queryReference, onReloadRequired }: Props) =
   );
 };
 
-const MemoStripeConnectAccountPage = memo(StripeConnectAccountPage);
+const MemoRootPage = memo(RootPage);
 
-const StripeConnectAccountPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationStripeConnectAccount_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -107,9 +107,9 @@ const StripeConnectAccountPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoStripeConnectAccountPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
 
-export default memo(StripeConnectAccountPageWithRelay);
+export default memo(RootPageWithRelay);

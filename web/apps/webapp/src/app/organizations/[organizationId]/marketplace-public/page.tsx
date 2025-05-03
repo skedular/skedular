@@ -5,7 +5,7 @@ import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
-const OrganizationMarketplacePublicPage = () => {
+const RootPage = () => {
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -28,4 +28,4 @@ const OrganizationMarketplacePublicPage = () => {
   );
 };
 
-export default memo(OrganizationMarketplacePublicPage);
+export default memo(RootPage);

@@ -49,7 +49,7 @@ type Props = {
   bookingId: string;
 };
 
-const OrganizationBookingPage = ({ queryReference, onReloadRequired, organizationId, bookingId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -91,9 +91,9 @@ const OrganizationBookingPage = ({ queryReference, onReloadRequired, organizatio
   );
 };
 
-const MemoOrganizationBookingPage = memo(OrganizationBookingPage);
+const MemoRootPage = memo(RootPage);
 
-const OrganizationBookingPageWithRelay = () => {
+const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -177,9 +177,9 @@ const OrganizationBookingPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationBookingPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} bookingId={finalBookingId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} bookingId={finalBookingId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationBookingPageWithRelay);
+export default memo(RootPageWithRelay);

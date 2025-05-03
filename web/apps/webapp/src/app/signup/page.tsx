@@ -4,7 +4,7 @@ import { getSignUpUrlAction } from '@/components/authActions';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
-const SignUpPage = () => {
+const RootPage = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -18,4 +18,4 @@ const SignUpPage = () => {
   return <></>;
 };
 
-export default memo(SignUpPage);
+export default memo(RootPage);
