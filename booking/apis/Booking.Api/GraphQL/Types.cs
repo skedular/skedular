@@ -109,6 +109,8 @@ public class BookingDetails : Node
     [GraphQLName("bookingCheckoutSession")]
     public BookingCheckoutSessionDetails? BookingCheckoutSession { get; set; }
 
+    [GraphQLName("bookedOnMarketplace")] public bool BookedOnMarketplace { get; set; }
+
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 

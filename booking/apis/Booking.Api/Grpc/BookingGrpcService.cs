@@ -44,11 +44,7 @@ public class BookingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new BookingSearchCriteria(
                 request.Where.FromGt?.ToDateTimeOffset(),
                 request.Where.FromGte?.ToDateTimeOffset(),
@@ -108,11 +104,7 @@ public class BookingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new BookingSearchCriteria(
                 request.Where.FromGt?.ToDateTimeOffset(),
                 request.Where.FromGte?.ToDateTimeOffset(),

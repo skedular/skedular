@@ -93,6 +93,7 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
+            BookedOnMarketplace = src.BookedOnMarketplace,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -158,6 +159,7 @@ public class Mapper : IMapper
                 ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
                 Quantity = item.Quantity
             }),
+            BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.BookingCheckoutSession)
         };
 
@@ -257,6 +259,7 @@ public class Mapper : IMapper
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
+        dest.BookedOnMarketplace = src.BookedOnMarketplace;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
@@ -310,7 +313,8 @@ public class Mapper : IMapper
             CreatedByCustomer = MapToGrpcResponse(src.CreatedByCustomer),
             LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
             DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
-            BookingCheckoutSession = MapToGrpcResponse(src.BookingCheckoutSession)
+            BookingCheckoutSession = MapToGrpcResponse(src.BookingCheckoutSession),
+            BookedOnMarketplace = src.BookedOnMarketplace
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
@@ -353,7 +357,8 @@ public class Mapper : IMapper
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedLocations = [],
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
+            BookedOnMarketplace = false
         };
     }
 

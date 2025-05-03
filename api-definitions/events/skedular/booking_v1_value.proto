@@ -48,6 +48,7 @@ message Booking {
   string deletedByCustomerId = 19;
   repeated LineItem lineItems = 20;
   BookingCheckoutSession bookingCheckoutSession = 21;
+  bool bookedOnMarketplace = 22;
 }
 
 enum BookingType

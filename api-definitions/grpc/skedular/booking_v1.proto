@@ -154,6 +154,7 @@ message Booking {
     Customer deletedByCustomer = 18;
     repeated LineItem lineItems = 19;
     BookingCheckoutSession bookingCheckoutSession = 20;
+    bool bookedOnMarketplace = 21;
 }
 
 message Customer {

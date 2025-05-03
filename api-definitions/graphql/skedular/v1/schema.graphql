@@ -36,6 +36,7 @@ type BookingConnection {
 }
 
 type BookingDetails {
+  bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   createdByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails

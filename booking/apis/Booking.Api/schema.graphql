@@ -34,6 +34,7 @@ type BookingDetails {
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
+  bookedOnMarketplace: Boolean!
   id: ID!
 }
 

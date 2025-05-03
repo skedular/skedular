@@ -80,11 +80,6 @@ public class BookingSubscriber(
             throw new InvalidOperationException();
         }
 
-        if (productVersions.Any(item => item.StripePrice is null))
-        {
-            throw new StripePriceRelationshipIsNotSetYet();
-        }
-
         var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
         if (organizationIds.Count > 1)
         {

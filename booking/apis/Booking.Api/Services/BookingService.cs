@@ -58,6 +58,8 @@ public class BookingService(
             throw new ArgumentException(nameof(booking.LineItems));
         }
 
+        booking.BookedOnMarketplace = booking.LineItems.Count > 0;
+
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(booking.Id))
         {
@@ -630,6 +632,7 @@ public class BookingService(
         }
 
         var existingLineItems = existingBooking.LineItems;
+        var existingBookedOnMarketplace = existingBooking.BookedOnMarketplace;
 
         booking.IsPaymentRequired = existingLineItems.Count != 0;
         booking.Status = existingLineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
@@ -649,7 +652,9 @@ public class BookingService(
             null,
             existingBooking.ProductVersions,
             existingBooking.BookingCheckoutSession);
+
         bookingEntity.LineItems = existingLineItems;
+        bookingEntity.BookedOnMarketplace = existingBookedOnMarketplace;
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);

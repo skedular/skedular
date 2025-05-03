@@ -66,11 +66,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TeamSearchCriteria(
                 request.Where.OrganizationId,
                 request.Where.CustomerId,

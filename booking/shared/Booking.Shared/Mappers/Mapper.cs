@@ -48,7 +48,8 @@ public class Mapper : IMapper
                     Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsPaymentRequired = src.IsPaymentRequired
+            IsPaymentRequired = src.IsPaymentRequired,
+            BookedOnMarketplace = src.BookedOnMarketplace
         };
 
         if (src.PaidByCustomer is not null)

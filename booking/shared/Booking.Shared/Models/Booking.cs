@@ -17,6 +17,7 @@ public class Booking : ModelBaseWithDeleted
     public BookingStatus Status { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
+    public bool BookedOnMarketplace { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {

@@ -202,11 +202,7 @@ public class LocationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new ResourceSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds),
             request.OrderBy.Select(item =>
             {

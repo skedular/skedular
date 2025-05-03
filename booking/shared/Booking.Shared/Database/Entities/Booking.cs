@@ -18,6 +18,7 @@ public class Booking : EntityBaseWithDeleted
     public string Status { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
+    public bool BookedOnMarketplace { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
@@ -45,6 +46,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.Confirmed);
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
+        builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
