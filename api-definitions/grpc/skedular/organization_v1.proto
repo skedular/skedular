@@ -182,7 +182,6 @@ message MemberEdge {
     string cursor = 2;
 }
 
-
 message Customer {
     string id = 1;
     string name = 2;

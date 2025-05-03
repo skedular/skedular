@@ -27,7 +27,7 @@ type BookingCheckoutSessionDetails {
   checkoutUrl: String!
   id: ID!
   paymentReferenceId: String!
-  paymentStatus: String!
+  paymentStatus: PaymentStatus!
 }
 
 type BookingConnection {
@@ -2187,6 +2187,13 @@ enum OrganizationTagOrderField {
 enum OrganizationType {
   Marketplace
   Private
+}
+
+enum PaymentStatus {
+  NoPaymentRequired
+  Paid
+  Pending
+  Unpaid
 }
 
 enum PriceUnit {

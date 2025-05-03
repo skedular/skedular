@@ -74,8 +74,7 @@ message BookingSchedule {
   google.protobuf.Timestamp until = 2;
 }
 
-enum BookingStatus
-{
+enum BookingStatus {
   Pending = 0;
   Rejected = 1;
   Confirmed = 2;
@@ -88,11 +87,11 @@ message LineItem {
   int32 quantity = 2;
 }
 
-enum PaymentStatus
-{
-  NoPaymentRequired = 0;
-  Paid = 1;
-  Unpaid = 2;
+enum PaymentStatus {
+  PaymentStatusNoPaymentRequired = 0;
+  PaymentStatusPending = 1;
+  PaymentStatusPaid = 2;
+  PaymentStatusUnpaid = 3;
 }
 
 message BookingCheckoutSession

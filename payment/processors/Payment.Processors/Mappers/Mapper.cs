@@ -507,7 +507,14 @@ public class Mapper : IMapper
 
     public StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest)
     {
-        dest.PaymentStatus = src.PaymentStatus;
+        dest.PaymentStatus = src.PaymentStatus switch
+        {
+            "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
+            "paid" => PaymentStatusConstants.Paid,
+            "unpaid" => PaymentStatusConstants.Unpaid,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         return dest;
     }
 
@@ -517,9 +524,10 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
             StripeCheckoutSessionId = src.StripeCheckoutSessionId,
-            Url = src.Url,
-            PaymentStatus = src.PaymentStatus,
+            CheckoutUrl = src.CheckoutUrl,
+            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
             Booking = MapTo(src.Booking)
         };
 

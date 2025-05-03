@@ -674,10 +674,7 @@ public class Mapper : IMapper
             ? null
             : new BookingCheckoutSessionDetails
             {
-                Id = src.Id,
-                PaymentReferenceId = src.PaymentReferenceId,
-                PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
-                CheckoutUrl = src.CheckoutUrl
+                Id = src.Id, PaymentReferenceId = src.PaymentReferenceId, CheckoutUrl = src.CheckoutUrl, PaymentStatus = src.PaymentStatus
             };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession? MapToGrpcResponse(
@@ -691,6 +688,7 @@ public class Mapper : IMapper
                 PaymentStatus = src.PaymentStatus switch
                 {
                     PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
+                    PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
                     PaymentStatus.Paid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Paid,
                     PaymentStatus.Unpaid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Unpaid,
                     _ => throw new ArgumentOutOfRangeException()
@@ -706,8 +704,10 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
-                PaymentReferenceId = src.PaymentReferenceId,
-                PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
-                CheckoutUrl = src.CheckoutUrl
+                DeletedAt = src.DeletedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                PaymentReferenceId = src.PaymentReferenceId.ToSafeString(),
+                PaymentStatus = src.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.Pending,
+                CheckoutUrl = src.CheckoutUrl.ToSafeString()
             };
 }

@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Google.Protobuf.WellKnownTypes;
 using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
@@ -17,8 +18,7 @@ public interface IMapper
     CustomerUpdateOptions MergeTo(Organization src);
     CustomerCreateOptions MapTo(Customer src);
     CustomerUpdateOptions MergeTo(Customer src);
-    BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src);
-    BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src);
+    BookingPaymentDetails MapTo(StripeCheckoutSession src);
     ProductCreateOptions MapToProduct(ProductVersion src, Product product, string organizationId);
     PriceCreateOptions MapToPrice(ProductVersion src, Product product, string organizationId, string stripeProductId);
 }
@@ -29,6 +29,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             OrganizationId = src.Organization is null ? string.Empty : src.Organization.Id,
             StripeAccountId = src.StripeAccountId,
             Name = src.Name.ToSafeString(),
@@ -87,19 +88,18 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
         };
 
-    public BookingPaymentCreatedDetails MapToBookingPaymentCreatedDetails(StripeCheckoutSession src) =>
-        new() { Id = src.Booking!.Id, PaymentReferenceId = src.Id, CheckoutUrl = src.Url.ToSafeString() };
-
-    public BookingPaymentDetails MapToBookingPaymentDetails(StripeCheckoutSession src) =>
+    public BookingPaymentDetails MapTo(StripeCheckoutSession src) =>
         new()
         {
-            Id = src.Booking!.Id,
-            PaymentReferenceId = src.Id,
+            Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
+            BookingId = src.Booking!.Id,
             PaymentStatus = src.PaymentStatus switch
             {
-                "no_payment_required" => PaymentStatus.NoPaymentRequired,
-                "paid" => PaymentStatus.Paid,
-                "unpaid" => PaymentStatus.Unpaid,
+                Api.Shared.Services.Models.PaymentStatus.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
+                Api.Shared.Services.Models.PaymentStatus.Pending => PaymentStatus.Pending,
+                Api.Shared.Services.Models.PaymentStatus.Paid => PaymentStatus.Paid,
+                Api.Shared.Services.Models.PaymentStatus.Unpaid => PaymentStatus.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };

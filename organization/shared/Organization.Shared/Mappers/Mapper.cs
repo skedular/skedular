@@ -26,6 +26,7 @@ public class Mapper : IMapper
         var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
@@ -88,6 +89,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             OrganizationId = src.Organization.Id,
             InvitedById = src.CreatedBy.Id,
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)

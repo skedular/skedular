@@ -63,10 +63,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "CghWYWNhdGlvbhAHEhQKEFRyYXZlbGluZ0ZvcldvcmsQCBIRCg1Ob25Xb3Jr",
             "aW5nRGF5EAkqbAoNQm9va2luZ1N0YXR1cxILCgdQZW5kaW5nEAASDAoIUmVq",
             "ZWN0ZWQQARINCglDb25maXJtZWQQAhISCg5QYXltZW50RXhwaXJlZBADEh0K",
-            "GVBheW1lbnRSZWNvcmROZXZlckNyZWF0ZWQQBCo8Cg1QYXltZW50U3RhdHVz",
-            "EhUKEU5vUGF5bWVudFJlcXVpcmVkEAASCAoEUGFpZBABEgoKBlVucGFpZBAC",
-            "QjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkJvb2tp",
-            "bmcuVjEuVmFsdWViBnByb3RvMw=="));
+            "GVBheW1lbnRSZWNvcmROZXZlckNyZWF0ZWQQBCp9Cg1QYXltZW50U3RhdHVz",
+            "EiIKHlBheW1lbnRTdGF0dXNOb1BheW1lbnRSZXF1aXJlZBAAEhgKFFBheW1l",
+            "bnRTdGF0dXNQZW5kaW5nEAESFQoRUGF5bWVudFN0YXR1c1BhaWQQAhIXChNQ",
+            "YXltZW50U3RhdHVzVW5wYWlkEANCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5F",
+            "dmVudHMuU2tlZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -111,9 +112,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
   }
 
   public enum PaymentStatus {
-    [pbr::OriginalName("NoPaymentRequired")] NoPaymentRequired = 0,
-    [pbr::OriginalName("Paid")] Paid = 1,
-    [pbr::OriginalName("Unpaid")] Unpaid = 2,
+    [pbr::OriginalName("PaymentStatusNoPaymentRequired")] NoPaymentRequired = 0,
+    [pbr::OriginalName("PaymentStatusPending")] Pending = 1,
+    [pbr::OriginalName("PaymentStatusPaid")] Paid = 2,
+    [pbr::OriginalName("PaymentStatusUnpaid")] Unpaid = 3,
   }
 
   #endregion

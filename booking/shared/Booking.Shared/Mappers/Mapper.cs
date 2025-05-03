@@ -20,6 +20,7 @@ public class Mapper : IMapper
         var booking = new Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             From = src.From.ToTimestamp(),
             Until = src.Until.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),

@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Marketplace.Shared.Mappers;
 
@@ -15,6 +16,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             Inactive = src.Inactive,
             OrganizationId = src.Organization.Id,
             LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())

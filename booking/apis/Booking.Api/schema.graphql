@@ -6,7 +6,7 @@
 type BookingCheckoutSessionDetails {
   paymentReferenceId: String!
   checkoutUrl: String!
-  paymentStatus: String!
+  paymentStatus: PaymentStatus!
   id: ID!
 }
 
@@ -307,6 +307,13 @@ enum Currency {
 enum OrderDirection {
   Ascending
   Descending
+}
+
+enum PaymentStatus {
+  NoPaymentRequired
+  Pending
+  Paid
+  Unpaid
 }
 
 enum PriceUnit {

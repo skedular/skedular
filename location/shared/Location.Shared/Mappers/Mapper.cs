@@ -20,6 +20,7 @@ public class Mapper : IMapper
         var location = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),

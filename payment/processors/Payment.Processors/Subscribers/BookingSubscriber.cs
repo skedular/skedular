@@ -186,8 +186,14 @@ public class BookingSubscriber(
             {
                 Id = randomHelper.Generate(),
                 StripeCheckoutSessionId = session.Id,
-                Url = session.Url,
-                PaymentStatus = session.PaymentStatus,
+                CheckoutUrl = session.Url,
+                PaymentStatus = session.PaymentStatus switch
+                {
+                    "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
+                    "unpaid" => PaymentStatusConstants.Pending,
+                    "paid" => PaymentStatusConstants.Paid,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 StripeCustomer = stripeCustomer
             };
 
@@ -201,15 +207,7 @@ public class BookingSubscriber(
         _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, stripeCheckoutSession));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        if (stripeCheckoutSession.PaymentStatus is "no_payment_required" or "paid")
-        {
-            await paymentPublisher.PublishBookingPaymentCompletedAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
-        }
-        else
-        {
-            await paymentPublisher.PublishBookingPaymentCreatedAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
-        }
+        await paymentPublisher.PublishBookingPaymentAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }
 
     private async Task HandleBookingDeletedEventAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)

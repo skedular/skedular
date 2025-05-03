@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Enterprise.Shared;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Customer.Shared.Mappers;
 
@@ -15,6 +16,7 @@ public class Mapper : IMapper
         var customer = new Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             Title = src.Title.ToSafeString(),
             Designation = src.Designation.ToSafeString(),
             Name = src.Name.ToSafeString(),

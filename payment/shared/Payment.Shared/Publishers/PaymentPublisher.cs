@@ -15,9 +15,7 @@ namespace Payment.Shared.Publishers;
 public interface IPaymentPublisher
 {
     Task PublishOrganizationStripeConnectAccountsAsync(IEnumerable<StripeConnectAccount> accounts, CancellationToken cancellationToken);
-    Task PublishBookingPaymentCreatedAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
-    Task PublishBookingPaymentCompletedAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
-    Task PublishBookingPaymentExpiredAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
+    Task PublishBookingPaymentAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken);
 }
 
 public class PaymentPublisher(
@@ -43,7 +41,7 @@ public class PaymentPublisher(
             },
             cancellationToken)));
 
-    public async Task PublishBookingPaymentCreatedAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
+    public async Task PublishBookingPaymentAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
         await Task.WhenAll(sessions.Select(session => publisher.PublishAsync(
             new Key { BookingId = session.Booking!.Id },
             new Event
@@ -51,37 +49,9 @@ public class PaymentPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    Type.BookingPaymentCreated,
+                    session.IsNotDeleted() ? Type.BookingPaymentUpserted : Type.BookingPaymentDeleted,
                     context.GetCorrelationId()),
-                Data = new Data { BookingPaymentCreated = mapper.MapToBookingPaymentCreatedDetails(session) }
-            },
-            cancellationToken)));
-
-    public async Task PublishBookingPaymentCompletedAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
-        await Task.WhenAll(sessions.Select(session => publisher.PublishAsync(
-            new Key { BookingId = session.Booking!.Id },
-            new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.BookingPaymentCompleted,
-                    context.GetCorrelationId()),
-                Data = new Data { BookingPayment = mapper.MapToBookingPaymentDetails(session) }
-            },
-            cancellationToken)));
-
-    public async Task PublishBookingPaymentExpiredAsync(IEnumerable<StripeCheckoutSession> sessions, CancellationToken cancellationToken) =>
-        await Task.WhenAll(sessions.Select(session => publisher.PublishAsync(
-            new Key { BookingId = session.Booking!.Id },
-            new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.BookingPaymentExpired,
-                    context.GetCorrelationId()),
-                Data = new Data { BookingPayment = mapper.MapToBookingPaymentDetails(session) }
+                Data = new Data { BookingPayment = mapper.MapTo(session) }
             },
             cancellationToken)));
 }

@@ -24,7 +24,9 @@ message Metadata {
   string correlationId = 6;
 }
 
-message Data { Customer customer = 1; }
+message Data { 
+  Customer customer = 1; 
+}
 
 message Customer {
   string id = 1;

@@ -7,11 +7,11 @@ namespace Payment.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class StripeCheckoutSession : EntityBase
+public class StripeCheckoutSession : EntityBaseWithDeleted
 {
     public string StripeCheckoutSessionId { get; set; }
-    public string Url { get; set; }
-    public string? PaymentStatus { get; set; }
+    public string CheckoutUrl { get; set; }
+    public string PaymentStatus { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string StripeCustomerCustomerId { get; set; }
@@ -25,10 +25,10 @@ public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<Strip
 {
     public void Configure(EntityTypeBuilder<StripeCheckoutSession> builder)
     {
-        builder.ConfigureEntityBase();
+        builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.StripeCheckoutSessionId).HasMaxLength(Constants.MaxStripeCheckoutSessionIdLength);
-        builder.Property(item => item.Url).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.CheckoutUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.MaxStripeCheckoutSessionPaymentStatusLength);
 
         builder

@@ -7,11 +7,11 @@ namespace Booking.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class BookingCheckoutSession : EntityBase
+public class BookingCheckoutSession : ReplicatedEntityBaseWithDeleted
 {
-    public string PaymentReferenceId { get; set; }
-    public string CheckoutUrl { get; set; }
-    public string PaymentStatus { get; set; }
+    public string? PaymentReferenceId { get; set; }
+    public string? CheckoutUrl { get; set; }
+    public string? PaymentStatus { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string BookingId { get; set; }
@@ -24,7 +24,7 @@ public class BookingCheckoutSessionConfiguration : IEntityTypeConfiguration<Book
 {
     public void Configure(EntityTypeBuilder<BookingCheckoutSession> builder)
     {
-        builder.ConfigureEntityBase();
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.PaymentReferenceId).HasMaxLength(Constants.MaxUniqueIdLength);
         builder.Property(item => item.CheckoutUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -35,7 +35,6 @@ public class BookingCheckoutSessionConfiguration : IEntityTypeConfiguration<Book
             .WithOne(item => item.BookingCheckoutSession)
             .HasForeignKey<BookingCheckoutSession>(item => item.BookingId);
 
-        builder.HasIndex(item => item.PaymentReferenceId);
         builder.HasIndex(item => item.PaymentStatus);
     }
 }

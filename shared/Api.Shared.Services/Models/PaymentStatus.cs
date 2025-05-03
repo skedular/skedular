@@ -3,6 +3,7 @@ namespace Api.Shared.Services.Models;
 public enum PaymentStatus
 {
     NoPaymentRequired,
+    Pending,
     Paid,
     Unpaid
 }
@@ -10,6 +11,7 @@ public enum PaymentStatus
 public static class PaymentStatusConstants
 {
     public const string NoPaymentRequired = "NO_PAYMENT_REQUIRED";
+    public const string Pending = "PENDING";
     public const string Paid = "PAID";
     public const string Unpaid = "UNPAID";
 }
@@ -20,6 +22,7 @@ public static class PaymentStatusExtensions
         src switch
         {
             PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
+            PaymentStatusConstants.Pending => PaymentStatus.Pending,
             PaymentStatusConstants.Paid => PaymentStatus.Paid,
             PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
             _ => throw new ArgumentOutOfRangeException()
@@ -31,6 +34,7 @@ public static class PaymentStatusExtensions
             : src switch
             {
                 PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
+                PaymentStatusConstants.Pending => PaymentStatus.Pending,
                 PaymentStatusConstants.Paid => PaymentStatus.Paid,
                 PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
@@ -40,6 +44,7 @@ public static class PaymentStatusExtensions
         src switch
         {
             PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
+            PaymentStatus.Pending => PaymentStatusConstants.Pending,
             PaymentStatus.Paid => PaymentStatusConstants.Paid,
             PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
             _ => throw new ArgumentOutOfRangeException()
@@ -51,6 +56,7 @@ public static class PaymentStatusExtensions
             : src switch
             {
                 PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
+                PaymentStatus.Pending => PaymentStatusConstants.Pending,
                 PaymentStatus.Paid => PaymentStatusConstants.Paid,
                 PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
@@ -60,6 +66,7 @@ public static class PaymentStatusExtensions
         src switch
         {
             PaymentStatus.NoPaymentRequired => "No payment required",
+            PaymentStatus.Pending => "Pending",
             PaymentStatus.Paid => "Paid",
             PaymentStatus.Unpaid => "Unpaid",
             _ => throw new ArgumentOutOfRangeException()
@@ -69,6 +76,7 @@ public static class PaymentStatusExtensions
         src switch
         {
             PaymentStatusConstants.NoPaymentRequired => "No payment required",
+            PaymentStatusConstants.Pending => "Pending",
             PaymentStatusConstants.Paid => "Paid",
             PaymentStatusConstants.Unpaid => "Unpaid",
             _ => throw new ArgumentOutOfRangeException()

@@ -300,6 +300,6 @@ public class BookingCheckoutSessionDetails : Node
 {
     [GraphQLName("paymentReferenceId")] public string PaymentReferenceId { get; set; } = string.Empty;
     [GraphQLName("checkoutUrl")] public string CheckoutUrl { get; set; } = string.Empty;
-    [GraphQLName("paymentStatus")] public string PaymentStatus { get; set; } = string.Empty;
+    [GraphQLName("paymentStatus")] public PaymentStatus PaymentStatus { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

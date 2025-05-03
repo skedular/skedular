@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Google.Protobuf.WellKnownTypes;
 using Team.Shared.Models;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
 using TeamMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember;
@@ -20,6 +21,7 @@ public class Mapper : IMapper
         var team = new Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
@@ -61,6 +63,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            DeletedAt = src.DeletedAt?.ToTimestamp(),
             TeamId = src.Team.Id,
             InvitedById = src.CreatedBy.Id,
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)

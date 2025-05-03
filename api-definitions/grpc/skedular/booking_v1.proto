@@ -115,11 +115,11 @@ enum BookingStatus
     PaymentRecordNeverCreated = 4;
 }
 
-enum PaymentStatus
-{
-    NoPaymentRequired = 0;
-    Paid = 1;
-    Unpaid = 2;
+enum PaymentStatus {
+    PaymentStatusNoPaymentRequired = 0;
+    PaymentStatusPending = 1;
+    PaymentStatusPaid = 2;
+    PaymentStatusUnpaid = 3;
 }
 
 message BookingConnection {
