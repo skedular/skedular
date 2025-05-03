@@ -2,6 +2,7 @@ export { default as DatePickerLocalizationProvider } from './date-picker-localiz
 export { GlobalReloadIdContext, default as GlobalReloadIdProvider, UpdateGlobalReloadIdContext } from './global-reload-id-provider';
 export { default as GoogleAnalyticsProvider } from './google-analytics-provider';
 export { InMsTeamsContext, default as InMsTeamsProvider } from './in-msteams-provider';
+export { default as useIntegratedPlatrform } from './integrated-paltform-hook';
 export { default as LogRocketProvider } from './logrocket-provider';
 export { PaletteModeContext, default as PaletteModeProvider, UpdatePaletteModeContext } from './palette-mode-provider';
 export type { ExtendedPaletteMode } from './palette-mode-provider';
