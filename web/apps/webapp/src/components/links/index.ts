@@ -1,9 +1,9 @@
-export const getRootLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}` : '/');
-export const getMeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/me` : 'me');
+export const getRootLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}` : '/');
+export const getMeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/me` : '/me');
 export const getNotificationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
 
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  integratedPlatrform ? `${integratedPlatrform}/organizations/${id}` : 'organizations/${id}';
+  integratedPlatrform ? `/${integratedPlatrform}/organizations/${id}` : `/organizations/${id}`;
 export const getOrganizationAddLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations/add` : 'organizations/add');
 export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
   let params = '';
@@ -94,7 +94,8 @@ export const getOrganizationProductAddLink = (integratedPlatrform: string | unde
 export const getOrganizationBookingProductLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}/book`;
 
-export const getOrganizationSsoSignInBaseLink = (integratedPlatrform: string | undefined, id: string) => `/organizations/${id}/sso-signin?redirectUrl=${window.location.href}`;
+export const getOrganizationSsoSignInBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/sso-signin?redirectUrl=${window.location.href}`;
 
 export const getOrganizationStripeConnectAccountBaseLink = (integratedPlatrform: string | undefined, id: string, stripeConnectAccountId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/stripe-connect-accounts/${stripeConnectAccountId}`;
