@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c43bca4323b900864984e9af5bd1ed0b>>
+ * @generated SignedSource<<1244a7e5d5ece83a1b00a40328cc3f2a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,19 @@ export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
 };
-export type editBooking_organizationMembers_refetchableFragment$variables = {
+export type editPrivateBooking_organizationMembers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
-export type editBooking_organizationMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_organizationMembers_query">;
+export type editPrivateBooking_organizationMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"editPrivateBooking_organizationMembers_query">;
 };
-export type editBooking_organizationMembers_refetchableFragment = {
-  response: editBooking_organizationMembers_refetchableFragment$data;
-  variables: editBooking_organizationMembers_refetchableFragment$variables;
+export type editPrivateBooking_organizationMembers_refetchableFragment = {
+  response: editPrivateBooking_organizationMembers_refetchableFragment$data;
+  variables: editPrivateBooking_organizationMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -97,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "editBooking_organizationMembers_refetchableFragment",
+    "name": "editPrivateBooking_organizationMembers_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -113,7 +113,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "editBooking_organizationMembers_query"
+        "name": "editPrivateBooking_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -123,7 +123,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "editBooking_organizationMembers_refetchableFragment",
+    "name": "editPrivateBooking_organizationMembers_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -291,16 +291,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3c330c3784257b50cbe30996738afeba",
+    "cacheID": "f6b9eae2f918f934924ad0b4c6d6c973",
     "id": null,
     "metadata": {},
-    "name": "editBooking_organizationMembers_refetchableFragment",
+    "name": "editPrivateBooking_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query editBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...editBooking_organizationMembers_query_1G22uz\n}\n\nfragment editBooking_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query editPrivateBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...editPrivateBooking_organizationMembers_query_1G22uz\n}\n\nfragment editPrivateBooking_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d5a1e0d0c49242f23588f926748c4a36";
+(node as any).hash = "559c7f14962987cd544d43c5e79f8081";
 
 export default node;

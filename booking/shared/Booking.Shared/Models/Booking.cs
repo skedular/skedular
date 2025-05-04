@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
+using Enterprise.Shared.Time;
 
 namespace Booking.Shared.Models;
 
@@ -53,4 +54,5 @@ public class Booking : ModelBaseWithDeleted
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
     public BookingCheckoutSession? BookingCheckoutSession { get; set; }
+    public DateTimeOffset BookingCheckoutSessionExpiry { get; set; }
 }

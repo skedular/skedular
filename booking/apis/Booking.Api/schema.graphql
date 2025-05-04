@@ -7,6 +7,10 @@ type BookingCheckoutSessionDetails {
   uniqueId: ID!
   checkoutUrl: String!
   paymentStatus: PaymentStatus!
+  amountTotal: String
+  amountTotalToDisplay: String!
+  currency: String
+  currencyToDisplay: String!
 }
 
 type BookingConnection {
@@ -34,6 +38,7 @@ type BookingDetails {
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
+  bookingCheckoutSessionExpiry: DateTime!
   bookedOnMarketplace: Boolean!
   id: ID!
 }

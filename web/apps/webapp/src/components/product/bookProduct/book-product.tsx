@@ -493,7 +493,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         });
 
         UpdateGlobalReloadId();
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform,organizationId, response.addBooking!.booking.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, response.addBooking!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL;
@@ -26,7 +27,7 @@ namespace Booking.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src);
+    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     BookingDetails MapTo(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddBookingInput src);
@@ -67,7 +68,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
-    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
+    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset bookingCheckoutSessionExpiry);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
@@ -77,7 +78,7 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src)
+    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry)
     {
         var team = new Shared.Models.Booking
         {
@@ -104,7 +105,8 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            BookingCheckoutSession = MapTo(src.BookingCheckoutSession)
+            BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
+            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry
         };
 
         return team;
@@ -160,7 +162,8 @@ public class Mapper : IMapper
                 Quantity = item.Quantity
             }),
             BookedOnMarketplace = src.BookedOnMarketplace,
-            BookingCheckoutSession = MapTo(src.BookingCheckoutSession)
+            BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
+            BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry
         };
 
     public Shared.Models.Booking MapTo(AddBookingInput src)
@@ -314,6 +317,7 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
             DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
             BookingCheckoutSession = MapToGrpcResponse(src.BookingCheckoutSession),
+            BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace
         };
 
@@ -409,7 +413,9 @@ public class Mapper : IMapper
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
-    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(MapTo(src.Node), src.Cursor);
+    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset bookingCheckoutSessionExpiry) =>
+        new(MapTo(src.Node, bookingCheckoutSessionExpiry), src.Cursor);
+
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
@@ -677,7 +683,19 @@ public class Mapper : IMapper
     private static BookingCheckoutSessionDetails? MapTo(Shared.Models.BookingCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSessionDetails { UniqueId = src.Id, CheckoutUrl = src.CheckoutUrl, PaymentStatus = src.PaymentStatus };
+            : new BookingCheckoutSessionDetails
+            {
+                UniqueId = src.Id,
+                CheckoutUrl = src.CheckoutUrl,
+                PaymentStatus = src.PaymentStatus,
+                AmountTotal = src.AmountTotal?.ToRoundedPrice(),
+                AmountTotalToDisplay =
+                    src.AmountTotal is null || string.IsNullOrWhiteSpace(src.Currency)
+                        ? "N/A"
+                        : src.AmountTotal.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                Currency = src.Currency,
+                CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
+            };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession? MapToGrpcResponse(
         Shared.Models.BookingCheckoutSession? src) =>
@@ -694,7 +712,9 @@ public class Mapper : IMapper
                     PaymentStatus.Unpaid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Unpaid,
                     _ => throw new ArgumentOutOfRangeException()
                 },
-                CheckoutUrl = src.CheckoutUrl
+                CheckoutUrl = src.CheckoutUrl,
+                AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
+                Currency = src.Currency.ToSafeString()
             };
 
     private static Shared.Models.BookingCheckoutSession? MapTo(BookingCheckoutSession? src) =>
@@ -708,6 +728,8 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 PaymentStatus = src.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.Pending,
+                AmountTotal = src.AmountTotal,
+                Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()
             };
 }

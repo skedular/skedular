@@ -115,6 +115,10 @@ const toShortDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
 };
 
+const toShortTime = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).format('hh:mm a') : '';
+};
+
 const toShortDateWithoutWeekDay = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('Do MMM YYYY') : '';
 };
@@ -337,5 +341,6 @@ export {
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
   toShortDateWithoutWeekDay,
+  toShortTime,
   toShortWeekDay,
 };

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;

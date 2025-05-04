@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using BookingCheckoutSession = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession;
 using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule;
 using LineItem = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem;
 using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
@@ -49,7 +50,8 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
-            BookedOnMarketplace = src.BookedOnMarketplace
+            BookedOnMarketplace = src.BookedOnMarketplace,
+            BookingCheckoutSession = MapTo(src.BookingCheckoutSession)
         };
 
         if (src.PaidByCustomer is not null)
@@ -87,6 +89,25 @@ public class Mapper : IMapper
 
         return booking;
     }
+
+    private static BookingCheckoutSession? MapTo(Models.BookingCheckoutSession? src) =>
+        src is null
+            ? null
+            : new BookingCheckoutSession
+            {
+                Id = src.Id,
+                CheckoutUrl = src.CheckoutUrl.ToSafeString(),
+                PaymentStatus = src.PaymentStatus switch
+                {
+                    PaymentStatus.NoPaymentRequired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired,
+                    PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
+                    PaymentStatus.Paid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Paid,
+                    PaymentStatus.Unpaid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Unpaid,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
+                Currency = src.Currency.ToSafeString()
+            };
 
     private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item =>

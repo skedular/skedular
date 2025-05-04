@@ -24,7 +24,11 @@ type AddOrganizationPaymentMethodIntentPayload {
 }
 
 type BookingCheckoutSessionDetails {
+  amountTotal: String
+  amountTotalToDisplay: String!
   checkoutUrl: String!
+  currency: String
+  currencyToDisplay: String!
   paymentStatus: PaymentStatus!
   uniqueId: ID!
 }
@@ -38,6 +42,7 @@ type BookingConnection {
 type BookingDetails {
   bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
+  bookingCheckoutSessionExpiry: DateTime!
   createdByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   from: DateTime!

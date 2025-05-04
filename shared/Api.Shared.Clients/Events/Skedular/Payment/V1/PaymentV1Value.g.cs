@@ -51,21 +51,22 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "VXJsGA4gASgJEhQKDGNvbnRhY3RFbWFpbBgPIAEoCRIUCgxjb250YWN0UGhv",
             "bmUYECABKAkSHQoVY2FwYWJpbGl0aWVzVHJhbnNmZXJzGBEgASgJEiAKGGNh",
             "cGFiaWxpdGllc0NhcmRQYXltZW50cxgSIAEoCRIVCg1vbmJvYXJkaW5nVXJs",
-            "GBMgASgJEhsKE29uYm9hcmRpbmdDb21wbGV0ZWQYFCABKAgisQEKHUJvb2tp",
+            "GBMgASgJEhsKE29uYm9hcmRpbmdDb21wbGV0ZWQYFCABKAgi2AEKHUJvb2tp",
             "bmdDaGVja291dFNlc3Npb25EZXRhaWxzEgoKAmlkGAEgASgJEi0KCWRlbGV0",
             "ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYm9v",
             "a2luZ0lkGAMgASgJEhMKC2NoZWNrb3V0VXJsGAQgASgJEi0KDXBheW1lbnRT",
-            "dGF0dXMYBSABKA4yFi5wYXltZW50LlBheW1lbnRTdGF0dXMq8gEKBFR5cGUS",
-            "JQohT3JnYW5pemF0aW9uUGF5bWVudE1ldGhvZHNVcGRhdGVkEAASIQodQ3Vz",
-            "dG9tZXJQYXltZW50TWV0aG9kc1VwZGF0ZWQQARIsCihPcmdhbml6YXRpb25T",
-            "dHJpcGVDb25uZWN0QWNjb3VudFVwc2VydGVkEAISKwonT3JnYW5pemF0aW9u",
-            "U3RyaXBlQ29ubmVjdEFjY291bnREZWxldGVkEAMSIgoeQm9va2luZ0NoZWNr",
-            "b3V0U2Vzc2lvblVwc2VydGVkEAQSIQodQm9va2luZ0NoZWNrb3V0U2Vzc2lv",
-            "bkRlbGV0ZWQQBSp9Cg1QYXltZW50U3RhdHVzEiIKHlBheW1lbnRTdGF0dXNO",
-            "b1BheW1lbnRSZXF1aXJlZBAAEhgKFFBheW1lbnRTdGF0dXNQZW5kaW5nEAES",
-            "FQoRUGF5bWVudFN0YXR1c1BhaWQQAhIXChNQYXltZW50U3RhdHVzVW5wYWlk",
-            "EANCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5",
-            "bWVudC5WMS5WYWx1ZWIGcHJvdG8z"));
+            "dGF0dXMYBSABKA4yFi5wYXltZW50LlBheW1lbnRTdGF0dXMSEwoLYW1vdW50",
+            "VG90YWwYBiABKAkSEAoIY3VycmVuY3kYByABKAkq8gEKBFR5cGUSJQohT3Jn",
+            "YW5pemF0aW9uUGF5bWVudE1ldGhvZHNVcGRhdGVkEAASIQodQ3VzdG9tZXJQ",
+            "YXltZW50TWV0aG9kc1VwZGF0ZWQQARIsCihPcmdhbml6YXRpb25TdHJpcGVD",
+            "b25uZWN0QWNjb3VudFVwc2VydGVkEAISKwonT3JnYW5pemF0aW9uU3RyaXBl",
+            "Q29ubmVjdEFjY291bnREZWxldGVkEAMSIgoeQm9va2luZ0NoZWNrb3V0U2Vz",
+            "c2lvblVwc2VydGVkEAQSIQodQm9va2luZ0NoZWNrb3V0U2Vzc2lvbkRlbGV0",
+            "ZWQQBSp9Cg1QYXltZW50U3RhdHVzEiIKHlBheW1lbnRTdGF0dXNOb1BheW1l",
+            "bnRSZXF1aXJlZBAAEhgKFFBheW1lbnRTdGF0dXNQZW5kaW5nEAESFQoRUGF5",
+            "bWVudFN0YXR1c1BhaWQQAhIXChNQYXltZW50U3RhdHVzVW5wYWlkEANCNqoC",
+            "M0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudC5W",
+            "MS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -75,7 +76,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.CustomerPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.CustomerPaymentMethod.Parser, new[]{ "CustomerId", "HasAttachedPaymentMethod" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.StripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "StripeAccountId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Url", "SupportUrl", "ContactEmail", "ContactPhone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompleted" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.BookingCheckoutSessionDetails), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.BookingCheckoutSessionDetails.Parser, new[]{ "Id", "DeletedAt", "BookingId", "CheckoutUrl", "PaymentStatus" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.BookingCheckoutSessionDetails), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.BookingCheckoutSessionDetails.Parser, new[]{ "Id", "DeletedAt", "BookingId", "CheckoutUrl", "PaymentStatus", "AmountTotal", "Currency" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2566,6 +2567,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       bookingId_ = other.bookingId_;
       checkoutUrl_ = other.checkoutUrl_;
       paymentStatus_ = other.paymentStatus_;
+      amountTotal_ = other.amountTotal_;
+      currency_ = other.currency_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2635,6 +2638,30 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "amountTotal" field.</summary>
+    public const int AmountTotalFieldNumber = 6;
+    private string amountTotal_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AmountTotal {
+      get { return amountTotal_; }
+      set {
+        amountTotal_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "currency" field.</summary>
+    public const int CurrencyFieldNumber = 7;
+    private string currency_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Currency {
+      get { return currency_; }
+      set {
+        currency_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2655,6 +2682,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (BookingId != other.BookingId) return false;
       if (CheckoutUrl != other.CheckoutUrl) return false;
       if (PaymentStatus != other.PaymentStatus) return false;
+      if (AmountTotal != other.AmountTotal) return false;
+      if (Currency != other.Currency) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2667,6 +2696,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (BookingId.Length != 0) hash ^= BookingId.GetHashCode();
       if (CheckoutUrl.Length != 0) hash ^= CheckoutUrl.GetHashCode();
       if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus.NoPaymentRequired) hash ^= PaymentStatus.GetHashCode();
+      if (AmountTotal.Length != 0) hash ^= AmountTotal.GetHashCode();
+      if (Currency.Length != 0) hash ^= Currency.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2705,6 +2736,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(40);
         output.WriteEnum((int) PaymentStatus);
       }
+      if (AmountTotal.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(AmountTotal);
+      }
+      if (Currency.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Currency);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2735,6 +2774,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(40);
         output.WriteEnum((int) PaymentStatus);
       }
+      if (AmountTotal.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(AmountTotal);
+      }
+      if (Currency.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Currency);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2759,6 +2806,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus.NoPaymentRequired) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PaymentStatus);
+      }
+      if (AmountTotal.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AmountTotal);
+      }
+      if (Currency.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Currency);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2789,6 +2842,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (other.PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus.NoPaymentRequired) {
         PaymentStatus = other.PaymentStatus;
+      }
+      if (other.AmountTotal.Length != 0) {
+        AmountTotal = other.AmountTotal;
+      }
+      if (other.Currency.Length != 0) {
+        Currency = other.Currency;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2832,6 +2891,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus) input.ReadEnum();
             break;
           }
+          case 50: {
+            AmountTotal = input.ReadString();
+            break;
+          }
+          case 58: {
+            Currency = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -2872,6 +2939,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
           }
           case 40: {
             PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus) input.ReadEnum();
+            break;
+          }
+          case 50: {
+            AmountTotal = input.ReadString();
+            break;
+          }
+          case 58: {
+            Currency = input.ReadString();
             break;
           }
         }

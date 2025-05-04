@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0f34c193c38cab49113bed3848b4e47>>
+ * @generated SignedSource<<32676ffce9ec5761f3132a6bda47857e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,10 +22,10 @@ export type UpdateBookingInput = {
   type: BookingType;
   until: any;
 };
-export type editBooking_updateBookingMutation$variables = {
+export type editPrivateBooking_updateBookingMutation$variables = {
   input: UpdateBookingInput;
 };
-export type editBooking_updateBookingMutation$data = {
+export type editPrivateBooking_updateBookingMutation$data = {
   readonly updateBooking: {
     readonly booking: {
       readonly from: any;
@@ -74,7 +74,7 @@ export type editBooking_updateBookingMutation$data = {
     };
   } | null | undefined;
 };
-export type editBooking_updateBookingMutation$rawResponse = {
+export type editPrivateBooking_updateBookingMutation$rawResponse = {
   readonly updateBooking: {
     readonly booking: {
       readonly from: any;
@@ -123,10 +123,10 @@ export type editBooking_updateBookingMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type editBooking_updateBookingMutation = {
-  rawResponse: editBooking_updateBookingMutation$rawResponse;
-  response: editBooking_updateBookingMutation$data;
-  variables: editBooking_updateBookingMutation$variables;
+export type editPrivateBooking_updateBookingMutation = {
+  rawResponse: editPrivateBooking_updateBookingMutation$rawResponse;
+  response: editPrivateBooking_updateBookingMutation$data;
+  variables: editPrivateBooking_updateBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -354,7 +354,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "editBooking_updateBookingMutation",
+    "name": "editPrivateBooking_updateBookingMutation",
     "selections": (v6/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -363,20 +363,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "editBooking_updateBookingMutation",
+    "name": "editPrivateBooking_updateBookingMutation",
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "e109abc0fa055058c5a8c03cbe7aa746",
+    "cacheID": "d7ae895b8ef18c1d3d67cb201885611b",
     "id": null,
     "metadata": {},
-    "name": "editBooking_updateBookingMutation",
+    "name": "editPrivateBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editPrivateBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b2d550c1efc13b9ffd339089b306c508";
+(node as any).hash = "5a5656700242c8a25ab60af50803ec42";
 
 export default node;

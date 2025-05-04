@@ -1,4 +1,6 @@
-import { EditBooking } from '@/components/booking/editBooking';
+import { EditMarketplaceBooking } from '@/components/booking/editMarketplaceBooking';
+import { EditPrivateBooking } from '@/components/booking/editPrivateBooking';
+import { PayMarketplaceBooking } from '@/components/booking/payMarketplaceBooking';
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
@@ -12,7 +14,7 @@ import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -33,11 +35,20 @@ const RootQuery = graphql`
     booking(id: $bookingId) {
       from
       bookedOnMarketplace
+      isPaymentRequired
+      bookingCheckoutSession {
+        paymentStatus
+      }
     }
-    ...editBooking_query
-    ...editBooking_organizationMembers_query
-    ...editBooking_customerTeams_query
-    ...editBooking_availableResources_query
+    ...editPrivateBooking_query
+    ...editPrivateBooking_organizationMembers_query
+    ...editPrivateBooking_customerTeams_query
+    ...editPrivateBooking_availableResources_query
+    ...editMarketplaceBooking_query
+    ...editMarketplaceBooking_booking_query
+    ...editMarketplaceBooking_organizationMembers_query
+    ...editMarketplaceBooking_customerTeams_query
+    ...payMarketplaceBooking_query
   }
 `;
 
@@ -51,6 +62,17 @@ type Props = {
 const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
+  const shouldPay = useMemo(() => {
+    if (!rootData.booking) {
+      return false;
+    }
+
+    if (rootData.booking.isPaymentRequired && !rootData.booking.bookingCheckoutSession) {
+      return true;
+    }
+
+    return rootData.booking.isPaymentRequired && rootData.booking.bookingCheckoutSession && rootData.booking.bookingCheckoutSession.paymentStatus === 'Pending';
+  }, [rootData.booking]);
 
   const handleBackClick = () => {
     router.back();
@@ -78,14 +100,27 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <EditBooking
-        rootDataRelay={rootData}
-        rootDataTeamsRelay={rootData}
-        rootDataOrganizationMembersRelay={rootData}
-        rootDataAvailableResourcesRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
-      />
+      {rootData.booking.bookedOnMarketplace && shouldPay && <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
+      {rootData.booking.bookedOnMarketplace && !shouldPay && (
+        <EditMarketplaceBooking
+          rootDataRelay={rootData}
+          rootDataBookingRelay={rootData}
+          rootDataTeamsRelay={rootData}
+          rootDataOrganizationMembersRelay={rootData}
+          onReloadRequired={onReloadRequired}
+          organizationId={organizationId}
+        />
+      )}
+      {!rootData.booking.bookedOnMarketplace && (
+        <EditPrivateBooking
+          rootDataRelay={rootData}
+          rootDataTeamsRelay={rootData}
+          rootDataOrganizationMembersRelay={rootData}
+          rootDataAvailableResourcesRelay={rootData}
+          onReloadRequired={onReloadRequired}
+          organizationId={organizationId}
+        />
+      )}
     </RootShell>
   );
 };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<781764f3f28fa112207d5e171a05398d>>
+ * @generated SignedSource<<533bade84791b3ff3dc559daa80d1e30>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type editBooking_availableResources_query$data = {
+export type editPrivateBooking_availableResources_query$data = {
   readonly availableResources: ReadonlyArray<{
     readonly customTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -25,14 +25,14 @@ export type editBooking_availableResources_query$data = {
       readonly uniqueId: string;
     }>;
   }>;
-  readonly " $fragmentType": "editBooking_availableResources_query";
+  readonly " $fragmentType": "editPrivateBooking_availableResources_query";
 };
-export type editBooking_availableResources_query$key = {
-  readonly " $data"?: editBooking_availableResources_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_availableResources_query">;
+export type editPrivateBooking_availableResources_query$key = {
+  readonly " $data"?: editPrivateBooking_availableResources_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"editPrivateBooking_availableResources_query">;
 };
 
-import editBooking_availableResources_refetchableFragment_graphql from './editBooking_availableResources_refetchableFragment.graphql';
+import editPrivateBooking_availableResources_refetchableFragment_graphql from './editPrivateBooking_availableResources_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -84,10 +84,10 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": editBooking_availableResources_refetchableFragment_graphql
+      "operation": editPrivateBooking_availableResources_refetchableFragment_graphql
     }
   },
-  "name": "editBooking_availableResources_query",
+  "name": "editPrivateBooking_availableResources_query",
   "selections": [
     {
       "alias": null,
@@ -155,6 +155,6 @@ return {
 };
 })();
 
-(node as any).hash = "5a61b3958f9f06b15b160653334af787";
+(node as any).hash = "f21ba1106ceeb9afddcfa7b81704117e";
 
 export default node;

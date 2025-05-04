@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bc4aea9cbaf7898de9a7212d3607bd32>>
+ * @generated SignedSource<<0bf10ec6a875e54e1cf04f5b51c63a5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type editBooking_availableResources_refetchableFragment$variables = {
+export type editPrivateBooking_availableResources_refetchableFragment$variables = {
   dateFromToGetAvailableResources: any;
   dateUntilToGetAvailableResources: any;
   locationId?: string | null | undefined;
   organizationId: string;
 };
-export type editBooking_availableResources_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_availableResources_query">;
+export type editPrivateBooking_availableResources_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"editPrivateBooking_availableResources_query">;
 };
-export type editBooking_availableResources_refetchableFragment = {
-  response: editBooking_availableResources_refetchableFragment$data;
-  variables: editBooking_availableResources_refetchableFragment$variables;
+export type editPrivateBooking_availableResources_refetchableFragment = {
+  response: editPrivateBooking_availableResources_refetchableFragment$data;
+  variables: editPrivateBooking_availableResources_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -77,12 +77,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "editBooking_availableResources_refetchableFragment",
+    "name": "editPrivateBooking_availableResources_refetchableFragment",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "editBooking_availableResources_query"
+        "name": "editPrivateBooking_availableResources_query"
       }
     ],
     "type": "Query",
@@ -92,7 +92,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "editBooking_availableResources_refetchableFragment",
+    "name": "editPrivateBooking_availableResources_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -157,16 +157,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c8de1a40fcb63eb3c5a7938d1d025085",
+    "cacheID": "c2bddccf9d597687c1497dde2a795724",
     "id": null,
     "metadata": {},
-    "name": "editBooking_availableResources_refetchableFragment",
+    "name": "editPrivateBooking_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query editBooking_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationId: String!\n) {\n  ...editBooking_availableResources_query\n}\n\nfragment editBooking_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query editPrivateBooking_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationId: String!\n) {\n  ...editPrivateBooking_availableResources_query\n}\n\nfragment editPrivateBooking_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5a61b3958f9f06b15b160653334af787";
+(node as any).hash = "f21ba1106ceeb9afddcfa7b81704117e";
 
 export default node;

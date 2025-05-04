@@ -99,4 +99,6 @@ message BookingCheckoutSession {
   string id = 1;
   string checkoutUrl = 2;
   PaymentStatus paymentStatus = 3;
+  string amountTotal = 4;
+  string currency = 5;
 }

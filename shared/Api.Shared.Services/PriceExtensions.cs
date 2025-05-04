@@ -1,6 +1,6 @@
 using Api.Shared.Services.Models;
 
-namespace Marketplace.Api;
+namespace Api.Shared.Services;
 
 public static class PriceExtensions
 {

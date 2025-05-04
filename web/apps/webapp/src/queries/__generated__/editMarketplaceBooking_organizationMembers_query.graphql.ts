@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e3606d7bff8f17a1c6eb35d17cd07d2>>
+ * @generated SignedSource<<e9b28d0ce545f3f5337ad3f5da91ad13>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type editBooking_organizationMembers_query$data = {
+export type editMarketplaceBooking_organizationMembers_query$data = {
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -28,14 +28,14 @@ export type editBooking_organizationMembers_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentType": "editBooking_organizationMembers_query";
+  readonly " $fragmentType": "editMarketplaceBooking_organizationMembers_query";
 };
-export type editBooking_organizationMembers_query$key = {
-  readonly " $data"?: editBooking_organizationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_organizationMembers_query">;
+export type editMarketplaceBooking_organizationMembers_query$key = {
+  readonly " $data"?: editMarketplaceBooking_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"editMarketplaceBooking_organizationMembers_query">;
 };
 
-import editBooking_organizationMembers_refetchableFragment_graphql from './editBooking_organizationMembers_refetchableFragment.graphql';
+import editMarketplaceBooking_organizationMembers_refetchableFragment_graphql from './editMarketplaceBooking_organizationMembers_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -86,10 +86,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": editBooking_organizationMembers_refetchableFragment_graphql
+      "operation": editMarketplaceBooking_organizationMembers_refetchableFragment_graphql
     }
   },
-  "name": "editBooking_organizationMembers_query",
+  "name": "editMarketplaceBooking_organizationMembers_query",
   "selections": [
     {
       "alias": "organizationMembers",
@@ -270,6 +270,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5a1e0d0c49242f23588f926748c4a36";
+(node as any).hash = "161797c90c6e7caeba80c65ed6fef25c";
 
 export default node;

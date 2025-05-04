@@ -7,14 +7,14 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { editBooking_availableResources_query$key } from '@/queries/__generated__/editBooking_availableResources_query.graphql';
-import type { editBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editBooking_availableResources_refetchableFragment.graphql';
-import type { editBooking_customerTeams_query$key } from '@/queries/__generated__/editBooking_customerTeams_query.graphql';
-import type { editBooking_customerTeams_refetchableFragment } from '@/queries/__generated__/editBooking_customerTeams_refetchableFragment.graphql';
-import type { editBooking_organizationMembers_query$key } from '@/queries/__generated__/editBooking_organizationMembers_query.graphql';
-import type { editBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editBooking_organizationMembers_refetchableFragment.graphql';
-import type { editBooking_query$key } from '@/queries/__generated__/editBooking_query.graphql';
-import type { BookingType, editBooking_updateBookingMutation } from '@/queries/__generated__/editBooking_updateBookingMutation.graphql';
+import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
+import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
+import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';
+import type { editPrivateBooking_customerTeams_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_customerTeams_refetchableFragment.graphql';
+import type { editPrivateBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateBooking_organizationMembers_query.graphql';
+import type { editPrivateBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_organizationMembers_refetchableFragment.graphql';
+import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
+import type { BookingType, editPrivateBooking_updateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -33,10 +33,10 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { array, boolean, date, object, string } from 'yup';
 
 type Props = {
-  rootDataRelay: editBooking_query$key;
-  rootDataOrganizationMembersRelay: editBooking_organizationMembers_query$key;
-  rootDataTeamsRelay: editBooking_customerTeams_query$key;
-  rootDataAvailableResourcesRelay: editBooking_availableResources_query$key;
+  rootDataRelay: editPrivateBooking_query$key;
+  rootDataOrganizationMembersRelay: editPrivateBooking_organizationMembers_query$key;
+  rootDataTeamsRelay: editPrivateBooking_customerTeams_query$key;
+  rootDataAvailableResourcesRelay: editPrivateBooking_availableResources_query$key;
   onReloadRequired?: () => void;
   organizationId: string;
 };
@@ -100,17 +100,16 @@ const bookingSchema = object({
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
-  organization: string().notRequired(),
   team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
   type: string().required('Type is required'),
 });
 
-const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
-  const rootData = useFragment<editBooking_query$key>(
+const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
+  const rootData = useFragment<editPrivateBooking_query$key>(
     graphql`
-      fragment editBooking_query on Query {
+      fragment editPrivateBooking_query on Query {
         locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
           __id
           totalCount
@@ -173,13 +172,13 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   );
 
   const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
-    editBooking_organizationMembers_refetchableFragment,
-    editBooking_organizationMembers_query$key
+    editPrivateBooking_organizationMembers_refetchableFragment,
+    editPrivateBooking_organizationMembers_query$key
   >(
     graphql`
-      fragment editBooking_organizationMembers_query on Query
+      fragment editPrivateBooking_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "editBooking_organizationMembers_refetchableFragment") {
+      @refetchable(queryName: "editPrivateBooking_organizationMembers_refetchableFragment") {
         organizationMembers(
           first: $count
           after: $cursor
@@ -207,9 +206,9 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     rootDataOrganizationMembersRelay,
   );
 
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editBooking_customerTeams_refetchableFragment, editBooking_customerTeams_query$key>(
+  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editPrivateBooking_customerTeams_refetchableFragment, editPrivateBooking_customerTeams_query$key>(
     graphql`
-      fragment editBooking_customerTeams_query on Query @refetchable(queryName: "editBooking_customerTeams_refetchableFragment") {
+      fragment editPrivateBooking_customerTeams_query on Query @refetchable(queryName: "editPrivateBooking_customerTeams_refetchableFragment") {
         customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
           __id
           totalCount
@@ -226,11 +225,11 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   );
 
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
-    editBooking_availableResources_refetchableFragment,
-    editBooking_availableResources_query$key
+    editPrivateBooking_availableResources_refetchableFragment,
+    editPrivateBooking_availableResources_query$key
   >(
     graphql`
-      fragment editBooking_availableResources_query on Query @refetchable(queryName: "editBooking_availableResources_refetchableFragment") {
+      fragment editPrivateBooking_availableResources_query on Query @refetchable(queryName: "editPrivateBooking_availableResources_refetchableFragment") {
         availableResources(where: { organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }) {
           uniqueId
           name
@@ -250,8 +249,8 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     rootDataAvailableResourcesRelay,
   );
 
-  const [commitUpdateBooking] = useMutation<editBooking_updateBookingMutation>(graphql`
-    mutation editBooking_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
+  const [commitUpdateBooking] = useMutation<editPrivateBooking_updateBookingMutation>(graphql`
+    mutation editPrivateBooking_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
       updateBooking(input: $input) {
         booking {
           id
@@ -466,6 +465,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
 
     handleRefetchTeams(rootData.booking.involvedCustomers[0].uniqueId);
   }, [handleRefetchTeams, rootData.booking?.involvedCustomers]);
+
   useEffect(() => {
     const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
@@ -482,11 +482,11 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   };
 
   const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, type }: BookingDetails) => {
-    if (!rootData.booking) {
+    const booking = rootData.booking;
+    if (!booking) {
       return;
     }
 
-    const booking = rootData.booking;
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
@@ -588,7 +588,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     handleRefetchTeams(customerId);
   };
 
-  const handleTeamChange = (option: LocationDetails | null) => {
+  const handleTeamChange = (option: TeamDetails | null) => {
     if (!rootData.booking) {
       return;
     }
@@ -821,4 +821,4 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   );
 };
 
-export default memo(EditBooking);
+export default memo(EditPrivateBooking);

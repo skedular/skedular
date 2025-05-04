@@ -562,6 +562,9 @@ public class Mapper : IMapper
                 PaymentStatus.Unpaid => Api.Shared.Services.Models.PaymentStatus.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            AmountTotal =
+                string.IsNullOrWhiteSpace(bookingCheckoutSession.AmountTotal) ? null : bookingCheckoutSession.AmountTotal.FromRoundedPrice(),
+            Currency = string.IsNullOrWhiteSpace(bookingCheckoutSession.Currency) ? null : bookingCheckoutSession.Currency,
             Booking = new Shared.Models.Booking { Id = bookingCheckoutSession.BookingId }
         };
     }
@@ -575,6 +578,8 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.CheckoutUrl = src.CheckoutUrl;
         dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
+        dest.AmountTotal = src.AmountTotal;
+        dest.Currency = src.Currency;
         dest.Booking = booking;
         return dest;
     }

@@ -189,6 +189,8 @@ public class BookingSubscriber(
                     "paid" => PaymentStatusConstants.Paid,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                AmountTotal = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100,
+                Currency = session.Currency,
                 StripeCustomer = stripeCustomer
             };
 

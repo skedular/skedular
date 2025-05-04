@@ -102,7 +102,9 @@ public class Mapper : IMapper
                 Api.Shared.Services.Models.PaymentStatus.Paid => PaymentStatus.Paid,
                 Api.Shared.Services.Models.PaymentStatus.Unpaid => PaymentStatus.Unpaid,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
+            Currency = src.Currency.ToSafeString()
         };
 
     public ProductCreateOptions MapToProduct(ProductVersion src, Product product, string organizationId) =>

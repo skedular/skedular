@@ -29,7 +29,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Description = src.Name.ToSafeString(),
-            Price = src.Price.ToRoundedPrice().ToSafeString(),
+            Price = src.Price.ToRoundedPrice(),
             PriceUnit = src.PriceUnit.ToPriceUnit(),
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes ?? -1,

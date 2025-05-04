@@ -8,6 +8,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
@@ -44,7 +45,8 @@ public class BookingService(
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    IMapper mapper) : IBookingService
+    IMapper mapper,
+    IBookingCheckoutSessionHelper bookingCheckoutSessionHelper) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -144,7 +146,7 @@ public class BookingService(
             null);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity);
+        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -220,7 +222,9 @@ public class BookingService(
 
         existingBooking.DeletedByCustomer = callingCustomerEntity;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+        var deletedBooking = mapper.MapTo(
+            repositoryFactory.BookingRepository.Remove(existingBooking),
+            bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -256,7 +260,7 @@ public class BookingService(
         }
 
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
-        var result = mapper.MapTo(booking);
+        var result = mapper.MapTo(booking, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(booking));
 
         if (booking.InvolvedOrganizations.Count == 0 ||
             booking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
@@ -410,7 +414,8 @@ public class BookingService(
             orderByFields,
             cancellationToken);
 
-        var result = (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+        var result = (paginatedInfo,
+            edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(item.Node))).ToList(), totalCount);
         if (customer is null)
         {
             return result;
@@ -658,7 +663,7 @@ public class BookingService(
 
         bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity);
+        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 

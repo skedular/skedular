@@ -2,6 +2,9 @@ namespace Enterprise.Shared.Time;
 
 public static class DateTimeOffsetExtensions
 {
+    public static DateTimeOffset TrimAllAfterSeconds(this DateTimeOffset value) =>
+        new(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Offset);
+
     public static DateTimeOffset ToDateTimeOffset(this DateTime value) => new(value.Ticks, TimeSpan.Zero);
 
     public static DateTime ToDateTime(this DateTimeOffset value) => value.DateTime;

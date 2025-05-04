@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4a9e5821146f78e62f5e1b16b8e85f2>>
+ * @generated SignedSource<<909d4dd05acb7943a0b0a51b57dafa23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,18 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type editBooking_customerTeams_refetchableFragment$variables = {
+export type editPrivateBooking_customerTeams_refetchableFragment$variables = {
   customerExists: boolean;
   customerId: string;
   organizationId?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type editBooking_customerTeams_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_customerTeams_query">;
+export type editPrivateBooking_customerTeams_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"editPrivateBooking_customerTeams_query">;
 };
-export type editBooking_customerTeams_refetchableFragment = {
-  response: editBooking_customerTeams_refetchableFragment$data;
-  variables: editBooking_customerTeams_refetchableFragment$variables;
+export type editPrivateBooking_customerTeams_refetchableFragment = {
+  response: editPrivateBooking_customerTeams_refetchableFragment$data;
+  variables: editPrivateBooking_customerTeams_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -58,12 +58,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "editBooking_customerTeams_refetchableFragment",
+    "name": "editPrivateBooking_customerTeams_refetchableFragment",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "editBooking_customerTeams_query"
+        "name": "editPrivateBooking_customerTeams_query"
       }
     ],
     "type": "Query",
@@ -73,7 +73,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "editBooking_customerTeams_refetchableFragment",
+    "name": "editPrivateBooking_customerTeams_refetchableFragment",
     "selections": [
       {
         "condition": "customerExists",
@@ -173,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "337f8f12ad9673eb8c02bedd7b448892",
+    "cacheID": "a957a50f6cf33d07d791f00b168279f5",
     "id": null,
     "metadata": {},
-    "name": "editBooking_customerTeams_refetchableFragment",
+    "name": "editPrivateBooking_customerTeams_refetchableFragment",
     "operationKind": "query",
-    "text": "query editBooking_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...editBooking_customerTeams_query\n}\n\nfragment editBooking_customerTeams_query on Query {\n  customerTeams(where: {organizationId: $organizationId, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query editPrivateBooking_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...editPrivateBooking_customerTeams_query\n}\n\nfragment editPrivateBooking_customerTeams_query on Query {\n  customerTeams(where: {organizationId: $organizationId, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8d63edcce7d3b4d7127c297070a02ef5";
+(node as any).hash = "34f614f85a794aff3a398e819ab7a007";
 
 export default node;

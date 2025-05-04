@@ -76,6 +76,8 @@ message BookingCheckoutSessionDetails {
   string bookingId = 3;
   string checkoutUrl = 4;
   PaymentStatus paymentStatus = 5;
+  string amountTotal = 6;
+  string currency = 7;
 }
 
 enum PaymentStatus {

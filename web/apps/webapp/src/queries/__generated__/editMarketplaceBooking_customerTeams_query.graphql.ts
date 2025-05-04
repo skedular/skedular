@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6a477f73a2068a83a8c8343ee4cfff3>>
+ * @generated SignedSource<<e44792dbacd92b2eafb7780f9933f45c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type editBooking_customerTeams_query$data = {
+export type editMarketplaceBooking_customerTeams_query$data = {
   readonly customerTeams?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -21,14 +21,14 @@ export type editBooking_customerTeams_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentType": "editBooking_customerTeams_query";
+  readonly " $fragmentType": "editMarketplaceBooking_customerTeams_query";
 };
-export type editBooking_customerTeams_query$key = {
-  readonly " $data"?: editBooking_customerTeams_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_customerTeams_query">;
+export type editMarketplaceBooking_customerTeams_query$key = {
+  readonly " $data"?: editMarketplaceBooking_customerTeams_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"editMarketplaceBooking_customerTeams_query">;
 };
 
-import editBooking_customerTeams_refetchableFragment_graphql from './editBooking_customerTeams_refetchableFragment.graphql';
+import editMarketplaceBooking_customerTeams_refetchableFragment_graphql from './editMarketplaceBooking_customerTeams_refetchableFragment.graphql';
 
 const node: ReaderFragment = {
   "argumentDefinitions": [
@@ -54,10 +54,10 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": editBooking_customerTeams_refetchableFragment_graphql
+      "operation": editMarketplaceBooking_customerTeams_refetchableFragment_graphql
     }
   },
-  "name": "editBooking_customerTeams_query",
+  "name": "editMarketplaceBooking_customerTeams_query",
   "selections": [
     {
       "condition": "customerExists",
@@ -159,6 +159,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8d63edcce7d3b4d7127c297070a02ef5";
+(node as any).hash = "1af552010907e70841b55b565df21728";
 
 export default node;

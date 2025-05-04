@@ -10,7 +10,11 @@ public interface IWorkaroundService
     Task RepublishAllBookingsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, IBookingPublisher bookingPublisher) : IWorkaroundService
+public class WorkaroundService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IBookingPublisher bookingPublisher,
+    IBookingCheckoutSessionHelper bookingCheckoutSessionHelper) : IWorkaroundService
 {
     public async Task RepublishBookingAsync(string bookingId, CancellationToken cancellationToken)
     {
@@ -20,12 +24,14 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
             return;
         }
 
-        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking)], cancellationToken);
+        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(booking))],
+            cancellationToken);
     }
 
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
-        await bookingPublisher.PublishBookingsAsync(bookings.Select(mapper.MapTo), cancellationToken);
+        await bookingPublisher.PublishBookingsAsync(
+            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(item))), cancellationToken);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fadae618d3a2f9d33bdfedef1f193a2c>>
+ * @generated SignedSource<<caa2320c63ea8c9903d2f2b27722ba65>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,9 +10,16 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type PaymentStatus = "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type editBooking_query$data = {
+export type editMarketplaceBooking_booking_query$data = {
   readonly booking: {
+    readonly bookingCheckoutSession: {
+      readonly amountTotalToDisplay: string;
+      readonly checkoutUrl: string;
+      readonly paymentStatus: PaymentStatus;
+    } | null | undefined;
+    readonly bookingCheckoutSessionExpiry: any;
     readonly from: any;
     readonly id: string;
     readonly involvedCustomers: ReadonlyArray<{
@@ -56,31 +63,21 @@ export type editBooking_query$data = {
     };
     readonly until: any;
   } | null | undefined;
-  readonly locations: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly id: string;
-        readonly name: string;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
-  readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
-  readonly " $fragmentType": "editBooking_query";
+  readonly " $fragmentType": "editMarketplaceBooking_booking_query";
 };
-export type editBooking_query$key = {
-  readonly " $data"?: editBooking_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"editBooking_query">;
+export type editMarketplaceBooking_booking_query$key = {
+  readonly " $data"?: editMarketplaceBooking_booking_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"editMarketplaceBooking_booking_query">;
 };
+
+import editMarketplaceBooking_booking_refetchableFragment_graphql from './editMarketplaceBooking_booking_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "uniqueId",
   "storageKey": null
 },
 v1 = {
@@ -90,119 +87,39 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v3 = [
-  (v2/*: any*/),
+v2 = [
+  (v0/*: any*/),
   (v1/*: any*/)
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v5 = [
-  (v2/*: any*/),
+v4 = [
+  (v0/*: any*/),
   (v1/*: any*/),
-  (v4/*: any*/)
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
       "name": "bookingId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "locationsSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
-  "metadata": null,
-  "name": "editBooking_query",
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": editMarketplaceBooking_booking_refetchableFragment_graphql
+    }
+  },
+  "name": "editMarketplaceBooking_booking_query",
   "selections": [
-    {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "locationsSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "LocationConnection",
-      "kind": "LinkedField",
-      "name": "locations",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LocationEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "LocationDetails",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/)
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": [
@@ -217,7 +134,13 @@ return {
       "name": "booking",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -265,7 +188,7 @@ return {
           "name": "involvedCustomers",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
+            (v0/*: any*/),
             (v1/*: any*/),
             {
               "alias": null,
@@ -305,7 +228,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedOrganizations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -315,7 +238,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -325,7 +248,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedTeams",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -336,9 +259,9 @@ return {
           "name": "resources",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
+            (v0/*: any*/),
             (v1/*: any*/),
-            (v4/*: any*/),
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -346,7 +269,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v4/*: any*/),
               "storageKey": null
             },
             {
@@ -356,26 +279,53 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v4/*: any*/),
               "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingCheckoutSessionDetails",
+          "kind": "LinkedField",
+          "name": "bookingCheckoutSession",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "checkoutUrl",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "paymentStatus",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "amountTotalToDisplay",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "bookingCheckoutSessionExpiry",
+          "storageKey": null
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
-      "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceBookingType_query"
     }
   ],
   "type": "Query",
@@ -383,6 +333,6 @@ return {
 };
 })();
 
-(node as any).hash = "63c645ee4323eb1f1e97e76d48f76590";
+(node as any).hash = "5ee4217b1d9c786e8a8afe810e5a7903";
 
 export default node;

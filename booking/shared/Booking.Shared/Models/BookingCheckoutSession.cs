@@ -7,5 +7,7 @@ public class BookingCheckoutSession : ReplicatedModelBaseWithDeleted
 {
     public string CheckoutUrl { get; set; } = string.Empty;
     public PaymentStatus PaymentStatus { get; set; }
+    public decimal? AmountTotal { get; set; }
+    public string? Currency { get; set; }
     public Booking Booking { get; set; } = new();
 }
