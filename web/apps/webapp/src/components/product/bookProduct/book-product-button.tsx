@@ -1,6 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
 import { NewIcon } from '@/components/icons';
 import { getOrganizationBookingProductLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import { coal } from '@/libs/theme';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const BookProductButton = ({ organizationId, productId, fullWidth, label, hideIcon, variant, size, sx, invertDefaultColor }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const borderSx = variant === 'contained' ? { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' } : {};
 
   return (
@@ -27,7 +29,7 @@ const BookProductButton = ({ organizationId, productId, fullWidth, label, hideIc
       <Button
         variant={variant ?? 'text'}
         LinkComponent={Link}
-        href={getOrganizationBookingProductLink(organizationId, productId)}
+        href={getOrganizationBookingProductLink(integratedPlatrform, organizationId, productId)}
         fullWidth={fullWidth}
         sx={{ ...sx, ...borderSx }}
       >

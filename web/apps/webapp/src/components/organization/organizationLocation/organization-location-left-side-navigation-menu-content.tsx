@@ -6,7 +6,7 @@ import {
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -31,6 +31,7 @@ type Props = {
 };
 
 const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, locationId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -65,10 +66,10 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
-  const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(organizationId, locationId);
-  const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(organizationId, locationId);
-  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
+  const setupLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationId, locationId);
+  const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationId, locationId);
+  const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId);
+  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationId, locationId);
 
   return (
     <List

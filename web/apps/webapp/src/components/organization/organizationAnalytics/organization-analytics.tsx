@@ -5,6 +5,7 @@ import { LocationDeskOccupancyInsightRoot } from '@/components/location/location
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationBookingInsightRoot } from '@/components/organization/organizationBookingInsight';
 import { OrganizationMemberAttendancyInsightRoot } from '@/components/organization/organizationMemberAttendancyInsight';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';
 import Box from '@mui/material/Box';
@@ -40,6 +41,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
@@ -74,7 +76,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(organizationId));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
   };
 
   return (

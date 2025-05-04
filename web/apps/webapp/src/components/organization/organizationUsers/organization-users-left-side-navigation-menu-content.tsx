@@ -1,7 +1,7 @@
 import { BodyIconTypography } from '@/components/commons';
 import { MembersIcon } from '@/components/icons';
 import { getOrganizationUsersBaseLink } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -25,6 +25,7 @@ type Props = {
 };
 
 const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
@@ -57,7 +58,7 @@ const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collap
     },
   };
 
-  const memberesLink = getOrganizationUsersBaseLink(organizationId);
+  const memberesLink = getOrganizationUsersBaseLink(integratedPlatrform, organizationId);
 
   return (
     <List

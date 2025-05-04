@@ -5,7 +5,7 @@ import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } fro
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { teamCard_addCustomerPreferredTeamMutation } from '@/queries/__generated__/teamCard_addCustomerPreferredTeamMutation.graphql';
@@ -126,6 +126,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -142,7 +143,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
 
-  const editLink = getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
+  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -161,7 +162,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         break;
 
       case MoreActionsMenuOptionType.ViewTeamBookings:
-        router.push(getOrganizationBookingsBaseLink(teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
         break;
     }
   };

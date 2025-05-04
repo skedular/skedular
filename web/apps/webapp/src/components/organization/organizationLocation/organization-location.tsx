@@ -27,7 +27,7 @@ import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationLocation_activateResourcesMutation } from '@/queries/__generated__/organizationLocation_activateResourcesMutation.graphql';
@@ -549,6 +549,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -707,7 +708,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationLocationsBaseLink(organizationId));
+    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationId));
   };
 
   const handleResourceNameSearchTextChange = (str: string) => {
@@ -740,7 +741,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     switch (id) {
       case MoreActionsMenuOptionType.EditResource:
         if (resourceDetails) {
-          router.push(getOrganizationLocationResourceBaseLink(organizationId, locationId, resourceDetails.id));
+          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationId, locationId, resourceDetails.id));
           return;
         }
 
@@ -1087,7 +1088,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   };
 
   const handleViewLocationBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(organizationId, { locationId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { locationId }));
   };
 
   const handleRemoveLocationClicked = () => {
@@ -1120,7 +1121,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           render: <NotificationContent content={`Location '${location.name}' removed.`} />,
         });
 
-        router.push(getOrganizationLocationsBaseLink(organizationId));
+        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {

@@ -6,7 +6,7 @@ import {
   getOrganizationTeamMembersBaseLink,
   getOrganizationTeamSetupBaseLink,
 } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -31,6 +31,7 @@ type Props = {
 };
 
 const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -65,10 +66,10 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationTeamSetupBaseLink(organizationId, teamId);
-  const locationLink = getOrganizationTeamLocationBaseLink(organizationId, teamId);
-  const memberesLink = getOrganizationTeamMembersBaseLink(organizationId, teamId);
-  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(organizationId, teamId);
+  const setupLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, organizationId, teamId);
+  const locationLink = getOrganizationTeamLocationBaseLink(integratedPlatrform, organizationId, teamId);
+  const memberesLink = getOrganizationTeamMembersBaseLink(integratedPlatrform, organizationId, teamId);
+  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(integratedPlatrform, organizationId, teamId);
 
   return (
     <List

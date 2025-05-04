@@ -6,7 +6,7 @@ import {
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -30,6 +30,7 @@ type Props = {
 };
 
 const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -64,10 +65,10 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(organizationId);
-  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(organizationId);
-  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(organizationId);
-  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(organizationId);
+  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationId);
+  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationId);
+  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationId);
+  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(integratedPlatrform, organizationId);
 
   return (
     <List

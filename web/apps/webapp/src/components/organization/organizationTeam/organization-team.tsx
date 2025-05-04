@@ -20,7 +20,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import { Search } from '@/components/search';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
@@ -225,6 +225,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -366,7 +367,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationTeamsBaseLink(organizationId));
+    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationId));
   };
 
   const handleDeactivateMembersClick = () => {
@@ -672,7 +673,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(organizationId, { teamId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { teamId }));
   };
 
   const handleRemoveTeamClicked = () => {
@@ -705,7 +706,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           render: <NotificationContent content={`Team '${team.name}' removed.`} />,
         });
 
-        router.push(getOrganizationTeamsBaseLink(organizationId));
+        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {

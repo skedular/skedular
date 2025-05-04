@@ -2,6 +2,7 @@ import { StackColumn } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { AddLocation } from '@/components/location/addLocation';
 import { AddOrganization } from '@/components/organization/addOrganization';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
@@ -9,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 
 const OrganizationOnboarding = () => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
@@ -20,13 +22,13 @@ const OrganizationOnboarding = () => {
 
   const handleLocationAdded = () => {
     if (organizationId) {
-      router.push(getOrganizationBaseLink(organizationId));
+      router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
     }
   };
 
   const handleLocationDismissed = () => {
     if (organizationId) {
-      router.push(getOrganizationBaseLink(organizationId));
+      router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
     }
   };
 

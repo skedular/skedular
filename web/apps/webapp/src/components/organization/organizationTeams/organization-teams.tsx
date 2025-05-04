@@ -11,7 +11,7 @@ import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { NewTeamButton } from '@/components/team/addTeam';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationTeams_addCustomerPreferredTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerPreferredTeamMutation.graphql';
@@ -162,6 +162,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const router = useRouter();
@@ -210,7 +211,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
@@ -222,7 +223,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
         break;
     }
   };

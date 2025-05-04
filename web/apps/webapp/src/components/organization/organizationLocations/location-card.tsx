@@ -7,7 +7,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
@@ -156,6 +156,7 @@ const LocationCard = ({
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -172,7 +173,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id);
+  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -191,7 +192,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
-        router.push(getOrganizationBookingsBaseLink(locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
         break;
     }
   };

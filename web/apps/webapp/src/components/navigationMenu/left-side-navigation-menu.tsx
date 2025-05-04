@@ -1,4 +1,5 @@
 import { getMeLink, getNotificationsBaseLink, getOrganizationAddLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import type { leftSideNavigationMenu_query$key } from '@/queries/__generated__/leftSideNavigationMenu_query.graphql';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, collapsed, hideIcons }: Props) 
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const [isCollpased, setIsCollpased] = useState(collapsed);
   const drawerWidth = isCollpased ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
@@ -31,9 +33,9 @@ const LeftSideNavigationMenu = ({ rootDataRelay, collapsed, hideIcons }: Props) 
     setIsCollpased(collapsed);
   };
 
-  const meLink = getMeLink();
-  const organizationAddLink = getOrganizationAddLink();
-  const notificationsLink = getNotificationsBaseLink();
+  const meLink = getMeLink(integratedPlatrform);
+  const organizationAddLink = getOrganizationAddLink(integratedPlatrform);
+  const notificationsLink = getNotificationsBaseLink(integratedPlatrform);
 
   if (pathName === meLink || pathName === organizationAddLink || pathName === notificationsLink) {
     return <></>;

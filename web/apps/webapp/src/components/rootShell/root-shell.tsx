@@ -9,7 +9,7 @@ import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { InMsTeamsContext, PaletteModeContext } from '@/libs/providers';
+import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, emerald } from '@/libs/theme';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -25,7 +25,7 @@ import { memo, useCallback, useContext, useEffect, useState, useTransition } fro
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import StackRow from '../commons/stack-row';
-import { getOrganizationSsoSignInBaseLink } from '../links';
+import { getOrganizationSsoSignInBaseLink, getRootLink } from '../links';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
@@ -89,6 +89,7 @@ const RootShell = ({
   organizationId,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const paletteMode = useContext(PaletteModeContext);
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
@@ -148,7 +149,7 @@ const RootShell = ({
 
   const handleSignOutClick = async () => {
     await signOut();
-    router.push('/');
+    router.push(getRootLink(integratedPlatrform));
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
@@ -190,7 +191,7 @@ const RootShell = ({
                     startElement={<SsoSigninIcon />}
                   />
                   <PushToRight />
-                  <Button variant="contained" href={getOrganizationSsoSignInBaseLink(organizationId)} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+                  <Button variant="contained" href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationId)} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
                     Single sign-on
                   </Button>
                 </StackRow>

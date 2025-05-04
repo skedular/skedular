@@ -16,7 +16,7 @@ import {
 import { CustomTag } from '@/components/customTag';
 import { SingleChoiceCountry } from '@/components/forms';
 import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, PreferredIcon, TickIcon } from '@/components/icons';
-import { getOrganizationBaseLink } from '@/components/links';
+import { getOrganizationBaseLink, getRootLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationMultipleChoicesIndustries, SingleChoiceOrganizationMemberVisibilityPolicy, SingleChoiceOrganizationType } from '@/components/organization';
@@ -28,7 +28,7 @@ import { EditOrganizationZoneDialog } from '@/components/organization/editOrgani
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
@@ -307,7 +307,8 @@ const OrganizationAdmin = ({
           totalCount
           edges {
             node {
-              id
+              id  const { integratedPlatrform } = useIntegratedPlatrform();
+
               name
               description
               color
@@ -510,6 +511,7 @@ const OrganizationAdmin = ({
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -1119,7 +1121,7 @@ const OrganizationAdmin = ({
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(organizationId));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
   };
 
   const handleRemovePaymentMethodClick = (id: string) => {
@@ -1474,7 +1476,7 @@ const OrganizationAdmin = ({
           render: <NotificationContent content={`Organization '${organizationDetails.name}' removed.`} />,
         });
 
-        router.push('/');
+        router.push(getRootLink(integratedPlatrform));
       },
       onError: (error) => {
         toast.update(toastId, {

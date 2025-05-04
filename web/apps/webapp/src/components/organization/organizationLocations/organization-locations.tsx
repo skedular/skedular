@@ -14,7 +14,7 @@ import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
 import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
@@ -217,6 +217,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [customTagIds, setCustomTagIds] = useState<string[]>([]);
   const [zoneIds, setZoneIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
@@ -276,7 +277,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, locationDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
@@ -288,7 +289,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
         break;
     }
   };

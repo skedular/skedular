@@ -7,7 +7,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
@@ -174,6 +174,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -197,7 +198,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          router.push(getOrganizationBookingBaseLink(organizationId, bookingDetails.id));
+          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingDetails.id));
         }
 
         break;
@@ -373,7 +374,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
         <CardHeader
           title={
             <StackRow>
-              <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+              <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingDetails.id)}>
                 {bookingDetails.involvedLocations.map((item) => (
                   <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
                 ))}

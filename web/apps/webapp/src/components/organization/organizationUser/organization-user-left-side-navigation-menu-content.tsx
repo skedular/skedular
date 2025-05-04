@@ -6,7 +6,7 @@ import {
   getOrganizationUserManageTeamsBaseLink,
   getOrganizationUserProfileBaseLink,
 } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -45,6 +45,7 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -79,10 +80,10 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const porofileLink = getOrganizationUserProfileBaseLink(organizationId, customerId);
-  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(organizationId, customerId);
-  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(organizationId, customerId);
-  const manageUserLink = getOrganizationUserManageBaseLink(organizationId, customerId);
+  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationId, customerId);
+  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationId, customerId);
+  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationId, customerId);
+  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationId, customerId);
 
   return (
     <List

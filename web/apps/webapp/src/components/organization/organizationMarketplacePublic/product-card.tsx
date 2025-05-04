@@ -2,7 +2,7 @@ import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypograph
 import { ProductIcon } from '@/components/icons';
 import { getOrganizationBookingProductLink } from '@/components/links';
 import BookProductButton from '@/components/product/bookProduct/book-product-button';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import type { productCard_ProductDetails$key } from '@/queries/__generated__/productCard_ProductDetails.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -42,6 +42,7 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const paletteMode = useContext(PaletteModeContext);
 
   return (
@@ -50,7 +51,7 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
         <CardHeader
           title={
             <StackRow>
-              <Link component={NextLink} href={getOrganizationBookingProductLink(organizationId, productDetails.id)}>
+              <Link component={NextLink} href={getOrganizationBookingProductLink(integratedPlatrform, organizationId, productDetails.id)}>
                 <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
 

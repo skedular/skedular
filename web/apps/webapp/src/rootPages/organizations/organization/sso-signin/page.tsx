@@ -4,7 +4,7 @@ import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, emerald } from '@/libs/theme';
 import type { pageOrganizationSsoSignin_rootQuery } from '@/queries/__generated__/pageOrganizationSsoSignin_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -57,6 +57,7 @@ const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationSsoSignin_rootQuery>(RootQuery);
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
   const { organizationId } = useParams();
@@ -80,13 +81,13 @@ const RootPageWithRelay = () => {
     loadQuery(
       {
         organizationId: finalOrganizationId,
-        redirectUrl: redirectUrl ?? getOrganizationBaseLink(finalOrganizationId),
+        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, finalOrganizationId),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, redirectUrl]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId, redirectUrl, integratedPlatrform]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

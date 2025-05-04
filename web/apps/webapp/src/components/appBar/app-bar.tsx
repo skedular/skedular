@@ -2,9 +2,9 @@ import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
-import { getMeLink, getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/links';
+import { getMeLink, getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink, getRootLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedOrganizationContext, UpdatePaletteModeContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
+import { PaletteModeContext, SelectedOrganizationContext, UpdatePaletteModeContext, UpdateSelectedOrganizationContext, useIntegratedPlatrform } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -66,6 +66,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const { signOut } = useAuth();
   const pathName = usePathname();
   const router = useRouter();
@@ -103,12 +104,12 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
-    if (pathName === getMeLink() || pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink()) {
+    if (pathName === getMeLink(integratedPlatrform) || pathName === getOrganizationAddLink(integratedPlatrform) || pathName === getNotificationsBaseLink(integratedPlatrform)) {
       return;
     }
 
     if (!selectedOrganizationId) {
-      router.push('/');
+      router.push(getRootLink(integratedPlatrform));
 
       return;
     }
@@ -117,19 +118,19 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
       return;
     }
 
-    router.push(getOrganizationBaseLink(selectedOrganizationId));
-  }, [router, finalOrganizationId, selectedOrganizationId, pathName]);
+    router.push(getOrganizationBaseLink(integratedPlatrform, selectedOrganizationId));
+  }, [router, finalOrganizationId, selectedOrganizationId, pathName, integratedPlatrform]);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationAddLink());
+      router.push(getOrganizationAddLink(integratedPlatrform));
     } else {
       setSelectedOrganizationId(id);
       updateSelectedOrganization(id);
 
-      router.push(getOrganizationBaseLink(id));
+      router.push(getOrganizationBaseLink(integratedPlatrform, id));
     }
   };
 
@@ -182,9 +183,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     familyName: rootData.me?.familyName,
   });
 
-  const meLink = getMeLink();
-  const organizationAddLink = getOrganizationAddLink();
-  const notificationsLink = getNotificationsBaseLink();
+  const meLink = getMeLink(integratedPlatrform);
+  const organizationAddLink = getOrganizationAddLink(integratedPlatrform);
+  const notificationsLink = getNotificationsBaseLink(integratedPlatrform);
   const showHambugerMenu = pathName !== meLink && pathName !== organizationAddLink && pathName !== notificationsLink;
 
   return (
@@ -323,7 +324,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             {selectedOrganizationId && (
               <MenuItem>
-                <Link component={NextLink} href={getMeLink()}>
+                <Link component={NextLink} href={getMeLink(integratedPlatrform)}>
                   <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
                 </Link>
               </MenuItem>
@@ -331,7 +332,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             {selectedOrganizationId && (
               <MenuItem>
-                <Link component={NextLink} href={getMeLink()}>
+                <Link component={NextLink} href={getMeLink(integratedPlatrform)}>
                   <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
                 </Link>
               </MenuItem>

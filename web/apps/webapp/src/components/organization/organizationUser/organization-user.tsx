@@ -17,7 +17,7 @@ import { BookingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { TeamCard } from '@/components/organization/organizationTeams';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
@@ -183,6 +183,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -214,7 +215,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   }, [section]);
 
   const handleCloseClick = () => {
-    router.push(getOrganizationUsersBaseLink(organizationId));
+    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
   };
 
   const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
@@ -386,7 +387,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           render: <NotificationContent content={'User removed.'} />,
         });
 
-        router.push(getOrganizationUsersBaseLink(organizationId));
+        router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -398,7 +399,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   };
 
   const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(organizationId, { customerId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { customerId }));
   };
 
   const customer = rootData.customer;

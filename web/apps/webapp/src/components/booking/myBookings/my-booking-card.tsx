@@ -7,13 +7,14 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
+
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
@@ -110,6 +111,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -133,7 +135,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          router.push(getOrganizationBookingBaseLink(organizationId, bookingDetails.id));
+          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingDetails.id));
         }
 
         break;
@@ -211,7 +213,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
       <Card sx={{ width: { xs: '100%', sm: 380 } }}>
         <CardHeader
           title={
-            <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+            <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingDetails.id)}>
               {bookingDetails.involvedLocations.map((item) => (
                 <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               ))}

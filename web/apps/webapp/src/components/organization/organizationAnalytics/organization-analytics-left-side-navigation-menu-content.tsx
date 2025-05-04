@@ -1,7 +1,7 @@
 import { BodyIconTypography } from '@/components/commons';
 import { LocationIcon, OrganizationIcon } from '@/components/icons';
 import { getOrganizationAnalyticsBaseLink, getOrganizationLocationsAnalyticsLocationsBaseLink } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -25,6 +25,7 @@ type Props = {
 };
 
 const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -59,8 +60,8 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const organizatinAnalyticsLink = getOrganizationAnalyticsBaseLink(organizationId);
-  const locationsAnalyticsLink = getOrganizationLocationsAnalyticsLocationsBaseLink(organizationId);
+  const organizatinAnalyticsLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, organizationId);
+  const locationsAnalyticsLink = getOrganizationLocationsAnalyticsLocationsBaseLink(integratedPlatrform, organizationId);
 
   return (
     <List

@@ -9,7 +9,7 @@ import {
   getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -33,6 +33,7 @@ type Props = {
 };
 
 const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -67,13 +68,13 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationAdminSetupBaseLink(organizationId);
-  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(organizationId);
-  const ssoLink = getOrganizationAdminSSOBaseLink(organizationId);
-  const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
-  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
-  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
-  const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(organizationId);
+  const setupLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationId);
+  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationId);
+  const ssoLink = getOrganizationAdminSSOBaseLink(integratedPlatrform, organizationId);
+  const zonesLink = getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationId);
+  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationId);
+  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationId);
+  const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(integratedPlatrform, organizationId);
 
   return (
     <List

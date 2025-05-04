@@ -4,7 +4,7 @@ import { getOrganizationLocationAddLink, getOrganizationLocationManageResourcesB
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import { AddResourceDialog } from '@/components/resource/addResource';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, emerald } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
@@ -47,6 +47,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -60,7 +61,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleAddResourceClicked = (locationId: string) => {
     setIsAddResourceDialogOpen(false);
 
-    router.push(getOrganizationLocationManageResourcesBaseLink(organizationId, locationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId));
   };
 
   const handleCancelAddResourceClicked = () => {
@@ -74,7 +75,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getOrganizationUsersBaseLink(organizationId));
+    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {
@@ -131,7 +132,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getOrganizationLocationAddLink(organizationId)}>
+                <Link component={NextLink} href={getOrganizationLocationAddLink(integratedPlatrform, organizationId)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Location"
@@ -147,7 +148,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Create teams that regularly work or meet together." />
-                <Link component={NextLink} href={getOrganizationTeamAddLink(organizationId)}>
+                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationId)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Team"

@@ -19,7 +19,7 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { myDetails_myPaymentMethodsDetails_query$key } from '@/queries/__generated__/myDetails_myPaymentMethodsDetails_query.graphql';
@@ -41,6 +41,7 @@ import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
+import { getRootLink } from '../links';
 import AddMyPaymentMethodDialog from './add-my-payment-method-dialog';
 
 type Props = {
@@ -192,6 +193,7 @@ const MyDetails = ({ queryReference }: Props) => {
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -213,7 +215,7 @@ const MyDetails = ({ queryReference }: Props) => {
   }, [refetchMyPaymentMethodsDetails]);
 
   const handleCloseClick = () => {
-    router.push('/');
+    router.push(getRootLink(integratedPlatrform));
   };
 
   const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {

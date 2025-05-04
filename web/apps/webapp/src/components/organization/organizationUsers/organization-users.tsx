@@ -11,7 +11,7 @@ import { RelayError } from '@/components/relayError';
 import { Search } from '@/components/search';
 import { TeamSelector } from '@/components/team/teamSelector';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
@@ -185,6 +185,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -396,7 +397,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationId, memberDetails.customer.uniqueId));
         break;
 
       case MoreActionsMenuOptionType.ViewUserBookings:
@@ -404,7 +405,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(organizationId, { customerId: memberDetails.customer.uniqueId }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { customerId: memberDetails.customer.uniqueId }));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:
@@ -593,7 +594,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(organizationId));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
   };
 
   const rows: RowType[] = members.map((member) => ({

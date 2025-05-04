@@ -14,7 +14,7 @@ import { Search } from '@/components/search';
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationMarketplaceSetup_activateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_activateProductsMutation.graphql';
@@ -294,7 +294,7 @@ const OrganizationMarketplaceSetup = ({
           inactive
           name
           description
-          priceToDisplay
+          priceToDisplaygetOrganizationStripeConnectAccountBaseLink
           priceUnit {
             name
           }
@@ -340,6 +340,7 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -513,7 +514,7 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(getOrganizationProductBaseLink(productDetails.organization?.uniqueId!, productDetails.id));
+        router.push(getOrganizationProductBaseLink(integratedPlatrform, productDetails.organization?.uniqueId!, productDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteProduct:
@@ -1004,7 +1005,13 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(getOrganizationStripeConnectAccountBaseLink(organizationStripeConnectAccountDetails.organization?.uniqueId!, organizationStripeConnectAccountDetails.id));
+        router.push(
+          getOrganizationStripeConnectAccountBaseLink(
+            integratedPlatrform,
+            organizationStripeConnectAccountDetails.organization?.uniqueId!,
+            organizationStripeConnectAccountDetails.id,
+          ),
+        );
         break;
 
       case MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount:
@@ -1093,7 +1100,7 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(organizationId));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
   };
 
   const productRows: ProductRowType[] = products.map((product) => ({

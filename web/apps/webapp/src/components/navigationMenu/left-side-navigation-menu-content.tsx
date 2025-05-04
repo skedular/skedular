@@ -13,7 +13,7 @@ import {
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
@@ -59,6 +59,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const { organizationId } = useParams();
@@ -127,15 +128,15 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     return <></>;
   }
 
-  const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
-  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(rootData.organization.id);
-  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(rootData.organization.id);
-  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(rootData.organization.id);
-  const organizationMembersBaseLink = getOrganizationUsersBaseLink(rootData.organization.id);
-  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(rootData.organization.id);
-  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(rootData.organization.id);
-  const organizationMarketplaceBaseLink = getOrganizationMarketplaceBaseLink(rootData.organization.id);
-  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(rootData.organization.id);
+  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationMarketplaceBaseLink = getOrganizationMarketplaceBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.id);
 
   return (
     <>
@@ -392,7 +393,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, finalOrganizationId)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}

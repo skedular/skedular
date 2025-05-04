@@ -7,7 +7,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookings_addBookingMutation } from '@/queries/__generated__/bookings_addBookingMutation.graphql';
@@ -239,6 +239,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -290,7 +291,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(organizationId, bookingId));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingId));
 
         break;
 
