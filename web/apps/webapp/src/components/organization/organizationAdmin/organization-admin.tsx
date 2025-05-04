@@ -307,8 +307,7 @@ const OrganizationAdmin = ({
           totalCount
           edges {
             node {
-              id  const { integratedPlatrform } = useIntegratedPlatrform();
-
+              id
               name
               description
               color

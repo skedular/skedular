@@ -294,7 +294,7 @@ const OrganizationMarketplaceSetup = ({
           inactive
           name
           description
-          priceToDisplaygetOrganizationStripeConnectAccountBaseLink
+          priceToDisplay
           priceUnit {
             name
           }

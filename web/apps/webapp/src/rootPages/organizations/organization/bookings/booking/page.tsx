@@ -32,6 +32,7 @@ const RootQuery = graphql`
   ) {
     booking(id: $bookingId) {
       from
+      bookedOnMarketplace
     }
     ...editBooking_query
     ...editBooking_organizationMembers_query

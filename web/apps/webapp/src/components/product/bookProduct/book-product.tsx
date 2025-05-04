@@ -15,10 +15,11 @@ import {
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
+import { getOrganizationBookingBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DefaultSelect } from '@/components/styled';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { BookingType, bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
@@ -213,6 +214,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     }
   `);
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -491,7 +493,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         });
 
         UpdateGlobalReloadId();
-        router.back();
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform,organizationId, response.addBooking!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {
