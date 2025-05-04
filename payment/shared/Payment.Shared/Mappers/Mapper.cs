@@ -109,7 +109,7 @@ public class Mapper : IMapper
         new()
         {
             Name = src.Name.ToSafeString(),
-            UnitLabel = src.PriceUnit.ToPriceUnitName(),
+            UnitLabel = src.PriceUnit.ToStripePriceUnitName(),
             Metadata = new Dictionary<string, string>
             {
                 { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
