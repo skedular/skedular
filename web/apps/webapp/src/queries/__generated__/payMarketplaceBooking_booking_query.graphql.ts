@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<209e2ff9de0384d70a1e425c8e9df12e>>
+ * @generated SignedSource<<25d58c473e41c6342fc4991ff933da5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type PaymentStatus = "Expired" | "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type payMarketplaceBooking_query$data = {
+export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
     readonly bookingCheckoutSession: {
       readonly amountTotalToDisplay: string;
@@ -42,6 +42,14 @@ export type payMarketplaceBooking_query$data = {
       readonly name: string;
       readonly uniqueId: string;
     }>;
+    readonly lineItems: ReadonlyArray<{
+      readonly productVersion: {
+        readonly name: string;
+        readonly priceToDisplay: string;
+        readonly uniqueId: string;
+      };
+      readonly quantity: number;
+    }>;
     readonly notes: string | null | undefined;
     readonly resources: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -63,12 +71,14 @@ export type payMarketplaceBooking_query$data = {
     };
     readonly until: any;
   } | null | undefined;
-  readonly " $fragmentType": "payMarketplaceBooking_query";
+  readonly " $fragmentType": "payMarketplaceBooking_booking_query";
 };
-export type payMarketplaceBooking_query$key = {
-  readonly " $data"?: payMarketplaceBooking_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"payMarketplaceBooking_query">;
+export type payMarketplaceBooking_booking_query$key = {
+  readonly " $data"?: payMarketplaceBooking_booking_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"payMarketplaceBooking_booking_query">;
 };
+
+import payMarketplaceBooking_booking_refetchableFragment_graphql from './payMarketplaceBooking_booking_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -109,8 +119,14 @@ return {
     }
   ],
   "kind": "Fragment",
-  "metadata": null,
-  "name": "payMarketplaceBooking_query",
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": payMarketplaceBooking_booking_refetchableFragment_graphql
+    }
+  },
+  "name": "payMarketplaceBooking_booking_query",
   "selections": [
     {
       "alias": null,
@@ -315,6 +331,44 @@ return {
           "kind": "ScalarField",
           "name": "bookingCheckoutSessionExpiry",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LineItemDetails",
+          "kind": "LinkedField",
+          "name": "lineItems",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "quantity",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Booking_ProductVersionDetails",
+              "kind": "LinkedField",
+              "name": "productVersion",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "priceToDisplay",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -325,6 +379,6 @@ return {
 };
 })();
 
-(node as any).hash = "9a71e3020d85b0b47c68cdb54c9ff28a";
+(node as any).hash = "f6eb3c047e0a4539b46f41867e98fb45";
 
 export default node;

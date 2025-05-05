@@ -7,7 +7,8 @@ import StackColumn from '@/components/commons/stack-column';
 import StackRow from '@/components/commons/stack-row';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
-import type { payMarketplaceBooking_query$key } from '@/queries/__generated__/payMarketplaceBooking_query.graphql';
+import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
+import type { payMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/payMarketplaceBooking_booking_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
@@ -15,17 +16,17 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: payMarketplaceBooking_query$key;
+  rootDataRelay: payMarketplaceBooking_booking_query$key;
   onReloadRequired?: () => void;
 };
 
 const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<payMarketplaceBooking_query$key>(
+  const [rootData, refetch] = useRefetchableFragment<payMarketplaceBooking_booking_refetchableFragment, payMarketplaceBooking_booking_query$key>(
     graphql`
-      fragment payMarketplaceBooking_query on Query {
+      fragment payMarketplaceBooking_booking_query on Query @refetchable(queryName: "payMarketplaceBooking_booking_refetchableFragment") {
         booking(id: $bookingId) {
           id
           from
@@ -75,6 +76,14 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
             amountTotalToDisplay
           }
           bookingCheckoutSessionExpiry
+          lineItems {
+            quantity
+            productVersion {
+              uniqueId
+              name
+              priceToDisplay
+            }
+          }
         }
       }
     `,
@@ -82,8 +91,8 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
   );
 
   const router = useRouter();
-  const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
-  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([
+  const [allDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
+  const [timeRange] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);

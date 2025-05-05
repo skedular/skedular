@@ -106,7 +106,8 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
-            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry
+            ProductVersions = MapTo(src.ProductVersions).ToList(), 
+            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry,
         };
 
         return team;
@@ -433,6 +434,7 @@ public class Mapper : IMapper
             UniqueId = src.Id,
             Name = src.Name,
             Price = src.Price.ToRoundedPrice(),
+            PriceToDisplay = src.Price.ToRoundedPrice().ToPriceToDisplay(src.Currency),
             PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() }
         };
@@ -733,4 +735,37 @@ public class Mapper : IMapper
                 Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()
             };
+
+    private static IEnumerable<Shared.Models.ProductVersion> MapTo(IEnumerable<ProductVersion> src) =>
+        src.Select(MapTo);
+
+    private static Shared.Models.ProductVersion MapTo(ProductVersion src)
+    {
+        ArgumentNullException.ThrowIfNull(src.PriceUnit);
+        ArgumentNullException.ThrowIfNull(src.PricePerMinute);
+        ArgumentNullException.ThrowIfNull(src.Currency);
+        ArgumentNullException.ThrowIfNull(src.BookAllLocationResources);
+        ArgumentNullException.ThrowIfNull(src.RecurrenceWindowDays);
+        ArgumentNullException.ThrowIfNull(src.RequireConsecutiveDays);
+        ArgumentNullException.ThrowIfNull(src.NumberOfResourcesToBook);
+        
+        return new Shared.Models.ProductVersion
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name.ToSafeString(),
+            Price = src.Price ?? 0,
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            PricePerMinute = src.PricePerMinute.Value,
+            Currency = src.Currency.ToCurrency(),
+            MinDurationMinutes = src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources.Value,
+            RecurrenceWindowDays = src.RecurrenceWindowDays.Value,
+            RequireConsecutiveDays = src.RequireConsecutiveDays.Value,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook.Value
+        };
+    }
 }

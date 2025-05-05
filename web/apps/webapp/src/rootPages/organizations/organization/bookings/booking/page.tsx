@@ -48,7 +48,7 @@ const RootQuery = graphql`
     ...editMarketplaceBooking_booking_query
     ...editMarketplaceBooking_organizationMembers_query
     ...editMarketplaceBooking_customerTeams_query
-    ...payMarketplaceBooking_query
+    ...payMarketplaceBooking_booking_query
   }
 `;
 
