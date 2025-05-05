@@ -5,7 +5,8 @@ public enum PaymentStatus
     NoPaymentRequired,
     Pending,
     Paid,
-    Unpaid
+    Unpaid,
+    Expired
 }
 
 public static class PaymentStatusConstants
@@ -14,6 +15,7 @@ public static class PaymentStatusConstants
     public const string Pending = "PENDING";
     public const string Paid = "PAID";
     public const string Unpaid = "UNPAID";
+    public const string Expired = "EXPIRED";
 }
 
 public static class PaymentStatusExtensions
@@ -25,6 +27,7 @@ public static class PaymentStatusExtensions
             PaymentStatusConstants.Pending => PaymentStatus.Pending,
             PaymentStatusConstants.Paid => PaymentStatus.Paid,
             PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
+            PaymentStatusConstants.Expired => PaymentStatus.Expired,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -37,6 +40,7 @@ public static class PaymentStatusExtensions
                 PaymentStatusConstants.Pending => PaymentStatus.Pending,
                 PaymentStatusConstants.Paid => PaymentStatus.Paid,
                 PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
+                PaymentStatusConstants.Expired => PaymentStatus.Expired,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -47,6 +51,7 @@ public static class PaymentStatusExtensions
             PaymentStatus.Pending => PaymentStatusConstants.Pending,
             PaymentStatus.Paid => PaymentStatusConstants.Paid,
             PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
+            PaymentStatus.Expired => PaymentStatusConstants.Expired,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -59,6 +64,7 @@ public static class PaymentStatusExtensions
                 PaymentStatus.Pending => PaymentStatusConstants.Pending,
                 PaymentStatus.Paid => PaymentStatusConstants.Paid,
                 PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
+                PaymentStatus.Expired => PaymentStatusConstants.Expired,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -69,6 +75,7 @@ public static class PaymentStatusExtensions
             PaymentStatus.Pending => "Pending",
             PaymentStatus.Paid => "Paid",
             PaymentStatus.Unpaid => "Unpaid",
+            PaymentStatus.Expired => "Expired",
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -79,6 +86,7 @@ public static class PaymentStatusExtensions
             PaymentStatusConstants.Pending => "Pending",
             PaymentStatusConstants.Paid => "Paid",
             PaymentStatusConstants.Unpaid => "Unpaid",
+            PaymentStatusConstants.Expired => "Expired",
             _ => throw new ArgumentOutOfRangeException()
         };
 }

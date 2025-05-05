@@ -1,4 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Processors.Mappers;
 using Payment.Shared.Publishers;
@@ -162,7 +163,9 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
             return;
         }
 
-        stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
+        stripeCheckoutSession = mapper.MergeTo(session, stripeCheckoutSession);
+        stripeCheckoutSession.PaymentStatus = PaymentStatusConstants.Expired;
+        stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(stripeCheckoutSession);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await paymentPublisher.PublishBookingCheckoutSessionAsync([mapper.MapTo(stripeCheckoutSession)], cancellationToken);
     }

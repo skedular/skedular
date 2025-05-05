@@ -560,6 +560,7 @@ public class Mapper : IMapper
                 PaymentStatus.Pending => Api.Shared.Services.Models.PaymentStatus.Pending,
                 PaymentStatus.Paid => Api.Shared.Services.Models.PaymentStatus.Paid,
                 PaymentStatus.Unpaid => Api.Shared.Services.Models.PaymentStatus.Unpaid,
+                PaymentStatus.Expired => Api.Shared.Services.Models.PaymentStatus.Expired,
                 _ => throw new ArgumentOutOfRangeException()
             },
             AmountTotal =

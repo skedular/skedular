@@ -62,11 +62,11 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "b25uZWN0QWNjb3VudFVwc2VydGVkEAISKwonT3JnYW5pemF0aW9uU3RyaXBl",
             "Q29ubmVjdEFjY291bnREZWxldGVkEAMSIgoeQm9va2luZ0NoZWNrb3V0U2Vz",
             "c2lvblVwc2VydGVkEAQSIQodQm9va2luZ0NoZWNrb3V0U2Vzc2lvbkRlbGV0",
-            "ZWQQBSp9Cg1QYXltZW50U3RhdHVzEiIKHlBheW1lbnRTdGF0dXNOb1BheW1l",
-            "bnRSZXF1aXJlZBAAEhgKFFBheW1lbnRTdGF0dXNQZW5kaW5nEAESFQoRUGF5",
-            "bWVudFN0YXR1c1BhaWQQAhIXChNQYXltZW50U3RhdHVzVW5wYWlkEANCNqoC",
-            "M0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudC5W",
-            "MS5WYWx1ZWIGcHJvdG8z"));
+            "ZWQQBSqXAQoNUGF5bWVudFN0YXR1cxIiCh5QYXltZW50U3RhdHVzTm9QYXlt",
+            "ZW50UmVxdWlyZWQQABIYChRQYXltZW50U3RhdHVzUGVuZGluZxABEhUKEVBh",
+            "eW1lbnRTdGF0dXNQYWlkEAISFwoTUGF5bWVudFN0YXR1c1VucGFpZBADEhgK",
+            "FFBheW1lbnRTdGF0dXNFeHBpcmVkEARCNqoCM0FwaS5TaGFyZWQuQ2xpZW50",
+            "cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudC5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -97,6 +97,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [pbr::OriginalName("PaymentStatusPending")] Pending = 1,
     [pbr::OriginalName("PaymentStatusPaid")] Paid = 2,
     [pbr::OriginalName("PaymentStatusUnpaid")] Unpaid = 3,
+    [pbr::OriginalName("PaymentStatusExpired")] Expired = 4,
   }
 
   #endregion

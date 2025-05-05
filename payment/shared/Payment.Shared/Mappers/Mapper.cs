@@ -101,6 +101,7 @@ public class Mapper : IMapper
                 Api.Shared.Services.Models.PaymentStatus.Pending => PaymentStatus.Pending,
                 Api.Shared.Services.Models.PaymentStatus.Paid => PaymentStatus.Paid,
                 Api.Shared.Services.Models.PaymentStatus.Unpaid => PaymentStatus.Unpaid,
+                Api.Shared.Services.Models.PaymentStatus.Expired => PaymentStatus.Expired,
                 _ => throw new ArgumentOutOfRangeException()
             },
             AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),

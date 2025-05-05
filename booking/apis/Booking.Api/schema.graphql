@@ -319,6 +319,7 @@ enum PaymentStatus {
   Pending
   Paid
   Unpaid
+  Expired
 }
 
 enum PriceUnit {

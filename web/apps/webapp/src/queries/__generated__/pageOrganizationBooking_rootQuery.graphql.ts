@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a435b09492b3469bbb526c955976d83>>
+ * @generated SignedSource<<c82b66446a6b3dd723a03903f04f36f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type LocationOrderField = "About" | "Name" | "Timezone" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "PhoneNumber" | "Role" | "Status" | "%future added value";
-export type PaymentStatus = "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
+export type PaymentStatus = "Expired" | "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
 export type TeamOrderField = "About" | "Name" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;

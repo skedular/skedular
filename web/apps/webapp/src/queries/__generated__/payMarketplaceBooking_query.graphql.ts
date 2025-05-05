@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8092c10b2c85f37edb58398080424411>>
+ * @generated SignedSource<<209e2ff9de0384d70a1e425c8e9df12e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
-export type PaymentStatus = "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
+export type PaymentStatus = "Expired" | "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_query$data = {
   readonly booking: {

@@ -93,6 +93,7 @@ enum PaymentStatus {
   PaymentStatusPending = 1;
   PaymentStatusPaid = 2;
   PaymentStatusUnpaid = 3;
+  PaymentStatusExpired = 4;
 }
 
 message BookingCheckoutSession {

@@ -64,11 +64,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "YXRpb24QBxIUChBUcmF2ZWxpbmdGb3JXb3JrEAgSEQoNTm9uV29ya2luZ0Rh",
             "eRAJKmwKDUJvb2tpbmdTdGF0dXMSCwoHUGVuZGluZxAAEgwKCFJlamVjdGVk",
             "EAESDQoJQ29uZmlybWVkEAISEgoOUGF5bWVudEV4cGlyZWQQAxIdChlQYXlt",
-            "ZW50UmVjb3JkTmV2ZXJDcmVhdGVkEAQqfQoNUGF5bWVudFN0YXR1cxIiCh5Q",
-            "YXltZW50U3RhdHVzTm9QYXltZW50UmVxdWlyZWQQABIYChRQYXltZW50U3Rh",
-            "dHVzUGVuZGluZxABEhUKEVBheW1lbnRTdGF0dXNQYWlkEAISFwoTUGF5bWVu",
-            "dFN0YXR1c1VucGFpZBADQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRz",
-            "LlNrZWR1bGFyLkJvb2tpbmcuVjEuVmFsdWViBnByb3RvMw=="));
+            "ZW50UmVjb3JkTmV2ZXJDcmVhdGVkEAQqlwEKDVBheW1lbnRTdGF0dXMSIgoe",
+            "UGF5bWVudFN0YXR1c05vUGF5bWVudFJlcXVpcmVkEAASGAoUUGF5bWVudFN0",
+            "YXR1c1BlbmRpbmcQARIVChFQYXltZW50U3RhdHVzUGFpZBACEhcKE1BheW1l",
+            "bnRTdGF0dXNVbnBhaWQQAxIYChRQYXltZW50U3RhdHVzRXhwaXJlZBAEQjaq",
+            "AjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkJvb2tpbmcu",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -117,6 +118,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [pbr::OriginalName("PaymentStatusPending")] Pending = 1,
     [pbr::OriginalName("PaymentStatusPaid")] Paid = 2,
     [pbr::OriginalName("PaymentStatusUnpaid")] Unpaid = 3,
+    [pbr::OriginalName("PaymentStatusExpired")] Expired = 4,
   }
 
   #endregion

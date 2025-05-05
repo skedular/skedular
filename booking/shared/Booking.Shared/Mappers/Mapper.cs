@@ -103,6 +103,7 @@ public class Mapper : IMapper
                     PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
                     PaymentStatus.Paid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Paid,
                     PaymentStatus.Unpaid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Unpaid,
+                    PaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Expired,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),

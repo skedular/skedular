@@ -710,6 +710,7 @@ public class Mapper : IMapper
                     PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
                     PaymentStatus.Paid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Paid,
                     PaymentStatus.Unpaid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Unpaid,
+                    PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 CheckoutUrl = src.CheckoutUrl,
