@@ -215,10 +215,12 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               {booking.bookingCheckoutSession && (
                 <StackRow>
-                  <SmallIconTypography label={timeLeftToPayInSeconds ? `Time left to pay: ${timeLeftToPayInSeconds}` : 'Expired'} color="error.main" />
-                  <Button LinkComponent={Link} variant="contained" sx={defaultButtonStyle} href={booking.bookingCheckoutSession?.checkoutUrl}>
-                    Pay
-                  </Button>
+                  <SmallIconTypography label={`Time left to pay: ${timeLeftToPayInSeconds ? timeLeftToPayInSeconds : 'Expired'}`} color="error.main" />
+                  {timeLeftToPayInSeconds && (
+                    <Button LinkComponent={Link} variant="contained" sx={defaultButtonStyle} href={booking.bookingCheckoutSession?.checkoutUrl}>
+                      Pay
+                    </Button>
+                  )}
                 </StackRow>
               )}
               {!booking.bookingCheckoutSession && (
