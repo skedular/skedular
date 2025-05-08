@@ -1,7 +1,7 @@
 import CustomerAvatar from '@/components/avatars/customer-avatar';
 import LocationAvatar from '@/components/avatars/location-avatar';
 import TeamAvatar from '@/components/avatars/team-avatar';
-import { AppBarWithStackColumn, BodyIconTypography } from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography } from '@/components/commons';
 import FormFieldLabel from '@/components/commons/form-field-label';
 import StackColumn from '@/components/commons/stack-column';
 import StackRow from '@/components/commons/stack-row';
@@ -11,11 +11,12 @@ import type { payMarketplaceBooking_booking_query$key } from '@/queries/__genera
 import type { payMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/payMarketplaceBooking_booking_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
@@ -90,12 +91,52 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const getTimeLeftToPayInSeconds = (bookingCheckoutSessionExpiry: string) => {
+    const expirtTime = dayjs(bookingCheckoutSessionExpiry).utc();
+    const currentTime = dayjs().utc();
+
+    return expirtTime.isBefore(currentTime) ? null : new Date(expirtTime.diff(currentTime, 'second') * 1000).toISOString().slice(11, 19);
+  };
+
   const router = useRouter();
+  const [, startTransition] = useTransition();
   const [allDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
   const [timeRange] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
+  const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() => (rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.bookingCheckoutSessionExpiry) : null));
+
+  const handleRefetch = useCallback(() => {
+    startTransition(() => {
+      refetch(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+        },
+      );
+    });
+  }, [refetch]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!rootData.booking?.bookingCheckoutSession) {
+        handleRefetch();
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [handleRefetch, rootData.booking?.bookingCheckoutSession]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeftToPayInSeconds(rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.bookingCheckoutSessionExpiry) : null);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [rootData.booking]);
 
   const handleCloseClick = () => {
     router.back();
@@ -172,11 +213,19 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
             )}
 
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <StackRow>
-                <Button LinkComponent={Link} variant="contained" sx={defaultButtonStyle} href={booking.bookingCheckoutSession?.checkoutUrl}>
-                  Pay
-                </Button>
-              </StackRow>
+              {booking.bookingCheckoutSession && (
+                <StackRow>
+                  <SmallIconTypography label={timeLeftToPayInSeconds ? `Time left to pay: ${timeLeftToPayInSeconds}` : 'Expired'} color="error.main" />
+                  <Button LinkComponent={Link} variant="contained" sx={defaultButtonStyle} href={booking.bookingCheckoutSession?.checkoutUrl}>
+                    Pay
+                  </Button>
+                </StackRow>
+              )}
+              {!booking.bookingCheckoutSession && (
+                <StackRow>
+                  <CircularProgress />
+                </StackRow>
+              )}
             </StackColumn>
           </StackColumn>
         </AppBarWithStackColumn>
