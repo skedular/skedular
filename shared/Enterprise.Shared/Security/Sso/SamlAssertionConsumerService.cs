@@ -21,6 +21,8 @@ public interface ISamlAssertionConsumerService
     SamlResponse ExtractSamlResponse(string saml);
     void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse);
     SamlResponse RetrieveSamlResponseFromCookie(string rawResponse);
+    Task<bool> ValidateMetadataAsync(string metadataUrl, CancellationToken cancellationToken);
+    Task<bool> ValidateCertificateAsync(string metadataUrl, CancellationToken cancellationToken);
 }
 
 public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider timeProvider, ICookieHelper cookieHelper)
@@ -178,4 +180,62 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
                 var certificateRawData = Convert.FromBase64String(certNode.Value);
                 return X509CertificateLoader.LoadCertificate(certificateRawData);
             }))!;
+    public async Task<bool> ValidateMetadataAsync(string metadataUrl, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
+            var document = XDocument.Parse(metadata);
+
+            // Verify required SAML metadata elements
+            var descriptor = document.Descendants()
+                .FirstOrDefault(x => x.Name.LocalName == "IDPSSODescriptor");
+            if (descriptor == null)
+            {
+                return false;
+            }
+
+            // Verify SSO service endpoint
+            var ssoService = descriptor.Descendants()
+                .FirstOrDefault(x => x.Name.LocalName == "SingleSignOnService");
+            if (ssoService?.Attribute("Location") == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> ValidateCertificateAsync(string metadataUrl, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var certificate = await GetSigningCertificateFromMetadataAsync(metadataUrl, cancellationToken);
+        
+            // Check if certificate is expired
+            if (certificate.NotAfter < timeProvider.GetUtcNow())
+            {
+                return false;
+            }
+            
+            // Basic certificate validation
+            if (!certificate.HasPrivateKey && certificate.GetRSAPublicKey() != null)
+            {
+                return true;
+            }
+
+            // Verify certificate has valid key usage
+            var keyUsages = certificate.Extensions["2.5.29.15"] as X509KeyUsageExtension;
+            return keyUsages == null || keyUsages.KeyUsages.HasFlag(X509KeyUsageFlags.DigitalSignature);
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

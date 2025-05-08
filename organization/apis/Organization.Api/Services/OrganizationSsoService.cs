@@ -9,6 +9,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using OrganizationSsoValidationResult = Organization.Shared.Configurations.OrganizationSsoValidationResult;
 
 namespace Organization.Api.Services;
 
@@ -62,6 +63,13 @@ public class OrganizationSsoService(
         ArgumentNullException.ThrowIfNull(ssoSetting.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(ssoSetting.Organization.Id);
 
+        // Validate SSO settings first
+        var validationResult = await ValidateSsoConfigurationAsync(ssoSetting, cancellationToken);
+        if (!validationResult.IsMetadataValid || !validationResult.IsCertificateValid)
+        {
+            throw new InvalidSsoConfiguration();
+        }
+        
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(ssoSetting.Organization.Id, cancellationToken);
         if (organization is null)
@@ -211,5 +219,30 @@ public class OrganizationSsoService(
         await transaction.CommitAsync(cancellationToken);
 
         return mapper.MapTo(organization);
+    }
+
+    public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(OrganizationSsoSetting ssoSettings, CancellationToken cancellationToken)
+    {
+        var result = new OrganizationSsoValidationResult();
+
+        try
+        {
+            // Test metadata
+            result.IsMetadataValid = await samlAssertionConsumerService.ValidateMetadataAsync(
+                ssoSettings.AppFederationMetadataUrl,
+                cancellationToken);
+
+            // Test certificate from metadata
+            result.IsCertificateValid = await samlAssertionConsumerService.ValidateCertificateAsync(
+                ssoSettings.AppFederationMetadataUrl,
+                cancellationToken);
+            
+        }
+        catch (Exception ex)
+        {
+            result.Error = ex.Message;
+        }
+
+        return result;
     }
 }

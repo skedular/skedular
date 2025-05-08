@@ -46,8 +46,8 @@ on:
       - "team/**"
 
 jobs:
-  build-workarounds:
-    name: "Build workarounds"
+  build-workarounds-apis:
+    name: "Build workarounds - All APIs"
     runs-on: self-hosted
     if: github.event.pull_request.draft == false
     env:
@@ -73,6 +73,21 @@ jobs:
           dockerRepository: allapis
           pushDockerImage: true
 
+  build-workarounds:
+    name: "Build workarounds - All Processors"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Build, Test and Push Image - All Processors
         uses: "./.github/actions/build-test-push"
         with:
@@ -85,6 +100,21 @@ jobs:
           dockerRepository: allprocessors
           pushDockerImage: true
 
+  build-workarounds-all-jobs:
+    name: "Build workarounds - All Jobs"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Build, Test and Push Image - All Jobs
         uses: "./.github/actions/build-test-push"
         with:
@@ -96,6 +126,21 @@ jobs:
           dockerNamespace: unityhubio
           dockerRepository: alljobs
           pushDockerImage: true
+
+  build-workarounds-all-infra:
+    name: "Build workarounds - All Infra"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Build, Test and Push Image - All Infra
         uses: "./.github/actions/build-test-push"

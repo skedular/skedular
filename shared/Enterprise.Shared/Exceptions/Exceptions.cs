@@ -73,3 +73,5 @@ public class CustomerStripeCustomerRelationshipIsNotSetYet() : Exception("Custom
 public class StripePriceRelationshipIsNotSetYet() : Exception("Stripe price relationship is not set yet");
 
 public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross organization product booking not allowed");
+
+public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
