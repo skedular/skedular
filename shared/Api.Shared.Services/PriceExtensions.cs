@@ -11,7 +11,7 @@ public static class PriceExtensions
             Currency.Usd => $"US${price}",
             _ => throw new ArgumentOutOfRangeException()
         };
-    
+
     public static string ToCurrencyToDisplay(this Currency currency) =>
         currency switch
         {
@@ -19,5 +19,4 @@ public static class PriceExtensions
             Currency.Usd => "US$",
             _ => throw new ArgumentOutOfRangeException()
         };
-
 }

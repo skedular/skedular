@@ -11,31 +11,29 @@ public interface IKafkaLogger
 
 public class KafkaLogger(ILogger<KafkaLogger> logger) : IKafkaLogger
 {
-    public void SetLogHandler<TKey, TValue>(ConsumerBuilder<TKey, TValue> builder) => builder.SetLogHandler(
-        (consumer, logMessage) =>
+    public void SetLogHandler<TKey, TValue>(ConsumerBuilder<TKey, TValue> builder) => builder.SetLogHandler((consumer, logMessage) =>
+    {
+        try
         {
-            try
-            {
-                Log<TValue>(logMessage, "CONSUMER", consumer.Name);
-            }
-            catch
-            {
-                // ignored
-            }
-        });
+            Log<TValue>(logMessage, "CONSUMER", consumer.Name);
+        }
+        catch
+        {
+            // ignored
+        }
+    });
 
-    public void SetLogHandler<TKey, TValue>(ProducerBuilder<TKey, TValue> builder) => builder.SetLogHandler(
-        (producer, logMessage) =>
+    public void SetLogHandler<TKey, TValue>(ProducerBuilder<TKey, TValue> builder) => builder.SetLogHandler((producer, logMessage) =>
+    {
+        try
         {
-            try
-            {
-                Log<TValue>(logMessage, "PRODUCER", producer.Name);
-            }
-            catch
-            {
-                // ignored
-            }
-        });
+            Log<TValue>(logMessage, "PRODUCER", producer.Name);
+        }
+        catch
+        {
+            // ignored
+        }
+    });
 
     private void Log<TValue>(
         LogMessage logMessage,

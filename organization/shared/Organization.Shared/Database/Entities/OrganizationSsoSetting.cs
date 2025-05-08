@@ -43,7 +43,3 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
         builder.HasIndex(item => item.IsActive);
     }
 }
-    
-
-
-

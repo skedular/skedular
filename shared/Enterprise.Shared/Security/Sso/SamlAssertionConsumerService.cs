@@ -162,24 +162,6 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
     public SamlResponse RetrieveSamlResponseFromCookie(string rawResponse) =>
         JsonSerializer.Deserialize<SamlResponse>(cookieHelper.Decrypt(rawResponse))!;
 
-    private async Task<X509Certificate2> GetSigningCertificateFromMetadataAsync(string metadataUrl, CancellationToken cancellationToken) =>
-        (await memoryCache.GetOrCreateAsync(
-            $"organization-sso-settings-{metadataUrl}",
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
-                var document = XDocument.Parse(metadata);
-                var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
-                if (certNode == null)
-                {
-                    throw new SamlMetadataException();
-                }
-
-                var certificateRawData = Convert.FromBase64String(certNode.Value);
-                return X509CertificateLoader.LoadCertificate(certificateRawData);
-            }))!;
     public async Task<bool> ValidateMetadataAsync(string metadataUrl, CancellationToken cancellationToken)
     {
         try
@@ -216,13 +198,13 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
         try
         {
             var certificate = await GetSigningCertificateFromMetadataAsync(metadataUrl, cancellationToken);
-        
+
             // Check if certificate is expired
             if (certificate.NotAfter < timeProvider.GetUtcNow())
             {
                 return false;
             }
-            
+
             // Basic certificate validation
             if (!certificate.HasPrivateKey && certificate.GetRSAPublicKey() != null)
             {
@@ -238,4 +220,23 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
             return false;
         }
     }
+
+    private async Task<X509Certificate2> GetSigningCertificateFromMetadataAsync(string metadataUrl, CancellationToken cancellationToken) =>
+        (await memoryCache.GetOrCreateAsync(
+            $"organization-sso-settings-{metadataUrl}",
+            async cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+
+                var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
+                var document = XDocument.Parse(metadata);
+                var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
+                if (certNode == null)
+                {
+                    throw new SamlMetadataException();
+                }
+
+                var certificateRawData = Convert.FromBase64String(certNode.Value);
+                return X509CertificateLoader.LoadCertificate(certificateRawData);
+            }))!;
 }

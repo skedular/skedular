@@ -1,6 +1,5 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
-using Enterprise.Shared.Time;
 
 namespace Booking.Shared.Models;
 

@@ -23,17 +23,16 @@ public class CustomerPublisher(
     : ICustomerPublisher
 {
     public async Task PublishCustomersAsync(IEnumerable<Models.Customer> customers, CancellationToken cancellationToken) =>
-        await Task.WhenAll(customers.Select(
-            customer => publisher.PublishAsync(
-                new Key { CustomerId = customer.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        customer.IsNotDeleted() ? Type.CustomerUpserted : Type.CustomerDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Customer = mapper.MapTo(customer) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(customers.Select(customer => publisher.PublishAsync(
+            new Key { CustomerId = customer.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    customer.IsNotDeleted() ? Type.CustomerUpserted : Type.CustomerDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Customer = mapper.MapTo(customer) }
+            },
+            cancellationToken)));
 }

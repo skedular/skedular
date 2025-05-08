@@ -38,8 +38,8 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.OrganizationMembers.Where(
-                organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .Include(query =>
+                query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))

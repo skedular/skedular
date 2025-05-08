@@ -21,7 +21,7 @@ public class LocationAuthorizationService(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
-        
+
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             location.Organization.Id,
             false,

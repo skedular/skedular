@@ -59,8 +59,8 @@ public class OrganizationInvitationService(
             .ToList();
 
         emails = emails.Where(item =>
-                !existingMemberEmails.Any(
-                    existingMemberEmail => string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
+                !existingMemberEmails.Any(existingMemberEmail =>
+                    string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();
         if (emails.Count == 0)
         {

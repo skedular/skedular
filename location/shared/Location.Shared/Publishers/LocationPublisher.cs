@@ -23,17 +23,16 @@ public class LocationPublisher(
     : ILocationPublisher
 {
     public async Task PublishLocationsAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken) =>
-        await Task.WhenAll(locations.Select(
-            location => publisher.PublishAsync(
-                new Key { LocationId = location.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Location = mapper.MapTo(location) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(locations.Select(location => publisher.PublishAsync(
+            new Key { LocationId = location.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Location = mapper.MapTo(location) }
+            },
+            cancellationToken)));
 }

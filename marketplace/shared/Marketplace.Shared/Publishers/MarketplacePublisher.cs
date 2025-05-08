@@ -24,17 +24,16 @@ public class MarketplacePublisher(
     : IMarketplacePublisher
 {
     public async Task PublishProductsAsync(IEnumerable<Product> products, CancellationToken cancellationToken) =>
-        await Task.WhenAll(products.Select(
-            product => publisher.PublishAsync(
-                new Key { ProductId = product.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        product.IsNotDeleted() ? Type.ProductUpserted : Type.ProductDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Product = mapper.MapTo(product) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(products.Select(product => publisher.PublishAsync(
+            new Key { ProductId = product.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    product.IsNotDeleted() ? Type.ProductUpserted : Type.ProductDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Product = mapper.MapTo(product) }
+            },
+            cancellationToken)));
 }

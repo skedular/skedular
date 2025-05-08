@@ -30,37 +30,35 @@ public class OrganizationPublisher(
 {
     public async Task PublishOrganizationsAsync(IEnumerable<Models.Organization> organizations,
         CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizations.Select(
-            organization => publisher.PublishAsync(
-                new Key { OrganizationId = organization.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Organization = mapper.MapTo(organization) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(organizations.Select(organization => publisher.PublishAsync(
+            new Key { OrganizationId = organization.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Organization = mapper.MapTo(organization) }
+            },
+            cancellationToken)));
 
     public async Task PublishInvitesToJoinOrganizationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
         string? inviteeIdToOverride,
         CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(
-            joinInvitation => publisher.PublishAsync(
-                new Key { OrganizationId = joinInvitation.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted()
-                            ? Type.InvitationToJoinOrganizationUpserted
-                            : Type.InvitationToJoinOrganizationDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(joinInvitations.Select(joinInvitation => publisher.PublishAsync(
+            new Key { OrganizationId = joinInvitation.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    joinInvitation.IsNotDeleted()
+                        ? Type.InvitationToJoinOrganizationUpserted
+                        : Type.InvitationToJoinOrganizationDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
+            },
+            cancellationToken)));
 }

@@ -507,7 +507,7 @@ public class Mapper : IMapper
 
     public StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest)
     {
-        dest.AmountTotal =  src.AmountTotal is null ? null : (decimal)src.AmountTotal / 100;
+        dest.AmountTotal = src.AmountTotal is null ? null : (decimal)src.AmountTotal / 100;
         dest.Currency = src.Currency;
         dest.PaymentStatus = src.PaymentStatus switch
         {

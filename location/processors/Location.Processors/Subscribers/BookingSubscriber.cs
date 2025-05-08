@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Sanitization;
 using Location.Processors.Mappers;

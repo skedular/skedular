@@ -72,7 +72,7 @@ public class ResourceService(
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
             productRelatedTags = productVersion.ProductTags.Concat(productVersion.LocationTags).Select(item => item.Id).ToList();
         }
-        
+
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
             organizationId,
             locationId,

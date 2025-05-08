@@ -21,7 +21,6 @@ public interface IOrganizationSsoService
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken);
-
 }
 
 public class OrganizationSsoService(
@@ -69,7 +68,7 @@ public class OrganizationSsoService(
         {
             throw new InvalidSsoConfiguration();
         }
-        
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(ssoSetting.Organization.Id, cancellationToken);
         if (organization is null)
@@ -186,7 +185,7 @@ public class OrganizationSsoService(
 
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
     }
-    
+
     public async Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -221,7 +220,9 @@ public class OrganizationSsoService(
         return mapper.MapTo(organization);
     }
 
-    public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(OrganizationSsoSetting ssoSettings, CancellationToken cancellationToken)
+    public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(
+        OrganizationSsoSetting ssoSettings,
+        CancellationToken cancellationToken)
     {
         var result = new OrganizationSsoValidationResult();
 
@@ -236,7 +237,6 @@ public class OrganizationSsoService(
             result.IsCertificateValid = await samlAssertionConsumerService.ValidateCertificateAsync(
                 ssoSettings.AppFederationMetadataUrl,
                 cancellationToken);
-            
         }
         catch (Exception ex)
         {

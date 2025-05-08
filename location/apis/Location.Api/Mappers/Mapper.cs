@@ -5,7 +5,6 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Location.Api.GraphQL;
 using Location.Shared.Database.Entities;
-using Booking = Location.Shared.Models.Booking;
 using Customer = Location.Shared.Models.Customer;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Resource = Location.Shared.Database.Entities.Resource;

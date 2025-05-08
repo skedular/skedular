@@ -97,7 +97,7 @@ public static class BookingTypeExtensions
                 BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             };
-    
+
     public static string ToBookingTypeName(this BookingType src) =>
         src switch
         {

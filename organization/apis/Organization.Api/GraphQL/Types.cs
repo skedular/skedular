@@ -154,7 +154,7 @@ public class OrganizationConnection : Enterprise.Shared.GraphQL.Types.Connection
 [GraphQLName("Organization_CustomerDetails")]
 public class CustomerDetails
 {
-    [GraphQLName("uniqueId")][ID] public string UniqueId { get; set; } = string.Empty;
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("email")] public string? Email { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("givenName")] public string? GivenName { get; set; }
@@ -218,7 +218,7 @@ public class OrganizationDetails : Node
 
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
 
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationEdge")]
@@ -229,7 +229,7 @@ public class OrganizationIndustryMainCategoryReferenceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("subCategories")] public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> SubCategories { get; set; } = [];
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationIndustrySubCategoryReferenceDetails")]
@@ -237,7 +237,7 @@ public class OrganizationIndustrySubCategoryReferenceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("mainCategoryName")] public string MainCategoryName { get; set; } = string.Empty;
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationMemberAttendancePercentage")]
@@ -260,7 +260,7 @@ public class OrganizationMemberDetails : Node
     public bool IsOrganizationOnboardingDone { get; set; }
 
     [GraphQLName("customer")] public CustomerDetails Customer { get; set; } = new();
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationMemberDetailsPayload")]
@@ -313,7 +313,7 @@ public class OrganizationPayload
 public class OrganizationTermsOfUse : Node
 {
     [GraphQLName("terms")] public string Terms { get; set; } = string.Empty;
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationWhereInput")]
@@ -408,7 +408,7 @@ public class OrganizationTagDetails : Node
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationTagEdge")]
@@ -468,7 +468,7 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("featureSet")] public IEnumerable<string> FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateOrganizationSsoSettingsInput")]

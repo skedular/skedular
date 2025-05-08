@@ -23,17 +23,16 @@ public class BookingPublisher(
     : IBookingPublisher
 {
     public async Task PublishBookingsAsync(IEnumerable<Models.Booking> bookings, CancellationToken cancellationToken) =>
-        await Task.WhenAll(bookings.Select(
-            booking => publisher.PublishAsync(
-                new Key { BookingId = booking.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        booking.IsNotDeleted() ? Type.BookingUpserted : Type.BookingDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Booking = mapper.MapTo(booking) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(bookings.Select(booking => publisher.PublishAsync(
+            new Key { BookingId = booking.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    booking.IsNotDeleted() ? Type.BookingUpserted : Type.BookingDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Booking = mapper.MapTo(booking) }
+            },
+            cancellationToken)));
 }

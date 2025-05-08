@@ -26,7 +26,7 @@ public class StripePaymentIntentConfiguration : IEntityTypeConfiguration<StripeP
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
 
         builder.HasOne(item => item.StripePaymentMethod).WithMany(item => item.StripePaymentIntents);
-        
+
         builder.HasIndex(item => item.Amount);
         builder.HasIndex(item => item.Currency);
     }

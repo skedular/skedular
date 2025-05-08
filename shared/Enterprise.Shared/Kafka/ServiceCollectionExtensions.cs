@@ -69,22 +69,21 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventSubscriber<TKey, TEvent>, TSubscriber>();
         services.TryAddSingleton<IKafkaMessageHandler<TKey, TEvent>, KafkaMessageHandler<TKey, TEvent>>();
 
-        services.AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(
-            sp => new KafkaConsumeService<TKey, TEvent>(
-                sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
-                sp.GetRequiredService<ApplicationConfiguration>(),
-                sp.GetRequiredService<KafkaTelemetryConfiguration>(),
-                topicNames,
-                kafkaConfiguration,
-                sp.GetRequiredService<IConsumerFactory>(),
-                null,
-                null,
-                null,
-                null,
-                sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
-                sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
-                sp.GetRequiredService<IKafkaActivityTracer>(),
-                sp.GetRequiredService<TimeProvider>()));
+        services.AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(sp => new KafkaConsumeService<TKey, TEvent>(
+            sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
+            sp.GetRequiredService<ApplicationConfiguration>(),
+            sp.GetRequiredService<KafkaTelemetryConfiguration>(),
+            topicNames,
+            kafkaConfiguration,
+            sp.GetRequiredService<IConsumerFactory>(),
+            null,
+            null,
+            null,
+            null,
+            sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
+            sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
+            sp.GetRequiredService<IKafkaActivityTracer>(),
+            sp.GetRequiredService<TimeProvider>()));
 
         return services;
     }
@@ -115,51 +114,49 @@ public static class ServiceCollectionExtensions
             DelayBaseSeconds,
             retryTopicKafkaConfiguration.OutgoingTopicPrefix);
 
-        services.AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(
-            sp => new KafkaConsumeService<TKey, TEvent>(
-                sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
-                sp.GetRequiredService<ApplicationConfiguration>(),
-                sp.GetRequiredService<KafkaTelemetryConfiguration>(),
-                [topicSetting.Topic],
-                consumerKafkaConfiguration,
-                sp.GetRequiredService<IConsumerFactory>(),
-                retryTopicSetting.RetryTopics.Any()
-                    ? retryTopicSetting.RetryTopics[0].Topic
-                    : retryTopicSetting.DeadLetterTopic,
-                null,
-                retryTopicKafkaConfiguration,
-                sp.GetRequiredService<IProducerFactory>(),
-                sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
-                sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
-                sp.GetRequiredService<IKafkaActivityTracer>(),
-                sp.GetRequiredService<TimeProvider>()));
+        services.AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(sp => new KafkaConsumeService<TKey, TEvent>(
+            sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
+            sp.GetRequiredService<ApplicationConfiguration>(),
+            sp.GetRequiredService<KafkaTelemetryConfiguration>(),
+            [topicSetting.Topic],
+            consumerKafkaConfiguration,
+            sp.GetRequiredService<IConsumerFactory>(),
+            retryTopicSetting.RetryTopics.Any()
+                ? retryTopicSetting.RetryTopics[0].Topic
+                : retryTopicSetting.DeadLetterTopic,
+            null,
+            retryTopicKafkaConfiguration,
+            sp.GetRequiredService<IProducerFactory>(),
+            sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
+            sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
+            sp.GetRequiredService<IKafkaActivityTracer>(),
+            sp.GetRequiredService<TimeProvider>()));
 
         foreach (var retryTopic in retryTopicSetting.RetryTopics)
         {
             services
-                .AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(
-                    sp =>
-                    {
-                        var indexOf = retryTopicSetting.RetryTopics.IndexOf(retryTopic);
+                .AddSingleton<IHostedService, KafkaConsumeService<TKey, TEvent>>(sp =>
+                {
+                    var indexOf = retryTopicSetting.RetryTopics.IndexOf(retryTopic);
 
-                        return new KafkaConsumeService<TKey, TEvent>(
-                            sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
-                            sp.GetRequiredService<ApplicationConfiguration>(),
-                            sp.GetRequiredService<KafkaTelemetryConfiguration>(),
-                            [retryTopic.Topic],
-                            retryTopicKafkaConfiguration,
-                            sp.GetRequiredService<IConsumerFactory>(),
-                            indexOf == retryTopicSetting.RetryTopics.Count - 1
-                                ? retryTopicSetting.DeadLetterTopic
-                                : retryTopicSetting.RetryTopics[indexOf + 1].Topic,
-                            retryTopic.RetryDelaySeconds,
-                            retryTopicKafkaConfiguration,
-                            sp.GetRequiredService<IProducerFactory>(),
-                            sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
-                            sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
-                            sp.GetRequiredService<IKafkaActivityTracer>(),
-                            sp.GetRequiredService<TimeProvider>());
-                    });
+                    return new KafkaConsumeService<TKey, TEvent>(
+                        sp.GetRequiredService<ILogger<KafkaConsumeService<TKey, TEvent>>>(),
+                        sp.GetRequiredService<ApplicationConfiguration>(),
+                        sp.GetRequiredService<KafkaTelemetryConfiguration>(),
+                        [retryTopic.Topic],
+                        retryTopicKafkaConfiguration,
+                        sp.GetRequiredService<IConsumerFactory>(),
+                        indexOf == retryTopicSetting.RetryTopics.Count - 1
+                            ? retryTopicSetting.DeadLetterTopic
+                            : retryTopicSetting.RetryTopics[indexOf + 1].Topic,
+                        retryTopic.RetryDelaySeconds,
+                        retryTopicKafkaConfiguration,
+                        sp.GetRequiredService<IProducerFactory>(),
+                        sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
+                        sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
+                        sp.GetRequiredService<IKafkaActivityTracer>(),
+                        sp.GetRequiredService<TimeProvider>());
+                });
         }
 
         return services;
@@ -179,19 +176,18 @@ public static class ServiceCollectionExtensions
         var topicSetting = new TopicSetting<TEvent>(kafkaTopicInfo.RetryTopicCount, DelayBaseSeconds, kafkaConfiguration.IncomingTopicPrefix);
         var retryTopicSetting = new TopicSetting<TEvent>(kafkaTopicInfo.RetryTopicCount, DelayBaseSeconds, kafkaConfiguration.OutgoingTopicPrefix);
 
-        services.AddSingleton<IHostedService, KafkaConsumeServiceV2<TKey, TEvent>>(
-            sp => new KafkaConsumeServiceV2<TKey, TEvent>(
-                sp.GetRequiredService<ILogger<KafkaConsumeServiceV2<TKey, TEvent>>>(),
-                sp.GetRequiredService<ApplicationConfiguration>(),
-                sp.GetRequiredService<KafkaTelemetryConfiguration>(),
-                new List<string> { topicSetting.Topic }.Concat(retryTopicSetting.RetryTopics.Select(item => item.Topic))
-                    .Concat([retryTopicSetting.DeadLetterTopic]).ToList(),
-                kafkaConfiguration,
-                sp.GetRequiredService<IConsumerFactory>(),
-                sp.GetRequiredService<IProducerFactory>(),
-                sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
-                sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
-                sp.GetRequiredService<IKafkaActivityTracer>()));
+        services.AddSingleton<IHostedService, KafkaConsumeServiceV2<TKey, TEvent>>(sp => new KafkaConsumeServiceV2<TKey, TEvent>(
+            sp.GetRequiredService<ILogger<KafkaConsumeServiceV2<TKey, TEvent>>>(),
+            sp.GetRequiredService<ApplicationConfiguration>(),
+            sp.GetRequiredService<KafkaTelemetryConfiguration>(),
+            new List<string> { topicSetting.Topic }.Concat(retryTopicSetting.RetryTopics.Select(item => item.Topic))
+                .Concat([retryTopicSetting.DeadLetterTopic]).ToList(),
+            kafkaConfiguration,
+            sp.GetRequiredService<IConsumerFactory>(),
+            sp.GetRequiredService<IProducerFactory>(),
+            sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
+            sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
+            sp.GetRequiredService<IKafkaActivityTracer>()));
 
         return services;
     }

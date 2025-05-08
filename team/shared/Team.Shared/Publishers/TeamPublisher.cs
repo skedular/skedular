@@ -30,37 +30,35 @@ public class TeamPublisher(
 {
     public async Task PublishTeamsAsync(IEnumerable<Models.Team> teams,
         CancellationToken cancellationToken) =>
-        await Task.WhenAll(teams.Select(
-            team => publisher.PublishAsync(
-                new Key { TeamId = team.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { Team = mapper.MapTo(team) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(teams.Select(team => publisher.PublishAsync(
+            new Key { TeamId = team.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { Team = mapper.MapTo(team) }
+            },
+            cancellationToken)));
 
     public async Task PublishInvitesToJoinTeamNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
         string? inviteeIdToOverride,
         CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(
-            joinInvitation => publisher.PublishAsync(
-                new Key { TeamId = joinInvitation.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted()
-                            ? Type.InvitationToJoinTeamUpserted
-                            : Type.InvitationToJoinTeamDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
-                },
-                cancellationToken)));
+        await Task.WhenAll(joinInvitations.Select(joinInvitation => publisher.PublishAsync(
+            new Key { TeamId = joinInvitation.Id },
+            new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    joinInvitation.IsNotDeleted()
+                        ? Type.InvitationToJoinTeamUpserted
+                        : Type.InvitationToJoinTeamDeleted,
+                    context.GetCorrelationId()),
+                Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
+            },
+            cancellationToken)));
 }

@@ -29,7 +29,7 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
         builder.Property(item => item.EntityId).HasMaxLength(Constants.MaxSsoEntityIdLength);
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Constants.MaxUrlLength);
-        builder.Property(item => item.IsActive).HasDefaultValue(false); 
+        builder.Property(item => item.IsActive).HasDefaultValue(false);
 
         builder
             .HasOne(item => item.Organization)
