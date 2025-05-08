@@ -768,7 +768,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Book
+                        Book & Pay
                       </Button>
                     </StackRow>
                   </StackColumn>
