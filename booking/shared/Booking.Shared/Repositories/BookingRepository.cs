@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Models;
+using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
@@ -14,6 +15,7 @@ namespace Booking.Shared.Repositories;
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Booking>> GetAllExpiredBookingsAsync(CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Booking Add(Database.Entities.Booking booking);
     Database.Entities.Booking Update(Database.Entities.Booking booking);
@@ -212,13 +214,29 @@ internal static class BookingExtensions
     }
 }
 
-public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProvider)
+public class BookingRepository(
+    BookingDbContext dbContext,
+    TimeProvider timeProvider,
+    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService)
     : RepositoryBase<BookingDbContext, Database.Entities.Booking>(dbContext, timeProvider), IBookingRepository
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Booking>> GetAllExpiredBookingsAsync(CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query => !query.DeletedAt.HasValue && query.IsPaymentRequired &&
+                            query.CreatedAt < bookingCheckoutSessionHelperService.GetExpiryDateTimeOffset() &&
+                            query.Status != BookingStatusConstants.PaymentExpired &&
+                            query.Status != BookingStatusConstants.PaymentRecordNeverCreated &&
+                            (query.BookingCheckoutSession == null ||
+                             (query.BookingCheckoutSession != null &&
+                              query.BookingCheckoutSession.PaymentStatus != PaymentStatusConstants.NoPaymentRequired &&
+                              query.BookingCheckoutSession.PaymentStatus != PaymentStatusConstants.Paid)))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking

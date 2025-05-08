@@ -1,6 +1,8 @@
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
 using Api.Shared.Services.Models;
+using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Kafka.Consume;
@@ -10,7 +12,12 @@ using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IResourceBookingSlotHelperService resourceBookingSlotHelperService)
+public class BookingInternalSubscriber(
+    IRepositoryFactory repositoryFactory,
+    IResourceBookingSlotHelperService resourceBookingSlotHelperService,
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    IMapper mapper,
+    IBookingPublisher bookingPublisher)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -19,6 +26,10 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IRe
         {
             case Type.GenerateResourceBookingSlot:
                 await HandleGenerateResourceBookingSlotEventAsync(@event.ResourceId, cancellationToken);
+                break;
+
+            case Type.PurgeExpiredBooking:
+                await HandlePurgeExpiredBookingEventAsync(@event.BookingId, cancellationToken);
                 break;
         }
 
@@ -147,4 +158,22 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IRe
 
     private static bool IsAvailable(TimeOnly start, OpeningHoursDetails openingHoursDetails) =>
         start >= openingHoursDetails.From && start < openingHoursDetails.Until;
+
+    private async Task HandlePurgeExpiredBookingEventAsync(string bookingId, CancellationToken cancellationToken)
+    {
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking is null || booking.DeletedAt is not null)
+        {
+            return;
+        }
+
+        booking.Status = booking.BookingCheckoutSession is null
+            ? BookingStatusConstants.PaymentRecordNeverCreated
+            : BookingStatusConstants.PaymentExpired;
+
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking)], cancellationToken);
+    }
 }

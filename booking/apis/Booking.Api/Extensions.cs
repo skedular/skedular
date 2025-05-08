@@ -21,8 +21,7 @@ public static class Extensions
             .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
             .AddScoped<ICachedLocationService, CachedLocationService>()
             .AddScoped<ICachedTeamService, CachedTeamService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddSingleton<IBookingCheckoutSessionHelper, BookingCheckoutSessionHelper>();
+            .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

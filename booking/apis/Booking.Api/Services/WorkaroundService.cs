@@ -1,6 +1,7 @@
 using Booking.Api.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 
 namespace Booking.Api.Services;
 
@@ -14,7 +15,7 @@ public class WorkaroundService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IBookingPublisher bookingPublisher,
-    IBookingCheckoutSessionHelper bookingCheckoutSessionHelper) : IWorkaroundService
+    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService) : IWorkaroundService
 {
     public async Task RepublishBookingAsync(string bookingId, CancellationToken cancellationToken)
     {
@@ -24,7 +25,8 @@ public class WorkaroundService(
             return;
         }
 
-        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(booking))],
+        await bookingPublisher.PublishBookingsAsync(
+            [mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking))],
             cancellationToken);
     }
 
@@ -32,6 +34,7 @@ public class WorkaroundService(
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
         await bookingPublisher.PublishBookingsAsync(
-            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelper.GetBookingCheckoutSessionExpiry(item))), cancellationToken);
+            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(item))),
+            cancellationToken);
     }
 }

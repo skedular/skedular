@@ -11,6 +11,7 @@ namespace Booking.Shared.Publishers;
 public interface IBookingInternalOutboxPublisher
 {
     void PublishGenerateResourceBookingSlot(IEnumerable<string> resourceIds, IUnitOfWork unitOfWork);
+    void PublishPurgeExpiredBooking(IEnumerable<string> bookingIds, IUnitOfWork unitOfWork);
 }
 
 public class BookingInternalOutboxPublisher(
@@ -33,6 +34,25 @@ public class BookingInternalOutboxPublisher(
                         Type.GenerateResourceBookingSlot,
                         context.GetCorrelationId()),
                     ResourceId = resourceId
+                },
+                unitOfWork);
+        }
+    }
+
+    public void PublishPurgeExpiredBooking(IEnumerable<string> bookingIds, IUnitOfWork unitOfWork)
+    {
+        foreach (var bookingId in bookingIds)
+        {
+            publisher.Publish(
+                new Key { BookingId = bookingId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.PurgeExpiredBooking,
+                        context.GetCorrelationId()),
+                    BookingId = bookingId
                 },
                 unitOfWork);
         }

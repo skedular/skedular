@@ -14,6 +14,7 @@ using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
 using PaymentStatus = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentStatus;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
+using ResourceBookingSlot = Booking.Shared.Models.ResourceBookingSlot;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
@@ -103,6 +104,8 @@ public interface IMapper
         BookingCheckoutSession src,
         Shared.Database.Entities.BookingCheckoutSession dest,
         Shared.Database.Entities.Booking booking);
+
+    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src);
 }
 
 public class Mapper : IMapper
@@ -585,6 +588,36 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            From = src.From,
+            Until = src.Until,
+            Notes = src.Notes,
+            Type = src.Type.ToBookingType(),
+            Status = src.Status.ToBookingStatus(),
+            IsPaymentRequired = src.IsPaymentRequired,
+            Schedules = src.Schedules,
+            LineItems = src.LineItems,
+            BookedOnMarketplace = src.BookedOnMarketplace,
+            ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            PaidByCustomer = MapTo(src.PaidByCustomer),
+            PaidByOrganization = MapTo(src.PaidByOrganization),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
+            ProductVersions = MapTo(src.ProductVersions).ToList()
+        };
+
     public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationTag(), organization);
 
@@ -631,4 +664,169 @@ public class Mapper : IMapper
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product
         };
+
+    private static IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
+
+    private static ResourceBookingSlot MapTo(Shared.Database.Entities.ResourceBookingSlot src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Available = src.Available,
+            Start = src.Start,
+            Customers = MapTo(src.Customers).ToList(),
+            Resource = MapTo(src.Resource)
+        };
+
+    private static IEnumerable<Shared.Models.Customer> MapTo(IEnumerable<Customer> src) => src.Select(MapTo)!;
+
+    private static Shared.Models.Customer? MapTo(Customer? src) =>
+        src is null
+            ? null
+            : new Shared.Models.Customer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512,
+                Identities = MapTo(src.Identities).ToList()
+            };
+
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) => src.Select(MapTo);
+
+    private static Shared.Models.Identity MapTo(Identity src) =>
+        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+
+    private static Shared.Models.Resource MapTo(Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Name = src.Name,
+            Capacity = src.Capacity,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+        };
+
+    private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+
+    private static Shared.Models.OrganizationTag MapTo(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name, Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+
+    private static IEnumerable<Organization> MapTo(IEnumerable<Shared.Database.Entities.Organization> src) => src.Select(MapTo)!;
+
+    private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>
+        src is null
+            ? null
+            : new Organization
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                LogoUrl = src.LogoUrl,
+                Offering = src.Offering,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+            };
+
+    private IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src) => src.Select(MapTo)!;
+
+    public Location? MapTo(Shared.Database.Entities.Location? src) =>
+        src is null
+            ? null
+            : new Location
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                OrganizationTags = MapTo(src.OrganizationTags).ToList()
+            };
+
+    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src) => src.Select(MapTo)!;
+
+    private static Team? MapTo(Shared.Database.Entities.Team? src) =>
+        src is null
+            ? null
+            : new Team
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name
+            };
+
+    private static BookingCheckoutSession? MapTo(Shared.Database.Entities.BookingCheckoutSession? src) =>
+        src is null
+            ? null
+            : new BookingCheckoutSession
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                DeletedAt = src.DeletedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                PaymentStatus = src.PaymentStatus?.ToNullablePaymentStatus() ?? Api.Shared.Services.Models.PaymentStatus.Pending,
+                AmountTotal = src.AmountTotal,
+                Currency = src.Currency,
+                CheckoutUrl = src.CheckoutUrl.ToSafeString()
+            };
+
+    private static IEnumerable<ProductVersion> MapTo(IEnumerable<Shared.Database.Entities.ProductVersion> src) =>
+        src.Select(MapTo);
+
+    private static ProductVersion MapTo(Shared.Database.Entities.ProductVersion src)
+    {
+        ArgumentNullException.ThrowIfNull(src.PriceUnit);
+        ArgumentNullException.ThrowIfNull(src.PricePerMinute);
+        ArgumentNullException.ThrowIfNull(src.Currency);
+        ArgumentNullException.ThrowIfNull(src.BookAllLocationResources);
+        ArgumentNullException.ThrowIfNull(src.RecurrenceWindowDays);
+        ArgumentNullException.ThrowIfNull(src.RequireConsecutiveDays);
+        ArgumentNullException.ThrowIfNull(src.NumberOfResourcesToBook);
+
+        return new ProductVersion
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name.ToSafeString(),
+            Price = src.Price ?? 0,
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            PricePerMinute = src.PricePerMinute.Value,
+            Currency = src.Currency.ToCurrency(),
+            MinDurationMinutes = src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources.Value,
+            RecurrenceWindowDays = src.RecurrenceWindowDays.Value,
+            RequireConsecutiveDays = src.RequireConsecutiveDays.Value,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook.Value
+        };
+    }
 }

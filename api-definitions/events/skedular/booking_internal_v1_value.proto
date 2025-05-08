@@ -6,12 +6,16 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value";
 
 enum Type {
-  GenerateResourceBookingSlot = 0; 
+  GenerateResourceBookingSlot = 0;
+  PurgeExpiredBooking = 1;
 }
 
 message Event {
   Metadata metadata = 1;
-  string resourceId = 2;
+  oneof payload {
+    string resourceId = 2;
+    string bookingId = 3;
+  }
 }
 
 message Metadata {

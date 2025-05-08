@@ -25,19 +25,21 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch9ib29raW5nX2ludGVybmFsX3YxX3ZhbHVlLnByb3RvEg9ib29raW5naW50",
-            "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8iSAoFRXZl",
+            "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8iagoFRXZl",
             "bnQSKwoIbWV0YWRhdGEYASABKAsyGS5ib29raW5naW50ZXJuYWwuTWV0YWRh",
-            "dGESEgoKcmVzb3VyY2VJZBgCIAEoCSKlAQoITWV0YWRhdGESCgoCaWQYASAB",
-            "KAkSFAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIj",
-            "CgR0eXBlGAQgASgOMhUuYm9va2luZ2ludGVybmFsLlR5cGUSKAoEdGltZRgF",
-            "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNY29ycmVsYXRp",
-            "b25JZBgGIAEoCSonCgRUeXBlEh8KG0dlbmVyYXRlUmVzb3VyY2VCb29raW5n",
-            "U2xvdBAAQj6qAjtBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFy",
-            "LkJvb2tpbmdJbnRlcm5hbC5WMS5WYWx1ZWIGcHJvdG8z"));
+            "dGESFAoKcmVzb3VyY2VJZBgCIAEoCUgAEhMKCWJvb2tpbmdJZBgDIAEoCUgA",
+            "QgkKB3BheWxvYWQipQEKCE1ldGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFp",
+            "blNvdXJjZRgCIAEoCRIRCglhcHBTb3VyY2UYAyABKAkSIwoEdHlwZRgEIAEo",
+            "DjIVLmJvb2tpbmdpbnRlcm5hbC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29n",
+            "bGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkq",
+            "QAoEVHlwZRIfChtHZW5lcmF0ZVJlc291cmNlQm9va2luZ1Nsb3QQABIXChNQ",
+            "dXJnZUV4cGlyZWRCb29raW5nEAFCPqoCO0FwaS5TaGFyZWQuQ2xpZW50cy5F",
+            "dmVudHMuU2tlZHVsYXIuQm9va2luZ0ludGVybmFsLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event.Parser, new[]{ "Metadata", "ResourceId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event.Parser, new[]{ "Metadata", "ResourceId", "BookingId" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null)
           }));
     }
@@ -47,6 +49,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
   #region Enums
   public enum Type {
     [pbr::OriginalName("GenerateResourceBookingSlot")] GenerateResourceBookingSlot = 0,
+    [pbr::OriginalName("PurgeExpiredBooking")] PurgeExpiredBooking = 1,
   }
 
   #endregion
@@ -88,7 +91,15 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Event(Event other) : this() {
       metadata_ = other.metadata_ != null ? other.metadata_.Clone() : null;
-      resourceId_ = other.resourceId_;
+      switch (other.PayloadCase) {
+        case PayloadOneofCase.ResourceId:
+          ResourceId = other.ResourceId;
+          break;
+        case PayloadOneofCase.BookingId:
+          BookingId = other.BookingId;
+          break;
+      }
+
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -112,14 +123,75 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
 
     /// <summary>Field number for the "resourceId" field.</summary>
     public const int ResourceIdFieldNumber = 2;
-    private string resourceId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ResourceId {
-      get { return resourceId_; }
+      get { return HasResourceId ? (string) payload_ : ""; }
       set {
-        resourceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        payloadCase_ = PayloadOneofCase.ResourceId;
       }
+    }
+    /// <summary>Gets whether the "resourceId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasResourceId {
+      get { return payloadCase_ == PayloadOneofCase.ResourceId; }
+    }
+    /// <summary> Clears the value of the oneof if it's currently set to "resourceId" </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearResourceId() {
+      if (HasResourceId) {
+        ClearPayload();
+      }
+    }
+
+    /// <summary>Field number for the "bookingId" field.</summary>
+    public const int BookingIdFieldNumber = 3;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string BookingId {
+      get { return HasBookingId ? (string) payload_ : ""; }
+      set {
+        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        payloadCase_ = PayloadOneofCase.BookingId;
+      }
+    }
+    /// <summary>Gets whether the "bookingId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasBookingId {
+      get { return payloadCase_ == PayloadOneofCase.BookingId; }
+    }
+    /// <summary> Clears the value of the oneof if it's currently set to "bookingId" </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearBookingId() {
+      if (HasBookingId) {
+        ClearPayload();
+      }
+    }
+
+    private object payload_;
+    /// <summary>Enum of possible cases for the "payload" oneof.</summary>
+    public enum PayloadOneofCase {
+      None = 0,
+      ResourceId = 2,
+      BookingId = 3,
+    }
+    private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PayloadOneofCase PayloadCase {
+      get { return payloadCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPayload() {
+      payloadCase_ = PayloadOneofCase.None;
+      payload_ = null;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -139,6 +211,8 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       }
       if (!object.Equals(Metadata, other.Metadata)) return false;
       if (ResourceId != other.ResourceId) return false;
+      if (BookingId != other.BookingId) return false;
+      if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -147,7 +221,9 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (metadata_ != null) hash ^= Metadata.GetHashCode();
-      if (ResourceId.Length != 0) hash ^= ResourceId.GetHashCode();
+      if (HasResourceId) hash ^= ResourceId.GetHashCode();
+      if (HasBookingId) hash ^= BookingId.GetHashCode();
+      hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -170,9 +246,13 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Metadata);
       }
-      if (ResourceId.Length != 0) {
+      if (HasResourceId) {
         output.WriteRawTag(18);
         output.WriteString(ResourceId);
+      }
+      if (HasBookingId) {
+        output.WriteRawTag(26);
+        output.WriteString(BookingId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -188,9 +268,13 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Metadata);
       }
-      if (ResourceId.Length != 0) {
+      if (HasResourceId) {
         output.WriteRawTag(18);
         output.WriteString(ResourceId);
+      }
+      if (HasBookingId) {
+        output.WriteRawTag(26);
+        output.WriteString(BookingId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -205,8 +289,11 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       if (metadata_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Metadata);
       }
-      if (ResourceId.Length != 0) {
+      if (HasResourceId) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ResourceId);
+      }
+      if (HasBookingId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BookingId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -226,9 +313,15 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         }
         Metadata.MergeFrom(other.Metadata);
       }
-      if (other.ResourceId.Length != 0) {
-        ResourceId = other.ResourceId;
+      switch (other.PayloadCase) {
+        case PayloadOneofCase.ResourceId:
+          ResourceId = other.ResourceId;
+          break;
+        case PayloadOneofCase.BookingId:
+          BookingId = other.BookingId;
+          break;
       }
+
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -259,6 +352,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
             ResourceId = input.ReadString();
             break;
           }
+          case 26: {
+            BookingId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -287,6 +384,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
           }
           case 18: {
             ResourceId = input.ReadString();
+            break;
+          }
+          case 26: {
+            BookingId = input.ReadString();
             break;
           }
         }

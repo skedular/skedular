@@ -78,9 +78,8 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry)
-    {
-        var team = new Shared.Models.Booking
+    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry) =>
+        new()
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
@@ -106,12 +105,9 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
-            ProductVersions = MapTo(src.ProductVersions).ToList(), 
-            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry,
+            ProductVersions = MapTo(src.ProductVersions).ToList(),
+            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry
         };
-
-        return team;
-    }
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
         src is null
@@ -551,6 +547,8 @@ public class Mapper : IMapper
 
     private static OrganizationZoneDetails MapToZone(OrganizationTag src) => new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
+    private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
+
     private static Shared.Models.Organization? MapTo(Organization? src) =>
         src is null
             ? null
@@ -567,6 +565,8 @@ public class Mapper : IMapper
                 Type = src.Type.ToOrganizationType(),
                 MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
             };
+
+    private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
 
     private static Shared.Models.Team? MapTo(Team? src) =>
         src is null
@@ -643,6 +643,8 @@ public class Mapper : IMapper
     private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapTo(item.Resource, item.Customers));
 
+    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
+
     private ResourceBookingSlot MapTo(Shared.Database.Entities.ResourceBookingSlot src) =>
         new()
         {
@@ -672,11 +674,8 @@ public class Mapper : IMapper
     private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
         new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
 
-    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
     private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
-    private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
     private IEnumerable<Shared.Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
-    private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
     private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo)!;
     private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
     private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
@@ -730,7 +729,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                PaymentStatus = src.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.Pending,
+                PaymentStatus = src.PaymentStatus?.ToNullablePaymentStatus() ?? PaymentStatus.Pending,
                 AmountTotal = src.AmountTotal,
                 Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()
@@ -748,7 +747,7 @@ public class Mapper : IMapper
         ArgumentNullException.ThrowIfNull(src.RecurrenceWindowDays);
         ArgumentNullException.ThrowIfNull(src.RequireConsecutiveDays);
         ArgumentNullException.ThrowIfNull(src.NumberOfResourcesToBook);
-        
+
         return new Shared.Models.ProductVersion
         {
             Id = src.Id,

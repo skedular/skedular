@@ -16,7 +16,9 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<IResourceBookingSlotHelperService, ResourceBookingSlotHelperService>()
-            .AddScoped<IResourceBookingSlotsHelperService, ResourceBookingSlotsHelperService>();
+            .AddScoped<IResourceBookingSlotsHelperService, ResourceBookingSlotsHelperService>()
+            .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
+            .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services.AddScoped<IRepositoryFactory, RepositoryFactory>();

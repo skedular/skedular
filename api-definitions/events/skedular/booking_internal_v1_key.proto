@@ -5,4 +5,5 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1
 
 message Key {
     string resourceId = 1;
+    string bookingId = 2;
 }

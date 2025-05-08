@@ -10,6 +10,7 @@ namespace Booking.Shared.Publishers;
 public interface IBookingInternalPublisher
 {
     Task PublishGenerateResourceBookingSlotAsync(IEnumerable<string> resourceIds, CancellationToken cancellationToken);
+    Task PublishPurgeExpiredBookingAsync(IEnumerable<string> bookingIds, CancellationToken cancellationToken);
 }
 
 public class BookingInternalPublisher(
@@ -30,6 +31,23 @@ public class BookingInternalPublisher(
                     Type.GenerateResourceBookingSlot,
                     context.GetCorrelationId()),
                 ResourceId = resourceId
+            };
+
+            await publisher.PublishAsync(key, @event, cancellationToken);
+        }));
+
+    public async Task PublishPurgeExpiredBookingAsync(IEnumerable<string> bookingIds, CancellationToken cancellationToken) =>
+        await Task.WhenAll(bookingIds.Select(async bookingId =>
+        {
+            var key = new Key { BookingId = bookingId };
+            var @event = new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.PurgeExpiredBooking,
+                    context.GetCorrelationId()),
+                BookingId = bookingId
             };
 
             await publisher.PublishAsync(key, @event, cancellationToken);
