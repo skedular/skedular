@@ -1,6 +1,8 @@
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace Booking.Shared.Database;
 
 public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<BookingDbContext>(options, customDbContextOptions)
+    : DbContextBase<BookingDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<BookingCheckoutSession> BookingCheckoutSession { get; set; }
@@ -25,6 +27,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<ResourceBookingSlot> ResourceBookingSlot { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>

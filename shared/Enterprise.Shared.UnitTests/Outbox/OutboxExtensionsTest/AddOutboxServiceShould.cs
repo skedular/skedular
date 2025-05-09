@@ -36,7 +36,7 @@ public class AddOutboxServiceShould
     public class DummyDbContext(DbContextOptions options) : DbContext(options), IOutboxStore
     {
 #pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
-        public DbSet<Shared.Outbox.Database.Entities.Outbox>? Outbox { get; }
+        public DbSet<Shared.Outbox.Database.Entities.Outbox>? Outbox { get; set; }
 #pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
     }
 }

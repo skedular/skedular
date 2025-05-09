@@ -33,7 +33,9 @@ public class OutboxEventPublisher<TKey, TEvent>(
         ArgumentNullException.ThrowIfNull(@event);
 
         var topic = @event.GetTopicName(kafkaConfiguration.OutgoingTopicPrefix);
-        var dbContext = (IOutboxStore)unitOfWork;
+        var dbContext = unitOfWork as IOutboxStore;
+
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         using (activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName).StartActivity(TelemetryKeys.EventSave))
         {

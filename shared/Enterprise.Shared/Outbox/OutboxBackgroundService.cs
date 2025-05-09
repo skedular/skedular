@@ -127,10 +127,7 @@ public class OutboxBackgroundService<TDbContext>(
                     outboxEvent.LastRetry = DateTimeOffset.UtcNow;
                     outboxEvent.ProcessingErrors = ex.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
 
-                    var level = outboxEvent.RetryCount <
-                                OutboxParameters.CriticalRetryThreshold
-                        ? LogLevel.Warning
-                        : LogLevel.Critical;
+                    var level = outboxEvent.RetryCount < OutboxParameters.CriticalRetryThreshold ? LogLevel.Warning : LogLevel.Critical;
 
                     activityAccessor.AddException(ex);
 

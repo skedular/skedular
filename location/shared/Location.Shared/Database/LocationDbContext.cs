@@ -1,5 +1,7 @@
 ﻿using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Location.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace Location.Shared.Database;
 
 public class LocationDbContext(DbContextOptions<LocationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<LocationDbContext>(options, customDbContextOptions)
+    : DbContextBase<LocationDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Booking> Booking { get; set; }
@@ -22,6 +24,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<Resource> Resource { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>

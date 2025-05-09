@@ -1,5 +1,7 @@
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Marketplace.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace Marketplace.Shared.Database;
 
 public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<MarketplaceDbContext>(options, customDbContextOptions)
+    : DbContextBase<MarketplaceDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -18,6 +20,7 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     public class MarketplaceDbContextDesignFactory : IDesignTimeDbContextFactory<MarketplaceDbContext>
     {

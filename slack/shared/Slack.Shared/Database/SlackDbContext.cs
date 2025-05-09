@@ -1,5 +1,7 @@
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +10,7 @@ using Slack.Shared.Database.Entities;
 namespace Slack.Shared.Database;
 
 public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<SlackDbContext>(options, customDbContextOptions)
+    : DbContextBase<SlackDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -20,6 +22,7 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public DbSet<Workspace> Workspace { get; set; }
     public DbSet<WorkspaceChannel> WorkspaceChannel { get; set; }
     public DbSet<WorkspaceMember> WorkspaceMember { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>

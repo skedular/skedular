@@ -1,5 +1,7 @@
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +10,7 @@ using Payment.Shared.Database.Entities;
 namespace Payment.Shared.Database;
 
 public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<PaymentDbContext>(options, customDbContextOptions)
+    : DbContextBase<PaymentDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Booking> Booking { get; set; }
@@ -28,6 +30,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
     public DbSet<StripePrice> StripePrice { get; set; }
     public DbSet<StripeProduct> StripeProduct { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>

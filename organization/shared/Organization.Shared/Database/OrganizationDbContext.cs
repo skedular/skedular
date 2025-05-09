@@ -1,5 +1,7 @@
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +10,7 @@ using Organization.Shared.Database.Entities;
 namespace Organization.Shared.Database;
 
 public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions)
+    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }
@@ -30,6 +32,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<Team> Team { get; set; }
     public DbSet<TermsOfUse> TermsOfUse { get; set; }
     public DbSet<Tag> Tag { get; set; }
+    public DbSet<Outbox> Outbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>

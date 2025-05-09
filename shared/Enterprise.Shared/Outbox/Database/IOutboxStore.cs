@@ -4,5 +4,5 @@ namespace Enterprise.Shared.Outbox.Database;
 
 public interface IOutboxStore
 {
-    DbSet<Entities.Outbox> Outbox { get; }
+    DbSet<Entities.Outbox> Outbox { get; set; }
 }
