@@ -1,10 +1,8 @@
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using MsTeams.Shared.Database.Entities;
 
 namespace MsTeams.Shared.Database;
@@ -26,13 +24,7 @@ public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, Custom
 
     public class MsTeamsDbContextDesignFactory : IDesignTimeDbContextFactory<MsTeamsDbContext>
     {
-        public MsTeamsDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new MsTeamsDbContext(
-                configuration.CreateDbContextOptionBuilder<MsTeamsDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public MsTeamsDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<MsTeamsDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

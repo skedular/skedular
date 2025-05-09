@@ -1,10 +1,8 @@
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using Organization.Shared.Database.Entities;
 
 namespace Organization.Shared.Database;
@@ -37,13 +35,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     // ReSharper disable once UnusedType.Global
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>
     {
-        public OrganizationDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new OrganizationDbContext(
-                configuration.CreateDbContextOptionBuilder<OrganizationDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public OrganizationDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<OrganizationDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

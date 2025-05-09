@@ -1,10 +1,8 @@
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using Payment.Shared.Database.Entities;
 
 namespace Payment.Shared.Database;
@@ -35,13 +33,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>
     {
-        public PaymentDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new PaymentDbContext(
-                configuration.CreateDbContextOptionBuilder<PaymentDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public PaymentDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<PaymentDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

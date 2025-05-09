@@ -1,11 +1,9 @@
-﻿using Enterprise.Shared.Configurations.Extensions;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Location.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace Location.Shared.Database;
 
@@ -29,13 +27,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     // ReSharper disable once UnusedType.Global
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>
     {
-        public LocationDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new LocationDbContext(
-                configuration.CreateDbContextOptionBuilder<LocationDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public LocationDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<LocationDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

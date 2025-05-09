@@ -1,11 +1,9 @@
 using Billing.Shared.Database.Entities;
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace Billing.Shared.Database;
 
@@ -23,12 +21,7 @@ public class BillingDbContext(DbContextOptions<BillingDbContext> options, Custom
     // ReSharper disable once UnusedType.Global
     public class BillingDbContextDesignFactory : IDesignTimeDbContextFactory<BillingDbContext>
     {
-        public BillingDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new BillingDbContext(configuration.CreateDbContextOptionBuilder<BillingDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public BillingDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<BillingDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

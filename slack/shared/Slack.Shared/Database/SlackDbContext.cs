@@ -1,10 +1,8 @@
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using Slack.Shared.Database.Entities;
 
 namespace Slack.Shared.Database;
@@ -27,13 +25,7 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     // ReSharper disable once UnusedType.Global
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>
     {
-        public SlackDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new SlackDbContext(
-                configuration.CreateDbContextOptionBuilder<SlackDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public SlackDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<SlackDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

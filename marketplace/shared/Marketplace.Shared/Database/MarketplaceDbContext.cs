@@ -1,11 +1,9 @@
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Marketplace.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace Marketplace.Shared.Database;
 
@@ -24,13 +22,7 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
 
     public class MarketplaceDbContextDesignFactory : IDesignTimeDbContextFactory<MarketplaceDbContext>
     {
-        public MarketplaceDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new MarketplaceDbContext(
-                configuration.CreateDbContextOptionBuilder<MarketplaceDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public MarketplaceDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<MarketplaceDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }

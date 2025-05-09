@@ -1,11 +1,9 @@
 using Booking.Shared.Database.Entities;
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace Booking.Shared.Database;
 
@@ -32,13 +30,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     // ReSharper disable once UnusedType.Global
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>
     {
-        public BookingDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new BookingDbContext(
-                configuration.CreateDbContextOptionBuilder<BookingDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public BookingDbContext CreateDbContext(string[] args) => new(DbContextExtensions.CreateDbContextOptionBuilder<BookingDbContext>().Options,
+            new CustomDbContextOptions { IsPooled = false });
     }
 }

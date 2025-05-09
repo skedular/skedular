@@ -1,11 +1,9 @@
 ﻿using Customer.Shared.Database.Entities;
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace Customer.Shared.Database;
 
@@ -28,13 +26,7 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     // ReSharper disable once UnusedType.Global
     public class CustomerDbContextDesignFactory : IDesignTimeDbContextFactory<CustomerDbContext>
     {
-        public CustomerDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-            return new CustomerDbContext(
-                configuration.CreateDbContextOptionBuilder<CustomerDbContext>().Options,
-                new CustomDbContextOptions { IsPooled = false });
-        }
+        public CustomerDbContext CreateDbContext(string[] args) =>
+            new(DbContextExtensions.CreateDbContextOptionBuilder<CustomerDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
     }
 }
