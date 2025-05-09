@@ -21,9 +21,6 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "SlackPostgresConnection")
-                    .WithDbContextFactory<SlackDbContext>(
-                        host.Configuration,
-                        Migration.SetAssembly,
-                        host.HostingEnvironment);
+                    .WithDbContextFactory<SlackDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
             });
 }

@@ -21,9 +21,6 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "BillingPostgresConnection")
-                    .WithDbContextFactory<BillingDbContext>(
-                        host.Configuration,
-                        Migration.SetAssembly,
-                        host.HostingEnvironment);
+                    .WithDbContextFactory<BillingDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
             });
 }

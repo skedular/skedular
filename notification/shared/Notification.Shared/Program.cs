@@ -21,9 +21,6 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "NotificationPostgresConnection")
-                    .WithDbContextFactory<NotificationDbContext>(
-                        host.Configuration,
-                        Migration.SetAssembly,
-                        host.HostingEnvironment);
+                    .WithDbContextFactory<NotificationDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
             });
 }

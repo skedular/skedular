@@ -21,9 +21,6 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "MarketplacePostgresConnection")
-                    .WithDbContextFactory<MarketplaceDbContext>(
-                        host.Configuration,
-                        Migration.SetAssembly,
-                        host.HostingEnvironment);
+                    .WithDbContextFactory<MarketplaceDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
             });
 }
