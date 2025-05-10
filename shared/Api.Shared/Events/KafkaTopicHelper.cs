@@ -8,12 +8,6 @@ public static class KafkaTopicHelper
     {
         var eventType = typeof(TEvent);
         var attribute = eventType.GetCustomAttribute<KafkaTopicAttribute>();
-        if (attribute is null)
-        {
-            throw new ArgumentNullException($"{eventType.FullName} does not have KafkaTopicAttribute implemented",
-                nameof(attribute));
-        }
-
-        return attribute;
+        return attribute ?? throw new ArgumentNullException($"{eventType.FullName} does not have KafkaTopicAttribute implemented", nameof(attribute));
     }
 }
