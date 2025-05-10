@@ -17,27 +17,47 @@ public static class Extensions
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.WorkOS);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.ApiKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer);
+        if (applicationConfiguration.IdentityProviders.WorkOS is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.ApiKey);
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer);
+            
+            services
+                .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }))
+                .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
+        }
 
-        services.AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }));
+        if (applicationConfiguration.IdentityProviders.Cognito is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Issuer);
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Audiences);
+            
+            services
+                .AddSingleton<ICognitoTokenService, CognitoTokenService>();
+        }
+
+        if (applicationConfiguration.IdentityProviders.Google is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Google.Issuer);
+
+            services
+                .AddSingleton<IGoogleTokenService, GoogleTokenService>();
+        }
 
         return services
             .AddSingleton<ICookieHelper, CookieHelper>()
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
-            .AddSingleton<IWorkOSTokenService, WorkOSTokenService>()
-            .AddSingleton<ICognitoTokenService, CognitoTokenService>()
-            .AddSingleton<IGoogleTokenService, GoogleTokenService>()
             .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
-                var tokenServices = new List<ITokenService> { sp.GetRequiredService<IWorkOSTokenService>() };
+                var tokenServices = new List<ITokenService>();
 
-                if (applicationConfiguration.IdentityProviders.Cognito is not null &&
-                    applicationConfiguration.IdentityProviders.Cognito.JwksUri is not null &&
-                    !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Issuer) &&
-                    !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Audiences))
+                if (applicationConfiguration.IdentityProviders.WorkOS is not null)
+                {
+                    tokenServices.Add(sp.GetRequiredService<IWorkOSTokenService>());
+                }
+
+                if (applicationConfiguration.IdentityProviders.Cognito?.JwksUri != null)
                 {
                     tokenServices.Add(sp.GetRequiredService<ICognitoTokenService>());
                 }

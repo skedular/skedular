@@ -3,12 +3,9 @@ using HotChocolate.Fusion.Metadata;
 
 namespace Gateway;
 
-public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgraphsConfigurations)
-    : ConfigurationRewriter
+public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgraphsConfigurations) : ConfigurationRewriter
 {
-    protected override ValueTask<HttpClientConfiguration> RewriteAsync(
-        HttpClientConfiguration configuration,
-        CancellationToken cancellationToken) =>
+    protected override ValueTask<HttpClientConfiguration> RewriteAsync(HttpClientConfiguration configuration, CancellationToken cancellationToken) =>
         new(configuration.SubgraphName switch
         {
             nameof(subgraphsConfigurations.Billing) => configuration with { EndpointUri = subgraphsConfigurations.Billing.Uri! },
