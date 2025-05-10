@@ -26,14 +26,4 @@ public abstract class DbContextBase<TContext>(DbContextOptions<TContext> options
 
         base.OnConfiguring(optionsBuilder);
     }
-
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        configurationBuilder.Properties<DateTimeOffset>(builder =>
-            builder
-                .HaveConversion<DateTimeOffsetToUtcConverter>()
-                .HaveConversion<NullableDateTimeOffsetToUtcConverter>());
-
-        base.ConfigureConventions(configurationBuilder);
-    }
 }

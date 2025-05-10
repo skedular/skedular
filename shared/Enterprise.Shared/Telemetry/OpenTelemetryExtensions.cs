@@ -18,10 +18,7 @@ namespace Enterprise.Shared.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
-    public static IServiceCollection WithOpenTelemetryCustom(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string appName)
+    public static IServiceCollection WithOpenTelemetryCustom(this IServiceCollection services, IConfiguration configuration, string appName)
     {
         services.AddSingleton<IActivityAccessor, ActivityAccessor>();
         services.AddSingleton<TextMapPropagator, StandardTextMapPropagator>();
@@ -37,10 +34,8 @@ public static class OpenTelemetryExtensions
 
         services
             .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
-            .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>,
-                StringDictionaryPropagatorFunctions>()
-            .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>,
-                PropagatorEntityFunctions>();
+            .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
+            .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
         services
             .AddOpenTelemetry()
@@ -48,9 +43,7 @@ public static class OpenTelemetryExtensions
                 {
                     if (openTelemetrySettings is not null && openTelemetrySettings.MetricsIngestEnabled)
                     {
-                        builder.AddMeter(
-                            MeterProviderNaming.SkedularMeterProviderName,
-                            MeterProviderNaming.SkedularMeterProviderVersion);
+                        builder.AddMeter(MeterProviderNaming.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
                     }
                 }
             )
@@ -89,10 +82,11 @@ public static class OpenTelemetryExtensions
                                 activity.DisplayName = $"{command.CommandType} main";
                                 activity.SetTag("db.type", command.CommandType);
                                 activity.SetTag("db.text", command.CommandText);
-                                activity.SetTag("db.parameters",
+                                activity.SetTag(
+                                    "db.parameters",
                                     string.Join(",",
-                                        command.Parameters.OfType<DbParameter>().Select(parameter =>
-                                            $"{parameter.ParameterName}={parameter.Value}")));
+                                        command.Parameters.OfType<DbParameter>()
+                                            .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
                             };
                         });
                     }

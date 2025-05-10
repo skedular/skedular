@@ -14,11 +14,9 @@ public sealed class TelemetryMiddleware : ITaggable<HttpContext>
     public TelemetryMiddleware(RequestDelegate next, IOpenTelemetryInstrumentation meters)
     {
         _next = next;
-        _httpRequestsTotalCounter =
-            meters.GetCounterByName<long>(MetricNames.HttpTotalRequestsCounter);
+        _httpRequestsTotalCounter = meters.GetCounterByName<long>(MetricNames.HttpTotalRequestsCounter);
 
-        meters.GetObservableGaugeByName(MetricNames.HttpRequestsDurationGauge,
-            () => new Measurement<float>(_httpRequestsDuration));
+        meters.GetObservableGaugeByName(MetricNames.HttpRequestsDurationGauge, () => new Measurement<float>(_httpRequestsDuration));
     }
 
     public TagList GetTags(HttpContext ctx) => ctx.GetTagListFromHttpContext<TelemetryMiddleware>();

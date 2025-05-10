@@ -14,13 +14,7 @@ public class Program
         // ReSharper disable once MemberCanBePrivate.Global
         Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((host, builder) =>
-            {
-                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
-            })
+                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args))
             .ConfigureServices((host, services) =>
-            {
-                services
-                    .AddDatabase(host.Configuration, false, "MsTeamsPostgresConnection")
-                    .WithDbContextFactory<MsTeamsDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
-            });
+                services.WithPooledDbContextFactory<MsTeamsDbContext>(host.Configuration, host.HostingEnvironment, "MsTeamsPostgresConnection"));
 }

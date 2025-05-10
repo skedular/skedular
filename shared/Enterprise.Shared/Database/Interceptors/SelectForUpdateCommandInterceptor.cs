@@ -11,10 +11,7 @@ namespace Enterprise.Shared.Database.Interceptors;
 /// </summary>
 public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 {
-    public override InterceptionResult<object> ScalarExecuting(
-        DbCommand command,
-        CommandEventData eventData,
-        InterceptionResult<object> result)
+    public override InterceptionResult<object> ScalarExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<object> result)
     {
         ManipulateCommand(command);
 
@@ -55,9 +52,7 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 
     private static void ManipulateCommand(IDbCommand command)
     {
-        if (command.CommandText.StartsWith(
-                "-- " + EntityFrameworkInterceptorTags.ForUpdateSkipLocked,
-                StringComparison.Ordinal))
+        if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdateSkipLocked, StringComparison.Ordinal))
         {
             command.CommandText += " FOR UPDATE SKIP LOCKED";
         }

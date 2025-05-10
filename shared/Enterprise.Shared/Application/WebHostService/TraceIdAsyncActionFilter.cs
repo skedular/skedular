@@ -1,19 +1,18 @@
-﻿using System.Diagnostics;
+﻿using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Enterprise.Shared.Application.WebHostService;
 
-public class TraceIdAsyncActionFilter(TraceSettings traceSettings) : IAsyncActionFilter
+public class TraceIdAsyncActionFilter(TraceSettings traceSettings, IActivityGetter activityGetter) : IAsyncActionFilter
 {
-    public async Task OnActionExecutionAsync(
-        ActionExecutingContext context,
-        ActionExecutionDelegate next)
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         await next();
 
-        if (traceSettings.EnableTraceParentOnResponseHeader && Activity.Current is not null)
+        var activityCurrent = activityGetter.GetCurrent();
+        if (traceSettings.EnableTraceParentOnResponseHeader && activityCurrent is not null)
         {
-            context.HttpContext.Response.Headers.TraceParent = Activity.Current.Id;
+            context.HttpContext.Response.Headers.TraceParent = activityCurrent.Id;
         }
     }
 }

@@ -1,13 +1,40 @@
+using Billing.Api.Grpc;
+using Billing.Shared;
+using Billing.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 
 namespace Billing.Api;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
-    public static async Task Main(string[] args) =>
-        await CreateHostBuilder(args).Build().RunWithGraphQLCommandsAsync(args);
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunWithGraphQLCommandsAsync(args);
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static IHostBuilder CreateHostBuilder(string[] args) => CreateHostBuilder<Startup>(args);
+    public static WebApplication CreateHostBuilder(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        var environment = builder.Environment;
+
+        services
+            .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "BillingPostgresConnection")
+            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddDomainSharedServices()
+            .AddDomainSharedMappers()
+            .AddMappers()
+            .AddRepositoryFactory()
+            .AddPublishers()
+            .AddOutboxPublishers()
+            .AddJobs()
+            .AddServices()
+            .AddGrpcServices(configuration);
+
+        var app = builder.Build().UseApplicationBuilderDefaults();
+
+        app.MapGrpcService<BillingGrpcService>();
+
+        return app;
+    }
 }

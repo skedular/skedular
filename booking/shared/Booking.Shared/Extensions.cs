@@ -51,7 +51,7 @@ public static class Extensions
             .AddScoped<IBookingInternalOutboxPublisher, BookingInternalOutboxPublisher>()
             .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);

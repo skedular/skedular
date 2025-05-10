@@ -43,7 +43,7 @@ public static class Extensions
         services
             .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
         ArgumentNullException.ThrowIfNull(locationConfiguration);

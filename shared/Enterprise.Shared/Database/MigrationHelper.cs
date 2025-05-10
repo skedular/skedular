@@ -59,7 +59,9 @@ public static class MigrationHelper
         {
             var scopedServiceProvider = scope.ServiceProvider;
             var dbContextFactory = scopedServiceProvider.GetRequiredService<IDbContextFactory<TDbContext>>();
+
             await using var dbContext = await dbContextFactory.CreateDbContextAsync(cancellationToken);
+
             var dbConnection = dbContext.Database.GetDbConnection();
             var connectionString = dbConnection.ConnectionString;
             var connectionStringParts = connectionString.Split(";", StringSplitOptions.RemoveEmptyEntries);

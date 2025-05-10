@@ -1,7 +1,6 @@
 ﻿// using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
 
 using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
-using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Kafka;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace AllInfra;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
     public static async Task Main(string[] args)
     {

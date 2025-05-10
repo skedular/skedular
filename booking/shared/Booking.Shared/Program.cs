@@ -14,13 +14,7 @@ public class Program
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((host, builder) =>
-            {
-                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
-            })
+                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args))
             .ConfigureServices((host, services) =>
-            {
-                services
-                    .AddDatabase(host.Configuration, false, "BookingPostgresConnection")
-                    .WithDbContextFactory<BookingDbContext>(host.Configuration, Migration.SetAssembly, host.HostingEnvironment);
-            });
+                services.WithPooledDbContextFactory<BookingDbContext>(host.Configuration, host.HostingEnvironment, "BookingPostgresConnection"));
 }

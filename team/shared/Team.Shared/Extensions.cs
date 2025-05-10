@@ -41,7 +41,7 @@ public static class Extensions
             .AddScoped<ITeamOutboxPublisher, TeamOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
         ArgumentNullException.ThrowIfNull(teamConfiguration);

@@ -40,7 +40,7 @@ public static class Extensions
             .AddScoped<ICustomerOutboxPublisher, CustomerOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
         ArgumentNullException.ThrowIfNull(customerConfiguration);

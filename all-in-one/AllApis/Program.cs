@@ -1,11 +1,10 @@
-﻿using Enterprise.Shared.Application.WebHostService;
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Hosting;
 
 namespace AllApis;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
     public static async Task Main(string[] args)
     {
@@ -23,18 +22,18 @@ public class Program : WebHostServiceBase<Program>
             cancellationToken);
 
         await Task.WhenAll(
-            Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Booking.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Customer.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Location.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Marketplace.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Organization.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Notification.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Payment.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Slack.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+            Billing.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Booking.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Customer.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Location.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Marketplace.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            MsTeams.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Organization.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Notification.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Payment.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Slack.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Team.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Gateway.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }
 }

@@ -12,8 +12,7 @@ public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, Time
 
     public IUnitOfWork UnitOfWork => DbContext;
 
-    public virtual IQueryable<TEntity> Query(ISpecification<TEntity>? specification = null) =>
-        ApplySpecification(specification);
+    public virtual IQueryable<TEntity> Query(ISpecification<TEntity>? specification = null) => ApplySpecification(specification);
 
     protected virtual IQueryable<TEntity> ApplySpecification(ISpecification<TEntity>? spec) =>
         SpecificationEvaluator<TEntity>.GetQuery(DbContext.Set<TEntity>().AsQueryable(), spec);
@@ -41,10 +40,8 @@ public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, Time
             cancellationToken);
     }
 
-    public async Task UpsertNakedAsync<TForeignEntity>(
-        string id,
-        TForeignEntity? foreignEntity,
-        CancellationToken cancellationToken) where TForeignEntity : EntityBase
+    public async Task UpsertNakedAsync<TForeignEntity>(string id, TForeignEntity? foreignEntity, CancellationToken cancellationToken)
+        where TForeignEntity : EntityBase
     {
         if (foreignEntity is null)
         {

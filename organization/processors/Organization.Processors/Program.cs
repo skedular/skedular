@@ -1,12 +1,73 @@
+using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Kafka.Configurations;
+using Organization.Processors.Subscribers;
+using Organization.Shared;
+using Organization.Shared.Configurations;
+using Organization.Shared.Database;
 
 namespace Organization.Processors;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
-    public static async Task Main(string[] args) => await CreateHostBuilder(args).Build().RunAsync();
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunAsync();
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static IHostBuilder CreateHostBuilder(string[] args) => CreateHostBuilder<Startup>(args);
+    public static WebApplication CreateHostBuilder(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        var environment = builder.Environment;
+
+        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+        ArgumentNullException.ThrowIfNull(emailConfiguration);
+        services.AddSingleton(emailConfiguration);
+
+        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
+        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+
+        services
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "OrganizationPostgresConnection")
+            .AddKafkaReliableEventConsumers<
+                OrganizationInternalSubscriber,
+                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                BookingSubscriber,
+                Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                CustomerSubscriber,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                LocationSubscriber,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                PaymentSubscriber,
+                Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                TeamSubscriber,
+                Key,
+                Event>(kafkaConfiguration);
+
+        services
+            .AddDomainSharedServices()
+            .AddDomainSharedMappers()
+            .AddMappers()
+            .AddRepositoryFactory()
+            .AddPublishers()
+            .AddOutboxPublishers()
+            .AddMappers()
+            .AddJobs()
+            .AddServices()
+            .AddGrpcServices(configuration);
+
+        return builder.Build().UseApplicationBuilderDefaults();
+    }
 }

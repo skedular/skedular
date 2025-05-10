@@ -38,7 +38,7 @@ public static class Extensions
         services
             .AddScoped<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var msTeamsConfiguration = configuration.GetSection(MarketplaceConfiguration.Key).Get<MarketplaceConfiguration>();
         ArgumentNullException.ThrowIfNull(msTeamsConfiguration);

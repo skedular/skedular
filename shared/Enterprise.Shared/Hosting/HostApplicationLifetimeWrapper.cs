@@ -7,8 +7,7 @@ public interface IHostApplicationLifetimeWrapper
     void StopApplication();
 }
 
-public class HostApplicationLifetimeWrapper(IHostApplicationLifetime hostApplicationLifetime)
-    : IHostApplicationLifetimeWrapper
+public class HostApplicationLifetimeWrapper(IHostApplicationLifetime hostApplicationLifetime) : IHostApplicationLifetimeWrapper
 {
     public void StopApplication() => hostApplicationLifetime.StopApplication();
 }

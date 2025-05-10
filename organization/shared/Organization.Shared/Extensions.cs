@@ -53,7 +53,7 @@ public static class Extensions
             .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var organizationConfiguration =
             configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();

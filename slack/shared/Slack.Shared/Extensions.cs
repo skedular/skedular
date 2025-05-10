@@ -79,7 +79,7 @@ public static class Extensions
             });
     }
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);

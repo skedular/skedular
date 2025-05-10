@@ -4,7 +4,6 @@ using HotChocolate.Execution.Configuration;
 using HotChocolate.Types.Descriptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +11,10 @@ namespace Enterprise.Shared.GraphQL;
 
 public static class GraphqlExtensions
 {
-    public static IServiceCollection AddGraphql<TDbContext>(
+    public static IServiceCollection AddGraphql(
         this IServiceCollection services,
         IConfiguration configuration,
-        Action<IRequestExecutorBuilder> configure) where TDbContext : DbContext
+        Action<IRequestExecutorBuilder> configure)
     {
         var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
         ArgumentNullException.ThrowIfNull(graphqlConfig);

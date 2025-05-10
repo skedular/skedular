@@ -1,7 +1,6 @@
 ﻿// using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
 
 using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
-using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Kafka;
@@ -11,8 +10,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace AllInOne;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
     public static async Task Main(string[] args)
     {
@@ -137,40 +135,40 @@ public class Program : WebHostServiceBase<Program>
         await Team.Shared.Program.Main(args);
 
         await Task.WhenAll(
-            Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Billing.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Billing.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Booking.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Booking.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Booking.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Customer.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Customer.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Customer.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Location.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Location.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Location.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Marketplace.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Marketplace.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Marketplace.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Notification.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Notification.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Notification.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Organization.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Organization.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Organization.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Payment.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Payment.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Payment.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Slack.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Slack.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Slack.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+            Billing.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Billing.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Billing.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Booking.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Booking.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Booking.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Customer.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Customer.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Customer.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Location.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Location.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Location.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Marketplace.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Marketplace.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Marketplace.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            MsTeams.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            MsTeams.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            MsTeams.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Notification.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Notification.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Notification.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Organization.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Organization.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Organization.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Payment.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Payment.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Payment.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Slack.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Slack.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Slack.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Team.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Team.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Team.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Gateway.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }
 }

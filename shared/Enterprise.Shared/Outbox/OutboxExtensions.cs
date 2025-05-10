@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared.Database;
-using Enterprise.Shared.Outbox.Database;
+﻿using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Publishers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,23 +7,11 @@ namespace Enterprise.Shared.Outbox;
 
 public static class OutboxExtensions
 {
-    public static DatabaseSetupContext<TDbContext> AddOutboxBackgroundService<TDbContext>(
-        this DatabaseSetupContext<TDbContext> databaseSetup)
-        where TDbContext : DbContext, IOutboxStore
-    {
-        databaseSetup.ServiceCollection.AddHostedService<OutboxBackgroundService<TDbContext>>();
+    public static IServiceCollection AddOutboxBackgroundService<TDbContext>(this IServiceCollection services)
+        where TDbContext : DbContext, IOutboxStore =>
+        services.AddHostedService<OutboxBackgroundService<TDbContext>>();
 
-        return databaseSetup;
-    }
-
-    public static DatabaseSetupContext<TDbContext> AddOutboxService<TDbContext>(
-        this DatabaseSetupContext<TDbContext> databaseSetup)
-        where TDbContext : DbContext, IOutboxStore
-    {
-        databaseSetup.ServiceCollection
-            .AddSingleton(typeof(IOutboxEventPublisher<,>), typeof(OutboxEventPublisher<,>))
-            .Decorate<IDbTransactionBuilder, OutboxTransactionBuilderDecorator>();
-
-        return databaseSetup;
-    }
+    public static IServiceCollection AddOutboxService(this IServiceCollection services) =>
+        services
+            .AddSingleton(typeof(IOutboxEventPublisher<,>), typeof(OutboxEventPublisher<,>));
 }

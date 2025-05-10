@@ -15,14 +15,86 @@ namespace Enterprise.Shared.Database;
 
 public static class ServiceExtensions
 {
-    public static void AddDatabaseHealthCheck(this DatabaseSetup databaseSetup) =>
-        databaseSetup.ServiceCollection.AddDatabaseHealthCheck(databaseSetup.NpgsqlDataSource);
+    public static IServiceCollection WithPooledDbContextFactory<TDbContext>(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment,
+        string connectionName)
+        where TDbContext : DbContext
+    {
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        var dataSource = GetDatasource(services, configuration, true, connectionName);
 
-    public static DatabaseSetup AddDatabase(
+        return services.AddPooledDbContextFactory<TDbContext>(options =>
+        {
+            if (environment.IsDevelopment())
+            {
+                options.EnableSensitiveDataLogging();
+            }
+
+            options
+                .AddInterceptors(new SelectForUpdateCommandInterceptor())
+                .UseNpgsql(
+                    dataSource,
+                    sqlOptions =>
+                    {
+                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
+                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                    })
+                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+        });
+    }
+
+    public static IServiceCollection WithDbContextFactory<TDbContext>(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment,
+        string connectionName)
+        where TDbContext : DbContext
+    {
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        var dataSource = GetDatasource(services, configuration, false, connectionName);
+
+        return services.AddDbContextFactory<TDbContext>(options =>
+        {
+            if (environment.IsDevelopment())
+            {
+                options.EnableSensitiveDataLogging();
+            }
+
+            options
+                .UseNpgsql(
+                    dataSource,
+                    sqlOptions =>
+                    {
+                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
+                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                    })
+                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+        });
+    }
+
+    public static IServiceCollection WithQuartzNpgsqlDbProvider(this IServiceCollection services, NpgsqlDataSource dataSource) =>
+        services.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(dataSource));
+
+    public static IServiceCollection AddRedis(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string name)
+    {
+        var connectionString = configuration.GetConnectionString(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+        return services
+            .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
+            .AddScoped<IDistributedCache, DistributedCache>();
+    }
+
+    private static NpgsqlDataSource GetDatasource(
         this IServiceCollection services,
         IConfiguration configuration,
         bool isPooled,
-        string name = ConnectionStringKeys.DefaultPostgresConnection)
+        string connectionName)
     {
         services
             .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled })
@@ -34,7 +106,7 @@ public static class ServiceExtensions
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
-        var connectionString = configuration.GetConnectionString(name);
+        var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
@@ -67,112 +139,8 @@ public static class ServiceExtensions
 
         var dataSource = postgresSqlConfigurationOptions.BuildDataSource();
 
-        return new DatabaseSetup(services, dataSource);
-    }
+        services.AddDatabaseHealthCheck(dataSource);
 
-    public static DatabaseSetupContext<TDbContext> WithPooledDbContextFactory<TDbContext>(
-        this DatabaseSetup databaseSetup,
-        IConfiguration configuration,
-        Migration option,
-        IHostEnvironment environment)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration =
-            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-
-        databaseSetup.ServiceCollection
-            .AddPooledDbContextFactory<TDbContext>(options =>
-            {
-                if (environment.IsDevelopment())
-                {
-                    options.EnableSensitiveDataLogging();
-                }
-
-                options.AddInterceptors(new SelectForUpdateCommandInterceptor());
-
-                options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
-                {
-                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-
-                    if (option != Migration.SetAssembly)
-                    {
-                        return;
-                    }
-
-                    sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                });
-
-                if (option == Migration.SetAssembly)
-                {
-                    options.ConfigureWarnings(warnings =>
-                    {
-                        warnings.Log(RelationalEventId.PendingModelChangesWarning);
-                    });
-                }
-            });
-
-        return new DatabaseSetupContext<TDbContext>(databaseSetup);
-    }
-
-    public static DatabaseSetupContext<TDbContext> WithDbContextFactory<TDbContext>(
-        this DatabaseSetup databaseSetup,
-        IConfiguration configuration,
-        Migration option,
-        IHostEnvironment environment)
-        where TDbContext : DbContext
-    {
-        var applicationConfiguration =
-            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-
-        databaseSetup.ServiceCollection
-            .AddDbContextFactory<TDbContext>(options =>
-            {
-                if (environment.IsDevelopment())
-                {
-                    options.EnableSensitiveDataLogging();
-                }
-
-                options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
-                {
-                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-
-                    if (option != Migration.SetAssembly)
-                    {
-                        return;
-                    }
-
-                    sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-                });
-
-                if (option == Migration.SetAssembly)
-                {
-                    options.ConfigureWarnings(warnings =>
-                    {
-                        warnings.Log(RelationalEventId.PendingModelChangesWarning);
-                    });
-                }
-            });
-
-        return new DatabaseSetupContext<TDbContext>(databaseSetup);
-    }
-
-    public static DatabaseSetup WithQuartzNpgsqlDbProvider(this DatabaseSetup databaseSetup)
-    {
-        databaseSetup.ServiceCollection.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(databaseSetup.NpgsqlDataSource));
-
-        return databaseSetup;
-    }
-
-    public static IServiceCollection AddRedis(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string name = ConnectionStringKeys.DefaultRedisConnection)
-    {
-        var connectionString = configuration.GetConnectionString(name);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        return services
-            .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
-            .AddScoped<IDistributedCache, DistributedCache>();
+        return dataSource;
     }
 }

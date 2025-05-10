@@ -1,12 +1,35 @@
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Outbox;
+using Notification.Shared;
+using Notification.Shared.Database;
 
 namespace Notification.Jobs;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
-    public static async Task Main(string[] args) => await CreateHostBuilder(args).Build().RunAsync();
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunAsync();
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static IHostBuilder CreateHostBuilder(string[] args) => CreateHostBuilder<Startup>(args);
+    public static WebApplication CreateHostBuilder(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        var environment = builder.Environment;
+
+        services
+            .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "NotificationPostgresConnection")
+            .AddOutboxBackgroundService<NotificationDbContext>()
+            .AddDomainSharedServices()
+            .AddDomainSharedMappers()
+            .AddMappers()
+            .AddRepositoryFactory()
+            .AddPublishers()
+            .AddOutboxPublishers()
+            .AddJobs()
+            .AddServices()
+            .AddGrpcServices(configuration);
+
+        return builder.Build().UseApplicationBuilderDefaults();
+    }
 }

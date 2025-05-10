@@ -1,13 +1,40 @@
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
+using MsTeams.Api.Grpc;
+using MsTeams.Shared;
+using MsTeams.Shared.Database;
 
 namespace MsTeams.Api;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
-    public static async Task Main(string[] args) =>
-        await CreateHostBuilder(args).Build().RunWithGraphQLCommandsAsync(args);
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunWithGraphQLCommandsAsync(args);
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static IHostBuilder CreateHostBuilder(string[] args) => CreateHostBuilder<Startup>(args);
+    public static WebApplication CreateHostBuilder(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        var environment = builder.Environment;
+
+        services
+            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "MsTeamsPostgresConnection")
+            .AddDomainSharedServices()
+            .AddDomainSharedMappers()
+            .AddMappers()
+            .AddRepositoryFactory()
+            .AddPublishers()
+            .AddOutboxPublishers()
+            .AddJobs()
+            .AddServices()
+            .AddGrpcServices(configuration);
+
+        var app = builder.Build().UseApplicationBuilderDefaults();
+
+        app.MapGrpcService<MsTeamsGrpcService>();
+
+        return app;
+    }
 }

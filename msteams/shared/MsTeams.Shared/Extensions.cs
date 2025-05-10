@@ -39,7 +39,7 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
 
-    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var msTeamsConfiguration = configuration.GetSection(MsTeamsConfiguration.Key).Get<MsTeamsConfiguration>();
         ArgumentNullException.ThrowIfNull(msTeamsConfiguration);

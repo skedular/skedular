@@ -5,10 +5,8 @@ namespace Enterprise.Shared.Configurations.Extensions;
 
 public static class ConfigurationBuilderExtensions
 {
-    public static IConfigurationRoot BuildConfig<TProgram>(
-        this IConfigurationBuilder builder,
-        string? environmentName = null,
-        string[]? args = null) where TProgram : class
+    public static IConfigurationRoot BuildConfig<TProgram>(this IConfigurationBuilder builder, string? environmentName = null, string[]? args = null)
+        where TProgram : class
     {
         ArgumentNullException.ThrowIfNull(builder);
 

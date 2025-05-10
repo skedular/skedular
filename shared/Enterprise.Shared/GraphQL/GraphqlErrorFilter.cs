@@ -8,8 +8,7 @@ namespace Enterprise.Shared.GraphQL;
 public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<GraphqlErrorFilter> logger)
     : IErrorFilter, ITaggable<string>
 {
-    private readonly Counter<long> _graphqlExceptionsCounter =
-        meters.GetCounterByName<long>(MetricNames.GraphqlExceptionsCounter);
+    private readonly Counter<long> _graphqlExceptionsCounter = meters.GetCounterByName<long>(MetricNames.GraphqlExceptionsCounter);
 
     public IError OnError(IError error)
     {

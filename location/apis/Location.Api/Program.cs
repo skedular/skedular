@@ -1,13 +1,41 @@
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
+using Location.Api.Grpc;
+using Location.Shared;
+using Location.Shared.Database;
 
 namespace Location.Api;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
-    public static async Task Main(string[] args) =>
-        await CreateHostBuilder(args).Build().RunWithGraphQLCommandsAsync(args);
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunWithGraphQLCommandsAsync(args);
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static IHostBuilder CreateHostBuilder(string[] args) => CreateHostBuilder<Startup>(args);
+    public static WebApplication CreateHostBuilder(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        var environment = builder.Environment;
+
+        services
+            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "LocationPostgresConnection")
+            .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddDomainSharedServices()
+            .AddDomainSharedMappers()
+            .AddMappers()
+            .AddRepositoryFactory()
+            .AddPublishers()
+            .AddOutboxPublishers()
+            .AddMappers()
+            .AddJobs()
+            .AddServices()
+            .AddGrpcServices(configuration);
+
+        var app = builder.Build().UseApplicationBuilderDefaults();
+
+        app.MapGrpcService<LocationGrpcService>();
+
+        return app;
+    }
 }

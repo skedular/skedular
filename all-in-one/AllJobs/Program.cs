@@ -1,11 +1,9 @@
-﻿using Enterprise.Shared.Application.WebHostService;
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Hosting;
 
 namespace AllJobs;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class Program : WebHostServiceBase<Program>
+public class Program
 {
     public static async Task Main(string[] args)
     {
@@ -23,17 +21,17 @@ public class Program : WebHostServiceBase<Program>
             cancellationToken);
 
         await Task.WhenAll(
-            Billing.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Booking.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Customer.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Location.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Marketplace.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Notification.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Organization.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Payment.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Slack.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+            Billing.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Booking.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Customer.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Location.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Marketplace.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            MsTeams.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Notification.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Organization.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Payment.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Slack.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Team.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }
 }

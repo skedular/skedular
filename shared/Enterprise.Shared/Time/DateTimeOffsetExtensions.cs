@@ -15,8 +15,6 @@ public static class DateTimeOffsetExtensions
 
     public static DateTimeOffset EndOfYesterday(this DateTimeOffset value) => value.StartOfDay().AddTicks(-1);
 
-    public static DateTimeOffset Tomorrow(this DateTimeOffset value) => value.AddDays(1);
-
     public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset) => dateTimeOffset.ToDate(dateTimeOffset.Offset);
 
     public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset, TimeSpan offset) =>

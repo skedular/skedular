@@ -8,8 +8,7 @@ namespace Enterprise.Shared.Logging;
 
 public static class SerilogExtensions
 {
-    public static IHostBuilder UseSerilogCustom(this IHostBuilder hostBuilder, string appName)
-    {
+    public static IHostBuilder UseSerilogCustom(this IHostBuilder hostBuilder, string? appName) =>
         hostBuilder.UseSerilog((hostingContext, _, loggerConfiguration) =>
             {
                 if (hostingContext.HostingEnvironment.IsDevelopment())
@@ -21,24 +20,10 @@ public static class SerilogExtensions
                     .Enrich.WithProperty("ApplicationContext", appName)
                     .Enrich.WithSpan()
                     .Enrich.FromLogContext()
-                    .Enrich.With(new GitHashEnvironmentVariableEnricher())
-                    .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions
-                    {
-                        Mode = MaskingMode.Globally,
-                        MaskingOperators =
-                        [
-                            new EmailAddressMaskingOperator(),
-                            new IbanMaskingOperator(),
-                            new CreditCardMaskingOperator()
-                        ],
-                        MaskValue = "***REDACTED***"
-                    })
+                    .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions { Mode = MaskingMode.Globally, MaskValue = "***REDACTED***" })
                     .ReadFrom.Configuration(hostingContext.Configuration)
                     .WriteTo.Console(new RenderedCompactJsonFormatter());
             },
             false,
             true);
-
-        return hostBuilder;
-    }
 }

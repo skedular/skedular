@@ -38,28 +38,11 @@ public class OutboxBackgroundService<TDbContext>(
                     .OrderBy(query => query.RetryCount)
                     .FirstOrDefault());
 
-    /// <summary>
-    ///     Signals to poll the database. Triggered either by the <see cref="OutboxEvents.ItemAdded" /> or the
-    ///     <see cref="OutboxParameters.RetryTime" /> timeout
-    /// </summary>
-    private readonly ManualResetEvent _poll = new(true);
-
     private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
-    private void TriggerPoll(object sender, EventArgs eventArgs) => _poll.Set();
 
-    public override async Task StartAsync(CancellationToken cancellationToken)
-    {
-        OutboxEvents.ItemAdded += TriggerPoll!;
+    public override async Task StartAsync(CancellationToken cancellationToken) => await base.StartAsync(cancellationToken);
 
-        await base.StartAsync(cancellationToken);
-    }
-
-    public override async Task StopAsync(CancellationToken cancellationToken)
-    {
-        OutboxEvents.ItemAdded -= TriggerPoll!;
-
-        await base.StopAsync(cancellationToken);
-    }
+    public override async Task StopAsync(CancellationToken cancellationToken) => await base.StopAsync(cancellationToken);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -78,18 +61,15 @@ public class OutboxBackgroundService<TDbContext>(
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            _poll.Reset();
-
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
-            await using var transaction =
-                await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
             var retryTime = TimeSpan.FromSeconds(OutboxParameters.RetryTime.TotalSeconds);
             var thresholdTime = DateTimeOffset.UtcNow - retryTime;
             var outboxEvent = await s_getOutboxItemQueryAsync(dbContext, thresholdTime, cancellationToken);
             if (outboxEvent == null)
             {
                 // if there are no events, then wait till there is one, or poll the database after a certain amount of time.
-                _poll.WaitOne(OutboxParameters.RetryTime);
+                await Task.Delay(OutboxParameters.RetryTime, cancellationToken);
 
                 continue;
             }
