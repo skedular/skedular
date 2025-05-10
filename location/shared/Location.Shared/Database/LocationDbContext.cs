@@ -28,6 +28,6 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>
     {
         public LocationDbContext CreateDbContext(string[] args) =>
-            new(DbContextExtensions.CreateDbContextOptionBuilder<LocationDbContext>().Options, new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<Program, LocationDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

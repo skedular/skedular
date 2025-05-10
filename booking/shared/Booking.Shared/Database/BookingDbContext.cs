@@ -30,7 +30,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     // ReSharper disable once UnusedType.Global
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>
     {
-        public BookingDbContext CreateDbContext(string[] args) => new(DbContextExtensions.CreateDbContextOptionBuilder<BookingDbContext>().Options,
-            new CustomDbContextOptions { IsPooled = false });
+        public BookingDbContext CreateDbContext(string[] args) =>
+            new(args.ToDbContextOption<Program, BookingDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }
