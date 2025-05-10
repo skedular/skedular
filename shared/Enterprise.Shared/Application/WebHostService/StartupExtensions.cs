@@ -177,7 +177,6 @@ public static class StartupExtensions
             });
 
         app
-            .UseMiddleware<TelemetryMiddleware>()
             .UseMiddleware<SecurityContextEnricherMiddleware>()
             .UseMiddleware<SsoContextEnricherMiddleware>()
             .UseMiddleware<ContextEnricherMiddleware>();

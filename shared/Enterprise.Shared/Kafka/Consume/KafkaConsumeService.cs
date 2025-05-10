@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka.Consume;
 
-public class KafkaConsumeService<TKey, TEvent> : BackgroundService
-    where TKey : IEvent, new() where TEvent : IEvent, new()
+public class KafkaConsumeService<TKey, TEvent> : BackgroundService where TKey : IEvent, new() where TEvent : IEvent, new()
 {
     private readonly IConsumer<byte[], byte[]> _consumer;
     private readonly KafkaConfiguration _consumerKafkaConfiguration;
@@ -153,9 +152,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation(
-                "{KafkaService}: Stopped due to cancellation",
-                typeName);
+            _logger.LogInformation("{KafkaService}: Stopped due to cancellation", typeName);
         }
         catch (Exception ex)
         {
@@ -343,7 +340,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         consumeResult.Message.SetConsumerGroup(_groupId);
         consumeResult.Message.SetLastException(ex);
 
-        // This would either move the message into retry topic or dead letter queue.
+        // This would either move the message into a retry topic or dead letter queue.
         await _producer!.ProduceAsync(_retryTopicName, consumeResult.Message, cancellationToken);
     }
 

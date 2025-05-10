@@ -12,22 +12,17 @@ public interface IFixtureCustomizer
 public static class AutoFakeItEasyCustomizers
 {
     internal static IList<Type> GlobalCustomizerTypes { get; } = new List<Type>();
-
-    public static void RegisterGlobalCustomizer<T>() where T : IFixtureCustomizer
-        => GlobalCustomizerTypes.Add(typeof(T));
+    public static void RegisterGlobalCustomizer<T>() where T : IFixtureCustomizer => GlobalCustomizerTypes.Add(typeof(T));
 }
 
 public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool skipGlobalCustomizers = false) : AutoDataAttribute(() =>
 {
-    var fixture = new Fixture()
-        .Customize(new AutoFakeItEasyCustomization());
+    var fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
 
     fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
     fixture.Customizations.Add(new ExceptionContextGenerator());
     fixture.Customizations.Add(new CancellationTokenGenerator());
-
-    fixture.Customizations.Add(new DateOnlyValueGenerator());
 
     if (!skipGlobalCustomizers)
     {
@@ -40,9 +35,7 @@ public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool
     }
 
     foreach (var fixtureCustomizerType in fixtureCustomizers.Where(fixtureCustomizer =>
-                 fixtureCustomizer.GetInterfaces()
-                     .Any(implementedInterface =>
-                         implementedInterface == typeof(IFixtureCustomizer))))
+                 fixtureCustomizer.GetInterfaces().Any(implementedInterface => implementedInterface == typeof(IFixtureCustomizer))))
     {
         ApplyCustomizationsFromType(fixture, fixtureCustomizerType);
     }
@@ -50,7 +43,6 @@ public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool
     return fixture;
 })
 {
-    // Adds support for DateOnly .net 6 type.
     private static void ApplyGlobalCustomizers(IFixture fixture)
     {
         foreach (var fixtureCustomizerType in AutoFakeItEasyCustomizers.GlobalCustomizerTypes)
@@ -61,8 +53,7 @@ public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool
 
     private static void ApplyCustomizationsFromType(IFixture fixture, Type fixtureCustomizerType)
     {
-        var fixtureCustomizer =
-            Activator.CreateInstance(fixtureCustomizerType) as IFixtureCustomizer;
+        var fixtureCustomizer = Activator.CreateInstance(fixtureCustomizerType) as IFixtureCustomizer;
 
         fixtureCustomizer?.Customize(fixture);
     }

@@ -11,9 +11,7 @@ public interface IDistributedCache
     Task<(bool, T?)> GetAsync<T>(string key);
 }
 
-public class DistributedCache(
-    ApplicationConfiguration applicationConfiguration,
-    ConnectionMultiplexer connectionMultiplexer) : IDistributedCache
+public class DistributedCache(ApplicationConfiguration applicationConfiguration, ConnectionMultiplexer connectionMultiplexer) : IDistributedCache
 {
     private readonly IDatabase _database = connectionMultiplexer.GetDatabase();
 

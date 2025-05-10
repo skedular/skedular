@@ -1,7 +1,6 @@
 ﻿using Enterprise.Shared.GraphQL.Configurations;
 using HotChocolate.AspNetCore;
 using HotChocolate.Execution.Configuration;
-using HotChocolate.Types.Descriptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +20,6 @@ public static class GraphqlExtensions
 
         var builder = services
             .AddErrorFilter<GraphqlErrorFilter>()
-            .AddSingleton<INamingConventions, CustomNamingConventions>()
             .AddGraphQLServer()
             .InitializeOnStartup()
             .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)

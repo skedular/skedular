@@ -11,12 +11,7 @@ public class ExceptionContextGenerator : ISpecimenBuilder
 {
     public object Create(object request, ISpecimenContext context)
     {
-        if (request is not Type type)
-        {
-            return new NoSpecimen();
-        }
-
-        if (type != typeof(ExceptionContext))
+        if (request is not Type type || type != typeof(ExceptionContext))
         {
             return new NoSpecimen();
         }
