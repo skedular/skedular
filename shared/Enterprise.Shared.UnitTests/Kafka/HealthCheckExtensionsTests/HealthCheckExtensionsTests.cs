@@ -29,6 +29,6 @@ public class HealthCheckExtensionsTests
             .Registrations
             .First();
 
-        registration.Tags.Should().Contain(HealthCheckTags.Readiness);
+        registration.Tags.Should().Contain(Constants.ReadinessTag);
     }
 }

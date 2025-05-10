@@ -7,7 +7,6 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.HealthCheck;
-using Enterprise.Shared.Infrastructure.Filters;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Logging;
@@ -29,15 +28,12 @@ namespace Enterprise.Shared.Application.WebHostService;
 
 public static class StartupExtensions
 {
-    private const string ReadinessPath = "/health/readiness";
-    private const string LivenessPath = "/health/liveness";
-
-    public static WebApplicationBuilder AddDefaultServices<TProgram>(this WebApplicationBuilder builder) where TProgram : class
+    public static WebApplicationBuilder AddServiceDefaults<TProgram>(this WebApplicationBuilder builder) where TProgram : class
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        var appName = typeof(TProgram).Assembly.GetName().Name;
+        var appName = typeof(TProgram).Assembly.GetName().Name ?? builder.Environment.ApplicationName;
         AppDomain.CurrentDomain.UnhandledException += RecordExceptionOnActivity;
 
         configuration.AddEnvironmentVariables("ASPNETCORE");
@@ -77,12 +73,24 @@ public static class StartupExtensions
             services.AddSingleton(azureEntraConfiguration);
         }
 
-        services.WithOpenTelemetryCustom(configuration, typeof(TProgram).Assembly.GetName().Name!);
+        services.AddProblemDetails();
+
+        builder.ConfigureOpenTelemetry(appName);
 
         if (builder.Environment.IsDevelopment())
         {
             services.AddSwaggerDocument();
         }
+
+        services.AddServiceDiscovery();
+        services.ConfigureHttpClientDefaults(http =>
+        {
+            // Turn on resilience by default
+            http.AddStandardResilienceHandler();
+
+            // Turn on service discovery by default
+            http.AddServiceDiscovery();
+        });
 
         services.AddAuthentication();
         services.AddAuthorization();
@@ -107,19 +115,9 @@ public static class StartupExtensions
 
         services
             .AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), [HealthCheckTags.Liveness]);
+            .AddCheck("self", () => HealthCheckResult.Healthy(), [Constants.LivenessTag]);
 
-        services.AddScoped<IGlobalHttpExceptionHandler, GlobalHttpExceptionHandler>();
-
-        services.AddControllers(options =>
-        {
-            options.Filters.Add(typeof(HttpGlobalExceptionFilter));
-
-            if (services.Any(descriptor => descriptor.ServiceType == typeof(TraceSettings)))
-            {
-                options.Filters.Add<TraceIdAsyncActionFilter>();
-            }
-        });
+        services.AddControllers();
 
         services
             .AddEndpointsApiExplorer()
@@ -139,8 +137,9 @@ public static class StartupExtensions
         return builder;
     }
 
-    public static WebApplication UseApplicationBuilderDefaults(this WebApplication app, Action? middleAction = null)
+    public static WebApplication AddWebApplicationDefaults(this WebApplication app, Action? middleAction = null)
     {
+        app.UseExceptionHandler();
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
         if (app.Environment.IsDevelopment())
@@ -151,7 +150,7 @@ public static class StartupExtensions
             app.UseSwaggerUi();
 
             // redirect root to health
-            app.UseRewriter(new RewriteOptions().AddRedirect("^$", ReadinessPath));
+            app.UseRewriter(new RewriteOptions().AddRedirect("^$", Constants.ReadinessPath));
         }
 
         app.UseRouting();
@@ -164,17 +163,17 @@ public static class StartupExtensions
 
         // Health checks must go before any middleware
         app.UseHealthChecks(
-            LivenessPath,
+            Constants.LivenessPath,
             new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains(HealthCheckTags.Liveness) || registration.Name.Contains("self")
+                Predicate = registration => registration.Tags.Contains(Constants.LivenessTag) || registration.Name.Contains("self")
             });
 
         app.UseHealthChecks(
-            ReadinessPath,
+            Constants.ReadinessPath,
             new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains(HealthCheckTags.Readiness) || registration.Name.Contains("services")
+                Predicate = registration => registration.Tags.Contains(Constants.ReadinessTag) || registration.Name.Contains("services")
             });
 
         app

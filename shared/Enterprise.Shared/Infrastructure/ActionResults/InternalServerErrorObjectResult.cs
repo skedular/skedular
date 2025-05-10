@@ -5,7 +5,5 @@ namespace Enterprise.Shared.Infrastructure.ActionResults;
 
 public class InternalServerErrorObjectResult : ObjectResult
 {
-    public InternalServerErrorObjectResult(object error)
-        : base(error) =>
-        StatusCode = StatusCodes.Status500InternalServerError;
+    public InternalServerErrorObjectResult(object error) : base(error) => StatusCode = StatusCodes.Status500InternalServerError;
 }

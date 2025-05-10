@@ -24,6 +24,10 @@ public class Program
         };
 
         await EnvironmentHelper.LoadEnvFileAsync(
+            Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"),
+            cancellationToken);
+
+        await EnvironmentHelper.LoadEnvFileAsync(
             Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"),
             cancellationToken);
 

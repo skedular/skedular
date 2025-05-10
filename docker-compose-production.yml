@@ -182,9 +182,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
@@ -276,9 +277,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
@@ -370,9 +372,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
@@ -489,9 +492,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:
@@ -583,9 +587,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:
@@ -677,9 +682,10 @@ services:
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedThroughWebEmail: true
       Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
-      OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: false
-      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:

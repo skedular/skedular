@@ -19,7 +19,7 @@ public static class HealthCheckExtensions
             .AddHealthChecks()
             .AddNpgSql(
                 new NpgSqlHealthCheckOptions(npgsqlDataSource),
-                tags: [HealthCheckTags.Readiness],
+                tags: [Constants.ReadinessTag],
                 timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
             );
 }

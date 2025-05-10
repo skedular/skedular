@@ -12,7 +12,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
+        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -30,6 +30,6 @@ public class Program
             .AddServices()
             .AddStripe(configuration);
 
-        return builder.Build().UseApplicationBuilderDefaults();
+        return builder.Build().AddWebApplicationDefaults();
     }
 }

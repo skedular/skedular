@@ -31,7 +31,7 @@ public static class HealthCheckExtensions
             .AddHealthChecks()
             .AddKafka(
                 producerConfig,
-                tags: [HealthCheckTags.Readiness],
+                tags: [Constants.ReadinessTag],
                 timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
             );
     }
