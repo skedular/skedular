@@ -14,6 +14,7 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
+using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Rewrite;
@@ -95,10 +96,11 @@ public static class StartupExtensions
         services.AddAuthentication();
         services.AddAuthorization();
         services.AddGrpc();
-        services.AddSso();
         services.AddOutboxService();
 
         services.AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>();
+
+        services.AddSingleton<IVersionService, VersionService<TProgram>>();
 
         services.TryAddSingleton(TimeProvider.System);
         services.AddHttpContextAccessor();

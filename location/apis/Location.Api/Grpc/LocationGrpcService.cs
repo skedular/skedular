@@ -1,9 +1,9 @@
-using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Version;
 using Grpc.Core;
 using Location.Api.Mappers;
 using Location.Api.Services;
@@ -22,6 +22,7 @@ using ResourceOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.Resourc
 namespace Location.Api.Grpc;
 
 public class LocationGrpcService(
+    IVersionService versionService,
     LocationConfiguration locationConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     ILocationService locationService,
@@ -31,10 +32,7 @@ public class LocationGrpcService(
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }

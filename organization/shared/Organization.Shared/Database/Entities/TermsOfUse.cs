@@ -37,7 +37,7 @@ public class TermsOfUseConfiguration : IEntityTypeConfiguration<TermsOfUse>
 
         builder.HasData(SeedData.Select(item =>
         {
-            item.CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1));
+            item.CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new TimeSpan(0, 0, 0, 0, 0));
             return item;
         }));
 

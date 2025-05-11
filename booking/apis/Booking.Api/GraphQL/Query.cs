@@ -1,4 +1,3 @@
-using System.Reflection;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
@@ -8,6 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
+using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
@@ -15,15 +15,12 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace Booking.Api.GraphQL;
 
 [QueryType]
-public class Query(IMapper mapper)
+public class Query(IMapper mapper, IVersionService versionService)
 {
     [UseResolverScope]
     public Version BookingVersion()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }

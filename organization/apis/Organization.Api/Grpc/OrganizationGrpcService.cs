@@ -1,10 +1,10 @@
-using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Version;
 using Grpc.Core;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
@@ -20,6 +20,7 @@ using Permissions = Api.Shared.Services.Grpc.Skedular.Organization.V1.Permission
 namespace Organization.Api.Grpc;
 
 public class OrganizationGrpcService(
+    IVersionService versionService,
     OrganizationConfiguration organizationConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
@@ -31,10 +32,7 @@ public class OrganizationGrpcService(
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }

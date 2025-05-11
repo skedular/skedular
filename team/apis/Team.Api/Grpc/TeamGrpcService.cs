@@ -1,9 +1,9 @@
-using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Version;
 using Grpc.Core;
 using Team.Api.Mappers;
 using Team.Api.Services;
@@ -19,6 +19,7 @@ using Version = Api.Shared.Services.Grpc.Skedular.Team.V1.Version;
 namespace Team.Api.Grpc;
 
 public class TeamGrpcService(
+    IVersionService versionService,
     TeamConfiguration teamConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     ITeamService teamService,
@@ -27,10 +28,7 @@ public class TeamGrpcService(
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }

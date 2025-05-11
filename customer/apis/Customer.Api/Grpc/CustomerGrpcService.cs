@@ -1,4 +1,3 @@
-using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
@@ -6,6 +5,7 @@ using Customer.Shared.Configurations;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Version;
 using Grpc.Core;
 using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using FeedbackChannel = Api.Shared.Services.Grpc.Skedular.Customer.V1.FeedbackChannel;
@@ -14,6 +14,7 @@ using Version = Api.Shared.Services.Grpc.Skedular.Customer.V1.Version;
 namespace Customer.Api.Grpc;
 
 public class CustomerGrpcService(
+    IVersionService versionService,
     CustomerConfiguration customerConfiguration,
     ICustomerService customerService,
     ICustomerOrganizationSettingsService customerOrganizationSettingsService,
@@ -28,10 +29,7 @@ public class CustomerGrpcService(
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }

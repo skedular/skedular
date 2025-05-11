@@ -29,7 +29,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -48,7 +49,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true 
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -67,7 +69,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true 
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -86,7 +89,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -105,7 +109,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -124,7 +129,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -143,7 +149,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -162,7 +169,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -181,7 +189,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -200,7 +209,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -219,7 +229,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2csclient \
@@ -238,4 +249,5 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson

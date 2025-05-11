@@ -1,10 +1,10 @@
-using System.Reflection;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
@@ -12,15 +12,12 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace Customer.Api.GraphQL;
 
 [QueryType]
-public class Query(IMapper mapper)
+public class Query(IMapper mapper, IVersionService versionService)
 {
     [UseResolverScope]
     public Version CustomerVersion()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }

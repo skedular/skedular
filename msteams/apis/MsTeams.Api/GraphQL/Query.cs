@@ -1,4 +1,4 @@
-using System.Reflection;
+using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using MsTeams.Api.Services;
@@ -7,15 +7,12 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace MsTeams.Api.GraphQL;
 
 [QueryType]
-public class Query
+public class Query(IVersionService versionService)
 {
     [UseResolverScope]
     public Version MsTeamsVersion()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }

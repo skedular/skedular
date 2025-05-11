@@ -26,8 +26,9 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
-
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+   
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/billing_v1.yaml \
@@ -42,7 +43,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -58,7 +60,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -74,7 +77,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -90,7 +94,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -106,7 +111,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -122,7 +128,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -138,7 +145,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -154,7 +162,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -170,7 +179,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -186,7 +196,8 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
 
 RUN nswag \
   openapi2cscontroller \
@@ -202,4 +213,5 @@ RUN nswag \
   /DictionaryType:System.Collections.Generic.IDictionary \
   /UseActionResultType:true \
   /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson

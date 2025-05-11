@@ -1,4 +1,3 @@
-using System.Reflection;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
@@ -9,6 +8,7 @@ using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Version;
 using Grpc.Core;
 using BookingOrderField = Booking.Shared.Models.BookingOrderField;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
@@ -20,6 +20,7 @@ using Version = Api.Shared.Services.Grpc.Skedular.Booking.V1.Version;
 namespace Booking.Api.Grpc;
 
 public class BookingGrpcService(
+    IVersionService versionService,
     BookingConfiguration bookingConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     IBookingService bookingService,
@@ -31,10 +32,7 @@ public class BookingGrpcService(
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
-        var assembly = Assembly.GetEntryAssembly();
-        ArgumentNullException.ThrowIfNull(assembly);
-        var version = assembly.GetName().Version;
-        ArgumentNullException.ThrowIfNull(version);
+        var version = versionService.GetVersion();
 
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
