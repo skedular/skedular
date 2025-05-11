@@ -40,10 +40,6 @@ public class OutboxBackgroundService<TDbContext>(
 
     private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
 
-    public override async Task StartAsync(CancellationToken cancellationToken) => await base.StartAsync(cancellationToken);
-
-    public override async Task StopAsync(CancellationToken cancellationToken) => await base.StopAsync(cancellationToken);
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var className = GetType().ToFullName();

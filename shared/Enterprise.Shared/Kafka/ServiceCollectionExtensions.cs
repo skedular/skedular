@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddKafka(this IServiceCollection services, bool useTelemetry = true)
     {
         services
+            .AddSingleton<IKafkaHelper, KafkaHelper>()
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
             .AddSingleton(typeof(ISerializer<>), typeof(CustomProtobufSerializer<>))
             .AddSingleton(typeof(IDeserializer<>), typeof(CustomProtobufDeserializer<>))

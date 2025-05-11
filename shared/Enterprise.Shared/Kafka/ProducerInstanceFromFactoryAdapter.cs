@@ -12,9 +12,7 @@ namespace Enterprise.Shared.Kafka;
 /// </remarks>
 /// <typeparam name="TKey">Message Key type</typeparam>
 /// <typeparam name="TValue">Message Value type</typeparam>
-public class ProducerInstanceFromFactoryAdapter<TKey, TValue>(
-    IProducerFactory factory,
-    KafkaConfiguration kafkaConfiguration)
+public class ProducerInstanceFromFactoryAdapter<TKey, TValue>(IProducerFactory factory, KafkaConfiguration kafkaConfiguration)
     : IProducer<TKey, TValue>
 {
     private readonly IProducer<TKey, TValue> _producer = factory.Build<TKey, TValue>(kafkaConfiguration);

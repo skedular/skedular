@@ -77,10 +77,7 @@ public static class ServiceExtensions
     public static IServiceCollection WithQuartzNpgsqlDbProvider(this IServiceCollection services, NpgsqlDataSource dataSource) =>
         services.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(dataSource));
 
-    public static IServiceCollection AddRedis(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string name)
+    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, string name)
     {
         var connectionString = configuration.GetConnectionString(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);

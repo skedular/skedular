@@ -19,9 +19,7 @@ public class ConsumerFactory(
     IKafkaLogger kafkaLogger)
     : IConsumerFactory
 {
-    public IConsumer<TKey, TValue> Build<TKey, TValue>(
-        KafkaConfiguration kafkaConfiguration,
-        Action<ConsumerBuilder<TKey, TValue>>? options = null)
+    public IConsumer<TKey, TValue> Build<TKey, TValue>(KafkaConfiguration kafkaConfiguration, Action<ConsumerBuilder<TKey, TValue>>? options = null)
     {
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
         return BuildConsumer(options, BuildConsumerConfig(kafkaConfiguration));

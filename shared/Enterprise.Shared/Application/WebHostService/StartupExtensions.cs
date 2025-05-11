@@ -47,6 +47,12 @@ public static class StartupExtensions
         var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
         if (kafkaConfiguration is not null)
         {
+            var bootstrapServers = configuration.GetConnectionString("kafka");
+            if (!string.IsNullOrWhiteSpace(bootstrapServers))
+            {
+                kafkaConfiguration.BootstrapServers = bootstrapServers;
+            }
+
             services.AddSingleton(kafkaConfiguration);
             if (kafkaConfiguration.SchemaRegistry is not null)
             {
