@@ -7,17 +7,17 @@ public static class PostgreSqlConfigurationExtensions
 {
     private static readonly ConcurrentDictionary<string, NpgsqlDataSource> s_dataSources = new();
 
-    internal static NpgsqlDataSource BuildDataSource(this PostgresConfigurationOptions configuration)
+    internal static NpgsqlDataSource BuildDataSource(this string connectionString)
     {
         try
         {
-            if (s_dataSources.TryGetValue(configuration.DefaultConnection, out var dataSource))
+            if (s_dataSources.TryGetValue(connectionString, out var dataSource))
             {
                 return dataSource;
             }
 
-            s_dataSources[configuration.DefaultConnection] = new NpgsqlDataSourceBuilder(configuration.DefaultConnection).EnableDynamicJson().Build();
-            return s_dataSources[configuration.DefaultConnection];
+            s_dataSources[connectionString] = new NpgsqlDataSourceBuilder(connectionString).EnableDynamicJson().Build();
+            return s_dataSources[connectionString];
         }
         catch (Exception ex)
         {

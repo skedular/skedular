@@ -26,6 +26,6 @@ public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbCont
     public class TeamDbContextDesignFactory : IDesignTimeDbContextFactory<TeamDbContext>
     {
         public TeamDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, TeamDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<TeamDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

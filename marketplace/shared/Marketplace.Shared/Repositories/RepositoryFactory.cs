@@ -6,6 +6,7 @@ namespace Marketplace.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    MarketplaceDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -19,21 +20,20 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly MarketplaceDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<MarketplaceDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
-        ProductRepository = new ProductRepository(_dbContext, timeProvider);
-        ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        OrganizationTagRepository = new OrganizationTagRepository(DbContext, timeProvider);
+        ProductRepository = new ProductRepository(DbContext, timeProvider);
+        ProductVersionRepository = new ProductVersionRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -42,7 +42,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public MarketplaceDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
@@ -63,7 +65,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

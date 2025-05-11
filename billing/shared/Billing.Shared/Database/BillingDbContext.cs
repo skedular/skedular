@@ -22,6 +22,6 @@ public class BillingDbContext(DbContextOptions<BillingDbContext> options, Custom
     public class BillingDbContextDesignFactory : IDesignTimeDbContextFactory<BillingDbContext>
     {
         public BillingDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, BillingDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<BillingDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

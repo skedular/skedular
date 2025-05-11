@@ -17,17 +17,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\billing\shared\Billing.Shared\Billing.Shared.csproj"/>
-        <ProjectReference Include="..\..\booking\shared\Booking.Shared\Booking.Shared.csproj"/>
-        <ProjectReference Include="..\..\customer\shared\Customer.Shared\Customer.Shared.csproj"/>
-        <ProjectReference Include="..\..\location\shared\Location.Shared\Location.Shared.csproj"/>
-        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Shared\Marketplace.Shared.csproj"/>
-        <ProjectReference Include="..\..\msteams\shared\MsTeams.Shared\MsTeams.Shared.csproj"/>
-        <ProjectReference Include="..\..\notification\shared\Notification.Shared\Notification.Shared.csproj"/>
-        <ProjectReference Include="..\..\organization\shared\Organization.Shared\Organization.Shared.csproj"/>
-        <ProjectReference Include="..\..\payment\shared\Payment.Shared\Payment.Shared.csproj"/>
-        <ProjectReference Include="..\..\slack\shared\Slack.Shared\Slack.Shared.csproj"/>
-        <ProjectReference Include="..\..\team\shared\Team.Shared\Team.Shared.csproj"/>
+        <ProjectReference Include="..\..\billing\shared\Billing.Infrastructure\Billing.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\booking\shared\Booking.Infrastructure\Booking.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\customer\shared\Customer.Infrastructure\Customer.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\location\shared\Location.Infrastructure\Location.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Infrastructure\Marketplace.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\msteams\shared\MsTeams.Infrastructure\MsTeams.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\notification\shared\Notification.Infrastructure\Notification.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\organization\shared\Organization.Infrastructure\Organization.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\payment\shared\Payment.Infrastructure\Payment.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\team\shared\Team.Infrastructure\Team.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

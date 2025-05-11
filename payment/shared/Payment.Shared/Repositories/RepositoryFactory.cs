@@ -6,6 +6,7 @@ namespace Payment.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    PaymentDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IAddressRepository AddressRepository { get; }
     IBookingRepository BookingRepository { get; }
@@ -29,31 +30,30 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly PaymentDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<PaymentDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        AddressRepository = new AddressRepository(_dbContext, timeProvider);
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
-        ProductRepository = new ProductRepository(_dbContext, timeProvider);
-        ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
-        StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
-        StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
-        StripeConnectAccountRepository = new StripeConnectAccountRepository(_dbContext, timeProvider);
-        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
-        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
-        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
-        StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
-        StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
+        AddressRepository = new AddressRepository(DbContext, timeProvider);
+        BookingRepository = new BookingRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        OrganizationOfferingRepository = new OrganizationOfferingRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
+        ProductRepository = new ProductRepository(DbContext, timeProvider);
+        ProductVersionRepository = new ProductVersionRepository(DbContext, timeProvider);
+        StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(DbContext, timeProvider);
+        StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(DbContext, timeProvider);
+        StripeConnectAccountRepository = new StripeConnectAccountRepository(DbContext, timeProvider);
+        StripeCustomerRepository = new StripeCustomerRepository(DbContext, timeProvider);
+        StripePaymentIntentRepository = new StripePaymentIntentRepository(DbContext, timeProvider);
+        StripePaymentMethodRepository = new StripePaymentMethodRepository(DbContext, timeProvider);
+        StripePriceRepository = new StripePriceRepository(DbContext, timeProvider);
+        StripeProductRepository = new StripeProductRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -62,7 +62,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public PaymentDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public IAddressRepository AddressRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
@@ -93,7 +95,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

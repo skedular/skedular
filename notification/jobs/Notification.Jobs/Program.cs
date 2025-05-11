@@ -18,7 +18,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "NotificationPostgresConnection")
+            .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddOutboxBackgroundService<NotificationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

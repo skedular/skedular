@@ -95,46 +95,13 @@ public static class ServiceExtensions
     {
         services
             .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled })
-            .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>();
-
-        var postgresSqlConfigurationOptions =
-            configuration.GetSection(PostgresConfigurationOptions.Key).Get<PostgresConfigurationOptions>() ?? new PostgresConfigurationOptions();
-
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        ArgumentNullException.ThrowIfNull(applicationConfiguration);
+            .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
+            .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 
         var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-        var npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-        if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
-        {
-            npgsqlConnectionStringBuilder.Database = $"{applicationConfiguration.Environment}.{npgsqlConnectionStringBuilder.Database}";
-        }
-
-        if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Server))
-        {
-            npgsqlConnectionStringBuilder.Host = postgresSqlConfigurationOptions.Server;
-        }
-
-        if (postgresSqlConfigurationOptions.Port is not null)
-        {
-            npgsqlConnectionStringBuilder.Port = postgresSqlConfigurationOptions.Port.Value;
-        }
-
-        if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Username))
-        {
-            npgsqlConnectionStringBuilder.Username = postgresSqlConfigurationOptions.Username;
-        }
-
-        if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Password))
-        {
-            npgsqlConnectionStringBuilder.Password = postgresSqlConfigurationOptions.Password;
-        }
-
-        postgresSqlConfigurationOptions.DefaultConnection = npgsqlConnectionStringBuilder.ConnectionString;
-
-        var dataSource = postgresSqlConfigurationOptions.BuildDataSource();
+        var dataSource = connectionString.BuildDataSource();
 
         services.AddDatabaseHealthCheck(dataSource);
 

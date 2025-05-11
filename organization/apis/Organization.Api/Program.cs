@@ -24,7 +24,7 @@ public class Program
         services.AddSingleton(emailConfiguration);
 
         services
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "OrganizationPostgresConnection")
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

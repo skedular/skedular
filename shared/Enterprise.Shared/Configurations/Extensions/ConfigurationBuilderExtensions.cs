@@ -23,6 +23,13 @@ public static class ConfigurationBuilderExtensions
             builder.AddJsonFile(filename, true);
         }
 
+        return builder.BuildConfig(environmentName, args);
+    }
+
+    public static IConfigurationRoot BuildConfig(this IConfigurationBuilder builder, string? environmentName = null, string[]? args = null)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true);
 
         if (!string.IsNullOrWhiteSpace(environmentName))

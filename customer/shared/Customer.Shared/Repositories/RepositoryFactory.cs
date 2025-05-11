@@ -6,6 +6,7 @@ namespace Customer.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    CustomerDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     ICustomerFeedbackRepository CustomerFeedbackRepository { get; }
     ICustomerRepository CustomerRepository { get; }
@@ -22,24 +23,23 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly CustomerDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<CustomerDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        CustomerFeedbackRepository = new CustomerFeedbackRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
-        OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        CustomerFeedbackRepository = new CustomerFeedbackRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        LocationRepository = new LocationRepository(DbContext, timeProvider);
+        ResourceRepository = new ResourceRepository(DbContext, timeProvider);
+        TeamRepository = new TeamRepository(DbContext, timeProvider);
+        TeamMemberRepository = new TeamMemberRepository(DbContext, timeProvider);
+        OrganizationTagRepository = new OrganizationTagRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -48,7 +48,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public CustomerDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public ICustomerFeedbackRepository CustomerFeedbackRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
@@ -72,7 +74,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

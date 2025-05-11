@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "SlackPostgresConnection")
+            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaReliableEventConsumers<
                 SlackInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key.Key,

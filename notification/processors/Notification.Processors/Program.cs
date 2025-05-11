@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "NotificationPostgresConnection")
+            .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddKafkaReliableEventConsumers<
                 NotificationSubscriber,
                 Api.Shared.Clients.Events.Skedular.Notification.V1.Key.Key,

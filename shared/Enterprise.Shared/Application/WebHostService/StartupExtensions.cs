@@ -102,6 +102,7 @@ public static class StartupExtensions
         services.AddAuthentication();
         services.AddAuthorization();
         services.AddGrpc();
+        services.AddSso();
         services.AddOutboxService();
 
         services.AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>();

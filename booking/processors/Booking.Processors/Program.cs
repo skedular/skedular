@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "BookingPostgresConnection")
+            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddKafkaReliableEventConsumers<
                 BookingInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key,

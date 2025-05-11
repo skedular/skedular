@@ -36,6 +36,6 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>
     {
         public OrganizationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, OrganizationDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<OrganizationDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

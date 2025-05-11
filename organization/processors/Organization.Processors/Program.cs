@@ -30,7 +30,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "OrganizationPostgresConnection")
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddKafkaReliableEventConsumers<
                 OrganizationInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key,

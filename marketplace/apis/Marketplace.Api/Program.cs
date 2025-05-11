@@ -19,7 +19,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "MarketplacePostgresConnection")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

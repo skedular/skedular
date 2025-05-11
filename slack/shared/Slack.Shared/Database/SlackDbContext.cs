@@ -26,6 +26,6 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>
     {
         public SlackDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, SlackDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<SlackDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

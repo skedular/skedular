@@ -6,6 +6,7 @@ namespace MsTeams.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    MsTeamsDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
@@ -21,23 +22,22 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly MsTeamsDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<MsTeamsDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
-        AzureTenantTeamChannelRepository = new AzureTenantTeamChannelRepository(_dbContext, timeProvider);
-        AzureTenantTeamRepository = new AzureTenantTeamRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        AzureTenantRepository = new AzureTenantRepository(DbContext, timeProvider);
+        AzureTenantTeamChannelRepository = new AzureTenantTeamChannelRepository(DbContext, timeProvider);
+        AzureTenantTeamRepository = new AzureTenantTeamRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        LocationRepository = new LocationRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        TeamRepository = new TeamRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -46,7 +46,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public MsTeamsDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
     public IAzureTenantTeamRepository AzureTenantTeamRepository { get; }
@@ -69,7 +71,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

@@ -18,7 +18,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "LocationPostgresConnection")
+            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddOutboxBackgroundService<LocationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

@@ -23,6 +23,6 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
     public class NotificationDbContextDesignFactory : IDesignTimeDbContextFactory<NotificationDbContext>
     {
         public NotificationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, NotificationDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<NotificationDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

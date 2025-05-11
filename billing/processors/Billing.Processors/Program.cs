@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "BillingPostgresConnection")
+            .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "billingdb")
             .AddKafkaReliableEventConsumers<
                 BillingInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key.Key,

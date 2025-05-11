@@ -18,7 +18,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "BookingPostgresConnection")
+            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddOutboxBackgroundService<BookingDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

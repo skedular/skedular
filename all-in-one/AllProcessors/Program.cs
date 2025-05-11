@@ -16,9 +16,8 @@ public class Program
             eventArgs.Cancel = true;
         };
 
-        await EnvironmentHelper.LoadEnvFileAsync(
-            Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"),
-            cancellationToken);
+        await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), cancellationToken);
+        await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), cancellationToken);
 
         await Task.WhenAll(
             Billing.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

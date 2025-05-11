@@ -7,6 +7,7 @@ namespace Team.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    TeamDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
@@ -22,23 +23,22 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly TeamDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<TeamDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
-        TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        BookingRepository = new BookingRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        JoinInvitationRepository = new JoinInvitationRepository(DbContext, timeProvider);
+        TeamMemberRepository = new TeamMemberRepository(DbContext, timeProvider);
+        TeamRepository = new TeamRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        LocationRepository = new LocationRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -47,7 +47,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public TeamDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
@@ -71,7 +73,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

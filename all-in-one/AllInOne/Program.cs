@@ -1,11 +1,4 @@
-﻿// using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
-
-using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
-using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Configurations.Extensions;
-using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
-using Microsoft.Extensions.Configuration;
+﻿using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Hosting;
 
 namespace AllInOne;
@@ -23,120 +16,22 @@ public class Program
             eventArgs.Cancel = true;
         };
 
-        await EnvironmentHelper.LoadEnvFileAsync(
-            Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"),
-            cancellationToken);
+        await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), cancellationToken);
+        await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), cancellationToken);
 
-        await EnvironmentHelper.LoadEnvFileAsync(
-            Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"),
-            cancellationToken);
-
-        var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory());
-        builder.BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
-
-        IConfiguration config = builder.Build();
-        var kafkaConfiguration = config.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
-
-        var kafkaHelper = new KafkaHelper(kafkaConfiguration);
-        await kafkaHelper.CreateTopicForEventAsync<Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>();
-        await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>();
-        await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>();
-        await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>();
-
-        // await Task.WhenAll(
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(),
-        //
-        //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(),
-        //
-        //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<
-        //             Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<
-        //             Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>());
-
-        await Billing.Shared.Program.Main(args);
-        await Booking.Shared.Program.Main(args);
-        await Customer.Shared.Program.Main(args);
-        await Location.Shared.Program.Main(args);
-        await Marketplace.Shared.Program.Main(args);
-        await MsTeams.Shared.Program.Main(args);
-        await Notification.Shared.Program.Main(args);
-        await Organization.Shared.Program.Main(args);
-        await Payment.Shared.Program.Main(args);
-        await Slack.Shared.Program.Main(args);
-        await Team.Shared.Program.Main(args);
+        await Task.WhenAll(
+            Billing.Infrastructure.Program.MigrateAsync(Billing.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Booking.Infrastructure.Program.MigrateAsync(Booking.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Customer.Infrastructure.Program.MigrateAsync(Customer.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Location.Infrastructure.Program.MigrateAsync(Location.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Marketplace.Infrastructure.Program.MigrateAsync(Marketplace.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            MsTeams.Infrastructure.Program.MigrateAsync(MsTeams.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Notification.Infrastructure.Program.MigrateAsync(Notification.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Organization.Infrastructure.Program.MigrateAsync(Organization.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Payment.Infrastructure.Program.MigrateAsync(Payment.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Slack.Infrastructure.Program.MigrateAsync(Slack.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
+        );
 
         await Task.WhenAll(
             Billing.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

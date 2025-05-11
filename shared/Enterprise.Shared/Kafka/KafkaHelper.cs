@@ -27,8 +27,7 @@ public class KafkaHelper : IKafkaHelper
         ArgumentNullException.ThrowIfNull(kafkaConfiguration.SchemaRegistry);
 
         _adminConfig = new AdminClientConfig { BootstrapServers = kafkaConfiguration.BootstrapServers };
-        _schemaRegistryClient = new CachedSchemaRegistryClient(
-            new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url });
+        _schemaRegistryClient = new CachedSchemaRegistryClient(new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url });
     }
 
     public async Task CreateTopicForEventAsync<TEvent>() where TEvent : IEvent, new()

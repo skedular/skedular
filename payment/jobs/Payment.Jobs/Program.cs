@@ -18,7 +18,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "PaymentPostgresConnection")
+            .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "paymentdb")
             .AddOutboxBackgroundService<PaymentDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

@@ -19,7 +19,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "PaymentPostgresConnection")
+            .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "paymentdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

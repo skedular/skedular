@@ -20,7 +20,7 @@ public class Program
 
         services
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "MsTeamsPostgresConnection")
+            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

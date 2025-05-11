@@ -22,7 +22,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "MarketplacePostgresConnection")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
             .AddOutboxBackgroundService<MarketplaceDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

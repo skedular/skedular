@@ -34,6 +34,6 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>
     {
         public PaymentDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, PaymentDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<PaymentDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

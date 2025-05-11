@@ -23,7 +23,7 @@ public class Program
         services.AddSingleton(emailConfiguration);
 
         services
-            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "CustomerPostgresConnection")
+            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddOutboxBackgroundService<CustomerDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

@@ -31,6 +31,6 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>
     {
         public BookingDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<Program, BookingDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<BookingDbContext>(), new CustomDbContextOptions { IsPooled = false });
     }
 }

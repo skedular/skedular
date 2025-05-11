@@ -134,6 +134,17 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -226,6 +237,17 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -287,7 +309,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1 && curl -f http://localhost:11004/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10130/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10830/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -321,6 +343,17 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -382,7 +415,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1 && curl -f http://localhost:11007/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10120/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10820/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -444,6 +477,17 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -536,6 +580,17 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -597,7 +652,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1 && curl -f http://localhost:11004/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10130/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10830/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -631,6 +686,17 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -692,7 +758,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1 && curl -f http://localhost:11007/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10120/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10820/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s

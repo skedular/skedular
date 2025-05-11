@@ -23,7 +23,7 @@ public class Program
         services.AddSingleton(emailConfiguration);
 
         services
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "SlackPostgresConnection")
+            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddOutboxBackgroundService<SlackDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

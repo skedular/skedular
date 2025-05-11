@@ -7,6 +7,7 @@ namespace Organization.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    OrganizationDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IAddressRepository AddressRepository { get; }
     IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
@@ -32,33 +33,32 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly OrganizationDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<OrganizationDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        AddressRepository = new AddressRepository(_dbContext, timeProvider);
-        AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(_dbContext, timeProvider);
-        AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
-        AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext, timeProvider);
-        IndustrySubCategoryRepository = new IndustrySubCategoryRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        OrganizationOfferingActiveMemberRepository = new OrganizationOfferingActiveMemberRepository(_dbContext, timeProvider);
-        OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
-        JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
-        TagRepository = new TagRepository(_dbContext, timeProvider);
+        AddressRepository = new AddressRepository(DbContext, timeProvider);
+        AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(DbContext, timeProvider);
+        AzureTenantRepository = new AzureTenantRepository(DbContext, timeProvider);
+        AzureTenantMemberRepository = new AzureTenantMemberRepository(DbContext, timeProvider);
+        BookingRepository = new BookingRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        IndustryMainCategoryRepository = new IndustryMainCategoryRepository(DbContext, timeProvider);
+        IndustrySubCategoryRepository = new IndustrySubCategoryRepository(DbContext, timeProvider);
+        LocationRepository = new LocationRepository(DbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
+        OrganizationOfferingActiveMemberRepository = new OrganizationOfferingActiveMemberRepository(DbContext, timeProvider);
+        OrganizationOfferingRepository = new OrganizationOfferingRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
+        TeamRepository = new TeamRepository(DbContext, timeProvider);
+        TermsOfUseRepository = new TermsOfUseRepository(DbContext, timeProvider);
+        JoinInvitationRepository = new JoinInvitationRepository(DbContext, timeProvider);
+        TagRepository = new TagRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -67,7 +67,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public OrganizationDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public IAddressRepository AddressRepository { get; }
     public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     public IAzureTenantRepository AzureTenantRepository { get; }
@@ -100,7 +102,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

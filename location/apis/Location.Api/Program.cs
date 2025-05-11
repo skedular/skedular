@@ -19,7 +19,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "LocationPostgresConnection")
+            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

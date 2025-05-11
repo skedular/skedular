@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "MsTeamsPostgresConnection")
+            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddKafkaReliableEventConsumers<
                 MsTeamsInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key.Key,

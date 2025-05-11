@@ -9,7 +9,6 @@ public interface IStripeConnectAccountRefreshCodeRepository : IRepository<Stripe
 {
     Task<StripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken);
     StripeConnectAccountRefreshCode Add(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode);
-    StripeConnectAccountRefreshCode Update(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode);
     StripeConnectAccountRefreshCode Remove(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode);
 }
 
@@ -27,13 +26,6 @@ public class StripeConnectAccountRefreshCodeRepository(PaymentDbContext dbContex
         var now = TimeProvider.GetUtcNow();
         stripeConnectAccountRefreshCode.CreatedAt = now;
         return DbContext.StripeConnectAccountRefreshCode.Add(stripeConnectAccountRefreshCode).Entity;
-    }
-
-    public StripeConnectAccountRefreshCode Update(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode)
-    {
-        var now = TimeProvider.GetUtcNow();
-        stripeConnectAccountRefreshCode.ModifiedAt = now;
-        return DbContext.StripeConnectAccountRefreshCode.Update(stripeConnectAccountRefreshCode).Entity;
     }
 
     public StripeConnectAccountRefreshCode Remove(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode)

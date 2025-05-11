@@ -30,7 +30,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "TeamPostgresConnection")
+            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
                 Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key,

@@ -6,6 +6,7 @@ namespace Notification.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    NotificationDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -18,20 +19,19 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
-    private readonly NotificationDbContext _dbContext;
     private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<NotificationDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        _dbContext = dbContextFactory.CreateDbContext();
+        DbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        NotificationRepository = new NotificationRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
+        LocationRepository = new LocationRepository(DbContext, timeProvider);
+        NotificationRepository = new NotificationRepository(DbContext, timeProvider);
+        TeamRepository = new TeamRepository(DbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
     }
 
     public void Dispose()
@@ -40,7 +40,9 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public IUnitOfWork UnitOfWork => _dbContext;
+    public NotificationDbContext DbContext { get; }
+
+    public IUnitOfWork UnitOfWork => DbContext;
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
@@ -60,7 +62,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
 
         if (disposing)
         {
-            _dbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _disposed = true;

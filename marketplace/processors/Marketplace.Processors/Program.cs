@@ -25,7 +25,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "MarketplacePostgresConnection")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,

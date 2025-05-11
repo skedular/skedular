@@ -18,7 +18,7 @@ public class Program
         var environment = builder.Environment;
 
         services
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "MsTeamsPostgresConnection")
+            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddOutboxBackgroundService<MsTeamsDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
