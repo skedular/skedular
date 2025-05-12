@@ -87,9 +87,17 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
+      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       Application__Environment: staging
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
@@ -145,9 +153,6 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -248,9 +253,6 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -354,9 +356,6 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -428,9 +427,17 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
+      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
+      ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
+      ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
+      ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
+      ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
+      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
+      ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
+      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
+      ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
+      ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       Application__Environment: prod
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
@@ -488,9 +495,6 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
@@ -591,9 +595,6 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
@@ -697,9 +698,6 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
-      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
-      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
-      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
