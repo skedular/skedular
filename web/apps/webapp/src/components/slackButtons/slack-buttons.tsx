@@ -20,7 +20,7 @@ const SlackButton = () => {
   const originalUrl = parameterizedUrl
     .replace('$SLACK_CLIENT_ID$', process.env.NEXT_PUBLIC_SLACK_CLIENT_ID)
     .replace('$SLACK_STATE$', encodeBase64(JSON.stringify(state)))
-    .replace('$SLACK_REDIRECT_URL$', encodeURIComponent(`${process.env.NEXT_PUBLIC_SLACK_REDIRECT_URL}/api/slack/v1/callback`));
+    .replace('$SLACK_REDIRECT_URL$', encodeURIComponent(`${process.env.NEXT_PUBLIC_SLACK_REDIRECT_URL}/slack/api/v1/callback`));
 
   const [baseUrl, queryString] = originalUrl.split('?');
   const params = new URLSearchParams(queryString);

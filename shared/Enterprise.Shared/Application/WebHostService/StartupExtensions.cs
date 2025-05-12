@@ -17,6 +17,7 @@ using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -126,7 +127,7 @@ public static class StartupExtensions
             .AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), [Constants.LivenessTag]);
 
-        services.AddControllers();
+        services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(TProgram).Assembly));
 
         services
             .AddEndpointsApiExplorer()
@@ -146,7 +147,7 @@ public static class StartupExtensions
         return builder;
     }
 
-    public static WebApplication AddWebApplicationDefaults(this WebApplication app, Action? middleAction = null)
+    public static WebApplication AddWebApplicationDefaults(this WebApplication app)
     {
         app.UseExceptionHandler();
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
