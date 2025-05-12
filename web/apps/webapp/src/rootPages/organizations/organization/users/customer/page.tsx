@@ -105,8 +105,8 @@ const UserPageWithRelay = () => {
         customerId: finalCustomerId,
         teamsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

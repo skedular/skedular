@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e7e1b0f18e171b889ca932877b24d61>>
+ * @generated SignedSource<<cb509d24800e3d779184f24fdc2f3153>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
+export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationSingleChoiceMemberRole_query$data = {
   readonly organizationMemberRoles: ReadonlyArray<OrganizationMemberRole>;

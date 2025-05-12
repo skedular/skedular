@@ -328,7 +328,7 @@ const OrganizationAdmin = ({
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $customTagNameSearchText }
-          orderBy: [{ direction: Ascending, field: Name }]
+          orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationAdmin_customTags") {
           __id
           totalCount
@@ -1503,7 +1503,7 @@ const OrganizationAdmin = ({
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1578,7 +1578,7 @@ const OrganizationAdmin = ({
 
   const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {

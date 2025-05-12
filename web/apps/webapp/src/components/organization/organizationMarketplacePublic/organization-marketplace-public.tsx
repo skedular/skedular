@@ -87,8 +87,8 @@ const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) 
         organizationId,
         productsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

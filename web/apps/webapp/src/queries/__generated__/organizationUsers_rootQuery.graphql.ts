@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c475c079e6597061137e37cc9cd5ad56>>
+ * @generated SignedSource<<2c015d15d33fc3555e2099d5547cd7ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
+export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type organizationUsers_rootQuery$variables = {
   organizationId: string;
   peopleNameSearchText?: string | null | undefined;

@@ -167,23 +167,23 @@ input UpdateProductInput {
 }
 
 enum Currency {
-  Nzd
-  Usd
+  NZD
+  USD
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 enum PriceUnit {
-  PerMinute
-  PerHour
-  PerUse
+  PER_MINUTE
+  PER_HOUR
+  PER_USE
 }
 
 enum ProductOrderField {
-  Name
+  NAME
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

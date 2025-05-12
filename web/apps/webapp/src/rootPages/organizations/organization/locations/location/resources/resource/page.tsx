@@ -127,20 +127,20 @@ const RootPageWithRelay = () => {
         resourceId: finalResourceId,
         multipleChoicesCustomTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesZonesSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesProductTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

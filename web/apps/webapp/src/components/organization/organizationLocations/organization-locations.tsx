@@ -698,28 +698,28 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
         organizationId,
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         zonesSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         customTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         fromTodayDate: today.toISOString(),
         untilTodayDate: today.add(1, 'day').toISOString(),
         organizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

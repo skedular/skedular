@@ -297,10 +297,10 @@ const Notifications = ({ queryReference }: Props) => {
         }
 
         switch (notification.notificationType) {
-          case 'InvitationToJoinOrganization':
+          case 'INVITATION_TO_JOIN_ORGANIZATION':
             return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join organization "${notification.organization?.name}"`} />;
 
-          case 'InvitationToJoinTeam':
+          case 'INVITATION_TO_JOIN_TEAM':
             return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join team "${notification.team?.name}"`} />;
 
           default:
@@ -330,7 +330,7 @@ const Notifications = ({ queryReference }: Props) => {
         }
 
         switch (notification.notificationType) {
-          case 'InvitationToJoinOrganization':
+          case 'INVITATION_TO_JOIN_ORGANIZATION':
             return (
               <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
                 <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
@@ -342,7 +342,7 @@ const Notifications = ({ queryReference }: Props) => {
               </StackRow>
             );
 
-          case 'InvitationToJoinTeam':
+          case 'INVITATION_TO_JOIN_TEAM':
             return (
               <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
                 <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
@@ -400,8 +400,8 @@ const NotificationsWithRelay = () => {
       {
         myNotificationsSortingValues: [
           {
-            direction: 'Descending',
-            field: 'Date',
+            direction: 'DESCENDING',
+            field: 'DATE',
           },
         ],
       },

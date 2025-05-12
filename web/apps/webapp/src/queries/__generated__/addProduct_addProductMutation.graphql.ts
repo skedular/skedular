@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a35b60f8417e8dfe7419129f3a8b0ce>>
+ * @generated SignedSource<<f0d8f85227bee01e6d82b34bea487c4e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type Currency = "Nzd" | "Usd" | "%future added value";
-export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
+export type Currency = "NZD" | "USD" | "%future added value";
+export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 export type AddProductInput = {
   bookAllLocationResources: boolean;
   clientMutationId?: string | null | undefined;

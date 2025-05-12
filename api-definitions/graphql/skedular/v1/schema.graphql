@@ -2077,169 +2077,169 @@ input ZoneOrganizationTagWhereInput {
 }
 
 enum BookingOrderField {
-  From
-  Notes
-  Status
-  To
-  Type
+  FROM
+  NOTES
+  STATUS
+  TO
+  TYPE
 }
 
 enum BookingStatus {
-  Confirmed
-  PaymentExpired
-  PaymentRecordNeverCreated
-  Pending
-  Rejected
+  CONFIRMED
+  PAYMENT_EXPIRED
+  PAYMENT_RECORD_NEVER_CREATED
+  PENDING
+  REJECTED
 }
 
 enum BookingType {
-  AnnualLeave
-  ClientOffice
-  NonWorkingDay
-  SickLeave
-  TravelingForWork
-  Vacation
-  WellbeingLeave
-  WorkingFromCoworkingSpace
-  WorkingFromHome
-  WorkingFromOffice
+  ANNUAL_LEAVE
+  CLIENT_OFFICE
+  NON_WORKING_DAY
+  SICK_LEAVE
+  TRAVELING_FOR_WORK
+  VACATION
+  WELLBEING_LEAVE
+  WORKING_FROM_COWORKING_SPACE
+  WORKING_FROM_HOME
+  WORKING_FROM_OFFICE
 }
 
 enum Currency {
-  Nzd
-  Usd
+  NZD
+  USD
 }
 
 enum CustomerOrderField {
-  Designation
-  FamilyName
-  GivenName
-  Locale
-  MiddleName
-  Name
-  PhoneNumber
-  Timezone
-  Title
+  DESIGNATION
+  FAMILY_NAME
+  GIVEN_NAME
+  LOCALE
+  MIDDLE_NAME
+  NAME
+  PHONE_NUMBER
+  TIMEZONE
+  TITLE
 }
 
 enum FeedbackChannelType {
-  MsTeams
-  Slack
-  Web
+  MS_TEAMS
+  SLACK
+  WEB
 }
 
 enum LocationOrderField {
-  About
-  Name
-  Timezone
+  ABOUT
+  NAME
+  TIMEZONE
 }
 
 enum NotificationOrderField {
-  Date
-  Type
+  DATE
+  TYPE
 }
 
 enum NotificationType {
-  InvitationToJoinOrganization
-  InvitationToJoinTeam
+  INVITATION_TO_JOIN_ORGANIZATION
+  INVITATION_TO_JOIN_TEAM
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 enum OrganizationMemberOrderField {
-  FamilyName
-  GivenName
-  MiddleName
-  Name
-  PhoneNumber
-  Role
-  Status
+  FAMILY_NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  NAME
+  PHONE_NUMBER
+  ROLE
+  STATUS
 }
 
 enum OrganizationMemberRole {
-  Administrator
-  Member
-  Owner
+  ADMINISTRATOR
+  MEMBER
+  OWNER
 }
 
 enum OrganizationMemberStatus {
-  Active
-  Inactive
+  ACTIVE
+  INACTIVE
 }
 
 enum OrganizationMemberVisibilityPolicy {
-  FullAccess
-  LimitedAccess
+  FULL_ACCESS
+  LIMITED_ACCESS
 }
 
 enum OrganizationOrderField {
-  Name
+  NAME
 }
 
 enum OrganizationStripeConnectAccountOrderField {
-  Name
+  NAME
 }
 
 enum OrganizationTagOrderField {
-  Description
-  Name
-  Type
+  DESCRIPTION
+  NAME
+  TYPE
 }
 
 enum OrganizationType {
-  Marketplace
-  Private
+  MARKETPLACE
+  PRIVATE
 }
 
 enum PaymentStatus {
-  Expired
-  NoPaymentRequired
-  Paid
-  Pending
-  Unpaid
+  EXPIRED
+  NO_PAYMENT_REQUIRED
+  PAID
+  PENDING
+  UNPAID
 }
 
 enum PriceUnit {
-  PerHour
-  PerMinute
-  PerUse
+  PER_HOUR
+  PER_MINUTE
+  PER_USE
 }
 
 enum ProductOrderField {
-  Name
+  NAME
 }
 
 enum ResourceOrderField {
-  Name
+  NAME
 }
 
 enum TeamMemberOrderField {
-  FamilyName
-  GivenName
-  MiddleName
-  Name
-  PhoneNumber
-  Role
-  Status
+  FAMILY_NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  NAME
+  PHONE_NUMBER
+  ROLE
+  STATUS
 }
 
 enum TeamMemberRole {
-  Administrator
-  Member
-  Owner
+  ADMINISTRATOR
+  MEMBER
+  OWNER
 }
 
 enum TeamMemberStatus {
-  Active
-  Inactive
+  ACTIVE
+  INACTIVE
 }
 
 enum TeamOrderField {
-  About
-  Name
+  ABOUT
+  NAME
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

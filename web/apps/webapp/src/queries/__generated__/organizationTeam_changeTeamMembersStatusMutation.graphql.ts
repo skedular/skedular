@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96a9537ef1f15119f2d51df11a1c87a0>>
+ * @generated SignedSource<<562fcd370ce50f60eae00faa8efc8ccb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type TeamMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
-export type TeamMemberStatus = "Active" | "Inactive" | "%future added value";
+export type TeamMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
+export type TeamMemberStatus = "ACTIVE" | "INACTIVE" | "%future added value";
 export type ChangeTeamMembersStatusInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;

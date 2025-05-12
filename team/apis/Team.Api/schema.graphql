@@ -282,34 +282,34 @@ input UpdateTeamMembersInput {
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 enum TeamMemberOrderField {
-  Role
-  Status
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  PhoneNumber
+  ROLE
+  STATUS
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+  PHONE_NUMBER
 }
 
 enum TeamMemberRole {
-  Owner
-  Administrator
-  Member
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 enum TeamMemberStatus {
-  Active
-  Inactive
+  ACTIVE
+  INACTIVE
 }
 
 enum TeamOrderField {
-  Name
-  About
+  NAME
+  ABOUT
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

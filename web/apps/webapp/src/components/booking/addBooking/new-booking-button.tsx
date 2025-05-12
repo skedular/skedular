@@ -164,20 +164,20 @@ const NewBookingButtonWithRelay = ({
         customerExists: false,
         teamsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         organizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

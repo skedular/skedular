@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b901f8f5dc19f0c6ad0340b736eb390c>>
+ * @generated SignedSource<<5da0b0f54b46823d7a062a5a3d67ca4f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type UpdateBookingInput = {
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;

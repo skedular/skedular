@@ -148,8 +148,8 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
         teamIds: [],
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

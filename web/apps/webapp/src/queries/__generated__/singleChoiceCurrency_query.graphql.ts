@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b15bf87dfc85e754d8f413efab05ced>>
+ * @generated SignedSource<<500811c5715d20639cc06e0a43560214>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type Currency = "Nzd" | "Usd" | "%future added value";
+export type Currency = "NZD" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type singleChoiceCurrency_query$data = {
   readonly currencies: ReadonlyArray<{

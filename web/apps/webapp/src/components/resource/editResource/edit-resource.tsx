@@ -623,7 +623,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
                     <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
-                  {rootData.organization?.type.type === 'Marketplace' && (
+                  {rootData.organization?.type.type === 'MARKETPLACE' && (
                     <FormFieldLabel label="Product Tags">
                       <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
                     </FormFieldLabel>

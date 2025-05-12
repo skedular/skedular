@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aba914b6a280a877c5a42612228d7c76>>
+ * @generated SignedSource<<b39dc4c76a489cb4dd4c5c66d6d51b6c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
+export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type singleChoicePriceUnit_query$data = {
   readonly priceUnits: ReadonlyArray<{

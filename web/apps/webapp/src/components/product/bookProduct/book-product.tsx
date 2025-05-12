@@ -364,7 +364,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
       setDateTimeErrorMessage('');
 
-      if (rootData.product?.priceUnit.type === 'PerHour' && durationInMinutes % 60 !== 0) {
+      if (rootData.product?.priceUnit.type === 'PER_HOUR' && durationInMinutes % 60 !== 0) {
         setDateTimeErrorMessage('You can only book resources for a duration that is a multiple of hours for this product.');
 
         return invalidResult;
@@ -406,15 +406,15 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
     let price = 0.0;
     switch (product.priceUnit.type) {
-      case 'PerMinute':
+      case 'PER_MINUTE':
         price = parseFloat(product.price) * quantity * totalMinutes;
         break;
 
-      case 'PerHour':
+      case 'PER_HOUR':
         price = (parseFloat(product.price) / 60) * quantity * totalMinutes;
         break;
 
-      case 'PerUse':
+      case 'PER_USE':
         price = parseFloat(product.price) * quantity;
         break;
     }

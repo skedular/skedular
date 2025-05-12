@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e43340e3d0766666f08aa677a50ee9c>>
+ * @generated SignedSource<<0214cd550f41375f65d154af102a3ecf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,8 +63,8 @@ v1 = [
     "name": "orderBy",
     "value": [
       {
-        "direction": "Ascending",
-        "field": "Name"
+        "direction": "ASCENDING",
+        "field": "NAME"
       }
     ]
   },
@@ -326,16 +326,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "290e90dc5f8e5193e5b3ed231f5d0d9a",
+    "cacheID": "1764d4997f15e9d1f187352b858b242a",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        onboardingCompleted\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        onboardingCompleted\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f803e0ff8457c312a9840ed16f7651c2";
+(node as any).hash = "0d83ee3fc6a3b60ca239e98107073bc1";
 
 export default node;

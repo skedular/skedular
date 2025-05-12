@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0cddc76eea62d891cda486358c42e1b5>>
+ * @generated SignedSource<<873566f64febc8a6bff2478a15fbdd5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,8 +63,8 @@ v1 = [
     "name": "orderBy",
     "value": [
       {
-        "direction": "Ascending",
-        "field": "Name"
+        "direction": "ASCENDING",
+        "field": "NAME"
       }
     ]
   },
@@ -252,16 +252,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "be8db1165cb16547d100bf3f05b8de6f",
+    "cacheID": "830400e6eabac38fcf5e5b585d579b87",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_locationTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_locationTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationMarketplaceSetup_locationTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_locationTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationMarketplaceSetup_locationTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "afc58f1f3ece4ce2f642a5eef8ec5408";
+(node as any).hash = "6637dec23a6c3ccb0b4c6f458b1d51f8";
 
 export default node;

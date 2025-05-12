@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fc624227920f4bcc14633c769ec7463>>
+ * @generated SignedSource<<b807aa12a9538f505a2a83e3f127b36c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -90,8 +90,8 @@ return {
           "name": "orderBy",
           "value": [
             {
-              "direction": "Ascending",
-              "field": "Name"
+              "direction": "ASCENDING",
+              "field": "NAME"
             }
           ]
         },
@@ -234,6 +234,6 @@ return {
 };
 })();
 
-(node as any).hash = "17c8862bc8d71a448cccd249869f954e";
+(node as any).hash = "b0e9c87d3cb5b80aab53fd623a24e5ba";
 
 export default node;

@@ -253,26 +253,26 @@ input UpdateMyCustomerDetailsInput {
 }
 
 enum CustomerOrderField {
-  Designation
-  Title
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  Timezone
-  Locale
-  PhoneNumber
+  DESIGNATION
+  TITLE
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+  TIMEZONE
+  LOCALE
+  PHONE_NUMBER
 }
 
 enum FeedbackChannelType {
-  Web
-  Slack
-  MsTeams
+  WEB
+  SLACK
+  MS_TEAMS
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

@@ -113,7 +113,7 @@ const OrganizationMarketplaceSetup = ({
           first: $count
           after: $cursor
           where: { organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true }
-          orderBy: [{ direction: Ascending, field: Name }]
+          orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_products") {
           __id
           totalCount
@@ -157,7 +157,7 @@ const OrganizationMarketplaceSetup = ({
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $productTagNameSearchText }
-          orderBy: [{ direction: Ascending, field: Name }]
+          orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_productTags") {
           __id
           totalCount
@@ -187,7 +187,7 @@ const OrganizationMarketplaceSetup = ({
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $locationTagNameSearchText }
-          orderBy: [{ direction: Ascending, field: Name }]
+          orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_locationTags") {
           __id
           totalCount
@@ -217,7 +217,7 @@ const OrganizationMarketplaceSetup = ({
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText }
-          orderBy: [{ direction: Ascending, field: Name }]
+          orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_organizationStripeConnectAccounts") {
           __id
           totalCount
@@ -1119,7 +1119,7 @@ const OrganizationMarketplaceSetup = ({
 
   const productColumns: GridColDef<(typeof productRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
@@ -1246,7 +1246,7 @@ const OrganizationMarketplaceSetup = ({
 
   const productTagColumns: GridColDef<(typeof productTagRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1298,7 +1298,7 @@ const OrganizationMarketplaceSetup = ({
 
   const locationTagColumns: GridColDef<(typeof locationTagRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1358,7 +1358,7 @@ const OrganizationMarketplaceSetup = ({
 
   const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,

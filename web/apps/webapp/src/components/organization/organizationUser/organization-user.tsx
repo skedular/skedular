@@ -291,7 +291,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
         input: {
           clientMutationId: nanoid(),
           ids: [member.id],
-          status: 'Inactive',
+          status: 'INACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -330,7 +330,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
         input: {
           clientMutationId: nanoid(),
           ids: [member.id],
-          status: 'Active',
+          status: 'ACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -547,12 +547,12 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
 
           {member && (
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              {member.status === 'Active' && (
+              {member.status === 'ACTIVE' && (
                 <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
                   Deactivate User
                 </Button>
               )}
-              {member.status === 'Inactive' && (
+              {member.status === 'INACTIVE' && (
                 <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
                   Activate User
                 </Button>

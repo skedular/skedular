@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00fcfbe1742e0db25dbd91c8fb8ff3d9>>
+ * @generated SignedSource<<7503de4afcc86ea192b6de542f0fee4d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingType = "AnnualLeave" | "ClientOffice" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellbeingLeave" | "WorkingFromCoworkingSpace" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
+export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookings_bookings_query$data = {
   readonly bookings: {
@@ -176,8 +176,8 @@ return {
           "name": "orderBy",
           "value": [
             {
-              "direction": "Ascending",
-              "field": "From"
+              "direction": "ASCENDING",
+              "field": "FROM"
             }
           ]
         },
@@ -477,6 +477,6 @@ return {
 };
 })();
 
-(node as any).hash = "1792c13de753f81706ab94081a505488";
+(node as any).hash = "b7509e093de775e50412151663615cd2";
 
 export default node;

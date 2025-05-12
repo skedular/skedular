@@ -308,8 +308,8 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel,
         organizationExists: !!organizationId,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

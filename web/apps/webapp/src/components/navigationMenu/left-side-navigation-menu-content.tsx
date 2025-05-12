@@ -306,7 +306,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </ListItem>
           )}
 
-          {rootData.organization.type.type === 'Marketplace' && (
+          {rootData.organization.type.type === 'MARKETPLACE' && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationMarketplaceBaseLink}>
                 <ListItemButton
@@ -332,7 +332,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </ListItem>
           )}
 
-          {rootData.organization.canModify && rootData.organization.type.type === 'Marketplace' && (
+          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationMarketplaceSetupBaseLink}>
                 <ListItemButton

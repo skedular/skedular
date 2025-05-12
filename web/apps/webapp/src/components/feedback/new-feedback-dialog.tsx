@@ -1,7 +1,7 @@
 import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
-import { PaletteModeContext } from '@/libs/providers';
+import { InMsTeamsContext, PaletteModeContext } from '@/libs/providers';
 import { getCustomerShortName, joinErrors } from '@/libs/utils';
 import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
@@ -58,6 +58,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
+  const inMsTeams = useContext(InMsTeamsContext);
 
   const handleSubmitFeedbackClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
     const id = nanoid();
@@ -69,7 +70,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           clientMutationId: nanoid(),
           id,
           feedbackContent,
-          channel: 'MsTeams',
+          channel: inMsTeams ? 'MS_TEAMS' : 'WEB',
         },
       },
       onCompleted: (_, errors) => {

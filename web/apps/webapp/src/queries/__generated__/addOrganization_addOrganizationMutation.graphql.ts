@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a692a065f00e1bd9571614453101b46e>>
+ * @generated SignedSource<<16d854065129e9e97782c9049c29b3df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FullAccess" | "LimitedAccess" | "%future added value";
-export type OrganizationType = "Marketplace" | "Private" | "%future added value";
+export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
+export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddOrganizationInput = {
   about?: string | null | undefined;
   agreedToTermsOfUse: boolean;

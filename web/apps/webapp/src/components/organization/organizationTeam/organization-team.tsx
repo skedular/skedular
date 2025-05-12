@@ -381,7 +381,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             .values()
             .map((id) => id as string)
             .toArray(),
-          status: 'Inactive',
+          status: 'INACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -420,7 +420,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             .values()
             .map((id) => id as string)
             .toArray(),
-          status: 'Active',
+          status: 'ACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -515,7 +515,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         input: {
           clientMutationId: nanoid(),
           ids: [memberDetails.id],
-          status: 'Inactive',
+          status: 'INACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -555,7 +555,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         input: {
           clientMutationId: nanoid(),
           ids: [memberDetails.id],
-          status: 'Active',
+          status: 'ACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -728,7 +728,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
     role: member.role,
-    status: member.status === 'Active',
+    status: member.status === 'ACTIVE',
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -741,7 +741,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       maxWidth: 20,
     },
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,

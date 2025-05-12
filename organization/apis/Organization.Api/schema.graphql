@@ -593,49 +593,49 @@ input ZoneOrganizationTagWhereInput {
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 enum OrganizationMemberOrderField {
-  Role
-  Status
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  PhoneNumber
+  ROLE
+  STATUS
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+  PHONE_NUMBER
 }
 
 enum OrganizationMemberRole {
-  Owner
-  Administrator
-  Member
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 enum OrganizationMemberStatus {
-  Active
-  Inactive
+  ACTIVE
+  INACTIVE
 }
 
 enum OrganizationMemberVisibilityPolicy {
-  FullAccess
-  LimitedAccess
+  FULL_ACCESS
+  LIMITED_ACCESS
 }
 
 enum OrganizationOrderField {
-  Name
+  NAME
 }
 
 enum OrganizationTagOrderField {
-  Name
-  Description
-  Type
+  NAME
+  DESCRIPTION
+  TYPE
 }
 
 enum OrganizationType {
-  Private
-  Marketplace
+  PRIVATE
+  MARKETPLACE
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

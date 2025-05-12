@@ -109,14 +109,14 @@ const RootPageWithRelay = () => {
         productId: finalProductId,
         multipleChoicesProductTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesLocationTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

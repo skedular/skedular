@@ -282,7 +282,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
             .values()
             .map((id) => id as string)
             .toArray(),
-          status: 'Inactive',
+          status: 'INACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -321,7 +321,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
             .values()
             .map((id) => id as string)
             .toArray(),
-          status: 'Active',
+          status: 'ACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -434,7 +434,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         input: {
           clientMutationId: nanoid(),
           ids: [memberDetails.id],
-          status: 'Inactive',
+          status: 'INACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -474,7 +474,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         input: {
           clientMutationId: nanoid(),
           ids: [memberDetails.id],
-          status: 'Active',
+          status: 'ACTIVE',
         },
       },
       onCompleted: (_, errors) => {
@@ -605,7 +605,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
     role: member.role,
-    status: member.status === 'Active',
+    status: member.status === 'ACTIVE',
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -618,7 +618,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       maxWidth: 20,
     },
     {
-      field: 'name',
+      field: 'NAME',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47c5e8ead0cff53806f7ee0e48017f91>>
+ * @generated SignedSource<<d50693ce5f08868f70b32142a5822f69>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,8 +63,8 @@ v1 = [
     "name": "orderBy",
     "value": [
       {
-        "direction": "Ascending",
-        "field": "Name"
+        "direction": "ASCENDING",
+        "field": "NAME"
       }
     ]
   },
@@ -252,16 +252,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "95108f0cd4af33c7943ab237d73b79c5",
+    "cacheID": "40e256e6985c65465c89b4973e20265f",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_customTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "17c8862bc8d71a448cccd249869f954e";
+(node as any).hash = "b0e9c87d3cb5b80aab53fd623a24e5ba";
 
 export default node;

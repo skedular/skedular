@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70be2a8511e36aff89ebd77b9a8903af>>
+ * @generated SignedSource<<1b850f314d874c43bda38944aedc9a94>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,11 +10,11 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationOrderField = "About" | "Name" | "Timezone" | "%future added value";
-export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "PhoneNumber" | "Role" | "Status" | "%future added value";
-export type PaymentStatus = "Expired" | "NoPaymentRequired" | "Paid" | "Pending" | "Unpaid" | "%future added value";
-export type TeamOrderField = "About" | "Name" | "%future added value";
+export type LocationOrderField = "ABOUT" | "NAME" | "TIMEZONE" | "%future added value";
+export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
+export type OrganizationMemberOrderField = "FAMILY_NAME" | "GIVEN_NAME" | "MIDDLE_NAME" | "NAME" | "PHONE_NUMBER" | "ROLE" | "STATUS" | "%future added value";
+export type PaymentStatus = "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PAID" | "PENDING" | "UNPAID" | "%future added value";
+export type TeamOrderField = "ABOUT" | "NAME" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;

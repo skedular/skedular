@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<064569bdb809f15beddde2d66df16440>>
+ * @generated SignedSource<<65b3ec1779c89e9b974d1d5628fa74a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type NotificationOrderField = "Date" | "Type" | "%future added value";
-export type NotificationType = "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
-export type OrderDirection = "Ascending" | "Descending" | "%future added value";
+export type NotificationOrderField = "DATE" | "TYPE" | "%future added value";
+export type NotificationType = "INVITATION_TO_JOIN_ORGANIZATION" | "INVITATION_TO_JOIN_TEAM" | "%future added value";
+export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
 export type NotificationOrderInput = {
   direction: OrderDirection;
   field: NotificationOrderField;

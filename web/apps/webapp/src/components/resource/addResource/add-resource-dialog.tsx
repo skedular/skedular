@@ -278,7 +278,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
                 <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
               </FormFieldLabel>
 
-              {rootData.organization?.type.type === 'Marketplace' && (
+              {rootData.organization?.type.type === 'MARKETPLACE' && (
                 <FormFieldLabel label="Product Tags" useWiderSpace>
                   <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
                 </FormFieldLabel>
@@ -324,26 +324,26 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
         organizationId,
         multipleChoicesCustomTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesZonesSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesProductTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

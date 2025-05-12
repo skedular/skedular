@@ -169,14 +169,14 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         customerIds: customerId ? [customerId] : [],
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         organizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

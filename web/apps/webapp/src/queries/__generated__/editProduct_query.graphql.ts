@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<913460c12178d553c3c8f0cfb1b57381>>
+ * @generated SignedSource<<aa2561ce75b25699e9c4ab57897af96c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type Currency = "Nzd" | "Usd" | "%future added value";
-export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
+export type Currency = "NZD" | "USD" | "%future added value";
+export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
   readonly openingHoursMinutesStep: number;

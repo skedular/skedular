@@ -541,14 +541,14 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
         organizationId: finalOrganizationId,
         multipleChoicesProductTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         multipleChoicesLocationTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

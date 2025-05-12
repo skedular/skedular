@@ -276,56 +276,56 @@ input UpdateBookingInput {
 }
 
 enum BookingOrderField {
-  From
-  To
-  Notes
-  Type
-  Status
+  FROM
+  TO
+  NOTES
+  TYPE
+  STATUS
 }
 
 enum BookingStatus {
-  Pending
-  Rejected
-  Confirmed
-  PaymentExpired
-  PaymentRecordNeverCreated
+  PENDING
+  REJECTED
+  CONFIRMED
+  PAYMENT_EXPIRED
+  PAYMENT_RECORD_NEVER_CREATED
 }
 
 enum BookingType {
-  WorkingFromHome
-  WorkingFromOffice
-  WorkingFromCoworkingSpace
-  SickLeave
-  AnnualLeave
-  WellbeingLeave
-  ClientOffice
-  Vacation
-  TravelingForWork
-  NonWorkingDay
+  WORKING_FROM_HOME
+  WORKING_FROM_OFFICE
+  WORKING_FROM_COWORKING_SPACE
+  SICK_LEAVE
+  ANNUAL_LEAVE
+  WELLBEING_LEAVE
+  CLIENT_OFFICE
+  VACATION
+  TRAVELING_FOR_WORK
+  NON_WORKING_DAY
 }
 
 enum Currency {
-  Nzd
-  Usd
+  NZD
+  USD
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 enum PaymentStatus {
-  NoPaymentRequired
-  Pending
-  Paid
-  Unpaid
-  Expired
+  NO_PAYMENT_REQUIRED
+  PENDING
+  PAID
+  UNPAID
+  EXPIRED
 }
 
 enum PriceUnit {
-  PerMinute
-  PerHour
-  PerUse
+  PER_MINUTE
+  PER_HOUR
+  PER_USE
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

@@ -85,8 +85,8 @@ const RootPageWithRelay = () => {
         organizationId: finalOrganizationId,
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

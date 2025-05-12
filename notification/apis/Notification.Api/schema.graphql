@@ -88,18 +88,18 @@ input NotificationOrderInput {
 }
 
 enum NotificationOrderField {
-  Date
-  Type
+  DATE
+  TYPE
 }
 
 enum NotificationType {
-  InvitationToJoinOrganization
-  InvitationToJoinTeam
+  INVITATION_TO_JOIN_ORGANIZATION
+  INVITATION_TO_JOIN_TEAM
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+  ASCENDING
+  DESCENDING
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

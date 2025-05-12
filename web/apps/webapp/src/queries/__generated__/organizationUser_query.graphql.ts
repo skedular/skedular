@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76eba35071f0e573c2954ee1d551af70>>
+ * @generated SignedSource<<508d48aa912eac834f0fd6c9e229310e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
-export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
+export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
+export type OrganizationMemberStatus = "ACTIVE" | "INACTIVE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationUser_query$data = {
   readonly customer: {

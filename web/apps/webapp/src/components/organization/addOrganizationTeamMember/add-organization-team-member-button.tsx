@@ -97,8 +97,8 @@ const AddOrganizationTeamMemberButtonWithRelay = ({ organizationId, onReloadRequ
         organizationId,
         addTeamMemberDialogOrganizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

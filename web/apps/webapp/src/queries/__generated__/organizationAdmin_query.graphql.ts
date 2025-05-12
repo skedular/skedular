@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d88befe66489320a04a7bd7671250631>>
+ * @generated SignedSource<<a54589cb7505cc37971b934fc4ea7eed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FullAccess" | "LimitedAccess" | "%future added value";
-export type OrganizationType = "Marketplace" | "Private" | "%future added value";
+export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
+export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly me: {

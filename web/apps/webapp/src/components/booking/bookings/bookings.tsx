@@ -124,7 +124,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
           }
-          orderBy: [{ field: From, direction: Ascending }]
+          orderBy: [{ field: FROM, direction: ASCENDING }]
         ) @connection(key: "bookings_bookings") {
           __id
           totalCount

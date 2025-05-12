@@ -1382,7 +1382,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                       <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                     </FormFieldLabel>
 
-                    {rootData.organization?.type.type === 'Marketplace' && (
+                    {rootData.organization?.type.type === 'MARKETPLACE' && (
                       <FormFieldLabel label="Location Tags">
                         <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                       </FormFieldLabel>

@@ -296,7 +296,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                     <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                   </FormFieldLabel>
 
-                  {rootData.organization?.type.type === 'Marketplace' && (
+                  {rootData.organization?.type.type === 'MARKETPLACE' && (
                     <FormFieldLabel label="Location Tags">
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                     </FormFieldLabel>
@@ -390,8 +390,8 @@ const AddLocationWithRelay = ({ onReloadRequired, organizationId, onAdded, onCan
         organizationId,
         multipleChoicesLocationTagsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },

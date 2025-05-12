@@ -71,7 +71,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId 
       return true;
     }
 
-    return rootData.booking.isPaymentRequired && rootData.booking.bookingCheckoutSession && rootData.booking.bookingCheckoutSession.paymentStatus === 'Pending';
+    return rootData.booking.isPaymentRequired && rootData.booking.bookingCheckoutSession && rootData.booking.bookingCheckoutSession.paymentStatus === 'PENDING';
   }, [rootData.booking]);
 
   const handleBackClick = () => {
@@ -171,8 +171,8 @@ const RootPageWithRelay = () => {
         bookingId: finalBookingId,
         organizationMembersSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         locationId: '',
@@ -182,14 +182,14 @@ const RootPageWithRelay = () => {
         customerExists: false,
         teamsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
         locationsSortingValues: [
           {
-            direction: 'Ascending',
-            field: 'Name',
+            direction: 'ASCENDING',
+            field: 'NAME',
           },
         ],
       },
