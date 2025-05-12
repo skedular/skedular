@@ -134,7 +134,7 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -237,7 +237,7 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -343,7 +343,7 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -477,7 +477,7 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -580,7 +580,7 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -686,7 +686,7 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__billingb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
+      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
