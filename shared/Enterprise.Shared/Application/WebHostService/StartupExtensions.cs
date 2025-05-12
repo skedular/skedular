@@ -113,7 +113,7 @@ public static class StartupExtensions
         services.AddHttpContextAccessor();
 
         services
-            .AddKafka()
+            .AddKafka(configuration)
             .AddRedis(configuration, "RedisConnection")
             .AddMemoryCache()
             .AddSecurity(configuration)

@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Events;
 using Confluent.Kafka;
+using Confluent.SchemaRegistry;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Hosting;
 using Enterprise.Shared.Kafka.Configurations;
@@ -8,6 +9,7 @@ using Enterprise.Shared.Kafka.Logger;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Kafka.Serialization;
 using Enterprise.Shared.Kafka.Telemetry;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -19,8 +21,26 @@ public static class ServiceCollectionExtensions
 {
     private const int DelayBaseSeconds = 10;
 
-    public static IServiceCollection AddKafka(this IServiceCollection services, bool useTelemetry = true)
+    public static IServiceCollection AddKafka(this IServiceCollection services, IConfiguration configuration, bool useTelemetry = true)
     {
+        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
+        if (kafkaConfiguration is null)
+        {
+            return services;
+        }
+
+        var bootstrapServers = configuration.GetConnectionString("kafka");
+        if (!string.IsNullOrWhiteSpace(bootstrapServers))
+        {
+            kafkaConfiguration.BootstrapServers = bootstrapServers;
+        }
+
+        services.AddSingleton(kafkaConfiguration);
+        if (kafkaConfiguration.SchemaRegistry is not null)
+        {
+            services.AddSingleton(new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url });
+        }
+
         services
             .AddSingleton<IKafkaHelper, KafkaHelper>()
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
