@@ -22,8 +22,14 @@ public static class ServiceExtensions
         string connectionName)
         where TDbContext : DbContext
     {
+        var connectionString = configuration.GetConnectionString(connectionName);
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            return services;
+        }
+
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, configuration, true, connectionName);
+        var dataSource = GetDatasource(services, true, connectionString);
 
         return services.AddPooledDbContextFactory<TDbContext>(options =>
         {
@@ -52,8 +58,14 @@ public static class ServiceExtensions
         string connectionName)
         where TDbContext : DbContext
     {
+        var connectionString = configuration.GetConnectionString(connectionName);
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            return services;
+        }
+
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, configuration, false, connectionName);
+        var dataSource = GetDatasource(services, false, connectionString);
 
         return services.AddDbContextFactory<TDbContext>(options =>
         {
@@ -77,29 +89,25 @@ public static class ServiceExtensions
     public static IServiceCollection WithQuartzNpgsqlDbProvider(this IServiceCollection services, NpgsqlDataSource dataSource) =>
         services.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(dataSource));
 
-    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, string name)
+    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, string connectionName)
     {
-        var connectionString = configuration.GetConnectionString(name);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+        var connectionString = configuration.GetConnectionString(connectionName);
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            return services;
+        }
 
         return services
             .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
             .AddScoped<IDistributedCache, DistributedCache>();
     }
 
-    private static NpgsqlDataSource GetDatasource(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        bool isPooled,
-        string connectionName)
+    private static NpgsqlDataSource GetDatasource(this IServiceCollection services, bool isPooled, string connectionString)
     {
         services
             .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled })
             .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
             .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
-
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var dataSource = connectionString.BuildDataSource();
 
