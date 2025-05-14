@@ -132,6 +132,13 @@ public class PaymentController(
                 case EventTypes.AccountExternalAccountCreated:
                 case EventTypes.AccountExternalAccountDeleted:
                 case EventTypes.AccountExternalAccountUpdated:
+                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
+                        stripeEvent.Account,
+                        json,
+                        cancellationToken);
+
+                    break;
+
                 case EventTypes.AccountUpdated:
                     {
                         var stripeAccount = stripeEvent.Data.Object as Account;

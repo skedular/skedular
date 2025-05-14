@@ -99,22 +99,15 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
 
     private void HandleAccountExternalAccountCreated(Stripe.Event stripeEvent)
     {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
     }
 
 
     private void HandleAccountExternalAccountDeleted(Stripe.Event stripeEvent)
     {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
     }
-
 
     private void HandleAccountExternalAccountUpdated(Stripe.Event stripeEvent)
     {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
     }
 
     private async Task HandleAccountUpdatedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
