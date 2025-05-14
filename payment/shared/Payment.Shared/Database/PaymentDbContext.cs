@@ -22,6 +22,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<ProductVersion> ProductVersion { get; set; }
     public DbSet<StripeCheckoutSession> StripeCheckoutSession { get; set; }
     public DbSet<StripeConnectAccount> StripeConnectAccount { get; set; }
+    public DbSet<StripeConnectAccountAuthorization> StripeConnectAccountAuthorization { get; set; }
     public DbSet<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCode { get; set; }
     public DbSet<StripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
     public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }

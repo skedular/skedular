@@ -406,11 +406,11 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             DetailsSubmitted = src.DetailsSubmitted,
-            ApplicationAuthorized = src.ApplicationAuthorized,
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization),
+            StripeConnectAccountAuthorization = MapTo(src.StripeConnectAccountAuthorization)
         };
 
     public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
@@ -584,4 +584,12 @@ public class Mapper : IMapper
             Currency = src.Currency.ToCurrency(),
             Product = product
         };
+
+    private static Shared.Models.StripeConnectAccountAuthorization? MapTo(StripeConnectAccountAuthorization? src) =>
+        src is null
+            ? null
+            : new Shared.Models.StripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
 }

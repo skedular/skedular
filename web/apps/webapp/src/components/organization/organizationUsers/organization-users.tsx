@@ -618,7 +618,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       maxWidth: 20,
     },
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,

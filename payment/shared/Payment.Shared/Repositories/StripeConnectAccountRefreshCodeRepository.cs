@@ -1,37 +1,34 @@
 using Enterprise.Shared.Database;
-using Microsoft.EntityFrameworkCore;
 using Payment.Shared.Database;
 using Payment.Shared.Database.Entities;
 
 namespace Payment.Shared.Repositories;
 
-public interface IStripeConnectAccountRefreshCodeRepository : IRepository<StripeConnectAccountRefreshCode>
+public interface IStripeConnectAccountAuthorizationRepository : IRepository<StripeConnectAccountAuthorization>
 {
-    Task<StripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken);
-    StripeConnectAccountRefreshCode Add(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode);
-    StripeConnectAccountRefreshCode Remove(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode);
+    StripeConnectAccountAuthorization Add(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode);
+    void Update(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode);
+    void Remove(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode);
 }
 
-public class StripeConnectAccountRefreshCodeRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<PaymentDbContext, StripeConnectAccountRefreshCode>(dbContext, timeProvider),
-        IStripeConnectAccountRefreshCodeRepository
+public class StripeConnectAccountAuthorizationRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<PaymentDbContext, StripeConnectAccountAuthorization>(dbContext, timeProvider),
+        IStripeConnectAccountAuthorizationRepository
 {
-    public async Task<StripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken) =>
-        await DbContext.StripeConnectAccountRefreshCode
-            .Include(query => query.StripeConnectAccount)
-            .FirstOrDefaultAsync(query => query.Code == code, cancellationToken);
-
-    public StripeConnectAccountRefreshCode Add(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode)
+    public StripeConnectAccountAuthorization Add(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode)
     {
         var now = TimeProvider.GetUtcNow();
         stripeConnectAccountRefreshCode.CreatedAt = now;
-        return DbContext.StripeConnectAccountRefreshCode.Add(stripeConnectAccountRefreshCode).Entity;
+        return DbContext.StripeConnectAccountAuthorization.Add(stripeConnectAccountRefreshCode).Entity;
     }
 
-    public StripeConnectAccountRefreshCode Remove(StripeConnectAccountRefreshCode stripeConnectAccountRefreshCode)
+    public void Update(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode)
     {
         var now = TimeProvider.GetUtcNow();
-        stripeConnectAccountRefreshCode.DeletedAt = now;
-        return DbContext.StripeConnectAccountRefreshCode.Update(stripeConnectAccountRefreshCode).Entity;
+        stripeConnectAccountRefreshCode.ModifiedAt = now;
+        DbContext.StripeConnectAccountAuthorization.Update(stripeConnectAccountRefreshCode);
     }
+
+    public void Remove(StripeConnectAccountAuthorization stripeConnectAccountRefreshCode) =>
+        DbContext.StripeConnectAccountAuthorization.Remove(stripeConnectAccountRefreshCode);
 }

@@ -34,6 +34,7 @@ internal static class OrganizationStripeConnectAccountExtensions
     internal static IIncludableQueryable<StripeConnectAccount, Customer> AddDependentObjects(
         this IQueryable<StripeConnectAccount> originalQuery) =>
         originalQuery
+            .Include(query => query.StripeConnectAccountAuthorization)
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer);
@@ -53,8 +54,12 @@ internal static class OrganizationStripeConnectAccountExtensions
         if (searchCriteria.OnboardingCompleted is not null)
         {
             query = searchCriteria.OnboardingCompleted.Value
-                ? query.Where(item => item.DetailsSubmitted && item.ApplicationAuthorized && item.ChargesEnabled && item.PayoutsEnabled)
-                : query.Where(item => !item.DetailsSubmitted || !item.ApplicationAuthorized || !item.ChargesEnabled || !item.PayoutsEnabled);
+                ? query.Where(item =>
+                    item.DetailsSubmitted && item.StripeConnectAccountAuthorization != null && item.StripeConnectAccountAuthorization.IsAuthorized &&
+                    item.ChargesEnabled && item.PayoutsEnabled)
+                : query.Where(item =>
+                    !item.DetailsSubmitted || item.StripeConnectAccountAuthorization == null ||
+                    !item.StripeConnectAccountAuthorization.IsAuthorized || !item.ChargesEnabled || !item.PayoutsEnabled);
         }
 
         return query;

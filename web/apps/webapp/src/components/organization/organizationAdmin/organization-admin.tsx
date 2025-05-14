@@ -1503,7 +1503,7 @@ const OrganizationAdmin = ({
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1578,7 +1578,7 @@ const OrganizationAdmin = ({
 
   const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {

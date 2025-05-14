@@ -23,7 +23,6 @@ public class StripeConnectAccount : EntityBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool DetailsSubmitted { get; set; }
-    public bool ApplicationAuthorized { get; set; }
     public string CapabilitiesCardPayments { get; set; }
     public string CapabilitiesTransfers { get; set; }
     public string OnboardingUrl { get; set; }
@@ -31,6 +30,7 @@ public class StripeConnectAccount : EntityBaseWithDeleted
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCodes { get; set; } = [];
     public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public virtual StripeConnectAccountAuthorization? StripeConnectAccountAuthorization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -54,7 +54,6 @@ public class StripeConnectAccountConfiguration : IEntityTypeConfiguration<Stripe
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.DetailsSubmitted).HasDefaultValue(false);
-        builder.Property(item => item.ApplicationAuthorized).HasDefaultValue(false);
         builder.Property(item => item.CapabilitiesCardPayments).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
         builder.Property(item => item.CapabilitiesTransfers).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
         builder.Property(item => item.OnboardingUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -67,7 +66,6 @@ public class StripeConnectAccountConfiguration : IEntityTypeConfiguration<Stripe
         builder.HasIndex(item => item.Country);
         builder.HasIndex(item => item.DefaultCurrency);
         builder.HasIndex(item => item.DetailsSubmitted);
-        builder.HasIndex(item => item.ApplicationAuthorized);
         builder.HasIndex(item => item.CapabilitiesTransfers);
         builder.HasIndex(item => item.CapabilitiesCardPayments);
     }

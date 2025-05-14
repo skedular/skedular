@@ -1,7 +1,9 @@
 ﻿using Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;
+using Payment.Shared.Database.Entities;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Stripe;
@@ -11,7 +13,11 @@ using Type = Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 
-public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMapper mapper, IPaymentPublisher paymentPublisher)
+public class PaymentInternalSubscriber(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IPaymentPublisher paymentPublisher,
+    IRandomHelper randomHelper)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -75,7 +81,17 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
             return;
         }
 
-        account.ApplicationAuthorized = true;
+        if (account.StripeConnectAccountAuthorization is null)
+        {
+            account.StripeConnectAccountAuthorization = repositoryFactory.StripeConnectAccountAuthorizationRepository.Add(
+                new StripeConnectAccountAuthorization { Id = randomHelper.Generate(), IsAuthorized = true });
+        }
+        else
+        {
+            account.StripeConnectAccountAuthorization.IsAuthorized = true;
+            repositoryFactory.StripeConnectAccountAuthorizationRepository.Update(account.StripeConnectAccountAuthorization);
+        }
+
         account = repositoryFactory.StripeConnectAccountRepository.Update(account);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -90,7 +106,17 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
             return;
         }
 
-        account.ApplicationAuthorized = false;
+        if (account.StripeConnectAccountAuthorization is null)
+        {
+            account.StripeConnectAccountAuthorization = repositoryFactory.StripeConnectAccountAuthorizationRepository.Add(
+                new StripeConnectAccountAuthorization { Id = randomHelper.Generate(), IsAuthorized = false });
+        }
+        else
+        {
+            account.StripeConnectAccountAuthorization.IsAuthorized = false;
+            repositoryFactory.StripeConnectAccountAuthorizationRepository.Update(account.StripeConnectAccountAuthorization);
+        }
+
         account = repositoryFactory.StripeConnectAccountRepository.Remove(account);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

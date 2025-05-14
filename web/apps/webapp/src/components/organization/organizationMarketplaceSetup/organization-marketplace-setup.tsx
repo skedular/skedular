@@ -1119,7 +1119,7 @@ const OrganizationMarketplaceSetup = ({
 
   const productColumns: GridColDef<(typeof productRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
@@ -1246,7 +1246,7 @@ const OrganizationMarketplaceSetup = ({
 
   const productTagColumns: GridColDef<(typeof productTagRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1298,7 +1298,7 @@ const OrganizationMarketplaceSetup = ({
 
   const locationTagColumns: GridColDef<(typeof locationTagRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => {
@@ -1358,7 +1358,7 @@ const OrganizationMarketplaceSetup = ({
 
   const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
     {
-      field: 'NAME',
+      field: 'name',
       headerName: 'Name',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,

@@ -2,13 +2,13 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Payment.Api.GraphQL;
+using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using PaymentMethod = Payment.Api.GraphQL.PaymentMethod;
 using StripeConnectAccount = Payment.Shared.Database.Entities.StripeConnectAccount;
-using StripeCustomer = Payment.Shared.Models.StripeCustomer;
 using StripePaymentMethod = Payment.Shared.Models.StripePaymentMethod;
 
 namespace Payment.Api.Mappers;
@@ -146,11 +146,11 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             DetailsSubmitted = src.DetailsSubmitted,
-            ApplicationAuthorized = src.ApplicationAuthorized,
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = MapTo(src.Organization!)
+            Organization = MapTo(src.Organization!),
+            StripeConnectAccountAuthorization = MapTo(src.StripeConnectAccountAuthorization)
         };
 
     public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.StripeConnectAccount? src) =>
@@ -242,8 +242,11 @@ public class Mapper : IMapper
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
-    private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src) =>
+    private static StripeConnectAccountAuthorization? MapTo(Shared.Database.Entities.StripeConnectAccountAuthorization? src) =>
         src is null
             ? null
-            : new StripeCustomer { CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Id = src.Id, StripeCustomerId = src.StripeCustomerId };
+            : new StripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
 }

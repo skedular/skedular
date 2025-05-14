@@ -18,13 +18,15 @@ public class StripeConnectAccount : ModelBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool DetailsSubmitted { get; set; }
-    public bool ApplicationAuthorized { get; set; }
     public string CapabilitiesTransfers { get; set; } = string.Empty;
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
     public string OnboardingUrl { get; set; } = string.Empty;
-    public bool OnboardingCompleted => DetailsSubmitted && ApplicationAuthorized && ChargesEnabled && PayoutsEnabled;
+
+    public bool OnboardingCompleted => DetailsSubmitted && StripeConnectAccountAuthorization is not null &&
+                                       StripeConnectAccountAuthorization.IsAuthorized && ChargesEnabled && PayoutsEnabled;
 
     public Organization? Organization { get; set; }
     public ICollection<StripeConnectAccountRefreshCode> StripeConnectAccountRefreshCodes { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public StripeConnectAccountAuthorization? StripeConnectAccountAuthorization { get; set; }
 }

@@ -41,6 +41,7 @@ public static class Extensions
             .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>()
             .AddScoped<IStripeConnectAccountRefreshCodeRepository, StripeConnectAccountRefreshCodeRepository>()
             .AddScoped<IStripeConnectAccountRepository, StripeConnectAccountRepository>()
+            .AddScoped<IStripeConnectAccountAuthorizationRepository, StripeConnectAccountAuthorizationRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
             .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()
             .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>()

@@ -21,6 +21,7 @@ public interface IRepositoryFactory
     IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
+    IStripeConnectAccountAuthorizationRepository StripeConnectAccountAuthorizationRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
     IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
@@ -49,6 +50,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(DbContext, timeProvider);
         StripeConnectAccountRefreshCodeRepository = new StripeConnectAccountRefreshCodeRepository(DbContext, timeProvider);
         StripeConnectAccountRepository = new StripeConnectAccountRepository(DbContext, timeProvider);
+        StripeConnectAccountAuthorizationRepository = new StripeConnectAccountAuthorizationRepository(DbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(DbContext, timeProvider);
         StripePaymentIntentRepository = new StripePaymentIntentRepository(DbContext, timeProvider);
         StripePaymentMethodRepository = new StripePaymentMethodRepository(DbContext, timeProvider);
@@ -78,6 +80,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     public IStripeConnectAccountRefreshCodeRepository StripeConnectAccountRefreshCodeRepository { get; }
     public IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
+    public IStripeConnectAccountAuthorizationRepository StripeConnectAccountAuthorizationRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }
     public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
