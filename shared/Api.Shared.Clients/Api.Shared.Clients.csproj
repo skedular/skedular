@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.30.2"/>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
+        <PackageReference Include="Google.Protobuf" Version="3.31.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
-        <PackageReference Include="System.Text.Json" Version="9.0.4"/>
+        <PackageReference Include="System.Text.Json" Version="9.0.5"/>
     </ItemGroup>
 
     <ItemGroup>

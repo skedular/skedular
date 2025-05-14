@@ -10,24 +10,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj"/>
-        <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj"/>
-        <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj"/>
-        <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj"/>
-        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj"/>
-        <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>
-        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj"/>
-        <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj"/>
-        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj"/>
-        <ProjectReference Include="..\..\slack\jobs\Slack.Jobs\Slack.Jobs.csproj"/>
-        <ProjectReference Include="..\..\team\jobs\Team.Jobs\Team.Jobs.csproj"/>
+        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj" />
+        <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj" />
+        <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj" />
+        <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj" />
+        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj" />
+        <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj" />
+        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj" />
+        <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj" />
+        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj" />
+        <ProjectReference Include="..\..\slack\jobs\Slack.Jobs\Slack.Jobs.csproj" />
+        <ProjectReference Include="..\..\team\jobs\Team.Jobs\Team.Jobs.csproj" />
     </ItemGroup>
 
     <ItemGroup>
