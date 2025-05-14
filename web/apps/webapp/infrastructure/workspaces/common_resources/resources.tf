@@ -137,7 +137,7 @@ resource "vercel_project" "default" {
     },
     {
       key    = "NEXT_PUBLIC_SLACK_REDIRECT_URL"
-      value  = "https://${module.shared_common.api_domain_name}"
+      value  = "https://slack${module.shared_common.api_domain_name}"
       target = ["development", "preview", "production"]
     },
     {
