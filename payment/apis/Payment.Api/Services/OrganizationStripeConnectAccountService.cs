@@ -30,7 +30,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<StripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int )> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
@@ -278,7 +278,7 @@ public class OrganizationStripeConnectAccountService(
         return accountRefreshCode.StripeConnectAccount.OnboardingUrl;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int)> GetPaginatedTeamsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<StripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,

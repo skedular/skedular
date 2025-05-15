@@ -59,7 +59,7 @@ public class Query(IMapper mapper, IVersionService versionService)
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        var (paginatedInfo, edges, totalCount) = await organizationStripeConnectAccountService.GetPaginatedTeamsAsync(
+        var (paginatedInfo, edges, totalCount) = await organizationStripeConnectAccountService.GetPaginatedAccountsAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationStripeConnectAccountSearchCriteria(where.OrganizationId, where.NameContains, where.OnboardingCompleted),
             orderBy.ToSafeCollection().Select(item => new OrganizationStripeConnectAccountOrder(item.Direction, item.Field)).ToList(),
