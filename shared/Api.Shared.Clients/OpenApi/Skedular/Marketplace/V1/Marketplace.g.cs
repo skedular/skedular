@@ -102,8 +102,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "marketplace/api/v1/{organizationId}/products/republish-all"
-                    urlBuilder_.Append("marketplace/api/v1/");
+                    // Operation Path: "v1/marketplace/{organizationId}/products/republish-all"
+                    urlBuilder_.Append("v1/marketplace/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/products/republish-all");
 
@@ -177,8 +177,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "marketplace/api/v1/products/republish-all"
-                    urlBuilder_.Append("marketplace/api/v1/products/republish-all");
+                    // Operation Path: "v1/marketplace/products/republish-all"
+                    urlBuilder_.Append("v1/marketplace/products/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

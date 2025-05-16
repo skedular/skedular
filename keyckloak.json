@@ -7,7 +7,7 @@
     "loginWithEmailAllowed": true,
     "clients": [
       {
-        "clientId": "http://127.0.0.1:10200/organization/api/v1",
+        "clientId": "http://127.0.0.1:10200/v1/organization",
         "name": "skedularapp",
         "enabled": true,
         "publicClient": true,
@@ -15,7 +15,7 @@
         "webOrigins": ["http://127.0.0.1:15000", "http://127.0.0.1:10200", "http://localhost:15000", "http://localhost:10200"],
         "directAccessGrantsEnabled": true,
         "rootUrl": "http://127.0.0.1:10200/",
-        "adminUrl": "http://127.0.0.1:10200/organization/api/v1/acs",
+        "adminUrl": "http://127.0.0.1:10200/v1/organization/acs",
         "baseUrl": "http://127.0.0.1:10200/",
         "standardFlowEnabled": true,
         "surrogateAuthRequired": false,
@@ -33,7 +33,7 @@
           "saml.force.post.binding": "true",
           "saml.encrypt": "false",
           "post.logout.redirect.uris": "+",
-          "saml_idp_initiated_sso_url_name": "http://127.0.0.1:10200/organization/api/v1/acs",
+          "saml_idp_initiated_sso_url_name": "http://127.0.0.1:10200/v1/organization/acs",
           "saml.server.signature": "true",
           "saml.server.signature.keyinfo.ext": "false",
           "realm_client": "false",

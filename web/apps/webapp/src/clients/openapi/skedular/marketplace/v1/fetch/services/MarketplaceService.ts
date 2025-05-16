@@ -19,7 +19,7 @@ export class MarketplaceService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/marketplace/api/v1/{organizationId}/products/republish-all',
+            url: '/v1/marketplace/{organizationId}/products/republish-all',
             path: {
                 'organizationId': organizationId,
             },
@@ -34,7 +34,7 @@ export class MarketplaceService {
     public republishAllProducts(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/marketplace/api/v1/products/republish-all',
+            url: '/v1/marketplace/products/republish-all',
         });
     }
 }

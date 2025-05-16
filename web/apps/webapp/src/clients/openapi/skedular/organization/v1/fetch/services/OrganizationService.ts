@@ -19,7 +19,7 @@ export class OrganizationService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/organization/api/v1/{organizationId}/republish',
+            url: '/v1/organization/{organizationId}/republish',
             path: {
                 'organizationId': organizationId,
             },
@@ -34,7 +34,7 @@ export class OrganizationService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/organization/api/v1/republish-all',
+            url: '/v1/organization/republish-all',
         });
     }
     /**
@@ -45,7 +45,7 @@ export class OrganizationService {
     public azureTenantAdminConsentUrl(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/organization/api/v1/azure-tenant-admin-consent-url',
+            url: '/v1/organization/azure-tenant-admin-consent-url',
             errors: {
                 302: `redirect status response code`,
             },
@@ -70,7 +70,7 @@ export class OrganizationService {
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/organization/api/v1/onboard-azure-tenant',
+            url: '/v1/organization/onboard-azure-tenant',
             query: {
                 'tenant': tenant,
                 'admin_consent': adminConsent,
@@ -89,7 +89,7 @@ export class OrganizationService {
     public ssoAcs(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/organization/api/v1/acs',
+            url: '/v1/organization/acs',
         });
     }
 }

@@ -36,14 +36,14 @@ namespace Api.Shared.Services.OpenApi.Skedular.Billing.V1
         /// republish organization billing info
         /// </summary>
         /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("billing/api/v1/republish-organization-billing-info/{organizationId}")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/billing/republish-organization-billing-info/{organizationId}")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishOrganizationBillingInfo(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all organizations billing info
         /// </summary>
         /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("billing/api/v1/republish-all-organizations-billing-info")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/billing/republish-all-organizations-billing-info")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllOrganizationsBillingInfo(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }

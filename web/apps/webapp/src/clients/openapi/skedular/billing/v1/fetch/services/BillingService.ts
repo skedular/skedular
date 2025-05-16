@@ -19,7 +19,7 @@ export class BillingService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/billing/api/v1/republish-organization-billing-info/{organizationId}',
+            url: '/v1/billing/republish-organization-billing-info/{organizationId}',
             path: {
                 'organizationId': organizationId,
             },
@@ -34,7 +34,7 @@ export class BillingService {
     public republishAllOrganizationsBillingInfo(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/billing/api/v1/republish-all-organizations-billing-info',
+            url: '/v1/billing/republish-all-organizations-billing-info',
         });
     }
 }

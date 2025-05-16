@@ -36,34 +36,34 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// republish organization
         /// </summary>
         /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/{organizationId}/republish")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/republish")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all organizations
         /// </summary>
         /// <returns>the status of organization republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/republish-all")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/republish-all")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// generate an admin consent Url for the given tenant
         /// </summary>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/azure-tenant-admin-consent-url")]
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant-admin-consent-url")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AzureTenantAdminConsentUrl(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// OnBoard a tenant
         /// </summary>
         /// <returns>onboarding response</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/onboard-azure-tenant")]
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/onboard-azure-tenant")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OnboardAzureTenant([Microsoft.AspNetCore.Mvc.FromQuery] string tenant, [Microsoft.AspNetCore.Mvc.FromQuery] bool admin_consent, [Microsoft.AspNetCore.Mvc.FromQuery] string state, [Microsoft.AspNetCore.Mvc.FromQuery] string? error, [Microsoft.AspNetCore.Mvc.FromQuery] string? error_description, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// sso acs
         /// </summary>
         /// <returns>sso acs</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/acs")]
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/acs")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SsoAcs(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }

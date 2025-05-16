@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /billing/api/v1/republish-organization-billing-info/{organizationId}:
+  /v1/billing/republish-organization-billing-info/{organizationId}:
     put:
       tags:
         - billing
@@ -40,7 +40,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /billing/api/v1/republish-all-organizations-billing-info:
+  /v1/billing/republish-all-organizations-billing-info:
     put:
       tags:
         - billing

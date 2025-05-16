@@ -102,8 +102,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "customer/api/v1/{customerId}/republish"
-                    urlBuilder_.Append("customer/api/v1/");
+                    // Operation Path: "v1/customer/{customerId}/republish"
+                    urlBuilder_.Append("v1/customer/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(customerId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
@@ -177,8 +177,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Customer.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "customer/api/v1/republish-all"
-                    urlBuilder_.Append("customer/api/v1/republish-all");
+                    // Operation Path: "v1/customer/republish-all"
+                    urlBuilder_.Append("v1/customer/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

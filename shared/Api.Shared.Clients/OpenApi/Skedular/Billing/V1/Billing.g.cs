@@ -102,8 +102,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Billing.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "billing/api/v1/republish-organization-billing-info/{organizationId}"
-                    urlBuilder_.Append("billing/api/v1/republish-organization-billing-info/");
+                    // Operation Path: "v1/billing/republish-organization-billing-info/{organizationId}"
+                    urlBuilder_.Append("v1/billing/republish-organization-billing-info/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -176,8 +176,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Billing.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "billing/api/v1/republish-all-organizations-billing-info"
-                    urlBuilder_.Append("billing/api/v1/republish-all-organizations-billing-info");
+                    // Operation Path: "v1/billing/republish-all-organizations-billing-info"
+                    urlBuilder_.Append("v1/billing/republish-all-organizations-billing-info");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

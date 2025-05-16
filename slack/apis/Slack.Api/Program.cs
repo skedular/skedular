@@ -139,7 +139,7 @@ public class Program
         var app = builder.Build().AddWebApplicationDefaults();
 
         app.MapGrpcService<SlackGrpcService>();
-        app.UseSlackNet(c => c.MapToPrefix("slack/api/v1"));
+        app.UseSlackNet(c => c.MapToPrefix("v1/slack"));
 
         return app;
     }

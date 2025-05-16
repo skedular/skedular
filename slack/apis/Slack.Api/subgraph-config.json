@@ -1,6 +1,6 @@
 {
   "subgraph": "Slack",
   "http": {
-    "baseAddress": "http://localhost:10700/slack/api/v1/graphql"
+    "baseAddress": "http://localhost:10700/v1/slack/graphql"
   }
 }

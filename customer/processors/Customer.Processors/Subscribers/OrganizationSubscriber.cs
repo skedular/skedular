@@ -178,7 +178,9 @@ public class OrganizationSubscriber(
             var newOrganizationId = customer.DefaultOrganization?.Id;
 
             var existingLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredLocations = customer.PreferredLocations.Where(location => location.Organization.Id != organizationId).ToList();
+            customer.PreferredLocations = customer.PreferredLocations
+                .Where(location => location.Organization is not null && location.Organization.Id != organizationId)
+                .ToList();
             var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
             var existingResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
@@ -188,7 +190,9 @@ public class OrganizationSubscriber(
             var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
 
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredTeams = customer.PreferredTeams.Where(team => team.Organization.Id != organizationId).ToList();
+            customer.PreferredTeams = customer.PreferredTeams
+                .Where(team => team.Organization is not null && team.Organization.Id != organizationId)
+                .ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);

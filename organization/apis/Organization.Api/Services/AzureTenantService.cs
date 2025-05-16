@@ -102,7 +102,7 @@ public class AzureTenantService(
             new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken() });
 
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
-        var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant").OriginalString);
+        var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "v1/organization/onboard-azure-tenant").OriginalString);
         var scope = Uri.EscapeDataString(Strings.Join(s_allPermissions)!);
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";

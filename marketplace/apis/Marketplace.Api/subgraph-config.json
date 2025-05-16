@@ -1,6 +1,6 @@
 {
   "subgraph": "Marketplace",
   "http": {
-    "baseAddress": "http://localhost:10900/marketplace/api/v1/graphql"
+    "baseAddress": "http://localhost:10900/v1/marketplace/graphql"
   }
 }

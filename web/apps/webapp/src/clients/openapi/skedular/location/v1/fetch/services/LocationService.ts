@@ -19,7 +19,7 @@ export class LocationService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/location/api/v1/{locationId}/republish',
+            url: '/v1/location/{locationId}/republish',
             path: {
                 'locationId': locationId,
             },
@@ -34,7 +34,7 @@ export class LocationService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/location/api/v1/republish-all',
+            url: '/v1/location/republish-all',
         });
     }
 }

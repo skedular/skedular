@@ -141,8 +141,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/organization/add-payment-method"
-                    urlBuilder_.Append("payment/api/v1/organization/add-payment-method");
+                    // Operation Path: "v1/payment/organization/add-payment-method"
+                    urlBuilder_.Append("v1/payment/organization/add-payment-method");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent_client_secret")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent_client_secret, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -227,8 +227,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/customer/add-payment-method"
-                    urlBuilder_.Append("payment/api/v1/customer/add-payment-method");
+                    // Operation Path: "v1/payment/customer/add-payment-method"
+                    urlBuilder_.Append("v1/payment/customer/add-payment-method");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Append(System.Uri.EscapeDataString("setup_intent_client_secret")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(setup_intent_client_secret, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -307,8 +307,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url"
-                    urlBuilder_.Append("payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url");
+                    // Operation Path: "v1/payment/organization-stripe-connect-account/refresh-onboarding-url"
+                    urlBuilder_.Append("v1/payment/organization-stripe-connect-account/refresh-onboarding-url");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("code")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Length--;
@@ -393,8 +393,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/stripe/platform/account/webhook"
-                    urlBuilder_.Append("payment/api/v1/stripe/platform/account/webhook");
+                    // Operation Path: "v1/payment/stripe/platform/account/webhook"
+                    urlBuilder_.Append("v1/payment/stripe/platform/account/webhook");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -470,8 +470,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/stripe/connect/account/webhook"
-                    urlBuilder_.Append("payment/api/v1/stripe/connect/account/webhook");
+                    // Operation Path: "v1/payment/stripe/connect/account/webhook"
+                    urlBuilder_.Append("v1/payment/stripe/connect/account/webhook");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -543,8 +543,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/organization-stripe-connect-account/republish-all"
-                    urlBuilder_.Append("payment/api/v1/organization-stripe-connect-account/republish-all");
+                    // Operation Path: "v1/payment/organization-stripe-connect-account/republish-all"
+                    urlBuilder_.Append("v1/payment/organization-stripe-connect-account/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

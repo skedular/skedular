@@ -182,7 +182,7 @@ resource "vercel_project" "default" {
     },
     {
       key    = "GATEWAY_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/gateway/api/"
+      value  = "https://${module.shared_common.api_domain_name}"
       target = ["development", "preview", "production"]
     }
   ]

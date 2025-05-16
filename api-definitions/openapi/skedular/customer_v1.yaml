@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /customer/api/v1/{customerId}/republish:
+  /v1/customer/{customerId}/republish:
     put:
       tags:
         - customer
@@ -39,7 +39,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /customer/api/v1/republish-all:
+  /v1/customer/republish-all:
     put:
       tags:
         - customer

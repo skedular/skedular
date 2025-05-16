@@ -102,8 +102,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Team.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "team/api/v1/{teamId}/republish"
-                    urlBuilder_.Append("team/api/v1/");
+                    // Operation Path: "v1/team/{teamId}/republish"
+                    urlBuilder_.Append("v1/team/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(teamId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
@@ -177,8 +177,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Team.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "team/api/v1/republish-all"
-                    urlBuilder_.Append("team/api/v1/republish-all");
+                    // Operation Path: "v1/team/republish-all"
+                    urlBuilder_.Append("v1/team/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

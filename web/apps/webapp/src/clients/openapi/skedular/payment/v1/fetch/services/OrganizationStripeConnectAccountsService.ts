@@ -19,7 +19,7 @@ export class OrganizationStripeConnectAccountsService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url',
+            url: '/v1/payment/organization-stripe-connect-account/refresh-onboarding-url',
             query: {
                 'code': code,
             },
@@ -37,7 +37,7 @@ export class OrganizationStripeConnectAccountsService {
     public republishAllOrganizationStripeConnectAccounts(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/payment/api/v1/organization-stripe-connect-account/republish-all',
+            url: '/v1/payment/organization-stripe-connect-account/republish-all',
         });
     }
 }

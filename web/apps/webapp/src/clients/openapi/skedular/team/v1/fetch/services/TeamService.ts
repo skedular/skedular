@@ -19,7 +19,7 @@ export class TeamService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/team/api/v1/{teamId}/republish',
+            url: '/v1/team/{teamId}/republish',
             path: {
                 'teamId': teamId,
             },
@@ -34,7 +34,7 @@ export class TeamService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/team/api/v1/republish-all',
+            url: '/v1/team/republish-all',
         });
     }
 }

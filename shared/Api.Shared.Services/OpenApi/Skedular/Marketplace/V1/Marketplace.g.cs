@@ -36,14 +36,14 @@ namespace Api.Shared.Services.OpenApi.Skedular.Marketplace.V1
         /// republish organization products
         /// </summary>
         /// <returns>the status of all organization products republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("marketplace/api/v1/{organizationId}/products/republish-all")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/{organizationId}/products/republish-all")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllOrganizationProducts(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all products
         /// </summary>
         /// <returns>the status of all products republishing</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("marketplace/api/v1/products/republish-all")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/marketplace/products/republish-all")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllProducts(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }

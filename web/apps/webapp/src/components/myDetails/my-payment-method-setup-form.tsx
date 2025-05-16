@@ -27,7 +27,7 @@ const MyPaymentMethodSetupForm = ({ onCancel }: Props) => {
     const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/payment/api/v1/customer/add-payment-method`,
+        return_url: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/v1/payment/customer/add-payment-method`,
       },
     });
 

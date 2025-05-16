@@ -1,6 +1,6 @@
 {
   "subgraph": "MsTeams",
   "http": {
-    "baseAddress": "http://localhost:10900/msteams/api/v1/graphql"
+    "baseAddress": "http://localhost:10900/v1/msteams/graphql"
   }
 }

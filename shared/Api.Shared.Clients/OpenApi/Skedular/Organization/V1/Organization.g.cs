@@ -125,8 +125,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "organization/api/v1/{organizationId}/republish"
-                    urlBuilder_.Append("organization/api/v1/");
+                    // Operation Path: "v1/organization/{organizationId}/republish"
+                    urlBuilder_.Append("v1/organization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
@@ -200,8 +200,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "organization/api/v1/republish-all"
-                    urlBuilder_.Append("organization/api/v1/republish-all");
+                    // Operation Path: "v1/organization/republish-all"
+                    urlBuilder_.Append("v1/organization/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -271,8 +271,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "organization/api/v1/azure-tenant-admin-consent-url"
-                    urlBuilder_.Append("organization/api/v1/azure-tenant-admin-consent-url");
+                    // Operation Path: "v1/organization/azure-tenant-admin-consent-url"
+                    urlBuilder_.Append("v1/organization/azure-tenant-admin-consent-url");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -356,8 +356,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "organization/api/v1/onboard-azure-tenant"
-                    urlBuilder_.Append("organization/api/v1/onboard-azure-tenant");
+                    // Operation Path: "v1/organization/onboard-azure-tenant"
+                    urlBuilder_.Append("v1/organization/onboard-azure-tenant");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("tenant")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(tenant, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     urlBuilder_.Append(System.Uri.EscapeDataString("admin_consent")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(admin_consent, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -438,8 +438,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "organization/api/v1/acs"
-                    urlBuilder_.Append("organization/api/v1/acs");
+                    // Operation Path: "v1/organization/acs"
+                    urlBuilder_.Append("v1/organization/acs");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

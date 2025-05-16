@@ -14,7 +14,7 @@ export class AzureService {
     public azureTenantAdminConsentUrl(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/organization/api/v1/azure-tenant-admin-consent-url',
+            url: '/v1/organization/azure-tenant-admin-consent-url',
             errors: {
                 302: `redirect status response code`,
             },
@@ -39,7 +39,7 @@ export class AzureService {
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/organization/api/v1/onboard-azure-tenant',
+            url: '/v1/organization/onboard-azure-tenant',
             query: {
                 'tenant': tenant,
                 'admin_consent': adminConsent,

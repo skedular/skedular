@@ -1,7 +1,7 @@
 Authentication:
 https://staging.skedular.app/api/auth/callback/azure-ad
 https://staging.skedular.app/auth-end.html?clientId=40aa5b3e-327c-4af6-8c00-ea380b1cae0a
-https://apistaging.skedular.app/organization/api/v1/onboard-azure-tenant
+https://apistaging.skedular.app/v1/organization/onboard-azure-tenant
 
 Expose an API:
 api://staging.skedular.app/40aa5b3e-327c-4af6-8c00-ea380b1cae0a

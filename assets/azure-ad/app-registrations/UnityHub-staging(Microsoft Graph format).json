@@ -8,9 +8,7 @@
   "displayName": "Skedular-staging",
   "description": "Skedular-staging",
   "groupMembershipClaims": null,
-  "identifierUris": [
-    "api://msteams.staging.skedular.app/40aa5b3e-327c-4af6-8c00-ea380b1cae0a"
-  ],
+  "identifierUris": ["api://msteams.staging.skedular.app/40aa5b3e-327c-4af6-8c00-ea380b1cae0a"],
   "isDeviceOnlyAuthSupported": false,
   "isFallbackPublicClient": false,
   "nativeAuthenticationApisEnabled": null,
@@ -18,10 +16,7 @@
   "publisherDomain": "getskedular.com",
   "serviceManagementReference": null,
   "signInAudience": "AzureADMultipleOrgs",
-  "tags": [
-    "WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1",
-    "WindowsAzureActiveDirectoryIntegratedApp"
-  ],
+  "tags": ["WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1", "WindowsAzureActiveDirectoryIntegratedApp"],
   "tokenEncryptionKeyId": null,
   "samlMetadataUrl": null,
   "defaultRedirectUri": null,
@@ -151,9 +146,7 @@
   "web": {
     "homePageUrl": "https://getskedular.com",
     "logoutUrl": null,
-    "redirectUris": [
-      "https://app.staging.skedular.app/api/auth/callback/azure-ad"
-    ],
+    "redirectUris": ["https://app.staging.skedular.app/api/auth/callback/azure-ad"],
     "implicitGrantSettings": {
       "enableAccessTokenIssuance": false,
       "enableIdTokenIssuance": false
@@ -168,7 +161,7 @@
   "spa": {
     "redirectUris": [
       "https://msteams.staging.skedular.app/auth-end.html?clientId=40aa5b3e-327c-4af6-8c00-ea380b1cae0a",
-      "https://apistaging.skedular.app/organization/api/v1/onboard-azure-tenant"
+      "https://apistaging.skedular.app/v1/organization/onboard-azure-tenant"
     ]
   }
 }

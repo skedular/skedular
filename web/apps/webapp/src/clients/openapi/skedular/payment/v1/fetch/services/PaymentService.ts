@@ -23,7 +23,7 @@ export class PaymentService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/payment/api/v1/organization/add-payment-method',
+            url: '/v1/payment/organization/add-payment-method',
             query: {
                 'setup_intent': setupIntent,
                 'setup_intent_client_secret': setupIntentClientSecret,
@@ -47,7 +47,7 @@ export class PaymentService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/payment/api/v1/customer/add-payment-method',
+            url: '/v1/payment/customer/add-payment-method',
             query: {
                 'setup_intent': setupIntent,
                 'setup_intent_client_secret': setupIntentClientSecret,
@@ -67,7 +67,7 @@ export class PaymentService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url',
+            url: '/v1/payment/organization-stripe-connect-account/refresh-onboarding-url',
             query: {
                 'code': code,
             },
@@ -88,7 +88,7 @@ export class PaymentService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/payment/api/v1/stripe/platform/account/webhook',
+            url: '/v1/payment/stripe/platform/account/webhook',
             headers: {
                 'Stripe-Signature': stripeSignature,
             },
@@ -106,7 +106,7 @@ export class PaymentService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/payment/api/v1/stripe/connect/account/webhook',
+            url: '/v1/payment/stripe/connect/account/webhook',
             headers: {
                 'Stripe-Signature': stripeSignature,
             },
@@ -121,7 +121,7 @@ export class PaymentService {
     public republishAllOrganizationStripeConnectAccounts(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/payment/api/v1/organization-stripe-connect-account/republish-all',
+            url: '/v1/payment/organization-stripe-connect-account/republish-all',
         });
     }
 }

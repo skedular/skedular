@@ -19,7 +19,7 @@ export class CustomerService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/customer/api/v1/{customerId}/republish',
+            url: '/v1/customer/{customerId}/republish',
             path: {
                 'customerId': customerId,
             },
@@ -34,7 +34,7 @@ export class CustomerService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/customer/api/v1/republish-all',
+            url: '/v1/customer/republish-all',
         });
     }
 }

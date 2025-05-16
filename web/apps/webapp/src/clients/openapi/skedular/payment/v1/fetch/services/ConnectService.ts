@@ -19,7 +19,7 @@ export class ConnectService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/payment/api/v1/stripe/connect/account/webhook',
+            url: '/v1/payment/stripe/connect/account/webhook',
             headers: {
                 'Stripe-Signature': stripeSignature,
             },

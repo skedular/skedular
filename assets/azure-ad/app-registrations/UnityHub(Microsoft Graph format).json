@@ -8,9 +8,7 @@
   "displayName": "Skedular",
   "description": "Skedular",
   "groupMembershipClaims": null,
-  "identifierUris": [
-    "api://msteams.skedular.app/d9f96787-6611-40da-8a87-31632229d3dc"
-  ],
+  "identifierUris": ["api://msteams.skedular.app/d9f96787-6611-40da-8a87-31632229d3dc"],
   "isDeviceOnlyAuthSupported": false,
   "isFallbackPublicClient": false,
   "nativeAuthenticationApisEnabled": null,
@@ -18,10 +16,7 @@
   "publisherDomain": "getskedular.com",
   "serviceManagementReference": null,
   "signInAudience": "AzureADMultipleOrgs",
-  "tags": [
-    "WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1",
-    "WindowsAzureActiveDirectoryIntegratedApp"
-  ],
+  "tags": ["WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1", "WindowsAzureActiveDirectoryIntegratedApp"],
   "tokenEncryptionKeyId": null,
   "samlMetadataUrl": null,
   "defaultRedirectUri": null,
@@ -165,7 +160,7 @@
   },
   "spa": {
     "redirectUris": [
-      "https://api.skedular.app/organization/api/v1/onboard-azure-tenant",
+      "https://api.skedular.app/v1/organization/onboard-azure-tenant",
       "https://msteams.skedular.app/auth-end.html?clientId=d9f96787-6611-40da-8a87-31632229d3dc"
     ]
   }

@@ -19,7 +19,7 @@ export class BookingService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/booking/api/v1/{bookingId}/republish',
+            url: '/v1/booking/{bookingId}/republish',
             path: {
                 'bookingId': bookingId,
             },
@@ -34,7 +34,7 @@ export class BookingService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/booking/api/v1/republish-all',
+            url: '/v1/booking/republish-all',
         });
     }
     /**
@@ -46,7 +46,7 @@ export class BookingService {
     public republishAllResourcesSlots(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/booking/api/v1/republish-all-resources-slots',
+            url: '/v1/booking/republish-all-resources-slots',
         });
     }
     /**
@@ -61,7 +61,7 @@ export class BookingService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/booking/api/v1/resources-slots/{resourceId}/republish',
+            url: '/v1/booking/resources-slots/{resourceId}/republish',
             path: {
                 'resourceId': resourceId,
             },

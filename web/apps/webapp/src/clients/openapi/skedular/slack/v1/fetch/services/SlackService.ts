@@ -21,7 +21,7 @@ export class SlackService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/slack/api/v1/callback',
+            url: '/v1/slack/callback',
             query: {
                 'code': code,
                 'state': state,

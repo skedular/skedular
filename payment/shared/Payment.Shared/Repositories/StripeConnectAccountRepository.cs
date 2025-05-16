@@ -31,8 +31,7 @@ public interface IStripeConnectAccountRepository : IRepository<StripeConnectAcco
 
 internal static class OrganizationStripeConnectAccountExtensions
 {
-    internal static IIncludableQueryable<StripeConnectAccount, Customer> AddDependentObjects(
-        this IQueryable<StripeConnectAccount> originalQuery) =>
+    internal static IIncludableQueryable<StripeConnectAccount, Customer> AddDependentObjects(this IQueryable<StripeConnectAccount> originalQuery) =>
         originalQuery
             .Include(query => query.StripeConnectAccountAuthorization)
             .Include(query => query.Organization)

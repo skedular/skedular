@@ -156,15 +156,15 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
-      Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
-      Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
-      Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
-      Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
-      Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
-      Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
-      Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
-      Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
+      Subgraphs__Billing__Url: http://localhost:10800/v1/billing/graphql
+      Subgraphs__Booking__Url: http://localhost:10300/v1/booking/graphql
+      Subgraphs__Customer__Url: http://localhost:10000/v1/customer/graphql
+      Subgraphs__Location__Url: http://localhost:10600/v1/location/graphql
+      Subgraphs__Notification__Url: http://localhost:10400/v1/notification/graphql
+      Subgraphs__Organization__Url: http://localhost:10200/v1/organization/graphql
+      Subgraphs__Payment__Url: http://localhost:10100/v1/payment/graphql
+      Subgraphs__Slack__Url: http://localhost:10700/v1/slack/graphql
+      Subgraphs__Team__Url: http://localhost:10500/v1/team/graphql
       Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -183,7 +183,7 @@ services:
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapistaging.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
@@ -283,7 +283,7 @@ services:
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapistaging.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
@@ -386,7 +386,7 @@ services:
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapistaging.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
@@ -498,15 +498,15 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
-      Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
-      Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
-      Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
-      Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
-      Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
-      Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
-      Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
-      Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
+      Subgraphs__Billing__Url: http://localhost:10800/v1/billing/graphql
+      Subgraphs__Booking__Url: http://localhost:10300/v1/booking/graphql
+      Subgraphs__Customer__Url: http://localhost:10000/v1/customer/graphql
+      Subgraphs__Location__Url: http://localhost:10600/v1/location/graphql
+      Subgraphs__Notification__Url: http://localhost:10400/v1/notification/graphql
+      Subgraphs__Organization__Url: http://localhost:10200/v1/organization/graphql
+      Subgraphs__Payment__Url: http://localhost:10100/v1/payment/graphql
+      Subgraphs__Slack__Url: http://localhost:10700/v1/slack/graphql
+      Subgraphs__Team__Url: http://localhost:10500/v1/team/graphql
       Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
@@ -525,7 +525,7 @@ services:
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapi.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
@@ -625,7 +625,7 @@ services:
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapi.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
@@ -728,7 +728,7 @@ services:
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
-      Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
+      Slack__RedirectUrl: https://slackapi.skedular.app/v1/slack/callback
       Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}

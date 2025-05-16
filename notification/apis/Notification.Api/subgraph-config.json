@@ -1,6 +1,6 @@
 {
   "subgraph": "Notification",
   "http": {
-    "baseAddress": "http://localhost:10400/notification/api/v1/graphql"
+    "baseAddress": "http://localhost:10400/v1/notification/graphql"
   }
 }

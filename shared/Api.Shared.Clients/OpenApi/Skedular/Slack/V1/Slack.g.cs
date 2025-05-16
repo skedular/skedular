@@ -93,8 +93,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Slack.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "slack/api/v1/callback"
-                    urlBuilder_.Append("slack/api/v1/callback");
+                    // Operation Path: "v1/slack/callback"
+                    urlBuilder_.Append("v1/slack/callback");
                     urlBuilder_.Append('?');
                     urlBuilder_.Append(System.Uri.EscapeDataString("code")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     if (state != null)

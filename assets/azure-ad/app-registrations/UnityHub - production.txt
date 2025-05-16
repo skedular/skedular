@@ -1,7 +1,7 @@
 Authentication:
 https://skedular.app/api/auth/callback/azure-ad
 https://skedular.app/auth-end.html?clientId=d9f96787-6611-40da-8a87-31632229d3dc
-https://api.skedular.app/organization/api/v1/onboard-azure-tenant
+https://api.skedular.app/v1/organization/onboard-azure-tenant
 
 Expose an API:
 api://skedular.app/d9f96787-6611-40da-8a87-31632229d3dc

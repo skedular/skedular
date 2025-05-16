@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /marketplace/api/v1/{organizationId}/products/republish-all:
+  /v1/marketplace/{organizationId}/products/republish-all:
     put:
       tags:
         - marketplace
@@ -40,7 +40,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /marketplace/api/v1/products/republish-all:
+  /v1/marketplace/products/republish-all:
     put:
       tags:
         - marketplace

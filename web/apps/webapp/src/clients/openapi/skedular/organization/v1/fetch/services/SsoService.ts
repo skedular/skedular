@@ -16,7 +16,7 @@ export class SsoService {
     public ssoAcs(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/organization/api/v1/acs',
+            url: '/v1/organization/acs',
         });
     }
 }

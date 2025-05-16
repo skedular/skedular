@@ -23,7 +23,7 @@ export class OrganizationService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/payment/api/v1/organization/add-payment-method',
+            url: '/v1/payment/organization/add-payment-method',
             query: {
                 'setup_intent': setupIntent,
                 'setup_intent_client_secret': setupIntentClientSecret,

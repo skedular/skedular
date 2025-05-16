@@ -118,8 +118,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "booking/api/v1/{bookingId}/republish"
-                    urlBuilder_.Append("booking/api/v1/");
+                    // Operation Path: "v1/booking/{bookingId}/republish"
+                    urlBuilder_.Append("v1/booking/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(bookingId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
@@ -193,8 +193,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "booking/api/v1/republish-all"
-                    urlBuilder_.Append("booking/api/v1/republish-all");
+                    // Operation Path: "v1/booking/republish-all"
+                    urlBuilder_.Append("v1/booking/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -266,8 +266,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "booking/api/v1/republish-all-resources-slots"
-                    urlBuilder_.Append("booking/api/v1/republish-all-resources-slots");
+                    // Operation Path: "v1/booking/republish-all-resources-slots"
+                    urlBuilder_.Append("v1/booking/republish-all-resources-slots");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -342,8 +342,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "booking/api/v1/resources-slots/{resourceId}/republish"
-                    urlBuilder_.Append("booking/api/v1/resources-slots/");
+                    // Operation Path: "v1/booking/resources-slots/{resourceId}/republish"
+                    urlBuilder_.Append("v1/booking/resources-slots/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(resourceId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 

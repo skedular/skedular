@@ -10,7 +10,7 @@ type Props = {
 const RelayProvider = ({ children, token }: PropsWithChildren<Props>) => {
   //  const isRunningInTeams = () => typeof window !== 'undefined' && window.name === 'embedded-page-container';
   const isRunningInTeams = () => false;
-  const environment = useMemo(() => (isRunningInTeams() && !token ? null : getEnvironment('/api/graphql', token)), [token]);
+  const environment = useMemo(() => (isRunningInTeams() && !token ? null : getEnvironment('/api/v1/graphql', token)), [token]);
 
   if (!environment) {
     return <></>;

@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /team/api/v1/{teamId}/republish:
+  /v1/team/{teamId}/republish:
     put:
       tags:
         - team
@@ -39,7 +39,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /team/api/v1/republish-all:
+  /v1/team/republish-all:
     put:
       tags:
         - team

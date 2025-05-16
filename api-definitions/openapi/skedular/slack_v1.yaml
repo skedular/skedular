@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /slack/api/v1/callback:
+  /v1/slack/callback:
     get:
       tags:
         - slack
