@@ -70,7 +70,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue &&
-                            !query.Organization.DeletedAt.HasValue &&
+                            query.Organization != null && !query.Organization.DeletedAt.HasValue &&
                             query.Organization.OrganizationMembers.Any(organizationMember =>
                                 !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == customerId))
             .AddDependentObjects(includeDeletedResources, false)
@@ -81,7 +81,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         bool includeDeletedResources,
         CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
+            .Where(query => !query.DeletedAt.HasValue && query.Organization != null && query.Organization.Id == organizationId)
             .AddDependentObjects(includeDeletedResources, false)
             .ToListAsync(cancellationToken);
 }

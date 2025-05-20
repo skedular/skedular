@@ -124,6 +124,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                             (resourceIds.Count == 0 || resourceIds.Contains(query.Resource.Id)) &&
                             query.Start >= from && query.Start < until &&
                             (string.IsNullOrWhiteSpace(organizationId) || (query.Resource.Location != null &&
+                                                                           query.Resource.Location.Organization != null &&
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
                              (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&

@@ -303,7 +303,7 @@ public class ResourceService(
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
-        foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => !ids.Contains(item.Id))))
+        foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => ids.Contains(item.Id))))
         {
             resource.Inactive = false;
         }
@@ -350,7 +350,7 @@ public class ResourceService(
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
-        foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => !ids.Contains(item.Id))))
+        foreach (var resource in mappedLocations.SelectMany(mappedLocation => mappedLocation.Resources.Where(item => ids.Contains(item.Id))))
         {
             resource.Inactive = true;
         }
