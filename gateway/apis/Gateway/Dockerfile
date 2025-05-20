@@ -8,7 +8,7 @@ WORKDIR "/src"
 COPY . .
 WORKDIR "/src/gateway/apis/Gateway"
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet restore && dotnet tool restore
-RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Gateway.csproj" -c Release -o /app/build
+# RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Gateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "Gateway.csproj" -c Release -o /app/publish /p:UseAppHost=false

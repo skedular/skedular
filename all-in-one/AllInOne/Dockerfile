@@ -8,7 +8,7 @@ WORKDIR "/src"
 COPY . .
 WORKDIR "/src/all-in-one/AllInOne"
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet restore && dotnet tool restore
-RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "AllInOne.csproj" -c Release -o /app/build
+# RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "AllInOne.csproj" -c Release -o /app/build
 
 FROM build AS test
 RUN mkdir -p /coverage/reports

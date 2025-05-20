@@ -8,7 +8,7 @@ WORKDIR "/src"
 COPY . .
 WORKDIR "/src/notification/processors/Notification.Processors"
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet restore && dotnet tool restore
-RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Notification.Processors.csproj" -c Release -o /app/build
+# RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Notification.Processors.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "Notification.Processors.csproj" -c Release -o /app/publish /p:UseAppHost=false

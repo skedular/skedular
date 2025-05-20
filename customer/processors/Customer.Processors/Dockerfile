@@ -8,7 +8,7 @@ WORKDIR "/src"
 COPY . .
 WORKDIR "/src/customer/processors/Customer.Processors"
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet restore && dotnet tool restore
-RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Customer.Processors.csproj" -c Release -o /app/build
+# RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet build --no-restore "Customer.Processors.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "Customer.Processors.csproj" -c Release -o /app/publish /p:UseAppHost=false
