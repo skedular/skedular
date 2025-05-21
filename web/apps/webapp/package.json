@@ -44,7 +44,7 @@
     "@vercel/otel": "^1.12.0",
     "@vercel/speed-insights": "^1.2.0",
     "@vis.gl/react-google-maps": "^1.5.2",
-    "@workos-inc/authkit-nextjs": "^2.3.2",
+    "@workos-inc/authkit-nextjs": "^2.3.3",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "cookies-next": "^5.1.0",
     "countries-list": "^3.1.1",
@@ -75,7 +75,7 @@
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.9",
     "@types/logrocket-react": "^3.0.3",
-    "@types/node": "^22.15.19",
+    "@types/node": "^22.15.21",
     "@types/pino": "^7.0.5",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
