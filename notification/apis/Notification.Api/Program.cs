@@ -1,6 +1,9 @@
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Security;
+using Enterprise.Shared.Security.Sso;
 using Notification.Api.Grpc;
 using Notification.Shared;
 using Notification.Shared.Database;
@@ -13,12 +16,18 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
 
         services
+            .AddKafka(configuration)
+            .AddSso()
+            .AddSecurity(configuration)
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
@@ -32,7 +41,13 @@ public class Program
             .AddServices()
             .AddGrpcServices(configuration);
 
-        var app = builder.Build().AddWebApplicationDefaults();
+        services.AddGrpc();
+
+        var app = builder
+            .Build()
+            .UseWebApplicationDefaults()
+            .UseSso()
+            .UseSecurity();
 
         app.MapGrpcService<NotificationGrpcService>();
 

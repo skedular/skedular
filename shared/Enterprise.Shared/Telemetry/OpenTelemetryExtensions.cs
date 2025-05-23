@@ -7,7 +7,6 @@ using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -21,10 +20,8 @@ namespace Enterprise.Shared.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
-    public static WebApplicationBuilder ConfigureOpenTelemetry(this WebApplicationBuilder builder, string appName)
+    public static IServiceCollection ConfigureOpenTelemetry(this IServiceCollection services, IConfiguration configuration, string appName)
     {
-        var services = builder.Services;
-        var configuration = builder.Configuration;
         var openTelemetrySettings = configuration.GetSection(OpenTelemetrySettings.Key).Get<OpenTelemetrySettings>();
 
         services
@@ -134,20 +131,17 @@ public static class OpenTelemetryExtensions
                 }
             });
 
-        return builder.AddOtherOpenTelemetryExporters();
+        return services.AddOtherOpenTelemetryExporters(configuration);
     }
 
-    private static WebApplicationBuilder AddOtherOpenTelemetryExporters(this WebApplicationBuilder builder)
+    private static IServiceCollection AddOtherOpenTelemetryExporters(this IServiceCollection services, IConfiguration configuration)
     {
-        var services = builder.Services;
-        var configuration = builder.Configuration;
-
         if (!string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
         {
             services.AddOpenTelemetry().UseOtlpExporter();
         }
 
-        return builder;
+        return services;
     }
 
     /// <summary>

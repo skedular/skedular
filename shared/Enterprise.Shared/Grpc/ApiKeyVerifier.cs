@@ -14,9 +14,7 @@ public class GrpcAuthenticator(IHttpContextAccessor httpContextAccessor, IContex
     public void VerifyAndEnrich(string apiKey)
     {
         var receivedKey = httpContextAccessor.HttpContext?.Request.Headers[Constants.ApiKey];
-        if (receivedKey is null ||
-            string.IsNullOrWhiteSpace(receivedKey.Value.FirstOrDefault()) ||
-            receivedKey.Value.First() != apiKey)
+        if (receivedKey is null || string.IsNullOrWhiteSpace(receivedKey.Value.FirstOrDefault()) || receivedKey.Value.First() != apiKey)
         {
             throw new Unauthorized();
         }

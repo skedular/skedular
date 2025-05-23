@@ -19,8 +19,4 @@
         <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="OpenApi\Prestino\SmartContract\V1\"/>
-    </ItemGroup>
-
 </Project>

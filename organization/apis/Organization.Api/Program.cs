@@ -1,6 +1,9 @@
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Security;
+using Enterprise.Shared.Security.Sso;
 using Organization.Api.Grpc;
 using Organization.Shared;
 using Organization.Shared.Configurations;
@@ -14,7 +17,10 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -24,6 +30,9 @@ public class Program
         services.AddSingleton(emailConfiguration);
 
         services
+            .AddKafka(configuration)
+            .AddSso()
+            .AddSecurity(configuration)
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
@@ -37,7 +46,13 @@ public class Program
             .AddMappers()
             .AddGrpcServices(configuration);
 
-        var app = builder.Build().AddWebApplicationDefaults();
+        services.AddGrpc();
+
+        var app = builder
+            .Build()
+            .UseWebApplicationDefaults()
+            .UseSso()
+            .UseSecurity();
 
         app.MapGrpcService<OrganizationGrpcService>();
 

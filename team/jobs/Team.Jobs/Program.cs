@@ -1,5 +1,6 @@
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
 using Team.Shared;
 using Team.Shared.Configurations;
@@ -13,7 +14,10 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -23,8 +27,9 @@ public class Program
         services.AddSingleton(emailConfiguration);
 
         services
+            .AddKafka(configuration)
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
-            .AddOutboxBackgroundService<TeamDbContext>()
+            .AddKafkaOutboxBackgroundService<TeamDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -35,6 +40,6 @@ public class Program
             .AddServices()
             .AddGrpcServices(configuration);
 
-        return builder.Build().AddWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults();
     }
 }

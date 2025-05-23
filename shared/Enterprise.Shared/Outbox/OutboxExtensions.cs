@@ -7,11 +7,11 @@ namespace Enterprise.Shared.Outbox;
 
 public static class OutboxExtensions
 {
-    public static IServiceCollection AddOutboxBackgroundService<TDbContext>(this IServiceCollection services)
+    public static IServiceCollection AddKafkaOutboxBackgroundService<TDbContext>(this IServiceCollection services)
         where TDbContext : DbContext, IOutboxStore =>
         services.AddHostedService<OutboxBackgroundService<TDbContext>>();
 
-    public static IServiceCollection AddOutboxService(this IServiceCollection services) =>
+    public static IServiceCollection AddKafkaOutboxService(this IServiceCollection services) =>
         services
             .AddSingleton(typeof(IOutboxEventPublisher<,>), typeof(OutboxEventPublisher<,>));
 }

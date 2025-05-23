@@ -1,17 +1,13 @@
 ﻿using System.Diagnostics;
-using Confluent.SchemaRegistry;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.HealthCheck;
-using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Logging;
-using Enterprise.Shared.Outbox;
-using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Random;
+using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Version;
@@ -25,12 +21,13 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WorkOS;
 
 namespace Enterprise.Shared.Application.WebHostService;
 
 public static class StartupExtensions
 {
-    public static WebApplicationBuilder AddServiceDefaults<TProgram>(this WebApplicationBuilder builder) where TProgram : class
+    public static WebApplicationBuilder AddDefaultServices<TProgram>(this WebApplicationBuilder builder) where TProgram : class
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
@@ -45,83 +42,88 @@ public static class StartupExtensions
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
         services.AddSingleton(applicationConfiguration);
 
-        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        if (kafkaConfiguration is not null)
+        if (applicationConfiguration.IdentityProviders.WorkOS is not null)
         {
-            var bootstrapServers = configuration.GetConnectionString("kafka");
-            if (!string.IsNullOrWhiteSpace(bootstrapServers))
-            {
-                kafkaConfiguration.BootstrapServers = bootstrapServers;
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.ApiKey);
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer);
 
-            services.AddSingleton(kafkaConfiguration);
-            if (kafkaConfiguration.SchemaRegistry is not null)
-            {
-                services.AddSingleton(new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url });
-            }
+            services
+                .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }))
+                .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
+        }
+
+        if (applicationConfiguration.IdentityProviders.Cognito is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Issuer);
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Audiences);
+
+            services
+                .AddSingleton<ICognitoTokenService, CognitoTokenService>();
+        }
+
+        if (applicationConfiguration.IdentityProviders.Google is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Google.Issuer);
+
+            services
+                .AddSingleton<IGoogleTokenService, GoogleTokenService>();
         }
 
         var azureEntraConfiguration = configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
-        if (azureEntraConfiguration is null)
+        if (azureEntraConfiguration is not null)
         {
-            services.AddSingleton(new AzureEntraConfiguration());
-        }
-        else
-        {
-            if (string.IsNullOrWhiteSpace(azureEntraConfiguration.ClientId))
-            {
-                Console.Error.WriteLine("azureEntraConfiguration.ClientId is null");
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
+            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientSecret);
 
-            if (string.IsNullOrWhiteSpace(azureEntraConfiguration.ClientSecret))
-            {
-                Console.Error.WriteLine("azureEntraConfiguration.ClientSecret is null");
-            }
-
-            services.AddSingleton(azureEntraConfiguration);
+            services
+                .AddSingleton(azureEntraConfiguration)
+                .AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>()
+                .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>();
         }
 
-        services.AddProblemDetails();
-
-        builder.ConfigureOpenTelemetry(appName);
+        services.ConfigureOpenTelemetry(configuration, appName);
 
         if (builder.Environment.IsDevelopment())
         {
             services.AddSwaggerDocument();
         }
 
-        services.AddServiceDiscovery();
-        services.ConfigureHttpClientDefaults(http =>
-        {
-            // Turn on resilience by default
-            http.AddStandardResilienceHandler();
+        services
+            .AddServiceDiscovery()
+            .ConfigureHttpClientDefaults(http =>
+            {
+                // Turn on resilience by default
+                http.AddStandardResilienceHandler();
 
-            // Turn on service discovery by default
-            http.AddServiceDiscovery();
-        });
+                // Turn on service discovery by default
+                http.AddServiceDiscovery();
+            });
 
         services.AddAuthentication();
         services.AddAuthorization();
-        services.AddGrpc();
-        services.AddSso();
-        services.AddOutboxService();
 
-        services.AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>();
+        if (applicationConfiguration.Cookie is not null)
+        {
+            var cookieConfiguration = applicationConfiguration.Cookie;
+            ArgumentNullException.ThrowIfNull(cookieConfiguration.EncryptionKey);
+            ArgumentException.ThrowIfNullOrWhiteSpace(cookieConfiguration.EncryptionKey.Key);
+            ArgumentException.ThrowIfNullOrWhiteSpace(cookieConfiguration.EncryptionKey.Iv);
 
-        services.AddSingleton<IVersionService, VersionService<TProgram>>();
-
-        services.TryAddSingleton(TimeProvider.System);
-        services.AddHttpContextAccessor();
+            services
+                .AddSingleton(cookieConfiguration)
+                .AddSingleton<ICookieHelper, CookieHelper>();
+        }
 
         services
-            .AddKafka(configuration)
-            .AddRedis(configuration, "RedisConnection")
+            .AddCors()
+            .AddProblemDetails()
+            .AddHttpContextAccessor()
             .AddMemoryCache()
-            .AddSecurity(configuration)
-            .AddContext()
-            .AddRandomHelper();
-
-        services.AddCors();
+            .AddSingleton<IVersionService, VersionService<TProgram>>()
+            .AddSingleton<IContext, Context.Context>()
+            .AddSingleton(new System.Random())
+            .AddSingleton<IRandomHelper, RandomHelper>()
+            .TryAddSingleton(TimeProvider.System);
 
         services
             .AddHealthChecks()
@@ -147,7 +149,7 @@ public static class StartupExtensions
         return builder;
     }
 
-    public static WebApplication AddWebApplicationDefaults(this WebApplication app)
+    public static WebApplication UseWebApplicationDefaults(this WebApplication app)
     {
         app.UseExceptionHandler();
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
@@ -186,11 +188,7 @@ public static class StartupExtensions
                 Predicate = registration => registration.Tags.Contains(Constants.ReadinessTag) || registration.Name.Contains("services")
             });
 
-        app
-            .UseMiddleware<SecurityContextEnricherMiddleware>()
-            .UseMiddleware<SsoContextEnricherMiddleware>()
-            .UseMiddleware<ContextEnricherMiddleware>();
-
+        app.UseMiddleware<ContextEnricherMiddleware>();
         app.MapGraphqlEndpoints(app.Configuration);
         app.MapControllers();
 

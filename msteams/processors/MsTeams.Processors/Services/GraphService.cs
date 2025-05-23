@@ -6,9 +6,7 @@ namespace MsTeams.Processors.Services;
 
 public interface IGraphService
 {
-    Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(
-        string tenantId,
-        CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(string tenantId, CancellationToken cancellationToken);
 
     Task<IReadOnlyCollection<AzureTenantTeamChannel>> GetAzureTenantTeamChannelsAsync(
         string tenantId,
@@ -16,13 +14,9 @@ public interface IGraphService
         CancellationToken cancellationToken);
 }
 
-public class GraphService(
-    IGraphServiceClientFactory graphServiceClientFactory,
-    IMapper mapper) : IGraphService
+public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IMapper mapper) : IGraphService
 {
-    public async Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(
-        string tenantId,
-        CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(string tenantId, CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
         var teams = new List<AzureTenantTeam>();

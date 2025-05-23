@@ -1,5 +1,6 @@
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
 using Notification.Shared;
 using Notification.Shared.Database;
@@ -12,14 +13,18 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
 
         services
+            .AddKafka(configuration)
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
-            .AddOutboxBackgroundService<NotificationDbContext>()
+            .AddKafkaOutboxBackgroundService<NotificationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -30,6 +35,6 @@ public class Program
             .AddServices()
             .AddGrpcServices(configuration);
 
-        return builder.Build().AddWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults();
     }
 }

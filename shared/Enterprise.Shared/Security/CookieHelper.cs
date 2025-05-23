@@ -16,23 +16,18 @@ public class CookieHelper : ICookieHelper
     private readonly byte[] _iv;
     private readonly byte[] _key;
 
-    public CookieHelper(ApplicationConfiguration applicationConfiguration)
+    public CookieHelper(CookieConfiguration cookieConfiguration)
     {
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.Cookie);
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.Cookie.EncryptionKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Cookie.EncryptionKey.Key);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Cookie.EncryptionKey.Iv);
-
-        _key = Encoding.UTF8.GetBytes(applicationConfiguration.Cookie.EncryptionKey.Key);
+        _key = Encoding.UTF8.GetBytes(cookieConfiguration.EncryptionKey.Key);
         if (_key.Length != 32)
         {
-            throw new ArgumentException($"{nameof(applicationConfiguration.Cookie.EncryptionKey.Key)} must be 32 bytes.");
+            throw new ArgumentException($"{nameof(cookieConfiguration.EncryptionKey.Key)} must be 32 bytes.");
         }
 
-        _iv = Encoding.UTF8.GetBytes(applicationConfiguration.Cookie.EncryptionKey.Iv);
+        _iv = Encoding.UTF8.GetBytes(cookieConfiguration.EncryptionKey.Iv);
         if (_iv.Length != 16)
         {
-            throw new ArgumentException($"{nameof(applicationConfiguration.Cookie.EncryptionKey.Iv)} must be 16 bytes.");
+            throw new ArgumentException($"{nameof(cookieConfiguration.EncryptionKey.Iv)} must be 16 bytes.");
         }
     }
 

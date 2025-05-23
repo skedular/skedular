@@ -9,6 +9,7 @@ using Enterprise.Shared.Kafka.Logger;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Kafka.Serialization;
 using Enterprise.Shared.Kafka.Telemetry;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -24,10 +25,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddKafka(this IServiceCollection services, IConfiguration configuration, bool useTelemetry = true)
     {
         var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        if (kafkaConfiguration is null)
-        {
-            return services;
-        }
+        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         var bootstrapServers = configuration.GetConnectionString("kafka");
         if (!string.IsNullOrWhiteSpace(bootstrapServers))
@@ -42,6 +40,7 @@ public static class ServiceCollectionExtensions
         }
 
         services
+            .AddKafkaOutboxService()
             .AddSingleton<IKafkaHelper, KafkaHelper>()
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
             .AddSingleton(typeof(ISerializer<>), typeof(CustomProtobufSerializer<>))

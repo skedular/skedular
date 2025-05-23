@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Kafka;
 using Organization.Infrastructure.Services;
 using Organization.Shared;
 using Organization.Shared.Database;
@@ -12,18 +13,22 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
 
         services
+            .AddKafka(configuration)
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs();
 
-        return builder.Build().AddWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults();
     }
 
     public static async Task MigrateAsync(WebApplication app, CancellationToken cancellationToken)

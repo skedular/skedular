@@ -4,6 +4,9 @@ using Billing.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Security;
+using Enterprise.Shared.Security.Sso;
 
 namespace Billing.Api;
 
@@ -13,12 +16,18 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
 
         services
+            .AddKafka(configuration)
+            .AddSso()
+            .AddSecurity(configuration)
             .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "billingdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()
@@ -31,7 +40,13 @@ public class Program
             .AddServices()
             .AddGrpcServices(configuration);
 
-        var app = builder.Build().AddWebApplicationDefaults();
+        services.AddGrpc();
+
+        var app = builder
+            .Build()
+            .UseWebApplicationDefaults()
+            .UseSso()
+            .UseSecurity();
 
         app.MapGrpcService<BillingGrpcService>();
 

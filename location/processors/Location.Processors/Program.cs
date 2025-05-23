@@ -16,7 +16,10 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args).AddServiceDefaults<Program>();
+        var builder = WebApplication
+            .CreateBuilder(args)
+            .AddDefaultServices<Program>();
+
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -25,6 +28,7 @@ public class Program
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         services
+            .AddKafka(configuration)
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
@@ -53,6 +57,6 @@ public class Program
             .AddGrpcServices(configuration)
             .AddJobs();
 
-        return builder.Build().AddWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults();
     }
 }
