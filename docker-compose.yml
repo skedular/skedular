@@ -6,13 +6,11 @@ volumes:
   skedular_redis_data:
   skedular_kafka1_data:
   skedular_keycloak_data:
+  skedular_temporal_data:
 
 services:
   dozzle:
     image: amir20/dozzle:latest
-    profiles:
-      - core
-      - all
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
@@ -31,25 +29,18 @@ services:
       POSTGRES_PASSWORD: "123456"
     ports:
       - "5432:5432"
-    profiles:
-      - core
-      - all
-      - gateway
     networks:
       - skedular_network
 
   redis:
     image: redis:latest
-    profiles:
-      - core
-      - all
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -58,9 +49,6 @@ services:
 
   redisinsight:
     image: redislabs/redisinsight:latest
-    profiles:
-      - core
-      - all
     restart: unless-stopped
     ports:
       - "5540:5540"
@@ -95,9 +83,6 @@ services:
       # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid"
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
-    profiles:
-      - core
-      - all
     networks:
       - skedular_network
 
@@ -113,9 +98,6 @@ services:
       KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
     ports:
       - 8888:8080
-    profiles:
-      - core
-      - all
     networks:
       - skedular_network
 
@@ -131,17 +113,11 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
-    profiles:
-      - core
-      - all
     networks:
       - skedular_network
 
   zipkin:
     image: openzipkin/zipkin:latest
-    profiles:
-      - core
-      - all
     restart: unless-stopped
     ports:
       - 9411:9411
@@ -150,9 +126,6 @@ services:
 
   jaeger:
     image: jaegertracing/all-in-one:latest
-    profiles:
-      - core
-      - all
     restart: unless-stopped
     ports:
       - 16686:16686
@@ -166,9 +139,6 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
-    profiles:
-      - core
-      - all
     ports:
       - "8090:8080"
     environment:
@@ -176,9 +146,55 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm.json
       KEYCLOAK_IMPORT_STRATEGY: OVERWRITE_EXISTING
-    command: [ "start-dev", "--import-realm" ]
+    command: ["start-dev", "--import-realm"]
     volumes:
       - skedular_keycloak_data:/opt/keycloak/data
       - ./keyckloak.json:/opt/keycloak/data/import/realm.json
+    networks:
+      - skedular_network
+
+  temporal:
+    image: temporalio/auto-setup:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - 7233:7233
+    environment:
+      - DB=postgres12
+      - POSTGRES_SEEDS=postgres
+      - DB_PORT=5432
+      - DBNAME=temporal
+      - VISIBILITY_DBNAME=temporal_visibility
+      - POSTGRES_USER=8b974997c3c54b10a556f089377505d7
+      - POSTGRES_PWD=123456
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    networks:
+      - skedular_network
+
+  temporal-admin-tools:
+    image: temporalio/admin-tools:latest
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    stdin_open: true
+    tty: true
+    networks:
+      - skedular_network
+
+  temporal-ui:
+    image: temporalio/ui:latest
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    ports:
+      - 8080:8080
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     networks:
       - skedular_network
