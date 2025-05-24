@@ -39,6 +39,6 @@ public class Program
             .AddServices()
             .AddGrpcServices(configuration);
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 }

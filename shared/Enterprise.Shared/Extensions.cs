@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
@@ -8,11 +9,13 @@ using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Logging;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security;
+using Enterprise.Shared.Security.Configurations;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
@@ -68,8 +71,8 @@ public static class Extensions
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
+        var appName = GetAppName<TProgram>(builder.Environment);
 
-        var appName = typeof(TProgram).Assembly.GetName().Name ?? builder.Environment.ApplicationName;
         AppDomain.CurrentDomain.UnhandledException += RecordExceptionOnActivity;
 
         configuration.AddEnvironmentVariables("ASPNETCORE");
@@ -171,14 +174,13 @@ public static class Extensions
             });
         builder.Host.UseSerilogCustom(appName);
 
-        Console.WriteLine($"EnvironmentName = {builder.Environment.EnvironmentName}");
-        Console.WriteLine($"AppName = {appName}");
-
         return builder;
     }
 
-    public static WebApplication UseWebApplicationDefaults(this WebApplication app)
+    public static WebApplication UseWebApplicationDefaults<TProgram>(this WebApplication app) where TProgram : class
     {
+        var appName = GetAppName<TProgram>(app.Environment);
+
         app.UseExceptionHandler();
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
@@ -220,8 +222,16 @@ public static class Extensions
         app.MapGraphqlEndpoints(app.Configuration);
         app.MapControllers();
 
+        var logger = app.Services.GetRequiredService<ILogger<TProgram>>();
+
+        logger.LogInformation("EnvironmentName = {EnvironmentName}", app.Environment.EnvironmentName);
+        logger.LogInformation("AppName = {appName}", appName);
+
         return app;
     }
+
+    private static string GetAppName<TProgram>(IWebHostEnvironment environment) where TProgram : class =>
+        typeof(TProgram).Assembly.GetName().Name ?? environment.ApplicationName;
 
     private static void RecordExceptionOnActivity(object sender, UnhandledExceptionEventArgs e)
     {

@@ -57,6 +57,6 @@ public class Program
             .AddGrpcServices(configuration)
             .AddJobs();
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 }

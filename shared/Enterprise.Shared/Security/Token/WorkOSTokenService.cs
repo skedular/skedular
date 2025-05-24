@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
-using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Security.Configurations;
 using Flurl.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;

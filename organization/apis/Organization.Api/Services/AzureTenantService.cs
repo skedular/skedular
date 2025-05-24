@@ -1,4 +1,4 @@
-﻿using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;

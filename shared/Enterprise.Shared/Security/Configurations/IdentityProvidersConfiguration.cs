@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Configurations;
+namespace Enterprise.Shared.Security.Configurations;
 
 public class IdentityProvidersConfiguration
 {

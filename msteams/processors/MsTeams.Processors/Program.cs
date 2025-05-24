@@ -61,6 +61,6 @@ public class Program
             .AddJobs()
             .AddServices();
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 }

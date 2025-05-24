@@ -50,7 +50,7 @@ public class Program
 
         var app = builder
             .Build()
-            .UseWebApplicationDefaults()
+            .UseWebApplicationDefaults<Program>()
             .UseSso()
             .UseSecurity();
 

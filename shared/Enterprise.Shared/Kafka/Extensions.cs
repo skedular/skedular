@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Kafka;
 
-public static class ServiceCollectionExtensions
+public static class Extensions
 {
     private const int DelayBaseSeconds = 10;
 

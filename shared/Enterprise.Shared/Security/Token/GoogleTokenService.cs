@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
-using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Security.Configurations;
 using Google.Apis.Auth;
 
 namespace Enterprise.Shared.Security.Token;

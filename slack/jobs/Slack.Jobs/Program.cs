@@ -41,6 +41,6 @@ public class Program
             .AddSlack(configuration, _ => { })
             .AddGrpcServices(configuration);
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 }

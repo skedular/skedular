@@ -64,6 +64,6 @@ public class Program
             .AddMappers()
             .AddStripe(configuration);
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 }

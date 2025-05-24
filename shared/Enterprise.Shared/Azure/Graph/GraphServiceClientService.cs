@@ -1,5 +1,5 @@
 using Azure.Identity;
-using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Azure.Configurations;
 using Microsoft.Graph;
 
 namespace Enterprise.Shared.Azure.Graph;

@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Security.Configurations;
 using SimpleBase;
 
 namespace Enterprise.Shared.Security;

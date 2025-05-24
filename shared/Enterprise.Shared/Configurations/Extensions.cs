@@ -10,8 +10,7 @@ public static class Extensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        using var embeddedAppSettingsStream =
-            typeof(TProgram).Assembly.GetManifestResourceStream($"{typeof(TProgram).Namespace}.appsettings.json");
+        using var embeddedAppSettingsStream = typeof(TProgram).Assembly.GetManifestResourceStream($"{typeof(TProgram).Namespace}.appsettings.json");
 
         if (embeddedAppSettingsStream is not null)
         {

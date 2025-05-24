@@ -1,5 +1,6 @@
-using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Security.Configurations;
 using Enterprise.Shared.Security.Token;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

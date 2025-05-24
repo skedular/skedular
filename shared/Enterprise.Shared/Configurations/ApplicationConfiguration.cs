@@ -12,7 +12,6 @@ public class ApplicationConfiguration
     public string AppSource { get; set; } = string.Empty;
     public string WebAppBaseDomain { get; set; } = string.Empty;
     public string ApiBaseDomain { get; set; } = string.Empty;
-    public bool EnableSchemaRegistry { get; set; }
     public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
     public string GetSource() => $"{Environment}::{DomainSource}::{AppSource}";
 }

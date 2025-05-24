@@ -51,7 +51,7 @@ public class Program
 
         services.AddHealthChecks();
 
-        var app = builder.Build().UseWebApplicationDefaults();
+        var app = builder.Build().UseWebApplicationDefaults<Program>();
 
         app.MapReverseProxy();
 

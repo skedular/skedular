@@ -28,7 +28,7 @@ public class Program
             .AddServices()
             .AddJobs();
 
-        return builder.Build().UseWebApplicationDefaults();
+        return builder.Build().UseWebApplicationDefaults<Program>();
     }
 
     public static async Task MigrateAsync(WebApplication app, CancellationToken cancellationToken)
