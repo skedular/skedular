@@ -14,8 +14,8 @@ public class TemporalConfiguration
 {
     public const string Key = "Temporal";
 
-    public WorkerConfig Worker { get; set; }
-    public ConnectionConfig Connection { get; set; }
+    public WorkerConfig Worker { get; set; } = new();
+    public ConnectionConfig Connection { get; set; } = new();
 }
 
 public record CapacityConfig(

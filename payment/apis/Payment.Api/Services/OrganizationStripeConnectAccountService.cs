@@ -11,7 +11,7 @@ using Payment.Shared.Repositories;
 using Payment.Shared.Services;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
-using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
+using StripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
 
 namespace Payment.Api.Services;
 

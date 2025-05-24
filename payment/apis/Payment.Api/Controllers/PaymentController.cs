@@ -5,7 +5,7 @@ using Payment.Api.Services;
 using Payment.Shared.Publishers;
 using Stripe;
 using Stripe.Checkout;
-using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
+using StripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
 
 namespace Payment.Api.Controllers;
 

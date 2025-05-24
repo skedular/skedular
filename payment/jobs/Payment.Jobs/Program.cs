@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Payment;
 using Payment.Shared;
 using Payment.Shared.Database;
 

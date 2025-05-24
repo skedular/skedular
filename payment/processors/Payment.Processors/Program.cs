@@ -4,6 +4,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Payment;
 using Payment.Processors.Subscribers;
 using Payment.Shared;
 using Payment.Shared.Database;

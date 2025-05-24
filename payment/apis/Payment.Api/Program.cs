@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
 using Payment.Api.Grpc;

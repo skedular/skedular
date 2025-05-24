@@ -1,9 +1,9 @@
-﻿using Enterprise.Shared.Sanitization;
+﻿using Enterprise.Shared.Payment.Configurations;
+using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
-using Payment.Shared.Configurations;
 
 namespace Payment.Api.GraphQL;
 
