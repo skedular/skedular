@@ -27,7 +27,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddSso()
-            .AddSecurity(configuration)
+            .AddSecurity()
             .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "billingdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()

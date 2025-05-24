@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Path = System.IO.Path;
 
-namespace Enterprise.Shared.Configurations.Extensions;
+namespace Enterprise.Shared.Configurations;
 
-public static class ConfigurationBuilderExtensions
+public static class Extensions
 {
     public static IConfigurationRoot BuildConfig<TProgram>(this IConfigurationBuilder builder, string? environmentName = null, string[]? args = null)
         where TProgram : class

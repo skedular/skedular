@@ -46,7 +46,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddSso()
-            .AddSecurity(configuration)
+            .AddSecurity()
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()

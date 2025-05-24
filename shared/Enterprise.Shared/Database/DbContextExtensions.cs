@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations.Extensions;
+using Enterprise.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

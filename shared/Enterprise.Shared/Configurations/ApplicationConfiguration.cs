@@ -13,37 +13,6 @@ public class ApplicationConfiguration
     public string WebAppBaseDomain { get; set; } = string.Empty;
     public string ApiBaseDomain { get; set; } = string.Empty;
     public bool EnableSchemaRegistry { get; set; }
-    public IdentityProviders IdentityProviders { get; set; } = new();
     public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
     public string GetSource() => $"{Environment}::{DomainSource}::{AppSource}";
-}
-
-public class IdentityProviders
-{
-    public Cognito? Cognito { get; set; }
-    public Google? Google { get; set; }
-
-// ReSharper disable once InconsistentNaming
-    public WorkOS? WorkOS { get; set; }
-}
-
-public class Cognito
-{
-    public Uri? JwksUri { get; set; }
-    public string? Issuer { get; set; }
-    public string? Audiences { get; set; }
-}
-
-public class Google
-{
-    public string? ApplicationId { get; set; }
-    public string? Issuer { get; set; }
-}
-
-// ReSharper disable once InconsistentNaming
-public class WorkOS
-{
-    public Uri? JwksUri { get; set; }
-    public string? Issuer { get; set; }
-    public string? ApiKey { get; set; }
 }

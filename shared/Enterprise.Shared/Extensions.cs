@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Globalization;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.HealthCheck;
@@ -80,25 +79,29 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
         services.AddSingleton(applicationConfiguration);
 
-        if (applicationConfiguration.IdentityProviders.WorkOS is not null)
+        var identityProvidersConfiguration = configuration.GetSection(IdentityProvidersConfiguration.Key).Get<IdentityProvidersConfiguration>();
+        if (identityProvidersConfiguration is not null)
         {
-            services
-                .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }))
-                .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
-        }
+            services.AddSingleton(identityProvidersConfiguration);
 
-        if (applicationConfiguration.IdentityProviders.Cognito is not null)
-        {
-            services
-                .AddSingleton<ICognitoTokenService, CognitoTokenService>();
-        }
+            if (identityProvidersConfiguration.WorkOS is not null)
+            {
+                services
+                    .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = identityProvidersConfiguration.WorkOS.ApiKey }))
+                    .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
+            }
 
-        if (applicationConfiguration.IdentityProviders.Google is not null)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Google.Issuer);
+            if (identityProvidersConfiguration.Cognito is not null)
+            {
+                services.AddSingleton<ICognitoTokenService, CognitoTokenService>();
+            }
 
-            services
-                .AddSingleton<IGoogleTokenService, GoogleTokenService>();
+            if (identityProvidersConfiguration.Google is not null)
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(identityProvidersConfiguration.Google.Issuer);
+
+                services.AddSingleton<IGoogleTokenService, GoogleTokenService>();
+            }
         }
 
         var azureEntraConfiguration = configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();

@@ -27,7 +27,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddSso()
-            .AddSecurity(configuration)
+            .AddSecurity()
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()

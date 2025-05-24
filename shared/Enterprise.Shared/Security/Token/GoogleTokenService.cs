@@ -12,10 +12,10 @@ public class GoogleTokenService : IGoogleTokenService
     private readonly IContext _context;
     private readonly Configurations.Google _googleConfiguration;
 
-    public GoogleTokenService(ApplicationConfiguration applicationConfiguration, IContext context)
+    public GoogleTokenService(IdentityProvidersConfiguration identityProvidersConfiguration, IContext context)
     {
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.Google);
-        _googleConfiguration = applicationConfiguration.IdentityProviders.Google;
+        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.Google);
+        _googleConfiguration = identityProvidersConfiguration.Google;
         _context = context;
     }
 

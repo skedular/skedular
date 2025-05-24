@@ -32,7 +32,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddSso()
-            .AddSecurity(configuration)
+            .AddSecurity()
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedServices()

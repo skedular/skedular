@@ -129,14 +129,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
-      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
-      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195NGRARQSJT1TTDAKKR9
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${STAGING_SKEDULAR_WORKOS_API_KEY}
+      IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
+      IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
+      IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
+      IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
+      IdentityProviders__Google__Issuer: https://accounts.google.com
+      IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195NGRARQSJT1TTDAKKR9
+      IdentityProviders__WorkOS__Issuer: https://api.workos.com
+      IdentityProviders__WorkOS__ApiKey: ${STAGING_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
@@ -231,14 +231,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
-      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
-      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195NGRARQSJT1TTDAKKR9
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${STAGING_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
@@ -332,14 +324,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
-      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
-      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195NGRARQSJT1TTDAKKR9
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${STAGING_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
@@ -469,14 +453,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
-      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
-      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195RQETQ0NFNDPE3GWBQK
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${PRODUCTION_SKEDULAR_WORKOS_API_KEY}
+      IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
+      IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
+      IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
+      IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
+      IdentityProviders__Google__Issuer: https://accounts.google.com
+      IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195RQETQ0NFNDPE3GWBQK
+      IdentityProviders__WorkOS__Issuer: https://api.workos.com
+      IdentityProviders__WorkOS__ApiKey: ${PRODUCTION_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
@@ -571,14 +555,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
-      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
-      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195RQETQ0NFNDPE3GWBQK
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${PRODUCTION_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
@@ -672,14 +648,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
-      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
-      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
-      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
-      Application__IdentityProviders__WorkOS__JwksUri: https://api.workos.com/sso/jwks/client_01H0Q195RQETQ0NFNDPE3GWBQK
-      Application__IdentityProviders__WorkOS__Issuer: https://api.workos.com
-      Application__IdentityProviders__WorkOS__ApiKey: ${PRODUCTION_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app

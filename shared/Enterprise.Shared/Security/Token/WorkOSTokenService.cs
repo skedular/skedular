@@ -17,21 +17,21 @@ public interface IWorkOSTokenService : ITokenService;
 // ReSharper disable once InconsistentNaming
 public class WorkOSTokenService : IWorkOSTokenService
 {
-    private readonly Configurations.WorkOS _cognitoConfiguration;
+    private readonly Configurations.WorkOS _configuration;
     private readonly IContext _context;
     private readonly IMemoryCache _memoryCache;
     private readonly IServiceProvider _serviceProvider;
     private readonly WorkOSClient _workOsClient;
 
     public WorkOSTokenService(
-        ApplicationConfiguration applicationConfiguration,
+        IdentityProvidersConfiguration identityProvidersConfiguration,
         IContext context,
         IMemoryCache memoryCache,
         WorkOSClient workOsClient,
         IServiceProvider serviceProvider)
     {
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.WorkOS);
-        _cognitoConfiguration = applicationConfiguration.IdentityProviders.WorkOS;
+        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.WorkOS);
+        _configuration = identityProvidersConfiguration.WorkOS;
 
         _context = context;
         _memoryCache = memoryCache;
@@ -47,14 +47,14 @@ public class WorkOSTokenService : IWorkOSTokenService
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(15);
 
-                return await _cognitoConfiguration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
+                return await _configuration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
             });
 
             ArgumentNullException.ThrowIfNull(jws);
 
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
-            if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
+            if (issuer is not null && _configuration.Issuer != issuer)
             {
                 return;
             }
@@ -64,7 +64,7 @@ public class WorkOSTokenService : IWorkOSTokenService
                 new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = _cognitoConfiguration.Issuer,
+                    ValidIssuer = _configuration.Issuer,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = jws.Keys,

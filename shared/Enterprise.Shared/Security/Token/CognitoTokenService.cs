@@ -19,12 +19,12 @@ public class CognitoTokenService : ICognitoTokenService
     private readonly IMemoryCache _memoryCache;
 
     public CognitoTokenService(
-        ApplicationConfiguration applicationConfiguration,
+        IdentityProvidersConfiguration identityProvidersConfiguration,
         IContext context,
         IMemoryCache memoryCache)
     {
-        ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.Cognito);
-        _cognitoConfiguration = applicationConfiguration.IdentityProviders.Cognito;
+        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.Cognito);
+        _cognitoConfiguration = identityProvidersConfiguration.Cognito;
 
         _audiences = _cognitoConfiguration.Audiences is null
             ? []
