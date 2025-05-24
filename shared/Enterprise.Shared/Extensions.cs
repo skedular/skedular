@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.Json;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
@@ -16,7 +17,11 @@ using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -160,7 +165,51 @@ public static class Extensions
             .AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), [Constants.LivenessTag]);
 
-        services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(TProgram).Assembly));
+        services
+            .AddControllers()
+            .AddJsonOptions(jsonOptions =>
+            {
+                jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                jsonOptions.JsonSerializerOptions.WriteIndented = true;
+            })
+            .ConfigureApplicationPartManager(partManager => partManager.ApplicationParts.Add(new AssemblyPart(typeof(TProgram).Assembly)))
+            .ConfigureApiBehaviorOptions(behaviorOptions =>
+            {
+                // this was shamelessly lifted from here
+                // https://github.com/KevinDockx/BuildingRESTfulAPIAspNetCore3/blob/master/Finished%20sample/CourseLibrary/CourseLibrary.API/Startup.cs
+
+                behaviorOptions.InvalidModelStateResponseFactory = context =>
+                {
+                    // create a problem details object
+                    var problemDetailsFactory = context.HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+                    var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(context.HttpContext, context.ModelState);
+
+                    // add additional info not added by default
+                    problemDetails.Detail = "See the errors field for details.";
+                    problemDetails.Instance = context.HttpContext.Request.Path;
+
+                    // find out which status code to use
+                    var actionExecutingContext = context as ActionExecutingContext;
+
+                    // only validation errors should be here
+                    if (context.ModelState.ErrorCount > 0 && (context is ControllerContext ||
+                                                              actionExecutingContext?.ActionArguments.Count ==
+                                                              context.ActionDescriptor.Parameters.Count))
+                    {
+                        problemDetails.Type = "https://myapi.com/path/to/modelrequirements";
+                        problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
+                        problemDetails.Title = "One or more validation errors occurred.";
+
+                        return new UnprocessableEntityObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                    }
+
+                    // if one of the keys wasn't correctly found / couldn't be parsed
+                    // we're dealing with null/unparsable input
+                    problemDetails.Status = StatusCodes.Status400BadRequest;
+                    problemDetails.Title = "One or more errors on input occurred.";
+                    return new BadRequestObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                };
+            });
 
         services
             .AddEndpointsApiExplorer()
@@ -181,7 +230,22 @@ public static class Extensions
     {
         var appName = GetAppName<TProgram>(app.Environment);
 
-        app.UseExceptionHandler();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler(appBuilder =>
+            {
+                appBuilder.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                });
+            });
+        }
+
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
         if (app.Environment.IsDevelopment())
