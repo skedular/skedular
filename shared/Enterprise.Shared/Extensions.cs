@@ -131,10 +131,11 @@ public static class Extensions
         services.AddAuthentication();
         services.AddAuthorization();
 
-        if (applicationConfiguration.Cookie is not null)
+        var cookieConfiguration = configuration.GetSection(CookieConfiguration.Key).Get<CookieConfiguration>();
+        if (cookieConfiguration is not null)
         {
             services
-                .AddSingleton(applicationConfiguration.Cookie)
+                .AddSingleton(cookieConfiguration)
                 .AddSingleton<ICookieHelper, CookieHelper>();
         }
 
