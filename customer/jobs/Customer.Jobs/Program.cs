@@ -1,7 +1,7 @@
 using Customer.Shared;
 using Customer.Shared.Configurations;
 using Customer.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;

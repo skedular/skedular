@@ -1,4 +1,4 @@
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Gateway.Configurations;
 using Gateway.Handlers;
 using HotChocolate.Fusion.Metadata;

@@ -3,7 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Billing.Processors.Subscribers;
 using Billing.Shared;
 using Billing.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;

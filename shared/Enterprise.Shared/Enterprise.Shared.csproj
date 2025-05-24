@@ -37,6 +37,8 @@
         <PackageReference Include="StackExchange.Redis" Version="2.8.37"/>
         <PackageReference Include="Stripe.net" Version="48.1.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0"/>
+        <PackageReference Include="System.Reactive" Version="6.0.1"/>
         <PackageReference Include="WorkOS.net" Version="2.9.0"/>
 
         <PackageReference Include="Aspire.Confluent.Kafka" Version="9.3.0"/>
@@ -90,8 +92,9 @@
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1"/>
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0"/>
-        <PackageReference Include="System.Reactive" Version="6.0.1"/>
+
+        <PackageReference Include="Temporalio" Version="1.6.0"/>
+        <PackageReference Include="Temporalio.Extensions.Hosting" Version="1.6.0"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
@@ -101,6 +104,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Temporal\"/>
     </ItemGroup>
 
 </Project>

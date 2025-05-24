@@ -3,7 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Customer.Processors.Subscribers;
 using Customer.Shared;
 using Customer.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;

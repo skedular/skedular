@@ -1,7 +1,7 @@
 using Billing.Api.Grpc;
 using Billing.Shared;
 using Billing.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;

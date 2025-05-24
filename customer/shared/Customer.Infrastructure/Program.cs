@@ -1,7 +1,7 @@
 ﻿using Customer.Infrastructure.Services;
 using Customer.Shared;
 using Customer.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 

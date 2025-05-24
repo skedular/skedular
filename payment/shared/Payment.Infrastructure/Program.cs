@@ -1,4 +1,4 @@
-﻿using Enterprise.Shared.Application.WebHostService;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Payment.Infrastructure.Services;

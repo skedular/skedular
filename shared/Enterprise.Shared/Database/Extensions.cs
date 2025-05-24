@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Enterprise.Shared.Cache;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
-using Quartz.Impl.AdoJobStore.Common;
-using StackExchange.Redis;
 
 namespace Enterprise.Shared.Database;
 
-public static class ServiceExtensions
+public static class Extensions
 {
     public static IServiceCollection WithPooledDbContextFactory<TDbContext>(
         this IServiceCollection services,
@@ -84,22 +81,6 @@ public static class ServiceExtensions
                     })
                 .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         });
-    }
-
-    public static IServiceCollection WithQuartzNpgsqlDbProvider(this IServiceCollection services, NpgsqlDataSource dataSource) =>
-        services.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(dataSource));
-
-    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, string connectionName)
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
-
-        return services
-            .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
-            .AddScoped<IDistributedCache, DistributedCache>();
     }
 
     private static NpgsqlDataSource GetDatasource(this IServiceCollection services, bool isPooled, string connectionString)

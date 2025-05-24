@@ -3,7 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Booking.Processors.Subscribers;
 using Booking.Shared;
 using Booking.Shared.Database;
-using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
