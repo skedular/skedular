@@ -21,6 +21,7 @@ public static class Extensions
         }
 
         return services
+            .AddSingleton(temporalConfiguration)
             .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue)
             .ConfigureOptions(o => { o.ConfigureService(temporalConfiguration); });
     }
@@ -37,6 +38,7 @@ public static class Extensions
         }
 
         return services
+            .AddSingleton(temporalConfiguration)
             .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
             .Configure<ITemporalClient>(_ => { });
     }
@@ -51,7 +53,7 @@ public static class Extensions
         temporalClientConnectOptions.Namespace = temporalConfiguration.Connection.Namespace;
         temporalClientConnectOptions.TargetHost = temporalConfiguration.Connection.Target;
 
-        if (temporalConfiguration.Connection.Mtls != null)
+        if (temporalConfiguration.Connection.Mtls is not null)
         {
             temporalClientConnectOptions.Tls = new TlsOptions
             {
