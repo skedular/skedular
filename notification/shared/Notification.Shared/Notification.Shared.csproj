@@ -24,8 +24,4 @@
         <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
-    </ItemGroup>
-
 </Project>

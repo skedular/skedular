@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{8DAB
 		scripts\format.sh = scripts\format.sh
 		scripts\generate-graphql.sh = scripts\generate-graphql.sh
 		scripts\lint.sh = scripts\lint.sh
-		scripts\run-docker-compose.sh = scripts\run-docker-compose.sh
 		scripts\start-dependencies.sh = scripts\start-dependencies.sh
 	EndProjectSection
 EndProject
