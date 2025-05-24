@@ -36,11 +36,9 @@ public static class Extensions
             temporalConfiguration.Connection.Target = target;
         }
 
-        return services.AddTemporalClient(o => { o.ConfigureClient(temporalConfiguration); }).Configure<ITemporalClient>(c =>
-        {
-            // connect when the container is built
-            c.Connection.ConnectAsync(); // TODO: 20250524 - Morteza: Check this line later
-        });
+        return services
+            .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
+            .Configure<ITemporalClient>(_ => { });
     }
 
     private static TemporalClientConnectOptions ConfigureClient(

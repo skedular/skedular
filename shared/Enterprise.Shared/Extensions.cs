@@ -250,8 +250,6 @@ public static class Extensions
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
-
             app.UseOpenApi();
             app.UseSwaggerUi();
 
