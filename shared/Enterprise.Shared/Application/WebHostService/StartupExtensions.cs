@@ -44,9 +44,6 @@ public static class StartupExtensions
 
         if (applicationConfiguration.IdentityProviders.WorkOS is not null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.ApiKey);
-            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer);
-
             services
                 .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }))
                 .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
@@ -54,9 +51,6 @@ public static class StartupExtensions
 
         if (applicationConfiguration.IdentityProviders.Cognito is not null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Issuer);
-            ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Audiences);
-
             services
                 .AddSingleton<ICognitoTokenService, CognitoTokenService>();
         }
@@ -72,9 +66,6 @@ public static class StartupExtensions
         var azureEntraConfiguration = configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
         if (azureEntraConfiguration is not null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
-            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientSecret);
-
             services
                 .AddSingleton(azureEntraConfiguration)
                 .AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>()
@@ -104,13 +95,8 @@ public static class StartupExtensions
 
         if (applicationConfiguration.Cookie is not null)
         {
-            var cookieConfiguration = applicationConfiguration.Cookie;
-            ArgumentNullException.ThrowIfNull(cookieConfiguration.EncryptionKey);
-            ArgumentException.ThrowIfNullOrWhiteSpace(cookieConfiguration.EncryptionKey.Key);
-            ArgumentException.ThrowIfNullOrWhiteSpace(cookieConfiguration.EncryptionKey.Iv);
-
             services
-                .AddSingleton(cookieConfiguration)
+                .AddSingleton(applicationConfiguration.Cookie)
                 .AddSingleton<ICookieHelper, CookieHelper>();
         }
 
