@@ -82,6 +82,42 @@ services:
     networks:
       - skedular_network
 
+  staging-temporal:
+    image: temporalio/auto-setup:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      - DB=postgres12
+      - POSTGRES_SEEDS=postgres
+      - DB_PORT=5432
+      - DBNAME=staging.temporal
+      - VISIBILITY_DBNAME=staging.temporal_visibility
+      - POSTGRES_USER=${SKEDULAR_POSTGRES_USERNAME}
+      - POSTGRES_PWD=${SKEDULAR_POSTGRES_PASSWORD}
+      - TEMPORAL_ADDRESS=staging-temporal:7233
+      - TEMPORAL_CLI_ADDRESS=staging-temporal:7233
+    networks:
+      - skedular_network
+
+  prod-temporal:
+    image: temporalio/auto-setup:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      - DB=postgres12
+      - POSTGRES_SEEDS=postgres
+      - DB_PORT=5432
+      - DBNAME=prod.temporal
+      - VISIBILITY_DBNAME=prod.temporal_visibility
+      - POSTGRES_USER=${SKEDULAR_POSTGRES_USERNAME}
+      - POSTGRES_PWD=${SKEDULAR_POSTGRES_PASSWORD}
+      - TEMPORAL_ADDRESS=prod-temporal:7233
+      - TEMPORAL_CLI_ADDRESS=prod-temporal:7233
+    networks:
+      - skedular_network
+
   staging-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure

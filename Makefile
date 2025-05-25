@@ -64,18 +64,18 @@ services-all-terminate:
 services-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-temporal prod-temporal staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-temporal prod-temporal staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
 
 .PHONY: services-start
 services-start:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-temporal prod-temporal staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
 
 .PHONY: services-stop
 services-stop:
-	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-temporal prod-temporal staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
 
 .PHONY: crm-restart
 crm-restart:
