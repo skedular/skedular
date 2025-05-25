@@ -23,12 +23,9 @@ public class ProducerFactory(
     {
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
-        using var logScope = logger.BeginScope("[{Build}<{Key}, {Value}>]", nameof(Build),
-            typeof(TKey),
-            typeof(TValue));
+        using var logScope = logger.BeginScope("[{Build}<{Key}, {Value}>]", nameof(Build), typeof(TKey), typeof(TValue));
 
         var config = BuildProducerConfig(kafkaConfiguration);
-
         var producer = BuildProducer<TKey, TValue>(config);
 
         return producer;
@@ -43,9 +40,7 @@ public class ProducerFactory(
             var serializer = serviceProvider.GetRequiredService<ISerializer<TKey>>();
             var className = serializer.GetType().ToFullName();
 
-            logger.LogTrace(
-                "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
-                className);
+            logger.LogTrace("Setting serializer for {KeyType}: {SerializerType}", typeof(TKey), className);
             builder.SetKeySerializer(serializer);
         }
 
@@ -54,9 +49,7 @@ public class ProducerFactory(
             var serializer = serviceProvider.GetRequiredService<ISerializer<TValue>>();
             var className = serializer.GetType().ToFullName();
 
-            logger.LogTrace(
-                "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
-                className);
+            logger.LogTrace("Setting serializer for {KeyType}: {SerializerType}", typeof(TKey), className);
             builder.SetValueSerializer(serializer);
         }
 

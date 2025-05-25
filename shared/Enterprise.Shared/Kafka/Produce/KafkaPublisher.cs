@@ -9,18 +9,9 @@ namespace Enterprise.Shared.Kafka.Produce;
 
 public interface IKafkaPublisher<in TKey, in TValue> where TValue : class, IEvent
 {
-    Task PublishAsync(
-        TKey key,
-        TValue outgoingEvent,
-        CancellationToken cancellationToken);
+    Task PublishAsync(TKey key, TValue outgoingEvent, CancellationToken cancellationToken);
 }
 
-/// <summary>
-///     Core functionality of kafka publishing.
-///     Values to be sent require the <see cref="KafkaTopicAttribute" /> on the class
-/// </summary>
-/// <typeparam name="TKey"></typeparam>
-/// <typeparam name="TValue"></typeparam>
 public class KafkaPublisher<TKey, TValue>(
     IProducer<TKey, TValue> producer,
     IActivityAccessor activityAccessor,
@@ -29,10 +20,7 @@ public class KafkaPublisher<TKey, TValue>(
     : IKafkaPublisher<TKey, TValue>
     where TValue : class, IEvent
 {
-    public async Task PublishAsync(
-        TKey key,
-        TValue outgoingEvent,
-        CancellationToken cancellationToken)
+    public async Task PublishAsync(TKey key, TValue outgoingEvent, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(outgoingEvent);
         ArgumentNullException.ThrowIfNull(typeof(TValue).GetCustomAttribute<KafkaTopicAttribute>());

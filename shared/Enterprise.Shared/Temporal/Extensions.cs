@@ -1,3 +1,4 @@
+using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ public static class Extensions
         }
 
         return services
+            .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
             .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue)
             .ConfigureOptions(o => { o.ConfigureService(temporalConfiguration); });
@@ -38,6 +40,7 @@ public static class Extensions
         }
 
         return services
+            .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
             .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
             .Configure<ITemporalClient>(_ => { });

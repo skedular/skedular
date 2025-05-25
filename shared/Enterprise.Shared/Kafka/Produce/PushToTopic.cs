@@ -7,10 +7,7 @@ namespace Enterprise.Shared.Kafka.Produce;
 
 public interface IPushToTopic<TKey>
 {
-    Task PushToTopicAsync(
-        string topicName,
-        Message<TKey, byte[]> message,
-        CancellationToken cancellationToken);
+    Task PushToTopicAsync(string topicName, Message<TKey, byte[]> message, CancellationToken cancellationToken);
 
     Task PushToExceptionTopicAsync(
         string topicName,
@@ -29,10 +26,7 @@ public class PushToTopic<TKey>(
 {
     private readonly IProducer<TKey, byte[]> _producer = factory.Build<TKey, byte[]>(kafkaConfiguration);
 
-    public async Task PushToTopicAsync(
-        string topicName,
-        Message<TKey, byte[]> message,
-        CancellationToken cancellationToken)
+    public async Task PushToTopicAsync(string topicName, Message<TKey, byte[]> message, CancellationToken cancellationToken)
     {
         try
         {
@@ -41,11 +35,7 @@ public class PushToTopic<TKey>(
         }
         catch (Exception ex)
         {
-            logger.LogCritical(
-                ex,
-                "Failed to push message {Key} to {Topic}",
-                message.Key,
-                topicName);
+            logger.LogCritical(ex, "Failed to push message {Key} to {Topic}", message.Key, topicName);
 
             throw;
         }
