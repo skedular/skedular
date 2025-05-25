@@ -24,6 +24,8 @@ public static class Extensions
         return services
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
+            .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
+            .Configure<ITemporalClient>(_ => { })
             .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue)
             .ConfigureOptions(o => { o.ConfigureService(temporalConfiguration); });
     }
