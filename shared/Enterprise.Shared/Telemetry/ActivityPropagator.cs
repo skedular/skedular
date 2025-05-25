@@ -23,7 +23,7 @@ public interface IActivityPropagator<in T> where T : class
         IActivitySource activitySource,
         string activityName,
         ActivityKind kind = ActivityKind.Internal,
-        IEnumerable<KeyValuePair<string, object?>>? tags = default);
+        IEnumerable<KeyValuePair<string, object?>>? tags = null);
 }
 
 /// <summary>
@@ -35,16 +35,14 @@ public class ActivityPropagator<T>(
     IPropagationContextGetter propagationContextGetter,
     TextMapPropagator textMapPropagator,
     IPropagatorFunctionProvider<T> functionProvider)
-    : IActivityPropagator<T>
-    where T : class
+    : IActivityPropagator<T> where T : class
 {
     public void PropagateActivity(T destination)
     {
         ArgumentNullException.ThrowIfNull(destination);
 
         var propagationContext = propagationContextGetter.GetPropagationContext();
-
-        if (propagationContext == null)
+        if (propagationContext is null)
         {
             return;
         }
@@ -53,22 +51,17 @@ public class ActivityPropagator<T>(
     }
 
     public PropagationContext GetActivityPropagationContext(T location) =>
-        textMapPropagator.Extract(new PropagationContext(), location,
-            functionProvider.Extract);
+        textMapPropagator.Extract(new PropagationContext(), location, functionProvider.Extract);
 
     public Activity? StartActivityFromPropagationContext(
         T location,
         IActivitySource activitySource,
         string activityName,
         ActivityKind kind = ActivityKind.Internal,
-        IEnumerable<KeyValuePair<string, object?>>? tags = default)
+        IEnumerable<KeyValuePair<string, object?>>? tags = null)
     {
         var propagationContext = GetActivityPropagationContext(location);
 
-        return activitySource.StartActivity(
-            activityName,
-            kind,
-            propagationContext.ActivityContext,
-            tags);
+        return activitySource.StartActivity(activityName, kind, propagationContext.ActivityContext, tags);
     }
 }

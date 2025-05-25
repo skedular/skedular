@@ -131,4 +131,7 @@ public static class Constants
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
     public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
+
+    public const int MaxWorkflowTypeLength = 1024;
+    public const int MaxWorkflowExecutionArgsLength = 10240;
 }

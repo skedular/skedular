@@ -10,9 +10,6 @@ using Enterprise.Shared.Telemetry;
 
 namespace Enterprise.Shared.Outbox.Publishers;
 
-/// <summary>
-///     Reliable delivery event publisher to kafka
-/// </summary>
 public interface IKafkaOutboxEventPublisher<in TKey, in TEvent> where TEvent : IMetadataEvent
 {
     void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork);
@@ -26,22 +23,19 @@ public class KafkaOutboxEventPublisher<TKey, TEvent>(
     KafkaConfiguration kafkaConfiguration,
     IRandomHelper randomHelper,
     TimeProvider timeProvider)
-    : IKafkaOutboxEventPublisher<TKey, TEvent>
-    where TEvent : class, IMetadataEvent
+    : IKafkaOutboxEventPublisher<TKey, TEvent> where TEvent : class, IMetadataEvent
 {
     public void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork)
     {
-        ArgumentNullException.ThrowIfNull(@event);
-
-        var topic = @event.GetTopicName(kafkaConfiguration.OutgoingTopicPrefix);
-        var dbContext = unitOfWork as IKafkaOutboxStore;
-
-        ArgumentNullException.ThrowIfNull(dbContext);
-
         using (activityAccessor.GetActivitySource(TelemetryKeys.KafkaActivitySourceName).StartActivity(TelemetryKeys.KafkaEventSave))
         {
             var headers = new Dictionary<string, string>();
             dictionaryActivityPropagator.PropagateActivity(headers);
+
+            ArgumentNullException.ThrowIfNull(@event);
+            var topic = @event.GetTopicName(kafkaConfiguration.OutgoingTopicPrefix);
+            var dbContext = unitOfWork as IKafkaOutboxStore;
+            ArgumentNullException.ThrowIfNull(dbContext);
 
             dbContext.KafkaOutbox.Add(new KafkaOutbox
             {

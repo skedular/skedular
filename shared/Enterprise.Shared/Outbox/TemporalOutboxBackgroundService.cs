@@ -1,15 +1,12 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using Api.Shared;
-using Confluent.Kafka;
 using Enterprise.Shared.Database.Interceptors;
-using Enterprise.Shared.Kafka.Configurations;
-using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Enterprise.Shared.Outbox.Telemetry;
 using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -17,37 +14,35 @@ using IsolationLevel = System.Data.IsolationLevel;
 
 namespace Enterprise.Shared.Outbox;
 
-public class KafkaOutboxBackgroundService<TDbContext>(
+public class TemporalOutboxBackgroundService<TDbContext>(
     IDbContextFactory<TDbContext> contextFactory,
-    IProducerFactory producerFactory,
     IActivityAccessor activityAccessor,
-    KafkaConfiguration kafkaConfiguration,
-    ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
-    IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator)
-    : BackgroundService where TDbContext : DbContext, IKafkaOutboxStore
+    ILogger<TemporalOutboxBackgroundService<TDbContext>> logger,
+    IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
+    IServiceProvider serviceProvider)
+    : BackgroundService where TDbContext : DbContext, ITemporalOutboxStore
 {
     private const int CriticalRetryThreshold = 5;
 
-    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<KafkaOutbox?>>
+    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<TemporalOutbox?>>
         s_getOutboxItemQueryAsync =
-            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, KafkaOutbox?>((
+            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, TemporalOutbox?>((
                     dbContext,
                     thresholdRetryTime,
                     cancellationToken) =>
-                dbContext.KafkaOutbox
+                dbContext.TemporalOutbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
                     .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
                     .OrderBy(query => query.RetryCount)
                     .FirstOrDefault());
 
-    private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
     private readonly TimeSpan _retryTime = TimeSpan.FromSeconds(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var className = GetType().ToFullName();
 
-        logger.LogInformation("Starting Kafka Outbox - {Class}", className);
+        logger.LogInformation("Starting Temporal Outbox - {Class}", className);
 
         await Policy.Handle<Exception>()
             .WaitAndRetryForeverAsync(
@@ -56,7 +51,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                     logger.LogError(exception, "Database issue occured! Retry {RetryCount} will start in {Time}", retry, retryTime))
             .ExecuteAsync(async token => await ProcessOutboxAsync(token), stoppingToken);
 
-        logger.LogInformation("Stopping Kafka {Class}", className);
+        logger.LogInformation("Stopping Temporal {Class}", className);
     }
 
     private async Task ProcessOutboxAsync(CancellationToken cancellationToken)
@@ -75,32 +70,28 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                 continue;
             }
 
-            var kafkaHeaders = ConvertToKafkaHeaders(outboxEvent.Headers);
-            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.KafkaActivitySourceName);
+            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.TemporalActivitySourceName);
 
             using (dictionaryActivityPropagator.StartActivityFromPropagationContext(
-                       outboxEvent.Headers,
+                       new Dictionary<string, string>(),
                        activitySource,
-                       TelemetryKeys.KafkaEventSend,
+                       TelemetryKeys.TemporalEventSend,
                        ActivityKind.Producer))
             {
-                var message = new Message<byte[]?, byte[]>
-                {
-                    Headers = kafkaHeaders, Key = outboxEvent.Key, Value = outboxEvent.Payload, Timestamp = new Timestamp(outboxEvent.Timestamp)
-                };
-
                 try
                 {
-                    logger.LogTrace("Producing message {MessageKey}", message.Key);
+                    logger.LogTrace("Started executing workflow {WorkflowType}", outboxEvent.WorkflowType);
 
-                    await _producer.ProduceAsync(outboxEvent.Topic, message, cancellationToken);
+                    await using var scope = serviceProvider.CreateAsyncScope();
+                    var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
+                    await temporalOutboxExecutor.StartWorkflowAsync(outboxEvent.WorkflowType, outboxEvent.ExecutionArgs, outboxEvent.WorkflowOptions);
 
                     activityAccessor.AddEvent(
-                        "Publish Kafka Outbox Message",
-                        "publish_kafka_outbox_message",
-                        new Dictionary<string, string> { [nameof(outboxEvent.Topic)] = outboxEvent.Topic });
+                        "Publish Temporal Outbox Message",
+                        "publish_temporal_outbox_message",
+                        new Dictionary<string, string> { [nameof(outboxEvent.WorkflowType)] = outboxEvent.WorkflowType });
 
-                    logger.LogTrace("Message {MessageKey} posted. Removing from outbox", message.Key);
+                    logger.LogTrace("Workflow {WorkflowType} execution started. Removing from outbox", outboxEvent.WorkflowType);
                     dbContext.Remove(outboxEvent);
                 }
                 catch (Exception ex)
@@ -114,8 +105,8 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                     activityAccessor.AddException(ex);
 
                     activityAccessor.AddEvent(
-                        "Retry Kafka Outbox Message",
-                        "retry_kafka_outbox_message",
+                        "Retry Temporal Outbox Message",
+                        "retry_temporal_outbox_message",
                         new Dictionary<string, string>
                         {
                             [nameof(outboxEvent.LastRetry)] = outboxEvent.LastRetry?.ToString("O")!, [nameof(LogLevel)] = level.ToString("G")
@@ -124,29 +115,17 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                     logger.Log(
                         level,
                         ex,
-                        "Failed to push message {MessageKey}. Setting retry count to {RetryCount} and last retry to {LastRetry}",
-                        message.Key,
+                        "Failed to execute workflow {WorkflowType}. Setting retry count to {RetryCount} and last retry to {LastRetry}",
+                        outboxEvent.WorkflowType,
                         outboxEvent.RetryCount,
                         outboxEvent.LastRetry);
                 }
 
-                logger.LogTrace("Saving changes to Message {MessageKey}", message.Key);
+                logger.LogTrace("Saving changes to Workflow {WorkflowType}", outboxEvent.WorkflowType);
                 await dbContext.SaveChangesAsync(cancellationToken);
-                logger.LogTrace("Commiting transaction for Message {MessageKey}", message.Key);
+                logger.LogTrace("Commiting transaction for Workflow {WorkflowType}", outboxEvent.WorkflowType);
                 await transaction.CommitAsync(cancellationToken);
             }
         }
-    }
-
-    private static Headers ConvertToKafkaHeaders(IDictionary<string, string> dictionary)
-    {
-        var headers = new Headers();
-
-        foreach (var header in dictionary)
-        {
-            headers.Add(header.Key, Encoding.UTF8.GetBytes(header.Value));
-        }
-
-        return headers;
     }
 }
