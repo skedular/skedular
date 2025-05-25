@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Temporalio.Client;
 
 #nullable disable
 
@@ -70,6 +71,47 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("KafkaOutbox");
+                });
+
+            modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.TemporalOutbox", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ExecutionArgs")
+                        .HasMaxLength(10240)
+                        .HasColumnType("character varying(10240)");
+
+                    b.Property<DateTimeOffset?>("LastRetry")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProcessingErrors")
+                        .HasMaxLength(102400)
+                        .HasColumnType("character varying(102400)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<WorkflowOptions>("WorkflowOptions")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("WorkflowType")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LastRetry");
+
+                    b.HasIndex("RetryCount");
+
+                    b.ToTable("TemporalOutbox");
                 });
 
             modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>

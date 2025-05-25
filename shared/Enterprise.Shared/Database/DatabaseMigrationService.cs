@@ -23,12 +23,8 @@ public class DatabaseMigrationService : IDatabaseMigrationService
                 {
                     await dbCreator.CreateAsync(ct);
                 }
-            }, cancellationToken);
-        await strategy.ExecuteAsync(
-            dbContext,
-            async (context, ct) =>
-            {
-                await context.Database.MigrateAsync(ct);
-            }, cancellationToken);
+            },
+            cancellationToken);
+        await strategy.ExecuteAsync(dbContext, async (context, ct) => { await context.Database.MigrateAsync(ct); }, cancellationToken);
     }
 }

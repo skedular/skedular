@@ -123,6 +123,7 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__temporal: "staging-temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -178,6 +179,7 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__temporal: "staging-temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -270,6 +272,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      ConnectionStrings__temporal: "staging-temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -363,6 +366,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      ConnectionStrings__temporal: "staging-temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -445,6 +449,7 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__temporal: "prod-temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -502,6 +507,7 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      ConnectionStrings__temporal: "prod-temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -594,6 +600,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      ConnectionStrings__temporal: "prod-temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -687,6 +694,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      ConnectionStrings__temporal: "prod-temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}

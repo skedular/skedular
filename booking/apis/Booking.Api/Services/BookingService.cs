@@ -5,12 +5,17 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
+using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Temporal.Configurations;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Temporalio.Api.Enums.V1;
+using Temporalio.Client;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -47,7 +52,9 @@ public class BookingService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingService
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    TemporalConfiguration temporalConfiguration,
+    ITemporalOutboxWorkflowExecutor<BookingPaidThroughStripe, BookingPaidThroughStripeInput> temporalOutboxWorkflowExecutor) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -151,6 +158,20 @@ public class BookingService(
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
+        if (booking.IsPaymentRequired)
+        {
+            temporalOutboxWorkflowExecutor.Execute(
+                new BookingPaidThroughStripeInput(booking.Id),
+                new WorkflowOptions
+                {
+                    Id = booking.Id,
+                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                    RetryPolicy = null,
+                    IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                },
+                repositoryFactory.UnitOfWork);
+        }
+        
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 

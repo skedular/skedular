@@ -1,9 +1,12 @@
 using Booking.Shared;
 using Booking.Shared.Database;
+using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Temporal;
+using Temporalio.Extensions.Hosting;
 
 namespace Booking.Jobs;
 
@@ -25,6 +28,7 @@ public class Program
             .AddKafka(configuration)
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddKafkaOutboxBackgroundService<BookingDbContext>()
+            .AddTemporalOutboxBackgroundService<BookingDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -34,6 +38,10 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddGrpcServices(configuration);
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<BookingPaidThroughStripe>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }
