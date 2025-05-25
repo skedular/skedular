@@ -30,7 +30,7 @@ public class NotificationOutboxPublisher(
     EmailConfiguration emailConfiguration,
     IRandomHelper randomHelper,
     IContext context,
-    IOutboxEventPublisher<Key, Event> publisher)
+    IKafkaOutboxEventPublisher<Key, Event> publisher)
     : INotificationOutboxPublisher
 {
     public void PublishNewSlackWorkspaceJoinedSubmitted(Workspace workspace, IUnitOfWork unitOfWork)

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Customer.Shared.Database;
 
 public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<CustomerDbContext>(options, customDbContextOptions), IOutboxStore
+    : DbContextBase<CustomerDbContext>(options, customDbContextOptions), IKafkaOutboxStore
 {
     public DbSet<Entities.Customer> Customer { get; set; }
     public DbSet<CustomerFeedback> CustomerFeedback { get; set; }
@@ -21,7 +21,7 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public DbSet<Team> Team { get; set; }
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Resource> Resource { get; set; }
-    public DbSet<Outbox> Outbox { get; set; }
+    public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class CustomerDbContextDesignFactory : IDesignTimeDbContextFactory<CustomerDbContext>

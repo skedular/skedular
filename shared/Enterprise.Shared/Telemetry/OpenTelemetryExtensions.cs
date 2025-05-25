@@ -108,7 +108,7 @@ public static class OpenTelemetryExtensions
                     .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
                     .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
                     .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
-                    .AddActivitySource(Outbox.Telemetry.TelemetryKeys.ActivitySourceName);
+                    .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
 
                 if (openTelemetrySettings is null)
                 {

@@ -6,39 +6,43 @@ using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Outbox.Database;
+using Enterprise.Shared.Outbox.Database.Entities;
 using Enterprise.Shared.Outbox.Telemetry;
 using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
 using IsolationLevel = System.Data.IsolationLevel;
 
 namespace Enterprise.Shared.Outbox;
 
-public class OutboxBackgroundService<TDbContext>(
+public class KafkaOutboxBackgroundService<TDbContext>(
     IDbContextFactory<TDbContext> contextFactory,
     IProducerFactory producerFactory,
     IActivityAccessor activityAccessor,
     KafkaConfiguration kafkaConfiguration,
-    ILogger<OutboxBackgroundService<TDbContext>> logger,
+    ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator)
     : BackgroundService
-    where TDbContext : DbContext, IOutboxStore
+    where TDbContext : DbContext, IKafkaOutboxStore
 {
-    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<Database.Entities.Outbox?>>
+    public const int CriticalRetryThreshold = 5;
+
+    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<KafkaOutbox?>>
         s_getOutboxItemQueryAsync =
-            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, Database.Entities.Outbox?>((
+            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, KafkaOutbox?>((
                     dbContext,
                     thresholdRetryTime,
                     cancellationToken) =>
-                dbContext.Outbox
+                dbContext.KafkaOutbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                    .Where(query =>
-                        query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
+                    .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
                     .OrderBy(query => query.RetryCount)
                     .FirstOrDefault());
 
     private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
+    public readonly TimeSpan RetryTime = TimeSpan.FromSeconds(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -46,9 +50,12 @@ public class OutboxBackgroundService<TDbContext>(
 
         logger.LogInformation("Starting Outbox - {Class}", className);
 
-        await OutboxParameters.DatabasePolicy.ExecuteAsync(
-            async token => await ProcessOutboxAsync(token),
-            stoppingToken);
+        await Policy.Handle<Exception>()
+            .WaitAndRetryForeverAsync(
+                _ => TimeSpan.FromSeconds(5),
+                (exception, retry, retryTime) =>
+                    logger.LogError(exception, "Database issue occured! Retry {RetryCount} will start in {Time}", retry, retryTime))
+            .ExecuteAsync(async token => await ProcessOutboxAsync(token), stoppingToken);
 
         logger.LogInformation("Stopping {Class}", className);
     }
@@ -59,24 +66,24 @@ public class OutboxBackgroundService<TDbContext>(
         {
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
             await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
-            var retryTime = TimeSpan.FromSeconds(OutboxParameters.RetryTime.TotalSeconds);
+            var retryTime = TimeSpan.FromSeconds(RetryTime.TotalSeconds);
             var thresholdTime = DateTimeOffset.UtcNow - retryTime;
             var outboxEvent = await s_getOutboxItemQueryAsync(dbContext, thresholdTime, cancellationToken);
             if (outboxEvent == null)
             {
                 // if there are no events, then wait till there is one, or poll the database after a certain amount of time.
-                await Task.Delay(OutboxParameters.RetryTime, cancellationToken);
+                await Task.Delay(RetryTime, cancellationToken);
 
                 continue;
             }
 
             var kafkaHeaders = ConvertToKafkaHeaders(outboxEvent.Headers);
-            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName);
+            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.KafkaActivitySourceName);
 
             using (dictionaryActivityPropagator.StartActivityFromPropagationContext(
                        outboxEvent.Headers,
                        activitySource,
-                       TelemetryKeys.EventSend,
+                       TelemetryKeys.KafkaEventSend,
                        ActivityKind.Producer))
             {
                 var message = new Message<byte[]?, byte[]>
@@ -91,7 +98,9 @@ public class OutboxBackgroundService<TDbContext>(
 
                     await _producer.ProduceAsync(outboxEvent.Topic, message, cancellationToken);
 
-                    activityAccessor.AddEvent("Publish", "publish",
+                    activityAccessor.AddEvent(
+                        "Publish",
+                        "publish",
                         new Dictionary<string, string> { [nameof(outboxEvent.Topic)] = outboxEvent.Topic });
 
                     logger.LogTrace("Message {MessageKey} posted. Removing from outbox", message.Key);
@@ -103,7 +112,7 @@ public class OutboxBackgroundService<TDbContext>(
                     outboxEvent.LastRetry = DateTimeOffset.UtcNow;
                     outboxEvent.ProcessingErrors = ex.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
 
-                    var level = outboxEvent.RetryCount < OutboxParameters.CriticalRetryThreshold ? LogLevel.Warning : LogLevel.Critical;
+                    var level = outboxEvent.RetryCount < CriticalRetryThreshold ? LogLevel.Warning : LogLevel.Critical;
 
                     activityAccessor.AddException(ex);
 

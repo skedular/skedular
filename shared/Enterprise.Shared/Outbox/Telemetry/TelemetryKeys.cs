@@ -2,7 +2,7 @@
 
 public static class TelemetryKeys
 {
-    public const string ActivitySourceName = "kafka_outbox";
-    public const string EventSave = "outbox save";
-    public const string EventSend = "outbox send";
+    public const string KafkaActivitySourceName = "kafka_outbox";
+    public const string KafkaEventSave = "kafka outbox save";
+    public const string KafkaEventSend = "kafka outbox send";
 }

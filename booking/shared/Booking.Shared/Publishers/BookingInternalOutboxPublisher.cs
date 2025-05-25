@@ -17,7 +17,7 @@ public interface IBookingInternalOutboxPublisher
 public class BookingInternalOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IContext context,
-    IOutboxEventPublisher<Key, Event> publisher)
+    IKafkaOutboxEventPublisher<Key, Event> publisher)
     : IBookingInternalOutboxPublisher
 {
     public void PublishGenerateResourceBookingSlot(IEnumerable<string> resourceIds, IUnitOfWork unitOfWork)

@@ -8,7 +8,7 @@ using Organization.Shared.Database.Entities;
 namespace Organization.Shared.Database;
 
 public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IOutboxStore
+    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IKafkaOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }
@@ -30,7 +30,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<Team> Team { get; set; }
     public DbSet<TermsOfUse> TermsOfUse { get; set; }
     public DbSet<Tag> Tag { get; set; }
-    public DbSet<Outbox> Outbox { get; set; }
+    public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>

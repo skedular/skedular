@@ -8,7 +8,7 @@ using Payment.Shared.Database.Entities;
 namespace Payment.Shared.Database;
 
 public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<PaymentDbContext>(options, customDbContextOptions), IOutboxStore
+    : DbContextBase<PaymentDbContext>(options, customDbContextOptions), IKafkaOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Booking> Booking { get; set; }
@@ -29,7 +29,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
     public DbSet<StripePrice> StripePrice { get; set; }
     public DbSet<StripeProduct> StripeProduct { get; set; }
-    public DbSet<Outbox> Outbox { get; set; }
+    public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class PaymentDbContextDesignFactory : IDesignTimeDbContextFactory<PaymentDbContext>

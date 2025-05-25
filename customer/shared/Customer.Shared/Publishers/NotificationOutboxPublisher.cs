@@ -37,7 +37,7 @@ public class NotificationOutboxPublisher(
     EmailConfiguration emailConfiguration,
     IRandomHelper randomHelper,
     IContext context,
-    IOutboxEventPublisher<Key, Event> publisher)
+    IKafkaOutboxEventPublisher<Key, Event> publisher)
     : INotificationOutboxPublisher
 {
     public void PublishNewCustomerFeedbackSubmitted(CustomerFeedback customerFeedback, IUnitOfWork unitOfWork)

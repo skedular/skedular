@@ -16,7 +16,7 @@ public interface IOrganizationInternalOutboxPublisher
 public class OrganizationInternalOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IContext context,
-    IOutboxEventPublisher<Key, Event> publisher)
+    IKafkaOutboxEventPublisher<Key, Event> publisher)
     : IOrganizationInternalOutboxPublisher
 {
     public void PublishRefreshAzureTenantMembers(IEnumerable<string> azureTenantIds, IUnitOfWork unitOfWork)

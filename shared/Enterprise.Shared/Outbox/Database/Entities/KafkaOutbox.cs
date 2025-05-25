@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Enterprise.Shared.Outbox.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-public class Outbox
+public class KafkaOutbox
 {
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string Id { get; set; }
@@ -24,9 +24,9 @@ public class Outbox
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class OutboxConfiguration : IEntityTypeConfiguration<Outbox>
+public class OutboxConfiguration : IEntityTypeConfiguration<KafkaOutbox>
 {
-    public void Configure(EntityTypeBuilder<Outbox> builder)
+    public void Configure(EntityTypeBuilder<KafkaOutbox> builder)
     {
         builder.HasKey(item => item.Id);
 

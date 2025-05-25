@@ -5,13 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Enterprise.Shared.Outbox;
 
-public static class OutboxExtensions
+public static class Extensions
 {
     public static IServiceCollection AddKafkaOutboxBackgroundService<TDbContext>(this IServiceCollection services)
-        where TDbContext : DbContext, IOutboxStore =>
-        services.AddHostedService<OutboxBackgroundService<TDbContext>>();
+        where TDbContext : DbContext, IKafkaOutboxStore =>
+        services.AddHostedService<KafkaOutboxBackgroundService<TDbContext>>();
 
     public static IServiceCollection AddKafkaOutboxService(this IServiceCollection services) =>
         services
-            .AddSingleton(typeof(IOutboxEventPublisher<,>), typeof(OutboxEventPublisher<,>));
+            .AddSingleton(typeof(IKafkaOutboxEventPublisher<,>), typeof(KafkaOutboxEventPublisher<,>));
 }

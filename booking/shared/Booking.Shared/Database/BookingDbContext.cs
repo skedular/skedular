@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Booking.Shared.Database;
 
 public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<BookingDbContext>(options, customDbContextOptions), IOutboxStore
+    : DbContextBase<BookingDbContext>(options, customDbContextOptions), IKafkaOutboxStore
 {
     public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<BookingCheckoutSession> BookingCheckoutSession { get; set; }
@@ -25,7 +25,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<ResourceBookingSlot> ResourceBookingSlot { get; set; }
-    public DbSet<Outbox> Outbox { get; set; }
+    public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>

@@ -8,7 +8,7 @@ using Team.Shared.Database.Entities;
 namespace Team.Shared.Database;
 
 public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<TeamDbContext>(options, customDbContextOptions), IOutboxStore
+    : DbContextBase<TeamDbContext>(options, customDbContextOptions), IKafkaOutboxStore
 {
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
@@ -20,7 +20,7 @@ public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbCont
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<Location> Location { get; set; }
-    public DbSet<Outbox> Outbox { get; set; }
+    public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class TeamDbContextDesignFactory : IDesignTimeDbContextFactory<TeamDbContext>

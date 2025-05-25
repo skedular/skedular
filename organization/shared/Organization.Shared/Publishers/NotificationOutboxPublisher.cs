@@ -52,7 +52,7 @@ public class NotificationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     EmailConfiguration emailConfiguration,
     IContext context,
-    IOutboxEventPublisher<Key, Event> publisher,
+    IKafkaOutboxEventPublisher<Key, Event> publisher,
     IRandomHelper randomHelper)
     : INotificationOutboxPublisher
 {

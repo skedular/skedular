@@ -19,7 +19,7 @@ namespace Location.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -58,7 +58,7 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("BookingResource");
                 });
 
-            modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.Outbox", b =>
+            modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.KafkaOutbox", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -100,7 +100,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("RetryCount");
 
-                    b.ToTable("Outbox");
+                    b.ToTable("KafkaOutbox");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Address", b =>
