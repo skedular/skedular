@@ -18,8 +18,7 @@ public interface ISlackInternalOutboxPublisher
 public class SlackInternalOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : ISlackInternalOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : ISlackInternalOutboxPublisher
 {
     public void PublishRefreshWorkspaceMembers(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork)
     {

@@ -53,8 +53,7 @@ public class NotificationOutboxPublisher(
     EmailConfiguration emailConfiguration,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
-    IRandomHelper randomHelper)
-    : INotificationOutboxPublisher
+    IRandomHelper randomHelper) : INotificationOutboxPublisher
 {
     public void PublishInviteToJoinOrganizationNewCustomer(
         Models.Organization organization,

@@ -22,8 +22,7 @@ public class TeamOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : ITeamOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : ITeamOutboxPublisher
 {
     public void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork)
     {

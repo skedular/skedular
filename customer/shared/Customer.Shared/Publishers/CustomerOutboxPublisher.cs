@@ -20,8 +20,7 @@ public class CustomerOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : ICustomerOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : ICustomerOutboxPublisher
 {
     public void PublishCustomers(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork)
     {

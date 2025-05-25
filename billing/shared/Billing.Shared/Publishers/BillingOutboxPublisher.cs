@@ -24,8 +24,7 @@ public class BillingOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : IBillingOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : IBillingOutboxPublisher
 {
     public void PublishBillingOrganizationsOfferings(IEnumerable<OrganizationOffering> organizationOfferings, IUnitOfWork unitOfWork)
     {

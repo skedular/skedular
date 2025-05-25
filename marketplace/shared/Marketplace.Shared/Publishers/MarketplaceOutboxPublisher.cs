@@ -21,8 +21,7 @@ public class MarketplaceOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : IMarketplaceOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : IMarketplaceOutboxPublisher
 {
     public void PublishProducts(IEnumerable<Product> products, IUnitOfWork unitOfWork)
     {

@@ -44,8 +44,7 @@ public class NotificationOutboxPublisher(
     EmailConfiguration emailConfiguration,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
-    IRandomHelper randomHelper)
-    : INotificationOutboxPublisher
+    IRandomHelper randomHelper) : INotificationOutboxPublisher
 {
     public void PublishInviteToJoinTeamNewCustomer(Models.Team team, Customer inviterCustomer, string inviteeCustomerEmail, IUnitOfWork unitOfWork)
     {

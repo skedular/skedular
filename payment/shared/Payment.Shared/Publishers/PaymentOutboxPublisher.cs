@@ -23,8 +23,7 @@ public class PaymentOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : IPaymentOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : IPaymentOutboxPublisher
 {
     public void PublishOrganizationPaymentMethodState(string organizationId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork) =>
         publisher.Publish(new Key { OrganizationId = organizationId }, new Event

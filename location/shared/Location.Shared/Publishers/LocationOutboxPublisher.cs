@@ -20,8 +20,7 @@ public class LocationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : ILocationOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : ILocationOutboxPublisher
 {
     public void PublishLocations(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork)
     {

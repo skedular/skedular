@@ -22,8 +22,7 @@ public class OrganizationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher)
-    : IOrganizationOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher) : IOrganizationOutboxPublisher
 {
     public void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork)
     {

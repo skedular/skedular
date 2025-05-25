@@ -7,6 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 
 namespace Booking.Processors;
 
@@ -67,7 +68,8 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddGrpcServices(configuration);
+            .AddGrpcServices(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }
