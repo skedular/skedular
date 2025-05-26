@@ -76,22 +76,22 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId = emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailTemplateName,
+                        TemplateId = emailConfiguration.NewCustomerFeedbackSubmittedEmailTemplateName,
                         TemplateData = templateData,
-                        Sender = emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailSender
+                        Sender = emailConfiguration.NewCustomerFeedbackSubmittedEmailSender
                     }
                 }
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerFeedbackSubmittedEmailReceivers);
 
         publisher.Publish(key, @event, unitOfWork);
     }
 
     public void PublishNewCustomerJoinedSubmitted(Models.Customer customer, IUnitOfWork unitOfWork)
     {
-        if (!emailConfiguration.EnableNewCustomerJoinedThroughWebEmail)
+        if (!emailConfiguration.EnableNewCustomerJoinedEmail)
         {
             return;
         }
@@ -121,15 +121,15 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId = emailConfiguration.NewCustomerJoinedThroughWebEmailTemplateName,
+                        TemplateId = emailConfiguration.NewCustomerJoinedEmailTemplateName,
                         TemplateData = templateData,
-                        Sender = emailConfiguration.NewCustomerJoinedThroughWebEmailSender
+                        Sender = emailConfiguration.NewCustomerJoinedEmailSender
                     }
                 }
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedThroughWebEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedEmailReceivers);
 
         publisher.Publish(key, @event, unitOfWork);
     }

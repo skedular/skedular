@@ -34,7 +34,7 @@ public class NotificationOutboxPublisher(
 {
     public void PublishNewSlackWorkspaceJoinedSubmitted(Workspace workspace, IUnitOfWork unitOfWork)
     {
-        if (!emailConfiguration.EnableNewSlackWorkspaceJoinedThroughWebEmail)
+        if (!emailConfiguration.EnableNewSlackWorkspaceJoinedEmail)
         {
             return;
         }
@@ -63,15 +63,15 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId = emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailTemplateName,
+                        TemplateId = emailConfiguration.NewSlackWorkspaceJoinedEmailTemplateName,
                         TemplateData = templateData,
-                        Sender = emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailSender
+                        Sender = emailConfiguration.NewSlackWorkspaceJoinedEmailSender
                     }
                 }
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewSlackWorkspaceJoinedEmailReceivers);
 
         publisher.Publish(key, @event, unitOfWork);
     }

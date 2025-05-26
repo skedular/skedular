@@ -4,8 +4,8 @@ public class EmailConfiguration
 {
     public const string Key = "Email";
 
-    public IReadOnlyCollection<string> NewSlackWorkspaceJoinedThroughWebEmailReceivers { get; set; } = [];
-    public string NewSlackWorkspaceJoinedThroughWebEmailTemplateName { get; set; } = string.Empty;
-    public string NewSlackWorkspaceJoinedThroughWebEmailSender { get; set; } = string.Empty;
-    public bool EnableNewSlackWorkspaceJoinedThroughWebEmail { get; set; }
+    public IReadOnlyCollection<string> NewSlackWorkspaceJoinedEmailReceivers { get; set; } = [];
+    public string NewSlackWorkspaceJoinedEmailTemplateName { get; set; } = string.Empty;
+    public string NewSlackWorkspaceJoinedEmailSender { get; set; } = string.Empty;
+    public bool EnableNewSlackWorkspaceJoinedEmail { get; set; }
 }

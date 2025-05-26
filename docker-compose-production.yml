@@ -227,17 +227,15 @@ services:
       Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -321,17 +319,15 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -415,17 +411,15 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -555,17 +549,15 @@ services:
       Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -649,17 +641,15 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -743,17 +733,15 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
-      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__InviteToJoinLocationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
-      Email__EnableNewCustomerJoinedThroughWebEmail: true
-      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
