@@ -6,9 +6,9 @@ locals {
   dns_records_dev = ["kapp", "dapp", "mapp"]
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_dev_tools" {
+resource "cloudflare_dns_record" "cloudflare_dns_records_dev_tools" {
   count   = local.is_staging ? length(local.dns_records_dev_tools) : 0
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_dev_tools, count.index)
   content = "31.220.100.177"
   type    = "A"
@@ -16,9 +16,9 @@ resource "cloudflare_record" "cloudflare_dns_records_dev_tools" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_dev" {
+resource "cloudflare_dns_record" "cloudflare_dns_records_dev" {
   count   = local.is_staging ? length(local.dns_records_dev) : 0
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_dev, count.index)
   content = "31.220.100.177"
   type    = "A"

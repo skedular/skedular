@@ -9,6 +9,18 @@ locals {
   eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog.${var.environment}.${local.webapp_domain_root}"
 }
 
+output "cloudflare_account_id" {
+  value = "26b0f35cc7cf1dd7be5973e8905fbfe8"
+}
+
+output "cloudflare_public_website_zone_id" {
+  value = "3940392e8a2fbdc76f317f350df1f146"
+}
+
+output "cloudflare_webapp_zone_id" {
+  value = "46f499b86f30ee281e480d41a4ad8a57"
+}
+
 output "cloudflare_public_website_domain_name" {
   value = local.public_website_domain_root
 }

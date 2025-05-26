@@ -17,9 +17,10 @@ module "simple_email_service" {
     cloudflare = cloudflare
   }
 
-  tags              = local.tags
-  domain            = module.common.simple_email_service_domain
-  cloudflare_domain = module.common.cloudflare_webapp_domain_name
+  tags               = local.tags
+  domain             = module.common.simple_email_service_domain
+  cloudflare_zone_id = module.common.cloudflare_webapp_zone_id
+  cloudflare_domain  = module.common.cloudflare_webapp_domain_name
 }
 
 module "cognito_user_pool" {
@@ -72,13 +73,9 @@ resource "aws_ssm_parameter" "stripe_pay_as_you_go_v1_product_unit_amount" {
   tags  = local.tags
 }
 
-data "cloudflare_zone" "public_website" {
-  name = module.common.cloudflare_public_website_domain_name
-}
-
-resource "cloudflare_record" "cloudflare_dns_record_production" {
+resource "cloudflare_dns_record" "cloudflare_dns_record_production" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
   content = "35.213.255.74"
   type    = "A"
@@ -86,9 +83,9 @@ resource "cloudflare_record" "cloudflare_dns_record_production" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "cloudflare_dns_record_production_www_public_website" {
+resource "cloudflare_dns_record" "cloudflare_dns_record_production_www_public_website" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "www"
   content = "35.213.255.74"
   type    = "A"
@@ -96,9 +93,9 @@ resource "cloudflare_record" "cloudflare_dns_record_production_www_public_websit
   ttl     = 1
 }
 
-resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
+resource "cloudflare_dns_record" "cloudflare_dns_record_production_staging" {
   count   = local.is_staging ? 1 : 0
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "staging"
   content = "35.213.255.74"
   type    = "A"
@@ -106,13 +103,9 @@ resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
   ttl     = 600
 }
 
-data "cloudflare_zone" "webapp" {
-  name = module.common.cloudflare_webapp_domain_name
-}
-
-resource "cloudflare_record" "cloudflare_dns_record_production_www_webapp" {
+resource "cloudflare_dns_record" "cloudflare_dns_record_production_www_webapp" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = "www"
   content = "31.220.100.177"
   type    = "A"
@@ -120,9 +113,9 @@ resource "cloudflare_record" "cloudflare_dns_record_production_www_webapp" {
   ttl     = 1
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_staging" {
+resource "cloudflare_dns_record" "cloudflare_dns_records_staging" {
   count   = local.is_staging ? length(local.dns_records_staging) : 0
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_staging, count.index)
   content = "31.220.100.177"
   type    = "A"
@@ -130,9 +123,9 @@ resource "cloudflare_record" "cloudflare_dns_records_staging" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_production" {
+resource "cloudflare_dns_record" "cloudflare_dns_records_production" {
   count   = local.is_staging ? 0 : length(local.dns_records_production)
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_production, count.index)
   content = "31.220.100.177"
   type    = "A"
@@ -140,9 +133,9 @@ resource "cloudflare_record" "cloudflare_dns_records_production" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "public_website_azure_custom_domain" {
+resource "cloudflare_dns_record" "public_website_azure_custom_domain" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
   content = "\"MS=ms14170435\""
   type    = "TXT"
@@ -150,9 +143,9 @@ resource "cloudflare_record" "public_website_azure_custom_domain" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "webapp_azure_custom_domain" {
+resource "cloudflare_dns_record" "webapp_azure_custom_domain" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = "@"
   content = "\"MS=ms29548806\""
   type    = "TXT"
@@ -160,12 +153,13 @@ resource "cloudflare_record" "webapp_azure_custom_domain" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "spaceship_public_website_srv" {
+resource "cloudflare_dns_record" "spaceship_public_website_srv" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "_autodiscover._tcp.${module.common.cloudflare_public_website_domain_name}"
   type    = "SRV"
-  data {
+
+  data = {
     service  = "_autodiscover"
     proto    = "_tcp"
     name     = module.common.cloudflare_public_website_domain_name
@@ -178,9 +172,9 @@ resource "cloudflare_record" "spaceship_public_website_srv" {
   ttl     = 1200
 }
 
-resource "cloudflare_record" "spaceship_public_website_mx_1" {
+resource "cloudflare_dns_record" "spaceship_public_website_mx_1" {
   count    = local.is_staging ? 0 : 1
-  zone_id  = data.cloudflare_zone.public_website.id
+  zone_id  = module.common.cloudflare_public_website_zone_id
   name     = "@"
   content  = "mx1.spacemail.com"
   type     = "MX"
@@ -189,9 +183,9 @@ resource "cloudflare_record" "spaceship_public_website_mx_1" {
   priority = 10
 }
 
-resource "cloudflare_record" "spaceship_public_website_mx_2" {
+resource "cloudflare_dns_record" "spaceship_public_website_mx_2" {
   count    = local.is_staging ? 0 : 1
-  zone_id  = data.cloudflare_zone.public_website.id
+  zone_id  = module.common.cloudflare_public_website_zone_id
   name     = "@"
   content  = "mx2.spacemail.com"
   type     = "MX"
@@ -200,9 +194,9 @@ resource "cloudflare_record" "spaceship_public_website_mx_2" {
   priority = 10
 }
 
-resource "cloudflare_record" "spaceship_public_website_spf" {
+resource "cloudflare_dns_record" "spaceship_public_website_spf" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
   content = "\"v=spf1 include:spf.spacemail.com ~all\""
   type    = "TXT"
@@ -210,9 +204,9 @@ resource "cloudflare_record" "spaceship_public_website_spf" {
   ttl     = 1200
 }
 
-resource "cloudflare_record" "spaceship_public_website_domain_key" {
+resource "cloudflare_dns_record" "spaceship_public_website_domain_key" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "spacemail._domainkey"
   content = "\"v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxZjRvEBVPMWyyB8rSk4U3fszE48BpiUY/7byuVqSXG+ZmMrpU249AfQ70+NSAQxpxcU/5nKsx/BNSaYjFMS51IjCWeJg0I3EaTxeRsGirPO0GhYHpexV33KXOaJju8iDA2kLgr9BT0OYRD6m24uN00y+VA52JBexGBvlgmLh6KoIiKR+6pqURyhi/qw7aLqjX7ZKzEAtZHHvCCJCOyzurxpxTBVEco5zreGerrKkHr5LP+z59DY6xXtt4F2MMolS85sVCtYtJ+JPtHE8d5jJgKFvKPv7vNcgD3q2KJdECGkNskFYGyr0Hzf/NR2N7gZFYFmyRBv30VbEWJb4lzpn2QIDAQAB\""
   type    = "TXT"
@@ -220,9 +214,9 @@ resource "cloudflare_record" "spaceship_public_website_domain_key" {
   ttl     = 1200
 }
 
-resource "cloudflare_record" "spaceship_public_website_domain_verification" {
+resource "cloudflare_dns_record" "spaceship_public_website_domain_verification" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
   content = "\"297dd8c8-b379-40ec-b71a-d9175d8e2c13\""
   type    = "TXT"
@@ -230,9 +224,9 @@ resource "cloudflare_record" "spaceship_public_website_domain_verification" {
   ttl     = 1800
 }
 
-resource "cloudflare_record" "public_website_dmarc" {
+resource "cloudflare_dns_record" "public_website_dmarc" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "_dmarc"
   content = "\"v=DMARC1; p=reject; rua=mailto:dmarc-reports@${module.common.cloudflare_public_website_domain_name}; ruf=mailto:dmarc-failures@${module.common.cloudflare_public_website_domain_name}; aspf=r; sp=reject;\""
   type    = "TXT"
@@ -240,9 +234,9 @@ resource "cloudflare_record" "public_website_dmarc" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
+resource "cloudflare_dns_record" "webapp_gmail_aws_ses_spf" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = module.common.cloudflare_webapp_zone_id
   name    = "@"
   content = "\"v=spf1 include:amazonses.com ~all\""
   type    = "TXT"
@@ -250,9 +244,9 @@ resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "bing-verification" {
+resource "cloudflare_dns_record" "bing-verification" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "d4b213988b9e9e47f7d9f17ea01d5b38"
   content = "verify.bing.com"
   type    = "CNAME"
@@ -260,9 +254,9 @@ resource "cloudflare_record" "bing-verification" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "yandex-verification" {
+resource "cloudflare_dns_record" "yandex-verification" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
+  zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
   content = "\"yandex-verification: 47a94d9de0bdc184\""
   type    = "TXT"

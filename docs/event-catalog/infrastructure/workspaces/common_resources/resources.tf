@@ -40,12 +40,8 @@ resource "vercel_deployment" "default" {
   team_id     = local.team_id
 }
 
-data "cloudflare_zone" "default" {
-  name = module.shared_common.cloudflare_webapp_domain_name
-}
-
-resource "cloudflare_record" "default" {
-  zone_id = data.cloudflare_zone.default.id
+resource "cloudflare_dns_record" "default" {
+  zone_id = module.shared_common.cloudflare_webapp_zone_id
   name    = module.shared_common.eventcatalog_webapp_domain_name
   content = "cname.vercel-dns.com."
   type    = "CNAME"
