@@ -38,6 +38,25 @@ resource "aws_iam_user_policy_attachment" "contabo_user_policy_attachment" {
   policy_arn = aws_iam_policy.contabo_user_ses_policy.arn
 }
 
+resource "aws_iam_user_policy" "contabo_user_s3_write_access" {
+  name = "contabo-user-s3-write-access"
+  user = aws_iam_user.contabo_user.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl"
+        ]
+        Resource = "${aws_s3_bucket.s3_cdn_bucket.arn}/*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_access_key" "contabo_user_access_key" {
   user = aws_iam_user.contabo_user.name
 }
