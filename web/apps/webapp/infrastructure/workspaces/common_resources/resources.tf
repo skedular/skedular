@@ -22,6 +22,7 @@ data "aws_cognito_user_pools" "user_pool" {
 
 locals {
   user_pool_id = tolist(data.aws_cognito_user_pools.user_pool.ids)[0]
+  is_staging   = var.environment == "staging"
 }
 
 resource "aws_cognito_user_pool_client" "default" {
@@ -208,7 +209,7 @@ resource "vercel_deployment" "default" {
 
 resource "cloudflare_dns_record" "default" {
   zone_id = module.shared_common.cloudflare_webapp_zone_id
-  name    = module.shared_common.webapp_domain_name
+  name    = local.is_staging ? module.shared_common.webapp_domain_name : "@"
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false
