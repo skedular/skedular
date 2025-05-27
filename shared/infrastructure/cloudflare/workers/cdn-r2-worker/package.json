@@ -1,0 +1,19 @@
+{
+	"name": "cdn-r2-worker",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"build": "wrangler build",
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.8.32",
+		"typescript": "^5.8.3",
+		"vitest": "~3.1.4",
+		"wrangler": "^4.16.1"
+	}
+}

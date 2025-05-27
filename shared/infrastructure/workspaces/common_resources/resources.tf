@@ -263,3 +263,13 @@ resource "cloudflare_dns_record" "yandex-verification" {
   proxied = false
   ttl     = 3600
 }
+
+resource "cloudflare_dns_record" "cloudflare-cdn-worker" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = module.common.cloudflare_webapp_zone_id
+  name    = "cdn"
+  content = "workers.dev"
+  type    = "CNAME"
+  proxied = false
+  ttl     = 600
+}
