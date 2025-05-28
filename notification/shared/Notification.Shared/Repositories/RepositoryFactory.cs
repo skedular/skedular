@@ -17,32 +17,21 @@ public interface IRepositoryFactory
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IDisposable
+public class RepositoryFactory : RepositoryFactoryBase<NotificationDbContext>, IRepositoryFactory
 {
-    private bool _disposed;
-
     public RepositoryFactory(IDbContextFactory<NotificationDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        DbContext = dbContextFactory.CreateDbContext();
+        _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
-        LocationRepository = new LocationRepository(DbContext, timeProvider);
-        NotificationRepository = new NotificationRepository(DbContext, timeProvider);
-        TeamRepository = new TeamRepository(DbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
+        LocationRepository = new LocationRepository(_dbContext, timeProvider);
+        NotificationRepository = new NotificationRepository(_dbContext, timeProvider);
+        TeamRepository = new TeamRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    public NotificationDbContext DbContext { get; }
-
-    public IUnitOfWork UnitOfWork => DbContext;
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
@@ -50,21 +39,4 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public INotificationRepository NotificationRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-
-    ~RepositoryFactory() => Dispose(false);
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (disposing)
-        {
-            DbContext.Dispose();
-        }
-
-        _disposed = true;
-    }
 }

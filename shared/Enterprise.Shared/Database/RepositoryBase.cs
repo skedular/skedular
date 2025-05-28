@@ -3,11 +3,11 @@ using Npgsql;
 
 namespace Enterprise.Shared.Database;
 
-public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
-    where TContext : DbContextBase<TContext>
+public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
+    where TDbContext : DbContextBase<TDbContext>
     where TEntity : EntityBase
 {
-    protected readonly TContext DbContext = dbContext;
+    protected readonly TDbContext DbContext = dbContext;
     protected readonly TimeProvider TimeProvider = timeProvider;
 
     public IUnitOfWork UnitOfWork => DbContext;

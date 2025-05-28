@@ -18,33 +18,22 @@ public interface IRepositoryFactory
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IDisposable
+public class RepositoryFactory : RepositoryFactoryBase<MarketplaceDbContext>, IRepositoryFactory
 {
-    private bool _disposed;
-
     public RepositoryFactory(IDbContextFactory<MarketplaceDbContext> dbContextFactory, TimeProvider timeProvider)
     {
-        DbContext = dbContextFactory.CreateDbContext();
+        _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
-        OrganizationTagRepository = new OrganizationTagRepository(DbContext, timeProvider);
-        ProductRepository = new ProductRepository(DbContext, timeProvider);
-        ProductVersionRepository = new ProductVersionRepository(DbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
+        OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
+        ProductRepository = new ProductRepository(_dbContext, timeProvider);
+        ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    public MarketplaceDbContext DbContext { get; }
-
-    public IUnitOfWork UnitOfWork => DbContext;
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
@@ -53,21 +42,4 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-
-    ~RepositoryFactory() => Dispose(false);
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (disposing)
-        {
-            DbContext.Dispose();
-        }
-
-        _disposed = true;
-    }
 }

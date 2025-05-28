@@ -26,43 +26,32 @@ public interface IRepositoryFactory
     IProductVersionRepository ProductVersionRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IDisposable
+public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
 {
-    private bool _disposed;
-
     public RepositoryFactory(
         IDbContextFactory<BookingDbContext> dbContextFactory,
         TimeProvider timeProvider,
         IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService)
     {
-        DbContext = dbContextFactory.CreateDbContext();
+        _dbContext = dbContextFactory.CreateDbContext();
 
-        BookingRepository = new BookingRepository(DbContext, timeProvider, bookingCheckoutSessionHelperService);
-        BookingCheckoutSessionRepository = new BookingCheckoutSessionRepository(DbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(DbContext, timeProvider);
-        IdentityRepository = new IdentityRepository(DbContext, timeProvider);
-        OrganizationRepository = new OrganizationRepository(DbContext, timeProvider);
-        OrganizationMemberRepository = new OrganizationMemberRepository(DbContext, timeProvider);
-        LocationRepository = new LocationRepository(DbContext, timeProvider);
-        ResourceRepository = new ResourceRepository(DbContext, timeProvider);
-        ResourceBookingSlotRepository = new ResourceBookingSlotRepository(DbContext, timeProvider);
-        TeamRepository = new TeamRepository(DbContext, timeProvider);
-        TeamMemberRepository = new TeamMemberRepository(DbContext, timeProvider);
-        OrganizationTagRepository = new OrganizationTagRepository(DbContext, timeProvider);
-        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(DbContext, timeProvider);
-        ProductRepository = new ProductRepository(DbContext, timeProvider);
-        ProductVersionRepository = new ProductVersionRepository(DbContext, timeProvider);
+        BookingRepository = new BookingRepository(_dbContext, timeProvider, bookingCheckoutSessionHelperService);
+        BookingCheckoutSessionRepository = new BookingCheckoutSessionRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
+        LocationRepository = new LocationRepository(_dbContext, timeProvider);
+        ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
+        ResourceBookingSlotRepository = new ResourceBookingSlotRepository(_dbContext, timeProvider);
+        TeamRepository = new TeamRepository(_dbContext, timeProvider);
+        TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
+        OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        ProductRepository = new ProductRepository(_dbContext, timeProvider);
+        ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    public BookingDbContext DbContext { get; }
-
-    public IUnitOfWork UnitOfWork => DbContext;
     public IBookingRepository BookingRepository { get; }
     public IBookingCheckoutSessionRepository BookingCheckoutSessionRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
@@ -78,21 +67,4 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
-
-    ~RepositoryFactory() => Dispose(false);
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (disposing)
-        {
-            DbContext.Dispose();
-        }
-
-        _disposed = true;
-    }
 }

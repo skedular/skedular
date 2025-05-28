@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Shared.Database;
 
-public abstract class DbContextBase<TContext>(DbContextOptions<TContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContext(options), IUnitOfWork where TContext : DbContextBase<TContext>
+public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContext(options), IUnitOfWork where TDbContext : DbContextBase<TDbContext>
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        var contextAssembly = Assembly.GetAssembly(typeof(TContext));
+        var contextAssembly = Assembly.GetAssembly(typeof(TDbContext));
         ArgumentNullException.ThrowIfNull(contextAssembly);
 
         builder.ApplyConfigurationsFromAssembly(contextAssembly);
@@ -18,7 +18,6 @@ public abstract class DbContextBase<TContext>(DbContextOptions<TContext> options
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // SelectForUpdateCommandInterceptor required for Outbox
         if (!customDbContextOptions.IsPooled)
         {
             optionsBuilder.AddInterceptors(new SelectForUpdateCommandInterceptor());
