@@ -273,3 +273,23 @@ resource "cloudflare_dns_record" "cloudflare-cdn-worker" {
   proxied = false
   ttl     = 600
 }
+
+resource "cloudflare_dns_record" "github_public_website" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = module.common.cloudflare_public_website_zone_id
+  name    = "_gh-skedular-e"
+  content = "9ea66c5313"
+  type    = "TXT"
+  proxied = false
+  ttl     = 1800
+}
+
+resource "cloudflare_dns_record" "github_webapp" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = module.common.cloudflare_webapp_zone_id
+  name    = "_gh-skedular-e"
+  content = "ae181b5ec4"
+  type    = "TXT"
+  proxied = false
+  ttl     = 1800
+}
