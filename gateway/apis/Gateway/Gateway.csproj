@@ -16,16 +16,11 @@
 
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json"/>
+        <EmbeddedResource Include="gateway.fgp"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="gateway.fgp">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
 </Project>
