@@ -48,7 +48,8 @@ on:
 jobs:
   build-workarounds:
     name: "Build workarounds"
-    runs-on: self-hosted
+    runs-on: 
+      - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
       DOCKER_BUILDKIT: 1
