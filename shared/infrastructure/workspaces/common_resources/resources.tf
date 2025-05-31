@@ -244,7 +244,7 @@ resource "cloudflare_dns_record" "webapp_gmail_aws_ses_spf" {
   ttl     = 3600
 }
 
-resource "cloudflare_dns_record" "bing-verification" {
+resource "cloudflare_dns_record" "bing_verification" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_public_website_zone_id
   name    = "d4b213988b9e9e47f7d9f17ea01d5b38"
@@ -254,7 +254,7 @@ resource "cloudflare_dns_record" "bing-verification" {
   ttl     = 600
 }
 
-resource "cloudflare_dns_record" "yandex-verification" {
+resource "cloudflare_dns_record" "yandex_verification" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_public_website_zone_id
   name    = "@"
@@ -264,7 +264,7 @@ resource "cloudflare_dns_record" "yandex-verification" {
   ttl     = 3600
 }
 
-resource "cloudflare_dns_record" "cloudflare-cdn-worker" {
+resource "cloudflare_dns_record" "cloudflare_cdn_worker" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_webapp_zone_id
   name    = "cdn"

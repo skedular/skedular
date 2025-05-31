@@ -1,5 +1,6 @@
 locals {
   s3_origin_id = "skedular-cdn-${var.environment}"
+  domain_name  = local.is_staging ? "awscdnstaging.${module.common.cloudflare_webapp_domain_name}" : "awscdn.${module.common.cloudflare_webapp_domain_name}"
 }
 
 data "aws_caller_identity" "current" {}
@@ -16,6 +17,26 @@ resource "aws_s3_bucket_public_access_block" "s3_cdn_bucket" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+resource "aws_acm_certificate" "cdn_acm_certificate" {
+  domain_name       = local.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "cloudflare_dns_record" "aws_cdn_certification_validation" {
+  zone_id = module.common.cloudflare_webapp_zone_id
+
+  name    = tolist(aws_acm_certificate.cdn_acm_certificate.domain_validation_options)[0].resource_record_name
+  content = tolist(aws_acm_certificate.cdn_acm_certificate.domain_validation_options)[0].resource_record_value
+  type    = tolist(aws_acm_certificate.cdn_acm_certificate.domain_validation_options)[0].resource_record_type
+
+  proxied = false
+  ttl     = 600
 }
 
 resource "aws_cloudfront_origin_access_control" "s3_cdn" {
