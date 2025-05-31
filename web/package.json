@@ -27,12 +27,12 @@
     "webapp#relay": "turbo run webapp#relay"
   },
   "devDependencies": {
-    "@types/relay-runtime": "^19.0.1",
-    "eslint": "9.27.0",
-    "eslint-plugin-turbo": "^2.5.3",
+    "@types/relay-runtime": "^19.0.2",
+    "eslint": "9.28.0",
+    "eslint-plugin-turbo": "^2.5.4",
     "global": "^4.4.0",
-    "next": "15.3.2",
-    "turbo": "^2.5.3"
+    "next": "15.3.3",
+    "turbo": "^2.5.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

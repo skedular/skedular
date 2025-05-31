@@ -35,7 +35,7 @@
         <PackageReference Include="Scrutor" Version="6.0.1"/>
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="StackExchange.Redis" Version="2.8.37"/>
-        <PackageReference Include="Stripe.net" Version="48.1.0"/>
+        <PackageReference Include="Stripe.net" Version="48.2.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0"/>
         <PackageReference Include="System.Reactive" Version="6.0.1"/>
@@ -44,7 +44,7 @@
         <PackageReference Include="Aspire.Confluent.Kafka" Version="9.3.0"/>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.3.0"/>
 
-        <PackageReference Include="Google.Protobuf" Version="3.31.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.31.1"/>
         <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.71.0"/>
 
