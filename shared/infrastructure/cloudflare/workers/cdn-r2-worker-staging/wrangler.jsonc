@@ -1,0 +1,19 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cdn-r2-worker-staging",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-05-25",
+	"observability": {
+		"enabled": true
+	},
+	"r2_buckets": [
+		{
+			"binding": "MY_BUCKET",
+			"bucket_name": "skedular-cdn-staging"
+		}
+	],
+	"route": {
+		"pattern": "cloudflarecdnstaging.skedular.app/*",
+		"zone_name": "skedular.app"
+	}
+}

@@ -7,6 +7,8 @@ locals {
   webapp_domain              = local.is_production ? "${local.webapp_domain_root}" : "${var.environment}.${local.webapp_domain_root}"
   api_domain                 = local.is_production ? "api.${local.webapp_domain_root}" : "api${var.environment}.${local.webapp_domain_root}"
   eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog.${var.environment}.${local.webapp_domain_root}"
+  cloudflarecdn              = local.is_production ? "cloudflarecdn" : "cloudflarecdn${var.environment}"
+  awscdn                     = local.is_production ? "awscdn" : "awscdn${var.environment}"
 }
 
 output "cloudflare_account_id" {
@@ -27,6 +29,22 @@ output "cloudflare_public_website_domain_name" {
 
 output "cloudflare_webapp_domain_name" {
   value = local.webapp_domain_root
+}
+
+output "cloudflare_webapp_cloudflare_cdn_domain_name" {
+  value = local.cloudflarecdn
+}
+
+output "cloudflare_webapp_cloudflare_cdn_full_domain_name" {
+  value = "${local.cloudflarecdn}.${local.webapp_domain_root}"
+}
+
+output "cloudflare_webapp_aws_cdn_domain_name" {
+  value = local.awscdn
+}
+
+output "cloudflare_webapp_aws_cdn_full_domain_name" {
+  value = "${local.awscdn}.${local.webapp_domain_root}"
 }
 
 output "aws_region" {

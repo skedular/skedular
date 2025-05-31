@@ -1,6 +1,5 @@
 locals {
   s3_origin_id = "skedular-cdn-${var.environment}"
-  domain_name  = local.is_staging ? "awscdnstaging.${module.common.cloudflare_webapp_domain_name}" : "awscdn.${module.common.cloudflare_webapp_domain_name}"
 }
 
 data "aws_caller_identity" "current" {}
@@ -20,7 +19,7 @@ resource "aws_s3_bucket_public_access_block" "s3_cdn_bucket" {
 }
 
 resource "aws_acm_certificate" "cdn_acm_certificate" {
-  domain_name       = local.domain_name
+  domain_name       = module.common.cloudflare_webapp_aws_cdn_full_domain_name
   validation_method = "DNS"
 
   lifecycle {
@@ -54,6 +53,8 @@ resource "aws_cloudfront_distribution" "s3_cdn_distribution" {
     origin_id                = local.s3_origin_id
   }
 
+  aliases = [module.common.cloudflare_webapp_aws_cdn_full_domain_name]
+
   enabled         = true
   is_ipv6_enabled = true
 
@@ -62,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_cdn_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.s3_origin_id
 
-    cache_policy_id          = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized
+    cache_policy_id          = "658327ea-f89d-4fab-a63d-7e88639e58f6" # Caching Optimized
     origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" # CORS-S3Origin
 
     viewer_protocol_policy = "redirect-to-https"
@@ -80,7 +81,9 @@ resource "aws_cloudfront_distribution" "s3_cdn_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = aws_acm_certificate.cdn_acm_certificate.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   tags = local.tags
@@ -107,4 +110,22 @@ resource "aws_s3_bucket_policy" "cloudfront_access" {
       }
     ]
   })
+}
+
+resource "cloudflare_dns_record" "aws_cdn" {
+  zone_id = module.common.cloudflare_webapp_zone_id
+  name    = module.common.cloudflare_webapp_aws_cdn_domain_name
+  type    = "CNAME"
+  content = aws_cloudfront_distribution.s3_cdn_distribution.domain_name
+  proxied = false
+  ttl     = 600
+}
+
+resource "cloudflare_dns_record" "cloudflare_cdn" {
+  zone_id = module.common.cloudflare_webapp_zone_id
+  name    = module.common.cloudflare_webapp_cloudflare_cdn_domain_name
+  content = "workers.dev"
+  type    = "CNAME"
+  proxied = false
+  ttl     = 600
 }

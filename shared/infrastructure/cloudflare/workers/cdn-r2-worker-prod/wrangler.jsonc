@@ -1,0 +1,19 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cdn-r2-worker-prod",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-05-25",
+	"observability": {
+		"enabled": true
+	},
+	"r2_buckets": [
+		{
+			"binding": "MY_BUCKET",
+			"bucket_name": "skedular-cdn-prod"
+		}
+	],
+	"route": {
+		"pattern": "cloudflarecdn.skedular.app/*",
+		"zone_name": "skedular.app"
+	}
+}

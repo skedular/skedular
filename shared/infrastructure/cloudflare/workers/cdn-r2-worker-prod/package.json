@@ -1,5 +1,5 @@
 {
-	"name": "cdn-r2-worker",
+	"name": "cdn-r2-worker-prod",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
@@ -11,9 +11,9 @@
 		"cf-typegen": "wrangler types"
 	},
 	"devDependencies": {
-		"@cloudflare/vitest-pool-workers": "^0.8.32",
+		"@cloudflare/vitest-pool-workers": "^0.8.34",
 		"typescript": "^5.8.3",
 		"vitest": "~3.1.4",
-		"wrangler": "^4.16.1"
+		"wrangler": "^4.18.0"
 	}
 }
