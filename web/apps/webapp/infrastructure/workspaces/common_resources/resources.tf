@@ -185,6 +185,11 @@ resource "vercel_project" "default" {
       key    = "GATEWAY_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}"
       target = ["development", "preview", "production"]
+    },
+    {
+      key    = "ENABLE_EXPERIMENTAL_COREPACK"
+      value  = "1"
+      target = ["development", "preview", "production"]
     }
   ]
 }
