@@ -33,6 +33,13 @@ namespace Api.Shared.Services.OpenApi.Skedular.Team.V1
     public abstract class TeamControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
+        /// return API version
+        /// </summary>
+        /// <returns>the version of the API</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/team/version")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// republish team
         /// </summary>
         /// <returns>the status of team republishing</returns>
@@ -65,6 +72,48 @@ namespace Api.Shared.Services.OpenApi.Skedular.Team.V1
         [System.Text.Json.Serialization.JsonPropertyName("message")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Message { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Version
+    {
+        /// <summary>
+        /// major version
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("major")]
+        public int Major { get; set; } = default!;
+
+        /// <summary>
+        /// minor version
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("minor")]
+        public int Minor { get; set; } = default!;
+
+        /// <summary>
+        /// build number
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("build")]
+        public int Build { get; set; } = default!;
+
+        /// <summary>
+        /// revision
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("revision")]
+        public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 

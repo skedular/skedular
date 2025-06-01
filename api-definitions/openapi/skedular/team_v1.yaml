@@ -15,6 +15,28 @@ servers:
     description: local
 
 paths:
+  /v1/team/version:
+    get:
+      tags:
+        - team
+      summary: return API version
+      operationId: getVersion
+
+      responses:
+        "200":
+          description: the version of the API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /v1/team/{teamId}/republish:
     put:
       tags:
@@ -72,3 +94,28 @@ components:
         message:
           type: string
           description: Error message
+
+    Version:
+      type: object
+      required:
+        - major
+        - minor
+        - build
+        - revision
+      properties:
+        major:
+          type: integer
+          format: int32
+          description: major version
+        minor:
+          type: integer
+          format: int32
+          description: minor version
+        build:
+          type: integer
+          format: int32
+          description: build number
+        revision:
+          type: integer
+          format: int32
+          description: revision

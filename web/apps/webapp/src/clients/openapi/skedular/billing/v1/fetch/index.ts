@@ -11,8 +11,10 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { Error } from './models/Error';
+export type { Version } from './models/Version';
 
 export { $Error } from './schemas/$Error';
+export { $Version } from './schemas/$Version';
 
 export { BillingService } from './services/BillingService';
 export { OrganizationService } from './services/OrganizationService';

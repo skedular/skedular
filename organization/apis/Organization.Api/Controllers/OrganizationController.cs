@@ -1,15 +1,28 @@
 using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
+using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;
+using Version = Api.Shared.Services.OpenApi.Skedular.Organization.V1.Version;
 
 namespace Organization.Api.Controllers;
 
 [ApiController]
 public class OrganizationController(
+    IVersionService versionService,
     IWorkaroundService workaroundService,
     IAzureTenantService azureTenantService,
     IOrganizationSsoService organizationSsoService) : OrganizationControllerBase
 {
+    public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
+    {
+        var version = versionService.GetVersion();
+
+        return Task.FromResult<ActionResult<Version>>(new Version
+        {
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+        });
+    }
+
     public override async Task<IActionResult> Republish(string organizationId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishOrganizationAsync(organizationId, cancellationToken);
