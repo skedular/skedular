@@ -33,6 +33,6 @@ public class MarketplaceController(IVersionService versionService, IWorkaroundSe
         return Ok();
     }
 
-    public override Task<ActionResult<FileUploadResponse>> UploadFile(IFormFile file, CancellationToken cancellationToken = default) =>
+    public override async Task<ActionResult<FileUploadResponse>> UploadFile(IFormFile file, CancellationToken cancellationToken = default) =>
         throw new NotImplementedException();
 }

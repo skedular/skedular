@@ -2,6 +2,7 @@ using Booking.Shared;
 using Booking.Shared.Database;
 using Booking.Shared.Workflows;
 using Enterprise.Shared;
+using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
@@ -26,6 +27,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddCdn(configuration)
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddKafkaOutboxBackgroundService<BookingDbContext>()
             .AddTemporalOutboxBackgroundService<BookingDbContext>()

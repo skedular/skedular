@@ -2,6 +2,7 @@
 using Billing.Shared;
 using Billing.Shared.Database;
 using Enterprise.Shared;
+using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 
@@ -23,6 +24,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddCdn(configuration)
             .WithPooledDbContextFactory<BillingDbContext>(configuration, environment, "billingdb")
             .AddRepositoryFactory()
             .AddServices()

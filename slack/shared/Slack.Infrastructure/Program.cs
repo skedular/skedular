@@ -1,4 +1,5 @@
 ﻿using Enterprise.Shared;
+using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Slack.Infrastructure.Services;
@@ -23,6 +24,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddCdn(configuration)
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddRepositoryFactory()
             .AddServices()

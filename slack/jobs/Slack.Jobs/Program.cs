@@ -1,4 +1,5 @@
 using Enterprise.Shared;
+using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
@@ -28,6 +29,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddCdn(configuration)
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
             .AddDomainSharedServices()
