@@ -7,7 +7,7 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Marketplace.V1.Version;
 namespace Marketplace.Api.Controllers;
 
 [ApiController]
-public class GatewayController(IVersionService versionService, IWorkaroundService workaroundService) : MarketplaceControllerBase
+public class MarketplaceController(IVersionService versionService, IWorkaroundService workaroundService) : MarketplaceControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -33,6 +33,6 @@ public class GatewayController(IVersionService versionService, IWorkaroundServic
         return Ok();
     }
 
-    public override Task<ActionResult<FileUploadResponse>> UploadFile(FileParameter file, CancellationToken cancellationToken = default) =>
+    public override Task<ActionResult<FileUploadResponse>> UploadFile(IFormFile file, CancellationToken cancellationToken = default) =>
         throw new NotImplementedException();
 }

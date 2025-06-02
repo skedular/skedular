@@ -27,8 +27,11 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
-   
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Gateway/V1/Gateway.g.cs
+
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/billing_v1.yaml \
@@ -44,7 +47,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Billing/V1/Billing.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -61,7 +67,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/Booking.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -78,7 +87,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/Customer.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -95,7 +107,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/Location.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -112,7 +127,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/Marketplace.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -129,7 +147,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/MsTeams/V1/MsTeams.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -146,7 +167,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Notification/V1/Notification.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -163,7 +187,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/Organization.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -180,7 +207,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Payment/V1/Payment.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -197,7 +227,10 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/Slack.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -214,4 +247,7 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/Team.g.cs
