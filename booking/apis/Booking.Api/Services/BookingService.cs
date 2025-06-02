@@ -159,8 +159,10 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (bookingEntity.InvolvedOrganizations.Count == 0 ||
-            bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
+        if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
+             bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
+            bookingEntity.InvolvedOrganizations.Any(item =>
+                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
         {
             booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
             {
@@ -236,8 +238,10 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (existingBooking.InvolvedOrganizations.Count == 0 ||
-            existingBooking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
+        if ((existingBooking.InvolvedOrganizations.Count == 0 ||
+             existingBooking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
+            existingBooking.InvolvedOrganizations.Any(item =>
+                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
         {
             deletedBooking.InvolvedCustomers = deletedBooking.InvolvedCustomers.Select(item =>
             {
@@ -268,8 +272,10 @@ public class BookingService(
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
         var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking));
 
-        if (booking.InvolvedOrganizations.Count == 0 ||
-            booking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
+        if ((booking.InvolvedOrganizations.Count == 0 ||
+             booking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
+            booking.InvolvedOrganizations.Any(item =>
+                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
         {
             result.InvolvedCustomers = result.InvolvedCustomers.Select(item =>
             {
@@ -433,8 +439,10 @@ public class BookingService(
                      .Where(item => !item.InvolvedCustomers.Select(involvedCustomer => involvedCustomer.Id).Contains(customer.Id)))
         {
             var bookingEntity = edges.Select(item => item.Node).First(item => item.Id == booking.Id);
-            if (bookingEntity.InvolvedOrganizations.Count == 0 ||
-                bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
+            if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
+                 bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
+                bookingEntity.InvolvedOrganizations.Any(item =>
+                    item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
             {
                 booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
                 {
@@ -677,8 +685,10 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (bookingEntity.InvolvedOrganizations.Count == 0 ||
-            bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer)))
+        if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
+             bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
+            bookingEntity.InvolvedOrganizations.Any(item =>
+                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
         {
             booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
             {
