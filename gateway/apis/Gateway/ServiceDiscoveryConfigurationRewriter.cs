@@ -52,6 +52,10 @@ public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgra
             {
                 EndpointUri = subgraphsConfigurations.Team.Uri ?? new Uri("https+http://teamapi/v1/graphql")
             },
+            nameof(subgraphsConfigurations.Core) => configuration with
+            {
+                EndpointUri = subgraphsConfigurations.Core.Uri ?? new Uri("https+http://coreapi/v1/graphql")
+            },
             _ => throw new NotSupportedException()
         });
 }

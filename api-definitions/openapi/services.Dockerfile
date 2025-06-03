@@ -251,3 +251,23 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/Team.g.cs
+
+RUN nswag \
+  openapi2cscontroller \
+  /Input:/openapi/skedular/core_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Core.V1 \
+  /Classname:Core \
+  /Output:/output/Skedular/Core/V1/Core.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson \
+  /ExcludedTypeNames:FileParameter
+
+RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/Core.g.cs

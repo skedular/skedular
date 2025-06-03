@@ -28,6 +28,7 @@
         <ProjectReference Include="..\..\payment\processors\Payment.Processors\Payment.Processors.csproj"/>
         <ProjectReference Include="..\..\slack\processors\Slack.Processors\Slack.Processors.csproj"/>
         <ProjectReference Include="..\..\team\processors\Team.Processors\Team.Processors.csproj"/>
+        <ProjectReference Include="..\..\core\processors\Core.Processors\Core.Processors.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

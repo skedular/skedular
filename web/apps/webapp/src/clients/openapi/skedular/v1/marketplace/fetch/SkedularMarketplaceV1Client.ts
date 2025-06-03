@@ -7,10 +7,12 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { MarketplaceService } from './services/MarketplaceService';
 import { ProductService } from './services/ProductService';
+import { V1Service } from './services/V1Service';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularMarketplaceV1Client {
     public readonly marketplace: MarketplaceService;
     public readonly product: ProductService;
+    public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -26,6 +28,7 @@ export class SkedularMarketplaceV1Client {
         });
         this.marketplace = new MarketplaceService(this.request);
         this.product = new ProductService(this.request);
+        this.v1 = new V1Service(this.request);
     }
 }
 

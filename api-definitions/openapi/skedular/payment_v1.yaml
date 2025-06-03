@@ -18,6 +18,7 @@ paths:
   /v1/payment/version:
     get:
       tags:
+        - v1
         - payment
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/payment/organization/add-payment-method:
     get:
       tags:
+        - v1
         - payment-method
         - payment
         - organization
@@ -76,6 +78,7 @@ paths:
   /v1/payment/customer/add-payment-method:
     get:
       tags:
+        - v1
         - payment-method
         - payment
         - customer
@@ -112,6 +115,7 @@ paths:
   /v1/payment/organization-stripe-connect-account/refresh-onboarding-url:
     get:
       tags:
+        - v1
         - payment
         - organizationStripeConnectAccounts
         - onboarding
@@ -140,6 +144,7 @@ paths:
   /v1/payment/stripe/platform/account/webhook:
     post:
       tags:
+        - v1
         - payment
         - stripe
         - webhook
@@ -168,6 +173,7 @@ paths:
   /v1/payment/stripe/connect/account/webhook:
     post:
       tags:
+        - v1
         - payment
         - stripe
         - webhook
@@ -196,6 +202,7 @@ paths:
   /v1/payment/organization-stripe-connect-account/republish-all:
     put:
       tags:
+        - v1
         - payment
         - organizationStripeConnectAccounts
       summary: republish all OrganizationStripeConnectAccounts

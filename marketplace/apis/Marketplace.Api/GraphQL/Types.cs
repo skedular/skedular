@@ -87,7 +87,7 @@ public class ProductDetails : Node
     public string LatestProductVersionId { get; set; } = string.Empty;
 
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
-    [GraphQLName("featureImages")] public IEnumerable<FeatureImageDetails> FeatureImages { get; set; } = [];
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -135,7 +135,7 @@ public class AddProductInput
 
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-    [GraphQLName("featureImageIds")] public IEnumerable<string> FeatureImageIds { get; set; } = [];
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
 }
 
 [GraphQLName("UpdateProductInput")]
@@ -167,7 +167,7 @@ public class UpdateProductInput
 
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-    [GraphQLName("featureImageIds")] public IEnumerable<string> FeatureImageIds { get; set; } = [];
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
 }
 
 [GraphQLName("DeleteProductsInput")]
@@ -196,11 +196,4 @@ public class ProductsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("products")] public IEnumerable<ProductDetails> Products { get; set; } = [];
-}
-
-[GraphQLName("FeatureImageDetails")]
-public class FeatureImageDetails : Node
-{
-    [GraphQLName("url")] public string Url { get; set; } = string.Empty;
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

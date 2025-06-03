@@ -30,7 +30,8 @@ public class Program
             Organization.Infrastructure.Program.MigrateAsync(Organization.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Payment.Infrastructure.Program.MigrateAsync(Payment.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Slack.Infrastructure.Program.MigrateAsync(Slack.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
-            Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
+            Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Core.Infrastructure.Program.MigrateAsync(Core.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
         );
 
         await Task.WhenAll(
@@ -67,6 +68,9 @@ public class Program
             Team.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Team.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Team.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Core.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Core.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Core.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Gateway.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }

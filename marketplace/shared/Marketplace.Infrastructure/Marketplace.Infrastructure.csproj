@@ -10,11 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Marketplace.Shared\Marketplace.Shared.csproj" />
+        <ProjectReference Include="..\Marketplace.Shared\Marketplace.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json" />
+        <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
 
 </Project>

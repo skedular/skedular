@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5312c4b5f5b5df58ec84140a777dc631>>
+ * @generated SignedSource<<db5718be6cfa89e1874d8a63935eeb90>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,10 +25,6 @@ export type organizationMarketplacePublic_rootQuery$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly featureImages: ReadonlyArray<{
-          readonly id: string;
-          readonly url: string;
-        }>;
         readonly id: string;
         readonly name: string;
         readonly organization: {
@@ -127,25 +123,6 @@ v5 = {
   "storageKey": null
 },
 v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "FeatureImageDetails",
-  "kind": "LinkedField",
-  "name": "featureImages",
-  "plural": true,
-  "selections": [
-    (v3/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v7 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -192,7 +169,6 @@ return {
                   (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
-                  (v6/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -204,7 +180,7 @@ return {
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -246,7 +222,6 @@ return {
                   (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
-                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -307,6 +282,13 @@ return {
                     "kind": "ScalarField",
                     "name": "maxBookingSpreadDays",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "primaryFeatureImageUrl",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -314,23 +296,23 @@ return {
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "3b0f807c17a4aade1cf8c1a326e65e84",
+    "cacheID": "133b08987df09f26a9af9ec336051b23",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplacePublic_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        featureImages {\n          id\n          url\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  featureImages {\n    id\n    url\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  primaryFeatureImageUrl\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8bde8eaa5db629f01ffdd83722fb1920";
+(node as any).hash = "6bfc1fb54cff2a010bb33c91ba025ca1";
 
 export default node;

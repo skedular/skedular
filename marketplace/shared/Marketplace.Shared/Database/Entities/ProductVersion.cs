@@ -22,6 +22,7 @@ public class ProductVersion : EntityBase
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
+    public string? PrimaryFeatureImageUrl { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
@@ -29,7 +30,6 @@ public class ProductVersion : EntityBase
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
-    public virtual ICollection<CdnFile> FeatureImages { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -48,11 +48,11 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
         builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
+        builder.Property(item => item.PrimaryFeatureImageUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
-        builder.HasMany(item => item.FeatureImages).WithMany(item => item.ProductVersions);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

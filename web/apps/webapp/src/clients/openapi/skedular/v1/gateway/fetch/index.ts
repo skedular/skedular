@@ -17,3 +17,4 @@ export { $Error } from './schemas/$Error';
 export { $Version } from './schemas/$Version';
 
 export { GatewayService } from './services/GatewayService';
+export { V1Service } from './services/V1Service';

@@ -7,10 +7,7 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Marketplace.V1.Version;
 namespace Marketplace.Api.Controllers;
 
 [ApiController]
-public class MarketplaceController(
-    IVersionService versionService,
-    IWorkaroundService workaroundService,
-    IFileUploaderService fileUploaderService) : MarketplaceControllerBase
+public class MarketplaceController(IVersionService versionService,IWorkaroundService workaroundService) : MarketplaceControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -35,7 +32,4 @@ public class MarketplaceController(
 
         return Ok();
     }
-
-    public override async Task<ActionResult<FileUploadResponse>> UploadFile(IFormFile file, CancellationToken cancellationToken = default) =>
-        new FileUploadResponse { Id = await fileUploaderService.UploadAsync(file.OpenReadStream(), file.ContentType, cancellationToken) };
 }

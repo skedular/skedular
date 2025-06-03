@@ -18,6 +18,7 @@ paths:
   /v1/notification/version:
     get:
       tags:
+        - v1
         - notification
       summary: return API version
       operationId: getVersion

@@ -19,9 +19,9 @@ public class Product : ModelBaseWithDeleted
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
+    public string? PrimaryFeatureImageUrl { get; set; }
     public Organization Organization { get; set; } = new();
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
-    public ICollection<CdnFile> FeatureImages { get; set; } = [];
 }

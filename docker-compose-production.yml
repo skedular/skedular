@@ -135,6 +135,7 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Application__Environment: staging
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
@@ -195,6 +196,7 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -209,6 +211,7 @@ services:
       Subgraphs__Payment__Url: http://localhost:10100/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
+      Subgraphs__Core__Url: http://localhost:11100/v1/graphql
       Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -290,6 +293,7 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -386,6 +390,7 @@ services:
       ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -471,6 +476,7 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Application__Environment: prod
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
@@ -533,6 +539,7 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
@@ -547,6 +554,7 @@ services:
       Subgraphs__Payment__Url: http://localhost:10100/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
+      Subgraphs__Core__Url: http://localhost:11100/v1/graphql
       Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
@@ -628,6 +636,7 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
@@ -724,6 +733,7 @@ services:
       ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
+      ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod

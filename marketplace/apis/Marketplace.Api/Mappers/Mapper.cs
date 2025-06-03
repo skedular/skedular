@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Marketplace.Api.GraphQL;
-using Marketplace.Shared.Database.Entities;
 using Customer = Marketplace.Shared.Models.Customer;
 using Organization = Marketplace.Shared.Database.Entities.Organization;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
@@ -25,16 +24,14 @@ public interface IMapper
         ProductVersion productVersion,
         Organization organization,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages);
+        ICollection<OrganizationTag> locationTags);
 
     Shared.Database.Entities.Product MergeTo(
         ProductVersion src,
         Shared.Database.Entities.Product dest,
         Organization organization,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages);
+        ICollection<OrganizationTag> locationTags);
 
     ProductEdge MapTo(Edge<Product> src);
     Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization);
@@ -44,8 +41,7 @@ public interface IMapper
         ProductVersion src,
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages);
+        ICollection<OrganizationTag> locationTags);
 }
 
 public class Mapper : IMapper
@@ -83,11 +79,11 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
-            ProductVersions = MapTo(src.ProductVersions).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList()
+            ProductVersions = MapTo(src.ProductVersions).ToList()
         };
 
     public ProductVersion MapTo(AddProductInput src) =>
@@ -105,9 +101,9 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            FeatureImages = src.FeatureImageIds.Select(item => new Shared.Models.CdnFile { Id = item }).ToList()
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
 
     public ProductVersion MapTo(UpdateProductInput src) =>
@@ -125,9 +121,9 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            FeatureImages = src.FeatureImageIds.Select(item => new Shared.Models.CdnFile { Id = item }).ToList()
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
 
     public ProductDetails? MapTo(Product? src)
@@ -157,9 +153,9 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = MapTo(src.Organization),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
         };
@@ -170,24 +166,21 @@ public class Mapper : IMapper
         ProductVersion productVersion,
         Organization organization,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages) =>
+        ICollection<OrganizationTag> locationTags) =>
         MergeTo(
             src,
             productVersion,
             new Shared.Database.Entities.Product(),
             organization,
             productTags,
-            locationTags,
-            featureImages);
+            locationTags);
 
     public Shared.Database.Entities.Product MergeTo(
         ProductVersion src,
         Shared.Database.Entities.Product dest,
         Organization organization,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages)
+        ICollection<OrganizationTag> locationTags)
     {
         dest.Organization = organization;
         dest.Name = src.Name;
@@ -202,9 +195,9 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
+        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
-        dest.FeatureImages = featureImages;
         return dest;
     }
 
@@ -230,11 +223,11 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = organization,
-            ProductVersions = MapTo(src.ProductVersions).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            ProductVersions = MapTo(src.ProductVersions).ToList()
         };
 
     public Shared.Models.Organization MapTo(Organization src) =>
@@ -252,9 +245,8 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages) =>
-        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags, featureImages);
+        ICollection<OrganizationTag> locationTags) =>
+        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id };
 
@@ -292,9 +284,9 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList()
+            LocationTags = MapTo(src.LocationTags).ToList()
         };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<Shared.Models.OrganizationTag> src) => src.Select(MapTo);
@@ -308,8 +300,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Product dest,
         Organization organization,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages)
+        ICollection<OrganizationTag> locationTags)
     {
         dest.Id = src.Id;
         dest.Inactive = src.Inactive;
@@ -327,9 +318,9 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = productVersion.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
+        dest.PrimaryFeatureImageUrl = productVersion.PrimaryFeatureImageUrl;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
-        dest.FeatureImages = featureImages;
         return dest;
     }
 
@@ -338,8 +329,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags,
-        ICollection<CdnFile> featureImages)
+        ICollection<OrganizationTag> locationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -354,20 +344,10 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
+        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;
-        dest.FeatureImages = featureImages;
         return dest;
     }
-
-    private static IEnumerable<FeatureImageDetails> MapTo(IEnumerable<Shared.Models.CdnFile> src) => src.Select(MapTo);
-
-    private static FeatureImageDetails MapTo(Shared.Models.CdnFile src) =>
-        new() { Id = src.Id, Url = src.Url };
-
-    private static IEnumerable<Shared.Models.CdnFile> MapTo(IEnumerable<CdnFile> src) => src.Select(MapTo);
-
-    private static Shared.Models.CdnFile MapTo(CdnFile src) =>
-        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Url = src.Url };
 }

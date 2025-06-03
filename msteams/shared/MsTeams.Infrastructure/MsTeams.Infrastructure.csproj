@@ -10,11 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MsTeams.Shared\MsTeams.Shared.csproj" />
+        <ProjectReference Include="..\MsTeams.Shared\MsTeams.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json" />
+        <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
 
 </Project>

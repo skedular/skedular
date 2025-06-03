@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiKqAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "cm9kdWN0VmVyc2lvbiKZAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
             "IAEoCRIRCglwcmljZVVuaXQYBSABKAkSEAoIY3VycmVuY3kYBiABKAkSGgoS",
             "bWluRHVyYXRpb25NaW51dGVzGAcgASgFEhoKEm1heER1cmF0aW9uTWludXRl",
@@ -44,12 +44,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "cmVjdXJyZW5jZVdpbmRvd0RheXMYCiABKAUSHgoWcmVxdWlyZUNvbnNlY3V0",
             "aXZlRGF5cxgLIAEoCBIcChRtYXhCb29raW5nU3ByZWFkRGF5cxgMIAEoBRIf",
             "ChdudW1iZXJPZlJlc291cmNlc1RvQm9vaxgNIAEoBRIVCg1wcm9kdWN0VGFn",
-            "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJEi8KDGZlYXR1cmVJ",
-            "bWFnZRgQIAMoCzIZLm1hcmtldHBsYWNlLkZlYXR1cmVJbWFnZSInCgxGZWF0",
-            "dXJlSW1hZ2USCgoCaWQYASABKAkSCwoDdXJsGAUgASgJKi8KBFR5cGUSEwoP",
-            "UHJvZHVjdFVwc2VydGVkEAASEgoOUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5W",
-            "MS5WYWx1ZWIGcHJvdG8z"));
+            "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJEh4KFnByaW1hcnlG",
+            "ZWF0dXJlSW1hZ2VVcmwYECABKAkqLwoEVHlwZRITCg9Qcm9kdWN0VXBzZXJ0",
+            "ZWQQABISCg5Qcm9kdWN0RGVsZXRlZBABQjqqAjdBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -57,8 +56,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "FeatureImage" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage.Parser, new[]{ "Id", "Url" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "PrimaryFeatureImageUrl" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1373,7 +1371,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       numberOfResourcesToBook_ = other.numberOfResourcesToBook_;
       productTagIds_ = other.productTagIds_.Clone();
       locationTagIds_ = other.locationTagIds_.Clone();
-      featureImage_ = other.featureImage_.Clone();
+      primaryFeatureImageUrl_ = other.primaryFeatureImageUrl_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1561,15 +1559,16 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       get { return locationTagIds_; }
     }
 
-    /// <summary>Field number for the "featureImage" field.</summary>
-    public const int FeatureImageFieldNumber = 16;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage> _repeated_featureImage_codec
-        = pb::FieldCodec.ForMessage(130, global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage> featureImage_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage>();
+    /// <summary>Field number for the "primaryFeatureImageUrl" field.</summary>
+    public const int PrimaryFeatureImageUrlFieldNumber = 16;
+    private string primaryFeatureImageUrl_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.FeatureImage> FeatureImage {
-      get { return featureImage_; }
+    public string PrimaryFeatureImageUrl {
+      get { return primaryFeatureImageUrl_; }
+      set {
+        primaryFeatureImageUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1602,7 +1601,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != other.NumberOfResourcesToBook) return false;
       if(!productTagIds_.Equals(other.productTagIds_)) return false;
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
-      if(!featureImage_.Equals(other.featureImage_)) return false;
+      if (PrimaryFeatureImageUrl != other.PrimaryFeatureImageUrl) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1625,7 +1624,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != 0) hash ^= NumberOfResourcesToBook.GetHashCode();
       hash ^= productTagIds_.GetHashCode();
       hash ^= locationTagIds_.GetHashCode();
-      hash ^= featureImage_.GetHashCode();
+      if (PrimaryFeatureImageUrl.Length != 0) hash ^= PrimaryFeatureImageUrl.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1698,7 +1697,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(output, _repeated_locationTagIds_codec);
-      featureImage_.WriteTo(output, _repeated_featureImage_codec);
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(PrimaryFeatureImageUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1763,7 +1765,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(ref output, _repeated_locationTagIds_codec);
-      featureImage_.WriteTo(ref output, _repeated_featureImage_codec);
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(PrimaryFeatureImageUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1815,7 +1820,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       size += productTagIds_.CalculateSize(_repeated_productTagIds_codec);
       size += locationTagIds_.CalculateSize(_repeated_locationTagIds_codec);
-      size += featureImage_.CalculateSize(_repeated_featureImage_codec);
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(PrimaryFeatureImageUrl);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1869,7 +1876,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.Add(other.productTagIds_);
       locationTagIds_.Add(other.locationTagIds_);
-      featureImage_.Add(other.featureImage_);
+      if (other.PrimaryFeatureImageUrl.Length != 0) {
+        PrimaryFeatureImageUrl = other.PrimaryFeatureImageUrl;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1950,7 +1959,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 130: {
-            featureImage_.AddEntriesFrom(input, _repeated_featureImage_codec);
+            PrimaryFeatureImageUrl = input.ReadString();
             break;
           }
         }
@@ -2033,242 +2042,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 130: {
-            featureImage_.AddEntriesFrom(ref input, _repeated_featureImage_codec);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class FeatureImage : pb::IMessage<FeatureImage>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<FeatureImage> _parser = new pb::MessageParser<FeatureImage>(() => new FeatureImage());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<FeatureImage> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.MarketplaceV1ValueReflection.Descriptor.MessageTypes[5]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public FeatureImage() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public FeatureImage(FeatureImage other) : this() {
-      id_ = other.id_;
-      url_ = other.url_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public FeatureImage Clone() {
-      return new FeatureImage(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "url" field.</summary>
-    public const int UrlFieldNumber = 5;
-    private string url_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Url {
-      get { return url_; }
-      set {
-        url_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as FeatureImage);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(FeatureImage other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (Url != other.Url) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (Url.Length != 0) hash ^= Url.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Url.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Url);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Url.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Url);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (Url.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Url);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(FeatureImage other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.Url.Length != 0) {
-        Url = other.Url;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 42: {
-            Url = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 42: {
-            Url = input.ReadString();
+            PrimaryFeatureImageUrl = input.ReadString();
             break;
           }
         }

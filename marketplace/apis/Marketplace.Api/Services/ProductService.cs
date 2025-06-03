@@ -10,7 +10,6 @@ using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
-using CdnFile = Marketplace.Shared.Database.Entities.CdnFile;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
 
 namespace Marketplace.Api.Services;
@@ -87,10 +86,6 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        var featureImagesIds = productVersion.FeatureImages.Select(item => item.Id).ToList();
-        var featureImages = await repositoryFactory.CdnFileRepository.Query(
-            new Specification<CdnFile> { Criteria = query => featureImagesIds.Contains(query.Id) }).ToListAsync(cancellationToken);
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
@@ -100,10 +95,9 @@ public class ProductService(
             productVersion,
             existingOrganization,
             productTags,
-            locationTags,
-            featureImages);
+            locationTags);
 
-        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags, featureImages);
+        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
@@ -140,12 +134,9 @@ public class ProductService(
             throw new ProductNotFound();
         }
 
-        foreach (var existingProduct in existingProducts)
+        if (existingProducts.Any(existingProduct => !organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer)))
         {
-            if (!organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer))
-            {
-                throw new Unauthorized();
-            }
+            throw new Unauthorized();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -279,17 +270,13 @@ public class ProductService(
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
-        var featureImagesIds = productVersion.FeatureImages.Select(item => item.Id).ToList();
-        var featureImages = await repositoryFactory.CdnFileRepository.Query(
-            new Specification<CdnFile> { Criteria = query => featureImagesIds.Contains(query.Id) }).ToListAsync(cancellationToken);
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags, featureImages));
-        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags, featureImages);
+        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags));
+        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 

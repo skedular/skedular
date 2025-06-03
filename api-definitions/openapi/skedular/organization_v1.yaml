@@ -18,6 +18,7 @@ paths:
   /v1/organization/version:
     get:
       tags:
+        - v1
         - organization
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/organization/{organizationId}/republish:
     put:
       tags:
+        - v1
         - organization
       summary: republish organization
       operationId: republish
@@ -64,6 +66,7 @@ paths:
   /v1/organization/republish-all:
     put:
       tags:
+        - v1
         - organization
       summary: republish all organizations
       operationId: republishAll
@@ -82,6 +85,7 @@ paths:
   /v1/organization/azure-tenant-admin-consent-url:
     get:
       tags:
+        - v1
         - organization
         - azure
         - tenant
@@ -94,6 +98,7 @@ paths:
   /v1/organization/onboard-azure-tenant:
     get:
       tags:
+        - v1
         - organization
         - azure
         - tenant
@@ -126,10 +131,11 @@ paths:
       responses:
         "200":
           description: onboarding response
-  
+
   /v1/organization/acs:
     post:
       tags:
+        - v1
         - organization
         - sso
       summary: sso acs

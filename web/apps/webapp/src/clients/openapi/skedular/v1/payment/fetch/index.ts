@@ -25,4 +25,5 @@ export { PaymentService } from './services/PaymentService';
 export { PaymentMethodService } from './services/PaymentMethodService';
 export { PlatformService } from './services/PlatformService';
 export { StripeService } from './services/StripeService';
+export { V1Service } from './services/V1Service';
 export { WebhookService } from './services/WebhookService';

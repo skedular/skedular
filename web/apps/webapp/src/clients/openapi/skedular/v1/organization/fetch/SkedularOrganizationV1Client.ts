@@ -9,12 +9,14 @@ import { AzureService } from './services/AzureService';
 import { OrganizationService } from './services/OrganizationService';
 import { SsoService } from './services/SsoService';
 import { TenantService } from './services/TenantService';
+import { V1Service } from './services/V1Service';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
     public readonly azure: AzureService;
     public readonly organization: OrganizationService;
     public readonly sso: SsoService;
     public readonly tenant: TenantService;
+    public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -32,6 +34,7 @@ export class SkedularOrganizationV1Client {
         this.organization = new OrganizationService(this.request);
         this.sso = new SsoService(this.request);
         this.tenant = new TenantService(this.request);
+        this.v1 = new V1Service(this.request);
     }
 }
 

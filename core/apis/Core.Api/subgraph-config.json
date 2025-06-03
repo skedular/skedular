@@ -1,0 +1,6 @@
+{
+  "subgraph": "Core",
+  "http": {
+    "baseAddress": "http://localhost:11100/v1/core/graphql"
+  }
+}

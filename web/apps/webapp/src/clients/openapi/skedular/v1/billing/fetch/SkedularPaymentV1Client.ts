@@ -7,10 +7,12 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { BillingService } from './services/BillingService';
 import { OrganizationService } from './services/OrganizationService';
+import { V1Service } from './services/V1Service';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularPaymentV1Client {
     public readonly billing: BillingService;
     public readonly organization: OrganizationService;
+    public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -26,6 +28,7 @@ export class SkedularPaymentV1Client {
         });
         this.billing = new BillingService(this.request);
         this.organization = new OrganizationService(this.request);
+        this.v1 = new V1Service(this.request);
     }
 }
 

@@ -15,6 +15,7 @@ public class SubgraphsConfigurations
     public UrlConfig Payment { get; set; } = new();
     public UrlConfig Slack { get; set; } = new();
     public UrlConfig Team { get; set; } = new();
+    public UrlConfig Core { get; set; } = new();
 }
 
 public class UrlConfig

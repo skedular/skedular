@@ -56,6 +56,7 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
+    coreCustomerRecordSynced
     pendingInvitationsCount
 
     isAzureTenantInstalled
@@ -107,7 +108,8 @@ const RootShell = ({
       rootData?.organizationCustomerRecordSynced &&
       rootData?.paymentCustomerRecordSynced &&
       rootData?.slackCustomerRecordSynced &&
-      rootData?.teamCustomerRecordSynced,
+      rootData?.teamCustomerRecordSynced &&
+      rootData?.coreCustomerRecordSynced,
     [
       rootData?.billingCustomerRecordSynced,
       rootData?.bookingCustomerRecordSynced,
@@ -119,6 +121,7 @@ const RootShell = ({
       rootData?.paymentCustomerRecordSynced,
       rootData?.slackCustomerRecordSynced,
       rootData?.teamCustomerRecordSynced,
+      rootData?.coreCustomerRecordSynced,
     ],
   );
 

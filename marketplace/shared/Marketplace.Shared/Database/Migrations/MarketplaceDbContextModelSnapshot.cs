@@ -29,36 +29,6 @@ namespace Marketplace.Shared.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "hstore");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CdnFileProduct", b =>
-                {
-                    b.Property<string>("FeatureImagesId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ProductsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("FeatureImagesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CdnFileProduct");
-                });
-
-            modelBuilder.Entity("CdnFileProductVersion", b =>
-                {
-                    b.Property<string>("FeatureImagesId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ProductVersionsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("FeatureImagesId", "ProductVersionsId");
-
-                    b.HasIndex("ProductVersionsId");
-
-                    b.ToTable("CdnFileProductVersion");
-                });
-
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.KafkaOutbox", b =>
                 {
                     b.Property<string>("Id")
@@ -143,41 +113,6 @@ namespace Marketplace.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("TemporalOutbox");
-                });
-
-            modelBuilder.Entity("Marketplace.Shared.Database.Entities.CdnFile", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.ToTable("CdnFile");
                 });
 
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Customer", b =>
@@ -565,6 +500,10 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
+                    b.Property<string>("PrimaryFeatureImageUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<int>("RecurrenceWindowDays")
                         .HasColumnType("integer");
 
@@ -655,6 +594,10 @@ namespace Marketplace.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
+
+                    b.Property<string>("PrimaryFeatureImageUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("ProductId")
                         .IsRequired()
@@ -749,36 +692,6 @@ namespace Marketplace.Shared.Database.Migrations
                     b.HasIndex("ProductVersionLocationTagsId");
 
                     b.ToTable("OrganizationTagProductVersion1");
-                });
-
-            modelBuilder.Entity("CdnFileProduct", b =>
-                {
-                    b.HasOne("Marketplace.Shared.Database.Entities.CdnFile", null)
-                        .WithMany()
-                        .HasForeignKey("FeatureImagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Marketplace.Shared.Database.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CdnFileProductVersion", b =>
-                {
-                    b.HasOne("Marketplace.Shared.Database.Entities.CdnFile", null)
-                        .WithMany()
-                        .HasForeignKey("FeatureImagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Marketplace.Shared.Database.Entities.ProductVersion", null)
-                        .WithMany()
-                        .HasForeignKey("ProductVersionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Identity", b =>

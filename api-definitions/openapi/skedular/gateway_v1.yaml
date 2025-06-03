@@ -18,6 +18,7 @@ paths:
   /v1/gateway/version:
     get:
       tags:
+        - v1
         - gateway
       summary: return API version
       operationId: getVersion

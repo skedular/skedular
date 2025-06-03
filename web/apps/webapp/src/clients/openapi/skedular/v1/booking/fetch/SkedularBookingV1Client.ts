@@ -6,9 +6,11 @@ import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { BookingService } from './services/BookingService';
+import { V1Service } from './services/V1Service';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBookingV1Client {
     public readonly booking: BookingService;
+    public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -23,6 +25,7 @@ export class SkedularBookingV1Client {
             ENCODE_PATH: config?.ENCODE_PATH,
         });
         this.booking = new BookingService(this.request);
+        this.v1 = new V1Service(this.request);
     }
 }
 

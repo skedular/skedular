@@ -30,7 +30,8 @@ public class Program
             Notification.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Payment.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Team.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
+            Team.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Core.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }
 }

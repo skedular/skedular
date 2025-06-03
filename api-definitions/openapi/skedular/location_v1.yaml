@@ -18,6 +18,8 @@ paths:
   /v1/location/version:
     get:
       tags:
+        - v1
+        - v1
         - location
       summary: return API version
       operationId: getVersion
@@ -40,6 +42,8 @@ paths:
   /v1/location/{locationId}/republish:
     put:
       tags:
+        - v1
+        - v1
         - location
       summary: republish location
       operationId: republish
@@ -64,6 +68,8 @@ paths:
   /v1/location/republish-all:
     put:
       tags:
+        - v1
+        - v1
         - location
       summary: republish all locations
       operationId: republishAll

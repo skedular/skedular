@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using Marketplace.Shared.Models;
 using Product = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product;
 using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion;
 
@@ -41,16 +39,13 @@ public class Mapper : IMapper
             RecurrenceWindowDays = src.RecurrenceWindowDays,
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString()
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
         productVersion.LocationTagIds.AddRange(src.LocationTags.Select(item => item.Id));
-        productVersion.FeatureImage.AddRange(src.FeatureImages.Select(MapTo));
 
         return productVersion;
     }
-
-    private FeatureImage MapTo(CdnFile src) =>
-        new() { Id = src.Id, Url = src.Url.ToSafeString() };
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ccaade25a08f48e1156f67346faa2521>>
+ * @generated SignedSource<<c98ff4868e66080ed4ae2b7837bd4be5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,6 @@ export type organizationMarketplaceSetup_deactivateProductsMutation$data = {
     readonly products: ReadonlyArray<{
       readonly bookAllLocationResources: boolean;
       readonly description: string | null | undefined;
-      readonly featureImages: ReadonlyArray<{
-        readonly id: string;
-        readonly url: string;
-      }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly maxBookingSpreadDays: number | null | undefined;
@@ -61,17 +57,10 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v2 = [
   {
     "alias": null,
     "args": [
@@ -94,7 +83,13 @@ v3 = [
         "name": "products",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -102,7 +97,7 @@ v3 = [
             "name": "inactive",
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -125,7 +120,7 @@ v3 = [
             "name": "priceUnit",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -195,25 +190,6 @@ v3 = [
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "FeatureImageDetails",
-            "kind": "LinkedField",
-            "name": "featureImages",
-            "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "url",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -228,7 +204,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMarketplaceSetup_deactivateProductsMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -237,19 +213,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationMarketplaceSetup_deactivateProductsMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "d609108ab279d14ab8b502f0a4bc2d23",
+    "cacheID": "e85cf1ec54d4ddd4afdc7218011e3dbb",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_deactivateProductsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deactivateProductsMutation(\n  $input: DeactivateProductsInput!\n) {\n  deactivateProducts(input: $input) {\n    products {\n      id\n      inactive\n      name\n      description\n      priceToDisplay\n      priceUnit {\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      organization {\n        uniqueId\n      }\n      featureImages {\n        id\n        url\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_deactivateProductsMutation(\n  $input: DeactivateProductsInput!\n) {\n  deactivateProducts(input: $input) {\n    products {\n      id\n      inactive\n      name\n      description\n      priceToDisplay\n      priceUnit {\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      organization {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "49317a20992b0b2b2b054fed094af101";
+(node as any).hash = "f7cd33477ecc6a7bd993ef986ef519b0";
 
 export default node;

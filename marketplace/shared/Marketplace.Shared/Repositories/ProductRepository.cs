@@ -37,7 +37,6 @@ internal static class ProductExtensions
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.FeatureImages)
             .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))

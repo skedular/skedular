@@ -17,3 +17,4 @@ export { $Error } from './schemas/$Error';
 export { $Version } from './schemas/$Version';
 
 export { SlackService } from './services/SlackService';
+export { V1Service } from './services/V1Service';

@@ -279,11 +279,6 @@ type DesksOccupancyPercentage {
   percentage: Float!
 }
 
-type FeatureImageDetails {
-  id: ID!
-  url: String!
-}
-
 type InviteCustomersToJoinOrganizationPayload {
   clientMutationId: String
 }
@@ -874,7 +869,6 @@ type ProductDetails {
   currency: CurrencyDetails!
   currencyToDisplay: String!
   description: String
-  featureImages: [FeatureImageDetails!]!
   id: ID!
   inactive: Boolean!
   latestProductVersionId: String!
@@ -888,6 +882,7 @@ type ProductDetails {
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
+  primaryFeatureImageUrl: String
   productTags: [Marketplace_OrganizationTagDetails!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -922,6 +917,8 @@ type Query {
   bookingStatuses: [BookingStatusDetails!]!
   bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
+  coreCustomerRecordSynced: Boolean! @cost(weight: "10")
+  coreVersion: Version!
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection! @cost(weight: "10")
@@ -1314,7 +1311,6 @@ input AddProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  featureImageIds: [String!]!
   id: String
   locationTagIds: [String!]!
   maxBookingSpreadDays: Int
@@ -1325,6 +1321,7 @@ input AddProductInput {
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
+  primaryFeatureImageUrl: String
   productTagIds: [String!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -1995,7 +1992,6 @@ input UpdateProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  featureImageIds: [String!]!
   id: String!
   locationTagIds: [String!]!
   maxBookingSpreadDays: Int
@@ -2006,6 +2002,7 @@ input UpdateProductInput {
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
+  primaryFeatureImageUrl: String
   productTagIds: [String!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!

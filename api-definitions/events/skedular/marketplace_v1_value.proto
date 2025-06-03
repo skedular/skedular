@@ -54,10 +54,5 @@ message ProductVersion {
   int32 numberOfResourcesToBook = 13;
   repeated string productTagIds = 14;
   repeated string locationTagIds = 15;
-  repeated FeatureImage featureImage = 16;
-}
-
-message FeatureImage {
-  string id = 1;
-  string url = 5;
+  string primaryFeatureImageUrl = 16;
 }

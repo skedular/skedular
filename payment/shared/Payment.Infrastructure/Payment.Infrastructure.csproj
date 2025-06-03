@@ -10,11 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Payment.Shared\Payment.Shared.csproj" />
+        <ProjectReference Include="..\Payment.Shared\Payment.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json" />
+        <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
 
 </Project>

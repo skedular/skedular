@@ -17,62 +17,67 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\gateway\apis\Gateway\Gateway.csproj" />
+        <ProjectReference Include="..\..\gateway\apis\Gateway\Gateway.csproj"/>
 
-        <ProjectReference Include="..\..\billing\shared\Billing.Infrastructure\Billing.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\billing\apis\Billing.Api\Billing.Api.csproj" />
-        <ProjectReference Include="..\..\billing\processors\Billing.Processors\Billing.Processors.csproj" />
-        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj" />
+        <ProjectReference Include="..\..\billing\shared\Billing.Infrastructure\Billing.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\billing\apis\Billing.Api\Billing.Api.csproj"/>
+        <ProjectReference Include="..\..\billing\processors\Billing.Processors\Billing.Processors.csproj"/>
+        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\booking\shared\Booking.Infrastructure\Booking.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\booking\apis\Booking.Api\Booking.Api.csproj" />
-        <ProjectReference Include="..\..\booking\processors\Booking.Processors\Booking.Processors.csproj" />
-        <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj" />
+        <ProjectReference Include="..\..\booking\shared\Booking.Infrastructure\Booking.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\booking\apis\Booking.Api\Booking.Api.csproj"/>
+        <ProjectReference Include="..\..\booking\processors\Booking.Processors\Booking.Processors.csproj"/>
+        <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\customer\shared\Customer.Infrastructure\Customer.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\customer\apis\Customer.Api\Customer.Api.csproj" />
-        <ProjectReference Include="..\..\customer\processors\Customer.Processors\Customer.Processors.csproj" />
-        <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj" />
+        <ProjectReference Include="..\..\customer\shared\Customer.Infrastructure\Customer.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\customer\apis\Customer.Api\Customer.Api.csproj"/>
+        <ProjectReference Include="..\..\customer\processors\Customer.Processors\Customer.Processors.csproj"/>
+        <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\location\shared\Location.Infrastructure\Location.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\location\apis\Location.Api\Location.Api.csproj" />
-        <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj" />
-        <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj" />
+        <ProjectReference Include="..\..\location\shared\Location.Infrastructure\Location.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\location\apis\Location.Api\Location.Api.csproj"/>
+        <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj"/>
+        <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Infrastructure\Marketplace.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\marketplace\apis\Marketplace.Api\Marketplace.Api.csproj" />
-        <ProjectReference Include="..\..\marketplace\processors\Marketplace.Processors\Marketplace.Processors.csproj" />
-        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj" />
+        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Infrastructure\Marketplace.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\marketplace\apis\Marketplace.Api\Marketplace.Api.csproj"/>
+        <ProjectReference Include="..\..\marketplace\processors\Marketplace.Processors\Marketplace.Processors.csproj"/>
+        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\msteams\shared\MsTeams.Infrastructure\MsTeams.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj" />
-        <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj" />
-        <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj" />
+        <ProjectReference Include="..\..\msteams\shared\MsTeams.Infrastructure\MsTeams.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
+        <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj"/>
+        <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\notification\shared\Notification.Infrastructure\Notification.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj" />
-        <ProjectReference Include="..\..\notification\processors\Notification.Processors\Notification.Processors.csproj" />
-        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj" />
+        <ProjectReference Include="..\..\notification\shared\Notification.Infrastructure\Notification.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
+        <ProjectReference Include="..\..\notification\processors\Notification.Processors\Notification.Processors.csproj"/>
+        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\organization\shared\Organization.Infrastructure\Organization.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj" />
-        <ProjectReference Include="..\..\organization\processors\Organization.Processors\Organization.Processors.csproj" />
-        <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj" />
+        <ProjectReference Include="..\..\organization\shared\Organization.Infrastructure\Organization.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
+        <ProjectReference Include="..\..\organization\processors\Organization.Processors\Organization.Processors.csproj"/>
+        <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\payment\shared\Payment.Infrastructure\Payment.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj" />
-        <ProjectReference Include="..\..\payment\processors\Payment.Processors\Payment.Processors.csproj" />
-        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj" />
+        <ProjectReference Include="..\..\payment\shared\Payment.Infrastructure\Payment.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj"/>
+        <ProjectReference Include="..\..\payment\processors\Payment.Processors\Payment.Processors.csproj"/>
+        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj" />
-        <ProjectReference Include="..\..\slack\processors\Slack.Processors\Slack.Processors.csproj" />
-        <ProjectReference Include="..\..\slack\jobs\Slack.Jobs\Slack.Jobs.csproj" />
+        <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj"/>
+        <ProjectReference Include="..\..\slack\processors\Slack.Processors\Slack.Processors.csproj"/>
+        <ProjectReference Include="..\..\slack\jobs\Slack.Jobs\Slack.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\team\shared\Team.Infrastructure\Team.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\team\apis\Team.Api\Team.Api.csproj" />
-        <ProjectReference Include="..\..\team\processors\Team.Processors\Team.Processors.csproj" />
-        <ProjectReference Include="..\..\team\jobs\Team.Jobs\Team.Jobs.csproj" />
+        <ProjectReference Include="..\..\team\shared\Team.Infrastructure\Team.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\team\apis\Team.Api\Team.Api.csproj"/>
+        <ProjectReference Include="..\..\team\processors\Team.Processors\Team.Processors.csproj"/>
+        <ProjectReference Include="..\..\team\jobs\Team.Jobs\Team.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\core\shared\Core.Infrastructure\Core.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\core\apis\Core.Api\Core.Api.csproj"/>
+        <ProjectReference Include="..\..\core\processors\Core.Processors\Core.Processors.csproj"/>
+        <ProjectReference Include="..\..\core\jobs\Core.Jobs\Core.Jobs.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

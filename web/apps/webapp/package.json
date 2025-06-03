@@ -65,6 +65,7 @@
     "react-dom": "19.1.0",
     "react-error-boundary": "^6.0.0",
     "react-final-form": "^6.5.9",
+    "react-image-crop": "^11.0.10",
     "react-relay": "^19.0.0",
     "react-svg-credit-card-payment-icons": "^3.1.1",
     "react-toastify": "^11.0.5",

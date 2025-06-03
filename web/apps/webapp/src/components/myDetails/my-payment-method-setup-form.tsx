@@ -42,7 +42,7 @@ const MyPaymentMethodSetupForm = ({ onCancel }: Props) => {
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
-          <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" disabled={isAdding || !stripe || !elements} />
+          <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" primaryDisabled={isAdding || !stripe || !elements} />
         </FormStackColumn>
       )}
     />

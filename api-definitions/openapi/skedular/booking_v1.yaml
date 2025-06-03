@@ -18,6 +18,7 @@ paths:
   /v1/booking/version:
     get:
       tags:
+        - v1
         - booking
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/booking/{bookingId}/republish:
     put:
       tags:
+        - v1
         - booking
       summary: republish booking
       operationId: republish
@@ -64,6 +66,7 @@ paths:
   /v1/booking/republish-all:
     put:
       tags:
+        - v1
         - booking
       summary: republish all bookings
       operationId: republishAll
@@ -82,6 +85,7 @@ paths:
   /v1/booking/republish-all-resources-slots:
     put:
       tags:
+        - v1
         - booking
       summary: republish all resource slots
       operationId: republishAllResourcesSlots
@@ -100,6 +104,7 @@ paths:
   /v1/booking/resources-slots/{resourceId}/republish:
     put:
       tags:
+        - v1
         - booking
       summary: republish resource slots
       operationId: republishResourcesSlots

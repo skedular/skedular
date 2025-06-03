@@ -8,5 +8,5 @@ public class Cloudflare
     public string AccessKey { get; set; } = string.Empty;
     public string SecretKey { get; set; } = string.Empty;
     public string CdnR2BucketName { get; set; } = string.Empty;
-    public string CdnBaseUrl { get; set; } = string.Empty;
+    public required Uri CdnBaseUrl { get; set; }
 }

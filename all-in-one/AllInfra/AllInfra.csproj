@@ -28,6 +28,7 @@
         <ProjectReference Include="..\..\payment\shared\Payment.Infrastructure\Payment.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\team\shared\Team.Infrastructure\Team.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\core\shared\Core.Infrastructure\Core.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

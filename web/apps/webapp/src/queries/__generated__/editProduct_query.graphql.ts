@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1793c8b62411448222541ee8774cb108>>
+ * @generated SignedSource<<6e81770deae37df9a641ef620aca5989>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,6 @@ export type editProduct_query$data = {
       readonly type: Currency;
     };
     readonly description: string | null | undefined;
-    readonly featureImages: ReadonlyArray<{
-      readonly id: string;
-      readonly url: string;
-    }>;
     readonly id: string;
     readonly inactive: boolean;
     readonly locationTags: ReadonlyArray<{
@@ -45,6 +41,7 @@ export type editProduct_query$data = {
       readonly name: string;
       readonly type: PriceUnit;
     };
+    readonly primaryFeatureImageUrl: string | null | undefined;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
@@ -66,17 +63,10 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -84,18 +74,18 @@ v2 = [
     "name": "type",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v0/*: any*/)
 ],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = [
-  (v3/*: any*/),
-  (v1/*: any*/),
+v3 = [
+  (v2/*: any*/),
+  (v0/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -129,7 +119,13 @@ return {
       "name": "product",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -137,7 +133,7 @@ return {
           "name": "inactive",
           "storageKey": null
         },
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -159,7 +155,7 @@ return {
           "kind": "LinkedField",
           "name": "priceUnit",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -169,7 +165,7 @@ return {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -228,7 +224,7 @@ return {
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -238,7 +234,7 @@ return {
           "kind": "LinkedField",
           "name": "locationTags",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -249,27 +245,15 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v3/*: any*/)
+            (v2/*: any*/)
           ],
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "FeatureImageDetails",
-          "kind": "LinkedField",
-          "name": "featureImages",
-          "plural": true,
-          "selections": [
-            (v0/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "primaryFeatureImageUrl",
           "storageKey": null
         }
       ],
@@ -308,6 +292,6 @@ return {
 };
 })();
 
-(node as any).hash = "17352c7caba3cc6b1bd956aa3e3485ef";
+(node as any).hash = "db3acb7846c1d730673c5232c478be40";
 
 export default node;

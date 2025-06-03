@@ -18,6 +18,7 @@ paths:
   /v1/customer/version:
     get:
       tags:
+        - v1
         - customer
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/customer/{customerId}/republish:
     put:
       tags:
+        - v1
         - customer
       summary: republish customer
       operationId: republish
@@ -64,6 +66,7 @@ paths:
   /v1/customer/republish-all:
     put:
       tags:
+        - v1
         - customer
       summary: republish all customers
       operationId: republishAll

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3da99953c90181c83a599409b2e929bb>>
+ * @generated SignedSource<<9f943a73a5006135d1465db5a4c549c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type AddProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
-  featureImageIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationTagIds: ReadonlyArray<string>;
   maxBookingSpreadDays?: number | null | undefined;
@@ -27,6 +26,7 @@ export type AddProductInput = {
   organizationId: string;
   price: string;
   priceUnit: PriceUnit;
+  primaryFeatureImageUrl?: string | null | undefined;
   productTagIds: ReadonlyArray<string>;
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
@@ -43,10 +43,6 @@ export type addProduct_addProductMutation$data = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
-      readonly featureImages: ReadonlyArray<{
-        readonly id: string;
-        readonly url: string;
-      }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly locationTags: ReadonlyArray<{
@@ -64,6 +60,7 @@ export type addProduct_addProductMutation$data = {
         readonly name: string;
         readonly type: PriceUnit;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -83,10 +80,6 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
-      readonly featureImages: ReadonlyArray<{
-        readonly id: string;
-        readonly url: string;
-      }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly locationTags: ReadonlyArray<{
@@ -104,6 +97,7 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly name: string;
         readonly type: PriceUnit;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -132,17 +126,10 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -150,9 +137,9 @@ v3 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v1/*: any*/)
 ],
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -160,7 +147,7 @@ v4 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v2/*: any*/),
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -169,7 +156,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -192,7 +179,13 @@ v5 = [
         "name": "product",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -200,7 +193,7 @@ v5 = [
             "name": "inactive",
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -222,7 +215,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "priceUnit",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -232,7 +225,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -291,7 +284,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -301,26 +294,14 @@ v5 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "FeatureImageDetails",
-            "kind": "LinkedField",
-            "name": "featureImages",
-            "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "url",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "primaryFeatureImageUrl",
             "storageKey": null
           }
         ],
@@ -336,7 +317,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addProduct_addProductMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -345,19 +326,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addProduct_addProductMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "8fd3ce2967987c6e9fe1714540450b02",
+    "cacheID": "ca99efad83bf14e45218e0058db6678b",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      featureImages {\n        id\n        url\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      primaryFeatureImageUrl\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "467c004ee6aec072ec626d69796759a5";
+(node as any).hash = "9849dec73009485b46b9d1de9e4cedcc";
 
 export default node;

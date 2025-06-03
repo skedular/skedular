@@ -134,4 +134,6 @@ public static class Constants
 
     public const int MaxWorkflowTypeLength = 1024;
     public const int MaxWorkflowExecutionArgsLength = 10240;
+
+    public static Uri EmptyUri = new("about:blank");
 }

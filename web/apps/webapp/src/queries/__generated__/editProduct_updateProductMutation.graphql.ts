@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0782bd06ec355ba2ac41731fa3988e39>>
+ * @generated SignedSource<<fc0414032fa41d69c4ff9f22a82a2ae6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type UpdateProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
-  featureImageIds: ReadonlyArray<string>;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   maxBookingSpreadDays?: number | null | undefined;
@@ -27,6 +26,7 @@ export type UpdateProductInput = {
   organizationId: string;
   price: string;
   priceUnit: PriceUnit;
+  primaryFeatureImageUrl?: string | null | undefined;
   productTagIds: ReadonlyArray<string>;
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
@@ -60,6 +60,7 @@ export type editProduct_updateProductMutation$data = {
         readonly name: string;
         readonly type: PriceUnit;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -96,6 +97,7 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly name: string;
         readonly type: PriceUnit;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -294,6 +296,13 @@ v4 = [
             "plural": true,
             "selections": (v3/*: any*/),
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "primaryFeatureImageUrl",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -320,16 +329,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "c64a8f45259f5eb94af1b81c5fa643a1",
+    "cacheID": "d83c6386ba34e8d919cc42e2c41aa3b2",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      primaryFeatureImageUrl\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0852dde3cf5db088b9561150386be4f5";
+(node as any).hash = "0ad17d99b3a0f626f4f9df83e4dc4e83";
 
 export default node;

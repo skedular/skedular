@@ -1,0 +1,125 @@
+openapi: 3.1.1
+info:
+  title: Core API v1
+  description: "Core REST API"
+  version: 1.0.0
+
+servers:
+  - url: https://api.skedular.app
+    description: production
+  - url: https://stagingapi.skedular.app
+    description: staging
+  - url: http://localhost:9000
+    description: local gateway
+  - url: http://localhost:11000
+    description: local
+
+paths:
+  /v1/core/version:
+    get:
+      tags:
+        - v1
+        - core
+      summary: return API version
+      operationId: getVersion
+
+      responses:
+        "200":
+          description: the version of the API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/core/uploadFile:
+    post:
+      tags:
+        - v1
+        - core
+      summary: Upload file
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload
+
+      responses:
+        "200":
+          description: the response of uploading file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadResponse"
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message
+
+    Version:
+      type: object
+      required:
+        - major
+        - minor
+        - build
+        - revision
+      properties:
+        major:
+          type: integer
+          format: int32
+          description: major version
+        minor:
+          type: integer
+          format: int32
+          description: minor version
+        build:
+          type: integer
+          format: int32
+          description: build number
+        revision:
+          type: integer
+          format: int32
+          description: revision
+
+    FileUploadResponse:
+      type: object
+      required:
+        - id
+        - cdnUrl
+      properties:
+        id:
+          type: string
+        cdnUrl:
+          type: string

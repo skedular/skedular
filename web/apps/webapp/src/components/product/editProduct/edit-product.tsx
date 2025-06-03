@@ -1,6 +1,7 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
+import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -11,6 +12,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -220,10 +222,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           organization {
             uniqueId
           }
-          featureImages {
-            id
-            url
-          }
+          primaryFeatureImageUrl
         }
         openingHoursMinutesStep
         ...multipleChoicesProductTags_query
@@ -269,6 +268,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
+          primaryFeatureImageUrl
         }
       }
     }
@@ -344,7 +344,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           productTagIds,
           locationTagIds,
           organizationId: product.organization.uniqueId,
-          featureImageIds: product.featureImages.map((item) => item.id),
+          primaryFeatureImageUrl: product.primaryFeatureImageUrl,
         },
       },
       onCompleted: (_, errors) => {
@@ -395,6 +395,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
+            primaryFeatureImageUrl: null,
           },
         },
       },
@@ -457,6 +458,12 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Feature Image">
+                      {rootData.product?.primaryFeatureImageUrl && (
+                        <Image src={rootData.product.primaryFeatureImageUrl} height={productFeatureImageHeight} width={productFeatureImageWidth} alt="" />
+                      )}
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>

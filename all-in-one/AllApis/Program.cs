@@ -32,6 +32,7 @@ public class Program
             Payment.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Team.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
+            Core.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Gateway.Program.CreateHostBuilder(args).RunAsync(cancellationToken)
         );
     }

@@ -18,6 +18,7 @@ paths:
   /v1/team/version:
     get:
       tags:
+        - v1
         - team
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/team/{teamId}/republish:
     put:
       tags:
+        - v1
         - team
       summary: republish team
       operationId: republish
@@ -64,6 +66,7 @@ paths:
   /v1/team/republish-all:
     put:
       tags:
+        - v1
         - team
       summary: republish all teams
       operationId: republishAll

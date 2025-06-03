@@ -13,21 +13,29 @@ type Props = {
   primaryLabel: string;
   secondaryLabel?: string;
   hideSecondary?: boolean;
-  disabled?: boolean;
+  primaryDisabled?: boolean;
+  secondaryDisabled?: boolean;
 };
 
-const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, primaryLabel, secondaryLabel, hideSecondary, disabled }: Props) => {
+const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, primaryLabel, secondaryLabel, hideSecondary, primaryDisabled, secondaryDisabled }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
     <DialogActions sx={sx}>
       {!hideSecondary && (
-        <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={disabled} sx={defaultButtonStyle}>
+        <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={secondaryDisabled} sx={defaultButtonStyle}>
           <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} />
         </Button>
       )}
 
-      <Button variant="contained" type={onPrimaryClicked ? undefined : 'submit'} onClick={onPrimaryClicked} color="primary" disabled={disabled} sx={{ textTransform: 'none' }}>
+      <Button
+        variant="contained"
+        type={onPrimaryClicked ? undefined : 'submit'}
+        onClick={onPrimaryClicked}
+        color="primary"
+        disabled={primaryDisabled}
+        sx={{ textTransform: 'none' }}
+      >
         <BodyIconTypography label={primaryLabel} invertDefaultColor />
       </Button>
     </DialogActions>

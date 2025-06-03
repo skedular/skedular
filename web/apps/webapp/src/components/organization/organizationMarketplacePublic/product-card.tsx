@@ -7,6 +7,7 @@ import type { productCard_ProductDetails$key } from '@/queries/__generated__/pro
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
 import Link from '@mui/material/Link';
 import NextLink from 'next/link';
 import { memo, useContext } from 'react';
@@ -37,10 +38,7 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
         organization {
           uniqueId
         }
-        featureImages {
-          id
-          url
-        }
+        primaryFeatureImageUrl
       }
     `,
     rootDataRelay,
@@ -52,6 +50,7 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
+        {productDetails.primaryFeatureImageUrl && <CardMedia component="img" image={productDetails.primaryFeatureImageUrl} />}
         <CardHeader
           title={
             <StackRow>

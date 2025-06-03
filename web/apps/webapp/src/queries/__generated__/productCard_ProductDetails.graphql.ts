@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b34fc9501a8a302e6859434e83c5443>>
+ * @generated SignedSource<<cfcca6d12d80d1bbc8fa2aa31a66116a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly description: string | null | undefined;
-  readonly featureImages: ReadonlyArray<{
-    readonly id: string;
-    readonly url: string;
-  }>;
   readonly id: string;
   readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
@@ -29,6 +25,7 @@ export type productCard_ProductDetails$data = {
   readonly priceUnit: {
     readonly name: string;
   };
+  readonly primaryFeatureImageUrl: string | null | undefined;
   readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -42,13 +39,6 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 };
@@ -58,8 +48,14 @@ return {
   "metadata": null,
   "name": "productCard_ProductDetails",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     (v0/*: any*/),
-    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -82,7 +78,7 @@ return {
       "name": "priceUnit",
       "plural": false,
       "selections": [
-        (v1/*: any*/)
+        (v0/*: any*/)
       ],
       "storageKey": null
     },
@@ -142,20 +138,8 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "FeatureImageDetails",
-      "kind": "LinkedField",
-      "name": "featureImages",
-      "plural": true,
-      "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        }
-      ],
+      "kind": "ScalarField",
+      "name": "primaryFeatureImageUrl",
       "storageKey": null
     }
   ],
@@ -164,6 +148,6 @@ return {
 };
 })();
 
-(node as any).hash = "a35e8587b3a0d5755022007f38967286";
+(node as any).hash = "56f9c50935293155c0ba5ac3e2d7b46c";
 
 export default node;

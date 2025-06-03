@@ -6,12 +6,12 @@ namespace Enterprise.Shared.Cdn;
 
 public interface ICdnService
 {
-    Task<string> UploadAsync(Stream stream, string contentType, string fileName, CancellationToken cancellationToken);
+    Task<(Uri, Uri)> UploadAsync(Stream stream, string contentType, string fileName, CancellationToken cancellationToken);
 }
 
 public class CdnService(Cloudflare cloudflare) : ICdnService
 {
-    public async Task<string> UploadAsync(Stream stream, string contentType, string fileName, CancellationToken cancellationToken)
+    public async Task<(Uri, Uri)> UploadAsync(Stream stream, string contentType, string fileName, CancellationToken cancellationToken)
     {
         var uri = new Uri($"https://{cloudflare.AccountId}.r2.cloudflarestorage.com");
         using var client = new AmazonS3Client(
@@ -36,6 +36,6 @@ public class CdnService(Cloudflare cloudflare) : ICdnService
 
         _ = await client.PutObjectAsync(request, cancellationToken);
 
-        return new Uri(uri, $"{cloudflare.CdnR2BucketName}/{fileName}").ToString();
+        return (new Uri(uri, $"{cloudflare.CdnR2BucketName}/{fileName}"), new Uri(cloudflare.CdnBaseUrl, fileName));
     }
 }

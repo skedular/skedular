@@ -18,6 +18,7 @@ paths:
   /v1/slack/version:
     get:
       tags:
+        - v1
         - slack
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/slack/callback:
     get:
       tags:
+        - v1
         - slack
       summary: slack installation callback
       operationId: callback

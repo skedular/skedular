@@ -30,7 +30,8 @@ public class Program
             Organization.Infrastructure.Program.MigrateAsync(Organization.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Payment.Infrastructure.Program.MigrateAsync(Payment.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Slack.Infrastructure.Program.MigrateAsync(Slack.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
-            Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
+            Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
+            Core.Infrastructure.Program.MigrateAsync(Core.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
         );
     }
 }

@@ -18,6 +18,7 @@ paths:
   /v1/msteams/version:
     get:
       tags:
+        - v1
         - msteams
       summary: return API version
       operationId: getVersion

@@ -137,10 +137,6 @@ const OrganizationMarketplaceSetup = ({
               organization {
                 uniqueId
               }
-              featureImages {
-                id
-                url
-              }
             }
           }
         }
@@ -312,10 +308,6 @@ const OrganizationMarketplaceSetup = ({
           organization {
             uniqueId
           }
-          featureImages {
-            id
-            url
-          }
         }
       }
     }
@@ -342,10 +334,6 @@ const OrganizationMarketplaceSetup = ({
           maxBookingSpreadDays
           organization {
             uniqueId
-          }
-          featureImages {
-            id
-            url
           }
         }
       }

@@ -4,13 +4,13 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { addProduct_addProductMutation, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -238,10 +238,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name
             color
           }
-          featureImages {
-            id
-            url
-          }
+          primaryFeatureImageUrl
         }
       }
     }
@@ -265,6 +262,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(1);
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
 
   const handleCloseClick = () => {
     onCancel();
@@ -315,7 +313,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           productTagIds,
           locationTagIds,
           organizationId,
-          featureImageIds: [],
+          primaryFeatureImageUrl,
         },
       },
       onCompleted: (_, errors) => {
@@ -367,11 +365,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            featureImages: [],
+            primaryFeatureImageUrl,
           },
         },
       },
     });
+  };
+
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
   };
 
   return (
@@ -422,6 +424,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Feature image">
+                      <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>

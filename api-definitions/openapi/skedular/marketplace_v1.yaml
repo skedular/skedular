@@ -18,6 +18,7 @@ paths:
   /v1/marketplace/version:
     get:
       tags:
+        - v1
         - marketplace
       summary: return API version
       operationId: getVersion
@@ -40,6 +41,7 @@ paths:
   /v1/marketplace/{organizationId}/products/republish-all:
     put:
       tags:
+        - v1
         - marketplace
         - product
       summary: republish organization products
@@ -65,6 +67,7 @@ paths:
   /v1/marketplace/products/republish-all:
     put:
       tags:
+        - v1
         - marketplace
         - product
       summary: republish all products
@@ -73,39 +76,6 @@ paths:
       responses:
         "200":
           description: the status of all products republishing
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /v1/marketplace/uploadFile:
-    post:
-      tags:
-        - marketplace
-      summary: Upload file
-      operationId: uploadFile
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                  description: The file to upload
-      
-      responses:
-        "200":
-          description: the response of uploading file 
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FileUploadResponse"
 
         default:
           description: unexpected error
@@ -154,11 +124,3 @@ components:
           type: integer
           format: int32
           description: revision
-
-    FileUploadResponse:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
