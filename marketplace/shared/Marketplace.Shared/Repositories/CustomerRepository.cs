@@ -11,10 +11,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken);
-    Customer Add(Customer customer);
-    Customer Update(Customer customer);
+    void Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
@@ -79,28 +76,11 @@ public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider tim
         GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
-
-    public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects()
-            .Where(query => !query.DeletedAt.HasValue)
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
-
-    public Customer Add(Customer customer)
-    {
-        var now = TimeProvider.GetUtcNow();
-        customer.CreatedAt = now;
-        return DbContext.Customer.Add(customer).Entity;
-    }
-
-    public Customer Update(Customer customer)
+    public void Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        return DbContext.Customer.Update(customer).Entity;
+        DbContext.Customer.Update(customer);
     }
 
     public Customer Remove(Customer customer)

@@ -20,7 +20,6 @@ public interface IProductRepository : IRepository<Product>
     Task<ICollection<Product>> GetAllAsync(CancellationToken cancellationToken);
     Product Add(Product product);
     Product Update(Product product);
-    Product Remove(Product product);
     void RemoveRange(ICollection<Product> products);
 
     Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsAsync(
@@ -131,13 +130,6 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
     {
         var now = TimeProvider.GetUtcNow();
         product.ModifiedAt = now;
-        return DbContext.Product.Update(product).Entity;
-    }
-
-    public Product Remove(Product product)
-    {
-        var now = TimeProvider.GetUtcNow();
-        product.DeletedAt = now;
         return DbContext.Product.Update(product).Entity;
     }
 

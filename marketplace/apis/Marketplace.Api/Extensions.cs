@@ -15,7 +15,8 @@ public static class Extensions
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IProductService, ProductService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
+            .AddScoped<IWorkaroundService, WorkaroundService>()
+            .AddScoped<IFileUploaderService, FileUploaderServiceService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
