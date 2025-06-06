@@ -39,7 +39,7 @@ public static class Extensions
     public static ICollection<T> ToSafeCollection<T>(this IEnumerable<T>? list) => list is null ? [] : list.ToList();
     public static int ToNullInt(this int? value) => value ?? -1;
     public static int? FromNullInt(this int value) => value == -1 ? null : value;
-    public static string ToRoundedPrice(this decimal price) => price.ToString("0.##", CultureInfo.InvariantCulture);
+    public static string ToRoundedPrice(this decimal price) => price.ToString("0.00", CultureInfo.InvariantCulture);
     public static decimal FromRoundedPrice(this string price) => decimal.Parse(price);
     public static string ToSafeString(this string? str) => string.IsNullOrWhiteSpace(str) ? string.Empty : str;
 
