@@ -30,6 +30,7 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                         {
                             Criteria = query =>
                                 !query.DeletedAt.HasValue &&
+                                !query.Workspace.DeletedAt.HasValue &&
                                 query.AutomaticallyUpdateProfileStatus.HasValue &&
                                 query.AutomaticallyUpdateProfileStatus.Value &&
                                 (!query.LastProfileStatusUpdatedAt.HasValue ||

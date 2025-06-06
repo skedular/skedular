@@ -13,10 +13,7 @@ public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
     WorkspaceMember Add(WorkspaceMember workspaceMember);
     WorkspaceMember Update(WorkspaceMember workspaceMember);
     void RemoveRange(ICollection<WorkspaceMember> workspaceMembers);
-
-    Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(
-        string workspaceId,
-        CancellationToken cancellationToken);
+    Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
 internal static class WorkspaceMemberExtensions
@@ -57,9 +54,7 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
         DbContext.WorkspaceMember.UpdateRange(workspaceMembers);
     }
 
-    public async Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(
-        string workspaceId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
             .Where(query => query.Workspace.Id == workspaceId)
             .ToListAsync(cancellationToken);

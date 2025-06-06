@@ -23,9 +23,9 @@ public class RefreshWorkspaceJob(IServiceProvider serviceProvider, TimeProvider 
                 var workspaceIds = await repositoryFactory.WorkspaceRepository.Query(
                         new Specification<Workspace>
                         {
-                            Criteria = query =>
+                            Criteria = query => !query.DeletedAt.HasValue && (
                                 !query.LastRefreshedAt.HasValue ||
-                                (now - query.LastRefreshedAt.Value).TotalHours >= 24
+                                (now - query.LastRefreshedAt.Value).TotalHours >= 24)
                         })
                     .Select(item => item.Id)
                     .ToListAsync(cancellationToken);

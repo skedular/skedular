@@ -13,7 +13,6 @@ public interface IWorkspaceRepository : IRepository<Workspace>
     Task<Workspace?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     Workspace Add(Workspace workspace);
     Workspace Update(Workspace workspace);
-    Workspace Remove(Workspace workspace);
 }
 
 internal static class WorkspaceExtensions
@@ -70,13 +69,6 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
     {
         var now = TimeProvider.GetUtcNow();
         workspace.ModifiedAt = now;
-        return DbContext.Workspace.Update(workspace).Entity;
-    }
-
-    public Workspace Remove(Workspace workspace)
-    {
-        var now = TimeProvider.GetUtcNow();
-        workspace.DeletedAt = now;
         return DbContext.Workspace.Update(workspace).Entity;
     }
 }

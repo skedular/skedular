@@ -28,7 +28,7 @@ public class LocationDailyUpdateJob(IServiceProvider serviceProvider, TimeProvid
                         Criteria = query =>
                             !query.DeletedAt.HasValue &&
                             (now - query.CreatedAt).TotalHours >= 24 &&
-                            query.DailyUpdateChannel != null &&
+                            query.DailyUpdateChannel != null && !query.DailyUpdateChannel.Workspace.DeletedAt.HasValue &&
                             (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
                              (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
                     }).ToListAsync(cancellationToken);
