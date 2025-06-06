@@ -238,6 +238,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name
             color
           }
+          featureImages {
+            id
+            url
+          }
         }
       }
     }
@@ -311,6 +315,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           productTagIds,
           locationTagIds,
           organizationId,
+          featureImageIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -362,6 +367,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
+            featureImages: [],
           },
         },
       },

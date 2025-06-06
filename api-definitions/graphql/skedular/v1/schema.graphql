@@ -279,6 +279,11 @@ type DesksOccupancyPercentage {
   percentage: Float!
 }
 
+type FeatureImageDetails {
+  id: ID!
+  url: String!
+}
+
 type InviteCustomersToJoinOrganizationPayload {
   clientMutationId: String
 }
@@ -869,6 +874,7 @@ type ProductDetails {
   currency: CurrencyDetails!
   currencyToDisplay: String!
   description: String
+  featureImages: [FeatureImageDetails!]!
   id: ID!
   inactive: Boolean!
   latestProductVersionId: String!
@@ -1308,6 +1314,7 @@ input AddProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
+  featureImageIds: [String!]!
   id: String
   locationTagIds: [String!]!
   maxBookingSpreadDays: Int
@@ -1988,6 +1995,7 @@ input UpdateProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
+  featureImageIds: [String!]!
   id: String!
   locationTagIds: [String!]!
   maxBookingSpreadDays: Int

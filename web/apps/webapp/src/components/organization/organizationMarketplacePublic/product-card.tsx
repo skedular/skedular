@@ -37,6 +37,10 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
         organization {
           uniqueId
         }
+        featureImages {
+          id
+          url
+        }
       }
     `,
     rootDataRelay,

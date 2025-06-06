@@ -8,6 +8,11 @@ type CurrencyDetails {
   name: String!
 }
 
+type FeatureImageDetails {
+  url: String!
+  id: ID!
+}
+
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
@@ -65,6 +70,7 @@ type ProductDetails {
   locationTags: [Marketplace_OrganizationTagDetails!]!
   latestProductVersionId: String!
   organization: Marketplace_OrganizationDetails!
+  featureImages: [FeatureImageDetails!]!
   id: ID!
 }
 
@@ -122,6 +128,7 @@ input AddProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
+  featureImageIds: [String!]!
 }
 
 input DeactivateProductsInput {
@@ -164,6 +171,7 @@ input UpdateProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
+  featureImageIds: [String!]!
 }
 
 enum Currency {

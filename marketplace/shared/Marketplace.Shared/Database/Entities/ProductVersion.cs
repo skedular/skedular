@@ -29,7 +29,7 @@ public class ProductVersion : EntityBase
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
-    public virtual ICollection<CdnFile> CdnFiles { get; set; } = [];
+    public virtual ICollection<CdnFile> FeatureImages { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -52,7 +52,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
-        builder.HasMany(item => item.CdnFiles).WithMany(item => item.ProductVersions);
+        builder.HasMany(item => item.FeatureImages).WithMany(item => item.ProductVersions);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

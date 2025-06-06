@@ -30,7 +30,7 @@ public class Product : EntityBaseWithDeleted
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
-    public virtual ICollection<CdnFile> CdnFiles { get; set; } = [];
+    public virtual ICollection<CdnFile> FeatureImages { get; set; } = [];
 
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
 }
@@ -55,7 +55,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductProductTag);
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductLocationTags);
-        builder.HasMany(item => item.CdnFiles).WithMany(item => item.Products);
+        builder.HasMany(item => item.FeatureImages).WithMany(item => item.Products);
 
         builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.Name);

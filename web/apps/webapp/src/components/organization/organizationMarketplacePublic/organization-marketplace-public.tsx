@@ -32,6 +32,10 @@ const RootQuery = graphql`
           organization {
             uniqueId
           }
+          featureImages {
+            id
+            url
+          }
           ...productCard_ProductDetails
         }
       }

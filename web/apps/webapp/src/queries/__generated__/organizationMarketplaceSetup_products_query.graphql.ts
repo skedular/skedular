@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5df8ed4410adc1341cf95711f5ad470>>
+ * @generated SignedSource<<5994a96ca952d1f4002be5b6ef5e7818>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,10 @@ export type organizationMarketplaceSetup_products_query$data = {
       readonly node: {
         readonly bookAllLocationResources: boolean;
         readonly description: string | null | undefined;
+        readonly featureImages: ReadonlyArray<{
+          readonly id: string;
+          readonly url: string;
+        }>;
         readonly id: string;
         readonly inactive: boolean;
         readonly maxBookingSpreadDays: number | null | undefined;
@@ -51,6 +55,13 @@ var v0 = [
   "products"
 ],
 v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -172,13 +183,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -186,7 +191,7 @@ return {
                   "name": "inactive",
                   "storageKey": null
                 },
-                (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -209,7 +214,7 @@ return {
                   "name": "priceUnit",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/)
+                    (v2/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -283,6 +288,25 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "concreteType": "FeatureImageDetails",
+                  "kind": "LinkedField",
+                  "name": "featureImages",
+                  "plural": true,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "url",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
@@ -346,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "47bd42bd53c7c7e85e02198ec2761b68";
+(node as any).hash = "6395378230f1f249859ac8c90f836869";
 
 export default node;

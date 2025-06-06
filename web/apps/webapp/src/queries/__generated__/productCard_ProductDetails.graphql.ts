@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<273f91cc729fc7e4aaf4fe47bd3b03ee>>
+ * @generated SignedSource<<6b34fc9501a8a302e6859434e83c5443>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,10 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly description: string | null | undefined;
+  readonly featureImages: ReadonlyArray<{
+    readonly id: string;
+    readonly url: string;
+  }>;
   readonly id: string;
   readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
@@ -38,6 +42,13 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 };
@@ -47,14 +58,8 @@ return {
   "metadata": null,
   "name": "productCard_ProductDetails",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     (v0/*: any*/),
+    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -77,7 +82,7 @@ return {
       "name": "priceUnit",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        (v1/*: any*/)
       ],
       "storageKey": null
     },
@@ -133,6 +138,25 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "FeatureImageDetails",
+      "kind": "LinkedField",
+      "name": "featureImages",
+      "plural": true,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "url",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "ProductDetails",
@@ -140,6 +164,6 @@ return {
 };
 })();
 
-(node as any).hash = "163b0b2500c1bb6d963aab18439a6ebe";
+(node as any).hash = "a35e8587b3a0d5755022007f38967286";
 
 export default node;

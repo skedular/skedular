@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56cc90b7b574322b5a283a502a5db2e5>>
+ * @generated SignedSource<<0782bd06ec355ba2ac41731fa3988e39>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type UpdateProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
+  featureImageIds: ReadonlyArray<string>;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   maxBookingSpreadDays?: number | null | undefined;

@@ -220,6 +220,10 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           organization {
             uniqueId
           }
+          featureImages {
+            id
+            url
+          }
         }
         openingHoursMinutesStep
         ...multipleChoicesProductTags_query
@@ -340,6 +344,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           productTagIds,
           locationTagIds,
           organizationId: product.organization.uniqueId,
+          featureImageIds: product.featureImages.map((item) => item.id),
         },
       },
       onCompleted: (_, errors) => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa2561ce75b25699e9c4ab57897af96c>>
+ * @generated SignedSource<<1793c8b62411448222541ee8774cb108>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,10 @@ export type editProduct_query$data = {
       readonly type: Currency;
     };
     readonly description: string | null | undefined;
+    readonly featureImages: ReadonlyArray<{
+      readonly id: string;
+      readonly url: string;
+    }>;
     readonly id: string;
     readonly inactive: boolean;
     readonly locationTags: ReadonlyArray<{
@@ -62,10 +66,17 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v1 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -73,18 +84,18 @@ v1 = [
     "name": "type",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v1/*: any*/)
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/),
-  (v0/*: any*/),
+v4 = [
+  (v3/*: any*/),
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -118,13 +129,7 @@ return {
       "name": "product",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -132,7 +137,7 @@ return {
           "name": "inactive",
           "storageKey": null
         },
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -154,7 +159,7 @@ return {
           "kind": "LinkedField",
           "name": "priceUnit",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -164,7 +169,7 @@ return {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -223,7 +228,7 @@ return {
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -233,7 +238,7 @@ return {
           "kind": "LinkedField",
           "name": "locationTags",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -244,7 +249,26 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v3/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "FeatureImageDetails",
+          "kind": "LinkedField",
+          "name": "featureImages",
+          "plural": true,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -284,6 +308,6 @@ return {
 };
 })();
 
-(node as any).hash = "08ad10dc9192ec92a5fec77411e2e698";
+(node as any).hash = "17352c7caba3cc6b1bd956aa3e3485ef";
 
 export default node;

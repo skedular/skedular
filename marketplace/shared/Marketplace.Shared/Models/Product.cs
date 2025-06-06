@@ -23,4 +23,5 @@ public class Product : ModelBaseWithDeleted
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
+    public ICollection<CdnFile> FeatureImages { get; set; } = [];
 }
