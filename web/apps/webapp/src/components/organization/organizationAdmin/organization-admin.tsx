@@ -1680,7 +1680,7 @@ const OrganizationAdmin = ({
                 type: organization.type.type,
                 memberVisibilityPolicy: organization.memberVisibilityPolicy.type,
                 industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
-                contactEmail: organization.contactEmail,
+                contactEmail: organization.contactEmail ?? '',
                 contactPhone: organization.contactPhone,
                 addressLine1: organization.physicalAddress.addressLine1,
                 addressLine2: organization.physicalAddress.addressLine2,
@@ -1911,7 +1911,7 @@ const OrganizationAdmin = ({
                 appFederationMetadataUrl: ssoSettingsappFederationMetadataUrl,
               }}
               validate={validateOrganizationSsoSettings}
-              render={({ handleSubmit, values }) => {
+              render={({ handleSubmit }) => {
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn

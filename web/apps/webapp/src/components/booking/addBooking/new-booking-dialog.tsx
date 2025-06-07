@@ -30,7 +30,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
-import { array, boolean, date, object, string } from 'yup';
+import { array, boolean, mixed, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: newBookingDialog_query$key;
@@ -90,7 +90,7 @@ type ResourceDetails = {
 };
 
 type BookingDetails = {
-  date: Date;
+  date: Dayjs;
   allDay: boolean;
   member: string;
   notes: string;
@@ -101,7 +101,11 @@ type BookingDetails = {
 };
 
 const bookingSchema = object({
-  date: date().required('Date/Time is required'),
+  date: mixed<Dayjs>()
+    .test('is-dayjs', 'Date must be a valid Dayjs object', (value) => {
+      return value != null && dayjs.isDayjs(value);
+    })
+    .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
@@ -284,7 +288,7 @@ const NewBookingDialog = ({
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
-  const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
+  const [from, setFrom] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [allDay, setAllDay] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
@@ -588,11 +592,11 @@ const NewBookingDialog = ({
           }}
           validate={validate}
           render={({ handleSubmit, values }) => {
-            setFrom(values.date);
-            setAllDay(values.allDay);
-            setNotes(values.notes);
-            setResourceIds(values.resources);
-            setBookingType(values.type);
+            setFrom(values!.date);
+            setAllDay(values!.allDay);
+            setNotes(values!.notes);
+            setResourceIds(values!.resources);
+            setBookingType(values!.type);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>

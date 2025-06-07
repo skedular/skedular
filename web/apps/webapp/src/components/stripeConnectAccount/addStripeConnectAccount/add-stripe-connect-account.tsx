@@ -114,7 +114,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
             }}
             validate={validateStripeConnectAccountDetails}
             render={({ handleSubmit, values }) => {
-              setName(values.name);
+              setName(values!.name);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>

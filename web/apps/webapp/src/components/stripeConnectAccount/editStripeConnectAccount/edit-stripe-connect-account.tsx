@@ -156,7 +156,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
             }}
             validate={validateStripeConnectAccountDetails}
             render={({ handleSubmit, values }) => {
-              setName(values.name);
+              setName(values!.name);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>

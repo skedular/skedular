@@ -24,7 +24,7 @@ type Props = {
 
 type LocationTagDetails = {
   name: string;
-  description: string;
+  description: string | null | undefined;
 };
 
 const locationTagSchema = object({

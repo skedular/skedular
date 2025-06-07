@@ -24,7 +24,7 @@ type Props = {
 
 type ProductTagDetails = {
   name: string;
-  description: string;
+  description: string | null | undefined;
 };
 
 const productTagSchema = object({

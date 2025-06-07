@@ -24,7 +24,7 @@ type Props = {
 
 type ZoneDetails = {
   name: string;
-  description: string;
+  description: string | null | undefined;
 };
 
 const zoneSchema = object({

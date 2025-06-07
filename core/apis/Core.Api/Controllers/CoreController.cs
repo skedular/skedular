@@ -19,7 +19,7 @@ public class CoreController(IVersionService versionService, IFileUploaderService
         });
     }
 
-    public override async Task<ActionResult<FileUploadResponse>> UploadFile(IFormFile file, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<FileUploadResponse>> UploadPublicAccessFile(IFormFile file, CancellationToken cancellationToken = default)
     {
         var uploadResponse = await fileUploaderService.UploadAsync(file.OpenReadStream(), file.ContentType, cancellationToken);
 

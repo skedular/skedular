@@ -19,4 +19,5 @@ export { $FileUploadResponse } from './schemas/$FileUploadResponse';
 export { $Version } from './schemas/$Version';
 
 export { CoreService } from './services/CoreService';
+export { PublicService } from './services/PublicService';
 export { V1Service } from './services/V1Service';

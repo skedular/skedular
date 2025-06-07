@@ -22,13 +22,13 @@ export class V1Service {
         });
     }
     /**
-     * Upload file
+     * Upload file with public access
      * @param formData
      * @returns FileUploadResponse the response of uploading file
      * @returns Error unexpected error
      * @throws ApiError
      */
-    public uploadFile(
+    public uploadPublicAccessFile(
         formData: {
             /**
              * The file to upload
@@ -38,7 +38,7 @@ export class V1Service {
     ): CancelablePromise<FileUploadResponse | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/v1/core/uploadFile',
+            url: '/v1/core/uploadPublicAccessFile',
             formData: formData,
             mediaType: 'multipart/form-data',
         });

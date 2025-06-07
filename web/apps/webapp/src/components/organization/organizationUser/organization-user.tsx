@@ -417,7 +417,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           <Form
             onSubmit={handleProfileDetailUpdateClick}
             initialValues={{
-              timezone: customer.timezone,
+              timezone: customer.timezone ?? '',
               designation: customer.designation,
               title: customer.title,
               name: customer.name,

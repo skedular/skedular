@@ -187,7 +187,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
         <Form
           onSubmit={handleAddClick}
           initialValues={{
-            member: null,
+            member: '',
           }}
           validate={validate}
           render={({ handleSubmit }) => {

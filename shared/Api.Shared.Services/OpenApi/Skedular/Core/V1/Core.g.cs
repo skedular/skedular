@@ -41,12 +41,12 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// Upload file
+        /// Upload file with public access
         /// </summary>
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadFile")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadFile(FileParameter file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPublicAccessFile")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPublicAccessFile(FileParameter file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 

@@ -41,7 +41,7 @@ const RootQuery = graphql`
 
 type CustomTagDetails = {
   name: string;
-  description: string;
+  description: string | null | undefined;
 };
 
 const customTagSchema = object({

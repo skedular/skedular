@@ -38,13 +38,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /v1/core/uploadFile:
+  /v1/core/uploadPublicAccessFile:
     post:
       tags:
         - v1
         - core
-      summary: Upload file
-      operationId: uploadFile
+        - public
+      summary: Upload file with public access
+      operationId: uploadPublicAccessFile
       requestBody:
         required: true
         content:

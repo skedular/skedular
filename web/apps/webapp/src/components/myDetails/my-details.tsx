@@ -413,7 +413,7 @@ const MyDetails = ({ queryReference }: Props) => {
             <Form
               onSubmit={handleProfileDetailUpdateClick}
               initialValues={{
-                timezone: me.timezone,
+                timezone: me.timezone ?? '',
                 designation: me.designation,
                 title: me.title,
                 name: me.name,

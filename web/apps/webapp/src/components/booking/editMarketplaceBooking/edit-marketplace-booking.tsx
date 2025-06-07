@@ -59,7 +59,7 @@ type TeamDetails = {
 
 type BookingDetails = {
   member: string;
-  notes: string;
+  notes: string | null | undefined;
   team: string | undefined;
   type: string;
 };

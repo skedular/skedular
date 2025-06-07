@@ -62,7 +62,7 @@ type TeamDetails = {
   name: string;
   about: string | null;
   timezone?: string;
-  primaryLocationId?: string;
+  primaryLocationId: string | null;
 };
 
 const teamSchema = object({
@@ -847,7 +847,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               initialValues={{
                 name: team.name,
                 about: team.about,
-                timezone: team.timezone,
+                timezone: team.timezone ?? '',
                 primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.uniqueId : null,
               }}
               validate={validate}

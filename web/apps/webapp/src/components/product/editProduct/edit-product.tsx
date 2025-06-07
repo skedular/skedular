@@ -18,7 +18,7 @@ import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, boolean, number, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: editProduct_query$key;
@@ -32,20 +32,20 @@ type ProductDetails = {
   price: string;
   priceUnit: string;
   currency: string;
-  numberOfResourcesToBook: number;
-  minDurationMinutes: number | null;
-  maxDurationMinutes: number | null;
+  numberOfResourcesToBook: string;
+  minDurationMinutes: string | null;
+  maxDurationMinutes: string | null;
   bookAllLocationResources: boolean;
-  recurrenceWindowDays: number;
+  recurrenceWindowDays: string;
   requireConsecutiveDays: boolean;
-  maxBookingSpreadDays: number | null;
+  maxBookingSpreadDays: string | null;
   productTagIds: string[];
   locationTagIds: string[];
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
   object({
-    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required.'),
+    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
     description: string().nullable(),
     price: string()
       .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
@@ -60,27 +60,33 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     priceUnit: string().required('Price Unit is required.'),
     currency: string().required('Currency is required.'),
-    numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0.'),
-    minDurationMinutes: number()
+    numberOfResourcesToBook: string()
+      .required('Number of resources to book is required.')
+      .test('is-number', 'Number of resources to book must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+      .test('min', 'Number of resources to book must be greater than 0.', (value) => Number(value) > 0),
+    minDurationMinutes: string()
       .nullable()
       .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        if (typeof value !== 'number') {
+        var minDurationMinutes = Number(value);
+        if (isNaN(minDurationMinutes)) {
           return true;
         }
 
-        return value % openingHoursMinutesStep === 0;
+        return minDurationMinutes % openingHoursMinutesStep === 0;
       })
       .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
-        const { maxDurationMinutes } = this.parent;
-        if (!maxDurationMinutes) {
+        const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
+        var maxDurationMinutes = Number(maxDurationMinutesStr);
+        if (isNaN(maxDurationMinutes)) {
           return true;
         }
 
-        if (typeof value !== 'number') {
+        var minDurationMinutes = Number(value);
+        if (isNaN(minDurationMinutes)) {
           return true;
         }
 
-        return value <= maxDurationMinutes;
+        return minDurationMinutes <= maxDurationMinutes;
       })
       .test('is-following-hour-price-unit-rules', 'Minimum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
         const { priceUnit } = this.parent;
@@ -92,32 +98,36 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        if (typeof value !== 'number') {
+        var minDurationMinutes = Number(value);
+        if (isNaN(minDurationMinutes)) {
           return true;
         }
 
-        return value % 60 === 0;
+        return minDurationMinutes % 60 === 0;
       }),
-    maxDurationMinutes: number()
+    maxDurationMinutes: string()
       .nullable()
       .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        if (typeof value !== 'number') {
+        var maxDurationMinutes = Number(value);
+        if (isNaN(maxDurationMinutes)) {
           return true;
         }
 
-        return value % openingHoursMinutesStep === 0;
+        return maxDurationMinutes % openingHoursMinutesStep === 0;
       })
       .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
-        const { minDurationMinutes } = this.parent;
-        if (!minDurationMinutes) {
+        const { minDurationMinutes: minDurationMinutesStr } = this.parent;
+        var minDurationMinutes = Number(minDurationMinutesStr);
+        if (isNaN(minDurationMinutes)) {
           return true;
         }
 
-        if (typeof value !== 'number') {
+        var maxDurationMinutes = Number(value);
+        if (isNaN(maxDurationMinutes)) {
           return true;
         }
 
-        return value >= minDurationMinutes;
+        return maxDurationMinutes >= minDurationMinutes;
       })
       .test('is-following-hour-price-unit-rules', 'Maximum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
         const { priceUnit } = this.parent;
@@ -129,14 +139,15 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        if (typeof value !== 'number') {
+        var maxDurationMinutes = Number(value);
+        if (isNaN(maxDurationMinutes)) {
           return true;
         }
 
-        return value % 60 === 0;
+        return maxDurationMinutes % 60 === 0;
       }),
     mustBookAllLocationResources: boolean(),
-    recurrenceWindowDays: number()
+    recurrenceWindowDays: string()
       .test('is-required', 'Recurrence window days is required.', function (value) {
         const { bookAllLocationResources } = this.parent;
         if (bookAllLocationResources) {
@@ -151,22 +162,29 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        return typeof value === 'number' && value > 0;
+        return Number(value) > 0;
       }),
     requireConsecutiveDays: boolean(),
-    maxBookingSpreadDays: number()
+    maxBookingSpreadDays: string()
       .nullable()
       .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days.', function (value) {
-        const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
+        const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays: recurrenceWindowDaysStr } = this.parent;
+
         if (bookAllLocationResources || requireConsecutiveDays) {
           return true;
         }
 
-        if (!value) {
+        var maxBookingSpreadDays = Number(value);
+        if (isNaN(maxBookingSpreadDays)) {
           return true;
         }
 
-        return typeof value === 'number' && value >= recurrenceWindowDays;
+        var recurrenceWindowDays = Number(recurrenceWindowDaysStr);
+        if (isNaN(recurrenceWindowDaysStr)) {
+          return true;
+        }
+
+        return maxBookingSpreadDays >= recurrenceWindowDays;
       })
       .test('is-greater-than-zero', 'Max booking spread days must be greater than 0.', function (value) {
         const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
@@ -174,11 +192,12 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        if (!value) {
+        var maxBookingSpreadDays = Number(value);
+        if (isNaN(maxBookingSpreadDays)) {
           return true;
         }
 
-        return typeof value === 'number' && value > 0;
+        return maxBookingSpreadDays > 0;
       }),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
@@ -284,14 +303,18 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   const [price, setPrice] = useState(rootData.product ? rootData.product.price : '');
   const [priceUnit, setPriceUnit] = useState(rootData.product ? rootData.product.priceUnit.type : '');
   const [currency, setCurrency] = useState(rootData.product ? rootData.product.currency.type : '');
-  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState(rootData.product ? rootData.product.numberOfResourcesToBook : '');
-  const [minDurationMinutes, setMinDurationMinutes] = useState<number | null>(rootData.product && rootData.product.minDurationMinutes ? rootData.product.minDurationMinutes : null);
-  const [maxDurationMinutes, setMaxDurationMinutes] = useState<number | null>(rootData.product && rootData.product.maxDurationMinutes ? rootData.product.maxDurationMinutes : null);
+  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState(rootData.product ? rootData.product.numberOfResourcesToBook.toString() : '1');
+  const [minDurationMinutes, setMinDurationMinutes] = useState<string | null>(
+    rootData.product && rootData.product.minDurationMinutes ? rootData.product.minDurationMinutes.toString() : null,
+  );
+  const [maxDurationMinutes, setMaxDurationMinutes] = useState<string | null>(
+    rootData.product && rootData.product.maxDurationMinutes ? rootData.product.maxDurationMinutes.toString() : null,
+  );
   const [bookAllLocationResources, setBookAllLocationResources] = useState(rootData.product ? rootData.product.bookAllLocationResources : false);
-  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState(rootData.product ? rootData.product.recurrenceWindowDays : 1);
+  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState(rootData.product ? rootData.product.recurrenceWindowDays.toString() : '1');
   const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(rootData.product ? rootData.product.requireConsecutiveDays : false);
-  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(
-    rootData.product && rootData.product.maxBookingSpreadDays ? rootData.product.maxBookingSpreadDays : 1,
+  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<string | null>(
+    rootData.product && rootData.product.maxBookingSpreadDays ? rootData.product.maxBookingSpreadDays.toString() : '1',
   );
   const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
@@ -434,20 +457,20 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
-              setName(values.name);
-              setDescription(values.description);
-              setPrice(values.price);
-              setPriceUnit(values.priceUnit);
-              setCurrency(values.currency);
-              setMinDurationMinutes(values.minDurationMinutes);
-              setMaxDurationMinutes(values.maxDurationMinutes);
-              setBookAllLocationResources(values.bookAllLocationResources);
-              setRequireConsecutiveDays(values.requireConsecutiveDays);
-              setRecurrenceWindowDays(values.recurrenceWindowDays);
-              setMaxBookingSpreadDays(values.maxBookingSpreadDays);
-              setNumberOfResourcesToBook(values.numberOfResourcesToBook);
-              setProductTagIds(values.productTagIds);
-              setLocationTagIds(values.locationTagIds);
+              setName(values!.name);
+              setDescription(values!.description);
+              setPrice(values!.price);
+              setPriceUnit(values!.priceUnit);
+              setCurrency(values!.currency);
+              setMinDurationMinutes(values!.minDurationMinutes);
+              setMaxDurationMinutes(values!.maxDurationMinutes);
+              setBookAllLocationResources(values!.bookAllLocationResources);
+              setRequireConsecutiveDays(values!.requireConsecutiveDays);
+              setRecurrenceWindowDays(values!.recurrenceWindowDays);
+              setMaxBookingSpreadDays(values!.maxBookingSpreadDays);
+              setNumberOfResourcesToBook(values!.numberOfResourcesToBook);
+              setProductTagIds(values!.productTagIds);
+              setLocationTagIds(values!.locationTagIds);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>

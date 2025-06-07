@@ -106,7 +106,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
         <Form
           onSubmit={handleSubmitFeedbackClick}
           initialValues={{
-            feedbackContent: '',
+            feedback: '',
           }}
           validate={validate}
           render={({ handleSubmit }) => (

@@ -124,7 +124,7 @@ const ImageFileUploader = ({ onUploadCompleted }: Props) => {
 
     try {
       const client = new SkedularCoreV1Client({ BASE: '/api' });
-      const response = (await client.core.uploadFile({ file })) as FileUploadResponse;
+      const response = (await client.core.uploadPublicAccessFile({ file })) as FileUploadResponse;
 
       onUploadCompleted(response.cdnUrl);
 

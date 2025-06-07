@@ -40,12 +40,12 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Upload file
+        /// Upload file with public access
         /// </summary>
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<FileUploadResponse> UploadFileAsync(FileParameter file = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<FileUploadResponse> UploadPublicAccessFileAsync(FileParameter file = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -161,12 +161,12 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Upload file
+        /// Upload file with public access
         /// </summary>
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileUploadResponse> UploadFileAsync(FileParameter file = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<FileUploadResponse> UploadPublicAccessFileAsync(FileParameter file = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -194,8 +194,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/core/uploadFile"
-                    urlBuilder_.Append("v1/core/uploadFile");
+                    // Operation Path: "v1/core/uploadPublicAccessFile"
+                    urlBuilder_.Append("v1/core/uploadPublicAccessFile");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

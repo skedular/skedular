@@ -21,7 +21,7 @@ const handler = async (request: NextRequest) => {
   const client = new SkedularCoreV1Client({ BASE: process.env.GATEWAY_ENDPOINT, HEADERS: headers });
 
   return Response.json(
-    await client.core.uploadFile({
+    await client.core.uploadPublicAccessFile({
       file,
     }),
   );

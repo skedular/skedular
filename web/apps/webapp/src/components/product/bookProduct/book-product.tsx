@@ -42,7 +42,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, date, number, object, string } from 'yup';
+import { array, mixed, number, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: bookProduct_query$key;
@@ -79,7 +79,7 @@ type ResourceDetails = {
 };
 
 type BookingDetails = {
-  date: Date;
+  date: Dayjs;
   quantity: number;
   resources: string[];
   type: string;
@@ -87,7 +87,11 @@ type BookingDetails = {
 
 const bookingSchema = (numberOfResourcesToBook: number) =>
   object({
-    date: date().required('Date is required'),
+    date: mixed<Dayjs>()
+      .test('is-dayjs', 'Date must be a valid Dayjs object', (value) => {
+        return value != null && dayjs.isDayjs(value);
+      })
+      .required('Date is required'),
     quantity: number().min(1, 'At least one resource is required').required('Quantity is required'),
     resources: array()
       .min(1, 'At least one resource is required')
@@ -220,7 +224,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
-  const [date, setDate] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
+  const [date, setDate] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>(() => {
     const start = toOpeningHoursFromTime('08:00');
 
@@ -567,10 +571,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
-              setDate(values.date);
-              setResourceIds(values.resources);
-              setQuantity(values.quantity);
-              setBookingType(values.type);
+              setDate(values!.date);
+              setResourceIds(values!.resources);
+              setQuantity(values!.quantity);
+              setBookingType(values!.type);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>

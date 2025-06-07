@@ -108,7 +108,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
         <Form
           onSubmit={handleInvitePeopleClick}
           initialValues={{
-            emails: '',
+            emails: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (

@@ -30,7 +30,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
-import { array, boolean, date, object, string } from 'yup';
+import { array, boolean, mixed, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: editPrivateBooking_query$key;
@@ -85,10 +85,10 @@ type ResourceDetails = {
 };
 
 type BookingDetails = {
-  date: Date;
+  date: Dayjs;
   allDay: boolean;
   member: string;
-  notes: string;
+  notes: string | null | undefined;
   team: string | undefined;
   location: string | undefined;
   resources: string[];
@@ -96,7 +96,11 @@ type BookingDetails = {
 };
 
 const bookingSchema = object({
-  date: date().required('Date/Time is required'),
+  date: mixed<Dayjs>()
+    .test('is-dayjs', 'Date must be a valid Dayjs object', (value) => {
+      return value != null && dayjs.isDayjs(value);
+    })
+    .required('Date/Time is required'),
   allDay: boolean(),
   member: string().required('User is required'),
   notes: string().notRequired(),
@@ -309,7 +313,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
-  const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
+  const [from, setFrom] = useState<Dayjs>(dayjs(rootData.booking?.from));
   const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
@@ -647,8 +651,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
-              setFrom(values.date);
-              setAllDay(values.allDay);
+              setFrom(values!.date);
+              setAllDay(values!.allDay);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
