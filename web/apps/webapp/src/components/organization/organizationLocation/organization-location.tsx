@@ -14,6 +14,7 @@ import { CustomTags } from '@/components/customTag';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -26,6 +27,7 @@ import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -164,6 +166,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           contactEmail
           contactPhone
+          primaryFeatureImageUrl
           physicalAddress {
             addressLine1
             addressLine2
@@ -293,6 +296,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           contactEmail
           contactPhone
+          primaryFeatureImageUrl
           physicalAddress {
             addressLine1
             addressLine2
@@ -559,6 +563,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.location?.primaryFeatureImageUrl);
 
   const [resourceNameSearchText, setResourceNameSearchText] = useState<string>('');
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
@@ -648,6 +653,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone,
           contactEmail,
           contactPhone,
+          primaryFeatureImageUrl,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -690,6 +696,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             timezone,
             contactEmail,
             contactPhone,
+            primaryFeatureImageUrl,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -1189,6 +1196,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     });
   };
 
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
+  };
+
   if (!rootData.location) {
     return <></>;
   }
@@ -1370,6 +1381,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Feature Image">
+                      {primaryFeatureImageUrl && (
+                        <ImageFileUploader
+                          defaultImageUrl={primaryFeatureImageUrl}
+                          defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                          previewImageHeight={locationFeatureImageHeight}
+                          previewImageWidth={locationFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      )}
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>

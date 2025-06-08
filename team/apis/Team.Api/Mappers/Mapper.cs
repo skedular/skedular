@@ -76,6 +76,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = MapTo(src.Organization),
             PrimaryLocation = MapTo(src.PrimaryLocation)
         };
@@ -124,6 +125,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
+        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
         dest.Organization = organization;
         dest.PrimaryLocation = primaryLocation;
         return dest;
@@ -138,6 +140,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
+                PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
@@ -181,6 +184,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
@@ -196,6 +200,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
@@ -206,6 +211,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
@@ -260,6 +266,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
             PrimaryLocation =
                 string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
@@ -292,6 +299,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
@@ -304,6 +312,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()

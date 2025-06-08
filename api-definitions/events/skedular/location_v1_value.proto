@@ -43,6 +43,7 @@ message Location {
   Address physicalAddress = 10;
   string contactEmail = 11;
   string contactPhone = 12;
+  string primaryFeatureImageUrl = 13;
 }
 
 message Resource {

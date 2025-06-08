@@ -337,6 +337,7 @@ type LocationDetails {
   openingHours: OpeningHours!
   organization: Location_OrganizationDetails!
   physicalAddress: LocationAddressDetails!
+  primaryFeatureImageUrl: String
   resources: [ResourceDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
   roomCapacity: Int!
@@ -1076,6 +1077,7 @@ type TeamDetails {
   members: [TeamMemberDetails!]!
   name: String!
   organization: Team_OrganizationDetails!
+  primaryFeatureImageUrl: String
   primaryLocation: Team_LocationDetails
   timezone: String
 }
@@ -1261,6 +1263,7 @@ input AddLocationInput {
   name: String!
   organizationId: String!
   physicalAddress: LocationAddressDetailsInput!
+  primaryFeatureImageUrl: String
   timezone: String
 }
 
@@ -1359,6 +1362,7 @@ input AddTeamInput {
   name: String!
   organizationId: String!
   organizationMemberIds: [String!]!
+  primaryFeatureImageUrl: String
   primaryLocationId: String
   timezone: String
 }
@@ -1890,6 +1894,7 @@ input UpdateLocationInput {
   locationTagIds: [String!]!
   name: String!
   physicalAddress: LocationAddressDetailsInput!
+  primaryFeatureImageUrl: String
   timezone: String
 }
 
@@ -2038,6 +2043,7 @@ input UpdateTeamAndTeamMembersInput {
   name: String!
   organizationId: String!
   organizationMemberIds: [String!]!
+  primaryFeatureImageUrl: String
   primaryLocationId: String
   timezone: String
 }
@@ -2047,6 +2053,7 @@ input UpdateTeamInput {
   clientMutationId: String
   id: String!
   name: String!
+  primaryFeatureImageUrl: String
   primaryLocationId: String
   timezone: String
 }

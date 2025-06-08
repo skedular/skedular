@@ -486,8 +486,6 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature image"></FormFieldLabel>
-
                     <FormFieldLabel label="Feature Image">
                       {primaryFeatureImageUrl && (
                         <ImageFileUploader

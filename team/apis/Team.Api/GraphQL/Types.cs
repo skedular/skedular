@@ -35,6 +35,7 @@ public class AddTeamInput
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
     [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
 }
 
 [GraphQLName("CancelInvitationToJoinTeamInput")]
@@ -134,6 +135,7 @@ public class TeamDetails : Node
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -230,6 +232,7 @@ public class UpdateTeamInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
 }
 
 [GraphQLName("UpdateTeamAndTeamMembersInput")]
@@ -242,6 +245,7 @@ public class UpdateTeamAndTeamMembersInput
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
     [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
 }

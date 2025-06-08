@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d15149fa82bf92a8c90d498eee4ef07f>>
+ * @generated SignedSource<<eeb70a064337e36c97ae71e174585824>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type organizationTeam_query$data = {
     readonly about: string | null | undefined;
     readonly id: string;
     readonly name: string;
+    readonly primaryFeatureImageUrl: string | null | undefined;
     readonly primaryLocation: {
       readonly name: string;
       readonly uniqueId: string;
@@ -89,6 +90,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "primaryFeatureImageUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Team_LocationDetails",
           "kind": "LinkedField",
           "name": "primaryLocation",
@@ -126,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "59b5f5c9787204f30b47c88aff81bad2";
+(node as any).hash = "ef35ebc51f63b4345ab959fcfef468a1";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f38f0b27510615fa7e43abb3372e818>>
+ * @generated SignedSource<<a790e682b500124b3b5b31714cd831b4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type AddTeamInput = {
   name: string;
   organizationId: string;
   organizationMemberIds: ReadonlyArray<string>;
+  primaryFeatureImageUrl?: string | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
@@ -29,6 +30,7 @@ export type addTeam_addTeamMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -39,6 +41,7 @@ export type addTeam_addTeamMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -107,6 +110,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "timezone",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "primaryFeatureImageUrl",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -133,16 +143,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "47d52dfa75c9982ea9e42a8a26e4ce52",
+    "cacheID": "459b593fd62c48cd92264c7c60e0b20a",
     "id": null,
     "metadata": {},
     "name": "addTeam_addTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n    }\n  }\n}\n"
+    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImageUrl\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "36d6cae965f42ced897458e57b026cf0";
+(node as any).hash = "94936ae8eeb201f075a89ca7ed1b5937";
 
 export default node;

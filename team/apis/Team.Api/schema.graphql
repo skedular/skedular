@@ -71,6 +71,7 @@ type TeamDetails {
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!
+  primaryFeatureImageUrl: String
   id: ID!
 }
 
@@ -173,6 +174,7 @@ input AddTeamInput {
   timezone: String
   customerIds: [String!]!
   organizationMemberIds: [String!]!
+  primaryFeatureImageUrl: String
 }
 
 input AddTeamMemberInput {
@@ -261,6 +263,7 @@ input UpdateTeamAndTeamMembersInput {
   organizationId: String!
   primaryLocationId: String
   timezone: String
+  primaryFeatureImageUrl: String
   customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
@@ -272,6 +275,7 @@ input UpdateTeamInput {
   about: String
   primaryLocationId: String
   timezone: String
+  primaryFeatureImageUrl: String
 }
 
 input UpdateTeamMembersInput {

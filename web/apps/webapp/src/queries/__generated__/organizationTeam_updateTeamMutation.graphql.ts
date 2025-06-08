@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e52d3fc588d2daa3178818c9b556fed>>
+ * @generated SignedSource<<9c6605ce63739329efca264963e2e316>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type UpdateTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;
   name: string;
+  primaryFeatureImageUrl?: string | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
@@ -26,6 +27,7 @@ export type organizationTeam_updateTeamMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly primaryLocation: {
         readonly name: string;
         readonly uniqueId: string;
@@ -40,6 +42,7 @@ export type organizationTeam_updateTeamMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly primaryLocation: {
         readonly name: string;
         readonly uniqueId: string;
@@ -117,6 +120,13 @@ v2 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "primaryFeatureImageUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Team_LocationDetails",
             "kind": "LinkedField",
             "name": "primaryLocation",
@@ -158,16 +168,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "547b31d6fb274baba158ca1e666106e9",
+    "cacheID": "b80ca9ec46c06426f69e098785077d9a",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_updateTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationTeam_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryLocation {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationTeam_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImageUrl\n      primaryLocation {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d6147784bd5620e0f5b0b0ac88c26fcb";
+(node as any).hash = "32e74d985d7c952fb0a43365446b4481";
 
 export default node;

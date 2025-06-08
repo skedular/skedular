@@ -32,33 +32,34 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             "dGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNY29y",
             "cmVsYXRpb25JZBgGIAEoCSJpCgREYXRhEhoKBHRlYW0YASABKAsyCi50ZWFt",
             "LlRlYW1IABI6ChRpbnZpdGF0aW9uVG9Kb2luVGVhbRgCIAEoCzIaLnRlYW0u",
-            "SW52aXRhdGlvblRvSm9pblRlYW1IAEIJCgdwYXlsb2FkIsYBCgRUZWFtEgoK",
+            "SW52aXRhdGlvblRvSm9pblRlYW1IAEIJCgdwYXlsb2FkIuYBCgRUZWFtEgoK",
             "AmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1",
             "Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIhCgdt",
             "ZW1iZXJzGAUgAygLMhAudGVhbS5UZWFtTWVtYmVyEhYKDm9yZ2FuaXphdGlv",
             "bklkGAYgASgJEhAKCHRpbWV6b25lGAcgASgJEhkKEXByaW1hcnlMb2NhdGlv",
-            "bklkGAggASgJIpoBCgpUZWFtTWVtYmVyEgoKAmlkGAEgASgJEhgKBHJvbGUY",
-            "AiABKA4yCi50ZWFtLlJvbGUSEgoKY3VzdG9tZXJJZBgDIAEoCRI0ChJvcmdh",
-            "bml6YXRpb25NZW1iZXIYBCABKAsyGC50ZWFtLk9yZ2FuaXphdGlvbk1lbWJl",
-            "chIcCgZzdGF0dXMYBSABKA4yDC50ZWFtLlN0YXR1cyJeChJPcmdhbml6YXRp",
-            "b25NZW1iZXISEgoKY3VzdG9tZXJJZBgBIAEoCRIcChRvcmdhbml6YXRpb25N",
-            "ZW1iZXJJZBgCIAEoCRIWCg5vcmdhbml6YXRpb25JZBgDIAEoCSKJAQoUSW52",
-            "aXRhdGlvblRvSm9pblRlYW0SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIg",
-            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIOCgZ0ZWFtSWQYAyAB",
-            "KAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRlZUlkGAUgASgJKmwK",
-            "BFR5cGUSEAoMVGVhbVVwc2VydGVkEAASDwoLVGVhbURlbGV0ZWQQARIgChxJ",
-            "bnZpdGF0aW9uVG9Kb2luVGVhbVVwc2VydGVkEAISHwobSW52aXRhdGlvblRv",
-            "Sm9pblRlYW1EZWxldGVkEAMqMAoEUm9sZRIJCgVPd25lchAAEhEKDUFkbWlu",
-            "aXN0cmF0b3IQARIKCgZNZW1iZXIQAioiCgZTdGF0dXMSCgoGQWN0aXZlEAAS",
-            "DAoISW5hY3RpdmUQAUIzqgIwQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
-            "a2VkdWxhci5UZWFtLlYxLlZhbHVlYgZwcm90bzM="));
+            "bklkGAggASgJEh4KFnByaW1hcnlGZWF0dXJlSW1hZ2VVcmwYCSABKAkimgEK",
+            "ClRlYW1NZW1iZXISCgoCaWQYASABKAkSGAoEcm9sZRgCIAEoDjIKLnRlYW0u",
+            "Um9sZRISCgpjdXN0b21lcklkGAMgASgJEjQKEm9yZ2FuaXphdGlvbk1lbWJl",
+            "chgEIAEoCzIYLnRlYW0uT3JnYW5pemF0aW9uTWVtYmVyEhwKBnN0YXR1cxgF",
+            "IAEoDjIMLnRlYW0uU3RhdHVzIl4KEk9yZ2FuaXphdGlvbk1lbWJlchISCgpj",
+            "dXN0b21lcklkGAEgASgJEhwKFG9yZ2FuaXphdGlvbk1lbWJlcklkGAIgASgJ",
+            "EhYKDm9yZ2FuaXphdGlvbklkGAMgASgJIokBChRJbnZpdGF0aW9uVG9Kb2lu",
+            "VGVhbRIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUu",
+            "cHJvdG9idWYuVGltZXN0YW1wEg4KBnRlYW1JZBgDIAEoCRITCgtpbnZpdGVk",
+            "QnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkqbAoEVHlwZRIQCgxUZWFt",
+            "VXBzZXJ0ZWQQABIPCgtUZWFtRGVsZXRlZBABEiAKHEludml0YXRpb25Ub0pv",
+            "aW5UZWFtVXBzZXJ0ZWQQAhIfChtJbnZpdGF0aW9uVG9Kb2luVGVhbURlbGV0",
+            "ZWQQAyowCgRSb2xlEgkKBU93bmVyEAASEQoNQWRtaW5pc3RyYXRvchABEgoK",
+            "Bk1lbWJlchACKiIKBlN0YXR1cxIKCgZBY3RpdmUQABIMCghJbmFjdGl2ZRAB",
+            "QjOqAjBBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLlRlYW0u",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data.Parser, new[]{ "Team", "InvitationToJoinTeam" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId", "PrimaryFeatureImageUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember.Parser, new[]{ "Id", "Role", "CustomerId", "OrganizationMember", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember.Parser, new[]{ "CustomerId", "OrganizationMemberId", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam.Parser, new[]{ "Id", "DeletedAt", "TeamId", "InvitedById", "InviteeId" }, null, null, null, null)
@@ -1071,6 +1072,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       organizationId_ = other.organizationId_;
       timezone_ = other.timezone_;
       primaryLocationId_ = other.primaryLocationId_;
+      primaryFeatureImageUrl_ = other.primaryFeatureImageUrl_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1175,6 +1177,18 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "primaryFeatureImageUrl" field.</summary>
+    public const int PrimaryFeatureImageUrlFieldNumber = 9;
+    private string primaryFeatureImageUrl_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PrimaryFeatureImageUrl {
+      get { return primaryFeatureImageUrl_; }
+      set {
+        primaryFeatureImageUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1198,6 +1212,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (OrganizationId != other.OrganizationId) return false;
       if (Timezone != other.Timezone) return false;
       if (PrimaryLocationId != other.PrimaryLocationId) return false;
+      if (PrimaryFeatureImageUrl != other.PrimaryFeatureImageUrl) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1213,6 +1228,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (Timezone.Length != 0) hash ^= Timezone.GetHashCode();
       if (PrimaryLocationId.Length != 0) hash ^= PrimaryLocationId.GetHashCode();
+      if (PrimaryFeatureImageUrl.Length != 0) hash ^= PrimaryFeatureImageUrl.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1260,6 +1276,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(66);
         output.WriteString(PrimaryLocationId);
       }
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(PrimaryFeatureImageUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1299,6 +1319,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(66);
         output.WriteString(PrimaryLocationId);
       }
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(PrimaryFeatureImageUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1330,6 +1354,9 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
       if (PrimaryLocationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PrimaryLocationId);
+      }
+      if (PrimaryFeatureImageUrl.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PrimaryFeatureImageUrl);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1367,6 +1394,9 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
       if (other.PrimaryLocationId.Length != 0) {
         PrimaryLocationId = other.PrimaryLocationId;
+      }
+      if (other.PrimaryFeatureImageUrl.Length != 0) {
+        PrimaryFeatureImageUrl = other.PrimaryFeatureImageUrl;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1422,6 +1452,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             PrimaryLocationId = input.ReadString();
             break;
           }
+          case 74: {
+            PrimaryFeatureImageUrl = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1474,6 +1508,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
           }
           case 66: {
             PrimaryLocationId = input.ReadString();
+            break;
+          }
+          case 74: {
+            PrimaryFeatureImageUrl = input.ReadString();
             break;
           }
         }

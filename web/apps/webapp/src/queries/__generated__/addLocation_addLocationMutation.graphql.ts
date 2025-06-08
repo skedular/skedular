@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<151d454d35ddcb9cfbf02a483d5c3743>>
+ * @generated SignedSource<<86d4cb37b465b7901c67bea7dfa2eadf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type AddLocationInput = {
   name: string;
   organizationId: string;
   physicalAddress: LocationAddressDetailsInput;
+  primaryFeatureImageUrl?: string | null | undefined;
   timezone?: string | null | undefined;
 };
 export type LocationAddressDetailsInput = {
@@ -55,6 +56,7 @@ export type addLocation_addLocationMutation$data = {
         readonly suburb: string;
         readonly zipcode: string;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -81,6 +83,7 @@ export type addLocation_addLocationMutation$rawResponse = {
         readonly suburb: string;
         readonly zipcode: string;
       };
+      readonly primaryFeatureImageUrl: string | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -163,6 +166,13 @@ v2 = [
             "args": null,
             "kind": "ScalarField",
             "name": "contactPhone",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "primaryFeatureImageUrl",
             "storageKey": null
           },
           {
@@ -276,16 +286,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "aaf053c3b9a737374b078678e8b937d1",
+    "cacheID": "899c0f9c864925f000cb27dfa4aab04c",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImageUrl\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2a817ccef7abe65aaa1ea748827b7c20";
+(node as any).hash = "e2352aa94c4de169698f90a487c84185";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1ece8db263c19d266ec5d60b47cab74e>>
+ * @generated SignedSource<<66b9eefd0d8749de5ab2c4db221fae9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,7 @@ export type locationCard_LocationDetails$data = {
     readonly suburb: string;
     readonly zipcode: string;
   };
+  readonly primaryFeatureImageUrl: string | null | undefined;
   readonly resources: ReadonlyArray<{
     readonly id: string;
   }>;
@@ -193,6 +194,13 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "primaryFeatureImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "hasFutureBooking",
       "storageKey": null
     },
@@ -228,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "802957d98d83ad30234c0017b30a4bdb";
+(node as any).hash = "cd7d98aa9649d122e9f268a82b7ee30d";
 
 export default node;

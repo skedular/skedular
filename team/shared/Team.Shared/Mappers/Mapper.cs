@@ -25,6 +25,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString(),
             OrganizationId = src.Organization.Id,
             PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id
         };

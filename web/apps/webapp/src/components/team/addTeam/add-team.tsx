@@ -6,6 +6,8 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { OrganizationMemberSelector } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
+import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -79,6 +81,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           name
           about
           timezone
+          primaryFeatureImageUrl
         }
       }
     }
@@ -96,6 +99,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateTeamDetails = makeValidate(teamSchema);
   const requiredTeamDetailsFields = makeRequired(teamSchema);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
 
   const handleCloseClick = () => {
     commitCompleteTeamOnboarding({
@@ -132,6 +136,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           name,
           about,
           timezone,
+          primaryFeatureImageUrl,
           customerIds,
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
@@ -191,10 +196,15 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             name,
             about,
             timezone,
+            primaryFeatureImageUrl,
           },
         },
       },
     });
+  };
+
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
   };
 
   if (!rootData.me) {
@@ -220,6 +230,15 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Feature image">
+                    <ImageFileUploader
+                      defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
+                      previewImageHeight={teamFeatureImageHeight}
+                      previewImageWidth={teamFeatureImageWidth}
+                      onUploadCompleted={handleFeatureImageUploadCompleted}
+                    />
+                  </FormFieldLabel>
+
                   <FormFieldLabel label="Name">
                     <TextField name="name" required={requiredTeamDetailsFields.name} />
                   </FormFieldLabel>

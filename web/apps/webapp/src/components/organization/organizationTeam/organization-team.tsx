@@ -19,6 +19,8 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import { Search } from '@/components/search';
+import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -101,6 +103,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name
           about
           timezone
+          primaryFeatureImageUrl
           primaryLocation {
             uniqueId
             name
@@ -152,6 +155,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name
           about
           timezone
+          primaryFeatureImageUrl
           primaryLocation {
             uniqueId
             name
@@ -236,6 +240,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const validate = makeValidate(teamSchema);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.team?.primaryFeatureImageUrl);
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -328,6 +333,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name,
           about,
           timezone,
+          primaryFeatureImageUrl,
           primaryLocationId,
         },
       },
@@ -359,6 +365,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             name,
             about,
             timezone,
+            primaryFeatureImageUrl,
             primaryLocation: null,
           },
         },
@@ -834,6 +841,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     },
   ];
 
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
+  };
+
   const team = rootData.team;
 
   return (
@@ -875,6 +886,18 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Feature Image">
+                      {primaryFeatureImageUrl && (
+                        <ImageFileUploader
+                          defaultImageUrl={primaryFeatureImageUrl}
+                          defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
+                          previewImageHeight={teamFeatureImageHeight}
+                          previewImageWidth={teamFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      )}
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredTeamDetailsFields.name} />
                     </FormFieldLabel>

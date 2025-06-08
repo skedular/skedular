@@ -103,6 +103,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
             Tags = MapTo(src.OrganizationTags).ToList()
@@ -152,6 +153,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             OpeningHours = src.OpeningHours,
             Organization = organization,
             OrganizationTags = organizationTags
@@ -169,6 +171,7 @@ public class Mapper : IMapper
         dest.Timezone = src.Timezone;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
         dest.OpeningHours = src.OpeningHours;
         dest.PhysicalAddress = physicalAddress;
         dest.OrganizationTags = organizationTags;
@@ -186,6 +189,7 @@ public class Mapper : IMapper
                 Timezone = src.Timezone,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
+                PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
@@ -357,6 +361,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -376,6 +381,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -428,6 +434,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -442,6 +449,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString(),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
             Permissions = new Permissions
@@ -471,6 +479,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -484,6 +493,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };

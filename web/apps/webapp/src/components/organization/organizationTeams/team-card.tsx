@@ -17,6 +17,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -82,6 +83,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
             }
           }
         }
+        primaryFeatureImageUrl
         hasFutureBooking
         canModify
         canDelete
@@ -289,6 +291,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
+        {teamDetails.primaryFeatureImageUrl && <CardMedia component="img" image={teamDetails.primaryFeatureImageUrl} />}
         <CardHeader
           title={
             <StackRow>

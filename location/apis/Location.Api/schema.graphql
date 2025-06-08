@@ -57,6 +57,7 @@ type LocationDetails {
   locationTags: [Location_OrganizationTagDetails!]!
   contactEmail: String
   contactPhone: String
+  primaryFeatureImageUrl: String
   id: ID!
 }
 
@@ -208,6 +209,7 @@ input AddLocationInput {
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
+  primaryFeatureImageUrl: String
 }
 
 input AddResourceInput {
@@ -298,6 +300,7 @@ input UpdateLocationInput {
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
+  primaryFeatureImageUrl: String
 }
 
 input UpdateLocationOpeningHoursInput {

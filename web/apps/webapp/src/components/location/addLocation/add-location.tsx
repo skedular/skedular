@@ -1,10 +1,12 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
+import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -91,6 +93,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           timezone
           contactEmail
           contactPhone
+          primaryFeatureImageUrl
           physicalAddress {
             addressLine1
             addressLine2
@@ -122,6 +125,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
 
   const handleCloseClick = () => {
     commitCompleteLocationOnboarding({
@@ -170,6 +174,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           timezone,
           contactEmail,
           contactPhone,
+          primaryFeatureImageUrl,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -237,6 +242,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             timezone,
             contactEmail,
             contactPhone,
+            primaryFeatureImageUrl,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -251,6 +257,10 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
         },
       },
     });
+  };
+
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
   };
 
   return (
@@ -284,6 +294,15 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Feature image">
+                    <ImageFileUploader
+                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                      previewImageHeight={locationFeatureImageHeight}
+                      previewImageWidth={locationFeatureImageWidth}
+                      onUploadCompleted={handleFeatureImageUploadCompleted}
+                    />
+                  </FormFieldLabel>
+
                   <FormFieldLabel label="Name">
                     <TextField name="name" required={requiredFields.name} />
                   </FormFieldLabel>

@@ -13,6 +13,7 @@ public class Location : ModelBaseWithDeleted
     public OpeningHours? OpeningHours { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public string? PrimaryFeatureImageUrl { get; set; }
 
     public Address? PhysicalAddress { get; set; }
 

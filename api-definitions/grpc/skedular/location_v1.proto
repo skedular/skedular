@@ -78,6 +78,7 @@ message Admin_AddInput {
     repeated string locationTagIds = 6;
     string contactEmail = 7;
     string contactPhone = 8;
+    string primaryFeatureImageUrl = 9;
 }
 
 message LocationConnection {
@@ -106,6 +107,7 @@ message Location {
     OpeningHours openingHours = 12;
     string contactEmail = 13;
     string contactPhone = 14;
+    string primaryFeatureImageUrl = 15;
 }
 
 message Admin_GetInput {
@@ -196,6 +198,7 @@ message AddInput {
     repeated string locationTagIds = 6;
     string contactEmail = 7;
     string contactPhone = 8;
+    string primaryFeatureImageUrl = 9;
 }
 
 message UpdateInput {
@@ -207,6 +210,7 @@ message UpdateInput {
     repeated string locationTagIds = 6;
     string contactEmail = 7;
     string contactPhone = 8;
+    string primaryFeatureImageUrl = 9;
 }
 
 message RemoveInput {

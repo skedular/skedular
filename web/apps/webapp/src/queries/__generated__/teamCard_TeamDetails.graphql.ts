@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d3451ef7311c16287f1d40fdf082aba>>
+ * @generated SignedSource<<d220ec30a42f4dfde3f5ae17265e675e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,7 @@ export type teamCard_TeamDetails$data = {
   readonly organization: {
     readonly uniqueId: string;
   };
+  readonly primaryFeatureImageUrl: string | null | undefined;
   readonly " $fragmentType": "teamCard_TeamDetails";
 };
 export type teamCard_TeamDetails$key = {
@@ -148,6 +149,13 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "primaryFeatureImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "hasFutureBooking",
       "storageKey": null
     },
@@ -171,6 +179,6 @@ return {
 };
 })();
 
-(node as any).hash = "4cdaea3a605819808b94852bbccbaa5d";
+(node as any).hash = "77ce06a52bf5b6dd3e725a7bd1d42f79";
 
 export default node;

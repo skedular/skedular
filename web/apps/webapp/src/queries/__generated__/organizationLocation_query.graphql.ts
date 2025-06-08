@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cbdaedcef426d7696f6704a06e064037>>
+ * @generated SignedSource<<4af6df84e0ef9b23d2070ecc99f7cdcb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,6 +78,7 @@ export type organizationLocation_query$data = {
       readonly suburb: string;
       readonly zipcode: string;
     };
+    readonly primaryFeatureImageUrl: string | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
   readonly me: {
@@ -268,6 +269,13 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "contactPhone",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "primaryFeatureImageUrl",
           "storageKey": null
         },
         {
@@ -478,6 +486,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0dcec1505edcc59aae6bc5131262c32";
+(node as any).hash = "277f6f6e18e9b60962bc339f2b26a3bd";
 
 export default node;
