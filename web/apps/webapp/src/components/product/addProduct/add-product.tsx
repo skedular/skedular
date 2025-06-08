@@ -2,6 +2,7 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
+import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
@@ -444,7 +445,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Feature image">
-                      <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
+                      <ImageFileUploader
+                        defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
+                        previewImageHeight={productFeatureImageHeight}
+                        previewImageWidth={productFeatureImageWidth}
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">

@@ -2,6 +2,7 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
 import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -12,7 +13,6 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -318,6 +318,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   );
   const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
+  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.product?.primaryFeatureImageUrl);
 
   const handleProductDetailUpdateClick = ({
     name,
@@ -367,7 +368,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           productTagIds,
           locationTagIds,
           organizationId: product.organization.uniqueId,
-          primaryFeatureImageUrl: product.primaryFeatureImageUrl,
+          primaryFeatureImageUrl,
         },
       },
       onCompleted: (_, errors) => {
@@ -418,7 +419,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            primaryFeatureImageUrl: null,
+            primaryFeatureImageUrl,
           },
         },
       },
@@ -427,6 +428,10 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
   const handleCloseClick = () => {
     router.back();
+  };
+
+  const handleFeatureImageUploadCompleted = (url: string) => {
+    setPrimaryFeatureImageUrl(url);
   };
 
   if (!rootData.product) {
@@ -481,9 +486,17 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Feature image"></FormFieldLabel>
+
                     <FormFieldLabel label="Feature Image">
-                      {rootData.product?.primaryFeatureImageUrl && (
-                        <Image src={rootData.product.primaryFeatureImageUrl} height={productFeatureImageHeight} width={productFeatureImageWidth} alt="" />
+                      {primaryFeatureImageUrl && (
+                        <ImageFileUploader
+                          defaultImageUrl={primaryFeatureImageUrl}
+                          defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
+                          previewImageHeight={productFeatureImageHeight}
+                          previewImageWidth={productFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
                       )}
                     </FormFieldLabel>
 
