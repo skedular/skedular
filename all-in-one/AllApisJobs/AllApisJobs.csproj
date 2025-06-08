@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>13</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\gateway\apis\Gateway\Gateway.csproj"/>
+
+        <ProjectReference Include="..\..\billing\apis\Billing.Api\Billing.Api.csproj"/>
+        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\booking\apis\Booking.Api\Booking.Api.csproj"/>
+        <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\customer\apis\Customer.Api\Customer.Api.csproj"/>
+        <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\location\apis\Location.Api\Location.Api.csproj"/>
+        <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\marketplace\apis\Marketplace.Api\Marketplace.Api.csproj"/>
+        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
+        <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
+        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
+        <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj"/>
+        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj"/>
+        <ProjectReference Include="..\..\slack\jobs\Slack.Jobs\Slack.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\team\apis\Team.Api\Team.Api.csproj"/>
+        <ProjectReference Include="..\..\team\jobs\Team.Jobs\Team.Jobs.csproj"/>
+
+        <ProjectReference Include="..\..\core\apis\Core.Api\Core.Api.csproj"/>
+        <ProjectReference Include="..\..\core\jobs\Core.Jobs\Core.Jobs.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>
