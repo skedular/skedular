@@ -7,7 +7,7 @@ info:
 servers:
   - url: https://api.skedular.app
     description: production
-  - url: https://stagingapi.skedular.app
+  - url: https://apistaging.skedular.app
     description: staging
   - url: http://localhost:9000
     description: local gateway
