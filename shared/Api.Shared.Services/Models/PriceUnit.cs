@@ -57,7 +57,7 @@ public static class PriceUnitExtensions
         {
             PriceUnit.PerMinute => "Minute",
             PriceUnit.PerHour => "Hour",
-            PriceUnit.PerUse => "One-time charge (not based on duration)",
+            PriceUnit.PerUse => "One-time",
             _ => throw new ArgumentOutOfRangeException()
         };
 }
