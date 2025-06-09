@@ -77,7 +77,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   const [customerIds, setCustomerIds] = useState<string[]>(customerId ? [customerId] : []);
   const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
   const [teamIds, setTeamIds] = useState<string[]>(teamId ? [teamId] : []);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
