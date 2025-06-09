@@ -14,8 +14,6 @@ public static class Extensions
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<IOrganizationService, OrganizationService>()
-            .AddScoped<IOrganizationPaymentService, OrganizationPaymentService>()
             .AddScoped<ICustomerPaymentService, CustomerPaymentService>()
             .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>();

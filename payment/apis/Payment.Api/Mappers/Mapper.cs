@@ -7,7 +7,6 @@ using Stripe;
 using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
 using Organization = Payment.Shared.Database.Entities.Organization;
-using PaymentMethod = Payment.Api.GraphQL.PaymentMethod;
 using StripeConnectAccount = Payment.Shared.Database.Entities.StripeConnectAccount;
 using StripePaymentMethod = Payment.Shared.Models.StripePaymentMethod;
 
@@ -15,8 +14,8 @@ namespace Payment.Api.Mappers;
 
 public interface IMapper
 {
-    IEnumerable<PaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
-    Shared.Database.Entities.StripePaymentMethod MergeTo(Stripe.PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
+    IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
+    Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
@@ -28,9 +27,9 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public IEnumerable<PaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+    public IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
 
-    public Shared.Database.Entities.StripePaymentMethod MergeTo(Stripe.PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
+    public Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
     {
         dest.PaymentMethodId = paymentMethod.Id;
 
@@ -202,7 +201,7 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static PaymentMethod MapTo(StripePaymentMethod src) =>
+    private static CustomerPaymentMethod MapTo(StripePaymentMethod src) =>
         new()
         {
             Id = src.Id,

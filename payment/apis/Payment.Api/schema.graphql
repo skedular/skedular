@@ -9,16 +9,21 @@ type AddCustomerPaymentMethodIntentPayload {
   clientSecret: String!
 }
 
-type AddOrganizationPaymentMethodIntentPayload {
-  clientMutationId: String
-  publishedKeys: String!
-  clientSecret: String!
+type CustomerPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
 }
 
 type Mutation {
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload @cost(weight: "10")
-  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
-  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload @cost(weight: "10")
+  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   removeMyPaymentMethod(input: RemoveMyPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
@@ -75,19 +80,6 @@ type PageInfo {
   endCursor: String
 }
 
-type PaymentMethod {
-  cardBrand: String
-  cardCountry: String
-  cardDescription: String
-  cardExpiryMonth: Int
-  cardExpiryYear: Int
-  cardFingerprint: String
-  cardFunding: String
-  cardIssuer: String
-  cardLastFourDigit: String
-  id: ID!
-}
-
 type Payment_OrganizationDetails {
   uniqueId: ID!
   name: String!
@@ -97,17 +89,12 @@ type Payment_OrganizationDetails {
 type Query {
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationPaymentMethodsDetails(organizationId: String!): [PaymentMethod!]! @cost(weight: "10")
-  myPaymentMethodsDetails: [PaymentMethod!]! @cost(weight: "10")
+  myPaymentMethodsDetails: [CustomerPaymentMethod!]! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
 }
 
 type RemoveCustomerPaymentMethodPayload {
-  clientMutationId: String
-}
-
-type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
@@ -120,11 +107,6 @@ type Version {
 
 input AddMyPaymentMethodIntentInput {
   clientMutationId: String
-}
-
-input AddOrganizationPaymentMethodIntentInput {
-  clientMutationId: String
-  organizationId: String!
 }
 
 input AddOrganizationStripeConnectAccountInput {
@@ -157,11 +139,6 @@ input OrganizationStripeConnectAccountWhereInput {
 }
 
 input RemoveMyPaymentMethodInput {
-  clientMutationId: String
-  id: String!
-}
-
-input RemoveOrganizationPaymentMethodInput {
   clientMutationId: String
   id: String!
 }

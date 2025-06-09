@@ -11,7 +11,8 @@ public class OrganizationController(
     IVersionService versionService,
     IWorkaroundService workaroundService,
     IAzureTenantService azureTenantService,
-    IOrganizationSsoService organizationSsoService) : OrganizationControllerBase
+    IOrganizationSsoService organizationSsoService,
+    IOrganizationPaymentService organizationPaymentService) : OrganizationControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -82,4 +83,17 @@ public class OrganizationController(
 
         return Redirect(redirectUrl);
     }
+
+    public override async Task<IActionResult> AddPaymentMethod(
+        // ReSharper disable InconsistentNaming
+        string setup_intent,
+        string setup_intent_client_secret,
+        string redirect_status,
+        // ReSharper restore InconsistentNaming
+        CancellationToken cancellationToken = default) =>
+        Redirect(await organizationPaymentService.HandleStripePaymentMethodEventAsync(
+            setup_intent,
+            setup_intent_client_secret,
+            redirect_status,
+            cancellationToken));
 }

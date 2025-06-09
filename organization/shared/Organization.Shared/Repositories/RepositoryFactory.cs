@@ -29,6 +29,9 @@ public interface IRepositoryFactory
     ITermsOfUseRepository TermsOfUseRepository { get; }
     IJoinInvitationRepository JoinInvitationRepository { get; }
     ITagRepository TagRepository { get; }
+    IStripeCustomerRepository StripeCustomerRepository { get; }
+    IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, IRepositoryFactory
@@ -57,6 +60,9 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
         TagRepository = new TagRepository(_dbContext, timeProvider);
+        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
+        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
+        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
     }
 
     public IAddressRepository AddressRepository { get; }
@@ -79,4 +85,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public ITermsOfUseRepository TermsOfUseRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }
     public ITagRepository TagRepository { get; }
+    public IStripeCustomerRepository StripeCustomerRepository { get; }
+    public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 }

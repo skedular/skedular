@@ -64,8 +64,8 @@ public class RemoveCustomerPaymentMethodPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("PaymentMethod")]
-public class PaymentMethod : Node
+[GraphQLName("CustomerPaymentMethod")]
+public class CustomerPaymentMethod : Node
 {
     [GraphQLName("cardBrand")] public string? CardBrand { get; set; }
     [GraphQLName("cardCountry")] public string? CardCountry { get; set; }

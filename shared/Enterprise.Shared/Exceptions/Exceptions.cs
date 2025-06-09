@@ -75,3 +75,5 @@ public class StripePriceRelationshipIsNotSetYet() : Exception("Stripe price rela
 public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross organization product booking not allowed");
 
 public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
+
+public class OrganizationPaymentMethodNotFound() : Exception("Organization payment method not found");

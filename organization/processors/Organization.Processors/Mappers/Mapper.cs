@@ -249,7 +249,6 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
-            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),

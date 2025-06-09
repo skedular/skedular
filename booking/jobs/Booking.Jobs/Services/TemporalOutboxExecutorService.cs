@@ -19,11 +19,11 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
             try
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var bookingPaidThroughStripeInput = JsonSerializer.Deserialize<BookingPaidThroughStripeInput>(executionArgs);
-                ArgumentNullException.ThrowIfNull(bookingPaidThroughStripeInput);
+                var input = JsonSerializer.Deserialize<BookingPaidThroughStripeInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync(
-                    (BookingPaidThroughStripe workflow) => workflow.ExecuteAsync(bookingPaidThroughStripeInput),
+                    (BookingPaidThroughStripe workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)

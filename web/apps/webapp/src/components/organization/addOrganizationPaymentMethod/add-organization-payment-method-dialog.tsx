@@ -1,5 +1,5 @@
 import { DefaultDialogTitle } from '@/components/commons';
-import { errorNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationPaymentMethodSetupForm } from '@/components/organization';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
@@ -12,7 +12,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 
@@ -43,8 +43,19 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
   const [addNewPaymentMethodState, setAddNewPaymentMethodState] = useState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
   const [clientSecret, setClientSecret] = useState('');
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>();
+  const hasRunRef = useRef(false);
 
   useEffect(() => {
+    // In development, React StrictMode intentionally double-invokes useEffect to help detect side effects.
+    // This guard prevents the mutation from running twice in dev mode, but has no effect in production.
+    if (process.env.NODE_ENV === 'development') {
+      if (hasRunRef.current) {
+        return;
+      }
+
+      hasRunRef.current = true;
+    }
+
     commitAddOrganizationPaymentMethodIntent({
       variables: {
         input: {
@@ -60,14 +71,9 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
           return;
         }
 
-        if (response.addOrganizationPaymentMethodIntent) {
-          setStripePromise(loadStripe(response.addOrganizationPaymentMethodIntent?.publishedKeys));
-          setClientSecret(response.addOrganizationPaymentMethodIntent?.clientSecret);
-          setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
-        } else {
-          themedToast(<NotificationContent content={`Payment method added.`} />, successNotificationOptions);
-          onCancel();
-        }
+        setStripePromise(loadStripe(response.addOrganizationPaymentMethodIntent.publishedKeys));
+        setClientSecret(response.addOrganizationPaymentMethodIntent.clientSecret);
+        setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${error.message}.`} />, errorNotificationOptions);

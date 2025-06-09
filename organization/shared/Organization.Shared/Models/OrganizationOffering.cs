@@ -12,4 +12,5 @@ public class OrganizationOffering : ModelBaseWithDeleted
     public int UnitPrice { get; set; }
     public Organization Organization { get; set; } = new();
     public ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
+    public StripePaymentIntent? StripePaymentIntent { get; set; }
 }

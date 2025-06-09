@@ -3,9 +3,14 @@ using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Payment;
+using Enterprise.Shared.Temporal;
 using Organization.Shared;
 using Organization.Shared.Configurations;
 using Organization.Shared.Database;
+using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.Activities;
+using Temporalio.Extensions.Hosting;
 
 namespace Organization.Jobs;
 
@@ -40,7 +45,13 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
+            .AddStripe(configuration)
             .AddGrpcServices(configuration);
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<AddOrganizationStripePaymentMethod>()
+            .AddScopedActivities<StripeIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

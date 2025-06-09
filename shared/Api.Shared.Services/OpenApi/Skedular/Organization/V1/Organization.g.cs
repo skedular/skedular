@@ -74,6 +74,13 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/acs")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SsoAcs(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// add payment method
+        /// </summary>
+        /// <returns>the readiness status</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/add-payment-method")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AddPaymentMethod([Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent, [Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent_client_secret, [Microsoft.AspNetCore.Mvc.FromQuery] string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]

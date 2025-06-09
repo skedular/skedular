@@ -38,8 +38,8 @@ import type { organizationAdmin_customTags_refetchableFragment } from '@/queries
 import type { organizationAdmin_deleteCustomTagsMutation } from '@/queries/__generated__/organizationAdmin_deleteCustomTagsMutation.graphql';
 import type { organizationAdmin_deleteOrganizationMutation } from '@/queries/__generated__/organizationAdmin_deleteOrganizationMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generated__/organizationAdmin_deleteZonesMutation.graphql';
-import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
-import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
+import type { organizationAdmin_organization_query$key } from '@/queries/__generated__/organizationAdmin_organization_query.graphql';
+import type { organizationAdmin_organization_refetchableFragment } from '@/queries/__generated__/organizationAdmin_organization_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
@@ -81,7 +81,7 @@ import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin
 
 type Props = {
   rootDataRelay: organizationAdmin_query$key;
-  rootDataOrganizationPaymentMethodsDetailsRelay: organizationAdmin_organizationPaymentMethodsDetails_query$key;
+  rootDataOrganizationRelay: organizationAdmin_organization_query$key;
   rootDataZonesRelay: organizationAdmin_zones_query$key;
   rootDataCustomTagsRelay: organizationAdmin_customTags_query$key;
   onReloadRequired: () => void;
@@ -176,14 +176,7 @@ type CustomTagRowType = {
   preferred: boolean;
 };
 
-const OrganizationAdmin = ({
-  rootDataRelay,
-  rootDataOrganizationPaymentMethodsDetailsRelay,
-  rootDataZonesRelay,
-  rootDataCustomTagsRelay,
-  onReloadRequired,
-  organizationId,
-}: Props) => {
+const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZonesRelay, rootDataCustomTagsRelay, onReloadRequired, organizationId }: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
@@ -196,6 +189,34 @@ const OrganizationAdmin = ({
             uniqueId
           }
         }
+        organizationIndustryMainCategoriesReferences {
+          subCategories {
+            id
+            name
+          }
+        }
+        organizationBillingContactDetails(organizationId: $organizationId) {
+          id
+          email
+          addressLine1
+          addressLine2
+          suburb
+          city
+          province
+          zipcode
+          country
+        }
+        ...organizationMultipleChoicesIndustries_query
+        ...singleChoiceOrganizationType_query
+        ...singleChoiceOrganizationMemberVisibilityPolicyquery
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataOrganization, refetchOrganization] = useRefetchableFragment<organizationAdmin_organization_refetchableFragment, organizationAdmin_organization_query$key>(
+    graphql`
+      fragment organizationAdmin_organization_query on Query @refetchable(queryName: "organizationAdmin_organization_refetchableFragment") {
         organization(id: $organizationId) {
           id
           name
@@ -227,6 +248,13 @@ const OrganizationAdmin = ({
             country
           }
           hasAttachedPaymentMethod
+          paymentMethods {
+            id
+            cardBrand
+            cardExpiryMonth
+            cardExpiryYear
+            cardLastFourDigit
+          }
           activeOffering {
             id
             isEnterprise
@@ -253,48 +281,9 @@ const OrganizationAdmin = ({
             appFederationMetadataUrl
           }
         }
-        organizationIndustryMainCategoriesReferences {
-          subCategories {
-            id
-            name
-          }
-        }
-        organizationBillingContactDetails(organizationId: $organizationId) {
-          id
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
-        }
-        ...organizationMultipleChoicesIndustries_query
-        ...singleChoiceOrganizationType_query
-        ...singleChoiceOrganizationMemberVisibilityPolicyquery
       }
     `,
-    rootDataRelay,
-  );
-
-  const [rootDataOrganizationPaymentMethodsDetails, refetchOrganizationPaymentMethodsDetails] = useRefetchableFragment<
-    organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment,
-    organizationAdmin_organizationPaymentMethodsDetails_query$key
-  >(
-    graphql`
-      fragment organizationAdmin_organizationPaymentMethodsDetails_query on Query
-      @refetchable(queryName: "organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment") {
-        organizationPaymentMethodsDetails(organizationId: $organizationId) {
-          id
-          cardBrand
-          cardExpiryMonth
-          cardExpiryYear
-          cardLastFourDigit
-        }
-      }
-    `,
-    rootDataOrganizationPaymentMethodsDetailsRelay,
+    rootDataOrganizationRelay,
   );
 
   const [rootDataZones, refetchZones] = useRefetchableFragment<organizationAdmin_zones_refetchableFragment, organizationAdmin_zones_query$key>(
@@ -525,7 +514,7 @@ const OrganizationAdmin = ({
   const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
   const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
-  const [ssoEnabled, setSsoEnabled] = useState(!!rootData.organization?.ssoSettings);
+  const [ssoEnabled, setSsoEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -607,14 +596,14 @@ const OrganizationAdmin = ({
 
   const handleRefetchOrganizationPaymentMethodsDetails = useCallback(() => {
     startTransition(() => {
-      refetchOrganizationPaymentMethodsDetails(
+      refetchOrganization(
         {},
         {
           fetchPolicy: 'store-and-network',
         },
       );
     });
-  }, [refetchOrganizationPaymentMethodsDetails]);
+  }, [refetchOrganization]);
 
   const handleOrganizationDetailUpdateClick = ({
     name,
@@ -633,11 +622,11 @@ const OrganizationAdmin = ({
     zipcode,
     country,
   }: OrganizationDetails) => {
-    if (!rootData.organization) {
+    if (!rootDataOrganization.organization) {
       return;
     }
 
-    const organization = rootData.organization;
+    const organization = rootDataOrganization.organization;
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
 
@@ -785,7 +774,7 @@ const OrganizationAdmin = ({
   };
 
   const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
-    const organization = rootData.organization;
+    const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
     }
@@ -846,7 +835,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const organization = rootData.organization;
+    const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
     }
@@ -1160,24 +1149,25 @@ const OrganizationAdmin = ({
   };
 
   const handleCancelActiveOfferingClick = () => {
-    if (!rootData.organization) {
+    if (!rootDataOrganization.organization) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Cancelling organization '${rootData.organization.name}' active offering...`} />, infoNotificationOptions);
+    const name = rootDataOrganization.organization.name;
+    const toastId = themedToast(<NotificationContent content={`Cancelling organization '${name}' active offering...`} />, infoNotificationOptions);
 
     commitCancelOrganizationOffering({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.organization.id,
+          id: rootDataOrganization.organization.id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${joinErrors(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -1187,7 +1177,7 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${rootData.organization?.name}' active offering cancelled.`} />,
+          render: <NotificationContent content={`Organization '${name}' active offering cancelled.`} />,
         });
 
         onReloadRequired();
@@ -1195,7 +1185,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${error.message}.`} />,
         });
 
         onReloadRequired();
@@ -1204,17 +1194,18 @@ const OrganizationAdmin = ({
   };
 
   const handleUpgradeOfferingClick = (code: string) => {
-    if (!rootData.organization) {
+    if (!rootDataOrganization.organization) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${rootData.organization.name} active offering'...`} />, infoNotificationOptions);
+    const name = rootDataOrganization.organization.name;
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${name} active offering'...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationOffering({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.organization.id,
+          id: rootDataOrganization.organization.id,
           offeringCode: code,
         },
       },
@@ -1222,7 +1213,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${joinErrors(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -1232,7 +1223,7 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${rootData.organization?.name} active offering updated.`} />,
+          render: <NotificationContent content={`Organization ${name} active offering updated.`} />,
         });
 
         onReloadRequired();
@@ -1240,7 +1231,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${error.message}.`} />,
         });
 
         onReloadRequired();
@@ -1445,26 +1436,25 @@ const OrganizationAdmin = ({
   };
 
   const handleRemoveOrganizationClicked = () => {
-    if (!rootData.organization) {
+    if (!rootDataOrganization.organization) {
       return;
     }
 
-    const organizationDetails = rootData.organization;
-
-    const toastId = themedToast(<NotificationContent content={`Removing organization '${organizationDetails.name}'...`} />, infoNotificationOptions);
+    const name = rootDataOrganization.organization.name;
+    const toastId = themedToast(<NotificationContent content={`Removing organization '${name}'...`} />, infoNotificationOptions);
 
     commitDeleteOrganization({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: organizationDetails.id,
+          id: rootDataOrganization.organization.id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the organization '${organizationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1472,7 +1462,7 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${organizationDetails.name}' removed.`} />,
+          render: <NotificationContent content={`Organization '${name}' removed.`} />,
         });
 
         router.push(getRootLink(integratedPlatrform));
@@ -1480,13 +1470,13 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the organization '${organizationDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  if (!rootData.organization) {
+  if (!rootDataOrganization.organization) {
     return <></>;
   }
 
@@ -1644,8 +1634,7 @@ const OrganizationAdmin = ({
     },
   ];
 
-  const organization = rootData.organization;
-
+  const organization = rootDataOrganization.organization;
   const billingContactDetails = rootData.organizationBillingContactDetails;
   const email = billingContactDetails.email ? billingContactDetails.email : '';
   const addressLine1 = billingContactDetails.addressLine1 ? billingContactDetails.addressLine1 : '';
@@ -1655,12 +1644,9 @@ const OrganizationAdmin = ({
   const province = billingContactDetails.province ? billingContactDetails.province : '';
   const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
   const country = billingContactDetails.country ? billingContactDetails.country : '';
-
-  const paymentMethodExist =
-    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails && rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
-  const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
-  const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
-
+  const paymentMethodExist = organization && organization.paymentMethods.length > 0;
+  const activeOffering = organization ? organization.activeOffering : null;
+  const availableOfferings = organization && organization.availableOfferings ? organization.availableOfferings : [];
   const ssoSettingsEntityId = organization.ssoSettings ? organization.ssoSettings.entityId : '';
   const ssoSettingsLoginUrl = organization.ssoSettings ? organization.ssoSettings.loginUrl : '';
   const ssoSettingsappFederationMetadataUrl = organization.ssoSettings ? organization.ssoSettings.appFederationMetadataUrl : '';
@@ -1885,7 +1871,7 @@ const OrganizationAdmin = ({
             {paymentMethodExist && (
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <StackRow>
-                  {rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.map((item) => (
+                  {organization.paymentMethods.map((item) => (
                     <StackColumn key={item.id}>
                       <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
                       <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
@@ -2200,7 +2186,7 @@ const OrganizationAdmin = ({
                           </ListItem>
                         ))}
 
-                        {!rootData.organization?.hasAttachedPaymentMethod && (
+                        {!organization?.hasAttachedPaymentMethod && (
                           <ListItem alignItems="flex-start" sx={{ padding: 0, paddingTop: 1 }}>
                             <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
                               <ErrorIcon fontSize="large" sx={{ color: 'red' }} />
@@ -2214,13 +2200,13 @@ const OrganizationAdmin = ({
                     </CardContent>
 
                     <CardActions sx={{ justifyContent: 'center' }}>
-                      {!rootData.organization?.hasAttachedPaymentMethod && (
+                      {!organization?.hasAttachedPaymentMethod && (
                         <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
                           Add Payment Method
                         </Button>
                       )}
 
-                      {rootData.organization?.hasAttachedPaymentMethod && !availableOffering.isEnterprise && (
+                      {organization?.hasAttachedPaymentMethod && !availableOffering.isEnterprise && (
                         <Button
                           color="primary"
                           variant="contained"
@@ -2231,7 +2217,7 @@ const OrganizationAdmin = ({
                         </Button>
                       )}
 
-                      {rootData.organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
+                      {organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
                         <Button href="mailto:support@getskedular.com" variant="contained" sx={{ textTransform: 'none', backgroundColor: 'black', color: 'white' }}>
                           Contact Us
                         </Button>

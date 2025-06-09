@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d2093d2a473a53049182fdde4774c1e>>
+ * @generated SignedSource<<c2ba533f2cf6205422bbb980ab8204ea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$data = {
     readonly clientMutationId: string | null | undefined;
     readonly clientSecret: string;
     readonly publishedKeys: string;
-  } | null | undefined;
+  };
 };
 export type addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation = {
   response: addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$data;

@@ -79,7 +79,7 @@ public class OrganizationSubscriber(
             ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
-        _ = await stripeCustomerService.UpsertCustomerAsync(organization, existingOrganization, null, @event.Metadata.Id, cancellationToken);
+//        _ = await stripeCustomerService.UpsertCustomerAsync(organization, existingOrganization, null, @event.Metadata.Id, cancellationToken);
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);

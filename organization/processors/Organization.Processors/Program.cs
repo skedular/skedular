@@ -5,6 +5,7 @@ using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 using Organization.Processors.Subscribers;
 using Organization.Shared;
 using Organization.Shared.Configurations;
@@ -54,10 +55,6 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
-                PaymentSubscriber,
-                Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 TeamSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
@@ -72,7 +69,8 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddServices()
-            .AddGrpcServices(configuration);
+            .AddGrpcServices(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

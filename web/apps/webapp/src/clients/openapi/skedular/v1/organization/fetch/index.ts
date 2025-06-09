@@ -18,6 +18,7 @@ export { $Version } from './schemas/$Version';
 
 export { AzureService } from './services/AzureService';
 export { OrganizationService } from './services/OrganizationService';
+export { PaymentMethodService } from './services/PaymentMethodService';
 export { SsoService } from './services/SsoService';
 export { TenantService } from './services/TenantService';
 export { V1Service } from './services/V1Service';

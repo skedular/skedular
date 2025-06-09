@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df67593e6ad6ce5f3a761e8cea464886>>
+ * @generated SignedSource<<c62a4c17db7197fd6bd61e86a14b9af2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -233,7 +233,7 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "PaymentMethod",
+        "concreteType": "CustomerPaymentMethod",
         "kind": "LinkedField",
         "name": "myPaymentMethodsDetails",
         "plural": true,

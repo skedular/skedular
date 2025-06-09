@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ee04f0e5d88bbf247f88bb58ecf96da>>
+ * @generated SignedSource<<38d1b291c2e613832a3193689fea3771>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodInten
     readonly clientMutationId: string | null | undefined;
     readonly clientSecret: string;
     readonly publishedKeys: string;
-  } | null | undefined;
+  };
 };
 export type addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation = {
   response: addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation$data;

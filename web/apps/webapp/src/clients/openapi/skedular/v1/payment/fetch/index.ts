@@ -19,7 +19,6 @@ export { $Version } from './schemas/$Version';
 export { ConnectService } from './services/ConnectService';
 export { CustomerService } from './services/CustomerService';
 export { OnboardingService } from './services/OnboardingService';
-export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentService } from './services/PaymentService';
 export { PaymentMethodService } from './services/PaymentMethodService';

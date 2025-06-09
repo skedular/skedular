@@ -245,6 +245,19 @@ type CustomerPayload {
   customer: CustomerDetails!
 }
 
+type CustomerPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
+}
+
 type CustomerResourceDetails {
   name: String
   uniqueId: ID!
@@ -392,9 +405,9 @@ type Mutation {
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
-  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload @cost(weight: "10")
+  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload @cost(weight: "10")
@@ -640,6 +653,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
+  paymentMethods: [OrganizationPaymentMethod!]!
   physicalAddress: OrganizationAddressDetails!
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
@@ -722,6 +736,19 @@ type OrganizationOfferingDetails {
 type OrganizationPayload {
   clientMutationId: String
   organization: OrganizationDetails!
+}
+
+type OrganizationPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
 }
 
 type OrganizationSsoSettingsDetails {
@@ -835,19 +862,6 @@ type PageInfo {
   startCursor: String
 }
 
-type PaymentMethod {
-  cardBrand: String
-  cardCountry: String
-  cardDescription: String
-  cardExpiryMonth: Int
-  cardExpiryYear: Int
-  cardFingerprint: String
-  cardFunding: String
-  cardIssuer: String
-  cardLastFourDigit: String
-  id: ID!
-}
-
 type Payment_OrganizationDetails {
   name: String!
   uniqueId: ID!
@@ -947,7 +961,7 @@ type Query {
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
-  myPaymentMethodsDetails: [PaymentMethod!]! @cost(weight: "10")
+  myPaymentMethodsDetails: [CustomerPaymentMethod!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   notificationVersion: Version!
@@ -962,7 +976,6 @@ type Query {
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection! @cost(weight: "10")
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
-  organizationPaymentMethodsDetails(organizationId: String!): [PaymentMethod!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")

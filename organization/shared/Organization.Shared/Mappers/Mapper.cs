@@ -4,10 +4,12 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
+using Stripe;
 using Address = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using StripePaymentMethod = Organization.Shared.Database.Entities.StripePaymentMethod;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
@@ -16,6 +18,9 @@ public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
     InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    CustomerCreateOptions MapTo(Database.Entities.Organization src);
+    CustomerUpdateOptions MergeTo(Database.Entities.Organization src);
+    StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -93,6 +98,41 @@ public class Mapper : IMapper
             OrganizationId = src.Organization.Id,
             InvitedById = src.CreatedBy.Id,
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
+        };
+
+    public CustomerCreateOptions MapTo(Database.Entities.Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
+
+    public CustomerUpdateOptions MergeTo(Database.Entities.Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
+
+    public StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization) =>
+        new()
+        {
+            SetupIntentId = setupIntentId,
+            PaymentMethodId = paymentMethod.Id,
+            CardBrand = paymentMethod.Card?.Brand,
+            CardCountry = paymentMethod.Card?.Country,
+            CardDescription = paymentMethod.Card?.Description,
+            CardExpiryMonth = paymentMethod.Card is null ? null : (byte)paymentMethod.Card.ExpMonth,
+            CardExpiryYear = paymentMethod.Card is null ? null : (short)paymentMethod.Card.ExpYear,
+            CardFingerprint = paymentMethod.Card?.Fingerprint,
+            CardFunding = paymentMethod.Card?.Funding,
+            CardIssuer = paymentMethod.Card?.Issuer,
+            CardLastFourDigit = paymentMethod.Card?.Last4,
+            Organization = organization
         };
 
     private static OrganizationSsoSettings? MapTo(OrganizationSsoSetting? src) =>

@@ -7,7 +7,6 @@ namespace Payment.Shared.Repositories;
 public interface IStripeCustomerRepository : IRepository<StripeCustomer>
 {
     StripeCustomer Add(StripeCustomer stripeCustomer);
-    StripeCustomer Update(StripeCustomer stripeCustomer);
 }
 
 public class StripeCustomerRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
@@ -18,12 +17,5 @@ public class StripeCustomerRepository(PaymentDbContext dbContext, TimeProvider t
         var now = TimeProvider.GetUtcNow();
         stripeCustomer.CreatedAt = now;
         return DbContext.StripeCustomer.Add(stripeCustomer).Entity;
-    }
-
-    public StripeCustomer Update(StripeCustomer stripeCustomer)
-    {
-        var now = TimeProvider.GetUtcNow();
-        stripeCustomer.ModifiedAt = now;
-        return DbContext.StripeCustomer.Update(stripeCustomer).Entity;
     }
 }

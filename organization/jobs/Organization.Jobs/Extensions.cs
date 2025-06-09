@@ -1,4 +1,6 @@
+using Enterprise.Shared.Outbox;
 using Organization.Jobs.Jobs;
+using Organization.Jobs.Services;
 
 namespace Organization.Jobs;
 
@@ -8,7 +10,7 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services;
+        services.AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63608e7f5347c520acb835b39a2d825e>>
+ * @generated SignedSource<<5697871cbe688302eb7cd7744bffa78e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,7 +44,7 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "PaymentMethod",
+        "concreteType": "CustomerPaymentMethod",
         "kind": "LinkedField",
         "name": "myPaymentMethodsDetails",
         "plural": true,

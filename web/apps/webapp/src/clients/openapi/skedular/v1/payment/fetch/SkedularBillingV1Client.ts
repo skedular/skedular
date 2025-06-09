@@ -8,7 +8,6 @@ import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { ConnectService } from './services/ConnectService';
 import { CustomerService } from './services/CustomerService';
 import { OnboardingService } from './services/OnboardingService';
-import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentService } from './services/PaymentService';
 import { PaymentMethodService } from './services/PaymentMethodService';
@@ -21,7 +20,6 @@ export class SkedularBillingV1Client {
     public readonly connect: ConnectService;
     public readonly customer: CustomerService;
     public readonly onboarding: OnboardingService;
-    public readonly organization: OrganizationService;
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly payment: PaymentService;
     public readonly paymentMethod: PaymentMethodService;
@@ -45,7 +43,6 @@ export class SkedularBillingV1Client {
         this.connect = new ConnectService(this.request);
         this.customer = new CustomerService(this.request);
         this.onboarding = new OnboardingService(this.request);
-        this.organization = new OrganizationService(this.request);
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.payment = new PaymentService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);

@@ -5,10 +5,10 @@
 import type { Error } from '../models/Error';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
-export class OrganizationService {
+export class PaymentMethodService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
-     * add organization payment method
+     * add payment method
      * @param setupIntent
      * @param setupIntentClientSecret
      * @param redirectStatus
@@ -16,14 +16,14 @@ export class OrganizationService {
      * @returns Error unexpected error
      * @throws ApiError
      */
-    public addOrganizationPaymentMethod(
+    public addPaymentMethod(
         setupIntent: string,
         setupIntentClientSecret: string,
         redirectStatus: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/v1/payment/organization/add-payment-method',
+            url: '/v1/organization/add-payment-method',
             query: {
                 'setup_intent': setupIntent,
                 'setup_intent_client_secret': setupIntentClientSecret,

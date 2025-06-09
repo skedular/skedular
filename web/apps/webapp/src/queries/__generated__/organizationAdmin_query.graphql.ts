@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a54589cb7505cc37971b934fc4ea7eed>>
+ * @generated SignedSource<<07d7e8894b22443558c61a97edd9bf51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,6 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
-export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly me: {
@@ -21,63 +19,6 @@ export type organizationAdmin_query$data = {
     readonly preferredZones: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
-  readonly organization: {
-    readonly about: string | null | undefined;
-    readonly activeOffering: {
-      readonly end: any;
-      readonly featureSet: ReadonlyArray<string>;
-      readonly free: boolean;
-      readonly id: string;
-      readonly isEnterprise: boolean;
-      readonly name: string;
-      readonly start: any;
-      readonly underPriceLines: ReadonlyArray<string>;
-      readonly unitPrice: number;
-    };
-    readonly availableOfferings: ReadonlyArray<{
-      readonly code: string;
-      readonly featureSet: ReadonlyArray<string>;
-      readonly free: boolean;
-      readonly isEnterprise: boolean;
-      readonly name: string;
-      readonly underPriceLines: ReadonlyArray<string>;
-      readonly unitPrice: number;
-    }>;
-    readonly canModify: boolean;
-    readonly contactEmail: string | null | undefined;
-    readonly contactPhone: string | null | undefined;
-    readonly hasAttachedPaymentMethod: boolean;
-    readonly id: string;
-    readonly industrySubCategories: ReadonlyArray<{
-      readonly id: string;
-      readonly name: string;
-    }>;
-    readonly logoUrl: string | null | undefined;
-    readonly memberVisibilityPolicy: {
-      readonly name: string;
-      readonly type: OrganizationMemberVisibilityPolicy;
-    };
-    readonly name: string;
-    readonly physicalAddress: {
-      readonly addressLine1: string;
-      readonly addressLine2: string | null | undefined;
-      readonly city: string;
-      readonly country: string;
-      readonly province: string | null | undefined;
-      readonly suburb: string;
-      readonly zipcode: string;
-    };
-    readonly ssoSettings: {
-      readonly appFederationMetadataUrl: string;
-      readonly entityId: string;
-      readonly loginUrl: string;
-    } | null | undefined;
-    readonly type: {
-      readonly name: string;
-      readonly type: OrganizationType;
-    };
-    readonly website: string | null | undefined;
   } | null | undefined;
   readonly organizationBillingContactDetails: {
     readonly addressLine1: string | null | undefined;
@@ -120,112 +61,7 @@ v1 = [
     "name": "uniqueId",
     "storageKey": null
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v2/*: any*/)
-],
-v4 = [
-  (v0/*: any*/),
-  (v2/*: any*/)
-],
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "addressLine1",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "addressLine2",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "suburb",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "city",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "province",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "zipcode",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "country",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isEnterprise",
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "unitPrice",
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "featureSet",
-  "storageKey": null
-},
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "underPriceLines",
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "free",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -271,210 +107,6 @@ return {
     },
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "id",
-          "variableName": "organizationId"
-        }
-      ],
-      "concreteType": "OrganizationDetails",
-      "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/),
-        (v2/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "logoUrl",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "about",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTypeDetails",
-          "kind": "LinkedField",
-          "name": "type",
-          "plural": false,
-          "selections": (v3/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-          "kind": "LinkedField",
-          "name": "memberVisibilityPolicy",
-          "plural": false,
-          "selections": (v3/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "website",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canModify",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
-          "kind": "LinkedField",
-          "name": "industrySubCategories",
-          "plural": true,
-          "selections": (v4/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "contactEmail",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "contactPhone",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationAddressDetails",
-          "kind": "LinkedField",
-          "name": "physicalAddress",
-          "plural": false,
-          "selections": [
-            (v5/*: any*/),
-            (v6/*: any*/),
-            (v7/*: any*/),
-            (v8/*: any*/),
-            (v9/*: any*/),
-            (v10/*: any*/),
-            (v11/*: any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "hasAttachedPaymentMethod",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationActiveOfferingDetails",
-          "kind": "LinkedField",
-          "name": "activeOffering",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/),
-            (v12/*: any*/),
-            (v2/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "start",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "end",
-              "storageKey": null
-            },
-            (v13/*: any*/),
-            (v14/*: any*/),
-            (v15/*: any*/),
-            (v16/*: any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationOfferingDetails",
-          "kind": "LinkedField",
-          "name": "availableOfferings",
-          "plural": true,
-          "selections": [
-            (v12/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "code",
-              "storageKey": null
-            },
-            (v2/*: any*/),
-            (v13/*: any*/),
-            (v14/*: any*/),
-            (v15/*: any*/),
-            (v16/*: any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationSsoSettingsDetails",
-          "kind": "LinkedField",
-          "name": "ssoSettings",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "entityId",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "loginUrl",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "appFederationMetadataUrl",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
       "args": null,
       "concreteType": "OrganizationIndustryMainCategoryReferenceDetails",
       "kind": "LinkedField",
@@ -488,7 +120,16 @@ return {
           "kind": "LinkedField",
           "name": "subCategories",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "name",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -516,13 +157,55 @@ return {
           "name": "email",
           "storageKey": null
         },
-        (v5/*: any*/),
-        (v6/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/),
-        (v9/*: any*/),
-        (v10/*: any*/),
-        (v11/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine1",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine2",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "suburb",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "province",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "zipcode",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -547,6 +230,6 @@ return {
 };
 })();
 
-(node as any).hash = "4daddf9c18502fe49ed3223e3c4ce396";
+(node as any).hash = "4db7716d9c0e560baf4e3ca1caae038e";
 
 export default node;

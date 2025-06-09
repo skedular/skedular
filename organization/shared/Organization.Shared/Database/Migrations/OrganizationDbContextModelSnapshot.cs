@@ -2177,9 +2177,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("HasAttachedPaymentMethod")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
@@ -2234,8 +2231,6 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("DailyMemberCountLastRecordedAt");
 
                     b.HasIndex("DeletedAt");
-
-                    b.HasIndex("HasAttachedPaymentMethod");
 
                     b.HasIndex("ModifiedAt");
 
@@ -2352,6 +2347,9 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("Start")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("StripePaymentIntentId")
+                        .HasColumnType("character varying(100)");
+
                     b.Property<int>("UnitPrice")
                         .HasColumnType("integer");
 
@@ -2378,6 +2376,9 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("Start");
+
+                    b.HasIndex("StripePaymentIntentId")
+                        .IsUnique();
 
                     b.HasIndex("UnitPrice");
 
@@ -2479,6 +2480,189 @@ namespace Organization.Shared.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("OrganizationSsoSetting");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripeCustomer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeCustomerId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.HasIndex("StripeCustomerId");
+
+                    b.ToTable("StripeCustomer");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentIntent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StripePaymentMethodId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Amount");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Currency");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("StripePaymentMethodId");
+
+                    b.ToTable("OrganizationOfferingStripePaymentIntent");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentMethod", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CardBrand")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CardCountry")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("CardDescription")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<byte?>("CardExpiryMonth")
+                        .HasColumnType("smallint");
+
+                    b.Property<short?>("CardExpiryYear")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CardFingerprint")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CardFunding")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CardIssuer")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CardLastFourDigit")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PaymentMethodId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SetupIntentId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.HasIndex("SetupIntentId")
+                        .IsUnique();
+
+                    b.HasIndex("CardExpiryMonth", "CardExpiryYear");
+
+                    b.ToTable("StripePaymentMethod");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.Tag", b =>
@@ -2799,7 +2983,13 @@ namespace Organization.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Organization.Shared.Database.Entities.StripePaymentIntent", "StripePaymentIntent")
+                        .WithOne("OrganizationOffering")
+                        .HasForeignKey("Organization.Shared.Database.Entities.OrganizationOffering", "StripePaymentIntentId");
+
                     b.Navigation("Organization");
+
+                    b.Navigation("StripePaymentIntent");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationOfferingActiveMember", b =>
@@ -2826,6 +3016,39 @@ namespace Organization.Shared.Database.Migrations
                     b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
                         .HasForeignKey("Organization.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripeCustomer", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
+                        .WithOne("StripeCustomer")
+                        .HasForeignKey("Organization.Shared.Database.Entities.StripeCustomer", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentIntent", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.StripePaymentMethod", "StripePaymentMethod")
+                        .WithMany("StripePaymentIntents")
+                        .HasForeignKey("StripePaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StripePaymentMethod");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentMethod", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("StripePaymentMethods")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2896,6 +3119,10 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Navigation("OrganizationSsoSettings");
 
+                    b.Navigation("StripeCustomer");
+
+                    b.Navigation("StripePaymentMethods");
+
                     b.Navigation("Tags");
 
                     b.Navigation("Teams");
@@ -2909,6 +3136,16 @@ namespace Organization.Shared.Database.Migrations
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationOffering", b =>
                 {
                     b.Navigation("OrganizationOfferingActiveMembers");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentIntent", b =>
+                {
+                    b.Navigation("OrganizationOffering");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentMethod", b =>
+                {
+                    b.Navigation("StripePaymentIntents");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.TermsOfUse", b =>

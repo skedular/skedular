@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Temporalio.Client;
 using IsolationLevel = System.Data.IsolationLevel;
 
 namespace Enterprise.Shared.Outbox;
@@ -44,7 +45,8 @@ public class TemporalOutboxBackgroundService<TDbContext>(
 
         logger.LogInformation("Starting Temporal Outbox - {Class}", className);
 
-        await Policy.Handle<Exception>()
+        await Policy
+            .Handle<Exception>()
             .WaitAndRetryForeverAsync(
                 _ => TimeSpan.FromSeconds(5),
                 (exception, retry, retryTime) =>
@@ -84,6 +86,8 @@ public class TemporalOutboxBackgroundService<TDbContext>(
 
                     await using var scope = serviceProvider.CreateAsyncScope();
                     var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
+
+                    outboxEvent.WorkflowOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
                     await temporalOutboxExecutor.StartWorkflowAsync(outboxEvent.WorkflowType, outboxEvent.ExecutionArgs, outboxEvent.WorkflowOptions);
 
                     activityAccessor.AddEvent(

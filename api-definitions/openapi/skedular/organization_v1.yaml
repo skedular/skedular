@@ -152,6 +152,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /v1/organization/add-payment-method:
+    get:
+      tags:
+        - v1
+        - organization
+        - payment-method
+      summary: add payment method
+      operationId: addPaymentMethod
+      parameters:
+        - name: setup_intent
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: setup_intent_client_secret
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect_status
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: the readiness status
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Error:

@@ -14,6 +14,8 @@ public interface IOrganizationAuthorizationService
     bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer);
+    bool CanViewPaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
+    bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
@@ -65,6 +67,20 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         };
 
     public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
+    public bool CanViewPaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
+    public bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,

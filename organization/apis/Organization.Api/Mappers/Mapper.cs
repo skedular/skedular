@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
+using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
 using Address = Organization.Shared.Database.Entities.Address;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
@@ -125,6 +126,7 @@ public interface IMapper
     Tag MapTo(UpdateLocationTagInput src);
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Organization organization);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Organization organization);
+    CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src);
 }
 
 public class Mapper : IMapper
@@ -146,7 +148,6 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
-            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
@@ -163,6 +164,8 @@ public class Mapper : IMapper
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.StripePaymentMethods = MapTo(src.StripePaymentMethods, organization).ToList();
+        organization.StripeCustomer = MapTo(src.StripeCustomer, organization);
 
         return organization;
     }
@@ -213,8 +216,7 @@ public class Mapper : IMapper
             ContactPhone = src.ContactPhone,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             TermsOfUse = termsOfUse,
-            IndustrySubCategories = industrySubCategories,
-            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
+            IndustrySubCategories = industrySubCategories
         };
 
     public Shared.Database.Entities.Organization MergeTo(
@@ -329,6 +331,7 @@ public class Mapper : IMapper
                 {
                     Type = src.MemberVisibilityPolicy, Name = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicyName()
                 },
+            PaymentMethods = MapTo(src.StripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
@@ -769,6 +772,15 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
+
+    public CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src) =>
+        new()
+        {
+            Name = src.Name,
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
+            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+        };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1214,4 +1226,59 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country
             };
+
+    private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+
+    private static OrganizationPaymentMethod MapTo(StripePaymentMethod src) =>
+        new()
+        {
+            Id = src.Id,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit
+        };
+
+    private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src, Shared.Models.Organization organization) =>
+        src is null
+            ? null
+            : new StripeCustomer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                StripeCustomerId = src.StripeCustomerId,
+                Organization = organization
+            };
+
+    private static IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            SetupIntentId = src.SetupIntentId,
+            PaymentMethodId = src.PaymentMethodId,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit,
+            Organization = organization
+        };
 }

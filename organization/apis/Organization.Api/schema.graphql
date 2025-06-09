@@ -7,6 +7,12 @@ type AcceptInvitationToJoinOrganizationPayload {
   clientMutationId: String
 }
 
+type AddOrganizationPaymentMethodIntentPayload {
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
+}
+
 type CancelInvitationToJoinOrganizationPayload {
   clientMutationId: String
 }
@@ -52,6 +58,8 @@ type Mutation {
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -120,6 +128,7 @@ type OrganizationDetails {
   isMyOnboardingDone: Boolean!
   members: [OrganizationMemberDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
+  paymentMethods: [OrganizationPaymentMethod!]!
   hasAttachedPaymentMethod: Boolean!
   ssoSettings: OrganizationSsoSettingsDetails
   id: ID!
@@ -199,6 +208,19 @@ type OrganizationOfferingDetails {
 type OrganizationPayload {
   clientMutationId: String
   organization: OrganizationDetails!
+}
+
+type OrganizationPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
 }
 
 type OrganizationSsoSettingsDetails {
@@ -304,6 +326,10 @@ type RejectInvitationToJoinOrganizationPayload {
   clientMutationId: String
 }
 
+type RemoveOrganizationPaymentMethodPayload {
+  clientMutationId: String
+}
+
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
 }
@@ -357,6 +383,11 @@ input AddOrganizationInput {
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
   physicalAddress: OrganizationAddressDetailsInput!
+}
+
+input AddOrganizationPaymentMethodIntentInput {
+  clientMutationId: String
+  organizationId: String!
 }
 
 input AddProductTagInput {
@@ -513,6 +544,11 @@ input RejectInvitationToJoinOrganizationInput {
 input RemoveOrganizationMembersInput {
   clientMutationId: String
   ids: [String!]!
+}
+
+input RemoveOrganizationPaymentMethodInput {
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveOrganizationSsoSettingsInput {

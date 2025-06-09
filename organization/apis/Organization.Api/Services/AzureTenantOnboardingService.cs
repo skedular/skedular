@@ -52,7 +52,6 @@ public class AzureTenantOnboardingService(
             Type = OrganizationTypeConstants.Private,
             MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
-            HasAttachedPaymentMethod = false,
             Locations = [location],
             OrganizationOfferings =
             [

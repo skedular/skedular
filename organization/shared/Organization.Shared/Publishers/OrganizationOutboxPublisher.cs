@@ -5,8 +5,12 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Mappers;
 using Organization.Shared.Models;
+using Organization.Shared.Workflows;
+using Temporalio.Api.Enums.V1;
+using Temporalio.Client;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
@@ -16,13 +20,17 @@ public interface IOrganizationOutboxPublisher
 {
     void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
     void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
+    void ExecuteWorkflowAddOrganizationStripePaymentMethod(AddOrganizationStripePaymentMethodInput args, IUnitOfWork unitOfWork);
 }
 
 public class OrganizationOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IMapper mapper,
     IContext context,
-    IKafkaOutboxEventPublisher<Key, Event> publisher) : IOrganizationOutboxPublisher
+    IKafkaOutboxEventPublisher<Key, Event> publisher,
+    TemporalConfiguration temporalConfiguration,
+    ITemporalOutboxWorkflowExecutor<AddOrganizationStripePaymentMethod, AddOrganizationStripePaymentMethodInput>
+        temporalOutboxAddOrganizationStripePaymentMethodWorkflowExecutor) : IOrganizationOutboxPublisher
 {
     public void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork)
     {
@@ -63,4 +71,16 @@ public class OrganizationOutboxPublisher(
                 unitOfWork);
         }
     }
+
+    public void ExecuteWorkflowAddOrganizationStripePaymentMethod(AddOrganizationStripePaymentMethodInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxAddOrganizationStripePaymentMethodWorkflowExecutor.Execute(
+            new AddOrganizationStripePaymentMethodInput(args.OrganizationId, args.ClientSecret, args.SetupIntentId),
+            new WorkflowOptions
+            {
+                Id = args.ClientSecret,
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
 }

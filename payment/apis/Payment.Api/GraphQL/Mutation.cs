@@ -11,30 +11,7 @@ namespace Payment.Api.GraphQL;
 public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<AddOrganizationPaymentMethodIntentPayload?> AddOrganizationPaymentMethodIntentAsync(
-        AddOrganizationPaymentMethodIntentInput input,
-        [Service] IOrganizationPaymentService organizationPaymentService,
-        CancellationToken cancellationToken)
-    {
-        var clientSecret = await organizationPaymentService.AddPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
-        return new AddOrganizationPaymentMethodIntentPayload
-        {
-            ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
-        };
-    }
-
-    [UseResolverScope]
-    public async Task<RemoveOrganizationPaymentMethodPayload?> RemoveOrganizationPaymentMethodAsync(
-        RemoveOrganizationPaymentMethodInput input,
-        [Service] IOrganizationPaymentService organizationPaymentService,
-        CancellationToken cancellationToken)
-    {
-        await organizationPaymentService.RemovePaymentMethodAsync(input.Id, cancellationToken);
-        return new RemoveOrganizationPaymentMethodPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
-    public async Task<AddCustomerPaymentMethodIntentPayload?> AddMyPaymentMethodIntentAsync(
+    public async Task<AddCustomerPaymentMethodIntentPayload> AddMyPaymentMethodIntentAsync(
         AddMyPaymentMethodIntentInput input,
         [Service] ICustomerPaymentService customerPaymentService,
         CancellationToken cancellationToken)

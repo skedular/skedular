@@ -11,6 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
             .AddScoped<IAzureTenantService, AzureTenantService>()
             .AddScoped<ICustomerService, CustomerService>()
@@ -24,8 +25,9 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
             .AddScoped<ITagService, TagService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<IOrganizationSsoService, OrganizationSsoService>();
+            .AddScoped<IOrganizationSsoService, OrganizationSsoService>()
+            .AddScoped<IOrganizationPaymentService, OrganizationPaymentService>()
+            .AddScoped<IStripeCustomerService, StripeCustomerService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

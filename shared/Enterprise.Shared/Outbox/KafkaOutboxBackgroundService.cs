@@ -49,7 +49,8 @@ public class KafkaOutboxBackgroundService<TDbContext>(
 
         logger.LogInformation("Starting Kafka Outbox - {Class}", className);
 
-        await Policy.Handle<Exception>()
+        await Policy
+            .Handle<Exception>()
             .WaitAndRetryForeverAsync(
                 _ => TimeSpan.FromSeconds(5),
                 (exception, retry, retryTime) =>

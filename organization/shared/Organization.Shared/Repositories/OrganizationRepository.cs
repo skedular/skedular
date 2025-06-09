@@ -49,24 +49,36 @@ internal static class OrganizationExtensions
             .ThenInclude(query => query.Identities)
             .Include(query => query.TermsOfUse)
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.PhysicalAddress);
+            .Include(query => query.PhysicalAddress)
+            .Include(query => query.StripeCustomer)
+            .Include(query =>
+                query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
 
         return includeAllOfferings
-            ? updatedQuery.Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
+            ? updatedQuery
+                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
                 .ThenInclude(query => query.OrganizationOfferingActiveMembers)
                 .ThenInclude(query => query.OrganizationMember)
                 .ThenInclude(query => query.Customer)
+                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
+                .ThenInclude(query => query.StripePaymentIntent)
+                .ThenInclude(query => query.StripePaymentMethod)
                 .Include(query => query.IndustrySubCategories)
                 .ThenInclude(query => query.IndustryMainCategory)
                 .Include(query => query.Locations)
                 .Include(query => query.Teams)
-            : updatedQuery.Include(query => query.OrganizationOfferings
+            : updatedQuery
+                .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
-                    .OrderByDescending(organizationOffering => organizationOffering.End)
-                    .Take(1))
+                    .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
                 .ThenInclude(query => query.OrganizationOfferingActiveMembers)
                 .ThenInclude(query => query.OrganizationMember)
                 .ThenInclude(query => query.Customer)
+                .Include(query => query.OrganizationOfferings
+                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                    .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
+                .ThenInclude(query => query.StripePaymentIntent)
+                .ThenInclude(query => query.StripePaymentMethod)
                 .Include(query => query.IndustrySubCategories)
                 .ThenInclude(query => query.IndustryMainCategory)
                 .Include(query => query.Locations)

@@ -17,11 +17,14 @@ public class Organization : EntityBaseWithDeleted
     public string? LogoUrl { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
-    public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? PhysicalAddressId { get; set; }
+    public virtual Address? PhysicalAddress { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -35,10 +38,8 @@ public class Organization : EntityBaseWithDeleted
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
-
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? PhysicalAddressId { get; set; }
-    public virtual Address? PhysicalAddress { get; set; }
+    public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public virtual StripeCustomer? StripeCustomer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -63,12 +64,12 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
+        builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Organization);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
-        builder.HasIndex(item => item.HasAttachedPaymentMethod);
         builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
         builder.HasIndex(item => item.DailyMemberCountLastRecordedAt);
     }

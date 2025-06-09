@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a64695a560ffa1d165a2860ef671231b>>
+ * @generated SignedSource<<df49978feb0c6812bad2f00b158456f7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,7 +42,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "PaymentMethod",
+      "concreteType": "CustomerPaymentMethod",
       "kind": "LinkedField",
       "name": "myPaymentMethodsDetails",
       "plural": true,

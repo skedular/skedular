@@ -149,7 +149,6 @@ public class OrganizationService(
             UnitPrice = finalOfferingCode.GetOffering().UnitPrice
         };
 
-        organizationEntity.HasAttachedPaymentMethod = false;
         organizationEntity.OrganizationMembers = organizationMembers;
         organizationEntity.OrganizationOfferings = [organizationOffering];
         organizationEntity = repositoryFactory.OrganizationRepository.Add(organizationEntity);
