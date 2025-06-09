@@ -13,7 +13,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { toast } from 'react-toastify';
 
 type Props = {
-  defaultImageUrl?: string;
+  defaultImageUrl?: string | null | undefined;
   defaultAspectRatio: number;
   previewImageHeight: number;
   previewImageWidth: number;

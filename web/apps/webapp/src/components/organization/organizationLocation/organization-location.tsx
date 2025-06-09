@@ -1382,15 +1382,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Feature Image">
-                      {primaryFeatureImageUrl && (
-                        <ImageFileUploader
-                          defaultImageUrl={primaryFeatureImageUrl}
-                          defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                          previewImageHeight={locationFeatureImageHeight}
-                          previewImageWidth={locationFeatureImageWidth}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
-                      )}
+                      <ImageFileUploader
+                        defaultImageUrl={primaryFeatureImageUrl}
+                        defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                        previewImageHeight={locationFeatureImageHeight}
+                        previewImageWidth={locationFeatureImageWidth}
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">

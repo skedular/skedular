@@ -887,15 +887,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Feature Image">
-                      {primaryFeatureImageUrl && (
-                        <ImageFileUploader
-                          defaultImageUrl={primaryFeatureImageUrl}
-                          defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
-                          previewImageHeight={teamFeatureImageHeight}
-                          previewImageWidth={teamFeatureImageWidth}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
-                      )}
+                      <ImageFileUploader
+                        defaultImageUrl={primaryFeatureImageUrl}
+                        defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
+                        previewImageHeight={teamFeatureImageHeight}
+                        previewImageWidth={teamFeatureImageWidth}
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
