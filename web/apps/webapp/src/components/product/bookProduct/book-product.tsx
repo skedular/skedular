@@ -244,7 +244,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
-  const [bookingType, setBookingType] = useState<string>('WorkingFromCoworkingSpace');
+  const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
