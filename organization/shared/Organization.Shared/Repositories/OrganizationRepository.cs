@@ -51,8 +51,7 @@ internal static class OrganizationExtensions
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.PhysicalAddress)
             .Include(query => query.StripeCustomer)
-            .Include(query =>
-                query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
+            .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue));
 
         return includeAllOfferings
             ? updatedQuery

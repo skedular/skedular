@@ -111,5 +111,7 @@ public class PaymentService(
 
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        
+        cachedCustomerService.CleanCache(customerEntity);
     }
 }
