@@ -6,11 +6,10 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Payment.V1.Value";
 
 enum Type {
-  CustomerPaymentMethodsUpdated = 0;
-  OrganizationStripeConnectAccountUpserted = 1;
-  OrganizationStripeConnectAccountDeleted = 2;
-  BookingCheckoutSessionUpserted = 3;
-  BookingCheckoutSessionDeleted = 4;
+  OrganizationStripeConnectAccountUpserted = 0;
+  OrganizationStripeConnectAccountDeleted = 1;
+  BookingCheckoutSessionUpserted = 2;
+  BookingCheckoutSessionDeleted = 3;
 }
 
 message Event {
@@ -29,7 +28,6 @@ message Metadata {
 
 message Data {
   oneof payload {
-    CustomerPaymentMethod customerPaymentMethod = 2;
     StripeConnectAccount stripeConnectAccount = 3;
     BookingCheckoutSessionDetails bookingCheckoutSession = 4;
   }

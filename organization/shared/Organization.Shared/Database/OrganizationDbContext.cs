@@ -31,7 +31,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<TermsOfUse> TermsOfUse { get; set; }
     public DbSet<Tag> Tag { get; set; }
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
-    public DbSet<StripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
+    public DbSet<StripePaymentIntent> StripePaymentIntent { get; set; }
     public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
 

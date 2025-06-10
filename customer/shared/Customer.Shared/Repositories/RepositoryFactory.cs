@@ -19,6 +19,9 @@ public interface IRepositoryFactory
     ITeamMemberRepository TeamMemberRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
+    IStripeCustomerRepository StripeCustomerRepository { get; }
+    IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepositoryFactory
@@ -38,6 +41,9 @@ public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepo
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
+        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
+        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
     }
 
     public ICustomerFeedbackRepository CustomerFeedbackRepository { get; }
@@ -51,4 +57,7 @@ public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepo
     public ITeamMemberRepository TeamMemberRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
+    public IStripeCustomerRepository StripeCustomerRepository { get; }
+    public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
+    public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
 }

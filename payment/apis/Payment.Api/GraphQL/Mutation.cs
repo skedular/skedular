@@ -8,31 +8,8 @@ using Payment.Api.Services;
 namespace Payment.Api.GraphQL;
 
 [MutationType]
-public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
+public class Mutation(IMapper mapper)
 {
-    [UseResolverScope]
-    public async Task<AddCustomerPaymentMethodIntentPayload> AddMyPaymentMethodIntentAsync(
-        AddMyPaymentMethodIntentInput input,
-        [Service] ICustomerPaymentService customerPaymentService,
-        CancellationToken cancellationToken)
-    {
-        var clientSecret = await customerPaymentService.AddPaymentMethodIntentAsync(cancellationToken);
-        return new AddCustomerPaymentMethodIntentPayload
-        {
-            ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
-        };
-    }
-
-    [UseResolverScope]
-    public async Task<RemoveCustomerPaymentMethodPayload?> RemoveMyPaymentMethodAsync(
-        RemoveMyPaymentMethodInput input,
-        [Service] ICustomerPaymentService customerPaymentService,
-        CancellationToken cancellationToken)
-    {
-        await customerPaymentService.RemovePaymentMethodAsync(input.Id, cancellationToken);
-        return new RemoveCustomerPaymentMethodPayload { ClientMutationId = input.ClientMutationId };
-    }
-
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload?> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,

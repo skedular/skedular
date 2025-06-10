@@ -19,7 +19,6 @@ public class Organization : ModelBaseWithDeleted
     public string? ContactPhone { get; set; }
 
     public Address? PhysicalAddress { get; set; }
-
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }
     public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];

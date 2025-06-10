@@ -22,9 +22,9 @@ import { RelayError } from '@/components/relayError';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
-import type { myDetails_myPaymentMethodsDetails_query$key } from '@/queries/__generated__/myDetails_myPaymentMethodsDetails_query.graphql';
-import type { myDetails_myPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myDetails_myPaymentMethodsDetails_refetchableFragment.graphql';
-import type { myDetails_removeMyPaymentMethodMutation } from '@/queries/__generated__/myDetails_removeMyPaymentMethodMutation.graphql';
+import type { myDetails_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myDetails_customerPaymentMethodsDetails_query.graphql';
+import type { myDetails_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myDetails_customerPaymentMethodsDetails_refetchableFragment.graphql';
+import type { myDetails_removeCustomerPaymentMethodMutation } from '@/queries/__generated__/myDetails_removeCustomerPaymentMethodMutation.graphql';
 import type { myDetails_rootQuery } from '@/queries/__generated__/myDetails_rootQuery.graphql';
 import type { myDetails_updateCustomerDetailsMutation } from '@/queries/__generated__/myDetails_updateCustomerDetailsMutation.graphql';
 import type { myDetails_updateMyBillingContactDetailsMutation } from '@/queries/__generated__/myDetails_updateMyBillingContactDetailsMutation.graphql';
@@ -76,7 +76,7 @@ const RootQuery = graphql`
       zipcode
       country
     }
-    ...myDetails_myPaymentMethodsDetails_query
+    ...myDetails_customerPaymentMethodsDetails_query
   }
 `;
 
@@ -131,17 +131,19 @@ const customerBillingSchema = object({
 const MyDetails = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<myDetails_rootQuery>(RootQuery, queryReference);
   const [rootDataMyPaymentMethodsDetails, refetchMyPaymentMethodsDetails] = useRefetchableFragment<
-    myDetails_myPaymentMethodsDetails_refetchableFragment,
-    myDetails_myPaymentMethodsDetails_query$key
+    myDetails_customerPaymentMethodsDetails_refetchableFragment,
+    myDetails_customerPaymentMethodsDetails_query$key
   >(
     graphql`
-      fragment myDetails_myPaymentMethodsDetails_query on Query @refetchable(queryName: "myDetails_myPaymentMethodsDetails_refetchableFragment") {
-        myPaymentMethodsDetails {
-          id
-          cardBrand
-          cardExpiryMonth
-          cardExpiryYear
-          cardLastFourDigit
+      fragment myDetails_customerPaymentMethodsDetails_query on Query @refetchable(queryName: "myDetails_customerPaymentMethodsDetails_refetchableFragment") {
+        me {
+          paymentMethods {
+            id
+            cardBrand
+            cardExpiryMonth
+            cardExpiryYear
+            cardLastFourDigit
+          }
         }
       }
     `,
@@ -185,9 +187,9 @@ const MyDetails = ({ queryReference }: Props) => {
     }
   `);
 
-  const [commitRemoveMyPaymentMethod] = useMutation<myDetails_removeMyPaymentMethodMutation>(graphql`
-    mutation myDetails_removeMyPaymentMethodMutation($input: RemoveMyPaymentMethodInput!) {
-      removeMyPaymentMethod(input: $input) {
+  const [commitRemoveCustomerPaymentMethod] = useMutation<myDetails_removeCustomerPaymentMethodMutation>(graphql`
+    mutation myDetails_removeCustomerPaymentMethodMutation($input: RemoveCustomerPaymentMethodInput!) {
+      removeCustomerPaymentMethod(input: $input) {
         clientMutationId
       }
     }
@@ -354,7 +356,7 @@ const MyDetails = ({ queryReference }: Props) => {
   const handleRemovePaymentMethodClick = (id: string) => {
     const toastId = themedToast(<NotificationContent content={`Removing payment method...`} />, infoNotificationOptions);
 
-    commitRemoveMyPaymentMethod({
+    commitRemoveCustomerPaymentMethod({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -402,8 +404,7 @@ const MyDetails = ({ queryReference }: Props) => {
   const province = billingContactDetails.province ? billingContactDetails.province : '';
   const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
   const country = billingContactDetails.country ? billingContactDetails.country : '';
-
-  const paymentMethodExist = rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails && rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails.length > 0;
+  const paymentMethodExist = rootDataMyPaymentMethodsDetails.me?.paymentMethods && rootDataMyPaymentMethodsDetails.me.paymentMethods.length > 0;
 
   return (
     <>
@@ -508,7 +509,7 @@ const MyDetails = ({ queryReference }: Props) => {
             {paymentMethodExist && (
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <StackRow>
-                  {rootDataMyPaymentMethodsDetails.myPaymentMethodsDetails.map((item) => (
+                  {rootDataMyPaymentMethodsDetails.me?.paymentMethods.map((item) => (
                     <StackColumn key={item.id}>
                       <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
                       <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>

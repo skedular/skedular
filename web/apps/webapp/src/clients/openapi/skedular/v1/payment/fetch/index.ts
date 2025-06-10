@@ -17,11 +17,9 @@ export { $Error } from './schemas/$Error';
 export { $Version } from './schemas/$Version';
 
 export { ConnectService } from './services/ConnectService';
-export { CustomerService } from './services/CustomerService';
 export { OnboardingService } from './services/OnboardingService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentService } from './services/PaymentService';
-export { PaymentMethodService } from './services/PaymentMethodService';
 export { PlatformService } from './services/PlatformService';
 export { StripeService } from './services/StripeService';
 export { V1Service } from './services/V1Service';

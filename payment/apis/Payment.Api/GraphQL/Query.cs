@@ -29,12 +29,6 @@ public class Query(IMapper mapper, IVersionService versionService)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<IEnumerable<CustomerPaymentMethod>> MyPaymentMethodsDetailsAsync(
-        [Service] ICustomerService customerService,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetMyPaymentMethodsAsync(cancellationToken));
-
-    [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountDetails?> OrganizationStripeConnectAccountAsync(
         string id,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,

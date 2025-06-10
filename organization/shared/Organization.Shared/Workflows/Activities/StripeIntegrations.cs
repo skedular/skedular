@@ -29,7 +29,7 @@ public class StripeIntegrations(
             throw new OrganizationNotFound();
         }
 
-        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organizations", organization!.Id, "admin");
+        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organizations", organization.Id, "admin");
 
         redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");
 

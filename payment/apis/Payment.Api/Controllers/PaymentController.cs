@@ -16,7 +16,6 @@ public class PaymentController(
     IVersionService versionService,
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
-    ICustomerPaymentService customerPaymentService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IPaymentInternalPublisher paymentInternalPublisher,
     ILogger<PaymentController> logger,
@@ -33,19 +32,6 @@ public class PaymentController(
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
     }
-
-    public override async Task<IActionResult> AddCustomerPaymentMethod(
-        // ReSharper disable InconsistentNaming
-        string setup_intent,
-        string setup_intent_client_secret,
-        string redirect_status,
-        // ReSharper restore InconsistentNaming
-        CancellationToken cancellationToken = default) =>
-        Redirect(await customerPaymentService.HandleStripePaymentMethodEventAsync(
-            setup_intent,
-            setup_intent_client_secret,
-            redirect_status,
-            cancellationToken));
 
     public override async Task<IActionResult> RefreshOrganizationStripeConnectAccountOnboarding(
         string code,

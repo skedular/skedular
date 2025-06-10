@@ -32,6 +32,8 @@ internal static class CustomerExtensions
         this IQueryable<Database.Entities.Customer> originalQuery) =>
         originalQuery
             .Include(query => query.Identities)
+            .Include(query => query.StripeCustomer)
+            .Include(query => query.StripePaymentMethods)
             .Include(query => query.DefaultOrganization)
             .Include(query => query.PreferredLocations)
             .ThenInclude(query => query.Organization)

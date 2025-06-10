@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2d7274233a608dd73005bb5656c2e3b1>>
+ * @generated SignedSource<<7049c20378e84e493aa1cc413b252037>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,21 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveMyPaymentMethodInput = {
+export type RemoveCustomerPaymentMethodInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type myDetails_removeMyPaymentMethodMutation$variables = {
-  input: RemoveMyPaymentMethodInput;
+export type myDetails_removeCustomerPaymentMethodMutation$variables = {
+  input: RemoveCustomerPaymentMethodInput;
 };
-export type myDetails_removeMyPaymentMethodMutation$data = {
-  readonly removeMyPaymentMethod: {
+export type myDetails_removeCustomerPaymentMethodMutation$data = {
+  readonly removeCustomerPaymentMethod: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type myDetails_removeMyPaymentMethodMutation = {
-  response: myDetails_removeMyPaymentMethodMutation$data;
-  variables: myDetails_removeMyPaymentMethodMutation$variables;
+export type myDetails_removeCustomerPaymentMethodMutation = {
+  response: myDetails_removeCustomerPaymentMethodMutation$data;
+  variables: myDetails_removeCustomerPaymentMethodMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -46,7 +46,7 @@ v1 = [
     ],
     "concreteType": "RemoveCustomerPaymentMethodPayload",
     "kind": "LinkedField",
-    "name": "removeMyPaymentMethod",
+    "name": "removeCustomerPaymentMethod",
     "plural": false,
     "selections": [
       {
@@ -65,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "myDetails_removeMyPaymentMethodMutation",
+    "name": "myDetails_removeCustomerPaymentMethodMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -74,20 +74,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "myDetails_removeMyPaymentMethodMutation",
+    "name": "myDetails_removeCustomerPaymentMethodMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "171ac0067a43c284c776f0a25a167550",
+    "cacheID": "51046ca53b99abc50b3b0f6a1838589e",
     "id": null,
     "metadata": {},
-    "name": "myDetails_removeMyPaymentMethodMutation",
+    "name": "myDetails_removeCustomerPaymentMethodMutation",
     "operationKind": "mutation",
-    "text": "mutation myDetails_removeMyPaymentMethodMutation(\n  $input: RemoveMyPaymentMethodInput!\n) {\n  removeMyPaymentMethod(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation myDetails_removeCustomerPaymentMethodMutation(\n  $input: RemoveCustomerPaymentMethodInput!\n) {\n  removeCustomerPaymentMethod(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "efe74fecf533b21f60f4b0972e507a6a";
+(node as any).hash = "d821c3afe48f46ef22c28e9087e3ce98";
 
 export default node;

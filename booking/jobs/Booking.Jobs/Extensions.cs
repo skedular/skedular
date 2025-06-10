@@ -10,7 +10,8 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services.AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+        services
+            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services

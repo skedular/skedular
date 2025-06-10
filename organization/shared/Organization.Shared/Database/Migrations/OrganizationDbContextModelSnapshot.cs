@@ -2575,7 +2575,7 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("StripePaymentMethodId");
 
-                    b.ToTable("OrganizationOfferingStripePaymentIntent");
+                    b.ToTable("StripePaymentIntent");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.StripePaymentMethod", b =>

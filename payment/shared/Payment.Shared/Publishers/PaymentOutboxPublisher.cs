@@ -14,7 +14,6 @@ namespace Payment.Shared.Publishers;
 
 public interface IPaymentOutboxPublisher
 {
-    void PublishCustomerPaymentMethodState(string customerId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork);
     void PublishOrganizationStripeConnectAccounts(IEnumerable<StripeConnectAccount> accounts, IUnitOfWork unitOfWork);
 }
 
@@ -24,24 +23,6 @@ public class PaymentOutboxPublisher(
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher) : IPaymentOutboxPublisher
 {
-    public void PublishCustomerPaymentMethodState(string customerId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork) =>
-        publisher.Publish(new Key { CustomerId = customerId }, new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.CustomerPaymentMethodsUpdated,
-                    context.GetCorrelationId()),
-                Data = new Data
-                {
-                    CustomerPaymentMethod = new CustomerPaymentMethod
-                    {
-                        CustomerId = customerId, HasAttachedPaymentMethod = hasAttachedPaymentMethod
-                    }
-                }
-            },
-            unitOfWork);
-
     public void PublishOrganizationStripeConnectAccounts(IEnumerable<StripeConnectAccount> accounts, IUnitOfWork unitOfWork)
     {
         foreach (var account in accounts)

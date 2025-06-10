@@ -20,6 +20,7 @@ namespace Customer.Api.Services;
 
 public interface ICustomerService
 {
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken);
     Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
@@ -47,6 +48,19 @@ public class CustomerService(
     ICachedCustomerService cachedCustomerService,
     TimeProvider timeProvider) : ICustomerService
 {
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
+        if (customer is null)
+        {
+            throw new CustomerNotFound();
+        }
+
+        return (mapper.MapTo(customer)!, customer);
+    }
+
     public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);

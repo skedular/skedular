@@ -11,6 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<ICustomerHelper, CustomerHelper>()
             .AddScoped<ICustomerHelperService, CustomerHelperService>()
             .AddScoped<ICustomerService, CustomerService>()
@@ -26,7 +27,8 @@ public static class Extensions
             .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<ICustomerOrganizationTagSettingsService, CustomerOrganizationTagSettingsService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
+            .AddScoped<IPaymentService, PaymentService>()
+            .AddScoped<IStripeCustomerService, StripeCustomerService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) => services;
 }

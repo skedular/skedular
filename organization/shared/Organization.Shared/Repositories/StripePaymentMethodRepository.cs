@@ -10,7 +10,6 @@ public interface IStripePaymentMethodRepository : IRepository<StripePaymentMetho
 {
     Task<StripePaymentMethod?> GetByIdAsync(string id, CancellationToken cancellationToken);
     void Add(StripePaymentMethod stripePaymentMethod);
-    void Update(StripePaymentMethod stripePaymentMethod);
     void Remove(StripePaymentMethod stripePaymentMethod);
 }
 
@@ -35,13 +34,6 @@ public class StripePaymentMethodRepository(OrganizationDbContext dbContext, Time
         var now = TimeProvider.GetUtcNow();
         stripePaymentMethod.CreatedAt = now;
         DbContext.StripePaymentMethod.Add(stripePaymentMethod);
-    }
-
-    public void Update(StripePaymentMethod stripePaymentMethod)
-    {
-        var now = TimeProvider.GetUtcNow();
-        stripePaymentMethod.ModifiedAt = now;
-        DbContext.StripePaymentMethod.Update(stripePaymentMethod);
     }
 
     public void Remove(StripePaymentMethod stripePaymentMethod)

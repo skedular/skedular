@@ -50,4 +50,28 @@ export class CustomerService {
             url: '/v1/customer/republish-all',
         });
     }
+    /**
+     * add customer payment method
+     * @param setupIntent
+     * @param setupIntentClientSecret
+     * @param redirectStatus
+     * @returns any the readiness status
+     * @returns Error unexpected error
+     * @throws ApiError
+     */
+    public addCustomerPaymentMethod(
+        setupIntent: string,
+        setupIntentClientSecret: string,
+        redirectStatus: string,
+    ): CancelablePromise<any | Error> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/v1/customer/add-payment-method',
+            query: {
+                'setup_intent': setupIntent,
+                'setup_intent_client_secret': setupIntentClientSecret,
+                'redirect_status': redirectStatus,
+            },
+        });
+    }
 }

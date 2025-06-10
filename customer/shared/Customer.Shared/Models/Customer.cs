@@ -11,6 +11,7 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public bool? IsDefaultOrganizationOnboardingDone { get; set; }
     public bool? IsPreferredLocationOnboardingDone { get; set; }
     public bool? IsPreferredZoneOnboardingDone { get; set; }
+    public bool HasAttachedPaymentMethod => StripePaymentMethods.Count != 0;
 
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
@@ -21,6 +22,8 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
+    public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public StripeCustomer? StripeCustomer { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

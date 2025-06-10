@@ -7,7 +7,8 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Customer.V1.Version;
 namespace Customer.Api.Controllers;
 
 [ApiController]
-public class CustomerController(IVersionService versionService, IWorkaroundService workaroundService) : CustomerControllerBase
+public class CustomerController(IVersionService versionService, IWorkaroundService workaroundService, IPaymentService paymentService)
+    : CustomerControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -32,4 +33,17 @@ public class CustomerController(IVersionService versionService, IWorkaroundServi
 
         return Ok();
     }
+
+    public override async Task<IActionResult> AddCustomerPaymentMethod(
+        // ReSharper disable InconsistentNaming
+        string setup_intent,
+        string setup_intent_client_secret,
+        string redirect_status,
+        // ReSharper restore InconsistentNaming
+        CancellationToken cancellationToken = default) =>
+        Redirect(await paymentService.HandleStripePaymentMethodEventAsync(
+            setup_intent,
+            setup_intent_client_secret,
+            redirect_status,
+            cancellationToken));
 }

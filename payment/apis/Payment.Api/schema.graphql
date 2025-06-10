@@ -3,28 +3,7 @@ schema {
   mutation: Mutation
 }
 
-type AddCustomerPaymentMethodIntentPayload {
-  clientMutationId: String
-  publishedKeys: String!
-  clientSecret: String!
-}
-
-type CustomerPaymentMethod {
-  cardBrand: String
-  cardCountry: String
-  cardDescription: String
-  cardExpiryMonth: Int
-  cardExpiryYear: Int
-  cardFingerprint: String
-  cardFunding: String
-  cardIssuer: String
-  cardLastFourDigit: String
-  id: ID!
-}
-
 type Mutation {
-  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
-  removeMyPaymentMethod(input: RemoveMyPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
@@ -89,13 +68,8 @@ type Payment_OrganizationDetails {
 type Query {
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
-  myPaymentMethodsDetails: [CustomerPaymentMethod!]! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
-}
-
-type RemoveCustomerPaymentMethodPayload {
-  clientMutationId: String
 }
 
 type Version {
@@ -103,10 +77,6 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
-}
-
-input AddMyPaymentMethodIntentInput {
-  clientMutationId: String
 }
 
 input AddOrganizationStripeConnectAccountInput {
@@ -136,11 +106,6 @@ input OrganizationStripeConnectAccountWhereInput {
   organizationId: String!
   nameContains: String
   onboardingCompleted: Boolean
-}
-
-input RemoveMyPaymentMethodInput {
-  clientMutationId: String
-  id: String!
 }
 
 input UpdateOrganizationStripeConnectAccountInput {

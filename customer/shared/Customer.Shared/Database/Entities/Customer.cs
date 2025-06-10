@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,7 +8,7 @@ namespace Customer.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class Customer : EntityBaseWithDeleted
+public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
 {
     public string? Designation { get; set; }
     public string? Title { get; set; }
@@ -42,6 +43,8 @@ public class Customer : EntityBaseWithDeleted
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
+    public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public virtual StripeCustomer? StripeCustomer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -73,6 +76,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredTeams).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
+        builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);
 
         builder.HasIndex(item => item.Designation);
         builder.HasIndex(item => item.Title);

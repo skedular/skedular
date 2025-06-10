@@ -32,13 +32,13 @@ public class StripeCustomerService(
             return organization.StripeCustomer;
         }
 
-        var customer = await customerCreateService.CreateAsync(
+        var stripeCustomer = await customerCreateService.CreateAsync(
             mapper.MapToStripeCustomerCreateOption(organization),
             new RequestOptions { IdempotencyKey = organization.Id, StripeAccount = null },
             cancellationToken);
         organization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
         {
-            Id = randomHelper.Generate(), StripeCustomerId = customer.Id, Organization = organization
+            Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, Organization = organization
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

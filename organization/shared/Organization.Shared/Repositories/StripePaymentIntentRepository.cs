@@ -16,6 +16,6 @@ public class StripePaymentIntentRepository(OrganizationDbContext dbContext, Time
     {
         var now = TimeProvider.GetUtcNow();
         stripePaymentIntent.CreatedAt = now;
-        DbContext.OrganizationOfferingStripePaymentIntent.Add(stripePaymentIntent);
+        DbContext.StripePaymentIntent.Add(stripePaymentIntent);
     }
 }

@@ -14,7 +14,7 @@ using Temporalio.Client;
 
 namespace Organization.Api.Services;
 
-public interface IOrganizationPaymentService
+public interface IPaymentService
 {
     Task<string> HandleStripePaymentMethodEventAsync(
         string setupIntentId,
@@ -26,7 +26,7 @@ public interface IOrganizationPaymentService
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
 }
 
-public class OrganizationPaymentService(
+public class PaymentService(
     IDbTransactionBuilder transactionBuilder,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
@@ -38,7 +38,7 @@ public class OrganizationPaymentService(
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
     TemporalConfiguration temporalConfiguration,
-    ITemporalClient temporalClient) : IOrganizationPaymentService
+    ITemporalClient temporalClient) : IPaymentService
 {
     public async Task<string> HandleStripePaymentMethodEventAsync(
         string setupIntentId,
@@ -81,7 +81,7 @@ public class OrganizationPaymentService(
 
         _ = await temporalClient.StartWorkflowAsync(
             (AddOrganizationStripePaymentMethod workflow) =>
-                workflow.ExecuteAsync(new AddOrganizationStripePaymentMethodInput(organizationId, setupIntent.ClientSecret, setupIntent.Id)),
+                workflow.ExecuteAsync(new AddOrganizationStripePaymentMethodInput(organization.Id, setupIntent.ClientSecret, setupIntent.Id)),
             new WorkflowOptions
             {
                 Id = setupIntent.ClientSecret,
@@ -177,9 +177,6 @@ public class OrganizationPaymentService(
             }
         }
 
-        _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-        
         var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
         if (paymentMethod is not null)
         {
@@ -189,5 +186,8 @@ public class OrganizationPaymentService(
                 new RequestOptions { IdempotencyKey = $"DetachPaymentMethod-{stripePaymentMethod.Id}" },
                 cancellationToken);
         }
+
+        _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
 }

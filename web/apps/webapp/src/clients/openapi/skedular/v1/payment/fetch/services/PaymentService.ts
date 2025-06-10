@@ -21,30 +21,6 @@ export class PaymentService {
         });
     }
     /**
-     * add customer payment method
-     * @param setupIntent
-     * @param setupIntentClientSecret
-     * @param redirectStatus
-     * @returns any the readiness status
-     * @returns Error unexpected error
-     * @throws ApiError
-     */
-    public addCustomerPaymentMethod(
-        setupIntent: string,
-        setupIntentClientSecret: string,
-        redirectStatus: string,
-    ): CancelablePromise<any | Error> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/v1/payment/customer/add-payment-method',
-            query: {
-                'setup_intent': setupIntent,
-                'setup_intent_client_secret': setupIntentClientSecret,
-                'redirect_status': redirectStatus,
-            },
-        });
-    }
-    /**
      * return OrganizationStripeConnectAccount onboarding refresh URL
      * @param code
      * @returns any should never be returned

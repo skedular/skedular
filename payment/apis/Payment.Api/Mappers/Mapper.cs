@@ -14,7 +14,6 @@ namespace Payment.Api.Mappers;
 
 public interface IMapper
 {
-    IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
     Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
@@ -27,8 +26,6 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
-
     public Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
     {
         dest.PaymentMethodId = paymentMethod.Id;
@@ -190,21 +187,6 @@ public class Mapper : IMapper
             ClientSecret = src.ClientSecret,
             Status = src.Status.ToStripePaymentMethodStatus(),
             PaymentMethodId = src.PaymentMethodId,
-            CardBrand = src.CardBrand,
-            CardCountry = src.CardCountry,
-            CardDescription = src.CardDescription,
-            CardExpiryMonth = src.CardExpiryMonth,
-            CardExpiryYear = src.CardExpiryYear,
-            CardFingerprint = src.CardFingerprint,
-            CardFunding = src.CardFunding,
-            CardIssuer = src.CardIssuer,
-            CardLastFourDigit = src.CardLastFourDigit
-        };
-
-    private static CustomerPaymentMethod MapTo(StripePaymentMethod src) =>
-        new()
-        {
-            Id = src.Id,
             CardBrand = src.CardBrand,
             CardCountry = src.CardCountry,
             CardDescription = src.CardDescription,

@@ -3,6 +3,12 @@ schema {
   mutation: Mutation
 }
 
+type AddCustomerPaymentMethodIntentPayload {
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
+}
+
 type CustomerConnection {
   pageInfo: PageInfo!
   edges: [CustomerEdge!]!
@@ -41,6 +47,8 @@ type CustomerDetails {
   preferredZones: [Customer_OrganizationTagDetails!]!
   preferredCustomTags: [Customer_OrganizationTagDetails!]!
   preferredResources: [CustomerResourceDetails!]!
+  paymentMethods: [CustomerPaymentMethod!]!
+  hasAttachedPaymentMethod: Boolean!
   id: ID!
 }
 
@@ -58,6 +66,19 @@ type CustomerEmail {
 type CustomerPayload {
   clientMutationId: String
   customer: CustomerDetails!
+}
+
+type CustomerPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
 }
 
 type CustomerResourceDetails {
@@ -109,6 +130,8 @@ type Mutation {
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
+  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
+  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
 }
 
 type PageInfo {
@@ -125,6 +148,10 @@ type Query {
   customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection! @cost(weight: "10")
 }
 
+type RemoveCustomerPaymentMethodPayload {
+  clientMutationId: String
+}
+
 type SubmitCustomerFeedbackPayload {
   id: ID!
   clientMutationId: String
@@ -135,6 +162,10 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
+}
+
+input AddCustomerPaymentMethodIntentInput {
+  clientMutationId: String
 }
 
 input AddCustomerPreferredLocationInput {
@@ -193,6 +224,11 @@ input CustomerOrderInput {
 input CustomersByPreferredLocationWhereInput {
   locationId: String!
   nameContains: String
+}
+
+input RemoveCustomerPaymentMethodInput {
+  clientMutationId: String
+  id: String!
 }
 
 input RemoveCustomerPreferredLocationInput {

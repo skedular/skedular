@@ -3,7 +3,7 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
-import type { addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation } from '@/queries/__generated__/addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation.graphql';
+import type { addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation } from '@/queries/__generated__/addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation.graphql';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,9 +27,9 @@ enum AddMyPaymentMethodState {
 }
 
 const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
-  const [commitAddMyPaymentMethodIntent] = useMutation<addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation>(graphql`
-    mutation addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation($input: AddMyPaymentMethodIntentInput!) {
-      addMyPaymentMethodIntent(input: $input) {
+  const [commitAddCustomerPaymentMethodIntent] = useMutation<addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation>(graphql`
+    mutation addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation($input: AddCustomerPaymentMethodIntentInput!) {
+      addCustomerPaymentMethodIntent(input: $input) {
         clientMutationId
         publishedKeys
         clientSecret
@@ -55,7 +55,7 @@ const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
       hasRunRef.current = true;
     }
 
-    commitAddMyPaymentMethodIntent({
+    commitAddCustomerPaymentMethodIntent({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -69,8 +69,8 @@ const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
           return;
         }
 
-        setStripePromise(loadStripe(response.addMyPaymentMethodIntent.publishedKeys));
-        setClientSecret(response.addMyPaymentMethodIntent.clientSecret);
+        setStripePromise(loadStripe(response.addCustomerPaymentMethodIntent.publishedKeys));
+        setClientSecret(response.addCustomerPaymentMethodIntent.clientSecret);
         setAddNewPaymentMethodState(AddMyPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
       },
       onError: (error) => {
@@ -80,7 +80,7 @@ const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
     });
 
     setAddNewPaymentMethodState(AddMyPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
-  }, [commitAddMyPaymentMethodIntent, onCancel, themedToast]);
+  }, [commitAddCustomerPaymentMethodIntent, onCancel, themedToast]);
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>

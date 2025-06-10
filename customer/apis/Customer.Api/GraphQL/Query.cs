@@ -27,8 +27,14 @@ public class Query(IMapper mapper, IVersionService versionService)
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]
-    public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
+    public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
+
+        customer.PaymentMethods = [];
+
+        return customer;
+    }
 
     [UseResolverScope]
     public async Task<CustomerConnection> CustomersByPreferredLocationAsync(
@@ -58,7 +64,14 @@ public class Query(IMapper mapper, IVersionService versionService)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo),
+            Edges = edges.Select(item =>
+            {
+                var customer = mapper.MapTo(item);
+
+                customer.Node.PaymentMethods = [];
+
+                return customer;
+            }),
             TotalCount = totalCount
         };
     }

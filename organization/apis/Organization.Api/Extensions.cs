@@ -26,7 +26,7 @@ public static class Extensions
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
             .AddScoped<ITagService, TagService>()
             .AddScoped<IOrganizationSsoService, OrganizationSsoService>()
-            .AddScoped<IOrganizationPaymentService, OrganizationPaymentService>()
+            .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

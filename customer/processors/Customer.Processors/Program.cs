@@ -8,6 +8,7 @@ using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 
 namespace Customer.Processors;
 
@@ -52,7 +53,8 @@ public class Program
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddGrpcServices(configuration);
+            .AddGrpcServices(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

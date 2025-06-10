@@ -201,6 +201,7 @@ type CustomerDetails {
   email: String
   familyName: String
   givenName: String
+  hasAttachedPaymentMethod: Boolean!
   id: ID!
   identities: [CustomerEmail!]!
   isDefaultOrganizationOnboardingDone: Boolean!
@@ -212,6 +213,7 @@ type CustomerDetails {
   locale: String
   middleName: String
   name: String
+  paymentMethods: [CustomerPaymentMethod!]!
   phoneNumber: String
   photoUrl: String
   photoUrl192: String
@@ -398,6 +400,7 @@ type Mutation {
   activateProducts(input: ActivateProductsInput!): ProductsPayload @cost(weight: "10")
   activateResources(input: ActivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
+  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
@@ -405,7 +408,6 @@ type Mutation {
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
-  addMyPaymentMethodIntent(input: AddMyPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
@@ -453,11 +455,11 @@ type Mutation {
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload @cost(weight: "10")
+  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload @cost(weight: "10")
-  removeMyPaymentMethod(input: RemoveMyPaymentMethodInput!): RemoveCustomerPaymentMethodPayload @cost(weight: "10")
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
@@ -961,7 +963,6 @@ type Query {
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
-  myPaymentMethodsDetails: [CustomerPaymentMethod!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   notificationVersion: Version!
@@ -1246,6 +1247,10 @@ input AddCustomTagInput {
   organizationId: String!
 }
 
+input AddCustomerPaymentMethodIntentInput {
+  clientMutationId: String
+}
+
 input AddCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
@@ -1287,10 +1292,6 @@ input AddLocationTagInput {
   id: String
   name: String!
   organizationId: String!
-}
-
-input AddMyPaymentMethodIntentInput {
-  clientMutationId: String
 }
 
 input AddOrganizationInput {
@@ -1762,6 +1763,11 @@ input RejectInvitationToJoinTeamInput {
   id: String!
 }
 
+input RemoveCustomerPaymentMethodInput {
+  clientMutationId: String
+  id: String!
+}
+
 input RemoveCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
@@ -1780,11 +1786,6 @@ input RemoveCustomerPreferredResourceInput {
 input RemoveCustomerPreferredTeamInput {
   clientMutationId: String
   teamId: String!
-}
-
-input RemoveMyPaymentMethodInput {
-  clientMutationId: String
-  id: String!
 }
 
 input RemoveOrganizationMembersInput {

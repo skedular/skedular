@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2ba533f2cf6205422bbb980ab8204ea>>
+ * @generated SignedSource<<2b93f18b6b8ba7ded7eea9fd909e2139>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,22 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddMyPaymentMethodIntentInput = {
+export type AddCustomerPaymentMethodIntentInput = {
   clientMutationId?: string | null | undefined;
 };
-export type addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$variables = {
-  input: AddMyPaymentMethodIntentInput;
+export type addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation$variables = {
+  input: AddCustomerPaymentMethodIntentInput;
 };
-export type addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$data = {
-  readonly addMyPaymentMethodIntent: {
+export type addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation$data = {
+  readonly addCustomerPaymentMethodIntent: {
     readonly clientMutationId: string | null | undefined;
     readonly clientSecret: string;
     readonly publishedKeys: string;
   };
 };
-export type addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation = {
-  response: addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$data;
-  variables: addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation$variables;
+export type addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation = {
+  response: addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation$data;
+  variables: addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -47,7 +47,7 @@ v1 = [
     ],
     "concreteType": "AddCustomerPaymentMethodIntentPayload",
     "kind": "LinkedField",
-    "name": "addMyPaymentMethodIntent",
+    "name": "addCustomerPaymentMethodIntent",
     "plural": false,
     "selections": [
       {
@@ -80,7 +80,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation",
+    "name": "addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -89,20 +89,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation",
+    "name": "addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "99b977ae9d055a662f78f77131c9bf9e",
+    "cacheID": "2c5727842e52dca26d5518174e47c3f8",
     "id": null,
     "metadata": {},
-    "name": "addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation",
+    "name": "addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation",
     "operationKind": "mutation",
-    "text": "mutation addMyPaymentMethodDialog_addMyPaymentMethodIntentMutation(\n  $input: AddMyPaymentMethodIntentInput!\n) {\n  addMyPaymentMethodIntent(input: $input) {\n    clientMutationId\n    publishedKeys\n    clientSecret\n  }\n}\n"
+    "text": "mutation addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation(\n  $input: AddCustomerPaymentMethodIntentInput!\n) {\n  addCustomerPaymentMethodIntent(input: $input) {\n    clientMutationId\n    publishedKeys\n    clientSecret\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "01267ce184edbdaacfee8905532738cc";
+(node as any).hash = "671199b08f35575e012cc7e8cbf7762c";
 
 export default node;

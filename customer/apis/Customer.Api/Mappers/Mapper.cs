@@ -5,6 +5,7 @@ using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using HotChocolate.Types.Pagination;
+using Stripe;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
@@ -45,6 +46,7 @@ public interface IMapper
     Shared.Models.Identity MapTo(Admin_UpdateIdentityInput src);
     Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src);
     CustomerEdge MapTo(Edge<Shared.Models.Customer> src);
+    CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Customer src);
 }
 
 public class Mapper : IMapper
@@ -152,7 +154,9 @@ public class Mapper : IMapper
                 Organization = item.Organization is null
                     ? null
                     : new OrganizationDetails { UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl }
-            })
+            }),
+            PaymentMethods = MapTo(src.StripePaymentMethods),
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
         };
 
     public CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId) =>
@@ -198,7 +202,9 @@ public class Mapper : IMapper
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
             PreferredResources = MapTo(src.PreferredResources).ToList(),
             PreferredTeams = MapTo(src.PreferredTeams).ToList(),
-            PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
+            PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
+            StripeCustomer = MapTo(src.StripeCustomer),
+            StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList()
         };
 
     public CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src) =>
@@ -398,6 +404,16 @@ public class Mapper : IMapper
 
     public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) => new(MapTo(src.Node), src.Cursor);
 
+    public CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Customer src) =>
+        new()
+        {
+            Name = src.ToDisplayableName(),
+            Email = src.Identities.ToSingleEmail(),
+            Phone = src.PhoneNumber.ToSafeString(),
+            PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
+            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+        };
+
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
 
     public Shared.Database.Entities.Customer
@@ -549,4 +565,56 @@ public class Mapper : IMapper
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
+    
+    private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src) =>
+        src is null
+            ? null
+            : new StripeCustomer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                StripeCustomerId = src.StripeCustomerId,
+            };
+
+    private static IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) =>
+        src.Select(MapTo);
+
+    private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            SetupIntentId = src.SetupIntentId,
+            PaymentMethodId = src.PaymentMethodId,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit,
+        };
+    
+    private static IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+
+    private static CustomerPaymentMethod MapTo(StripePaymentMethod src) =>
+        new()
+        {
+            Id = src.Id,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit
+        };
 }

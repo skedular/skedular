@@ -121,6 +121,10 @@ public class CustomerDetails : Node
     [GraphQLName("preferredZones")] public IEnumerable<OrganizationTagDetails> PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredResources")] public IEnumerable<CustomerResourceDetails> PreferredResources { get; set; } = [];
+    [GraphQLName("paymentMethods")] public IEnumerable<CustomerPaymentMethod> PaymentMethods { get; set; } = [];
+
+    [GraphQLName("hasAttachedPaymentMethod")]
+    public bool HasAttachedPaymentMethod { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
@@ -281,4 +285,19 @@ public class CustomerResourceDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string? Name { get; set; }
+}
+
+[GraphQLName("CustomerPaymentMethod")]
+public class CustomerPaymentMethod : Node
+{
+    [GraphQLName("cardBrand")] public string? CardBrand { get; set; }
+    [GraphQLName("cardCountry")] public string? CardCountry { get; set; }
+    [GraphQLName("cardDescription")] public string? CardDescription { get; set; }
+    [GraphQLName("cardExpiryMonth")] public int? CardExpiryMonth { get; set; }
+    [GraphQLName("cardExpiryYear")] public int? CardExpiryYear { get; set; }
+    [GraphQLName("cardFingerprint")] public string? CardFingerprint { get; set; }
+    [GraphQLName("cardFunding")] public string? CardFunding { get; set; }
+    [GraphQLName("cardIssuer")] public string? CardIssuer { get; set; }
+    [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

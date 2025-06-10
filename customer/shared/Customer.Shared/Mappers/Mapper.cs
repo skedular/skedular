@@ -1,12 +1,20 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using Stripe;
+using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
+using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
+using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
+using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource;
+using Team = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team;
 
 namespace Customer.Shared.Mappers;
 
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer MapTo(Models.Customer src);
+    StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Customer customer);
 }
 
 public class Mapper : IMapper
@@ -62,6 +70,23 @@ public class Mapper : IMapper
 
         return customer;
     }
+
+    public StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Customer customer) =>
+        new()
+        {
+            SetupIntentId = setupIntentId,
+            PaymentMethodId = paymentMethod.Id,
+            CardBrand = paymentMethod.Card?.Brand,
+            CardCountry = paymentMethod.Card?.Country,
+            CardDescription = paymentMethod.Card?.Description,
+            CardExpiryMonth = paymentMethod.Card is null ? null : (byte)paymentMethod.Card.ExpMonth,
+            CardExpiryYear = paymentMethod.Card is null ? null : (short)paymentMethod.Card.ExpYear,
+            CardFingerprint = paymentMethod.Card?.Fingerprint,
+            CardFunding = paymentMethod.Card?.Funding,
+            CardIssuer = paymentMethod.Card?.Issuer,
+            CardLastFourDigit = paymentMethod.Card?.Last4,
+            Customer = customer
+        };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Models.Identity> src) => src.Select(MapTo);
 
