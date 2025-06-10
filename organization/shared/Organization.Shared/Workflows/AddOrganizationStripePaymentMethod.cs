@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Logging;
 using Organization.Shared.Workflows.Activities;
+using Temporalio.Exceptions;
 using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows;
@@ -15,15 +15,17 @@ public record StripePaymentMethodEventState(string SetupIntentId, string Redirec
 [Workflow]
 public class AddOrganizationStripePaymentMethod
 {
-    private static readonly TimeSpan s_maxTimeAllowedToReceiveStripePaymentMethodEvent = TimeSpan.FromMinutes(30);
-    private readonly ILogger _logger = Workflow.Logger;
     private AddOrganizationStripePaymentMethodState? _state;
 
     [WorkflowRun]
     public async Task<string> ExecuteAsync(AddOrganizationStripePaymentMethodInput args)
     {
         _state = new AddOrganizationStripePaymentMethodState(args, null);
-        await AwaitPaymentMethodEventAsync();
+
+        if (!await Workflow.WaitConditionAsync(() => _state.StripePaymentMethodEventState is not null, TimeSpan.FromMinutes(30)))
+        {
+            throw new ApplicationFailureException($"Failed to receive Stripe payment method event for organization {_state.Args.OrganizationId}");
+        }
 
         ArgumentNullException.ThrowIfNull(_state.StripePaymentMethodEventState);
 
@@ -47,38 +49,4 @@ public class AddOrganizationStripePaymentMethod
 
         return Task.CompletedTask;
     }
-
-    private async Task AwaitPaymentMethodEventAsync()
-    {
-        ArgumentNullException.ThrowIfNull(_state);
-
-        try
-        {
-            _logger.LogInformation(
-                "{tag} Await receiving Stripe payment method event for organization {organizationId}...",
-                GetLogPrefix(),
-                _state.Args.OrganizationId);
-
-            await Workflow.WaitConditionAsync(
-                () => _state.StripePaymentMethodEventState is not null,
-                s_maxTimeAllowedToReceiveStripePaymentMethodEvent);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(
-                ex,
-                "{tag} Failed to receive Stripe payment method event for organization {organizationId}...",
-                GetLogPrefix(),
-                _state.Args.OrganizationId);
-
-            throw;
-        }
-
-        _logger.LogInformation(
-            "{tag} Received Stripe payment method event for organization {organizationId}...",
-            GetLogPrefix(),
-            _state.Args.OrganizationId);
-    }
-
-    private static string GetLogPrefix() => $"{nameof(AddOrganizationStripePaymentMethod)}:{Workflow.Info.RunId}:";
 }
