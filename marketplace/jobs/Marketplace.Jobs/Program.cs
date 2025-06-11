@@ -31,6 +31,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
             .AddKafkaOutboxBackgroundService<MarketplaceDbContext>()
+            .AddTemporalOutboxBackgroundService<MarketplaceDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

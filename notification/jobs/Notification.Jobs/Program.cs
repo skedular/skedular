@@ -27,6 +27,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddKafkaOutboxBackgroundService<NotificationDbContext>()
+            .AddTemporalOutboxBackgroundService<NotificationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

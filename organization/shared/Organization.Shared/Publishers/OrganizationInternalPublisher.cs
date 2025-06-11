@@ -9,7 +9,6 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationInternalPublisher
 {
-    Task PublishOrganizationsRequireOfferingAutoRenewAsync(IEnumerable<string> organizationIds, CancellationToken cancellationToken);
     Task PublishRecordOrganizationDailyMemberCountAsync(IEnumerable<string> organizationIds, CancellationToken cancellationToken);
     Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, CancellationToken cancellationToken);
 }
@@ -17,23 +16,6 @@ public interface IOrganizationInternalPublisher
 public class OrganizationInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : IOrganizationInternalPublisher
 {
-    public async Task PublishOrganizationsRequireOfferingAutoRenewAsync(IEnumerable<string> organizationIds, CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizationIds.Select(async organizationId =>
-        {
-            var key = new Key { OrganizationId = organizationId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.RenewOrganizationOffering,
-                    context.GetCorrelationId()),
-                OrganizationId = organizationId
-            };
-
-            await publisher.PublishAsync(key, @event, cancellationToken);
-        }));
-
     public async Task PublishRecordOrganizationDailyMemberCountAsync(IEnumerable<string> organizationIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(organizationIds.Select(async organizationId =>
         {

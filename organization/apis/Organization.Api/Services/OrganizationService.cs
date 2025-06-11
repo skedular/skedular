@@ -13,6 +13,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Workflows;
 using Address = Organization.Shared.Database.Entities.Address;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -197,15 +198,18 @@ public class OrganizationService(
         organization = mapper.MapTo(organizationEntity);
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
+
+        organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+            new ScheduleRenewOrganizationOfferingInput(
+                organization.Id,
+                organizationOffering.Id,
+                organizationOffering.End.GetNextOfferingPeriodStart()),
+            repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (customer is null)
-        {
-            return organization;
-        }
-
-        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organizationEntity, customer))
+        if (customer is null || organizationAuthorizationService.CanViewMemberPersonalDetails(organizationEntity, customer))
         {
             return organization;
         }

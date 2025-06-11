@@ -27,15 +27,11 @@ public class TemporalOutboxBackgroundService<TDbContext>(
 
     private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<TemporalOutbox?>>
         s_getOutboxItemQueryAsync =
-            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, TemporalOutbox?>((
-                    dbContext,
-                    thresholdRetryTime,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, TemporalOutbox?>((dbContext, thresholdRetryTime, cancellationToken) =>
                 dbContext.TemporalOutbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                    .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
                     .OrderBy(query => query.RetryCount)
-                    .FirstOrDefault());
+                    .FirstOrDefault(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime));
 
     private readonly TimeSpan _retryTime = TimeSpan.FromSeconds(1);
 

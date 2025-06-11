@@ -32,6 +32,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddKafkaOutboxBackgroundService<TeamDbContext>()
+            .AddTemporalOutboxBackgroundService<TeamDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

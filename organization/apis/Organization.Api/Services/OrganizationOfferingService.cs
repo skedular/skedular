@@ -8,6 +8,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Workflows;
 
 namespace Organization.Api.Services;
 
@@ -27,17 +28,13 @@ public class OrganizationOfferingService(
     IMapper mapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
 {
-    public async Task UpdateOfferingAsync(
-        string organizationId,
-        OfferingCode offeringCode,
-        CancellationToken cancellationToken)
+    public async Task UpdateOfferingAsync(string organizationId, OfferingCode offeringCode, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var offering = offeringCode.GetOffering();
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -76,7 +73,7 @@ public class OrganizationOfferingService(
 
         if (matchingOffering is null)
         {
-            repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOffering
+            var organizationOffering = new OrganizationOffering
             {
                 Id = randomHelper.Generate(),
                 Code = offeringCode,
@@ -85,11 +82,24 @@ public class OrganizationOfferingService(
                 AutoRenew = true,
                 UnitPrice = offering.UnitPrice,
                 Organization = organization
-            });
+            };
+            repositoryFactory.OrganizationOfferingRepository.Add(organizationOffering);
+            organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                new ScheduleRenewOrganizationOfferingInput(
+                    organization.Id,
+                    organizationOffering.Id,
+                    organizationOffering.End.GetNextOfferingPeriodStart()),
+                repositoryFactory.UnitOfWork);
         }
         else
         {
             repositoryFactory.OrganizationOfferingRepository.Undelete(matchingOffering);
+            organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                new ScheduleRenewOrganizationOfferingInput(
+                    organization.Id,
+                    matchingOffering.Id,
+                    matchingOffering.End.GetNextOfferingPeriodStart()),
+                repositoryFactory.UnitOfWork);
         }
 
         organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);

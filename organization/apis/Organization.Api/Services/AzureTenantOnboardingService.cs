@@ -8,6 +8,7 @@ using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Workflows;
 using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
 using Location = Organization.Shared.Database.Entities.Location;
 
@@ -43,7 +44,17 @@ public class AzureTenantOnboardingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var location = new Location { Id = randomHelper.Generate() };
-        var now = timeProvider.GetUtcNow();
+        var start = timeProvider.GetUtcNow();
+        var organizationOffering = new OrganizationOffering
+        {
+            Id = randomHelper.Generate(),
+            CreatedAt = start,
+            Code = OfferingCode.FreeTierV1,
+            Start = start,
+            End = start.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
+            AutoRenew = true,
+            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+        };
         var organization = new Shared.Database.Entities.Organization
         {
             Id = randomHelper.Generate(),
@@ -53,19 +64,7 @@ public class AzureTenantOnboardingService(
             MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
             Locations = [location],
-            OrganizationOfferings =
-            [
-                new OrganizationOffering
-                {
-                    Id = randomHelper.Generate(),
-                    CreatedAt = now,
-                    Code = OfferingCode.FreeTierV1,
-                    Start = now,
-                    End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-                    AutoRenew = true,
-                    UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
-                }
-            ]
+            OrganizationOfferings = [organizationOffering]
         };
         var azureTenant = new AzureTenant
         {
@@ -84,6 +83,12 @@ public class AzureTenantOnboardingService(
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
         organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+            new ScheduleRenewOrganizationOfferingInput(
+                organization.Id,
+                organizationOffering.Id,
+                organizationOffering.End.GetNextOfferingPeriodStart()),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

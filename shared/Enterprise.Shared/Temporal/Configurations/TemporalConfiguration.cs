@@ -40,7 +40,7 @@ public class ConnectionConfig
 
 public class WorkerConfig
 {
-    public string TaskQueue { get; init; } = string.Empty;
+    public string TaskQueue { get; set; } = string.Empty;
     public CapacityConfig Capacity { get; init; } = new();
     public RateLimitsConfig RateLimits { get; init; } = new();
     public CacheConfig Cache { get; init; } = new();

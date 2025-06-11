@@ -30,15 +30,11 @@ public class KafkaOutboxBackgroundService<TDbContext>(
 
     private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<KafkaOutbox?>>
         s_getOutboxItemQueryAsync =
-            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, KafkaOutbox?>((
-                    dbContext,
-                    thresholdRetryTime,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, KafkaOutbox?>((dbContext, thresholdRetryTime, cancellationToken) =>
                 dbContext.KafkaOutbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                    .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
                     .OrderBy(query => query.RetryCount)
-                    .FirstOrDefault());
+                    .FirstOrDefault(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime));
 
     private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
     private readonly TimeSpan _retryTime = TimeSpan.FromSeconds(1);

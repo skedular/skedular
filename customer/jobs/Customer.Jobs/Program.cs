@@ -37,6 +37,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddKafkaOutboxBackgroundService<CustomerDbContext>()
+            .AddTemporalOutboxBackgroundService<CustomerDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

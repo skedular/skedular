@@ -37,6 +37,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddKafkaOutboxBackgroundService<OrganizationDbContext>()
+            .AddTemporalOutboxBackgroundService<OrganizationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -50,7 +51,9 @@ public class Program
 
         services
             .AddTemporalWorker(configuration)
+            .AddWorkflow<ScheduleRenewOrganizationOffering>()
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
+            .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();

@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Core.Shared.Database;
 
 public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<CoreDbContext>(options, customDbContextOptions), IKafkaOutboxStore
+    : DbContextBase<CoreDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<CdnFile> CdnFile { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
+    public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 
     public class CoreDbContextDesignFactory : IDesignTimeDbContextFactory<CoreDbContext>
     {

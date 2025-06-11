@@ -27,6 +27,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddKafkaOutboxBackgroundService<MsTeamsDbContext>()
+            .AddTemporalOutboxBackgroundService<MsTeamsDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

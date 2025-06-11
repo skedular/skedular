@@ -28,6 +28,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "paymentdb")
             .AddKafkaOutboxBackgroundService<PaymentDbContext>()
+            .AddTemporalOutboxBackgroundService<PaymentDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

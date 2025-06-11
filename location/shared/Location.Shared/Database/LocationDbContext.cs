@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Location.Shared.Database;
 
 public class LocationDbContext(DbContextOptions<LocationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<LocationDbContext>(options, customDbContextOptions), IKafkaOutboxStore
+    : DbContextBase<LocationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Booking> Booking { get; set; }
@@ -23,6 +23,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
+    public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>

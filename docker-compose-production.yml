@@ -82,7 +82,7 @@ services:
     networks:
       - skedular_network
 
-  staging-temporal:
+  temporal:
     image: temporalio/auto-setup:latest
     restart: unless-stopped
     depends_on:
@@ -91,80 +91,37 @@ services:
       - DB=postgres12
       - POSTGRES_SEEDS=postgres
       - DB_PORT=5432
-      - DBNAME=staging.temporal
-      - VISIBILITY_DBNAME=staging.temporal_visibility
+      - DBNAME=temporal
+      - VISIBILITY_DBNAME=temporal_visibility
       - POSTGRES_USER=${SKEDULAR_POSTGRES_USERNAME}
       - POSTGRES_PWD=${SKEDULAR_POSTGRES_PASSWORD}
-      - TEMPORAL_ADDRESS=staging-temporal:7233
-      - TEMPORAL_CLI_ADDRESS=staging-temporal:7233
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
     networks:
       - skedular_network
 
-  staging-temporal-admin-tools:
+  temporal-admin-tools:
     image: temporalio/admin-tools:latest
     restart: unless-stopped
     depends_on:
-      - staging-temporal
+      - temporal
     environment:
-      - TEMPORAL_ADDRESS=staging-temporal:7233
-      - TEMPORAL_CLI_ADDRESS=staging-temporal:7233
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
     stdin_open: true
     tty: true
     networks:
       - skedular_network
 
-  staging-temporal-ui:
+  temporal-ui:
     image: temporalio/ui:latest
     restart: unless-stopped
     depends_on:
-      - staging-temporal
+      - temporal
     ports:
       - 8080:8080
     environment:
-      - TEMPORAL_ADDRESS=staging-temporal:7233
-    networks:
-      - skedular_network
-
-  prod-temporal:
-    image: temporalio/auto-setup:latest
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    environment:
-      - DB=postgres12
-      - POSTGRES_SEEDS=postgres
-      - DB_PORT=5432
-      - DBNAME=prod.temporal
-      - VISIBILITY_DBNAME=prod.temporal_visibility
-      - POSTGRES_USER=${SKEDULAR_POSTGRES_USERNAME}
-      - POSTGRES_PWD=${SKEDULAR_POSTGRES_PASSWORD}
-      - TEMPORAL_ADDRESS=prod-temporal:7233
-      - TEMPORAL_CLI_ADDRESS=prod-temporal:7233
-    networks:
-      - skedular_network
-
-  prod-temporal-admin-tools:
-    image: temporalio/admin-tools:latest
-    restart: unless-stopped
-    depends_on:
-      - prod-temporal
-    environment:
-      - TEMPORAL_ADDRESS=prod-temporal:7233
-      - TEMPORAL_CLI_ADDRESS=prod-temporal:7233
-    stdin_open: true
-    tty: true
-    networks:
-      - skedular_network
-
-  prod-temporal-ui:
-    image: temporalio/ui:latest
-    restart: unless-stopped
-    depends_on:
-      - prod-temporal
-    ports:
-      - 8081:8080
-    environment:
-      - TEMPORAL_ADDRESS=prod-temporal:7233
+      - TEMPORAL_ADDRESS=temporal:7233
     networks:
       - skedular_network
 
@@ -173,7 +130,7 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__temporal: "staging-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -234,7 +191,7 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__temporal: "staging-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -331,7 +288,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
-      ConnectionStrings__temporal: "staging-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -428,7 +385,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
-      ConnectionStrings__temporal: "staging-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -514,7 +471,7 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__temporal: "prod-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -577,7 +534,7 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
-      ConnectionStrings__temporal: "prod-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -674,7 +631,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
-      ConnectionStrings__temporal: "prod-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
@@ -771,7 +728,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
-      ConnectionStrings__temporal: "prod-temporal:7233"
+      ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}

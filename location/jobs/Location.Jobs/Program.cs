@@ -27,6 +27,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddKafkaOutboxBackgroundService<LocationDbContext>()
+            .AddTemporalOutboxBackgroundService<LocationDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

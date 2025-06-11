@@ -2,7 +2,6 @@ using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Models;
-using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
@@ -12,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Organization.Processors.Mappers;
 using Organization.Processors.Services;
 using Organization.Shared.Database.Entities;
-using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Customer = Organization.Shared.Models.Customer;
 using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
@@ -27,7 +25,6 @@ namespace Organization.Processors.Subscribers;
 public class OrganizationInternalSubscriber(
     CustomerConfiguration customerConfiguration,
     LocationConfiguration locationConfiguration,
-    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
@@ -35,7 +32,6 @@ public class OrganizationInternalSubscriber(
     IGraphService graphService,
     CustomerService.CustomerServiceClient customerServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
-    IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationMemberService organizationMemberService)
     : IEventSubscriber<Key, Event>
 {
@@ -43,10 +39,6 @@ public class OrganizationInternalSubscriber(
     {
         switch (@event.Metadata.Type)
         {
-            case Type.RenewOrganizationOffering:
-                await HandleRenewOrganizationOfferingEventAsync(@event, cancellationToken);
-                break;
-
             case Type.RecordDailyMemberCount:
                 await HandleRecordDailyMemberCountEventAsync(@event, cancellationToken);
                 break;
@@ -57,57 +49,6 @@ public class OrganizationInternalSubscriber(
         }
 
         return EventSubscriberResults.Success;
-    }
-
-    private async Task HandleRenewOrganizationOfferingEventAsync(Event @event, CancellationToken cancellationToken)
-    {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
-        if (organization is null)
-        {
-            return;
-        }
-
-        var now = timeProvider.GetUtcNow();
-        var expiredOfferingsRequireAutoRenew = await repositoryFactory.OrganizationOfferingRepository.Query(new Specification<OrganizationOffering>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.End <= now && query.AutoRenew
-            }.ApplyOrderByDescending(query => query.End))
-            .ToListAsync(cancellationToken);
-
-        if (expiredOfferingsRequireAutoRenew.Count == 0)
-        {
-            return;
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        var expiredOfferingRequireAutoRenew = expiredOfferingsRequireAutoRenew.First();
-        var offering = expiredOfferingRequireAutoRenew.Code.GetOffering();
-        var start = expiredOfferingRequireAutoRenew.End.GetNextOfferingPeriodStart();
-
-        _ = repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOffering
-        {
-            Id = randomHelper.Generate(),
-            Code = expiredOfferingRequireAutoRenew.Code,
-            Start = start,
-            End = start.GetOfferingPeriodEnd(),
-            AutoRenew = expiredOfferingRequireAutoRenew.AutoRenew,
-            UnitPrice = offering.UnitPrice,
-            Organization = organization
-        });
-        repositoryFactory.OrganizationOfferingRepository.RemoveRange(expiredOfferingsRequireAutoRenew);
-
-        var mappedOrganization = mapper.MapTo(organization);
-        mappedOrganization.OrganizationOfferings =
-        [
-            mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First()
-        ];
-
-        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
     }
 
     private async Task HandleRecordDailyMemberCountEventAsync(Event @event, CancellationToken cancellationToken)

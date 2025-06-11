@@ -1,3 +1,4 @@
+using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,13 @@ public static class Extensions
             temporalConfiguration.Connection.Target = target;
         }
 
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        ArgumentNullException.ThrowIfNull(applicationConfiguration);
+        if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
+        {
+            temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
+        }
+
         return services
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
@@ -39,6 +47,13 @@ public static class Extensions
         if (!string.IsNullOrWhiteSpace(target))
         {
             temporalConfiguration.Connection.Target = target;
+        }
+
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        ArgumentNullException.ThrowIfNull(applicationConfiguration);
+        if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
+        {
+            temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
         }
 
         return services

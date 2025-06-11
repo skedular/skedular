@@ -32,6 +32,7 @@ public class Program
             .AddCdn(configuration)
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
+            .AddTemporalOutboxBackgroundService<SlackDbContext>()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

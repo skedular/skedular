@@ -8,7 +8,7 @@ using Slack.Shared.Database.Entities;
 namespace Slack.Shared.Database;
 
 public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<SlackDbContext>(options, customDbContextOptions), IKafkaOutboxStore
+    : DbContextBase<SlackDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -21,6 +21,7 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public DbSet<WorkspaceChannel> WorkspaceChannel { get; set; }
     public DbSet<WorkspaceMember> WorkspaceMember { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
+    public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>

@@ -1,5 +1,5 @@
 locals {
-  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "stagingtemporal", "temporal"]
+  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "temporal"]
 }
 
 locals {

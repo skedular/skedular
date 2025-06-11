@@ -20,7 +20,7 @@ public interface IOrganizationOutboxPublisher
 {
     void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
     void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
-    void ExecuteWorkflowAddOrganizationStripePaymentMethod(AddOrganizationStripePaymentMethodInput args, IUnitOfWork unitOfWork);
+    void ExecuteWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
 }
 
 public class OrganizationOutboxPublisher(
@@ -29,8 +29,9 @@ public class OrganizationOutboxPublisher(
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     TemporalConfiguration temporalConfiguration,
-    ITemporalOutboxWorkflowExecutor<AddOrganizationStripePaymentMethod, AddOrganizationStripePaymentMethodInput>
-        temporalOutboxAddOrganizationStripePaymentMethodWorkflowExecutor) : IOrganizationOutboxPublisher
+    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering, ScheduleRenewOrganizationOfferingInput>
+        temporalOutboxRenewOrganizationOfferingExecutor)
+    : IOrganizationOutboxPublisher
 {
     public void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork)
     {
@@ -62,9 +63,7 @@ public class OrganizationOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted()
-                            ? Type.InvitationToJoinOrganizationUpserted
-                            : Type.InvitationToJoinOrganizationDeleted,
+                        joinInvitation.IsNotDeleted() ? Type.InvitationToJoinOrganizationUpserted : Type.InvitationToJoinOrganizationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, null) }
                 },
@@ -72,12 +71,12 @@ public class OrganizationOutboxPublisher(
         }
     }
 
-    public void ExecuteWorkflowAddOrganizationStripePaymentMethod(AddOrganizationStripePaymentMethodInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxAddOrganizationStripePaymentMethodWorkflowExecutor.Execute(
-            new AddOrganizationStripePaymentMethodInput(args.OrganizationId, args.ClientSecret, args.SetupIntentId),
+    public void ExecuteWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxRenewOrganizationOfferingExecutor.Execute(
+            args,
             new WorkflowOptions
             {
-                Id = args.ClientSecret,
+                Id = args.OrganizationOfferingId,
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

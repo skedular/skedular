@@ -6,6 +6,7 @@ using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Workflows;
 using Stripe;
@@ -37,6 +38,7 @@ public class PaymentService(
     IStripeCustomerService stripeCustomerService,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient) : IPaymentService
 {
@@ -127,9 +129,7 @@ public class PaymentService(
                 .Query(new Specification<OrganizationOffering>
                     {
                         Criteria = query =>
-                            !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
-                            query.Start <= now &&
-                            query.End >= now
+                            !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.Start <= now && query.End >= now
                     }
                     .ApplyOrderBy(query => query.Id))
                 .FirstOrDefaultAsync(cancellationToken);
@@ -160,7 +160,7 @@ public class PaymentService(
 
             if (existingFreeOffering is null)
             {
-                repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOffering
+                var newOrganizationOffering = new OrganizationOffering
                 {
                     Id = randomHelper.Generate(),
                     Code = OfferingCode.FreeTierV1,
@@ -169,11 +169,27 @@ public class PaymentService(
                     End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
                     AutoRenew = true,
                     UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
-                });
+                };
+
+                repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
+
+                organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                    new ScheduleRenewOrganizationOfferingInput(
+                        organization.Id,
+                        newOrganizationOffering.Id,
+                        newOrganizationOffering.End.GetNextOfferingPeriodStart()),
+                    repositoryFactory.UnitOfWork);
             }
             else
             {
                 repositoryFactory.OrganizationOfferingRepository.Undelete(existingFreeOffering);
+
+                organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                    new ScheduleRenewOrganizationOfferingInput(
+                        organization.Id,
+                        existingFreeOffering.Id,
+                        existingFreeOffering.End.GetNextOfferingPeriodStart()),
+                    repositoryFactory.UnitOfWork);
             }
         }
 

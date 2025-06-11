@@ -15,8 +15,8 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
+            .AddHostedService<MigrateOfferingToTemporalWorkflowJob>()
             .AddHostedService<OrganizationDailyMemberCountRecorderJob>()
-            .AddHostedService<OrganizationOfferingRenewalJob>()
             .AddHostedService<RefreshAzureTenantMembersJob>()
             .AddHostedService<BuiltInTagsSyncJob>();
 }

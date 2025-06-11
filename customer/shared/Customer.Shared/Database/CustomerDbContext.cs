@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Customer.Shared.Database;
 
 public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<CustomerDbContext>(options, customDbContextOptions), IKafkaOutboxStore
+    : DbContextBase<CustomerDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
 {
     public DbSet<Entities.Customer> Customer { get; set; }
     public DbSet<CustomerFeedback> CustomerFeedback { get; set; }
@@ -25,6 +25,7 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public DbSet<StripePaymentIntent> StripePaymentIntent { get; set; }
     public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
+    public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class CustomerDbContextDesignFactory : IDesignTimeDbContextFactory<CustomerDbContext>

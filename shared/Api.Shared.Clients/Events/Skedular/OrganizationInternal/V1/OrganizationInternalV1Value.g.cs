@@ -32,11 +32,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
             "dGESCgoCaWQYASABKAkSFAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNv",
             "dXJjZRgDIAEoCRIoCgR0eXBlGAQgASgOMhoub3JnYW5pemF0aW9uaW50ZXJu",
             "YWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKmAKBFR5cGUSHQoZUmVuZXdP",
-            "cmdhbml6YXRpb25PZmZlcmluZxAAEhoKFlJlY29yZERhaWx5TWVtYmVyQ291",
-            "bnQQARIdChlSZWZyZXNoQXp1cmVUZW5hbnRNZW1iZXJzEAJCQ6oCQEFwaS5T",
-            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uSW50",
-            "ZXJuYWwuVjEuVmFsdWViBnByb3RvMw=="));
+            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKkEKBFR5cGUSGgoWUmVjb3Jk",
+            "RGFpbHlNZW1iZXJDb3VudBAAEh0KGVJlZnJlc2hBenVyZVRlbmFudE1lbWJl",
+            "cnMQAUJDqgJAQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5P",
+            "cmdhbml6YXRpb25JbnRlcm5hbC5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -49,9 +48,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RenewOrganizationOffering")] RenewOrganizationOffering = 0,
-    [pbr::OriginalName("RecordDailyMemberCount")] RecordDailyMemberCount = 1,
-    [pbr::OriginalName("RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 2,
+    [pbr::OriginalName("RecordDailyMemberCount")] RecordDailyMemberCount = 0,
+    [pbr::OriginalName("RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 1,
   }
 
   #endregion
@@ -487,7 +485,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering;
+    private global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type Type {
@@ -552,7 +550,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (DomainSource.Length != 0) hash ^= DomainSource.GetHashCode();
       if (AppSource.Length != 0) hash ^= AppSource.GetHashCode();
-      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering) hash ^= Type.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount) hash ^= Type.GetHashCode();
       if (time_ != null) hash ^= Time.GetHashCode();
       if (CorrelationId.Length != 0) hash ^= CorrelationId.GetHashCode();
       if (_unknownFields != null) {
@@ -585,7 +583,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -619,7 +617,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -650,7 +648,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       if (AppSource.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (time_ != null) {
@@ -680,7 +678,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       if (other.AppSource.Length != 0) {
         AppSource = other.AppSource;
       }
-      if (other.Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RenewOrganizationOffering) {
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type.RecordDailyMemberCount) {
         Type = other.Type;
       }
       if (other.time_ != null) {

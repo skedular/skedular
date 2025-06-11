@@ -31,10 +31,7 @@ public class AddOrganizationStripePaymentMethod
 
         var redirectUrl = await Workflow.ExecuteActivityAsync(
             (StripeIntegrations activity) => activity.SetOrganizationPaymentMethodAsync(
-                new SetOrganizationPaymentMethodInput(
-                    _state.Args.OrganizationId,
-                    _state.StripePaymentMethodEventState.SetupIntentId,
-                    _state.StripePaymentMethodEventState.RedirectStatus)),
+                new SetOrganizationPaymentMethodInput(args.OrganizationId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
             new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
         return redirectUrl;
