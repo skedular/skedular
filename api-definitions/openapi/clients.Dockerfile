@@ -17,7 +17,7 @@ RUN nswag \
   /Input:/openapi/skedular/gateway_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Gateway.V1 \
   /Classname:GatewayClient \
-  /Output:/output/Skedular/V1/Gateway/Gateway.g.cs \
+  /Output:/output/Skedular/Gateway/V1/Gateway.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
