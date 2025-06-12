@@ -16,6 +16,14 @@ dozzle.skedular.app {
 	reverse_proxy localhost:5001
 }
 
+stagingtemporal.skedular.app {
+	reverse_proxy localhost:8080
+}
+
+temporal.skedular.app {
+	reverse_proxy localhost:8081
+}
+
 crm.skedular.app {
 	reverse_proxy localhost:50000
 }

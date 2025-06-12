@@ -100,6 +100,31 @@ services:
     networks:
       - skedular_network
 
+  staging-temporal-admin-tools:
+    image: temporalio/admin-tools:latest
+    restart: unless-stopped
+    depends_on:
+      - staging-temporal
+    environment:
+      - TEMPORAL_ADDRESS=staging-temporal:7233
+      - TEMPORAL_CLI_ADDRESS=staging-temporal:7233
+    stdin_open: true
+    tty: true
+    networks:
+      - skedular_network
+
+  staging-temporal-ui:
+    image: temporalio/ui:latest
+    restart: unless-stopped
+    depends_on:
+      - staging-temporal
+    ports:
+      - 8080:8080
+    environment:
+      - TEMPORAL_ADDRESS=staging-temporal:7233
+    networks:
+      - skedular_network
+
   prod-temporal:
     image: temporalio/auto-setup:latest
     restart: unless-stopped
@@ -115,6 +140,31 @@ services:
       - POSTGRES_PWD=${SKEDULAR_POSTGRES_PASSWORD}
       - TEMPORAL_ADDRESS=prod-temporal:7233
       - TEMPORAL_CLI_ADDRESS=prod-temporal:7233
+    networks:
+      - skedular_network
+
+  prod-temporal-admin-tools:
+    image: temporalio/admin-tools:latest
+    restart: unless-stopped
+    depends_on:
+      - prod-temporal
+    environment:
+      - TEMPORAL_ADDRESS=prod-temporal:7233
+      - TEMPORAL_CLI_ADDRESS=prod-temporal:7233
+    stdin_open: true
+    tty: true
+    networks:
+      - skedular_network
+
+  prod-temporal-ui:
+    image: temporalio/ui:latest
+    restart: unless-stopped
+    depends_on:
+      - prod-temporal
+    ports:
+      - 8081:8080
+    environment:
+      - TEMPORAL_ADDRESS=prod-temporal:7233
     networks:
       - skedular_network
 
