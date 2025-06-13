@@ -409,6 +409,7 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
@@ -478,7 +479,7 @@ type Mutation {
   updateMyBillingContactDetails(input: UpdateMyBillingContactDetailsInput!): MyBillingContactDetailsPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
+  updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
@@ -599,21 +600,17 @@ type OrganizationAvailableResources {
   resourcesCount: Int!
 }
 
-type OrganizationBillingContactDetails {
-  addressLine1: String
+type OrganizationBillingDetails {
+  addressLine1: String!
   addressLine2: String
-  city: String
-  country: String
-  email: String
+  city: String!
+  companyName: String
+  country: String!
+  email: String!
   id: ID!
   province: String
-  suburb: String
-  zipcode: String
-}
-
-type OrganizationBillingContactDetailsPayload {
-  clientMutationId: String
-  organizationBillingContactDetails: OrganizationBillingContactDetails!
+  suburb: String!
+  zipcode: String!
 }
 
 type OrganizationBookingPermissions {
@@ -655,6 +652,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
+  organizationBillingDetails: OrganizationBillingDetails
   paymentMethods: [OrganizationPaymentMethod!]!
   physicalAddress: OrganizationAddressDetails!
   resourceTypes: [OrganizationTagDetails!]!
@@ -969,7 +967,6 @@ type Query {
   openingHoursMinutesStep: Int!
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizationAnalytics(from: DateTime! organizationId: String! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
-  organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -1292,6 +1289,21 @@ input AddLocationTagInput {
   id: String
   name: String!
   organizationId: String!
+}
+
+input AddOrganizationBillingDetailsInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  clientMutationId: String
+  companyName: String
+  country: String!
+  email: String!
+  id: String
+  organizationId: String!
+  province: String
+  suburb: String!
+  zipcode: String!
 }
 
 input AddOrganizationInput {
@@ -1958,17 +1970,18 @@ input UpdateMyCustomerDetailsInput {
   title: String
 }
 
-input UpdateOrganizationBillingContactDetailsInput {
-  addressLine1: String
+input UpdateOrganizationBillingDetailsInput {
+  addressLine1: String!
   addressLine2: String
-  city: String
+  city: String!
   clientMutationId: String
-  country: String
-  email: String
-  organizationId: String!
+  companyName: String
+  country: String!
+  email: String!
+  id: String!
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 input UpdateOrganizationInput {

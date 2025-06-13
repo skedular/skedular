@@ -33,6 +33,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
     public DbSet<StripePaymentIntent> StripePaymentIntent { get; set; }
     public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
+    public DbSet<OrganizationBillingDetails> OrganizationBillingDetails { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 

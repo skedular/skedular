@@ -12,6 +12,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Configurations;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
+using OrganizationBillingDetails = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using TermsOfUse = Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse;
 using Version = Api.Shared.Services.Grpc.Skedular.Organization.V1.Version;
@@ -28,6 +29,7 @@ public class OrganizationGrpcService(
     IOrganizationMemberService organizationMemberService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITagService tagService,
+    IOrganizationBillingService organizationBillingService,
     IMapper mapper) : OrganizationService.OrganizationServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -275,5 +277,34 @@ public class OrganizationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<OrganizationBillingDetails> GetOrganizationBillingDetails(
+        GetOrganizationBillingDetailsInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await organizationBillingService.GetByOrganizationIdAsync(request.OrganizationId, context.CancellationToken));
+    }
+
+    public override async Task<OrganizationBillingDetails> AddOrganizationBillingDetails(
+        AddOrganizationBillingDetailsInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+        var organization = await organizationBillingService.AddAsync(mapper.MapTo(request), context.CancellationToken);
+
+        return mapper.MapToGrpcResponse(organization.OrganizationBillingDetails);
+    }
+
+    public override async Task<OrganizationBillingDetails> UpdateOrganizationBillingDetails(
+        UpdateOrganizationBillingDetailsInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+        var organization = await organizationBillingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken);
+
+        return mapper.MapToGrpcResponse(organization.OrganizationBillingDetails);
     }
 }

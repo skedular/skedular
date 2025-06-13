@@ -24,16 +24,6 @@ public class Query(IMapper mapper, IVersionService versionService)
         CancellationToken cancellationToken) => await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<OrganizationBillingContactDetails> OrganizationBillingContactDetailsAsync(
-        string organizationId,
-        [Service] IOrganizationBillingService organizationBillingService,
-        CancellationToken cancellationToken)
-    {
-        var organization = await organizationBillingService.GetByOrganizationIdAsync(organizationId, cancellationToken);
-        return mapper.MapTo(organization);
-    }
-
-    [UseResolverScope]
     public async Task<CustomerBillingContactDetails> MyBillingContactDetailsAsync(
         [Service] ICustomerBillingService customerBillingService,
         CancellationToken cancellationToken)

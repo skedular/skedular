@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,8 +8,12 @@ namespace Payment.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class Address : EntityBase
+public class Address : EntityBase, IAddressDetails
 {
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
+
+    public virtual Organization? Organization { get; set; }
     public string AddressLine1 { get; set; }
     public string? AddressLine2 { get; set; }
     public string Suburb { get; set; }
@@ -16,10 +21,6 @@ public class Address : EntityBase
     public string? Province { get; set; }
     public string Zipcode { get; set; }
     public string Country { get; set; }
-    public decimal Latitude { get; set; }
-    public decimal Longitude { get; set; }
-
-    public virtual Organization? Organization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

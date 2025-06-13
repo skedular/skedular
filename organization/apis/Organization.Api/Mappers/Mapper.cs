@@ -5,11 +5,13 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL;
-using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
+using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
 using Address = Organization.Shared.Database.Entities.Address;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
+using AzureTenant = Organization.Shared.Models.AzureTenant;
+using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
 using Identity = Organization.Shared.Models.Identity;
@@ -29,6 +31,11 @@ using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
+using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
+using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using StripeCustomer = Organization.Shared.Models.StripeCustomer;
+using StripePaymentMethod = Organization.Shared.Models.StripePaymentMethod;
+using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 
 namespace Organization.Api.Mappers;
 
@@ -126,7 +133,27 @@ public interface IMapper
     Tag MapTo(UpdateLocationTagInput src);
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Organization organization);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Organization organization);
+    OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization);
+
+    OrganizationBillingDetails MergeToEntity(
+        Shared.Models.OrganizationBillingDetails src,
+        OrganizationBillingDetails dest,
+        Shared.Database.Entities.Organization organization);
+
     CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src);
+    Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src);
+    Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src);
+    GraphQL.Billing.OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src);
+
+    Shared.Models.OrganizationBillingDetails MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput src);
+
+    Shared.Models.OrganizationBillingDetails MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateOrganizationBillingDetailsInput src);
+
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails MapToGrpcResponse(
+        Shared.Models.OrganizationBillingDetails? src);
+
+    Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src);
 }
 
 public class Mapper : IMapper
@@ -164,6 +191,7 @@ public class Mapper : IMapper
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.OrganizationBillingDetails = MapTo(src.OrganizationBillingDetails, organization);
         organization.StripePaymentMethods = MapTo(src.StripePaymentMethods, organization).ToList();
         organization.StripeCustomer = MapTo(src.StripeCustomer, organization);
 
@@ -336,6 +364,7 @@ public class Mapper : IMapper
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
             PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
+            OrganizationBillingDetails = MapToGraphQl(src.OrganizationBillingDetails),
             AvailableOfferings = availableOfferings,
             ActiveOffering = MapTo(organizationOffering),
             CanModify = src.CanModify,
@@ -773,6 +802,28 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationBillingDetails(), organization);
+
+    public OrganizationBillingDetails MergeToEntity(
+        Shared.Models.OrganizationBillingDetails src,
+        OrganizationBillingDetails dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.CompanyName = src.CompanyName;
+        dest.Email = src.Email;
+        dest.AddressLine1 = src.AddressLine1;
+        dest.AddressLine2 = src.AddressLine2;
+        dest.Suburb = src.Suburb;
+        dest.City = src.City;
+        dest.Province = src.Province;
+        dest.Zipcode = src.Zipcode;
+        dest.Country = src.Country;
+        dest.Organization = organization;
+        return dest;
+    }
+
     public CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src) =>
         new()
         {
@@ -781,6 +832,120 @@ public class Mapper : IMapper
             Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
+
+    public Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src) =>
+        new()
+        {
+            Id = src.Id,
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
+
+    public GraphQL.Billing.OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
+
+    public Shared.Models.OrganizationBillingDetails MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Shared.Models.OrganizationBillingDetails MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateOrganizationBillingDetailsInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
+
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails MapToGrpcResponse(
+        Shared.Models.OrganizationBillingDetails? src) =>
+        src is null
+            ? new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails { Id = string.Empty }
+            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName.ToSafeString(),
+                Email = src.Email,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City,
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    public Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src) =>
+        src is null
+            ? null
+            : new Shared.Models.OrganizationBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1189,6 +1354,24 @@ public class Mapper : IMapper
                 Organization = organization
             };
 
+    private static Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src, Shared.Models.Organization organization) =>
+        src is null
+            ? null
+            : new Shared.Models.OrganizationBillingDetails
+            {
+                Id = src.Id,
+                CompanyName =  src.CompanyName, 
+                Email =  src.Email, 
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                Organization = organization
+            };
+
     private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Organization organization) =>
         new()
         {
@@ -1218,6 +1401,23 @@ public class Mapper : IMapper
             : new AddressDetails
             {
                 FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    private static GraphQL.Billing.OrganizationBillingDetails? MapToGraphQl(Shared.Models.OrganizationBillingDetails? src) =>
+        src is null
+            ? null
+            : new GraphQL.Billing.OrganizationBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

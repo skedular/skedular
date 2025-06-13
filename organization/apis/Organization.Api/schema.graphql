@@ -26,6 +26,8 @@ type InviteCustomersToJoinOrganizationPayload {
 }
 
 type Mutation {
+  addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
+  updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
@@ -92,6 +94,19 @@ type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
+type OrganizationBillingDetails {
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
+  id: ID!
+}
+
 type OrganizationConnection {
   pageInfo: PageInfo!
   edges: [OrganizationEdge!]!
@@ -116,6 +131,7 @@ type OrganizationDetails {
   contactEmail: String
   contactPhone: String
   physicalAddress: OrganizationAddressDetails!
+  organizationBillingDetails: OrganizationBillingDetails
   availableOfferings: [OrganizationOfferingDetails!]!
   activeOffering: OrganizationActiveOfferingDetails!
   hasFutureBooking: Boolean!
@@ -369,6 +385,21 @@ input AddLocationTagInput {
   color: String
 }
 
+input AddOrganizationBillingDetailsInput {
+  clientMutationId: String
+  id: String
+  organizationId: String!
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
+}
+
 input AddOrganizationInput {
   clientMutationId: String
   id: String
@@ -576,6 +607,20 @@ input UpdateLocationTagInput {
   name: String!
   description: String
   color: String
+}
+
+input UpdateOrganizationBillingDetailsInput {
+  clientMutationId: String
+  id: String!
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
 }
 
 input UpdateOrganizationInput {

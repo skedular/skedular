@@ -1,9 +1,4 @@
-using Enterprise.Shared.GraphQL.Types;
-using Enterprise.Shared.Pagination;
 using HotChocolate;
-using HotChocolate.Types.Pagination;
-using HotChocolate.Types.Relay;
-using Organization.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 

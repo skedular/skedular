@@ -47,7 +47,6 @@ public interface IMapper
     Shared.Models.WorkspaceMember MapTo(WorkspaceMember src, Shared.Models.Workspace workspace);
     Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
     Booking MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
-    OrganizationBillingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src);
     OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src);
     LocationPermissions MapTo(Permissions src);
     TeamPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
@@ -60,7 +59,6 @@ public interface IMapper
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src);
     Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src);
-    Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
     OrganizationCustomTag MapTo(CustomTag src);
     OrganizationZone MapTo(Zone src);
 }
@@ -231,9 +229,6 @@ public class Mapper : IMapper
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking
         };
-
-    public OrganizationBillingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src) =>
-        new() { CanViewBillingInfo = src.CanViewBillingInfo, CanManageBillingInfo = src.CanManageBillingInfo };
 
     public OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src) =>
         new()
@@ -498,8 +493,6 @@ public class Mapper : IMapper
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             OrganizationProductTags = MapTo(src.OrganizationProductTags).ToList()
         };
-
-    public Workspace MapToEntity(Shared.Models.Workspace src, Organization organization) => MergeToEntity(src, new Workspace(), organization);
 
     public OrganizationCustomTag MapTo(CustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };

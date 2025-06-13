@@ -17,8 +17,9 @@ public class ScheduleRenewOrganizationOffering
             await Workflow.DelayAsync(delayDuration);
         }
 
-        await Workflow.ExecuteActivityAsync(
-            (OrganizationOfferings activity) => activity.RenewOrganizationOfferingAsync(new RenewOrganizationOfferingInput(args.OrganizationId)),
+        _ = await Workflow.ExecuteActivityAsync(
+            (OrganizationOfferings activity) =>
+                activity.RenewAutoRenewableOrganizationOfferingAsync(new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId)),
             new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
     }
 }

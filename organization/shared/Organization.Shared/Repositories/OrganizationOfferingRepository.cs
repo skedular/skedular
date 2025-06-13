@@ -9,6 +9,7 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationOfferingRepository : IRepository<OrganizationOffering>
 {
     Task<ICollection<OrganizationOffering>> GetActiveOfferingsAsync(CancellationToken cancellationToken);
+    Task<ICollection<OrganizationOffering>> GetExpiredAutoRenewableOfferingsAsync(string organizationId, CancellationToken cancellationToken);
     void Add(OrganizationOffering organizationOffering);
     void Remove(OrganizationOffering organizationOffering);
     void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
@@ -24,6 +25,18 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
             .Where(query => !query.DeletedAt.HasValue)
             .Include(query => query.Organization)
             .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<OrganizationOffering>> GetExpiredAutoRenewableOfferingsAsync(
+        string organizationId,
+        CancellationToken cancellationToken)
+    {
+        var now = TimeProvider.GetUtcNow();
+
+        return await DbContext.OrganizationOffering
+            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.End <= now && query.AutoRenew)
+            .Include(query => query.Organization)
+            .ToListAsync(cancellationToken);
+    }
 
     public void Add(OrganizationOffering organizationOffering)
     {

@@ -52,6 +52,7 @@ message Organization {
   Address physicalAddress = 14;
   string contactEmail = 15;
   string contactPhone = 16;
+  OrganizationBillingDetails organizationBillingDetails = 17;
 }
 
 enum Role {
@@ -118,4 +119,17 @@ message Address {
   string province = 6;
   string zipcode = 7;
   string country = 8;
+}
+
+message OrganizationBillingDetails {
+  string id = 1;
+  string companyName = 2;
+  string email = 3;
+  string addressLine1 = 4;
+  string addressLine2 = 5;
+  string suburb = 6;
+  string city = 7;
+  string province = 8;
+  string zipcode = 9;
+  string country = 10;
 }

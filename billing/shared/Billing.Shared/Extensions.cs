@@ -30,8 +30,7 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IBillingInternalPublisher, BillingInternalPublisher>()
-            .AddScoped<IBillingPublisher, BillingPublisher>();
+            .AddScoped<IBillingInternalPublisher, BillingInternalPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

@@ -30,10 +30,6 @@ public class BillingSubscriber(
 
                 break;
 
-            case Type.OrganizationBillingInfoUpdated:
-                // TODO: 20240601 - Morteza: Need to update Stripe customer billing info
-                break;
-
             case Type.BillingOrganizationOfferingDeleted:
                 break;
         }

@@ -220,14 +220,27 @@ services:
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
       Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
+      Billing__GrpcUrl: http://staging-apis-01:10802
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://staging-apis-01:10302
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://staging-apis-01:10002
       Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
+      Location__GrpcUrl: http://staging-apis-01:10602
       Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://staging-apis-01:10202
       Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://staging-apis-01:10102
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
+      Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
+      Team__GrpcUrl: http://staging-apis-01:10502
+      Marketplace__ApiKey: ${STAGING_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://staging-apis-01:11002
+      Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://staging-apis-01:11102
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
@@ -322,6 +335,10 @@ services:
       Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://staging-apis-01:10502
+      Marketplace__ApiKey: ${STAGING_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://staging-apis-01:11002
+      Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://staging-apis-01:11102
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
@@ -419,6 +436,10 @@ services:
       Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://staging-apis-01:10502
+      Marketplace__ApiKey: ${STAGING_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://staging-apis-01:11002
+      Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://staging-apis-01:11102
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
@@ -563,14 +584,27 @@ services:
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
       Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
+      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://production-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
+      Location__GrpcUrl: http://production-apis-01:10602
       Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://production-apis-01:10202
       Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
+      Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
+      Team__GrpcUrl: http://production-apis-01:10502
+      Marketplace__ApiKey: ${PRODUCTION_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://production-apis-01:11002
+      Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://production-apis-01:11102
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
@@ -648,23 +682,27 @@ services:
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://prod-apis-01:10802
+      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
-      Booking__GrpcUrl: http://prod-apis-01:10302
+      Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
-      Customer__GrpcUrl: http://prod-apis-01:10002
+      Customer__GrpcUrl: http://production-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
-      Location__GrpcUrl: http://prod-apis-01:10602
+      Location__GrpcUrl: http://production-apis-01:10602
       Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://prod-apis-01:10402
+      Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
-      Organization__GrpcUrl: http://prod-apis-01:10202
+      Organization__GrpcUrl: http://production-apis-01:10202
       Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://prod-apis-01:10102
+      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
-      Slack__GrpcUrl: http://prod-apis-01:10702
+      Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
-      Team__GrpcUrl: http://prod-apis-01:10502
+      Team__GrpcUrl: http://production-apis-01:10502
+      Marketplace__ApiKey: ${PRODUCTION_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://production-apis-01:11002
+      Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://production-apis-01:11102
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
@@ -745,23 +783,27 @@ services:
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://prod-apis-01:10802
+      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
-      Booking__GrpcUrl: http://prod-apis-01:10302
+      Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
-      Customer__GrpcUrl: http://prod-apis-01:10002
+      Customer__GrpcUrl: http://production-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
-      Location__GrpcUrl: http://prod-apis-01:10602
+      Location__GrpcUrl: http://production-apis-01:10602
       Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://prod-apis-01:10402
+      Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
-      Organization__GrpcUrl: http://prod-apis-01:10202
+      Organization__GrpcUrl: http://production-apis-01:10202
       Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://prod-apis-01:10102
+      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
-      Slack__GrpcUrl: http://prod-apis-01:10702
+      Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
-      Team__GrpcUrl: http://prod-apis-01:10502
+      Team__GrpcUrl: http://production-apis-01:10502
+      Marketplace__ApiKey: ${PRODUCTION_SKEDULAR_MARKETPLACE_APIKEY}
+      Marketplace__GrpcUrl: http://production-apis-01:11002
+      Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
+      Core__GrpcUrl: http://production-apis-01:11102
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}

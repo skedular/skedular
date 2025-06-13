@@ -38,52 +38,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /v1/billing/republish-organization-billing-info/{organizationId}:
-    put:
-      tags:
-        - v1
-        - billing
-        - organization
-      summary: republish organization billing info
-      operationId: republishOrganizationBillingInfo
-      parameters:
-        - in: path
-          name: organizationId
-          schema:
-            type: string
-          required: true
-
-      responses:
-        "200":
-          description: the status of organization republishing
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /v1/billing/republish-all-organizations-billing-info:
-    put:
-      tags:
-        - v1
-        - billing
-        - organization
-      summary: republish all organizations billing info
-      operationId: republishAllOrganizationsBillingInfo
-
-      responses:
-        "200":
-          description: the status of organization republishing
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
 components:
   schemas:
     Error:

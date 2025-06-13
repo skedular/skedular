@@ -32,6 +32,7 @@ public interface IRepositoryFactory
     IStripeCustomerRepository StripeCustomerRepository { get; }
     IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, IRepositoryFactory
@@ -63,6 +64,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
         StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
         StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
+        OrganizationBillingDetailsRepository = new OrganizationOrganizationBillingDetailsRepository(_dbContext, timeProvider);
     }
 
     public IAddressRepository AddressRepository { get; }
@@ -88,4 +90,5 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IStripeCustomerRepository StripeCustomerRepository { get; }
     public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
     public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    public IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
 }

@@ -1,8 +1,6 @@
-using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Api.Shared.Services.Models;
 using Billing.Api.GraphQL;
 using Billing.Shared.Models;
-using Enterprise.Shared;
 
 namespace Billing.Api.Mappers;
 
@@ -14,7 +12,6 @@ public interface IMapper
     MyBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId);
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization MapTo(Shared.Database.Entities.Organization src);
-    OrganizationBillingInfo MapToGrpcResponse(Organization src);
 }
 
 public class Mapper : IMapper
@@ -105,19 +102,6 @@ public class Mapper : IMapper
 
         return organization;
     }
-
-    public OrganizationBillingInfo MapToGrpcResponse(Organization src) =>
-        new()
-        {
-            Email = src.BillingContactEmail.ToSafeString(),
-            AddressLine1 = src.BillingContactAddressLine1.ToSafeString(),
-            AddressLine2 = src.BillingContactAddressLine2.ToSafeString(),
-            Suburb = src.BillingContactSuburb.ToSafeString(),
-            City = src.BillingContactCity.ToSafeString(),
-            Province = src.BillingContactProvince.ToSafeString(),
-            Zipcode = src.BillingContactZipcode.ToSafeString(),
-            Country = src.BillingContactCountry.ToSafeString()
-        };
 
     private OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Organization organization) =>
         new()

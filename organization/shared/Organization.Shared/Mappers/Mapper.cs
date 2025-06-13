@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
 using Stripe;
 using Address = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address;
+using OrganizationBillingDetails = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingDetails;
 using Customer = Organization.Shared.Models.Customer;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
@@ -52,7 +53,8 @@ public class Mapper : IMapper
                 UnitPrice = organizationOffering.UnitPrice
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            OrganizationBillingDetails = MapTo(src.OrganizationBillingDetails)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -170,6 +172,23 @@ public class Mapper : IMapper
             : new Address
             {
                 Id = src.Id,
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString()
+            };
+
+    private static OrganizationBillingDetails? MapTo(Models.OrganizationBillingDetails? src) =>
+        src is null
+            ? null
+            : new OrganizationBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName.ToSafeString(),
+                Email = src.Email.ToSafeString(),
                 AddressLine1 = src.AddressLine1.ToSafeString(),
                 AddressLine2 = src.AddressLine2.ToSafeString(),
                 Suburb = src.Suburb.ToSafeString(),

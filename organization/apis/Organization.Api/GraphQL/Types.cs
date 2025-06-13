@@ -5,6 +5,7 @@ using HotChocolate;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Organization.Shared.Models;
+using OrganizationBillingDetails = Organization.Api.GraphQL.Billing.OrganizationBillingDetails;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -199,6 +200,9 @@ public class OrganizationDetails : Node
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
     [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; } = new();
+
+    [GraphQLName("organizationBillingDetails")]
+    public OrganizationBillingDetails? OrganizationBillingDetails { get; set; } = new();
 
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();

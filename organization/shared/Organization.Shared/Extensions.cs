@@ -43,7 +43,8 @@ public static class Extensions
             .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
             .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()
-            .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>();
+            .AddScoped<IStripePaymentMethodRepository, StripePaymentMethodRepository>()
+            .AddScoped<IOrganizationBillingDetailsRepository, OrganizationOrganizationBillingDetailsRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

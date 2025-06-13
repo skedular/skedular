@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.Skedular.Billing.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -14,7 +14,7 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BillingService = Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Workspace = Slack.Shared.Models.Workspace;
@@ -35,13 +35,13 @@ public interface ISettingsPage
 public class SettingsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
-    BillingConfiguration billingConfiguration,
+    OrganizationConfiguration organizationConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     ICommonComponents commonComponents,
-    IBillingService billingService,
-    BillingService.BillingServiceClient billingServiceClient,
+    IOrganizationService organizationService,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IWorkspaceChannelService workspaceChannelService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
@@ -127,10 +127,10 @@ public class SettingsPage(
         {
             case BillingActionTypes.Billing:
                 {
-                    var permissions = await billingService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+                    var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                     context.PageContext.PushCurrentPageToVisitedPages();
-                    if (permissions.CanManageBillingInfo)
+                    if (permissions.CanModify)
                     {
                         await OpenEditBillingInfoDialogAsync(workspace, workspaceMember, request.TriggerId, context, cancellationToken);
                     }
@@ -232,8 +232,8 @@ public class SettingsPage(
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
         var actionMenus = new List<StaticSelectMenu>();
-        var permissions = await billingService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
-        if (permissions.CanViewBillingInfo)
+        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        if (permissions.CanView)
         {
             actionMenus.Add(new StaticSelectMenu
             {
@@ -309,9 +309,9 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var billingInfo = await billingServiceClient.GetOrganizationBillingInfoAsync(
-            new GetOrganizationBillingInfoInput { OrganizationId = workspace.Organization.Id },
-            billingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var billingInfo = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
+            new GetOrganizationBillingDetailsInput { OrganizationId = workspace.Organization.Id },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var email = new SectionBlock { Text = $"Email: {billingInfo.Email.ToSafeString()}".ToPlainText() };
@@ -345,9 +345,9 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var billingInfo = await billingServiceClient.GetOrganizationBillingInfoAsync(
-            new GetOrganizationBillingInfoInput { OrganizationId = workspace.Organization.Id },
-            billingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var billingInfo = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
+            new GetOrganizationBillingDetailsInput { OrganizationId = workspace.Organization.Id },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var email = new InputBlock

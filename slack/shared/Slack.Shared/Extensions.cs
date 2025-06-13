@@ -1,7 +1,8 @@
-using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Marketplace.V1;
 using Api.Shared.Services.Grpc.Skedular.Notification.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Grpc.Skedular.Payment.V1;
@@ -15,6 +16,7 @@ using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using SlackNet.AspNetCore;
+using BillingService = Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService;
 
 namespace Slack.Shared;
 
@@ -159,6 +161,16 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(teamConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(teamConfiguration.GrpcUrl);
 
+        var marketplaceConfiguration = configuration.GetSection(MarketplaceConfiguration.Key).Get<MarketplaceConfiguration>();
+        ArgumentNullException.ThrowIfNull(marketplaceConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(marketplaceConfiguration.GrpcUrl);
+        
+        var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
+        ArgumentNullException.ThrowIfNull(coreConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(coreConfiguration.GrpcUrl);
+
         services.AddGrpcClient<BillingService.BillingServiceClient>(GrpcClients.ConfigureBilling);
         services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
@@ -167,6 +179,8 @@ public static class Extensions
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
         services.AddGrpcClient<PaymentService.PaymentServiceClient>(GrpcClients.ConfigurePayment);
         services.AddGrpcClient<TeamService.TeamServiceClient>(GrpcClients.ConfigureTeam);
+        services.AddGrpcClient<MarketplaceService.MarketplaceServiceClient>(GrpcClients.ConfigureMarketplace);
+        services.AddGrpcClient<CoreService.CoreServiceClient>(GrpcClients.ConfigureCore);
 
         return services
             .AddSingleton(slackConfiguration)
@@ -177,6 +191,8 @@ public static class Extensions
             .AddSingleton(notificationConfiguration)
             .AddSingleton(organizationConfiguration)
             .AddSingleton(paymentConfiguration)
-            .AddSingleton(teamConfiguration);
+            .AddSingleton(teamConfiguration)
+            .AddSingleton(marketplaceConfiguration)
+            .AddSingleton(coreConfiguration);
     }
 }

@@ -31,38 +31,30 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             "AiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhQKDGRvbWFpblNv",
             "dXJjZRgDIAEoCRIRCglhcHBTb3VyY2UYBCABKAkSGwoEdHlwZRgFIAEoDjIN",
             "LmJpbGxpbmcuVHlwZRIoCgR0aW1lGAYgASgLMhouZ29vZ2xlLnByb3RvYnVm",
-            "LlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAcgASgJIuwBCgREYXRhEksK",
+            "LlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAcgASgJIqEBCgREYXRhEksK",
             "G29yZ2FuaXphdGlvbk9mZmVyaW5nQmlsbGluZxgBIAEoCzIkLmJpbGxpbmcu",
-            "T3JnYW5pemF0aW9uT2ZmZXJpbmdCaWxsaW5nSAASSQoab3JnYW5pemF0aW9u",
-            "QmlsbGluZ0NvbnRhY3QYAiABKAsyIy5iaWxsaW5nLk9yZ2FuaXphdGlvbkJp",
-            "bGxpbmdDb250YWN0SAASQQoWY3VzdG9tZXJCaWxsaW5nQ29udGFjdBgDIAEo",
-            "CzIfLmJpbGxpbmcuQ3VzdG9tZXJCaWxsaW5nQ29udGFjdEgAQgkKB3BheWxv",
-            "YWQijQEKG09yZ2FuaXphdGlvbk9mZmVyaW5nQmlsbGluZxISCgpvZmZlcmlu",
-            "Z0lkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJEhEKCXRvdGFsQ29z",
-            "dBgDIAEoAxIvCgtpbnZvaWNlRGF0ZRgEIAEoCzIaLmdvb2dsZS5wcm90b2J1",
-            "Zi5UaW1lc3RhbXAiwQEKGk9yZ2FuaXphdGlvbkJpbGxpbmdDb250YWN0EhYK",
-            "Dm9yZ2FuaXphdGlvbklkGAEgASgJEg0KBWVtYWlsGAIgASgJEhQKDGFkZHJl",
-            "c3NMaW5lMRgDIAEoCRIUCgxhZGRyZXNzTGluZTIYBCABKAkSDgoGc3VidXJi",
-            "GAUgASgJEgwKBGNpdHkYBiABKAkSEAoIcHJvdmluY2UYByABKAkSDwoHemlw",
-            "Y29kZRgIIAEoCRIPCgdjb3VudHJ5GAkgASgJIs4BChZDdXN0b21lckJpbGxp",
-            "bmdDb250YWN0EhIKCmN1c3RvbWVySWQYASABKAkSEwoLY29tcGFueU5hbWUY",
-            "AiABKAkSDQoFZW1haWwYAyABKAkSFAoMYWRkcmVzc0xpbmUxGAQgASgJEhQK",
-            "DGFkZHJlc3NMaW5lMhgFIAEoCRIOCgZzdWJ1cmIYBiABKAkSDAoEY2l0eRgH",
-            "IAEoCRIQCghwcm92aW5jZRgIIAEoCRIPCgd6aXBjb2RlGAkgASgJEg8KB2Nv",
-            "dW50cnkYCiABKAkqmwEKBFR5cGUSJwojQmlsbGluZ09yZ2FuaXphdGlvbk9m",
-            "ZmVyaW5nVXBzZXJ0ZWQQABImCiJCaWxsaW5nT3JnYW5pemF0aW9uT2ZmZXJp",
-            "bmdEZWxldGVkEAESIgoeT3JnYW5pemF0aW9uQmlsbGluZ0luZm9VcGRhdGVk",
-            "EAISHgoaQ3VzdG9tZXJCaWxsaW5nSW5mb1VwZGF0ZWQQA0I2qgIzQXBpLlNo",
-            "YXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5CaWxsaW5nLlYxLlZhbHVl",
-            "YgZwcm90bzM="));
+            "T3JnYW5pemF0aW9uT2ZmZXJpbmdCaWxsaW5nSAASQQoWY3VzdG9tZXJCaWxs",
+            "aW5nQ29udGFjdBgDIAEoCzIfLmJpbGxpbmcuQ3VzdG9tZXJCaWxsaW5nQ29u",
+            "dGFjdEgAQgkKB3BheWxvYWQijQEKG09yZ2FuaXphdGlvbk9mZmVyaW5nQmls",
+            "bGluZxISCgpvZmZlcmluZ0lkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIg",
+            "ASgJEhEKCXRvdGFsQ29zdBgDIAEoAxIvCgtpbnZvaWNlRGF0ZRgEIAEoCzIa",
+            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAizgEKFkN1c3RvbWVyQmlsbGlu",
+            "Z0NvbnRhY3QSEgoKY3VzdG9tZXJJZBgBIAEoCRITCgtjb21wYW55TmFtZRgC",
+            "IAEoCRINCgVlbWFpbBgDIAEoCRIUCgxhZGRyZXNzTGluZTEYBCABKAkSFAoM",
+            "YWRkcmVzc0xpbmUyGAUgASgJEg4KBnN1YnVyYhgGIAEoCRIMCgRjaXR5GAcg",
+            "ASgJEhAKCHByb3ZpbmNlGAggASgJEg8KB3ppcGNvZGUYCSABKAkSDwoHY291",
+            "bnRyeRgKIAEoCSp3CgRUeXBlEicKI0JpbGxpbmdPcmdhbml6YXRpb25PZmZl",
+            "cmluZ1Vwc2VydGVkEAASJgoiQmlsbGluZ09yZ2FuaXphdGlvbk9mZmVyaW5n",
+            "RGVsZXRlZBABEh4KGkN1c3RvbWVyQmlsbGluZ0luZm9VcGRhdGVkEAJCNqoC",
+            "M0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQmlsbGluZy5W",
+            "MS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Metadata.Parser, new[]{ "Id", "DeletedAt", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data.Parser, new[]{ "OrganizationOfferingBilling", "OrganizationBillingContact", "CustomerBillingContact" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data.Parser, new[]{ "OrganizationOfferingBilling", "CustomerBillingContact" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling.Parser, new[]{ "OfferingId", "OrganizationId", "TotalCost", "InvoiceDate" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact.Parser, new[]{ "OrganizationId", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.CustomerBillingContact), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.CustomerBillingContact.Parser, new[]{ "CustomerId", "CompanyName", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null)
           }));
     }
@@ -73,8 +65,7 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
   public enum Type {
     [pbr::OriginalName("BillingOrganizationOfferingUpserted")] BillingOrganizationOfferingUpserted = 0,
     [pbr::OriginalName("BillingOrganizationOfferingDeleted")] BillingOrganizationOfferingDeleted = 1,
-    [pbr::OriginalName("OrganizationBillingInfoUpdated")] OrganizationBillingInfoUpdated = 2,
-    [pbr::OriginalName("CustomerBillingInfoUpdated")] CustomerBillingInfoUpdated = 3,
+    [pbr::OriginalName("CustomerBillingInfoUpdated")] CustomerBillingInfoUpdated = 2,
   }
 
   #endregion
@@ -810,9 +801,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
         case PayloadOneofCase.OrganizationOfferingBilling:
           OrganizationOfferingBilling = other.OrganizationOfferingBilling.Clone();
           break;
-        case PayloadOneofCase.OrganizationBillingContact:
-          OrganizationBillingContact = other.OrganizationBillingContact.Clone();
-          break;
         case PayloadOneofCase.CustomerBillingContact:
           CustomerBillingContact = other.CustomerBillingContact.Clone();
           break;
@@ -839,18 +827,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "organizationBillingContact" field.</summary>
-    public const int OrganizationBillingContactFieldNumber = 2;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact OrganizationBillingContact {
-      get { return payloadCase_ == PayloadOneofCase.OrganizationBillingContact ? (global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact) payload_ : null; }
-      set {
-        payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OrganizationBillingContact;
-      }
-    }
-
     /// <summary>Field number for the "customerBillingContact" field.</summary>
     public const int CustomerBillingContactFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -868,7 +844,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     public enum PayloadOneofCase {
       None = 0,
       OrganizationOfferingBilling = 1,
-      OrganizationBillingContact = 2,
       CustomerBillingContact = 3,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
@@ -901,7 +876,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
         return true;
       }
       if (!object.Equals(OrganizationOfferingBilling, other.OrganizationOfferingBilling)) return false;
-      if (!object.Equals(OrganizationBillingContact, other.OrganizationBillingContact)) return false;
       if (!object.Equals(CustomerBillingContact, other.CustomerBillingContact)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -912,7 +886,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (payloadCase_ == PayloadOneofCase.OrganizationOfferingBilling) hash ^= OrganizationOfferingBilling.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) hash ^= OrganizationBillingContact.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.CustomerBillingContact) hash ^= CustomerBillingContact.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
@@ -937,10 +910,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(OrganizationOfferingBilling);
       }
-      if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) {
-        output.WriteRawTag(18);
-        output.WriteMessage(OrganizationBillingContact);
-      }
       if (payloadCase_ == PayloadOneofCase.CustomerBillingContact) {
         output.WriteRawTag(26);
         output.WriteMessage(CustomerBillingContact);
@@ -959,10 +928,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(OrganizationOfferingBilling);
       }
-      if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) {
-        output.WriteRawTag(18);
-        output.WriteMessage(OrganizationBillingContact);
-      }
       if (payloadCase_ == PayloadOneofCase.CustomerBillingContact) {
         output.WriteRawTag(26);
         output.WriteMessage(CustomerBillingContact);
@@ -979,9 +944,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
       int size = 0;
       if (payloadCase_ == PayloadOneofCase.OrganizationOfferingBilling) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationOfferingBilling);
-      }
-      if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationBillingContact);
       }
       if (payloadCase_ == PayloadOneofCase.CustomerBillingContact) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(CustomerBillingContact);
@@ -1004,12 +966,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             OrganizationOfferingBilling = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
           }
           OrganizationOfferingBilling.MergeFrom(other.OrganizationOfferingBilling);
-          break;
-        case PayloadOneofCase.OrganizationBillingContact:
-          if (OrganizationBillingContact == null) {
-            OrganizationBillingContact = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact();
-          }
-          OrganizationBillingContact.MergeFrom(other.OrganizationBillingContact);
           break;
         case PayloadOneofCase.CustomerBillingContact:
           if (CustomerBillingContact == null) {
@@ -1047,15 +1003,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             OrganizationOfferingBilling = subBuilder;
             break;
           }
-          case 18: {
-            global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact subBuilder = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact();
-            if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) {
-              subBuilder.MergeFrom(OrganizationBillingContact);
-            }
-            input.ReadMessage(subBuilder);
-            OrganizationBillingContact = subBuilder;
-            break;
-          }
           case 26: {
             global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.CustomerBillingContact subBuilder = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.CustomerBillingContact();
             if (payloadCase_ == PayloadOneofCase.CustomerBillingContact) {
@@ -1091,15 +1038,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             }
             input.ReadMessage(subBuilder);
             OrganizationOfferingBilling = subBuilder;
-            break;
-          }
-          case 18: {
-            global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact subBuilder = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingContact();
-            if (payloadCase_ == PayloadOneofCase.OrganizationBillingContact) {
-              subBuilder.MergeFrom(OrganizationBillingContact);
-            }
-            input.ReadMessage(subBuilder);
-            OrganizationBillingContact = subBuilder;
             break;
           }
           case 26: {
@@ -1437,500 +1375,6 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class OrganizationBillingContact : pb::IMessage<OrganizationBillingContact>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<OrganizationBillingContact> _parser = new pb::MessageParser<OrganizationBillingContact>(() => new OrganizationBillingContact());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<OrganizationBillingContact> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.BillingV1ValueReflection.Descriptor.MessageTypes[4]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationBillingContact() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationBillingContact(OrganizationBillingContact other) : this() {
-      organizationId_ = other.organizationId_;
-      email_ = other.email_;
-      addressLine1_ = other.addressLine1_;
-      addressLine2_ = other.addressLine2_;
-      suburb_ = other.suburb_;
-      city_ = other.city_;
-      province_ = other.province_;
-      zipcode_ = other.zipcode_;
-      country_ = other.country_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public OrganizationBillingContact Clone() {
-      return new OrganizationBillingContact(this);
-    }
-
-    /// <summary>Field number for the "organizationId" field.</summary>
-    public const int OrganizationIdFieldNumber = 1;
-    private string organizationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationId {
-      get { return organizationId_; }
-      set {
-        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "email" field.</summary>
-    public const int EmailFieldNumber = 2;
-    private string email_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Email {
-      get { return email_; }
-      set {
-        email_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "addressLine1" field.</summary>
-    public const int AddressLine1FieldNumber = 3;
-    private string addressLine1_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string AddressLine1 {
-      get { return addressLine1_; }
-      set {
-        addressLine1_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "addressLine2" field.</summary>
-    public const int AddressLine2FieldNumber = 4;
-    private string addressLine2_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string AddressLine2 {
-      get { return addressLine2_; }
-      set {
-        addressLine2_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "suburb" field.</summary>
-    public const int SuburbFieldNumber = 5;
-    private string suburb_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Suburb {
-      get { return suburb_; }
-      set {
-        suburb_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "city" field.</summary>
-    public const int CityFieldNumber = 6;
-    private string city_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string City {
-      get { return city_; }
-      set {
-        city_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "province" field.</summary>
-    public const int ProvinceFieldNumber = 7;
-    private string province_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Province {
-      get { return province_; }
-      set {
-        province_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "zipcode" field.</summary>
-    public const int ZipcodeFieldNumber = 8;
-    private string zipcode_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Zipcode {
-      get { return zipcode_; }
-      set {
-        zipcode_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "country" field.</summary>
-    public const int CountryFieldNumber = 9;
-    private string country_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Country {
-      get { return country_; }
-      set {
-        country_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as OrganizationBillingContact);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(OrganizationBillingContact other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (OrganizationId != other.OrganizationId) return false;
-      if (Email != other.Email) return false;
-      if (AddressLine1 != other.AddressLine1) return false;
-      if (AddressLine2 != other.AddressLine2) return false;
-      if (Suburb != other.Suburb) return false;
-      if (City != other.City) return false;
-      if (Province != other.Province) return false;
-      if (Zipcode != other.Zipcode) return false;
-      if (Country != other.Country) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
-      if (Email.Length != 0) hash ^= Email.GetHashCode();
-      if (AddressLine1.Length != 0) hash ^= AddressLine1.GetHashCode();
-      if (AddressLine2.Length != 0) hash ^= AddressLine2.GetHashCode();
-      if (Suburb.Length != 0) hash ^= Suburb.GetHashCode();
-      if (City.Length != 0) hash ^= City.GetHashCode();
-      if (Province.Length != 0) hash ^= Province.GetHashCode();
-      if (Zipcode.Length != 0) hash ^= Zipcode.GetHashCode();
-      if (Country.Length != 0) hash ^= Country.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrganizationId);
-      }
-      if (Email.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Email);
-      }
-      if (AddressLine1.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(AddressLine1);
-      }
-      if (AddressLine2.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(AddressLine2);
-      }
-      if (Suburb.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Suburb);
-      }
-      if (City.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(City);
-      }
-      if (Province.Length != 0) {
-        output.WriteRawTag(58);
-        output.WriteString(Province);
-      }
-      if (Zipcode.Length != 0) {
-        output.WriteRawTag(66);
-        output.WriteString(Zipcode);
-      }
-      if (Country.Length != 0) {
-        output.WriteRawTag(74);
-        output.WriteString(Country);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrganizationId);
-      }
-      if (Email.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Email);
-      }
-      if (AddressLine1.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(AddressLine1);
-      }
-      if (AddressLine2.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(AddressLine2);
-      }
-      if (Suburb.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Suburb);
-      }
-      if (City.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(City);
-      }
-      if (Province.Length != 0) {
-        output.WriteRawTag(58);
-        output.WriteString(Province);
-      }
-      if (Zipcode.Length != 0) {
-        output.WriteRawTag(66);
-        output.WriteString(Zipcode);
-      }
-      if (Country.Length != 0) {
-        output.WriteRawTag(74);
-        output.WriteString(Country);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (OrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
-      }
-      if (Email.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Email);
-      }
-      if (AddressLine1.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(AddressLine1);
-      }
-      if (AddressLine2.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(AddressLine2);
-      }
-      if (Suburb.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Suburb);
-      }
-      if (City.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(City);
-      }
-      if (Province.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Province);
-      }
-      if (Zipcode.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Zipcode);
-      }
-      if (Country.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Country);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(OrganizationBillingContact other) {
-      if (other == null) {
-        return;
-      }
-      if (other.OrganizationId.Length != 0) {
-        OrganizationId = other.OrganizationId;
-      }
-      if (other.Email.Length != 0) {
-        Email = other.Email;
-      }
-      if (other.AddressLine1.Length != 0) {
-        AddressLine1 = other.AddressLine1;
-      }
-      if (other.AddressLine2.Length != 0) {
-        AddressLine2 = other.AddressLine2;
-      }
-      if (other.Suburb.Length != 0) {
-        Suburb = other.Suburb;
-      }
-      if (other.City.Length != 0) {
-        City = other.City;
-      }
-      if (other.Province.Length != 0) {
-        Province = other.Province;
-      }
-      if (other.Zipcode.Length != 0) {
-        Zipcode = other.Zipcode;
-      }
-      if (other.Country.Length != 0) {
-        Country = other.Country;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 18: {
-            Email = input.ReadString();
-            break;
-          }
-          case 26: {
-            AddressLine1 = input.ReadString();
-            break;
-          }
-          case 34: {
-            AddressLine2 = input.ReadString();
-            break;
-          }
-          case 42: {
-            Suburb = input.ReadString();
-            break;
-          }
-          case 50: {
-            City = input.ReadString();
-            break;
-          }
-          case 58: {
-            Province = input.ReadString();
-            break;
-          }
-          case 66: {
-            Zipcode = input.ReadString();
-            break;
-          }
-          case 74: {
-            Country = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 18: {
-            Email = input.ReadString();
-            break;
-          }
-          case 26: {
-            AddressLine1 = input.ReadString();
-            break;
-          }
-          case 34: {
-            AddressLine2 = input.ReadString();
-            break;
-          }
-          case 42: {
-            Suburb = input.ReadString();
-            break;
-          }
-          case 50: {
-            City = input.ReadString();
-            break;
-          }
-          case 58: {
-            Province = input.ReadString();
-            break;
-          }
-          case 66: {
-            Zipcode = input.ReadString();
-            break;
-          }
-          case 74: {
-            Country = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CustomerBillingContact : pb::IMessage<CustomerBillingContact>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1945,7 +1389,7 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.BillingV1ValueReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.BillingV1ValueReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

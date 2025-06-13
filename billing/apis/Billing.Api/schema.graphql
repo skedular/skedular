@@ -17,7 +17,6 @@ type CustomerBillingContactDetails {
 }
 
 type Mutation {
-  updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
   updateMyBillingContactDetails(input: UpdateMyBillingContactDetailsInput!): MyBillingContactDetailsPayload @cost(weight: "10")
 }
 
@@ -26,27 +25,9 @@ type MyBillingContactDetailsPayload {
   customerBillingContactDetails: CustomerBillingContactDetails!
 }
 
-type OrganizationBillingContactDetails {
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
-  id: ID!
-}
-
-type OrganizationBillingContactDetailsPayload {
-  clientMutationId: String
-  organizationBillingContactDetails: OrganizationBillingContactDetails!
-}
-
 type Query {
   billingVersion: Version!
   billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
   myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
 }
 
@@ -60,19 +41,6 @@ type Version {
 input UpdateMyBillingContactDetailsInput {
   clientMutationId: String
   companyName: String
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
-}
-
-input UpdateOrganizationBillingContactDetailsInput {
-  clientMutationId: String
-  organizationId: String!
   email: String
   addressLine1: String
   addressLine2: String

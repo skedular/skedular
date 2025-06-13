@@ -30,7 +30,6 @@ public static class Extensions
             .AddScoped<ILocationService, LocationService>()
             .AddScoped<ITeamService, TeamService>()
             .AddScoped<IBookingService, BookingService>()
-            .AddScoped<IBillingService, BillingService>()
             .AddScoped<IWorkspaceService, WorkspaceService>()
             .AddScoped<IWorkspaceOnboardingService, WorkspaceOnboardingService>()
             .AddScoped<IWorkspaceMemberService, WorkspaceMemberService>()

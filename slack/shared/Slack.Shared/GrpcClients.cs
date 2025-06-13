@@ -29,4 +29,10 @@ public static class GrpcClients
 
     public static void ConfigureTeam(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<TeamConfiguration>().GrpcUrl;
+    
+    public static void ConfigureMarketplace(IServiceProvider provider, GrpcClientFactoryOptions client) =>
+        client.Address = provider.GetRequiredService<MarketplaceConfiguration>().GrpcUrl;
+
+    public static void ConfigureCore(IServiceProvider provider, GrpcClientFactoryOptions client) =>
+        client.Address = provider.GetRequiredService<CoreConfiguration>().GrpcUrl;
 }

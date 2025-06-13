@@ -32,6 +32,7 @@ import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
+import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_customTags_query$key } from '@/queries/__generated__/organizationAdmin_customTags_query.graphql';
 import type { organizationAdmin_customTags_refetchableFragment } from '@/queries/__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
@@ -44,7 +45,7 @@ import type { organizationAdmin_query$key } from '@/queries/__generated__/organi
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
-import type { organizationAdmin_updateOrganizationBillingContactDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingContactDetailsMutation.graphql';
+import type { organizationAdmin_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingDetailsMutation.graphql';
 import type {
   organizationAdmin_updateOrganizationMutation,
   OrganizationMemberVisibilityPolicy,
@@ -127,6 +128,7 @@ const organizationSchema = object({
 });
 
 type OrganizationBillingDetails = {
+  companyName: string | null;
   email: string;
   addressLine1: string;
   addressLine2: string | null;
@@ -138,6 +140,7 @@ type OrganizationBillingDetails = {
 };
 
 const organizationBillingSchema = object({
+  companyName: string().nullable(),
   email: string()
     .email(({ value }) => `${value} is not a valid email`)
     .required('Email is required'),
@@ -194,17 +197,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             name
           }
-        }
-        organizationBillingContactDetails(organizationId: $organizationId) {
-          id
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
         }
         ...organizationMultipleChoicesIndustries_query
         ...singleChoiceOrganizationType_query
@@ -279,6 +271,18 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             entityId
             loginUrl
             appFederationMetadataUrl
+          }
+          organizationBillingDetails {
+            id
+            companyName
+            email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
         }
       }
@@ -391,19 +395,45 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
   `);
 
-  const [commitUpdateOrganizationBillingContactDetails] = useMutation<organizationAdmin_updateOrganizationBillingContactDetailsMutation>(graphql`
-    mutation organizationAdmin_updateOrganizationBillingContactDetailsMutation($input: UpdateOrganizationBillingContactDetailsInput!) @raw_response_type {
-      updateOrganizationBillingContactDetails(input: $input) {
-        organizationBillingContactDetails {
+  const [commitAddOrganizationBillingDetails] = useMutation<organizationAdmin_addOrganizationBillingDetailsMutation>(graphql`
+    mutation organizationAdmin_addOrganizationBillingDetailsMutation($input: AddOrganizationBillingDetailsInput!) @raw_response_type {
+      addOrganizationBillingDetails(input: $input) {
+        organization {
           id
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
+          organizationBillingDetails {
+            id
+            companyName
+            email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitUpdateOrganizationBillingDetails] = useMutation<organizationAdmin_updateOrganizationBillingDetailsMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationBillingDetailsMutation($input: UpdateOrganizationBillingDetailsInput!) @raw_response_type {
+      updateOrganizationBillingDetails(input: $input) {
+        organization {
+          id
+          organizationBillingDetails {
+            id
+            companyName
+            email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
         }
       }
     }
@@ -711,54 +741,23 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   };
 
-  const handleOrganizationBillingDetailUpdateClick = ({ email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationBillingDetails) => {
-    const billingDetails = rootData.organizationBillingContactDetails;
-    if (!billingDetails) {
-      return;
+  const handleOrganizationBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationBillingDetails) => {
+    if (!rootDataOrganization.organization) {
+      return
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
+    const organization = rootDataOrganization.organization;
+    const organizationBillingDetails = organization.organizationBillingDetails;
 
-    commitUpdateOrganizationBillingContactDetails({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          organizationId: organization.id,
-          email,
-          addressLine1,
-          addressLine2,
-          suburb,
-          city,
-          province,
-          zipcode,
-          country,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
-          });
+    if (organizationBillingDetails) {
+      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
 
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${organization?.name}' billing updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationBillingContactDetails: {
-          organizationBillingContactDetails: {
-            id: billingDetails.id,
+      commitUpdateOrganizationBillingDetails({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
+            id: organizationBillingDetails.id,
+            companyName,
             email,
             addressLine1,
             addressLine2,
@@ -769,8 +768,110 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             country,
           },
         },
-      },
-    });
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization '${organization?.name}' billing updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateOrganizationBillingDetails: {
+            organization: {
+              id: organization.id,
+              organizationBillingDetails: {
+                id: organizationBillingDetails.id,
+                companyName,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      const id = nanoid();
+      const toastId = themedToast(<NotificationContent content={`Adding organization '${organization.name}' billing...`} />, infoNotificationOptions);
+
+      commitAddOrganizationBillingDetails({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
+            organizationId: organization.id,
+            id,
+            companyName,
+            email,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to add organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization '${organization?.name}' billing added.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add organization '${organization?.name}' billing. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          addOrganizationBillingDetails: {
+            organization: {
+              id: organization.id,
+              organizationBillingDetails: {
+                id,
+                companyName,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    }
   };
 
   const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
@@ -1480,10 +1581,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     return <></>;
   }
 
-  if (!rootData.organizationBillingContactDetails) {
-    return <></>;
-  }
-
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
@@ -1635,15 +1732,16 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   ];
 
   const organization = rootDataOrganization.organization;
-  const billingContactDetails = rootData.organizationBillingContactDetails;
-  const email = billingContactDetails.email ? billingContactDetails.email : '';
-  const addressLine1 = billingContactDetails.addressLine1 ? billingContactDetails.addressLine1 : '';
-  const addressLine2 = billingContactDetails.addressLine2 ? billingContactDetails.addressLine2 : '';
-  const suburb = billingContactDetails.suburb ? billingContactDetails.suburb : '';
-  const city = billingContactDetails.city ? billingContactDetails.city : '';
-  const province = billingContactDetails.province ? billingContactDetails.province : '';
-  const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
-  const country = billingContactDetails.country ? billingContactDetails.country : '';
+  const organizationBillingDetails = rootDataOrganization.organization.organizationBillingDetails;
+  const companyName = organizationBillingDetails?.companyName ? organizationBillingDetails.companyName : '';
+  const email = organizationBillingDetails?.email ? organizationBillingDetails.email : '';
+  const addressLine1 = organizationBillingDetails?.addressLine1 ? organizationBillingDetails.addressLine1 : '';
+  const addressLine2 = organizationBillingDetails?.addressLine2 ? organizationBillingDetails.addressLine2 : '';
+  const suburb = organizationBillingDetails?.suburb ? organizationBillingDetails.suburb : '';
+  const city = organizationBillingDetails?.city ? organizationBillingDetails.city : '';
+  const province = organizationBillingDetails?.province ? organizationBillingDetails.province : '';
+  const zipcode = organizationBillingDetails?.zipcode ? organizationBillingDetails.zipcode : '';
+  const country = organizationBillingDetails?.country ? organizationBillingDetails.country : '';
   const paymentMethodExist = organization && organization.paymentMethods.length > 0;
   const activeOffering = organization ? organization.activeOffering : null;
   const availableOfferings = organization && organization.availableOfferings ? organization.availableOfferings : [];
@@ -1782,6 +1880,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             <Form
               onSubmit={handleOrganizationBillingDetailUpdateClick}
               initialValues={{
+                companyName,
                 email,
                 addressLine1,
                 addressLine2,
@@ -1806,6 +1905,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Company name">
+                      <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Email">
                       <TextField name="email" required={requiredOrganizationBillingFields.email} helperText="Email to send invoice to" />
                     </FormFieldLabel>

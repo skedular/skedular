@@ -26,6 +26,9 @@ service OrganizationService {
     rpc AddZone (AddZoneInput) returns (Zone);
     rpc UpdateZone (UpdateZoneInput) returns (Zone);
     rpc RemoveZone (RemoveZoneInput) returns (Zone);
+    rpc GetOrganizationBillingDetails (GetOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
+    rpc AddOrganizationBillingDetails (AddOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
+    rpc UpdateOrganizationBillingDetails (UpdateOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
 }
 
 message VersionInput {
@@ -93,6 +96,7 @@ message Organization {
     string memberVisibilityPolicy = 16;
     string contactEmail = 17;
     string contactPhone = 18;
+    OrganizationBillingDetails OrganizationBillingDetails = 19;
 }
 
 message IndustrySubCategory {
@@ -361,4 +365,48 @@ message ResourceType {
     string description = 3;
     string tagType = 4;
     string color = 5;
+}
+
+message GetOrganizationBillingDetailsInput {
+    string organizationId = 1;
+}
+
+message AddOrganizationBillingDetailsInput {
+    string id = 1;
+    string organizationId = 2;
+    string companyName = 3;
+    string email = 4;
+    string addressLine1 = 5;
+    string addressLine2 = 6;
+    string suburb = 7;
+    string city = 8;
+    string province = 9;
+    string zipcode = 10;
+    string country = 11;
+}
+
+message UpdateOrganizationBillingDetailsInput {
+    string id = 1;
+    string companyName = 2;
+    string email = 3;
+    string addressLine1 = 4;
+    string addressLine2 = 5;
+    string suburb = 6;
+    string city = 7;
+    string province = 8;
+    string zipcode = 9;
+    string country = 10;
+}
+
+message OrganizationBillingDetails {
+    string id = 1;
+    string companyName = 2;
+    string email = 3;
+    string addressLine1 = 4;
+    string addressLine2 = 5;
+    string suburb = 6;
+    string city = 7;
+    string province = 8;
+    string zipcode = 9;
+    string country = 10;
 }
