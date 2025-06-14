@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 
 namespace Customer.Api.Services;
 
@@ -42,7 +42,7 @@ public class CustomerLocationSettingsService(
 
         if (!ignoreAuthorizationCheck && !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (customer.PreferredLocations.Any(item => item.Id == locationId))

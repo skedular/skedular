@@ -1,11 +1,11 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Services;
 using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;

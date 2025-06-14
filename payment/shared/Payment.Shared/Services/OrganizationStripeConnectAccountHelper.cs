@@ -1,4 +1,4 @@
-using Enterprise.Shared.Exceptions;
+using Api.Shared.Services;
 using Payment.Shared.Database.Entities;
 
 namespace Payment.Shared.Services;

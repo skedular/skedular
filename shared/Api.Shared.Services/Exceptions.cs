@@ -1,6 +1,4 @@
-namespace Enterprise.Shared.Exceptions;
-
-public class Unauthorized() : Exception("Unauthorized");
+namespace Api.Shared.Services;
 
 public class CustomerNotFound() : Exception("Customer not found");
 
@@ -56,8 +54,6 @@ public class CustomTagWithSameNameExist() : Exception("Tag with same name exist"
 public class ZoneWithSameNameExist() : Exception("Zone with same name exist");
 
 public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");
-
-public class SamlMetadataException() : Exception("Signing certificate not found in IdP metadata");
 
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
     : Exception("Team Primary location organization does not match team organization");

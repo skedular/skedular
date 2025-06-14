@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Customer.Api.Mappers;
 using Customer.Shared.Models;
@@ -5,7 +6,6 @@ using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -85,7 +85,7 @@ public class CustomerService(
                     .ToList();
                 if (mutualOrganizations.Count == 0)
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 if (mutualOrganizations.All(item => item.MemberVisibilityPolicy != OrganizationMemberVisibilityPolicyConstants.FullAccess))

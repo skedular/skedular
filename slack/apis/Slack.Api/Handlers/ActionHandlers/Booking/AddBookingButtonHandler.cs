@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;

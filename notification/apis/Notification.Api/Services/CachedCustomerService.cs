@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using Notification.Api.Mappers;
 using Notification.Shared.Models;

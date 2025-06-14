@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -71,7 +71,7 @@ public class OrganizationStripeConnectAccountService(
 
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (string.IsNullOrWhiteSpace(organization.Name))
@@ -86,7 +86,7 @@ public class OrganizationStripeConnectAccountService(
             {
                 if (existingAccount.Organization == null || existingAccount.Organization.Id != organizationId)
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 return await UpdateInternalAsync(nickname, existingAccount, customer, cancellationToken);
@@ -156,7 +156,7 @@ public class OrganizationStripeConnectAccountService(
 
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(account.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
@@ -202,7 +202,7 @@ public class OrganizationStripeConnectAccountService(
         if (existingOrganizations.Any(existingOrganization =>
                 !organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
@@ -244,7 +244,7 @@ public class OrganizationStripeConnectAccountService(
 
         if (!organizationAuthorizationService.CanViewStripeConnectAccount(account.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return mapper.MapTo(account);
@@ -296,7 +296,7 @@ public class OrganizationStripeConnectAccountService(
 
         if (!organizationAuthorizationService.CanViewStripeConnectAccount(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.StripeConnectAccountRepository.GetPaginatedAccountsAsync(
@@ -323,7 +323,7 @@ public class OrganizationStripeConnectAccountService(
 
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(account.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

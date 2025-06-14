@@ -2,7 +2,6 @@
 using System.Data.Common;
 using System.Diagnostics;
 using Confluent.Kafka;
-using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
@@ -75,8 +74,8 @@ public static class OpenTelemetryExtensions
                 tracing.AddAspNetCoreInstrumentation(options =>
                 {
                     options.Filter = context =>
-                        !context.Request.Path.StartsWithSegments(Constants.ReadinessPath)
-                        && !context.Request.Path.StartsWithSegments(Constants.LivenessPath);
+                        !context.Request.Path.StartsWithSegments(HealthCheck.Constants.ReadinessPath)
+                        && !context.Request.Path.StartsWithSegments(HealthCheck.Constants.LivenessPath);
                 });
 
                 tracing

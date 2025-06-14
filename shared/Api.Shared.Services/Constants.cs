@@ -1,12 +1,8 @@
-namespace Api.Shared;
+namespace Api.Shared.Services;
 
 public static class Constants
 {
-    public const int MaxUniqueIdLength = 100;
-
     public const int MaxVerifiableTokenLength = 200;
-
-    public const int MaxKafkaTopicNameLength = 249;
 
     public const int MaxPersonTitleLength = 100;
 
@@ -61,22 +57,6 @@ public static class Constants
 
     public const int MaxBookingNotesLength = 1000;
 
-    public const int MaxOutboxProcessingErrorsLength = 102400;
-
-    public const int MaxSlackChannelNameLength = 1000;
-    public const int MaxSlackChannelTopicLength = 1000;
-    public const int MaxSlackChannelPurposeLength = 1000;
-
-    public const int MaxSlackWorkspaceNameLength = 1000;
-    public const int MaxSlackWorkspaceDomainLength = 2000;
-    public const int MaxSlackWorkspaceEmailDomainLength = 2000;
-    public const int MaxSlackWorkspaceEnterpriseNameLength = 1000;
-    public const int MaxSlackBotUserIdLength = 1000;
-    public const int MaxSlackAuthedUserIdLength = 1000;
-    public const int MaxSlackScopeLength = 10000;
-
-    public const int MaxTokenLength = 10000;
-
     public const int MaxAzureTeamNameLength = 1000;
     public const int MaxAzureTeamChannelNameLength = 1000;
 
@@ -98,9 +78,6 @@ public static class Constants
 
     public const int MaxOrganizationTypeLength = 50;
     public const int MaxOrganizationMemberVisibilityPolicyLength = 50;
-
-    public const string OrganizationSsoCookiePrefix = "skedular-sso";
-    public const string OrganizationSsoCookieHeader = "X-SSO-Cookies";
 
     public const int MaxProductNameLength = 500;
     public const int MaxProductDescriptionLength = 10000;
@@ -131,9 +108,6 @@ public static class Constants
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
     public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
-
-    public const int MaxWorkflowTypeLength = 1024;
-    public const int MaxWorkflowExecutionArgsLength = 10240;
 
     public static Uri EmptyUri = new("about:blank");
 }

@@ -36,19 +36,19 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
     public void Configure(EntityTypeBuilder<Workspace> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
-        builder.Property(item => item.Name).HasMaxLength(Api.Shared.Constants.MaxSlackWorkspaceNameLength);
-        builder.Property(item => item.Domain).HasMaxLength(Api.Shared.Constants.MaxSlackWorkspaceDomainLength);
-        builder.Property(item => item.EmailDomain).HasMaxLength(Api.Shared.Constants.MaxSlackWorkspaceEmailDomainLength);
-        builder.Property(item => item.EnterpriseId).HasMaxLength(Api.Shared.Constants.MaxUniqueIdLength);
-        builder.Property(item => item.EnterpriseName).HasMaxLength(Api.Shared.Constants.MaxSlackWorkspaceEnterpriseNameLength);
-        builder.Property(item => item.BotUserId).HasMaxLength(Api.Shared.Constants.MaxSlackBotUserIdLength);
-        builder.Property(item => item.BotUserScope).HasMaxLength(Api.Shared.Constants.MaxSlackScopeLength);
-        builder.Property(item => item.BotUserAccessToken).HasMaxLength(Api.Shared.Constants.MaxTokenLength);
-        builder.Property(item => item.BotRefreshToken).HasMaxLength(Api.Shared.Constants.MaxTokenLength);
-        builder.Property(item => item.AuthedUserId).HasMaxLength(Api.Shared.Constants.MaxSlackAuthedUserIdLength);
-        builder.Property(item => item.AuthedUserScope).HasMaxLength(Api.Shared.Constants.MaxSlackScopeLength);
-        builder.Property(item => item.AuthedUserAccessToken).HasMaxLength(Api.Shared.Constants.MaxTokenLength);
-        builder.Property(item => item.AuthedRefreshToken).HasMaxLength(Api.Shared.Constants.MaxTokenLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.Constants.MaxSlackWorkspaceNameLength);
+        builder.Property(item => item.Domain).HasMaxLength(Constants.Constants.MaxSlackWorkspaceDomainLength);
+        builder.Property(item => item.EmailDomain).HasMaxLength(Constants.Constants.MaxSlackWorkspaceEmailDomainLength);
+        builder.Property(item => item.EnterpriseId).HasMaxLength(Enterprise.Shared.Constants.MaxUniqueIdLength);
+        builder.Property(item => item.EnterpriseName).HasMaxLength(Constants.Constants.MaxSlackWorkspaceEnterpriseNameLength);
+        builder.Property(item => item.BotUserId).HasMaxLength(Constants.Constants.MaxSlackBotUserIdLength);
+        builder.Property(item => item.BotUserScope).HasMaxLength(Constants.Constants.MaxSlackScopeLength);
+        builder.Property(item => item.BotUserAccessToken).HasMaxLength(Constants.Constants.MaxSlackTokenLength);
+        builder.Property(item => item.BotRefreshToken).HasMaxLength(Constants.Constants.MaxSlackTokenLength);
+        builder.Property(item => item.AuthedUserId).HasMaxLength(Constants.Constants.MaxSlackAuthedUserIdLength);
+        builder.Property(item => item.AuthedUserScope).HasMaxLength(Constants.Constants.MaxSlackScopeLength);
+        builder.Property(item => item.AuthedUserAccessToken).HasMaxLength(Constants.Constants.MaxSlackTokenLength);
+        builder.Property(item => item.AuthedRefreshToken).HasMaxLength(Constants.Constants.MaxSlackTokenLength);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Workspaces);
 

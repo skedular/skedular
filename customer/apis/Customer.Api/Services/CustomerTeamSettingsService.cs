@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 
 namespace Customer.Api.Services;
 
@@ -42,7 +42,7 @@ public class CustomerTeamSettingsService(
 
         if (!ignoreAuthorizationCheck && !teamAuthorizationService.CanAddTeamAsDefault(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (customer.PreferredTeams.Any(item => item.Id == teamId))

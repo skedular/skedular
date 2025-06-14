@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;

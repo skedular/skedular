@@ -1,4 +1,4 @@
-using Api.Shared;
+using Api.Shared.Services;
 using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;

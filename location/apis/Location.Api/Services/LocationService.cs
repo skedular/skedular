@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -68,7 +68,7 @@ public class LocationService(
 
             if (!organizationAuthorizationService.CanModify(organization, customer))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             if (!organizationOfferingService.CanCreateLocation(organization) ||
@@ -165,7 +165,7 @@ public class LocationService(
 
         if (!organizationAuthorizationService.CanDelete(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -248,7 +248,7 @@ public class LocationService(
 
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -267,7 +267,7 @@ public class LocationService(
     {
         if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var locationRef = location;
@@ -318,7 +318,7 @@ public class LocationService(
     {
         if (customer is not null && !organizationAuthorizationService.CanView(locationEdge.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var mappedLocation = mapper.MapTo(locationEdge);

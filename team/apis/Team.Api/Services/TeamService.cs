@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -76,7 +76,7 @@ public class TeamService(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (!organizationOfferingService.CanCreateTeam(organization) ||
@@ -212,7 +212,7 @@ public class TeamService(
 
         if (!teamAuthorizationService.CanDelete(existingTeam, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -301,21 +301,21 @@ public class TeamService(
 
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
             {
                 if (organization.OrganizationMembers.All(member => member.Customer.Id != customer.Id))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
             else
             {
                 if (organization.OrganizationMembers.All(member => member.Customer.Id != searchCriteria.CustomerId))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
         }
@@ -348,7 +348,7 @@ public class TeamService(
 
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -396,7 +396,7 @@ public class TeamService(
     {
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var rebuiltTeamMembers = updateTeamMembers
@@ -467,7 +467,7 @@ public class TeamService(
     {
         if (customer is not null && !teamAuthorizationService.CanView(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var mappedTeam = mapper.MapTo(team);

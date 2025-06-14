@@ -37,20 +37,20 @@ public class WorkspaceMemberConfiguration : IEntityTypeConfiguration<WorkspaceMe
     public void Configure(EntityTypeBuilder<WorkspaceMember> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
-        builder.Property(item => item.Email).HasMaxLength(Api.Shared.Constants.MaxEmailLength);
-        builder.Property(item => item.Designation).HasMaxLength(Api.Shared.Constants.MaxPersonDesignationLength);
-        builder.Property(item => item.Name).HasMaxLength(Api.Shared.Constants.MaxPersonNameLength);
-        builder.Property(item => item.GivenName).HasMaxLength(Api.Shared.Constants.MaxGivenNameLength);
-        builder.Property(item => item.FamilyName).HasMaxLength(Api.Shared.Constants.MaxFamilyNameLength);
-        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
-        builder.Property(item => item.Locale).HasMaxLength(Api.Shared.Constants.MaxLocaleLength);
-        builder.Property(item => item.PhotoUrl).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl24).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl32).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl48).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl72).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl192).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.PhotoUrl512).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
+        builder.Property(item => item.Email).HasMaxLength(Api.Shared.Services.Constants.MaxEmailLength);
+        builder.Property(item => item.Designation).HasMaxLength(Api.Shared.Services.Constants.MaxPersonDesignationLength);
+        builder.Property(item => item.Name).HasMaxLength(Api.Shared.Services.Constants.MaxPersonNameLength);
+        builder.Property(item => item.GivenName).HasMaxLength(Api.Shared.Services.Constants.MaxGivenNameLength);
+        builder.Property(item => item.FamilyName).HasMaxLength(Api.Shared.Services.Constants.MaxFamilyNameLength);
+        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Services.Constants.MaxTimezoneLength);
+        builder.Property(item => item.Locale).HasMaxLength(Api.Shared.Services.Constants.MaxLocaleLength);
+        builder.Property(item => item.PhotoUrl).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl24).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl32).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl48).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl72).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl192).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl512).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
 
         builder.HasOne(item => item.Workspace).WithMany(item => item.WorkspaceMembers);
 

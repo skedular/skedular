@@ -1,4 +1,4 @@
-using Enterprise.Shared.Exceptions;
+using Api.Shared.Services;
 using Team.Shared.Models;
 using Team.Shared.Repositories;
 

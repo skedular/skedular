@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Location.Api.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Repositories;

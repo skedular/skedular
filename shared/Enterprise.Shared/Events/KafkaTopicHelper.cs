@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Api.Shared.Events;
+namespace Enterprise.Shared.Events;
 
 public static class KafkaTopicHelper
 {

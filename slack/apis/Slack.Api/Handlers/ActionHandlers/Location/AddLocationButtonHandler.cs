@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;

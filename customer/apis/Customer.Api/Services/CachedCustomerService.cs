@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Customer.Api.Services;

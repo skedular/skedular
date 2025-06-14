@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Booking.Api.Services;

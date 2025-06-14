@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Stripe;
 

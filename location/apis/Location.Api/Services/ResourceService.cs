@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -66,7 +66,7 @@ public class ResourceService(
 
         if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return mapper.MapTo(resource);
@@ -113,7 +113,7 @@ public class ResourceService(
 
         if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var matchingResourceFound = await repositoryFactory.ResourceRepository.Query(
@@ -207,7 +207,7 @@ public class ResourceService(
 
         if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -243,7 +243,7 @@ public class ResourceService(
 
         if (existingLocations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization.Organization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -287,7 +287,7 @@ public class ResourceService(
 
         if (existingLocations.Any(item => !organizationAuthorizationService.CanModify(item.Organization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -334,7 +334,7 @@ public class ResourceService(
 
         if (existingLocations.Any(item => !organizationAuthorizationService.CanModify(item.Organization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -378,7 +378,7 @@ public class ResourceService(
 
         if (!organizationAuthorizationService.CanView(location.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var (paginatedInfo, edges, totalCount) =
@@ -410,7 +410,7 @@ public class ResourceService(
 
         if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var resourceId = resource.Id;

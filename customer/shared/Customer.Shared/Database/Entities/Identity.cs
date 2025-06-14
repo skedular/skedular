@@ -1,4 +1,4 @@
-using Api.Shared;
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +10,9 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Identity : EntityBase, IIdentityDetails
 {
+    public virtual Customer Customer { get; set; }
     public string? Email { get; set; }
     public bool? EmailVerified { get; set; }
-
-    public virtual Customer Customer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

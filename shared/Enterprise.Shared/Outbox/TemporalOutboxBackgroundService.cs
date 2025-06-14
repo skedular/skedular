@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Api.Shared;
 using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;

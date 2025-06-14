@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Customer.Api.Services.Authorization;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 
 namespace Customer.Api.Services;
 
@@ -40,7 +40,7 @@ public class CustomerOrganizationSettingsService(
 
         if (!ignoreAuthorizationCheck && !organizationAuthorizationService.CanAddOrganizationAsDefault(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         customer.DefaultOrganization = organization;

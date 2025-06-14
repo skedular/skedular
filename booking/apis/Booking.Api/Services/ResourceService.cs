@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 
 namespace Booking.Api.Services;
 
@@ -56,7 +56,7 @@ public class ResourceService(
 
             if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -114,7 +114,7 @@ public class ResourceService(
 
         if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, false, cancellationToken);

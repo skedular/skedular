@@ -26,11 +26,11 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Constants.MaxOrganizationTypeLength)
+        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationTypeLength)
             .HasDefaultValue(OrganizationTypeConstants.Private);
         builder
             .Property(item => item.MemberVisibilityPolicy)
-            .HasMaxLength(Api.Shared.Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationMemberVisibilityPolicyLength)
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.OrganizationDailyUpdateChannels);

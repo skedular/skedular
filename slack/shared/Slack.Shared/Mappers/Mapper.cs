@@ -115,22 +115,22 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Email = src.Profile.Email.ToSafeString();
-        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Constants.MaxPersonDesignationLength);
-        dest.Name = src.Profile.RealName.ToSafeString().Truncate(Api.Shared.Constants.MaxPersonNameLength);
-        dest.GivenName = src.Profile.FirstName.ToSafeString().Truncate(Api.Shared.Constants.MaxGivenNameLength);
-        dest.FamilyName = src.Profile.LastName.ToSafeString().Truncate(Api.Shared.Constants.MaxFamilyNameLength);
-        dest.Timezone = src.Tz.ToSafeString().Truncate(Api.Shared.Constants.MaxTimezoneLength);
+        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonDesignationLength);
+        dest.Name = src.Profile.RealName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonNameLength);
+        dest.GivenName = src.Profile.FirstName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxGivenNameLength);
+        dest.FamilyName = src.Profile.LastName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxFamilyNameLength);
+        dest.Timezone = src.Tz.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxTimezoneLength);
         dest.IsAdmin = src.IsAdmin;
         dest.IsOwner = src.IsOwner;
         dest.IsPrimaryOwner = src.IsPrimaryOwner;
-        dest.Locale = src.Locale.ToSafeString().Truncate(Api.Shared.Constants.MaxLocaleLength);
-        dest.PhotoUrl = src.Profile.ImageOriginal.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl24 = src.Profile.Image24.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl32 = src.Profile.Image32.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl48 = src.Profile.Image48.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl72 = src.Profile.Image72.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl192 = src.Profile.Image192.Truncate(Api.Shared.Constants.MaxUrlLength);
-        dest.PhotoUrl512 = src.Profile.Image512.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.Locale = src.Locale.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxLocaleLength);
+        dest.PhotoUrl = src.Profile.ImageOriginal.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl24 = src.Profile.Image24.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl32 = src.Profile.Image32.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl48 = src.Profile.Image48.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl72 = src.Profile.Image72.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl192 = src.Profile.Image192.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl512 = src.Profile.Image512.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
         dest.Workspace = workspace;
         return dest;
     }
@@ -140,7 +140,7 @@ public class Mapper : IMapper
     public WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace)
     {
         dest.Id = src.Id;
-        dest.Name = src.Name.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.Name = src.Name.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
         dest.Topic = src.Topic.Value;
         dest.Purpose = src.Purpose.Value;
         dest.IsPrivate = src.IsPrivate;

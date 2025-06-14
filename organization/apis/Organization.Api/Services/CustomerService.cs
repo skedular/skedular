@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Organization.Api.Mappers;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;

@@ -1,4 +1,4 @@
-﻿namespace Api.Shared.Events;
+﻿namespace Enterprise.Shared.Events;
 
 public class KafkaTopicAttribute(
     string topicName,

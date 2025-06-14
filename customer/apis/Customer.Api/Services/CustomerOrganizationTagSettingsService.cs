@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Api.Services.Authorization;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 
 namespace Customer.Api.Services;
 
@@ -50,7 +50,7 @@ public class CustomerOrganizationTagSettingsService(
 
         if (!organizationAuthorizationService.CanAddOrganizationTagAsDefault(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (customer.PreferredOrganizationTags.Any(item => item.Id == organizationTagId))

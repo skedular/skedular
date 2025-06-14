@@ -21,7 +21,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
+        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Services.Constants.MaxTimezoneLength);
 
         builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.TeamDailyUpdateChannels);
 

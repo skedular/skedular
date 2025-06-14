@@ -6,7 +6,6 @@ using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
-using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Logging;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security;
@@ -163,7 +162,7 @@ public static class Extensions
 
         services
             .AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), [Constants.LivenessTag]);
+            .AddCheck("self", () => HealthCheckResult.Healthy(), [HealthCheck.Constants.LivenessTag]);
 
         services
             .AddControllers()
@@ -254,7 +253,7 @@ public static class Extensions
             app.UseSwaggerUi();
 
             // redirect root to health
-            app.UseRewriter(new RewriteOptions().AddRedirect("^$", Constants.ReadinessPath));
+            app.UseRewriter(new RewriteOptions().AddRedirect("^$", HealthCheck.Constants.ReadinessPath));
         }
 
         app.UseRouting();
@@ -267,17 +266,18 @@ public static class Extensions
 
         // Health checks must go before any middleware
         app.UseHealthChecks(
-            Constants.LivenessPath,
+            HealthCheck.Constants.LivenessPath,
             new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains(Constants.LivenessTag) || registration.Name.Contains("self")
+                Predicate = registration => registration.Tags.Contains(HealthCheck.Constants.LivenessTag) || registration.Name.Contains("self")
             });
 
         app.UseHealthChecks(
-            Constants.ReadinessPath,
+            HealthCheck.Constants.ReadinessPath,
             new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains(Constants.ReadinessTag) || registration.Name.Contains("services")
+                Predicate = registration =>
+                    registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
             });
 
         app.UseMiddleware<ContextEnricherMiddleware>();

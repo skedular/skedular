@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +52,7 @@ public class EditTeamButtonHandler(
             await teamService.GetPermissionsAsync(context.TeamId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var team = await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);

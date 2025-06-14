@@ -1,7 +1,6 @@
 using System.IO.Compression;
 using System.Text;
 using System.Web;
-using Enterprise.Shared.Security.Sso.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Security.Sso;
@@ -29,7 +28,7 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger, Ti
 
     private string GenerateSamlRequest(string organizationId, string appUrl)
     {
-        var samlId = $"{Constants.SamlIdPrefix}{organizationId}";
+        var samlId = $"{Models.Constants.SamlIdPrefix}{organizationId}";
         //ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
         return $@"
                     <samlp:AuthnRequest

@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
@@ -174,7 +174,7 @@ public class LocationsPage(
             var bookingPermissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
@@ -195,7 +195,7 @@ public class LocationsPage(
             var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
             if (!permissions.CanModify)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = EditLocationContext.Deserialize(request.View.PrivateMetadata);
@@ -215,7 +215,7 @@ public class LocationsPage(
             var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
             if (!permissions.CanDelete)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = RemoveLocationContext.Deserialize(request.View.PrivateMetadata);

@@ -1,4 +1,4 @@
-namespace Api.Shared.Events;
+namespace Enterprise.Shared.Events;
 
 /// <summary>
 ///     Where IEvent is inherited, the type that is inheriting needs the attribute <see cref="KafkaTopicAttribute" />

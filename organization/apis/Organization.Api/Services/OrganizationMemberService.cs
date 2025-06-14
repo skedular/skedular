@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
 using Organization.Api.Mappers;
@@ -56,7 +56,7 @@ public class OrganizationMemberService(
 
         if (!organizationAuthorizationService.CanView(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
@@ -113,23 +113,23 @@ public class OrganizationMemberService(
 
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var myMemberDetails = organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
         if (myMemberDetails.Status != OrganizationMemberStatusConstants.Active)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (myMemberDetails.Role == OrganizationMemberRoleConstants.Administrator && memberRole == OrganizationMemberRole.Owner)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (myMemberDetails.Role == OrganizationMemberRoleConstants.Member && memberRole == OrganizationMemberRole.Administrator)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var mappedRole = memberRole.ToOrganizationMemberRole();
@@ -190,7 +190,7 @@ public class OrganizationMemberService(
         if (!organizationMembers.All(item =>
                 organizationAuthorizationService.CanModify(organizations.Single(organization => organization.Id == item.Organization.Id), customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -258,7 +258,7 @@ public class OrganizationMemberService(
         if (!organizationMembers.All(item =>
                 organizationAuthorizationService.CanModify(organizations.Single(organization => organization.Id == item.Organization.Id), customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -349,7 +349,7 @@ public class OrganizationMemberService(
         var matchingOrganizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customer.Id);
         if (matchingOrganizationMember is null)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         matchingOrganizationMember.IsOrganizationOnboardingDone = true;

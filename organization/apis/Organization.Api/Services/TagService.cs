@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -57,7 +57,7 @@ public class TagService(
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return mapper.MapTo(tag);
@@ -94,7 +94,7 @@ public class TagService(
 
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var tagType = tag.Type.ToOrganizationTagType();
@@ -167,7 +167,7 @@ public class TagService(
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -198,7 +198,7 @@ public class TagService(
 
         if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -233,7 +233,7 @@ public class TagService(
 
         if (!organizationAuthorizationService.CanView(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.TagRepository.GetPaginatedTagsAsync(
@@ -259,7 +259,7 @@ public class TagService(
 
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var tagId = tag.Id;

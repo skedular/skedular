@@ -1,4 +1,3 @@
-using Api.Shared;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Enterprise.Shared.Database;

@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Customer.Shared.Repositories;
 using Customer.Shared.Workflows;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Temporal.Configurations;
 using Stripe;
 using Temporalio.Api.Enums.V1;
@@ -111,7 +111,7 @@ public class PaymentService(
 
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        
+
         cachedCustomerService.CleanCache(customerEntity);
     }
 }

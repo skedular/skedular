@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -41,7 +41,7 @@ public class RemoveResourceButtonHandler(
         var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await locationServiceClient.RemoveResourceAsync(

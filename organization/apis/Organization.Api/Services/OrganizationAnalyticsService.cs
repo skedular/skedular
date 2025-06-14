@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Models;
 using Organization.Api.Services.Authorization;

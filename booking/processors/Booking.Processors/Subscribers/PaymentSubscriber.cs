@@ -1,8 +1,8 @@
 using Api.Shared.Clients.Events.Skedular.Payment.V1.Key;
+using Api.Shared.Services;
 using Booking.Processors.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Event = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type;

@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;

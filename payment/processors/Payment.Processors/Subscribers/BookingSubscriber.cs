@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Payment.Processors.Mappers;

@@ -21,6 +21,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
+        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Services.Constants.MaxTimezoneLength);
     }
 }

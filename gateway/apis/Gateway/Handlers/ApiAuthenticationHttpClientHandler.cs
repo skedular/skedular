@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Headers;
-using Api.Shared;
+using Enterprise.Shared;
 
 namespace Gateway.Handlers;
 

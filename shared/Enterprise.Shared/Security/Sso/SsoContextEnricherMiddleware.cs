@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Api.Shared;
 using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Enterprise.Shared.Exceptions;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;
 

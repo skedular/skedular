@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Marketplace.Api.Mappers;
 using Marketplace.Shared.Models;
 using Marketplace.Shared.Repositories;

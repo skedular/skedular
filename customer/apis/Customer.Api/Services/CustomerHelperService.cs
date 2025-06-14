@@ -1,9 +1,9 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 
 namespace Customer.Api.Services;
 

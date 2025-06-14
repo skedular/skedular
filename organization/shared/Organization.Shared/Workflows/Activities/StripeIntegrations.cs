@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Flurl;
 using Organization.Shared.Mappers;

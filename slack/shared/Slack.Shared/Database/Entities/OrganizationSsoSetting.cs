@@ -25,9 +25,9 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.EntityId).HasMaxLength(Api.Shared.Constants.MaxSsoEntityIdLength);
-        builder.Property(item => item.LoginUrl).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
-        builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
+        builder.Property(item => item.EntityId).HasMaxLength(Api.Shared.Services.Constants.MaxSsoEntityIdLength);
+        builder.Property(item => item.LoginUrl).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
+        builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Api.Shared.Services.Constants.MaxUrlLength);
         builder.Property(item => item.IsActive).HasDefaultValue(false);
 
         builder

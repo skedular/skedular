@@ -1,9 +1,9 @@
+using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 
 namespace Customer.Api.Services;
@@ -36,7 +36,7 @@ public class MyBillingService(
             {
                 if (existingCustomerBillingDetails.Customer.Id != customer.Id)
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 return await UpdateInternalAsync(
@@ -85,7 +85,7 @@ public class MyBillingService(
 
         if (existingCustomerBillingDetails.Customer.Id != customer.Id)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return await UpdateInternalAsync(customerBillingDetails, existingCustomerBillingDetails, customerEntity, cancellationToken);

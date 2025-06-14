@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
@@ -38,7 +38,7 @@ public class OrganizationBillingService(
 
         if (!organizationAuthorizationService.CanView(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return mapper.MapTo(existingOrganization.BillingDetails);
@@ -61,7 +61,7 @@ public class OrganizationBillingService(
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (!string.IsNullOrWhiteSpace(organizationBillingDetails.Id))
@@ -73,7 +73,7 @@ public class OrganizationBillingService(
             {
                 if (existingOrganizationBillingDetails.Organization.Id != existingOrganization.Id)
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 return await UpdateInternalAsync(
@@ -129,7 +129,7 @@ public class OrganizationBillingService(
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         return await UpdateInternalAsync(organizationBillingDetails, existingOrganizationBillingDetails, existingOrganization, cancellationToken);

@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
-using Enterprise.Shared.Exceptions;
+using Api.Shared.Services;
 using Enterprise.Shared.Kafka.Consume;
 using Organization.Processors.Mappers;
 using Organization.Shared.Repositories;

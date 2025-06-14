@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
@@ -42,7 +42,7 @@ public class OrganizationOfferingService(
 
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (offering.UnitPrice != 0 && organization.StripePaymentMethods.Count == 0)

@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +71,7 @@ public class PaymentService(
 
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         organization.StripeCustomer ??= await stripeCustomerService.AddAsync(organization.Id, cancellationToken);
@@ -114,7 +114,7 @@ public class PaymentService(
 
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -52,7 +52,7 @@ public class ProductService(
             {
                 if (existingProduct.OrganizationId != organizationId)
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
@@ -71,7 +71,7 @@ public class ProductService(
 
         if (!organizationAuthorizationService.CanModifyProduct(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         productVersion.Id = randomHelper.Generate();
@@ -136,7 +136,7 @@ public class ProductService(
 
         if (existingProducts.Any(existingProduct => !organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -172,7 +172,7 @@ public class ProductService(
         var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
         if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -208,7 +208,7 @@ public class ProductService(
         var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
         if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -254,7 +254,7 @@ public class ProductService(
     {
         if (customer is not null && !organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         productVersion.Id = randomHelper.Generate();

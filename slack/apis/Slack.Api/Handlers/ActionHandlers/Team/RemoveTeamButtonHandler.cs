@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -41,7 +41,7 @@ public class RemoveTeamButtonHandler(
         var permissions = await teamService.GetPermissionsAsync(context.TeamId, workspaceMember, cancellationToken);
         if (!permissions.CanDelete)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await teamServiceClient.RemoveAsync(

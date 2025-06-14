@@ -18,9 +18,9 @@ public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
 {
     public void Configure(EntityTypeBuilder<Identity> builder)
     {
-        builder.ConfigureReplicatedEntityBase(Api.Shared.Constants.MaxVerifiableTokenLength);
+        builder.ConfigureReplicatedEntityBase(Api.Shared.Services.Constants.MaxVerifiableTokenLength);
 
-        builder.Property(item => item.Email).HasMaxLength(Api.Shared.Constants.MaxEmailLength);
+        builder.Property(item => item.Email).HasMaxLength(Api.Shared.Services.Constants.MaxEmailLength);
 
         builder.HasOne(item => item.Customer).WithMany(item => item.Identities);
 

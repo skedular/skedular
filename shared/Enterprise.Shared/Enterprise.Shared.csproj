@@ -10,8 +10,8 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.S3" Version="4.0.1.5"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.7"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.1.6"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.8"/>
         <PackageReference Include="Confluent.Kafka" Version="2.10.1"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.10.0"/>
         <PackageReference Include="CountryData" Version="6.13.0"/>
@@ -37,7 +37,7 @@
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="StackExchange.Redis" Version="2.8.41"/>
         <PackageReference Include="Stripe.net" Version="48.2.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.0"/>
         <PackageReference Include="System.Reactive" Version="6.0.1"/>
         <PackageReference Include="WorkOS.net" Version="2.9.0"/>
@@ -101,10 +101,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
     </ItemGroup>
 
 </Project>

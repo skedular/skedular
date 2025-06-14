@@ -5,12 +5,10 @@ using System.Text.Json;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Security.Sso.Models;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using Constants = Api.Shared.Constants;
 
 namespace Enterprise.Shared.Security.Sso;
 

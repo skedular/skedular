@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
@@ -6,7 +7,6 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -210,7 +210,7 @@ public class BookingService(
             var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
             if (!organizations.Any(item => organizationAuthorizationService.CanDeleteBooking(item, customer)))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -220,7 +220,7 @@ public class BookingService(
             var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
             if (!teams.Any(item => teamAuthorizationService.CanDeleteBooking(item, customer)))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -333,7 +333,7 @@ public class BookingService(
             if (searchCriteria.CustomerIds.Any(customerId =>
                     !organizationCustomerPairs.Keys.Any(item => organizationCustomerPairs[item].Contains(customerId))))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -347,7 +347,7 @@ public class BookingService(
 
             if (searchCriteria.OrganizationIds.Any(item => !organizationIds.Contains(item)))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -368,7 +368,7 @@ public class BookingService(
 
                 if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
         }
@@ -390,7 +390,7 @@ public class BookingService(
 
                 if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
         }
@@ -486,14 +486,14 @@ public class BookingService(
             {
                 if (!organizationAuthorizationService.CanUpdateBooking(organizationEntity, customer))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
             else
             {
                 if (!organizationAuthorizationService.CanAddBooking(organizationEntity, customer))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
 
                 if (!organizationOfferingService.IsMoreInteractionAllowed(organizationEntity, customer))
@@ -534,14 +534,14 @@ public class BookingService(
             {
                 if (!teamAuthorizationService.CanUpdateBooking(teamEntity, customer))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
             else
             {
                 if (!teamAuthorizationService.CanAddBooking(teamEntity, customer))
                 {
-                    throw new Unauthorized();
+                    throw new UnauthorizedAccessException();
                 }
             }
 
@@ -585,7 +585,7 @@ public class BookingService(
             var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
             if (!organizationEntities.Any(item => organizationAuthorizationService.CanViewBookings(item, customer)))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -595,7 +595,7 @@ public class BookingService(
             var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
             if (!teamEntities.Any(item => teamAuthorizationService.CanViewBookings(item, customer)))
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
         }
     }

@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using EmailValidation;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;

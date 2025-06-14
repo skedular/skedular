@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using Api.Shared;
 using Confluent.Kafka;
 using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Kafka.Configurations;

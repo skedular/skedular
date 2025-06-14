@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -45,7 +45,7 @@ public class EditZoneButtonHandler(
             await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var values = viewSubmission.View.State.Values;

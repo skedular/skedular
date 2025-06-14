@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using Notification.Api.Mappers;
 using Notification.Shared.Models;
 using Notification.Shared.Repositories;

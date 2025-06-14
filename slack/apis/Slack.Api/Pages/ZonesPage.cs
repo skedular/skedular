@@ -1,7 +1,7 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -159,7 +159,7 @@ public class ZonesPage(
             var bookingPermissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
@@ -183,7 +183,7 @@ public class ZonesPage(
             var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!permissions.CanModify)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();
@@ -203,7 +203,7 @@ public class ZonesPage(
                 cancellationToken);
             if (!permissions.CanDelete)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();

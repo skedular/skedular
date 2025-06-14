@@ -1,5 +1,5 @@
-﻿using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
+﻿using Api.Shared.Services;
+using Enterprise.Shared.Context;
 using Payment.Api.Mappers;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;

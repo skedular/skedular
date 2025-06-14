@@ -1,4 +1,4 @@
-using Api.Shared;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -28,7 +28,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.SourceId).HasMaxLength(Constants.MaxUniqueIdLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxNotificationTypeLength);
+        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Services.Constants.MaxNotificationTypeLength);
 
         builder.HasOne(item => item.InvitedBy).WithMany(item => item.InvitedByNotifications);
         builder.HasOne(item => item.Invitee).WithMany(item => item.InviteeNotifications);

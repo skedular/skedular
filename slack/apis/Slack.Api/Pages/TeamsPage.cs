@@ -1,9 +1,9 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
@@ -163,7 +163,7 @@ public class TeamsPage(
             var bookingPermissions = await bookingService.GetTeamPermissionsAsync(teamId, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
@@ -183,7 +183,7 @@ public class TeamsPage(
             var permissions = await teamService.GetPermissionsAsync(teamId, workspaceMember, cancellationToken);
             if (!permissions.CanModify)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = EditTeamContext.Deserialize(request.View.PrivateMetadata);
@@ -203,7 +203,7 @@ public class TeamsPage(
             var permissions = await teamService.GetPermissionsAsync(teamId, workspaceMember, cancellationToken);
             if (!permissions.CanDelete)
             {
-                throw new Unauthorized();
+                throw new UnauthorizedAccessException();
             }
 
             var context = RemoveTeamContext.Deserialize(request.View.PrivateMetadata);

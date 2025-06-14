@@ -1,5 +1,4 @@
-﻿using Api.Shared;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Enterprise.Shared.Outbox.Database.Entities;

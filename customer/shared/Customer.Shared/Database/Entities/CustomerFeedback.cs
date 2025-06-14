@@ -1,4 +1,4 @@
-using Api.Shared;
+using Api.Shared.Services;
 using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;

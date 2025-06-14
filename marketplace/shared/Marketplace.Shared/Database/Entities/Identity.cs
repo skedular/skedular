@@ -1,4 +1,4 @@
-using Api.Shared;
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

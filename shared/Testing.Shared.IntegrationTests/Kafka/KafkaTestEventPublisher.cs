@@ -1,5 +1,5 @@
-﻿using Api.Shared.Events;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
+using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Random;

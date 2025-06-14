@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
@@ -239,7 +239,7 @@ public class HomePage(
                     var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
                     if (!permissions.CanViewBookings)
                     {
-                        throw new Unauthorized();
+                        throw new UnauthorizedAccessException();
                     }
 
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);

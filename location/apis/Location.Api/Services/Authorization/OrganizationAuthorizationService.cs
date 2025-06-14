@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Enterprise.Shared.Exceptions;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Customer = Location.Shared.Models.Customer;

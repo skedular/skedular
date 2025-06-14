@@ -29,9 +29,9 @@ public class WorkspaceChannelConfiguration : IEntityTypeConfiguration<WorkspaceC
     public void Configure(EntityTypeBuilder<WorkspaceChannel> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
-        builder.Property(item => item.Name).HasMaxLength(Api.Shared.Constants.MaxSlackChannelNameLength);
-        builder.Property(item => item.Topic).HasMaxLength(Api.Shared.Constants.MaxSlackChannelTopicLength);
-        builder.Property(item => item.Purpose).HasMaxLength(Api.Shared.Constants.MaxSlackChannelPurposeLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.Constants.MaxSlackChannelNameLength);
+        builder.Property(item => item.Topic).HasMaxLength(Constants.Constants.MaxSlackChannelTopicLength);
+        builder.Property(item => item.Purpose).HasMaxLength(Constants.Constants.MaxSlackChannelPurposeLength);
 
         builder.HasOne(item => item.Workspace).WithMany(item => item.Channels);
 

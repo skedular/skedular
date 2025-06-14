@@ -1,9 +1,9 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Services;
 using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Location = Customer.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;

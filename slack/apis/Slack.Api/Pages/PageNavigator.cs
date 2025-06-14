@@ -1,4 +1,4 @@
-using Enterprise.Shared.Exceptions;
+using Api.Shared.Services;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
 using Slack.Shared.Configurations;

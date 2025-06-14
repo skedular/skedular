@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -41,7 +41,7 @@ public class RemoveCustomTagButtonHandler(
         var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await organizationServiceClient.RemoveCustomTagAsync(

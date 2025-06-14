@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Kafka.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,7 +30,7 @@ public static class HealthCheckExtensions
             .AddHealthChecks()
             .AddKafka(
                 producerConfig,
-                tags: [Constants.ReadinessTag],
+                tags: [HealthCheck.Constants.ReadinessTag],
                 timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
             );
     }

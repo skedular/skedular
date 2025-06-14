@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Api.Shared.Events;
 using Confluent.Kafka;
+using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;

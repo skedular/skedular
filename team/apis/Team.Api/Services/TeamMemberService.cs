@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -64,7 +64,7 @@ public class TeamMemberService(
 
         if (!teamAuthorizationService.CanView(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var memberVisibilityPolicy = team.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
@@ -125,18 +125,18 @@ public class TeamMemberService(
 
         if (!teamAuthorizationService.CanModify(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var myMemberDetails = team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
         if (myMemberDetails.Role == TeamMemberRoleConstants.Administrator && memberRole == TeamMemberRole.Owner)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (myMemberDetails.Role == TeamMemberRoleConstants.Member && memberRole == TeamMemberRole.Administrator)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var mappedRole = memberRole.ToTeamMemberRole();
@@ -208,7 +208,7 @@ public class TeamMemberService(
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
         if (!teamMembers.All(item => teamAuthorizationService.CanModify(teams.Single(organization => organization.Id == item.Team.Id), customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -268,7 +268,7 @@ public class TeamMemberService(
 
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
@@ -385,7 +385,7 @@ public class TeamMemberService(
 
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
@@ -466,7 +466,7 @@ public class TeamMemberService(
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
         if (!teamMembers.All(item => teamAuthorizationService.CanModify(teams.Single(team => team.Id == item.Team.Id), customer)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -528,7 +528,7 @@ public class TeamMemberService(
 
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);

@@ -1,4 +1,4 @@
-﻿using Api.Shared.Events;
+﻿using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Consume.Extensions;
 
 namespace Enterprise.Shared.Kafka.Consume;

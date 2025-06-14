@@ -1,13 +1,13 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Sso;
-using Enterprise.Shared.Security.Sso.Models;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Constants = Enterprise.Shared.Security.Sso.Models.Constants;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
 using OrganizationSsoValidationResult = Organization.Shared.Configurations.OrganizationSsoValidationResult;
 
@@ -78,7 +78,7 @@ public class OrganizationSsoService(
 
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -116,7 +116,7 @@ public class OrganizationSsoService(
 
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (organization.OrganizationSsoSettings is null)
@@ -162,7 +162,7 @@ public class OrganizationSsoService(
         var samlResponse = samlAssertionConsumerService.ExtractSamlResponse(decodedSaml);
         if (samlResponse.StatusCode != "urn:oasis:names:tc:SAML:2.0:status:Success" || samlResponse.SessionNotOnOrAfter <= timeProvider.GetUtcNow())
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var samlOriginId = samlResponse.InResponseTo.StartsWith(Constants.SamlIdPrefix)
@@ -180,7 +180,7 @@ public class OrganizationSsoService(
             cancellationToken);
         if (!isSignatureValid)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
@@ -199,7 +199,7 @@ public class OrganizationSsoService(
 
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (organization.OrganizationSsoSettings is null)

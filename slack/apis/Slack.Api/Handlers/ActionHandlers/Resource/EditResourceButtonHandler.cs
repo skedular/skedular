@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -44,7 +44,7 @@ public class EditResourceButtonHandler(
         var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var values = viewSubmission.View.State.Values;

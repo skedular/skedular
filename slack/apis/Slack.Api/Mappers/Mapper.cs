@@ -1,4 +1,3 @@
-using Api.Shared;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
@@ -9,6 +8,7 @@ using SlackNet;
 using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using Booking = Slack.Shared.Models.Booking;
+using Constants = Slack.Shared.Constants.Constants;
 using Customer = Slack.Shared.Models.Customer;
 using Identity = Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
@@ -95,13 +95,13 @@ public class Mapper : IMapper
         dest.Name = (string.IsNullOrWhiteSpace(src.Team?.Name) ? string.Empty : src.Team.Name).Truncate(Constants.MaxSlackWorkspaceNameLength);
         dest.BotUserId = src.BotUserId;
         dest.BotUserScope = src.Scope.Truncate(Constants.MaxSlackScopeLength);
-        dest.BotUserAccessToken = src.AccessToken.Truncate(Constants.MaxTokenLength);
-        dest.BotRefreshToken = src.RefreshToken.ToSafeString().Truncate(Constants.MaxTokenLength);
+        dest.BotUserAccessToken = src.AccessToken.Truncate(Constants.MaxSlackTokenLength);
+        dest.BotRefreshToken = src.RefreshToken.ToSafeString().Truncate(Constants.MaxSlackTokenLength);
         dest.AuthedUserId = src.AuthedUser.Id;
         dest.AuthedUserScope = src.AuthedUser.Scope.Truncate(Constants.MaxSlackScopeLength);
-        dest.AuthedUserAccessToken = src.AuthedUser.AccessToken.Truncate(Constants.MaxTokenLength);
+        dest.AuthedUserAccessToken = src.AuthedUser.AccessToken.Truncate(Constants.MaxSlackTokenLength);
         dest.AuthedRefreshToken =
-            (src.AuthedUser is null ? string.Empty : src.AuthedUser.RefreshToken.ToSafeString()).Truncate(Constants.MaxTokenLength);
+            (src.AuthedUser is null ? string.Empty : src.AuthedUser.RefreshToken.ToSafeString()).Truncate(Constants.MaxSlackTokenLength);
         dest.Organization = organization;
         return dest;
     }
@@ -499,26 +499,6 @@ public class Mapper : IMapper
 
     public OrganizationZone MapTo(Zone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.Domain = src.Domain.ToSafeString();
-        dest.EmailDomain = src.EmailDomain.ToSafeString();
-        dest.EnterpriseId = src.EnterpriseId.ToSafeString();
-        dest.EnterpriseName = src.EnterpriseName.ToSafeString();
-        dest.BotUserId = src.BotUserId;
-        dest.BotUserScope = src.BotUserScope;
-        dest.BotUserAccessToken = src.BotUserAccessToken;
-        dest.BotRefreshToken = src.BotRefreshToken;
-        dest.AuthedUserId = src.AuthedUserId;
-        dest.AuthedUserScope = src.AuthedUserScope;
-        dest.AuthedUserAccessToken = src.AuthedUserAccessToken;
-        dest.AuthedRefreshToken = src.AuthedRefreshToken;
-        dest.Organization = organization;
-        return dest;
-    }
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> src, Team team) =>
         src.Select(item => MapTo(item, team));

@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;

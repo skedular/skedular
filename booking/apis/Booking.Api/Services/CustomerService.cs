@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Booking.Api.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 
 namespace Booking.Api.Services;
 

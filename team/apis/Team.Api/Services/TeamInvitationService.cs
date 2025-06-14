@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
@@ -49,7 +49,7 @@ public class TeamInvitationService(
 
         if (!teamAuthorizationService.CanInvitePeople(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var existingMemberEmails = team.TeamMembers
@@ -203,7 +203,7 @@ public class TeamInvitationService(
 
         if (!teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -221,12 +221,12 @@ public class TeamInvitationService(
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (joinInvitation.Invitee is not null && joinInvitation.Invitee.Id != customer.Id)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         if (joinInvitation.Email is not null && !customer.Identities
@@ -234,7 +234,7 @@ public class TeamInvitationService(
                 .Select(item => item.Email)
                 .Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
     }
 }

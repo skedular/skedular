@@ -5,9 +5,7 @@
 //----------------------
 
 using System.Text.RegularExpressions;
-
-using Api.Shared.Events;
-
+using Enterprise.Shared.Events;
 using Google.Protobuf.WellKnownTypes;
 
 using NanoidDotNet;

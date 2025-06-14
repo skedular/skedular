@@ -1,4 +1,4 @@
-using Enterprise.Shared.Exceptions;
+using Api.Shared.Services;
 using Organization.Processors.Mappers;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;

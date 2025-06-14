@@ -1,5 +1,5 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Exceptions;
 using MsTeams.Api.Mappers;
 using MsTeams.Shared.Models;
 using MsTeams.Shared.Repositories;

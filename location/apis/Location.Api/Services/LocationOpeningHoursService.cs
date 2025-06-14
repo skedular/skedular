@@ -1,6 +1,6 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Publishers;
@@ -43,7 +43,7 @@ public class LocationOpeningHoursService(
 
         if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

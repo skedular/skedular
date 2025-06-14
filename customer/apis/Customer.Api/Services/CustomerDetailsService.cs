@@ -1,5 +1,3 @@
-using Enterprise.Shared.Exceptions;
-
 namespace Customer.Api.Services;
 
 public interface ICustomerDetailsService
@@ -69,7 +67,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
         if (customer.Id != id)
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         customer.Timezone = timezone;

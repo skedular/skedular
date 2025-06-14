@@ -1,7 +1,7 @@
-﻿using Api.Shared.Events;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Confluent.SchemaRegistry;
+using Enterprise.Shared.Events;
 using Enterprise.Shared.Kafka.Configurations;
 using Schema = Confluent.SchemaRegistry.Schema;
 

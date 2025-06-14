@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared.HealthCheck;
-using HealthChecks.NpgSql;
+﻿using HealthChecks.NpgSql;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
@@ -19,7 +18,7 @@ public static class HealthCheckExtensions
             .AddHealthChecks()
             .AddNpgSql(
                 new NpgSqlHealthCheckOptions(npgsqlDataSource),
-                tags: [Constants.ReadinessTag],
+                tags: [HealthCheck.Constants.ReadinessTag],
                 timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
             );
 }

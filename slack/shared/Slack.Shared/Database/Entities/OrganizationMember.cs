@@ -28,10 +28,10 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Role).HasMaxLength(Api.Shared.Constants.MaxRoleLength);
+        builder.Property(item => item.Role).HasMaxLength(Api.Shared.Services.Constants.MaxRoleLength);
         builder
             .Property(item => item.Status)
-            .HasMaxLength(Api.Shared.Constants.MaxOrganizationMemberStatusLength)
+            .HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationMemberStatusLength)
             .HasDefaultValue(OrganizationMemberStatusConstants.Active);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationMembers).HasForeignKey(item => item.OrganizationId);

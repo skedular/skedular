@@ -1,8 +1,8 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
-using Organization.Shared.Database.Entities;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
@@ -19,7 +18,6 @@ using Address = Organization.Shared.Database.Entities.Address;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
-using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 using Tag = Organization.Shared.Database.Entities.Tag;
@@ -256,7 +254,7 @@ public class OrganizationService(
 
         if (!organizationAuthorizationService.CanDelete(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -369,7 +367,7 @@ public class OrganizationService(
     {
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -432,7 +430,7 @@ public class OrganizationService(
     {
         if (!organizationAuthorizationService.CanView(organization, customer))
         {
-            throw new Unauthorized();
+            throw new UnauthorizedAccessException();
         }
 
         var mappedOrganization = mapper.MapTo(organization);
