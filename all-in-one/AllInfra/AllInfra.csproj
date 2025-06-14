@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\billing\shared\Billing.Infrastructure\Billing.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\booking\shared\Booking.Infrastructure\Booking.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\customer\shared\Customer.Infrastructure\Customer.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\location\shared\Location.Infrastructure\Location.Infrastructure.csproj"/>

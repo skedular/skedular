@@ -34,26 +34,6 @@ RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /outpu
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/billing_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Billing.V1 \
-  /Classname:Billing \
-  /Output:/output/Skedular/Billing/V1/Billing.g.cs \
-  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
-  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
-  /ControllerStyle:abstract \
-  /HandleReferences:true \
-  /ArrayType:System.Collections.Generic.IList \
-  /DictionaryType:System.Collections.Generic.IDictionary \
-  /UseActionResultType:true \
-  /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson \
-  /ExcludedTypeNames:FileParameter
-
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Billing/V1/Billing.g.cs
-
-RUN nswag \
-  openapi2cscontroller \
   /Input:/openapi/skedular/booking_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.V1 \
   /Classname:Booking \

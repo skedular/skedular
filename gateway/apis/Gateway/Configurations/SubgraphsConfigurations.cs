@@ -4,7 +4,6 @@ public class SubgraphsConfigurations
 {
     public const string Key = "Subgraphs";
 
-    public UrlConfig Billing { get; set; } = new();
     public UrlConfig Booking { get; set; } = new();
     public UrlConfig Customer { get; set; } = new();
     public UrlConfig Location { get; set; } = new();

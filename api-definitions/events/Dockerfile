@@ -23,52 +23,6 @@ RUN --mount=type=cache,target=~/.nuget/packages dotnet publish "Skedularctl.cspr
 
 COPY ["api-definitions/events", "/events"]
 
-RUN mkdir -p /output/Skedular/BillingInternal/V1
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/BillingInternal/V1 --csharp_opt=file_extension=.g.cs billing_internal_v1_key.proto
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/BillingInternal/V1 --csharp_opt=file_extension=.g.cs billing_internal_v1_value.proto
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key \
-    --event-type Key \
-    --topic-name billing.v1.internal \
-    --retry-topic-name-prefix billing.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name billing.v1.internal.deadletter \
-    --generate-metadata-function-helper False \
-    --protobuf-schema-file-path /events/skedular/billing_internal_v1_key.proto \
-    --output-file-path /output/Skedular/BillingInternal/V1/BillingInternalKeyMetadata.g.cs
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value \
-    --event-type Event \
-    --topic-name billing.v1.internal \
-    --retry-topic-name-prefix billing.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name billing.v1.internal.deadletter \
-    --protobuf-schema-file-path /events/skedular/billing_internal_v1_value.proto \
-    --output-file-path /output/Skedular/BillingInternal/V1/BillingInternalValueMetadata.g.cs
-
-RUN mkdir -p /output/Skedular/Billing/V1
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Billing/V1 --csharp_opt=file_extension=.g.cs billing_v1_key.proto
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Billing/V1 --csharp_opt=file_extension=.g.cs billing_v1_value.proto
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key \
-    --event-type Key \
-    --topic-name billing.v1.event \
-    --retry-topic-name-prefix billing.v1.event.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name billing.v1.event.deadletter \
-    --generate-metadata-function-helper False \
-    --protobuf-schema-file-path /events/skedular/billing_v1_key.proto \
-    --output-file-path /output/Skedular/Billing/V1/BillingKeyMetadata.g.cs
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value \
-    --event-type Event \
-    --topic-name billing.v1.event \
-    --retry-topic-name-prefix billing.v1.event.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name billing.v1.event.deadletter \
-    --protobuf-schema-file-path /events/skedular/billing_v1_value.proto \
-    --output-file-path /output/Skedular/Billing/V1/BillingValueMetadata.g.cs
-
 RUN mkdir -p /output/Skedular/Booking/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Booking/V1 --csharp_opt=file_extension=.g.cs booking_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Booking/V1 --csharp_opt=file_extension=.g.cs booking_v1_value.proto

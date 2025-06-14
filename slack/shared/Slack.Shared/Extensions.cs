@@ -16,7 +16,6 @@ using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using SlackNet.AspNetCore;
-using BillingService = Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService;
 
 namespace Slack.Shared;
 
@@ -121,11 +120,6 @@ public static class Extensions
             Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
         }
 
-        var billingConfiguration = configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();
-        ArgumentNullException.ThrowIfNull(billingConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(billingConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(billingConfiguration.GrpcUrl);
-
         var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
@@ -171,7 +165,6 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(coreConfiguration.GrpcUrl);
 
-        services.AddGrpcClient<BillingService.BillingServiceClient>(GrpcClients.ConfigureBilling);
         services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
         services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
@@ -184,7 +177,6 @@ public static class Extensions
 
         return services
             .AddSingleton(slackConfiguration)
-            .AddSingleton(billingConfiguration)
             .AddSingleton(bookingConfiguration)
             .AddSingleton(customerConfiguration)
             .AddSingleton(locationConfiguration)

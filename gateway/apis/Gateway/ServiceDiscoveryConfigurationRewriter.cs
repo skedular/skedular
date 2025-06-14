@@ -8,10 +8,6 @@ public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgra
     protected override ValueTask<HttpClientConfiguration> RewriteAsync(HttpClientConfiguration configuration, CancellationToken cancellationToken) =>
         new(configuration.SubgraphName switch
         {
-            nameof(subgraphsConfigurations.Billing) => configuration with
-            {
-                EndpointUri = subgraphsConfigurations.Billing.Uri ?? new Uri("https+http://billingapi/v1/graphql")
-            },
             nameof(subgraphsConfigurations.Booking) => configuration with
             {
                 EndpointUri = subgraphsConfigurations.Booking.Uri ?? new Uri("https+http://bookingapi/v1/graphql")

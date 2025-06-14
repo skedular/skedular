@@ -6,9 +6,6 @@ namespace Slack.Shared;
 
 public static class GrpcClients
 {
-    public static void ConfigureBilling(IServiceProvider provider, GrpcClientFactoryOptions client) =>
-        client.Address = provider.GetRequiredService<BillingConfiguration>().GrpcUrl;
-
     public static void ConfigureBooking(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<BookingConfiguration>().GrpcUrl;
 

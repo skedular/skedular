@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\billing\jobs\Billing.Jobs\Billing.Jobs.csproj"/>
         <ProjectReference Include="..\..\booking\jobs\Booking.Jobs\Booking.Jobs.csproj"/>
         <ProjectReference Include="..\..\customer\jobs\Customer.Jobs\Customer.Jobs.csproj"/>
         <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj"/>

@@ -34,26 +34,6 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/billing_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Billing.V1 \
-  /Classname:BillingClient \
-  /Output:/output/Skedular/Billing/V1/Billing.g.cs \
-  /GenerateClientClasses:true \
-  /OperationGenerationMode:SingleClientFromOperationId \
-  /GenerateClientInterfaces:true \
-  /InjectHttpClient:true \
-  /UseBaseUrl:false \
-  /GenerateOptionalParameters:true \
-  /GenerateJsonMethods:false \
-  /ArrayType:System.Collections.Generic.IList \
-  /DictionaryType:System.Collections.Generic.IDictionary \
-  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
-  /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
-
-RUN nswag \
-  openapi2csclient \
   /Input:/openapi/skedular/booking_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.V1 \
   /Classname:BookingClient \

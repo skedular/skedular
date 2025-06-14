@@ -13,7 +13,7 @@ on:
       - ".github/workflows/workarounds.yml"
       - "shared/**"
       - "all-in-one/**"
-      - "billing/**"
+      - "core/**"
       - "booking/**"
       - "customer/**"
       - "gateway/**"
@@ -24,6 +24,7 @@ on:
       - "payment/**"
       - "slack/**"
       - "team/**"
+      - "marketplace/**"
   pull_request:
     branches:
       - "main"
@@ -33,7 +34,7 @@ on:
       - ".github/workflows/workarounds.yml"
       - "shared/**"
       - "all-in-one/**"
-      - "billing/**"
+      - "core/**"
       - "booking/**"
       - "customer/**"
       - "gateway/**"
@@ -44,11 +45,12 @@ on:
       - "payment/**"
       - "slack/**"
       - "team/**"
+      - "marketplace/**"
 
 jobs:
   build-apis:
     name: "Build APIs"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
@@ -76,7 +78,7 @@ jobs:
 
   build-processors:
     name: "Build Processors"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
@@ -104,7 +106,7 @@ jobs:
 
   build-jobs:
     name: "Build Jobs"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
@@ -132,7 +134,7 @@ jobs:
 
   build-infra:
     name: "Build Infra"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:

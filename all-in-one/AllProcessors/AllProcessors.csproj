@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\billing\processors\Billing.Processors\Billing.Processors.csproj"/>
         <ProjectReference Include="..\..\booking\processors\Booking.Processors\Booking.Processors.csproj"/>
         <ProjectReference Include="..\..\customer\processors\Customer.Processors\Customer.Processors.csproj"/>
         <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj"/>

@@ -20,7 +20,6 @@ public class Program
         await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), cancellationToken);
 
         await Task.WhenAll(
-            Billing.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Booking.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Customer.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Location.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

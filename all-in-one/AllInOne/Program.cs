@@ -20,7 +20,6 @@ public class Program
         await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), cancellationToken);
 
         await Task.WhenAll(
-            Billing.Infrastructure.Program.MigrateAsync(Billing.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Booking.Infrastructure.Program.MigrateAsync(Booking.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Customer.Infrastructure.Program.MigrateAsync(Customer.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Location.Infrastructure.Program.MigrateAsync(Location.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
@@ -35,9 +34,6 @@ public class Program
         );
 
         await Task.WhenAll(
-            Billing.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Billing.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Billing.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Booking.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Booking.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Booking.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

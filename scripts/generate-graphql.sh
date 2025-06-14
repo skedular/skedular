@@ -7,10 +7,6 @@ BASE_DIR="$(cd "$(dirname "${0}")/.." && pwd)"
 
 dotnet tool restore
 
-cd "${BASE_DIR}/billing/apis/Billing.Api"
-dotnet run -- schema export --output schema.graphql
-dotnet fusion subgraph pack
-
 cd "${BASE_DIR}/booking/apis/Booking.Api"
 dotnet run -- schema export --output schema.graphql
 dotnet fusion subgraph pack
@@ -56,7 +52,6 @@ dotnet run -- schema export --output schema.graphql
 dotnet fusion subgraph pack
 
 cd "${BASE_DIR}/gateway/apis/Gateway"
-dotnet fusion compose -p gateway.fgp -s ../../../billing/apis/Billing.Api
 dotnet fusion compose -p gateway.fgp -s ../../../booking/apis/Booking.Api
 dotnet fusion compose -p gateway.fgp -s ../../../customer/apis/Customer.Api
 dotnet fusion compose -p gateway.fgp -s ../../../location/apis/Location.Api

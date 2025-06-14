@@ -1,5 +1,3 @@
-using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
 using Enterprise.Shared;
 using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
@@ -52,11 +50,7 @@ public class Program
             .AddKafkaReliableEventConsumers<
                 MarketplaceSubscriber,
                 Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
-                BillingSubscriber,
-                Key,
-                Event>(kafkaConfiguration);
+                Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>(kafkaConfiguration);
 
         services
             .AddDomainSharedServices()

@@ -131,7 +131,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -192,7 +191,6 @@ services:
       Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -207,7 +205,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Subgraphs__Billing__Url: http://localhost:10800/v1/graphql
       Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
       Subgraphs__Customer__Url: http://localhost:10000/v1/graphql
       Subgraphs__Location__Url: http://localhost:10600/v1/graphql
@@ -219,8 +216,6 @@ services:
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
-      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://staging-apis-01:10802
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -302,7 +297,6 @@ services:
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -317,8 +311,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://staging-apis-01:10802
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -403,7 +395,6 @@ services:
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${STAGING_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${STAGING_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -418,8 +409,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://staging-apis-01:10802
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
       Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
@@ -493,7 +482,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -556,7 +544,6 @@ services:
       Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -571,7 +558,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Subgraphs__Billing__Url: http://localhost:10800/v1/graphql
       Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
       Subgraphs__Customer__Url: http://localhost:10000/v1/graphql
       Subgraphs__Location__Url: http://localhost:10600/v1/graphql
@@ -583,8 +569,6 @@ services:
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
-      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
@@ -666,7 +650,6 @@ services:
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -681,8 +664,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
@@ -767,7 +748,6 @@ services:
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
       ConnectionStrings__temporal: "temporal:7233"
-      ConnectionStrings__billingdb: ${PRODUCTION_POSTGRES_BILLING_CONNECTIONSTRING}
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
       ConnectionStrings__customerdb: ${PRODUCTION_POSTGRES_CUSTOMER_CONNECTIONSTRING}
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
@@ -782,8 +762,6 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
-      Billing__GrpcUrl: http://production-apis-01:10802
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://production-apis-01:10302
       Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
