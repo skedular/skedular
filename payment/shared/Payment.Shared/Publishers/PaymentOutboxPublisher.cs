@@ -34,7 +34,7 @@ public class PaymentOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        account.IsNotDeleted() ? Type.OrganizationStripeConnectAccountUpserted : Type.OrganizationStripeConnectAccountDeleted,
+                        account.IsDeleted() ? Type.OrganizationStripeConnectAccountDeleted : Type.OrganizationStripeConnectAccountUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { StripeConnectAccount = mapper.MapTo(account) }
                 },

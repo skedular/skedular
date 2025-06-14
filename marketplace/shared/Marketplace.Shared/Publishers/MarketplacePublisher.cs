@@ -31,7 +31,7 @@ public class MarketplacePublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    product.IsNotDeleted() ? Type.ProductUpserted : Type.ProductDeleted,
+                    product.IsDeleted() ? Type.ProductDeleted : Type.ProductUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { Product = mapper.MapTo(product) }
             },

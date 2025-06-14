@@ -35,3 +35,9 @@ public static class ReplicatedEntityBaseWithDeletedExtension
         builder.HasIndex(item => item.DeletedAt);
     }
 }
+
+public static class EntityBaseWithDeletedExtensions
+{
+    public static bool IsNotDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => !entity.IsDeleted();
+    public static bool IsDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => entity.DeletedAt.HasValue;
+}

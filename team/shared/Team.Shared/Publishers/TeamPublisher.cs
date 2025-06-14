@@ -37,7 +37,7 @@ public class TeamPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
+                    team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { Team = mapper.MapTo(team) }
             },
@@ -54,9 +54,7 @@ public class TeamPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    joinInvitation.IsNotDeleted()
-                        ? Type.InvitationToJoinTeamUpserted
-                        : Type.InvitationToJoinTeamDeleted,
+                    joinInvitation.IsDeleted() ? Type.InvitationToJoinTeamDeleted : Type.InvitationToJoinTeamUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
             },

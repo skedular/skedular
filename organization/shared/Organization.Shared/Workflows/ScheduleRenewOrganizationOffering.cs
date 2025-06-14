@@ -17,9 +17,15 @@ public class ScheduleRenewOrganizationOffering
             await Workflow.DelayAsync(delayDuration);
         }
 
-        _ = await Workflow.ExecuteActivityAsync(
+        await Workflow.ExecuteActivityAsync(
             (OrganizationOfferings activity) =>
-                activity.RenewAutoRenewableOrganizationOfferingAsync(new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId)),
+                activity.PayForOrganizationOfferingAsync(new PayForOrganizationOffering(args.OrganizationOfferingId)),
+            new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+
+        await Workflow.ExecuteActivityAsync(
+            (OrganizationOfferings activity) =>
+                activity.RenewAutoRenewableOrganizationOfferingAsync(
+                    new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId, args.OrganizationOfferingId)),
             new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
     }
 }

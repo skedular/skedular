@@ -41,7 +41,7 @@ public class BookingOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        booking.IsNotDeleted() ? Type.BookingUpserted : Type.BookingDeleted,
+                        booking.IsDeleted() ? Type.BookingDeleted : Type.BookingUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { Booking = mapper.MapTo(booking) }
                 },

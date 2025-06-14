@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
@@ -8,11 +7,10 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationOfferingRepository : IRepository<OrganizationOffering>
 {
+    Task<OrganizationOffering?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationOffering>> GetActiveOfferingsAsync(CancellationToken cancellationToken);
-    Task<ICollection<OrganizationOffering>> GetExpiredAutoRenewableOfferingsAsync(string organizationId, CancellationToken cancellationToken);
     void Add(OrganizationOffering organizationOffering);
     void Remove(OrganizationOffering organizationOffering);
-    void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
     void Undelete(OrganizationOffering organizationOffering);
 }
 
@@ -20,23 +18,20 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
     : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider),
         IOrganizationOfferingRepository
 {
+    public async Task<OrganizationOffering?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationOffering
+            .Include(query => query.Organization)
+            .ThenInclude(query => query.StripeCustomer)
+            .Include(query => query.Organization)
+            .ThenInclude(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
+            .Include(query => query.OrganizationOfferingActiveMembers)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public async Task<ICollection<OrganizationOffering>> GetActiveOfferingsAsync(CancellationToken cancellationToken) =>
         await DbContext.OrganizationOffering
             .Where(query => !query.DeletedAt.HasValue)
             .Include(query => query.Organization)
             .ToListAsync(cancellationToken);
-
-    public async Task<ICollection<OrganizationOffering>> GetExpiredAutoRenewableOfferingsAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
-    {
-        var now = TimeProvider.GetUtcNow();
-
-        return await DbContext.OrganizationOffering
-            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.End <= now && query.AutoRenew)
-            .Include(query => query.Organization)
-            .ToListAsync(cancellationToken);
-    }
 
     public void Add(OrganizationOffering organizationOffering)
     {
@@ -50,13 +45,6 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
         var now = TimeProvider.GetUtcNow();
         organizationOffering.DeletedAt = now;
         DbContext.OrganizationOffering.Update(organizationOffering);
-    }
-
-    public void RemoveRange(ICollection<OrganizationOffering> organizationOfferings)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organizationOfferings.ForEach(organizationOffering => organizationOffering.DeletedAt = now);
-        DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
 
     public void Undelete(OrganizationOffering organizationOffering)

@@ -33,7 +33,7 @@ public class LocationOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
+                        location.IsDeleted() ? Type.LocationDeleted : Type.LocationUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { Location = mapper.MapTo(location) }
                 },

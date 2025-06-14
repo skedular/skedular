@@ -33,7 +33,7 @@ public class CustomerOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        customer.IsNotDeleted() ? Type.CustomerUpserted : Type.CustomerDeleted,
+                        customer.IsDeleted() ? Type.CustomerDeleted : Type.CustomerUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { Customer = mapper.MapTo(customer) }
                 },

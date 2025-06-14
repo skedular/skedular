@@ -35,7 +35,7 @@ public class PaymentPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    account.IsNotDeleted() ? Type.OrganizationStripeConnectAccountUpserted : Type.OrganizationStripeConnectAccountDeleted,
+                    account.IsDeleted() ? Type.OrganizationStripeConnectAccountDeleted : Type.OrganizationStripeConnectAccountUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { StripeConnectAccount = mapper.MapTo(account) }
             },
@@ -49,7 +49,7 @@ public class PaymentPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    session.IsNotDeleted() ? Type.BookingCheckoutSessionUpserted : Type.BookingCheckoutSessionDeleted,
+                    session.IsDeleted() ? Type.BookingCheckoutSessionDeleted : Type.BookingCheckoutSessionUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { BookingCheckoutSession = mapper.MapTo(session) }
             },

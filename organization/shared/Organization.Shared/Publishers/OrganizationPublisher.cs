@@ -37,7 +37,7 @@ public class OrganizationPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
+                    organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { Organization = mapper.MapTo(organization) }
             },
@@ -54,9 +54,7 @@ public class OrganizationPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    joinInvitation.IsNotDeleted()
-                        ? Type.InvitationToJoinOrganizationUpserted
-                        : Type.InvitationToJoinOrganizationDeleted,
+                    joinInvitation.IsDeleted() ? Type.InvitationToJoinOrganizationDeleted : Type.InvitationToJoinOrganizationUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
             },
