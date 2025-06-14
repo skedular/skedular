@@ -93,6 +93,7 @@ public static class SettingsActionTypes
 public static class BillingActionTypes
 {
     public const string Billing = "Billing";
+    public const string CompanyName = "CompanyName";
     public const string Email = "Email";
     public const string AddressLine1 = "AddressLine1";
     public const string AddressLine2 = "AddressLine2";

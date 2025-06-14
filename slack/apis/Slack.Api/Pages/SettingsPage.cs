@@ -345,10 +345,24 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var billingInfo = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
+        var organizationBillingDetails = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
             new GetOrganizationBillingDetailsInput { OrganizationId = workspace.Organization.Id },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
+
+        var companyName = new InputBlock
+        {
+            BlockId = BillingActionTypes.CompanyName,
+            Label = "Company name".ToPlainText(),
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.CompanyName,
+                InitialValue = string.IsNullOrWhiteSpace(organizationBillingDetails.CompanyName)
+                    ? null
+                    : organizationBillingDetails.CompanyName.ToSafeString()
+            },
+            Optional = false
+        };
 
         var email = new InputBlock
         {
@@ -357,7 +371,9 @@ public class SettingsPage(
             Element = new EmailTextInput
             {
                 ActionId = BillingActionTypes.Email,
-                InitialValue = string.IsNullOrWhiteSpace(billingInfo.Email) ? null : billingInfo.Email.ToSafeString()
+                InitialValue = string.IsNullOrWhiteSpace(organizationBillingDetails.Email)
+                    ? null
+                    : organizationBillingDetails.Email.ToSafeString()
             },
             Optional = false
         };
@@ -366,7 +382,10 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.AddressLine1,
             Label = "Address line 1".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.AddressLine1, InitialValue = billingInfo.AddressLine1.ToSafeString() },
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.AddressLine1, InitialValue = organizationBillingDetails.AddressLine1.ToSafeString()
+            },
             Optional = true
         };
 
@@ -374,7 +393,10 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.AddressLine2,
             Label = "Address line 2".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.AddressLine2, InitialValue = billingInfo.AddressLine2.ToSafeString() },
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.AddressLine2, InitialValue = organizationBillingDetails.AddressLine2.ToSafeString()
+            },
             Optional = true
         };
 
@@ -382,7 +404,8 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Suburb,
             Label = "Suburb".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.Suburb, InitialValue = billingInfo.Suburb.ToSafeString() },
+            Element =
+                new PlainTextInput { ActionId = BillingActionTypes.Suburb, InitialValue = organizationBillingDetails.Suburb.ToSafeString() },
             Optional = true
         };
 
@@ -390,7 +413,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.City,
             Label = "City".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.City, InitialValue = billingInfo.City.ToSafeString() },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.City, InitialValue = organizationBillingDetails.City.ToSafeString() },
             Optional = true
         };
 
@@ -398,7 +421,10 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Province,
             Label = "Province".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.Province, InitialValue = billingInfo.Province.ToSafeString() },
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.Province, InitialValue = organizationBillingDetails.Province.ToSafeString()
+            },
             Optional = true
         };
 
@@ -406,7 +432,10 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Zipcode,
             Label = "Zipcode".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.Zipcode, InitialValue = billingInfo.Zipcode.ToSafeString() },
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.Zipcode, InitialValue = organizationBillingDetails.Zipcode.ToSafeString()
+            },
             Optional = true
         };
 
@@ -417,9 +446,9 @@ public class SettingsPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.CountryKey,
-                InitialOption = string.IsNullOrWhiteSpace(billingInfo.Country)
+                InitialOption = string.IsNullOrWhiteSpace(organizationBillingDetails.Country)
                     ? null
-                    : new Option { Text = billingInfo.Country.ToOptionText(), Value = billingInfo.Country },
+                    : new Option { Text = organizationBillingDetails.Country.ToOptionText(), Value = organizationBillingDetails.Country },
                 MinQueryLength = 3
             },
             Optional = true
@@ -436,7 +465,7 @@ public class SettingsPage(
                 Submit = "Save",
                 Blocks =
                 [
-                    email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
+                    companyName, email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
                 ],
                 PrivateMetadata = commonPageContext.Serialize()
             },

@@ -11,17 +11,8 @@ public static class SlackClientExtensions
         this ISlackApiClient slackApiClient,
         string triggerId,
         ViewDefinition viewDefinition,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            return await slackApiClient.Views.Open(triggerId, viewDefinition, cancellationToken);
-        }
-        catch (SlackException)
-        {
-            return await slackApiClient.Views.Open(string.Empty, viewDefinition, cancellationToken);
-        }
-    }
+        CancellationToken cancellationToken) =>
+        await slackApiClient.Views.Open(triggerId, viewDefinition, cancellationToken);
 
     public static async Task ViewsPublishAsync(
         this ISlackApiClient slackApiClient,

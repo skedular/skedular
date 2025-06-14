@@ -44,6 +44,29 @@ public class EditBillingButtonHandler(
         var values = viewSubmission.View.State.Values;
         var setOrganizationBillingInfoInput = new SetOrganizationBillingInfoInput { OrganizationId = workspace.Organization.Id };
 
+        if (values.TryGetValue(BillingActionTypes.CompanyName, out var companyNameBlock))
+        {
+            if (companyNameBlock.TryGetValue(BillingActionTypes.CompanyName, out var companyName))
+            {
+                if (companyName is PlainTextInputValue value)
+                {
+                    setOrganizationBillingInfoInput.CompanyName = value.Value.ToSafeString();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Company name must be PlainTextInputValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("company name block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("company name block is missing");
+        }
+
         if (values.TryGetValue(BillingActionTypes.Email, out var emailBlock))
         {
             if (emailBlock.TryGetValue(BillingActionTypes.Email, out var email))
