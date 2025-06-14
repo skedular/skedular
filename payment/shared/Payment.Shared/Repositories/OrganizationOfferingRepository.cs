@@ -50,7 +50,5 @@ public class OrganizationOfferingRepository(PaymentDbContext dbContext, TimeProv
         await DbContext.OrganizationOffering
             .Where(query => query.Organization.Id == organizationId)
             .Include(query => query.Organization)
-            .Include(query => query.StripePaymentIntent)
-            .ThenInclude(query => query.StripePaymentMethod)
             .ToListAsync(cancellationToken);
 }

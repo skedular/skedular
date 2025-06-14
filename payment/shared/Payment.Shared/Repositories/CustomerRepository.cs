@@ -18,13 +18,11 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, IEnumerable<StripePaymentMethod>> AddDependentObjects(this IQueryable<Customer> originalQuery) =>
+    internal static IIncludableQueryable<Customer, StripeConnectAccount?> AddDependentObjects(this IQueryable<Customer> originalQuery) =>
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.StripeCustomers)
-            .ThenInclude(query => query.StripeConnectAccount)
-            .Include(query =>
-                query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
+            .ThenInclude(query => query.StripeConnectAccount);
 }
 
 public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timeProvider)

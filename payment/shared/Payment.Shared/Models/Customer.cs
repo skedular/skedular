@@ -7,7 +7,6 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
 {
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public string? Designation { get; set; }
     public string? Title { get; set; }

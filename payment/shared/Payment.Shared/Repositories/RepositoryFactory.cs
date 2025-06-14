@@ -23,8 +23,6 @@ public interface IRepositoryFactory
     IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
     IStripeConnectAccountAuthorizationRepository StripeConnectAccountAuthorizationRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
-    IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
-    IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
     IStripePriceRepository StripePriceRepository { get; }
     IStripeProductRepository StripeProductRepository { get; }
 }
@@ -50,8 +48,6 @@ public class RepositoryFactory : RepositoryFactoryBase<PaymentDbContext>, IRepos
         StripeConnectAccountRepository = new StripeConnectAccountRepository(_dbContext, timeProvider);
         StripeConnectAccountAuthorizationRepository = new StripeConnectAccountAuthorizationRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
-        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
-        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
         StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
         StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
     }
@@ -71,8 +67,6 @@ public class RepositoryFactory : RepositoryFactoryBase<PaymentDbContext>, IRepos
     public IStripeConnectAccountRepository StripeConnectAccountRepository { get; }
     public IStripeConnectAccountAuthorizationRepository StripeConnectAccountAuthorizationRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }
-    public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
-    public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
     public IStripePriceRepository StripePriceRepository { get; }
     public IStripeProductRepository StripeProductRepository { get; }
 }

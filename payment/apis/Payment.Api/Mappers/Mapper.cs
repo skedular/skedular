@@ -8,15 +8,12 @@ using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using StripeConnectAccount = Payment.Shared.Database.Entities.StripeConnectAccount;
-using StripePaymentMethod = Payment.Shared.Models.StripePaymentMethod;
 
 namespace Payment.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest);
     Customer MapTo(Shared.Database.Entities.Customer src);
-    IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
     StripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
     Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
@@ -26,27 +23,6 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Shared.Database.Entities.StripePaymentMethod MergeTo(PaymentMethod paymentMethod, Shared.Database.Entities.StripePaymentMethod dest)
-    {
-        dest.PaymentMethodId = paymentMethod.Id;
-
-        if (paymentMethod.Card is null)
-        {
-            return dest;
-        }
-
-        dest.CardBrand = paymentMethod.Card.Brand;
-        dest.CardCountry = paymentMethod.Card.Country;
-        dest.CardDescription = paymentMethod.Card.Description;
-        dest.CardExpiryMonth = (byte)paymentMethod.Card.ExpMonth;
-        dest.CardExpiryYear = (short)paymentMethod.Card.ExpYear;
-        dest.CardFingerprint = paymentMethod.Card.Fingerprint;
-        dest.CardFunding = paymentMethod.Card.Funding;
-        dest.CardIssuer = paymentMethod.Card.Issuer;
-        dest.CardLastFourDigit = paymentMethod.Card.Last4;
-        return dest;
-    }
-
     public Customer MapTo(Shared.Database.Entities.Customer src) =>
         new()
         {
@@ -56,8 +32,6 @@ public class Mapper : IMapper
             Id = src.Id,
             Identities = MapTo(src.Identities).ToList()
         };
-
-    public IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) => src.Select(MapTo);
 
     public AccountCreateOptions MapToStripeAccountRequest(Organization src) =>
         new()
@@ -175,28 +149,6 @@ public class Mapper : IMapper
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.StripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
-
-    private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            SetupIntentId = src.SetupIntentId,
-            ClientSecret = src.ClientSecret,
-            Status = src.Status.ToStripePaymentMethodStatus(),
-            PaymentMethodId = src.PaymentMethodId,
-            CardBrand = src.CardBrand,
-            CardCountry = src.CardCountry,
-            CardDescription = src.CardDescription,
-            CardExpiryMonth = src.CardExpiryMonth,
-            CardExpiryYear = src.CardExpiryYear,
-            CardFingerprint = src.CardFingerprint,
-            CardFunding = src.CardFunding,
-            CardIssuer = src.CardIssuer,
-            CardLastFourDigit = src.CardLastFourDigit
-        };
 
     private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;

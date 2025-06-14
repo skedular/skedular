@@ -1,5 +1,4 @@
-﻿using Api.Shared.Services.Models;
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.Exceptions;
 using Payment.Api.Mappers;
 using Payment.Shared.Models;
@@ -10,7 +9,6 @@ namespace Payment.Api.Services;
 public interface ICustomerService
 {
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
-    Task<ICollection<StripePaymentMethod>> GetMyPaymentMethodsAsync(CancellationToken cancellationToken);
 }
 
 public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context)
@@ -27,12 +25,5 @@ public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mappe
         }
 
         return (mapper.MapTo(customer), customer);
-    }
-
-    public async Task<ICollection<StripePaymentMethod>> GetMyPaymentMethodsAsync(CancellationToken cancellationToken)
-    {
-        var (_, customerEntity) = await GetCustomerAsync(cancellationToken);
-
-        return mapper.MapTo(customerEntity.StripePaymentMethods.Where(item => item.Status == StripePaymentMethodStatusConstants.Confirmed)).ToList();
     }
 }

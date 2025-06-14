@@ -24,11 +24,10 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, StripePaymentMethod>
-        AddDependentObjects(
-            this IQueryable<Organization> originalQuery,
-            bool includeDeletedOrganizationMembers,
-            bool includeAllOfferings)
+    internal static IIncludableQueryable<Organization, IEnumerable<OrganizationOffering>> AddDependentObjects(
+        this IQueryable<Organization> originalQuery,
+        bool includeDeletedOrganizationMembers,
+        bool includeAllOfferings)
     {
         var updatedQuery = originalQuery
             .Include(query => query.OrganizationSsoSettings)
@@ -40,22 +39,16 @@ internal static class OrganizationExtensions
                 query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query =>
-                query.StripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue))
             .Include(query => query.StripeConnectAccounts);
 
         return includeAllOfferings
             ? updatedQuery
                 .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
-                .ThenInclude(query => query.StripePaymentIntent)
-                .ThenInclude(query => query.StripePaymentMethod)
             : updatedQuery
                 .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                     .OrderByDescending(organizationOffering => organizationOffering.End)
-                    .Take(1))
-                .ThenInclude(query => query.StripePaymentIntent)
-                .ThenInclude(query => query.StripePaymentMethod);
+                    .Take(1));
     }
 }
 
