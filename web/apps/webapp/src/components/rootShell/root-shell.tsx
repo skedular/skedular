@@ -46,7 +46,6 @@ const RootQuery = graphql`
     myOrganizations {
       id
     }
-    billingCustomerRecordSynced
     bookingCustomerRecordSynced
     locationCustomerRecordSynced
     marketplaceCustomerRecordSynced
@@ -99,7 +98,6 @@ const RootShell = ({
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>
-      rootData?.billingCustomerRecordSynced &&
       rootData?.bookingCustomerRecordSynced &&
       rootData?.locationCustomerRecordSynced &&
       rootData?.marketplaceCustomerRecordSynced &&
@@ -111,7 +109,6 @@ const RootShell = ({
       rootData?.teamCustomerRecordSynced &&
       rootData?.coreCustomerRecordSynced,
     [
-      rootData?.billingCustomerRecordSynced,
       rootData?.bookingCustomerRecordSynced,
       rootData?.locationCustomerRecordSynced,
       rootData?.marketplaceCustomerRecordSynced,

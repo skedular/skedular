@@ -921,8 +921,6 @@ type Query {
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
-  billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  billingVersion: Version!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection! @cost(weight: "10")
