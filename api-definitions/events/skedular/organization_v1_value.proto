@@ -52,7 +52,7 @@ message Organization {
   Address physicalAddress = 14;
   string contactEmail = 15;
   string contactPhone = 16;
-  OrganizationBillingDetails organizationBillingDetails = 17;
+  OrganizationBillingDetails billingDetails = 17;
 }
 
 enum Role {

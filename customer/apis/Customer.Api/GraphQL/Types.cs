@@ -4,6 +4,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
+using CustomerBillingDetails = Customer.Api.GraphQL.Billing.CustomerBillingDetails;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -122,6 +123,7 @@ public class CustomerDetails : Node
     [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredResources")] public IEnumerable<CustomerResourceDetails> PreferredResources { get; set; } = [];
     [GraphQLName("paymentMethods")] public IEnumerable<CustomerPaymentMethod> PaymentMethods { get; set; } = [];
+    [GraphQLName("billingDetails")] public CustomerBillingDetails? BillingDetails { get; set; }
 
     [GraphQLName("hasAttachedPaymentMethod")]
     public bool HasAttachedPaymentMethod { get; set; }
@@ -132,7 +134,7 @@ public class CustomerDetails : Node
 [GraphQLName("CustomerEdge")]
 public class CustomerEdge(CustomerDetails node, string cursor) : Edge<CustomerDetails>(node, cursor);
 
-[GraphQLName("CustomerEmail")]
+[GraphQLName("CustomerIdentity")]
 public class CustomerIdentity : Node
 {
     [GraphQLName("email")] public string? Email { get; set; }

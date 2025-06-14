@@ -11,14 +11,6 @@ namespace Billing.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public string? BillingContactEmail { get; set; }
-    public string? BillingContactAddressLine1 { get; set; }
-    public string? BillingContactAddressLine2 { get; set; }
-    public string? BillingContactSuburb { get; set; }
-    public string? BillingContactCity { get; set; }
-    public string? BillingContactProvince { get; set; }
-    public string? BillingContactZipcode { get; set; }
-    public string? BillingContactCountry { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
 
@@ -35,14 +27,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
-        builder.Property(item => item.BillingContactEmail).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.BillingContactAddressLine1).HasMaxLength(Constants.MaxAddressLineLength);
-        builder.Property(item => item.BillingContactAddressLine2).HasMaxLength(Constants.MaxAddressLineLength);
-        builder.Property(item => item.BillingContactSuburb).HasMaxLength(Constants.MaxSuburbLength);
-        builder.Property(item => item.BillingContactCity).HasMaxLength(Constants.MaxCityLength);
-        builder.Property(item => item.BillingContactProvince).HasMaxLength(Constants.MaxProvinceLength);
-        builder.Property(item => item.BillingContactZipcode).HasMaxLength(Constants.MaxZipcodeLength);
-        builder.Property(item => item.BillingContactCountry).HasMaxLength(Constants.MaxCountryLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder
             .Property(item => item.MemberVisibilityPolicy)

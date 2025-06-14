@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d500170acf4207f9dd658290c3c8b520>>
+ * @generated SignedSource<<094f06b2be0d2f0628b18088326c8c12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -408,7 +408,7 @@ return {
             "args": null,
             "concreteType": "OrganizationBillingDetails",
             "kind": "LinkedField",
-            "name": "organizationBillingDetails",
+            "name": "billingDetails",
             "plural": false,
             "selections": [
               (v1/*: any*/),
@@ -442,16 +442,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5a3a8e5f793ec1bf320e2e54ff276604",
+    "cacheID": "8ab9cd85bd1e81a453f6bdc2421bb67a",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_organization_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    organizationBillingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b7c092136bcc9b6eda788226300ea96d";
+(node as any).hash = "3f36661b095acd76bbbff354477e22f7";
 
 export default node;

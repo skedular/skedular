@@ -8,7 +8,6 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Billing.V1.Value";
 enum Type {
   BillingOrganizationOfferingUpserted = 0;
   BillingOrganizationOfferingDeleted = 1;
-  CustomerBillingInfoUpdated = 2;
 }
 
 message Event {
@@ -29,7 +28,6 @@ message Metadata {
 message Data {
   oneof payload {
     OrganizationOfferingBilling organizationOfferingBilling = 1;
-    CustomerBillingContact customerBillingContact = 3;
   }
 }
 
@@ -38,17 +36,4 @@ message OrganizationOfferingBilling {
   string organizationId = 2;
   int64 totalCost = 3;
   google.protobuf.Timestamp invoiceDate = 4;
-}
-
-message CustomerBillingContact {
-  string customerId = 1;
-  string companyName = 2;
-  string email = 3;
-  string addressLine1 = 4;
-  string addressLine2 = 5;
-  string suburb = 6;
-  string city = 7;
-  string province = 8;
-  string zipcode = 9;
-  string country = 10;
 }

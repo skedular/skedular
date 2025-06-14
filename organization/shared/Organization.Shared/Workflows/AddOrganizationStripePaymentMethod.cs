@@ -10,7 +10,7 @@ public record AddOrganizationStripePaymentMethodState(
     AddOrganizationStripePaymentMethodInput Args,
     StripePaymentMethodEventState? StripePaymentMethodEventState);
 
-public record StripePaymentMethodEventState(string SetupIntentId, string RedirectStatus);
+public record StripePaymentMethodEventState(string RedirectStatus);
 
 [Workflow]
 public class AddOrganizationStripePaymentMethod

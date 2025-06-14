@@ -10,23 +10,6 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
 {
-    public string? Designation { get; set; }
-    public string? Title { get; set; }
-    public string? Name { get; set; }
-    public string? GivenName { get; set; }
-    public string? MiddleName { get; set; }
-    public string? FamilyName { get; set; }
-    public string? PhotoUrl { get; set; }
-    public string? PhotoUrl24 { get; set; }
-    public string? PhotoUrl32 { get; set; }
-    public string? PhotoUrl48 { get; set; }
-    public string? PhotoUrl72 { get; set; }
-    public string? PhotoUrl192 { get; set; }
-    public string? PhotoUrl512 { get; set; }
-    public string? Timezone { get; set; }
-    public string? Locale { get; set; }
-    public string? PhoneNumber { get; set; }
-
     public bool? IsOrganizationOnboardingDone { get; set; }
     public bool? IsLocationOnboardingDone { get; set; }
     public bool? IsTeamOnboardingDone { get; set; }
@@ -45,6 +28,23 @@ public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public virtual StripeCustomer? StripeCustomer { get; set; }
+    public virtual CustomerBillingDetails? BillingDetails { get; set; }
+    public string? Designation { get; set; }
+    public string? Title { get; set; }
+    public string? Name { get; set; }
+    public string? GivenName { get; set; }
+    public string? MiddleName { get; set; }
+    public string? FamilyName { get; set; }
+    public string? PhotoUrl { get; set; }
+    public string? PhotoUrl24 { get; set; }
+    public string? PhotoUrl32 { get; set; }
+    public string? PhotoUrl48 { get; set; }
+    public string? PhotoUrl72 { get; set; }
+    public string? PhotoUrl192 { get; set; }
+    public string? PhotoUrl512 { get; set; }
+    public string? Timezone { get; set; }
+    public string? Locale { get; set; }
+    public string? PhoneNumber { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

@@ -22,12 +22,13 @@ import { RelayError } from '@/components/relayError';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import type { myDetails_addMyBillingDetailsMutation } from '@/queries/__generated__/myDetails_addMyBillingDetailsMutation.graphql';
 import type { myDetails_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myDetails_customerPaymentMethodsDetails_query.graphql';
 import type { myDetails_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myDetails_customerPaymentMethodsDetails_refetchableFragment.graphql';
 import type { myDetails_removeCustomerPaymentMethodMutation } from '@/queries/__generated__/myDetails_removeCustomerPaymentMethodMutation.graphql';
 import type { myDetails_rootQuery } from '@/queries/__generated__/myDetails_rootQuery.graphql';
 import type { myDetails_updateCustomerDetailsMutation } from '@/queries/__generated__/myDetails_updateCustomerDetailsMutation.graphql';
-import type { myDetails_updateMyBillingContactDetailsMutation } from '@/queries/__generated__/myDetails_updateMyBillingContactDetailsMutation.graphql';
+import type { myDetails_updateMyBillingDetailsMutation } from '@/queries/__generated__/myDetails_updateMyBillingDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -63,18 +64,18 @@ const RootQuery = graphql`
       familyName
       timezone
       phoneNumber
-    }
-    myBillingContactDetails {
-      id
-      companyName
-      email
-      addressLine1
-      addressLine2
-      suburb
-      city
-      province
-      zipcode
-      country
+      billingDetails {
+        id
+        companyName
+        email
+        addressLine1
+        addressLine2
+        suburb
+        city
+        province
+        zipcode
+        country
+      }
     }
     ...myDetails_customerPaymentMethodsDetails_query
   }
@@ -168,20 +169,45 @@ const MyDetails = ({ queryReference }: Props) => {
     }
   `);
 
-  const [commitUpdateMyBillingContactDetails] = useMutation<myDetails_updateMyBillingContactDetailsMutation>(graphql`
-    mutation myDetails_updateMyBillingContactDetailsMutation($input: UpdateMyBillingContactDetailsInput!) @raw_response_type {
-      updateMyBillingContactDetails(input: $input) {
-        customerBillingContactDetails {
+  const [commitAddMyBillingDetails] = useMutation<myDetails_addMyBillingDetailsMutation>(graphql`
+    mutation myDetails_addMyBillingDetailsMutation($input: AddMyBillingDetailsInput!) @raw_response_type {
+      addMyBillingDetails(input: $input) {
+        customer {
           id
-          companyName
-          email
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
+          billingDetails {
+            id
+            companyName
+            email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitUpdateMyBillingDetails] = useMutation<myDetails_updateMyBillingDetailsMutation>(graphql`
+    mutation myDetails_updateMyBillingDetailsMutation($input: UpdateMyBillingDetailsInput!) @raw_response_type {
+      updateMyBillingDetails(input: $input) {
+        customer {
+          id
+          billingDetails {
+            id
+            companyName
+            email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
         }
       }
     }
@@ -283,52 +309,18 @@ const MyDetails = ({ queryReference }: Props) => {
   };
 
   const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: CustomerBillingDetails) => {
-    const billingDetails = rootData.myBillingContactDetails;
-    if (!billingDetails) {
+    if (!rootData.me) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);
+    const billingDetails = rootData.me.billingDetails;
+    if (billingDetails) {
+      const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);
 
-    commitUpdateMyBillingContactDetails({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          companyName,
-          email,
-          addressLine1,
-          addressLine2,
-          suburb,
-          city,
-          province,
-          zipcode,
-          country,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update billing. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Billing updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update billing. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateMyBillingContactDetails: {
-          customerBillingContactDetails: {
+      commitUpdateMyBillingDetails({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
             id: billingDetails.id,
             companyName,
             email,
@@ -341,8 +333,109 @@ const MyDetails = ({ queryReference }: Props) => {
             country,
           },
         },
-      },
-    });
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update billing. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Billing updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update billing. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateMyBillingDetails: {
+            customer: {
+              id: rootData.me.id,
+              billingDetails: {
+                id: billingDetails.id,
+                companyName,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      const id = nanoid();
+      const toastId = themedToast(<NotificationContent content={`Adding billing...`} />, infoNotificationOptions);
+
+      commitAddMyBillingDetails({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
+            id,
+            companyName,
+            email,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to add billing. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Billing added.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update add. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          addMyBillingDetails: {
+            customer: {
+              id: rootData.me.id,
+              billingDetails: {
+                id,
+                companyName,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    }
   };
 
   const handleAddPaymentMethodClicked = () => {
@@ -394,16 +487,16 @@ const MyDetails = ({ queryReference }: Props) => {
     return <></>;
   }
 
-  const billingContactDetails = rootData.myBillingContactDetails;
-  const companyName = billingContactDetails.companyName ? billingContactDetails.companyName : '';
-  const email = billingContactDetails.email ? billingContactDetails.email : '';
-  const addressLine1 = billingContactDetails.addressLine1 ? billingContactDetails.addressLine1 : '';
-  const addressLine2 = billingContactDetails.addressLine2 ? billingContactDetails.addressLine2 : '';
-  const suburb = billingContactDetails.suburb ? billingContactDetails.suburb : '';
-  const city = billingContactDetails.city ? billingContactDetails.city : '';
-  const province = billingContactDetails.province ? billingContactDetails.province : '';
-  const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
-  const country = billingContactDetails.country ? billingContactDetails.country : '';
+  const billingDetails = rootData.me.billingDetails;
+  const companyName = billingDetails?.companyName ? billingDetails.companyName : '';
+  const email = billingDetails?.email ? billingDetails.email : '';
+  const addressLine1 = billingDetails?.addressLine1 ? billingDetails.addressLine1 : '';
+  const addressLine2 = billingDetails?.addressLine2 ? billingDetails.addressLine2 : '';
+  const suburb = billingDetails?.suburb ? billingDetails.suburb : '';
+  const city = billingDetails?.city ? billingDetails.city : '';
+  const province = billingDetails?.province ? billingDetails.province : '';
+  const zipcode = billingDetails?.zipcode ? billingDetails.zipcode : '';
+  const country = billingDetails?.country ? billingDetails.country : '';
   const paymentMethodExist = rootDataMyPaymentMethodsDetails.me?.paymentMethods && rootDataMyPaymentMethodsDetails.me.paymentMethods.length > 0;
 
   return (

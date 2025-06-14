@@ -54,6 +54,7 @@ message Customer {
   repeated Team preferredTeams = 23;
   repeated OrganizationTag preferredOrganizationTags = 24;
   string phoneNumber = 25;
+  CustomerBillingDetails billingDetails = 26;
 }
 
 message Identity {
@@ -90,4 +91,17 @@ message Resource {
 message OrganizationTag {
   string id = 1;
   string organizationId = 2;
+}
+
+message CustomerBillingDetails {
+  string id = 1;
+  string companyName = 2;
+  string email = 3;
+  string addressLine1 = 4;
+  string addressLine2 = 5;
+  string suburb = 6;
+  string city = 7;
+  string province = 8;
+  string zipcode = 9;
+  string country = 10;
 }

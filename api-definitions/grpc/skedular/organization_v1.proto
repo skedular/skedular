@@ -96,7 +96,7 @@ message Organization {
     string memberVisibilityPolicy = 16;
     string contactEmail = 17;
     string contactPhone = 18;
-    OrganizationBillingDetails OrganizationBillingDetails = 19;
+    OrganizationBillingDetails billingDetails = 19;
 }
 
 message IndustrySubCategory {

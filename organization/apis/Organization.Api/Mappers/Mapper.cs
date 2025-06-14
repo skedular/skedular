@@ -191,7 +191,7 @@ public class Mapper : IMapper
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
-        organization.OrganizationBillingDetails = MapTo(src.OrganizationBillingDetails, organization);
+        organization.BillingDetails = MapTo(src.BillingDetails, organization);
         organization.StripePaymentMethods = MapTo(src.StripePaymentMethods, organization).ToList();
         organization.StripeCustomer = MapTo(src.StripeCustomer, organization);
 
@@ -364,7 +364,7 @@ public class Mapper : IMapper
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
             PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
-            OrganizationBillingDetails = MapToGraphQl(src.OrganizationBillingDetails),
+            BillingDetails = MapToGraphQl(src.BillingDetails),
             AvailableOfferings = availableOfferings,
             ActiveOffering = MapTo(organizationOffering),
             CanModify = src.CanModify,
@@ -1360,8 +1360,8 @@ public class Mapper : IMapper
             : new Shared.Models.OrganizationBillingDetails
             {
                 Id = src.Id,
-                CompanyName =  src.CompanyName, 
-                Email =  src.Email, 
+                CompanyName = src.CompanyName,
+                Email = src.Email,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

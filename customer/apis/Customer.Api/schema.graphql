@@ -9,6 +9,19 @@ type AddCustomerPaymentMethodIntentPayload {
   clientSecret: String!
 }
 
+type CustomerBillingDetails {
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
+  id: ID!
+}
+
 type CustomerConnection {
   pageInfo: PageInfo!
   edges: [CustomerEdge!]!
@@ -18,7 +31,7 @@ type CustomerConnection {
 type CustomerDetails {
   createdAt: DateTime!
   email: String
-  identities: [CustomerEmail!]!
+  identities: [CustomerIdentity!]!
   designation: String
   title: String
   name: String
@@ -48,6 +61,7 @@ type CustomerDetails {
   preferredCustomTags: [Customer_OrganizationTagDetails!]!
   preferredResources: [CustomerResourceDetails!]!
   paymentMethods: [CustomerPaymentMethod!]!
+  billingDetails: CustomerBillingDetails
   hasAttachedPaymentMethod: Boolean!
   id: ID!
 }
@@ -57,7 +71,7 @@ type CustomerEdge {
   cursor: String!
 }
 
-type CustomerEmail {
+type CustomerIdentity {
   email: String
   verified: Boolean!
   id: ID!
@@ -111,6 +125,8 @@ type Customer_OrganizationTagDetails {
 }
 
 type Mutation {
+  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload @cost(weight: "10")
+  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload @cost(weight: "10")
   completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload @cost(weight: "10")
@@ -186,6 +202,20 @@ input AddCustomerPreferredResourceInput {
 input AddCustomerPreferredTeamInput {
   clientMutationId: String
   teamId: String!
+}
+
+input AddMyBillingDetailsInput {
+  clientMutationId: String
+  id: String
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
 }
 
 input ClearCustomerDefaultOrganizationInput {
@@ -274,6 +304,20 @@ input UpdateCustomerDetailsInput {
   middleName: String
   familyName: String
   phoneNumber: String
+}
+
+input UpdateMyBillingDetailsInput {
+  clientMutationId: String
+  id: String!
+  companyName: String
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  suburb: String!
+  city: String!
+  province: String
+  zipcode: String!
+  country: String!
 }
 
 input UpdateMyCustomerDetailsInput {

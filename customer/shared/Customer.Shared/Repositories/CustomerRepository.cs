@@ -32,6 +32,7 @@ internal static class CustomerExtensions
         this IQueryable<Database.Entities.Customer> originalQuery) =>
         originalQuery
             .Include(query => query.Identities)
+            .Include(query => query.BillingDetails)
             .Include(query => query.StripeCustomer)
             .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
             .Include(query => query.DefaultOrganization)

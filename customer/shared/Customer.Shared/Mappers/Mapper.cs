@@ -3,6 +3,7 @@ using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Stripe;
+using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails;
 using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
 using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
 using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
@@ -41,6 +42,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
+            BillingDetails = MapTo(src.BillingDetails),
             Settings = new Settings
             {
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
@@ -92,4 +94,21 @@ public class Mapper : IMapper
 
     private static Identity MapTo(Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
+
+    private static CustomerBillingDetails? MapTo(Models.CustomerBillingDetails? src) =>
+        src is null
+            ? null
+            : new CustomerBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName.ToSafeString(),
+                Email = src.Email.ToSafeString(),
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString()
+            };
 }

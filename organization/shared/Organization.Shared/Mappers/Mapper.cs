@@ -54,7 +54,7 @@ public class Mapper : IMapper
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            OrganizationBillingDetails = MapTo(src.OrganizationBillingDetails)
+            BillingDetails = MapTo(src.BillingDetails)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));

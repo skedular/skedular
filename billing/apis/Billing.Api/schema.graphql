@@ -1,34 +1,10 @@
 schema {
   query: Query
-  mutation: Mutation
-}
-
-type CustomerBillingContactDetails {
-  companyName: String
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
-  id: ID!
-}
-
-type Mutation {
-  updateMyBillingContactDetails(input: UpdateMyBillingContactDetailsInput!): MyBillingContactDetailsPayload @cost(weight: "10")
-}
-
-type MyBillingContactDetailsPayload {
-  clientMutationId: String
-  customerBillingContactDetails: CustomerBillingContactDetails!
 }
 
 type Query {
   billingVersion: Version!
   billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
 }
 
 type Version {
@@ -36,19 +12,6 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
-}
-
-input UpdateMyBillingContactDetailsInput {
-  clientMutationId: String
-  companyName: String
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

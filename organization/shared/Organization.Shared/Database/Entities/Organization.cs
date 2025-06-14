@@ -40,7 +40,7 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public virtual StripeCustomer? StripeCustomer { get; set; }
-    public virtual OrganizationBillingDetails? OrganizationBillingDetails { get; set; }
+    public virtual OrganizationBillingDetails? BillingDetails { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

@@ -143,15 +143,6 @@ public class Mapper : IMapper
         dest.GivenName = src.GivenName;
         dest.MiddleName = src.MiddleName;
         dest.FamilyName = src.FamilyName;
-        dest.BillingContactCompanyName = src.BillingContactCompanyName;
-        dest.BillingContactEmail = src.BillingContactEmail;
-        dest.BillingContactAddressLine1 = src.BillingContactAddressLine1;
-        dest.BillingContactAddressLine2 = src.BillingContactAddressLine2;
-        dest.BillingContactSuburb = src.BillingContactSuburb;
-        dest.BillingContactCity = src.BillingContactCity;
-        dest.BillingContactProvince = src.BillingContactProvince;
-        dest.BillingContactZipcode = src.BillingContactZipcode;
-        dest.BillingContactCountry = src.BillingContactCountry;
         dest.Identities = identities;
         return dest;
     }
@@ -270,15 +261,6 @@ public class Mapper : IMapper
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,
             FamilyName = src.FamilyName,
-            BillingContactCompanyName = src.BillingContactCompanyName,
-            BillingContactEmail = src.BillingContactEmail,
-            BillingContactAddressLine1 = src.BillingContactAddressLine1,
-            BillingContactAddressLine2 = src.BillingContactAddressLine2,
-            BillingContactSuburb = src.BillingContactSuburb,
-            BillingContactCity = src.BillingContactCity,
-            BillingContactProvince = src.BillingContactProvince,
-            BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry,
             Identities = MapTo(src.Identities).ToList()
         };
 
@@ -292,14 +274,6 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
-            BillingContactEmail = src.BillingContactEmail,
-            BillingContactAddressLine1 = src.BillingContactAddressLine1,
-            BillingContactAddressLine2 = src.BillingContactAddressLine2,
-            BillingContactSuburb = src.BillingContactSuburb,
-            BillingContactCity = src.BillingContactCity,
-            BillingContactProvince = src.BillingContactProvince,
-            BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry,
             Type = src.Type.ToOrganizationType(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };

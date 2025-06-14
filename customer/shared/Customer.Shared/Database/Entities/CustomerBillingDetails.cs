@@ -3,11 +3,11 @@ using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Organization.Shared.Database.Entities;
+namespace Customer.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class OrganizationBillingDetails : EntityBase
+public class CustomerBillingDetails : EntityBase
 {
     public string? CompanyName { get; set; }
     public string Email { get; set; }
@@ -20,14 +20,14 @@ public class OrganizationBillingDetails : EntityBase
     public string Country { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; }
-    public virtual Organization Organization { get; set; }
+    public string CustomerId { get; set; }
+    public virtual Customer Customer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class BillingDetailsConfiguration : IEntityTypeConfiguration<OrganizationBillingDetails>
+public class BillingDetailsConfiguration : IEntityTypeConfiguration<CustomerBillingDetails>
 {
-    public void Configure(EntityTypeBuilder<OrganizationBillingDetails> builder)
+    public void Configure(EntityTypeBuilder<CustomerBillingDetails> builder)
     {
         builder.ConfigureEntityBase();
 
@@ -42,8 +42,8 @@ public class BillingDetailsConfiguration : IEntityTypeConfiguration<Organization
         builder.Property(item => item.Country).HasMaxLength(Constants.MaxCountryLength);
 
         builder
-            .HasOne(item => item.Organization)
+            .HasOne(item => item.Customer)
             .WithOne(item => item.BillingDetails)
-            .HasForeignKey<OrganizationBillingDetails>(item => item.OrganizationId);
+            .HasForeignKey<CustomerBillingDetails>(item => item.CustomerId);
     }
 }

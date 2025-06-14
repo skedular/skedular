@@ -131,7 +131,7 @@ type OrganizationDetails {
   contactEmail: String
   contactPhone: String
   physicalAddress: OrganizationAddressDetails!
-  organizationBillingDetails: OrganizationBillingDetails
+  billingDetails: OrganizationBillingDetails
   availableOfferings: [OrganizationOfferingDetails!]!
   activeOffering: OrganizationActiveOfferingDetails!
   hasFutureBooking: Boolean!

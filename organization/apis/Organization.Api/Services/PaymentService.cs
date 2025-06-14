@@ -53,7 +53,7 @@ public class PaymentService(
         ArgumentNullException.ThrowIfNull(handle);
 
         await handle.SignalAsync(
-            workflow => workflow.StripePaymentMethodEventReceivedAsync(new StripePaymentMethodEventState(setupIntentId, redirectStatus)),
+            workflow => workflow.StripePaymentMethodEventReceivedAsync(new StripePaymentMethodEventState(redirectStatus)),
             new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
         );
 

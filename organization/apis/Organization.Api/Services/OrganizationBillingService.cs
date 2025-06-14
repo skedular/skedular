@@ -41,7 +41,7 @@ public class OrganizationBillingService(
             throw new Unauthorized();
         }
 
-        return mapper.MapTo(existingOrganization.OrganizationBillingDetails);
+        return mapper.MapTo(existingOrganization.BillingDetails);
     }
 
     public async Task<Shared.Models.Organization> AddAsync(
@@ -93,7 +93,7 @@ public class OrganizationBillingService(
         var organizationBillingDetailsEntity = mapper.MapTo(organizationBillingDetails, existingOrganization);
         repositoryFactory.OrganizationBillingDetailsRepository.Add(organizationBillingDetailsEntity);
 
-        existingOrganization.OrganizationBillingDetails = organizationBillingDetailsEntity;
+        existingOrganization.BillingDetails = organizationBillingDetailsEntity;
         var mappedOrganization = mapper.MapTo(existingOrganization);
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
@@ -147,7 +147,7 @@ public class OrganizationBillingService(
             mapper.MergeToEntity(organizationBillingDetails, existingOrganizationBillingDetails, existingOrganization);
         repositoryFactory.OrganizationBillingDetailsRepository.Update(organizationBillingDetailsEntity);
 
-        existingOrganization.OrganizationBillingDetails = organizationBillingDetailsEntity;
+        existingOrganization.BillingDetails = organizationBillingDetailsEntity;
 
         var mappedOrganization = mapper.MapTo(existingOrganization);
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

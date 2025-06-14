@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5a6d83eb6e1dcf506a4098438addd213>>
+ * @generated SignedSource<<03904298ac6e5e18343a0d26a0bf8907>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,6 +35,18 @@ export type organizationAdmin_organization_query$data = {
       readonly underPriceLines: ReadonlyArray<string>;
       readonly unitPrice: number;
     }>;
+    readonly billingDetails: {
+      readonly addressLine1: string;
+      readonly addressLine2: string | null | undefined;
+      readonly city: string;
+      readonly companyName: string | null | undefined;
+      readonly country: string;
+      readonly email: string;
+      readonly id: string;
+      readonly province: string | null | undefined;
+      readonly suburb: string;
+      readonly zipcode: string;
+    } | null | undefined;
     readonly canModify: boolean;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
@@ -50,18 +62,6 @@ export type organizationAdmin_organization_query$data = {
       readonly type: OrganizationMemberVisibilityPolicy;
     };
     readonly name: string;
-    readonly organizationBillingDetails: {
-      readonly addressLine1: string;
-      readonly addressLine2: string | null | undefined;
-      readonly city: string;
-      readonly companyName: string | null | undefined;
-      readonly country: string;
-      readonly email: string;
-      readonly id: string;
-      readonly province: string | null | undefined;
-      readonly suburb: string;
-      readonly zipcode: string;
-    } | null | undefined;
     readonly paymentMethods: ReadonlyArray<{
       readonly cardBrand: string | null | undefined;
       readonly cardExpiryMonth: number | null | undefined;
@@ -473,7 +473,7 @@ return {
           "args": null,
           "concreteType": "OrganizationBillingDetails",
           "kind": "LinkedField",
-          "name": "organizationBillingDetails",
+          "name": "billingDetails",
           "plural": false,
           "selections": [
             (v0/*: any*/),
@@ -510,6 +510,6 @@ return {
 };
 })();
 
-(node as any).hash = "b7c092136bcc9b6eda788226300ea96d";
+(node as any).hash = "3f36661b095acd76bbbff354477e22f7";
 
 export default node;

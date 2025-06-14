@@ -200,9 +200,7 @@ public class OrganizationDetails : Node
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
     [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; } = new();
-
-    [GraphQLName("organizationBillingDetails")]
-    public OrganizationBillingDetails? OrganizationBillingDetails { get; set; } = new();
+    [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }
 
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();

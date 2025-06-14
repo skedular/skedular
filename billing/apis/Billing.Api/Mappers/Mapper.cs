@@ -1,56 +1,16 @@
 using Api.Shared.Services.Models;
-using Billing.Api.GraphQL;
 using Billing.Shared.Models;
 
 namespace Billing.Api.Mappers;
 
 public interface IMapper
 {
-    OrganizationBillingContactDetails MapTo(Organization src);
-    CustomerBillingContactDetails MapTo(Customer src);
-    OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId);
-    MyBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId);
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization MapTo(Shared.Database.Entities.Organization src);
 }
 
 public class Mapper : IMapper
 {
-    public OrganizationBillingContactDetails MapTo(Organization src) =>
-        new()
-        {
-            Id = $"organization-billing-{src.Id}",
-            Email = src.BillingContactEmail,
-            AddressLine1 = src.BillingContactAddressLine1,
-            AddressLine2 = src.BillingContactAddressLine2,
-            Suburb = src.BillingContactSuburb,
-            City = src.BillingContactCity,
-            Province = src.BillingContactProvince,
-            Zipcode = src.BillingContactZipcode,
-            Country = src.BillingContactCountry
-        };
-
-    public CustomerBillingContactDetails MapTo(Customer src) =>
-        new()
-        {
-            Id = $"customer-billing-{src.Id}",
-            CompanyName = src.BillingContactCompanyName,
-            Email = src.BillingContactEmail,
-            AddressLine1 = src.BillingContactAddressLine1,
-            AddressLine2 = src.BillingContactAddressLine2,
-            Suburb = src.BillingContactSuburb,
-            City = src.BillingContactCity,
-            Province = src.BillingContactProvince,
-            Zipcode = src.BillingContactZipcode,
-            Country = src.BillingContactCountry
-        };
-
-    public OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId) =>
-        new() { ClientMutationId = clientMutationId, OrganizationBillingContactDetails = MapTo(src) };
-
-    public MyBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId) =>
-        new() { ClientMutationId = clientMutationId, CustomerBillingContactDetails = MapTo(src) };
-
     public Customer MapTo(Shared.Database.Entities.Customer src) =>
         new()
         {
@@ -63,15 +23,6 @@ public class Mapper : IMapper
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,
             FamilyName = src.FamilyName,
-            BillingContactCompanyName = src.BillingContactCompanyName,
-            BillingContactEmail = src.BillingContactEmail,
-            BillingContactAddressLine1 = src.BillingContactAddressLine1,
-            BillingContactAddressLine2 = src.BillingContactAddressLine2,
-            BillingContactSuburb = src.BillingContactSuburb,
-            BillingContactCity = src.BillingContactCity,
-            BillingContactProvince = src.BillingContactProvince,
-            BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry,
             Identities = MapTo(src.Identities).ToList()
         };
 
@@ -85,14 +36,6 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
-            BillingContactEmail = src.BillingContactEmail,
-            BillingContactAddressLine1 = src.BillingContactAddressLine1,
-            BillingContactAddressLine2 = src.BillingContactAddressLine2,
-            BillingContactSuburb = src.BillingContactSuburb,
-            BillingContactCity = src.BillingContactCity,
-            BillingContactProvince = src.BillingContactProvince,
-            BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry,
             Type = src.Type.ToOrganizationType(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };

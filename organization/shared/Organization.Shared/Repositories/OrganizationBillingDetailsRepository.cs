@@ -8,8 +8,8 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationBillingDetailsRepository : IRepository<OrganizationBillingDetails>
 {
     Task<OrganizationBillingDetails?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    OrganizationBillingDetails Add(OrganizationBillingDetails address);
-    OrganizationBillingDetails Update(OrganizationBillingDetails address);
+    OrganizationBillingDetails Add(OrganizationBillingDetails organizationBillingDetails);
+    OrganizationBillingDetails Update(OrganizationBillingDetails organizationBillingDetails);
 }
 
 public class OrganizationOrganizationBillingDetailsRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -20,17 +20,17 @@ public class OrganizationOrganizationBillingDetailsRepository(OrganizationDbCont
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public OrganizationBillingDetails Add(OrganizationBillingDetails address)
+    public OrganizationBillingDetails Add(OrganizationBillingDetails organizationBillingDetails)
     {
         var now = TimeProvider.GetUtcNow();
-        address.CreatedAt = now;
-        return DbContext.OrganizationBillingDetails.Add(address).Entity;
+        organizationBillingDetails.CreatedAt = now;
+        return DbContext.OrganizationBillingDetails.Add(organizationBillingDetails).Entity;
     }
 
-    public OrganizationBillingDetails Update(OrganizationBillingDetails address)
+    public OrganizationBillingDetails Update(OrganizationBillingDetails organizationBillingDetails)
     {
         var now = TimeProvider.GetUtcNow();
-        address.ModifiedAt = now;
-        return DbContext.OrganizationBillingDetails.Update(address).Entity;
+        organizationBillingDetails.ModifiedAt = now;
+        return DbContext.OrganizationBillingDetails.Update(organizationBillingDetails).Entity;
     }
 }

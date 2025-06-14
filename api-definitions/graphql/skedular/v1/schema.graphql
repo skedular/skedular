@@ -175,17 +175,17 @@ type CurrencyDetails {
   type: Currency!
 }
 
-type CustomerBillingContactDetails {
-  addressLine1: String
+type CustomerBillingDetails {
+  addressLine1: String!
   addressLine2: String
-  city: String
+  city: String!
   companyName: String
-  country: String
-  email: String
+  country: String!
+  email: String!
   id: ID!
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 type CustomerConnection {
@@ -195,6 +195,7 @@ type CustomerConnection {
 }
 
 type CustomerDetails {
+  billingDetails: CustomerBillingDetails
   createdAt: DateTime!
   defaultOrganization: Customer_OrganizationDetails
   designation: String
@@ -203,7 +204,7 @@ type CustomerDetails {
   givenName: String
   hasAttachedPaymentMethod: Boolean!
   id: ID!
-  identities: [CustomerEmail!]!
+  identities: [CustomerIdentity!]!
   isDefaultOrganizationOnboardingDone: Boolean!
   isLocationOnboardingDone: Boolean!
   isOrganizationOnboardingDone: Boolean!
@@ -236,7 +237,7 @@ type CustomerEdge {
   node: CustomerDetails!
 }
 
-type CustomerEmail {
+type CustomerIdentity {
   email: String
   id: ID!
   verified: Boolean!
@@ -408,6 +409,7 @@ type Mutation {
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
+  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
@@ -476,7 +478,7 @@ type Mutation {
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload @cost(weight: "10")
   updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload @cost(weight: "10")
   updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
-  updateMyBillingContactDetails(input: UpdateMyBillingContactDetailsInput!): MyBillingContactDetailsPayload @cost(weight: "10")
+  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload @cost(weight: "10")
@@ -490,11 +492,6 @@ type Mutation {
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
   updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
-}
-
-type MyBillingContactDetailsPayload {
-  clientMutationId: String
-  customerBillingContactDetails: CustomerBillingContactDetails!
 }
 
 type NotificationConnection {
@@ -635,6 +632,7 @@ type OrganizationDetails {
   activeOffering: OrganizationActiveOfferingDetails!
   agreedToTermsOfUse: Boolean!
   availableOfferings: [OrganizationOfferingDetails!]!
+  billingDetails: OrganizationBillingDetails
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canModify: Boolean!
@@ -652,7 +650,6 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
-  organizationBillingDetails: OrganizationBillingDetails
   paymentMethods: [OrganizationPaymentMethod!]!
   physicalAddress: OrganizationAddressDetails!
   resourceTypes: [OrganizationTagDetails!]!
@@ -957,7 +954,6 @@ type Query {
   me: CustomerDetails @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
-  myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
@@ -1289,6 +1285,20 @@ input AddLocationTagInput {
   id: String
   name: String!
   organizationId: String!
+}
+
+input AddMyBillingDetailsInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  clientMutationId: String
+  companyName: String
+  country: String!
+  email: String!
+  id: String
+  province: String
+  suburb: String!
+  zipcode: String!
 }
 
 input AddOrganizationBillingDetailsInput {
@@ -1945,17 +1955,18 @@ input UpdateLocationTagInput {
   name: String!
 }
 
-input UpdateMyBillingContactDetailsInput {
-  addressLine1: String
+input UpdateMyBillingDetailsInput {
+  addressLine1: String!
   addressLine2: String
-  city: String
+  city: String!
   clientMutationId: String
   companyName: String
-  country: String
-  email: String
+  country: String!
+  email: String!
+  id: String!
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 input UpdateMyCustomerDetailsInput {

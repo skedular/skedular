@@ -295,7 +295,7 @@ public class OrganizationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
         var organization = await organizationBillingService.AddAsync(mapper.MapTo(request), context.CancellationToken);
 
-        return mapper.MapToGrpcResponse(organization.OrganizationBillingDetails);
+        return mapper.MapToGrpcResponse(organization.BillingDetails);
     }
 
     public override async Task<OrganizationBillingDetails> UpdateOrganizationBillingDetails(
@@ -305,6 +305,6 @@ public class OrganizationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
         var organization = await organizationBillingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken);
 
-        return mapper.MapToGrpcResponse(organization.OrganizationBillingDetails);
+        return mapper.MapToGrpcResponse(organization.BillingDetails);
     }
 }

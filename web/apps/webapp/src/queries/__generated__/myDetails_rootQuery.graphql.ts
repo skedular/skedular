@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<010f6a8aab5e7592592c04d861c368e6>>
+ * @generated SignedSource<<f82c46e9113b348117b5748a6c93eb20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,18 @@ import { FragmentRefs } from "relay-runtime";
 export type myDetails_rootQuery$variables = Record<PropertyKey, never>;
 export type myDetails_rootQuery$data = {
   readonly me: {
+    readonly billingDetails: {
+      readonly addressLine1: string;
+      readonly addressLine2: string | null | undefined;
+      readonly city: string;
+      readonly companyName: string | null | undefined;
+      readonly country: string;
+      readonly email: string;
+      readonly id: string;
+      readonly province: string | null | undefined;
+      readonly suburb: string;
+      readonly zipcode: string;
+    } | null | undefined;
     readonly designation: string | null | undefined;
     readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
@@ -25,18 +37,6 @@ export type myDetails_rootQuery$data = {
     readonly timezone: string | null | undefined;
     readonly title: string | null | undefined;
   } | null | undefined;
-  readonly myBillingContactDetails: {
-    readonly addressLine1: string | null | undefined;
-    readonly addressLine2: string | null | undefined;
-    readonly city: string | null | undefined;
-    readonly companyName: string | null | undefined;
-    readonly country: string | null | undefined;
-    readonly email: string | null | undefined;
-    readonly id: string;
-    readonly province: string | null | undefined;
-    readonly suburb: string | null | undefined;
-    readonly zipcode: string | null | undefined;
-  };
   readonly " $fragmentSpreads": FragmentRefs<"myDetails_customerPaymentMethodsDetails_query">;
 };
 export type myDetails_rootQuery = {
@@ -125,9 +125,9 @@ v10 = {
 v11 = {
   "alias": null,
   "args": null,
-  "concreteType": "CustomerBillingContactDetails",
+  "concreteType": "CustomerBillingDetails",
   "kind": "LinkedField",
-  "name": "myBillingContactDetails",
+  "name": "billingDetails",
   "plural": false,
   "selections": [
     (v0/*: any*/),
@@ -216,11 +216,11 @@ return {
           (v7/*: any*/),
           (v8/*: any*/),
           (v9/*: any*/),
-          (v10/*: any*/)
+          (v10/*: any*/),
+          (v11/*: any*/)
         ],
         "storageKey": null
       },
-      (v11/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -255,6 +255,7 @@ return {
           (v8/*: any*/),
           (v9/*: any*/),
           (v10/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -297,21 +298,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      (v11/*: any*/)
+      }
     ]
   },
   "params": {
-    "cacheID": "879936f40b80211bb4fbf6192200b3bd",
+    "cacheID": "6a0e4f757406a0d1b754b105ac4dbd76",
     "id": null,
     "metadata": {},
     "name": "myDetails_rootQuery",
     "operationKind": "query",
-    "text": "query myDetails_rootQuery {\n  me {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n  }\n  myBillingContactDetails {\n    id\n    companyName\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...myDetails_customerPaymentMethodsDetails_query\n}\n\nfragment myDetails_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
+    "text": "query myDetails_rootQuery {\n  me {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n  ...myDetails_customerPaymentMethodsDetails_query\n}\n\nfragment myDetails_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "555c8805ed924d95a674b6d25833e2b0";
+(node as any).hash = "014f14cff30fc05ad20782e8ff83fc98";
 
 export default node;

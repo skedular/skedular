@@ -8,6 +8,8 @@ public class OrganizationNotFound() : Exception("Organization not found");
 
 public class OrganizationBillingDetailsNotFound() : Exception("Organization billing details not found");
 
+public class CustomerBillingDetailsNotFound() : Exception("Customer billing details not found");
+
 public class OrganizationNameIsInvalid() : Exception("Organization name is invalid");
 
 public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");

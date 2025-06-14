@@ -24,6 +24,7 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
     public DbSet<StripePaymentIntent> StripePaymentIntent { get; set; }
     public DbSet<StripePaymentMethod> StripePaymentMethod { get; set; }
+    public DbSet<CustomerBillingDetails> CustomerBillingDetails { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 

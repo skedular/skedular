@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
+using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Models.Location;
@@ -242,6 +243,7 @@ public class Mapper : IMapper
                 Timezone = src.Timezone,
                 Locale = src.Locale,
                 PhoneNumber = src.PhoneNumber,
+                BillingDetails = MapTo(src.BillingDetails),
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone,
                 IsTeamOnboardingDone = src.IsTeamOnboardingDone,
@@ -483,5 +485,24 @@ public class Mapper : IMapper
                 Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
                 Color = src.Color
+            };
+
+    private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>
+        src is null
+            ? null
+            : new CustomerBillingDetails
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
             };
 }

@@ -272,7 +272,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             loginUrl
             appFederationMetadataUrl
           }
-          organizationBillingDetails {
+          billingDetails {
             id
             companyName
             email
@@ -400,7 +400,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       addOrganizationBillingDetails(input: $input) {
         organization {
           id
-          organizationBillingDetails {
+          billingDetails {
             id
             companyName
             email
@@ -422,7 +422,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       updateOrganizationBillingDetails(input: $input) {
         organization {
           id
-          organizationBillingDetails {
+          billingDetails {
             id
             companyName
             email
@@ -743,20 +743,20 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
   const handleOrganizationBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationBillingDetails) => {
     if (!rootDataOrganization.organization) {
-      return
+      return;
     }
 
     const organization = rootDataOrganization.organization;
-    const organizationBillingDetails = organization.organizationBillingDetails;
+    const billingDetails = organization.billingDetails;
 
-    if (organizationBillingDetails) {
+    if (billingDetails) {
       const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
 
       commitUpdateOrganizationBillingDetails({
         variables: {
           input: {
             clientMutationId: nanoid(),
-            id: organizationBillingDetails.id,
+            id: billingDetails.id,
             companyName,
             email,
             addressLine1,
@@ -793,8 +793,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           updateOrganizationBillingDetails: {
             organization: {
               id: organization.id,
-              organizationBillingDetails: {
-                id: organizationBillingDetails.id,
+              billingDetails: {
+                id: billingDetails.id,
                 companyName,
                 email,
                 addressLine1,
@@ -855,7 +855,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           addOrganizationBillingDetails: {
             organization: {
               id: organization.id,
-              organizationBillingDetails: {
+              billingDetails: {
                 id,
                 companyName,
                 email,
@@ -1732,16 +1732,16 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   ];
 
   const organization = rootDataOrganization.organization;
-  const organizationBillingDetails = rootDataOrganization.organization.organizationBillingDetails;
-  const companyName = organizationBillingDetails?.companyName ? organizationBillingDetails.companyName : '';
-  const email = organizationBillingDetails?.email ? organizationBillingDetails.email : '';
-  const addressLine1 = organizationBillingDetails?.addressLine1 ? organizationBillingDetails.addressLine1 : '';
-  const addressLine2 = organizationBillingDetails?.addressLine2 ? organizationBillingDetails.addressLine2 : '';
-  const suburb = organizationBillingDetails?.suburb ? organizationBillingDetails.suburb : '';
-  const city = organizationBillingDetails?.city ? organizationBillingDetails.city : '';
-  const province = organizationBillingDetails?.province ? organizationBillingDetails.province : '';
-  const zipcode = organizationBillingDetails?.zipcode ? organizationBillingDetails.zipcode : '';
-  const country = organizationBillingDetails?.country ? organizationBillingDetails.country : '';
+  const billingDetails = rootDataOrganization.organization.billingDetails;
+  const companyName = billingDetails?.companyName ? billingDetails.companyName : '';
+  const email = billingDetails?.email ? billingDetails.email : '';
+  const addressLine1 = billingDetails?.addressLine1 ? billingDetails.addressLine1 : '';
+  const addressLine2 = billingDetails?.addressLine2 ? billingDetails.addressLine2 : '';
+  const suburb = billingDetails?.suburb ? billingDetails.suburb : '';
+  const city = billingDetails?.city ? billingDetails.city : '';
+  const province = billingDetails?.province ? billingDetails.province : '';
+  const zipcode = billingDetails?.zipcode ? billingDetails.zipcode : '';
+  const country = billingDetails?.country ? billingDetails.country : '';
   const paymentMethodExist = organization && organization.paymentMethods.length > 0;
   const activeOffering = organization ? organization.activeOffering : null;
   const availableOfferings = organization && organization.availableOfferings ? organization.availableOfferings : [];

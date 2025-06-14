@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5c9a288a25116837a4c9f4bb694b654c>>
+ * @generated SignedSource<<65fe4554de2d9d6c11561515a28747de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type UpdateOrganizationBillingDetailsInput = {
   companyName?: string | null | undefined;
   country: string;
   email: string;
-  id?: string | null | undefined;
+  id: string;
   province?: string | null | undefined;
   suburb: string;
   zipcode: string;
@@ -28,8 +28,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$variables
 export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
   readonly updateOrganizationBillingDetails: {
     readonly organization: {
-      readonly id: string;
-      readonly organizationBillingDetails: {
+      readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
         readonly city: string;
@@ -41,14 +40,14 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
         readonly suburb: string;
         readonly zipcode: string;
       } | null | undefined;
+      readonly id: string;
     };
   } | null | undefined;
 };
 export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawResponse = {
   readonly updateOrganizationBillingDetails: {
     readonly organization: {
-      readonly id: string;
-      readonly organizationBillingDetails: {
+      readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
         readonly city: string;
@@ -60,6 +59,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawRespon
         readonly suburb: string;
         readonly zipcode: string;
       } | null | undefined;
+      readonly id: string;
     };
   } | null | undefined;
 };
@@ -113,7 +113,7 @@ v2 = [
             "args": null,
             "concreteType": "OrganizationBillingDetails",
             "kind": "LinkedField",
-            "name": "organizationBillingDetails",
+            "name": "billingDetails",
             "plural": false,
             "selections": [
               (v1/*: any*/),
@@ -208,16 +208,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "303cfd3eaf664edd17019b6277b71b0b",
+    "cacheID": "cc82de4b78f03d960eee0843931062d8",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationBillingDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationBillingDetailsMutation(\n  $input: UpdateOrganizationBillingDetailsInput!\n) {\n  updateOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      organizationBillingDetails {\n        id\n        companyName\n        email\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationBillingDetailsMutation(\n  $input: UpdateOrganizationBillingDetailsInput!\n) {\n  updateOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "163f329b4c90220b6d5b607d194d05d1";
+(node as any).hash = "6ea9e1661a973d5fd580731d4a855318";
 
 export default node;

@@ -1,5 +1,4 @@
-﻿using Billing.Api.Mappers;
-using Billing.Api.Services;
+﻿using Billing.Api.Services;
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
@@ -8,7 +7,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace Billing.Api.GraphQL;
 
 [QueryType]
-public class Query(IMapper mapper, IVersionService versionService)
+public class Query(IVersionService versionService)
 {
     [UseResolverScope]
     public Version BillingVersion()
@@ -22,13 +21,4 @@ public class Query(IMapper mapper, IVersionService versionService)
     public async Task<bool> BillingCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) => await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
-
-    [UseResolverScope]
-    public async Task<CustomerBillingContactDetails> MyBillingContactDetailsAsync(
-        [Service] ICustomerBillingService customerBillingService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerBillingService.GetMyBillingContactAsync(cancellationToken);
-        return mapper.MapTo(customer);
-    }
 }
