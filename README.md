@@ -7,33 +7,38 @@ Skedular Mono Repository
 ### Prerequisites
 
 - Docker and Docker Compose
-- .NET 8.0 SDK
+- .NET 9.0 SDK
 - Node.js 22.x and pnpm
 - Make (for running Makefile commands)
 
 ### Getting Started
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd unityhubio
    ```
 
 2. **Create environment file**
+
    ```bash
-   cp .env.example .env
+   cp .env.template .env
    # Edit .env file with your configuration
    ```
 
 3. **Start infrastructure dependencies**
+
    ```bash
    # Using the provided script
-   ./scripts/start-dependencies.sh up --build
-   
+   ./scripts/start-dependencies.sh
+
    # Or using docker-compose directly
    docker compose -p skedular -f docker-compose.yml --env-file .env up -d
    ```
+
    This starts:
+
    - PostgreSQL database (port 5432)
    - Redis cache (port 6379)
    - Kafka message broker (port 9092)
@@ -42,20 +47,22 @@ Skedular Mono Repository
    - Dozzle for log viewing (port 5001)
 
 4. **Generate GraphQL schemas and federation gateway**
+
    ```bash
    # This step is important for GraphQL federation to work properly
    # It exports schemas from each service and composes them into the gateway
    ./scripts/generate-graphql.sh
-   
+
    # Or use the make command which also generates other API definitions
    make generate
    ```
 
 5. **Run database migrations**
+
    ```bash
    # Run all migrations at once
    dotnet run --project all-in-one/AllInfra
-   
+
    # Or run individual service migrations if needed
    # dotnet run --project location/shared/Location.Infrastructure
    # dotnet run --project organization/shared/Organization.Infrastructure
@@ -63,15 +70,15 @@ Skedular Mono Repository
    ```
 
 6. **Start backend services**
-   
+
    ```bash
    # Option 1: Run all APIs and Gateway at once (recommended)
    dotnet run --project all-in-one/AllApis
-   
+
    # Option 2: Run everything (APIs, Processors, Jobs, and Gateway)
    # Note: This also runs migrations first
    dotnet run --project all-in-one/AllInOne
-   
+
    # Option 3: Run services individually (for debugging specific services)
    # dotnet run --project gateway/apis/Gateway
    # dotnet run --project organization/apis/Organization.Api
@@ -94,16 +101,17 @@ Skedular Mono Repository
 - **Organization API**: http://localhost:10200
 - **Booking API**: http://localhost:10300
 - **Customer API**: http://localhost:10400
-- **Billing API**: http://localhost:10500
 - **Location API**: http://localhost:10600
 - **Notification API**: http://localhost:10700
 - **Team API**: http://localhost:10800
 - **Payment API**: http://localhost:10900
 - **Marketplace API**: http://localhost:11000
+- **Core API**: http://localhost:11100
 
 ### Common Development Tasks
 
 #### Code formatting
+
 ```bash
 # Format .NET code using JetBrains CleanupCode
 ./scripts/format.sh
@@ -113,6 +121,7 @@ make format
 ```
 
 #### Run linting
+
 ```bash
 # Lint .NET code using JetBrains InspectCode
 ./scripts/lint.sh
@@ -122,6 +131,7 @@ make lint
 ```
 
 #### Regenerate GraphQL schemas and code
+
 ```bash
 # Generate GraphQL schemas and compose federation gateway
 ./scripts/generate-graphql.sh
@@ -131,6 +141,7 @@ make generate
 ```
 
 #### View logs
+
 ```bash
 # Using Dozzle web interface
 open http://localhost:5001
@@ -161,12 +172,15 @@ make services-all-terminate
 ### Troubleshooting
 
 #### Database Connection Issues
+
 - Ensure PostgreSQL is running: `docker ps | grep postgres`
 - Check credentials in `.env` file match docker-compose.yml
 - Default connection: `postgres://8b974997c3c54b10a556f089377505d7:123456@localhost:5432/skedular`
 
 #### Port Conflicts
+
 If services fail to start due to port conflicts:
+
 ```bash
 # Find process using a port
 lsof -i :PORT
@@ -176,7 +190,9 @@ kill -9 PID
 ```
 
 #### GraphQL Errors
+
 For "Cannot return null for non-nullable field" errors:
+
 1. Check for null data in database tables
 2. Run database cleanup if needed:
    ```sql
@@ -186,12 +202,18 @@ For "Cannot return null for non-nullable field" errors:
    ```
 
 #### Reset Development Environment
+
 ```bash
 # Stop all services
-make services-all-terminate
+./scripts/start-dependencies.sh down
 
 # Remove volumes (WARNING: deletes all data)
 docker volume prune
+
+or
+
+./scripts/start-dependencies.sh down -v
+
 
 # Restart
 ./scripts/start-dependencies.sh
