@@ -52,11 +52,7 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        var location = await locationService.GetByIdAsync(request.Id, false, context.CancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
+        var location = await locationService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new LocationNotFound();
 
         return mapper.MapToGrpcResponse(location);
     }
@@ -108,11 +104,7 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        var location = await locationService.GetByIdAsync(request.Id, true, context.CancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
+        var location = await locationService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new LocationNotFound();
 
         return mapper.MapToGrpcResponse(location);
     }

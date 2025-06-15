@@ -90,11 +90,8 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
         return new Permissions
         {

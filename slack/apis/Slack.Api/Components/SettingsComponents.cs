@@ -29,12 +29,7 @@ public class SettingsComponents(ICustomerService customerService, ILocationServi
         CancellationToken cancellationToken)
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
         if (customer.IsPreferredLocationOnboardingDone.HasValue && customer.IsPreferredLocationOnboardingDone.Value)
         {
             return [];
@@ -73,12 +68,7 @@ public class SettingsComponents(ICustomerService customerService, ILocationServi
         CancellationToken cancellationToken)
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
         if (customer.IsPreferredZoneOnboardingDone.HasValue && customer.IsPreferredZoneOnboardingDone.Value)
         {
             return [];

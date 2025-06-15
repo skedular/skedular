@@ -89,7 +89,6 @@ public class BookingService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
         var productVersions = await GetProductVersionsAsync(booking.LineItems.Select(item => item.ProductVersionId).ToList(), cancellationToken);
@@ -184,11 +183,7 @@ public class BookingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
 
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
-        if (existingBooking is null)
-        {
-            throw new BookingNotFound();
-        }
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
 
         return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
     }
@@ -198,12 +193,7 @@ public class BookingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
-        if (existingBooking is null)
-        {
-            throw new BookingNotFound();
-        }
-
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
@@ -263,12 +253,7 @@ public class BookingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
-        if (booking is null)
-        {
-            throw new BookingNotFound();
-        }
-
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
         var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking));
 

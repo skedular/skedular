@@ -22,8 +22,10 @@ public static class OpenTelemetryExtensions
     public static IServiceCollection ConfigureOpenTelemetry(this IServiceCollection services, IConfiguration configuration, string appName)
     {
         var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+        ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
 
         services
+            .AddSingleton(openTelemetryConfiguration)
             .AddSingleton<IActivityAccessor, ActivityAccessor>()
             .AddSingleton<TextMapPropagator, StandardTextMapPropagator>()
             .AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>()
@@ -45,14 +47,9 @@ public static class OpenTelemetryExtensions
                         .AddRuntimeInstrumentation()
                         .AddNpgsqlInstrumentation();
 
-                    if (openTelemetryConfiguration is null)
-                    {
-                        return;
-                    }
-
                     if (openTelemetryConfiguration.MetricsIngestEnabled)
                     {
-                        metrics.AddMeter(MeterProviderNaming.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
+                        metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
                     }
 
                     if (openTelemetryConfiguration.ConsoleEnabled)
@@ -84,7 +81,7 @@ public static class OpenTelemetryExtensions
                     .AddNpgsql()
                     .AddHotChocolateInstrumentation();
 
-                if (openTelemetryConfiguration is not null && openTelemetryConfiguration.EntityFrameworkEnabled)
+                if (openTelemetryConfiguration.EntityFrameworkEnabled)
                 {
                     tracing.AddEntityFrameworkCoreInstrumentation(options =>
                     {
@@ -108,11 +105,6 @@ public static class OpenTelemetryExtensions
                     .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
                     .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
                     .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
-
-                if (openTelemetryConfiguration is null)
-                {
-                    return;
-                }
 
                 if (openTelemetryConfiguration.ConsoleEnabled)
                 {

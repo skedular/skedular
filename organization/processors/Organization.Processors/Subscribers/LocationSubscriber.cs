@@ -25,12 +25,8 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
                     }
                     else
                     {
-                        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, cancellationToken);
-                        if (organization is null)
-                        {
-                            throw new OrganizationNotFound();
-                        }
-
+                        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, cancellationToken) ??
+                                           throw new OrganizationNotFound();
                         var existingLocation =
                             await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                         if (existingLocation.EventRaisedAt > location.EventRaisedAt)

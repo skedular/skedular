@@ -76,13 +76,7 @@ public class MyBillingService(
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var existingCustomerBillingDetails = await repositoryFactory.CustomerBillingDetailsRepository.GetByIdAsync(
             customerBillingDetails.Id,
-            cancellationToken);
-
-        if (existingCustomerBillingDetails is null)
-        {
-            throw new CustomerBillingDetailsNotFound();
-        }
-
+            cancellationToken) ?? throw new CustomerBillingDetailsNotFound();
         if (existingCustomerBillingDetails.Customer.Id != customer.Id)
         {
             throw new UnauthorizedAccessException();

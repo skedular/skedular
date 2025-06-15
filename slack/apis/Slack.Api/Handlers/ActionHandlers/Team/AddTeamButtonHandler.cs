@@ -35,12 +35,8 @@ public class AddTeamButtonHandler(
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,
@@ -48,12 +44,7 @@ public class AddTeamButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
         var name = new InputBlock
         {
             BlockId = TeamActionTypes.Name,
@@ -132,12 +123,8 @@ public class AddTeamButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             viewSubmission.User.Id,

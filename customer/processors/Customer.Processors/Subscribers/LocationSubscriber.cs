@@ -111,12 +111,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
         var customerIds = location.PreferredByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredResources =
                 customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();

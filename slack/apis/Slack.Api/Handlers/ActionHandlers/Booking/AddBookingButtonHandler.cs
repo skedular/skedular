@@ -46,12 +46,8 @@ public class AddBookingButtonHandler(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,
@@ -59,12 +55,7 @@ public class AddBookingButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
         var context = AddBookingContext.Deserialize(action.Value);
         var bookingDate = new InputBlock
         {
@@ -118,12 +109,8 @@ public class AddBookingButtonHandler(
     {
         var cancellationToken = CancellationToken.None;
 
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             viewSubmission.User.Id,

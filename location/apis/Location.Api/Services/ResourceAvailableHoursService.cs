@@ -41,18 +41,9 @@ public class ResourceAvailableHoursService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
-        if (existingResource is null)
-        {
-            throw new ResourceNotFound();
-        }
-
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();

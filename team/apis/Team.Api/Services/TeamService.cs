@@ -56,12 +56,8 @@ public class TeamService(
         Location? primaryLocation = null;
         if (team.PrimaryLocation is not null)
         {
-            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken);
-            if (primaryLocation is null)
-            {
-                throw new LocationNotFound();
-            }
-
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken) ??
+                              throw new LocationNotFound();
             if (primaryLocation.Organization is null)
             {
                 throw new OrganizationNotFound();
@@ -159,33 +155,21 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
-        if (existingTeam is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken) ?? throw new TeamNotFound();
         Location? primaryLocation = null;
+
         if (team.PrimaryLocation is not null)
         {
-            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken);
-            if (primaryLocation is null)
-            {
-                throw new LocationNotFound();
-            }
-
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken) ??
+                              throw new LocationNotFound();
             if (primaryLocation.Organization.Id != team.Organization.Id)
             {
                 throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
             }
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -199,12 +183,7 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
-        if (existingTeam is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingTeam.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -293,12 +272,8 @@ public class TeamService(
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, cancellationToken);
-            if (organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, cancellationToken) ??
+                               throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();
@@ -340,12 +315,8 @@ public class TeamService(
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
-            if (organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken) ??
+                               throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();

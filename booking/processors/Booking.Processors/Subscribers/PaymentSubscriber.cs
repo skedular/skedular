@@ -20,12 +20,8 @@ public class PaymentSubscriber(ILogger<PaymentSubscriber> logger, IRepositoryFac
                     ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.BookingCheckoutSession.BookingId);
 
                     var bookingCheckoutSession = mapper.MapTo(@event);
-                    var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingCheckoutSession.Booking.Id, cancellationToken);
-                    if (booking is null)
-                    {
-                        throw new BookingNotFound();
-                    }
-
+                    var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingCheckoutSession.Booking.Id, cancellationToken) ??
+                                  throw new BookingNotFound();
                     var existingBookingCheckoutSession = await repositoryFactory.BookingCheckoutSessionRepository.UpsertNakedAsync(
                         bookingCheckoutSession.Id,
                         booking,

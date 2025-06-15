@@ -1,8 +1,6 @@
-using Enterprise.Shared.Storage;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
-using Location.Shared.Services;
 
 namespace Location.Api;
 
@@ -23,7 +21,6 @@ public static class Extensions
             .AddScoped<IResourceService, ResourceService>()
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<IFileStorageService, LocalFileStorageService>()
             .AddScoped<IFloorPlanStorageService, FloorPlanStorageService>()
             .AddScoped<IFloorPlanService, FloorPlanService>();
 

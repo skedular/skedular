@@ -26,11 +26,7 @@ public class CustomerHelperService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
 
         return customer;
     }
@@ -39,11 +35,8 @@ public class CustomerHelperService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken) ??
+                       throw new CustomerNotFound();
 
         return customer;
     }

@@ -47,18 +47,9 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
-        if (resource is null)
-        {
-            throw new ResourceNotFound();
-        }
-
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -100,12 +91,8 @@ public class ResourceService(
             resource.Id = randomHelper.Generate();
         }
 
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (customer is not null && !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -174,11 +161,8 @@ public class ResourceService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
-        if (existingResource is null)
-        {
-            throw new ResourceNotFound();
-        }
+        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken) ??
+                               throw new ResourceNotFound();
 
         return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
     }
@@ -188,18 +172,9 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
-        if (resource is null)
-        {
-            throw new ResourceNotFound();
-        }
-
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -370,12 +345,8 @@ public class ResourceService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ??
+                       throw new LocationNotFound();
         if (!organizationAuthorizationService.CanView(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -397,12 +368,8 @@ public class ResourceService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (customer is not null && !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();

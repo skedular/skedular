@@ -6,7 +6,6 @@ using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
-using Location.Shared.Services;
 
 namespace Location.Api.Services;
 
@@ -91,7 +90,7 @@ public class FloorPlanService(
         await imageFile.CopyToAsync(stream, cancellationToken);
         var imageContent = stream.ToArray();
 
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+        var fileName = $"{randomHelper.Generate()}{Path.GetExtension(imageFile.FileName)}";
         var (imageUrl, thumbnailUrl, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
             imageContent,
             fileName,
@@ -128,12 +127,9 @@ public class FloorPlanService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken)
-                        ?? throw new LocationNotFound();
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken)
-                       ?? throw new LocationNotFound();
+        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken) ??
+                       throw new LocationNotFound();
 
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {
@@ -168,7 +164,7 @@ public class FloorPlanService(
             await imageFile.CopyToAsync(stream, cancellationToken);
             var imageContent = stream.ToArray();
 
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+            var fileName = $"{randomHelper.Generate()}{Path.GetExtension(imageFile.FileName)}";
             var (imageUrl, thumbnailUrl, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
                 imageContent,
                 fileName,
@@ -192,13 +188,9 @@ public class FloorPlanService(
     public async Task DeleteAsync(string floorPlanId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken)
-                        ?? throw new LocationNotFound();
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken)
-                       ?? throw new LocationNotFound();
-
+        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken) ??
+                       throw new LocationNotFound();
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -240,10 +232,7 @@ public class FloorPlanService(
     public async Task<ICollection<FloorPlan>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken)
-                       ?? throw new LocationNotFound();
-
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationAuthorizationService.CanView(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -266,20 +255,16 @@ public class FloorPlanService(
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken)
-                       ?? throw new ResourceNotFound();
-
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken)
-                        ?? throw new LocationNotFound();
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken) ?? throw new ResourceNotFound();
+        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
 
         if (resource.Location.Id != floorPlan.LocationId)
         {
             throw new ResourceAndFloorPlanLocationMismatch();
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken)
-                       ?? throw new LocationNotFound();
-
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                       throw new LocationNotFound();
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -330,11 +315,9 @@ public class FloorPlanService(
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken)
-                       ?? throw new ResourceNotFound();
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken)
-                       ?? throw new LocationNotFound();
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken) ?? throw new ResourceNotFound();
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                       throw new LocationNotFound();
 
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {

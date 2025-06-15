@@ -1,25 +1,21 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
+using Enterprise.Shared.Telemetry.Configurations;
 
 namespace Enterprise.Shared.Metrics;
 
 public interface IOpenTelemetryInstrumentation
 {
     Counter<T> GetCounterByName<T>(string counterName) where T : struct;
-
-    ObservableGauge<T> GetObservableGaugeByName<T>(
-        string name,
-        Func<Measurement<T>> measurement) where T : struct;
+    ObservableGauge<T> GetObservableGaugeByName<T>(string name, Func<Measurement<T>> measurement) where T : struct;
 }
 
-public class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentation
+public class OpenTelemetryInstrumentation(OpenTelemetryConfiguration openTelemetryConfiguration) : IOpenTelemetryInstrumentation
 {
     private readonly ConcurrentDictionary<string, Instrument> _instruments = new();
 
-    private readonly Meter _meter = new(
-        MeterProviderNaming.MeterProviderName,
-        MeterProviderNaming.MeterProviderVersion);
+    private readonly Meter _meter = new(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
 
     public Counter<T> GetCounterByName<T>(string counterName) where T : struct
     {
@@ -28,9 +24,7 @@ public class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentation
         return (Counter<T>)result;
     }
 
-    public ObservableGauge<T> GetObservableGaugeByName<T>(
-        string gaugeName,
-        Func<Measurement<T>> measurement) where T : struct
+    public ObservableGauge<T> GetObservableGaugeByName<T>(string gaugeName, Func<Measurement<T>> measurement) where T : struct
     {
         var result = GetOrCreate(gaugeName,
             () => _meter.CreateObservableGauge(gaugeName, measurement));

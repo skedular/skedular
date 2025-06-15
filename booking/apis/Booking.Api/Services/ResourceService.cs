@@ -48,12 +48,8 @@ public class ResourceService(
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
-            if (organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+                               throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
             {
                 throw new UnauthorizedAccessException();
@@ -63,12 +59,7 @@ public class ResourceService(
         ICollection<string> productRelatedTags = [];
         if (!string.IsNullOrWhiteSpace(productId))
         {
-            var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
-            if (product is null)
-            {
-                throw new ProductNotFound();
-            }
-
+            var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
             productRelatedTags = productVersion.ProductTags.Concat(productVersion.LocationTags).Select(item => item.Id).ToList();
         }
@@ -106,12 +97,8 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
         {
             throw new UnauthorizedAccessException();

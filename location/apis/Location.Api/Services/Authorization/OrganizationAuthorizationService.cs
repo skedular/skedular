@@ -54,11 +54,7 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
     public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
-        if (location is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
 
         return new Permissions
         {

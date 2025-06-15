@@ -111,12 +111,8 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             var updatedOrganizationMember = mapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
@@ -130,12 +126,8 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
@@ -162,12 +154,8 @@ public class OrganizationSubscriber(
                         .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             var existingOrganizationId = customer.DefaultOrganization?.Id;
 
             if (customer.DefaultOrganization is not null && customer.DefaultOrganization.Id == organizationId)
@@ -215,12 +203,7 @@ public class OrganizationSubscriber(
         var customerIds = organization.DefaultedByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.DefaultOrganization = null;
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }

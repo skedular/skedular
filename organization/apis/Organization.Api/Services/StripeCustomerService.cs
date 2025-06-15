@@ -21,12 +21,8 @@ public class StripeCustomerService(
 {
     public async Task<OrganizationStripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (organization.OrganizationStripeCustomer is not null)
         {
             return organization.OrganizationStripeCustomer;

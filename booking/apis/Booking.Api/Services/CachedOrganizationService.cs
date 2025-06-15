@@ -22,17 +22,8 @@ public class CachedOrganizationService(IRepositoryFactory repositoryFactory, IMe
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-                var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                    id,
-                    false,
-                    false,
-                    cancellationToken);
-                if (organization is null)
-                {
-                    throw new OrganizationNotFound();
-                }
-
-                return organization;
+                return await repositoryFactory.OrganizationRepository.GetByIdAsync(id, false, false, cancellationToken) ??
+                       throw new OrganizationNotFound();
             });
 
         if (organization is null)

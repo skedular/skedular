@@ -44,12 +44,7 @@ public class LocationAnalyticsService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationAuthorizationService.CanViewAnalytics(location.Organization, customer))
         {
             return new LocationAnalytics(locationId, string.Empty, [], [], []);
@@ -85,12 +80,7 @@ public class LocationAnalyticsService(
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         foreach (var item in locations.Item2)
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAsync(item.Node.Id, cancellationToken);
-            if (location is null)
-            {
-                throw new LocationNotFound();
-            }
-
+            var location = await repositoryFactory.LocationRepository.GetByIdAsync(item.Node.Id, cancellationToken) ?? throw new LocationNotFound();
             if (!organizationAuthorizationService.CanViewAnalytics(location.Organization, customer))
             {
                 return [];

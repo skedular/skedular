@@ -63,12 +63,8 @@ public class OrganizationStripeConnectAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -129,11 +125,8 @@ public class OrganizationStripeConnectAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
-        if (account is null)
-        {
-            throw new OrganizationStripeConnectAccountNotFound();
-        }
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
+                      throw new OrganizationStripeConnectAccountNotFound();
 
         return await UpdateInternalAsync(nickname, account, customer, cancellationToken);
     }
@@ -143,12 +136,8 @@ public class OrganizationStripeConnectAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
-        if (account is null)
-        {
-            throw new OrganizationStripeConnectAccountNotFound();
-        }
-
+        var account = await repositoryFactory.StripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
+                      throw new OrganizationStripeConnectAccountNotFound();
         if (account.Organization == null)
         {
             throw new InvalidOperationException();
@@ -254,12 +243,8 @@ public class OrganizationStripeConnectAccountService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(code);
 
-        var accountRefreshCode = await repositoryFactory.StripeConnectAccountRefreshCodeRepository.GetByCodeAsync(code, cancellationToken);
-        if (accountRefreshCode is null)
-        {
-            throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
-        }
-
+        var accountRefreshCode = await repositoryFactory.StripeConnectAccountRefreshCodeRepository.GetByCodeAsync(code, cancellationToken) ??
+                                 throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
         var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             accountRefreshCode.StripeConnectAccount.StripeAccountId,
             accountRefreshCode.RedirectUrl,
@@ -288,11 +273,8 @@ public class OrganizationStripeConnectAccountService(
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, false, cancellationToken);
-        if (organization is null)
-        {
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, false, cancellationToken) ??
             throw new OrganizationNotFound();
-        }
 
         if (!organizationAuthorizationService.CanViewStripeConnectAccount(organization, customer))
         {

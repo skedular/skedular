@@ -28,20 +28,11 @@ public class CustomerResourceSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, false, cancellationToken);
-        if (resource is null)
-        {
-            throw new ResourceNotFound();
-        }
-
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, false, cancellationToken) ?? throw new ResourceNotFound();
         if (resource.Location is not null)
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, false, cancellationToken);
-            if (location is null)
-            {
-                throw new LocationNotFound();
-            }
-
+            var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, false, cancellationToken) ??
+                           throw new LocationNotFound();
             if (!await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
             {
                 throw new UnauthorizedAccessException();

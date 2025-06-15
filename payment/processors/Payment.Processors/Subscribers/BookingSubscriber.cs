@@ -126,12 +126,8 @@ public class BookingSubscriber(
         StripeCustomer stripeCustomer;
         if (booking.PaidByCustomer is not null)
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             stripeCustomer = await stripeCustomerService.UpsertCustomerAsync(
                 mapper.MapTo(customer),
                 customer,
@@ -142,12 +138,8 @@ public class BookingSubscriber(
         else if (booking.PaidByOrganization is not null)
         {
             var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken);
-            if (organization is null)
-            {
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken) ??
                 throw new OrganizationNotFound();
-            }
-
             stripeCustomer = await stripeCustomerService.UpsertCustomerAsync(
                 mapper.MapTo(organization)!,
                 organization,

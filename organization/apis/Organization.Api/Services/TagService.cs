@@ -43,18 +43,9 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
-        if (tag is null)
-        {
-            throw new OrganizationTagNotFound();
-        }
-
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -86,12 +77,8 @@ public class TagService(
             tag.Id = randomHelper.Generate();
         }
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -139,11 +126,7 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
-        if (existingTag is null)
-        {
-            throw new OrganizationTagNotFound();
-        }
+        var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken) ?? throw new OrganizationTagNotFound();
 
         return await UpdateInternalAsync(tag, existingTag, customer, cancellationToken);
     }
@@ -153,18 +136,9 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
-        if (tag is null)
-        {
-            throw new OrganizationTagNotFound();
-        }
-
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -225,12 +199,8 @@ public class TagService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanView(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -251,12 +221,8 @@ public class TagService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTag.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTag.Organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();

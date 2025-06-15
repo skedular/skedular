@@ -50,13 +50,8 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
-                var customer =
-                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken);
-                if (customer is null)
-                {
-                    throw new CustomerNotFound();
-                }
-
+                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                               throw new CustomerNotFound();
                 return (mapper.MapTo(customer)!, customer);
             });
     }

@@ -99,18 +99,10 @@ public class OrganizationMemberService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organizationMember = await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(organizationMemberId, cancellationToken);
-        if (organizationMember is null)
-        {
-            throw new OrganizationMemberNotFound();
-        }
-
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationMember.Organization.Id, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organizationMember = await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(organizationMemberId, cancellationToken) ??
+                                 throw new OrganizationMemberNotFound();
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationMember.Organization.Id, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -305,12 +297,8 @@ public class OrganizationMemberService(
         OrganizationMember member,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (organization.OrganizationMembers.Any(item => item.Id == member.Id))
         {
             return mapper.MapTo(organization);
@@ -338,12 +326,8 @@ public class OrganizationMemberService(
     public async Task CompleteOrganizationMemberOnboardingAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var matchingOrganizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customer.Id);

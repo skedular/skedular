@@ -88,12 +88,8 @@ public class PaymentService(
     public async Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
         var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken);
-        if (stripePaymentMethod is null)
-        {
-            throw new OrganizationPaymentMethodNotFound();
-        }
-
+        var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
+                                  throw new OrganizationPaymentMethodNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.StripePaymentMethodRepository.Remove(stripePaymentMethod);

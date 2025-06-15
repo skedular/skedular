@@ -41,12 +41,7 @@ public class TeamInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanInvitePeople(team, customer))
         {
             throw new UnauthorizedAccessException();
@@ -121,20 +116,12 @@ public class TeamInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new TeamJoinInvitationNotFound();
-        }
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new TeamJoinInvitationNotFound();
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (team.TeamMembers.All(item => item.Customer.Id != customer.Id))
@@ -165,11 +152,8 @@ public class TeamInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new TeamJoinInvitationNotFound();
-        }
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new TeamJoinInvitationNotFound();
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
@@ -189,18 +173,9 @@ public class TeamInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new TeamJoinInvitationNotFound();
-        }
-
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new TeamJoinInvitationNotFound();
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer))
         {
             throw new UnauthorizedAccessException();

@@ -30,12 +30,8 @@ public class EditLocationButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             viewSubmission.User.Id,

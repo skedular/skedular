@@ -23,12 +23,7 @@ public class StripeIntegrations(
     public async Task<string> SetCustomerPaymentMethodAsync(SetCustomerPaymentMethodInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(args.CustomerId, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(args.CustomerId, cancellationToken) ?? throw new CustomerNotFound();
         var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "me");
 
         redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");

@@ -109,13 +109,10 @@ public class TeamSubscriber(
         var updatedItems = new List<TeamMember>();
         foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             OrganizationMember? organizationMember = null;
+
             if (teamMember.OrganizationMember is not null)
             {
                 var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
@@ -147,13 +144,10 @@ public class TeamSubscriber(
         var addedItems = new List<TeamMember>();
         foreach (var teamMember in team.TeamMembers.Where(teamMember => teamMembers.All(item => item.Id != teamMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             OrganizationMember? organizationMember = null;
+
             if (teamMember.OrganizationMember is not null)
             {
                 var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
@@ -195,12 +189,8 @@ public class TeamSubscriber(
                         .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken) ??
+                           throw new CustomerNotFound();
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != existingTeam.Id).ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
@@ -218,12 +208,7 @@ public class TeamSubscriber(
         var customerIds = team.PreferredByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
-
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }

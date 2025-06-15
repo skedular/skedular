@@ -10,7 +10,6 @@ using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
-using Location.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Path = System.IO.Path;
 
@@ -148,10 +147,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(input.LocationId, cancellationToken)
-                       ?? throw new LocationNotFound();
-
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(input.LocationId, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -172,7 +168,7 @@ public class Mutation(IMapper mapper)
         }
 
         var imageData = Convert.FromBase64String(input.ImageBase64);
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(input.ImageFileName)}";
+        var fileName = $"{randomHelper.Generate()}{Path.GetExtension(input.ImageFileName)}";
         var contentType = GetContentType(input.ImageFileName);
         var (imagePath, thumbnailPath, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
             imageData,

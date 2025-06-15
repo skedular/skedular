@@ -16,11 +16,8 @@ public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IMa
 {
     public async Task AddMembersAsync(string organizationId, IReadOnlyCollection<OrganizationMember> members, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
         // TODO: 20240823 - Morteza: Need to ensure de-activated tenant members won't be added back to the organization  
         var newMembers = members.Where(member => organization.OrganizationMembers.All(organizationMember => member.Id != organizationMember.Id));

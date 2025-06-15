@@ -56,12 +56,7 @@ public class TeamMemberService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanView(team, customer))
         {
             throw new UnauthorizedAccessException();
@@ -111,18 +106,8 @@ public class TeamMemberService(
     public async Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken);
-        if (teamMember is null)
-        {
-            throw new TeamMemberNotFound();
-        }
-
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamMember.Team.Id, cancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanModify(team, customer))
         {
             throw new UnauthorizedAccessException();
@@ -260,23 +245,14 @@ public class TeamMemberService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
 
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
-        if (existingTeam is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer!))
         {
             throw new NoMoreInteractionAllowed();
@@ -371,29 +347,16 @@ public class TeamMemberService(
     public async Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken);
-        if (existingTeamMember is null)
-        {
-            throw new TeamMemberNotFound();
-        }
-
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken);
-        if (existingTeam is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken) ??
+                           throw new TeamNotFound();
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -520,23 +483,14 @@ public class TeamMemberService(
     public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
-        if (existingTeam is null)
-        {
-            throw new TeamNotFound();
-        }
-
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -573,13 +527,8 @@ public class TeamMemberService(
         }
 
         var now = timeProvider.GetUtcNow();
-        var organizationMemberToAdd = organization.OrganizationMembers.FirstOrDefault(item => item.Id == member.OrganizationMember!.Id);
-
-        if (organizationMemberToAdd is null)
-        {
-            throw new OrganizationMemberNotFound();
-        }
-
+        var organizationMemberToAdd = organization.OrganizationMembers.FirstOrDefault(item => item.Id == member.OrganizationMember!.Id) ??
+                                      throw new OrganizationMemberNotFound();
         var teamMember = new Shared.Database.Entities.TeamMember
         {
             Id = randomHelper.Generate(),

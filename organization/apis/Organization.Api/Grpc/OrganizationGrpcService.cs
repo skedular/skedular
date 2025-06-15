@@ -66,11 +66,7 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdAsync(request.Id, context.CancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await organizationService.GetByIdAsync(request.Id, context.CancellationToken) ?? throw new OrganizationNotFound();
 
         return mapper.MapToGrpcResponse(organization);
     }

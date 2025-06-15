@@ -30,12 +30,7 @@ public class LocationOpeningHoursService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();

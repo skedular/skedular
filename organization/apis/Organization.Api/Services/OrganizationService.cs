@@ -232,11 +232,8 @@ public class OrganizationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
 
         return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
     }
@@ -246,11 +243,8 @@ public class OrganizationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanDelete(organization, customer))
         {

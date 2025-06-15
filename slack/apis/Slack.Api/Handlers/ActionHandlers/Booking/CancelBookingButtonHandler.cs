@@ -25,12 +25,8 @@ public class CancelBookingButtonHandler(
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,

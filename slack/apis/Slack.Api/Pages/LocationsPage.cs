@@ -73,18 +73,12 @@ public class LocationsPage(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -152,13 +146,8 @@ public class LocationsPage(
         BlockActionRequest request,
         CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
+                              throw new SlackWorkspaceNotFound();
         var (workspaceMemberEntity, _) =
             await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,

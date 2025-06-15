@@ -133,12 +133,8 @@ public class LocationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -152,12 +148,7 @@ public class LocationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
-        if (existingLocation is null)
-        {
-            throw new LocationNotFound();
-        }
-
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -240,12 +231,8 @@ public class LocationService(
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
-            if (organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+                               throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();

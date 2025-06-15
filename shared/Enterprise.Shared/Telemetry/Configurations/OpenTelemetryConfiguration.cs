@@ -9,4 +9,5 @@ public class OpenTelemetryConfiguration
     public string ZipkinEndpoint { get; set; } = string.Empty;
     public string JaegerEndpoint { get; set; } = string.Empty;
     public bool EntityFrameworkEnabled { get; set; }
+    public string MeterProviderName { get; set; } = string.Empty;
 }

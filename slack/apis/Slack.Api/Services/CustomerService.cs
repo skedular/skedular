@@ -61,11 +61,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
 
         return (mapper.MapTo(customer)!, customer);
     }

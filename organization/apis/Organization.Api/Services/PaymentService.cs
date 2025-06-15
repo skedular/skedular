@@ -63,12 +63,8 @@ public class PaymentService(
     public async Task<string> AddPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -100,19 +96,11 @@ public class PaymentService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organizationStripePaymentMethod =
-            await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken);
-        if (organizationStripePaymentMethod is null)
-        {
+            await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
             throw new OrganizationPaymentMethodNotFound();
-        }
-
         var organization = organizationStripePaymentMethod.Organization;
-        organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken) ??
+                       throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {
             throw new UnauthorizedAccessException();

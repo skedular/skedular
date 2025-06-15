@@ -41,11 +41,8 @@ public class OrganizationInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanInvitePeople(organization, customer))
         {
@@ -130,19 +127,13 @@ public class OrganizationInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new OrganizationJoinInvitationNotFound();
-        }
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new OrganizationJoinInvitationNotFound();
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(joinInvitation.Organization.Id, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(joinInvitation.Organization.Id, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -174,11 +165,8 @@ public class OrganizationInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new OrganizationJoinInvitationNotFound();
-        }
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new OrganizationJoinInvitationNotFound();
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
@@ -198,18 +186,10 @@ public class OrganizationInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken);
-        if (joinInvitation is null)
-        {
-            throw new OrganizationJoinInvitationNotFound();
-        }
-
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(joinInvitation.Organization.Id, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
+                             throw new OrganizationJoinInvitationNotFound();
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(joinInvitation.Organization.Id, cancellationToken) ??
+                           throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanCancelPeopleExistingInvitations(organization, customer))
         {
             throw new UnauthorizedAccessException();

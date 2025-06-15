@@ -35,18 +35,11 @@ public class CustomerOrganizationTagSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(organizationTagId, cancellationToken);
-        if (organizationTag is null)
-        {
-            throw new OrganizationTagNotFound();
-        }
-
+        var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(organizationTagId, cancellationToken) ??
+                              throw new OrganizationTagNotFound();
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationTag.Organization.Id, false, false, cancellationToken);
-        if (organization is null)
-        {
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationTag.Organization.Id, false, false, cancellationToken) ??
             throw new OrganizationNotFound();
-        }
 
         if (!organizationAuthorizationService.CanAddOrganizationTagAsDefault(organization, customer))
         {

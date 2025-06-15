@@ -37,11 +37,7 @@ public class TeamGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        var team = await teamService.GetByIdAsync(request.Id, true, context.CancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
+        var team = await teamService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new TeamNotFound();
 
         return mapper.MapToGrpcResponse(team);
     }
@@ -50,11 +46,7 @@ public class TeamGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        var team = await teamService.GetByIdAsync(request.Id, false, context.CancellationToken);
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
+        var team = await teamService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new TeamNotFound();
 
         return mapper.MapToGrpcResponse(team);
     }

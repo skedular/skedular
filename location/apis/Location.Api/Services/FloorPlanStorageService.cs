@@ -1,10 +1,9 @@
 using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Random;
-using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace Location.Shared.Services;
+namespace Location.Api.Services;
 
 public interface IFloorPlanStorageService
 {
@@ -14,14 +13,10 @@ public interface IFloorPlanStorageService
         string contentType,
         int thumbnailWidth = 200,
         int thumbnailHeight = 200);
-
     Task DeleteFloorPlanAsync(string imageUrl, string? thumbnailUrl);
 }
 
-public class FloorPlanStorageService(
-    ICdnService cdnService,
-    IRandomHelper randomHelper,
-    ILogger<FloorPlanStorageService> logger)
+public class FloorPlanStorageService(ICdnService cdnService, IRandomHelper randomHelper, ILogger<FloorPlanStorageService> logger)
     : IFloorPlanStorageService
 {
     private const string FloorPlanPrefix = "floor-plans";
@@ -72,7 +67,7 @@ public class FloorPlanStorageService(
 
         return (imageUrl.ToString(), thumbnailUrl, width, height);
     }
-
+    
     public Task DeleteFloorPlanAsync(string imageUrl, string? thumbnailUrl)
     {
         logger.LogInformation("Floor plan deletion requested but not implemented for CDN: {ImageUrl}", imageUrl);

@@ -52,11 +52,8 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken) ??
+                       throw new CustomerNotFound();
 
         return (mapper.MapTo(customer)!, customer);
     }
@@ -65,12 +62,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
         if (!ignoreAuthorizationCheck)
         {
             var (_, callingCustomer) = await cachedCustomerService.GetAsync(cancellationToken);
@@ -272,12 +264,8 @@ public class CustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
 
-        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
-        if (existingCustomer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken) ??
+                               throw new CustomerNotFound();
         if (existingCustomer.Identities.All(item => item.Id != identity.Id))
         {
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -302,12 +290,8 @@ public class CustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
 
-        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
-        if (existingCustomer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken) ??
+                               throw new CustomerNotFound();
         var matchingIdentityToUpdate = existingCustomer.Identities.First(item => item.Id == identity.Id);
         var identityChanged = identity.Email != matchingIdentityToUpdate.Email || identity.EmailVerified != matchingIdentityToUpdate.EmailVerified;
 

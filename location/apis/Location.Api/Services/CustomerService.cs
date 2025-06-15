@@ -19,11 +19,8 @@ public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mappe
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken) ??
+                       throw new CustomerNotFound();
 
         return (mapper.MapTo(customer)!, customer);
     }
@@ -43,12 +40,7 @@ public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mappe
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
-        if (customer is null)
-        {
-            throw new CustomerNotFound();
-        }
-
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
         return (mapper.MapTo(customer)!, customer);
     }
 }

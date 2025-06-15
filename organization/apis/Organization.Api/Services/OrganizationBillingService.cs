@@ -30,12 +30,8 @@ public class OrganizationBillingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (existingOrganization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanView(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -53,11 +49,8 @@ public class OrganizationBillingService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationBillingDetails.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationBillingDetails.Organization.Id, cancellationToken) ??
             throw new OrganizationNotFound();
-        }
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -113,19 +106,11 @@ public class OrganizationBillingService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganizationBillingDetails = await repositoryFactory.OrganizationBillingDetailsRepository.GetByIdAsync(
             organizationBillingDetails.Id,
-            cancellationToken);
-
-        if (existingOrganizationBillingDetails is null)
-        {
-            throw new OrganizationBillingDetailsNotFound();
-        }
+            cancellationToken) ?? throw new OrganizationBillingDetailsNotFound();
 
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationBillingDetails.Organization.Id, cancellationToken);
-        if (existingOrganization is null)
-        {
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationBillingDetails.Organization.Id, cancellationToken) ??
             throw new OrganizationNotFound();
-        }
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
