@@ -26,7 +26,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -44,6 +44,7 @@ type Props = {
   organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
+  defaultResourceIds?: string[];
 };
 
 type CustomerDetails = {
@@ -127,6 +128,7 @@ const NewBookingDialog = ({
   organizationId,
   defaultLocationId,
   defaultDate,
+  defaultResourceIds,
 }: Props) => {
   const rootData = useFragment(
     graphql`
@@ -298,7 +300,14 @@ const NewBookingDialog = ({
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_OFFICE');
-  const [resourceIds, setResourceIds] = useState<string[]>([]);
+  const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds ?? []);
+
+  // Update resourceIds when defaultResourceIds changes
+  useEffect(() => {
+    if (defaultResourceIds && defaultResourceIds.length > 0) {
+      setResourceIds(defaultResourceIds);
+    }
+  }, [defaultResourceIds]);
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
@@ -591,15 +600,20 @@ const NewBookingDialog = ({
             type: bookingType,
           }}
           validate={validate}
-          render={({ handleSubmit, values }) => {
-            setFrom(values!.date);
-            setAllDay(values!.allDay);
-            setNotes(values!.notes);
-            setResourceIds(values!.resources);
-            setBookingType(values!.type);
-
+          render={({ handleSubmit }) => {
             return (
               <FormStackColumn onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={({ values }) => {
+                    if (!values) return;
+                    if (values.date !== from) setFrom(values.date);
+                    if (values.allDay !== allDay) setAllDay(values.allDay);
+                    if (values.notes !== notes) setNotes(values.notes);
+                    if (JSON.stringify(values.resources) !== JSON.stringify(resourceIds)) setResourceIds(values.resources);
+                    if (values.type !== bookingType) setBookingType(values.type);
+                  }}
+                />
                 <FormFieldLabel label="User" useWiderSpace>
                   <Autocomplete
                     name="member"

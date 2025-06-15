@@ -21,6 +21,8 @@ type Props = {
   organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
+  defaultResourceIds?: string[];
+  isInitiallyOpen?: boolean;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -57,6 +59,8 @@ const NewBookingButton = ({
   organizationId,
   defaultLocationId,
   defaultDate,
+  defaultResourceIds,
+  isInitiallyOpen = false,
   fullWidth,
   label,
   hideIcon,
@@ -66,7 +70,13 @@ const NewBookingButton = ({
   invertDefaultColor,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(isInitiallyOpen);
+
+  useEffect(() => {
+    if (isInitiallyOpen) {
+      setIsDialogOpen(true);
+    }
+  }, [isInitiallyOpen]);
 
   const handleButtonClicked = () => {
     setIsDialogOpen(true);
@@ -111,6 +121,7 @@ const NewBookingButton = ({
         organizationId={organizationId}
         defaultLocationId={defaultLocationId}
         defaultDate={defaultDate}
+        defaultResourceIds={defaultResourceIds}
       />
     </>
   );
@@ -124,6 +135,8 @@ type RelayProps = {
   organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
+  defaultResourceIds?: string[];
+  isInitiallyOpen?: boolean;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -139,6 +152,8 @@ const NewBookingButtonWithRelay = ({
   organizationId,
   defaultLocationId,
   defaultDate,
+  defaultResourceIds,
+  isInitiallyOpen,
   fullWidth,
   label,
   hideIcon,
@@ -200,6 +215,8 @@ const NewBookingButtonWithRelay = ({
         defaultLocationId={defaultLocationId}
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}
+        defaultResourceIds={defaultResourceIds}
+        isInitiallyOpen={isInitiallyOpen}
         fullWidth={fullWidth}
         label={label}
         hideIcon={hideIcon}

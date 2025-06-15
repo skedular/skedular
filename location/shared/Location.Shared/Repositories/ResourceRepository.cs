@@ -33,6 +33,8 @@ internal static class ResourceExtensions
     internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Resource> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
+            .Include(query => query.ResourcePosition)
+                .ThenInclude(query => query!.FloorPlan)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)

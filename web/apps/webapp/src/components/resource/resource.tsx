@@ -14,10 +14,29 @@ type Props = {
   showFullName?: boolean;
 };
 
-const Resource = ({ resource, showFullName }: Props) => (
-  <Tooltip title={resource.name}>
-    <Chip label={`${resource.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: resource.color ?? stringToColor(resource.id) }} />
-  </Tooltip>
-);
+const Resource = ({ resource, showFullName }: Props) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  return (
+    <Tooltip title={resource.name}>
+      <Chip
+        label={`${resource.name}`}
+        sx={{
+          maxWidth: showFullName ? undefined : 100,
+          backgroundColor: resource.color ?? stringToColor(resource.id),
+          cursor: 'inherit',
+          '&:hover': {
+            backgroundColor: resource.color ?? stringToColor(resource.id),
+          },
+        }}
+        component="div"
+        clickable={false}
+        onClick={handleClick}
+      />
+    </Tooltip>
+  );
+};
 
 export default memo(Resource);

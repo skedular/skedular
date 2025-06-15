@@ -1,10 +1,11 @@
 import { BodyIconTypography } from '@/components/commons';
-import { EditIcon, OpeningHoursIcon, ResourceIcon } from '@/components/icons';
+import { EditIcon, OpeningHoursIcon, ResourceIcon, FloorPlanIcon } from '@/components/icons';
 import {
   getOrganizationLocationManageLocationBaseLink,
   getOrganizationLocationManageResourcesBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
+  getOrganizationLocationFloorPlansBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
@@ -68,6 +69,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationId, locationId);
   const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationId, locationId);
+  const floorPlansLink = getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationId, locationId);
   const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId);
   const manageLocationLink = getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationId, locationId);
 
@@ -112,6 +114,25 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <OpeningHoursIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === openingHoursLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={floorPlansLink}>
+          <ListItemButton selected={fullPath === floorPlansLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === floorPlansLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <FloorPlanIcon color="inherit" />} invertDefaultColor={fullPath === floorPlansLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Floor Plans"
+                startElement={!hideIcons && <FloorPlanIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === floorPlansLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

@@ -21,6 +21,8 @@ public interface IRepositoryFactory
     IOrganizationRepository OrganizationRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
+    IFloorPlanRepository FloorPlanRepository { get; }
+    IResourcePositionRepository ResourcePositionRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepositoryFactory
@@ -41,6 +43,8 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        FloorPlanRepository = new FloorPlanRepository(_dbContext, timeProvider);
+        ResourcePositionRepository = new ResourcePositionRepository(_dbContext, timeProvider);
     }
 
     public IAddressRepository AddressRepository { get; }
@@ -55,4 +59,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     public IOrganizationRepository OrganizationRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
+    public IFloorPlanRepository FloorPlanRepository { get; }
+    public IResourcePositionRepository ResourcePositionRepository { get; }
 }

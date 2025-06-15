@@ -443,6 +443,88 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("DailyRoomCountRecording");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.FloorPlan", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("FloorLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("FloorName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ThumbnailPath")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("FloorLevel");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("LocationId", "FloorLevel")
+                        .IsUnique()
+                        .HasFilter("\"DeletedAt\" IS NULL");
+
+                    b.ToTable("FloorPlan");
+                });
+
             modelBuilder.Entity("Location.Shared.Database.Entities.Identity", b =>
                 {
                     b.Property<string>("Id")
@@ -893,6 +975,70 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("Resource");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.ResourcePosition", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FloorPlanId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<Dictionary<string, object>>("Metadata")
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ResourceId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Shape")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("X")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Y")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("FloorPlanId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ResourceId")
+                        .IsUnique();
+
+                    b.ToTable("ResourcePosition");
+                });
+
             modelBuilder.Entity("LocationOrganizationTag", b =>
                 {
                     b.Property<string>("LocationsId")
@@ -968,6 +1114,17 @@ namespace Location.Shared.Database.Migrations
                 {
                     b.HasOne("Location.Shared.Database.Entities.Location", "Location")
                         .WithMany("DailyRoomCountRecordings")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.FloorPlan", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("FloorPlans")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1055,6 +1212,25 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("Location");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.ResourcePosition", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.FloorPlan", "FloorPlan")
+                        .WithMany("ResourcePositions")
+                        .HasForeignKey("FloorPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Location.Shared.Database.Entities.Resource", "Resource")
+                        .WithOne("ResourcePosition")
+                        .HasForeignKey("Location.Shared.Database.Entities.ResourcePosition", "ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FloorPlan");
+
+                    b.Navigation("Resource");
+                });
+
             modelBuilder.Entity("LocationOrganizationTag", b =>
                 {
                     b.HasOne("Location.Shared.Database.Entities.Location", null)
@@ -1097,11 +1273,18 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("OrganizationMembers");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.FloorPlan", b =>
+                {
+                    b.Navigation("ResourcePositions");
+                });
+
             modelBuilder.Entity("Location.Shared.Database.Entities.Location", b =>
                 {
                     b.Navigation("DailyDeskCountRecordings");
 
                     b.Navigation("DailyRoomCountRecordings");
+
+                    b.Navigation("FloorPlans");
 
                     b.Navigation("Resources");
                 });
@@ -1115,6 +1298,11 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("OrganizationSsoSettings");
 
                     b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.Resource", b =>
+                {
+                    b.Navigation("ResourcePosition");
                 });
 #pragma warning restore 612, 618
         }

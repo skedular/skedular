@@ -77,3 +77,5 @@ public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross orga
 public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
 
 public class OrganizationPaymentMethodNotFound() : Exception("Organization payment method not found");
+
+public class FloorPlanWithSameFloorLevelExists(int floorLevel) : Exception($"A floor plan already exists for floor level {floorLevel}. Please choose a different floor level.");

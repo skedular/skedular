@@ -15,6 +15,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<Customer> Customer { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
     public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
+    public DbSet<FloorPlan> FloorPlan { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Entities.Location> Location { get; set; }
     public DbSet<Organization> Organization { get; set; }
@@ -22,6 +23,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<Resource> Resource { get; set; }
+    public DbSet<ResourcePosition> ResourcePosition { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 

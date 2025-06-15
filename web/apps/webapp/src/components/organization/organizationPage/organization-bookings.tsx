@@ -8,11 +8,13 @@ import { LocationSelector } from '@/components/location/locationSelector';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
+import { FloorPlanModalWithQuery } from '@/components/location/floorPlans';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organizationBookings_rootQuery } from '@/queries/__generated__/organizationBookings_rootQuery.graphql';
+import type { organizationBookingsFloorPlanModalQuery } from '@/queries/__generated__/organizationBookingsFloorPlanModalQuery.graphql';
 import { Dayjs } from 'dayjs';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -26,6 +28,9 @@ type Props = {
   locationId?: string | null;
   teamId?: string | null;
   defaultStartWeek: Dayjs;
+  showBookingDialog?: boolean;
+  defaultResourceId?: string | null;
+  onLocationNameChange?: (name: string) => void;
 };
 
 const RootQuery = graphql`
@@ -69,7 +74,29 @@ const RootQuery = graphql`
   }
 `;
 
-const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, customerId, locationId, teamId, defaultStartWeek }: Props) => {
+const FloorPlanModalQuery = graphql`
+  query organizationBookingsFloorPlanModalQuery(
+    $locationId: String!
+    $organizationId: String!
+    $dateFromToGetAvailableResources: DateTime!
+    $dateUntilToGetAvailableResources: DateTime!
+  ) {
+    ...floorPlanModal_query @arguments(locationId: $locationId)
+  }
+`;
+
+const ModernOrganization = ({
+  queryReference,
+  onReloadRequired,
+  organizationId,
+  customerId,
+  locationId,
+  teamId,
+  defaultStartWeek,
+  showBookingDialog = false,
+  defaultResourceId,
+  onLocationNameChange,
+}: Props) => {
   const rootData = usePreloadedQuery<organizationBookings_rootQuery>(RootQuery, queryReference);
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
@@ -78,6 +105,16 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
   const [teamIds, setTeamIds] = useState<string[]>(teamId ? [teamId] : []);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+
+  // Set initial location name if locationId is provided
+  useEffect(() => {
+    if (locationId && rootData.myLocations && onLocationNameChange) {
+      const location = rootData.myLocations.find((loc) => loc.id === locationId);
+      if (location) {
+        onLocationNameChange(location.name);
+      }
+    }
+  }, [locationId, rootData.myLocations, onLocationNameChange]);
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
@@ -90,6 +127,12 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
 
   const handlLocationChanged = (id?: string) => {
     setLocationIds(id ? [id] : []);
+    if (onLocationNameChange && id && rootData.myLocations) {
+      const location = rootData.myLocations.find((loc) => loc.id === id);
+      if (location) {
+        onLocationNameChange(location.name);
+      }
+    }
   };
 
   const handlTeamChanged = (id?: string) => {
@@ -117,7 +160,13 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
-        <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationId={organizationId} />
+        <NewBookingButton
+          onReloadRequired={onReloadRequired}
+          defaultDate={today}
+          organizationId={organizationId}
+          isInitiallyOpen={showBookingDialog}
+          defaultResourceIds={defaultResourceId ? [defaultResourceId] : undefined}
+        />
       </GridContainer>
       <Bookings
         rootDataRelay={rootData}
@@ -146,13 +195,19 @@ type RelayProps = {
 
 const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationBookings_rootQuery>(RootQuery);
+  const [floorPlanQueryReference, loadFloorPlanQuery] = useQueryLoader<organizationBookingsFloorPlanModalQuery>(FloorPlanModalQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const [, startTransition] = useTransition();
+  const [currentLocationName, setCurrentLocationName] = useState<string>('Floor Plan');
   const [startWeek] = useState(startOfWeek());
   const searchParams = useSearchParams();
+  const router = useRouter();
   const customerId = searchParams.get('customerId');
   const locationId = searchParams.get('locationId');
   const teamId = searchParams.get('teamId');
+  const showFloorPlan = searchParams.get('showFloorPlan') === 'true';
+  const showBookingDialog = searchParams.get('showBookingDialog') === 'true';
+  const defaultResourceId = searchParams.get('defaultResourceId');
 
   useEffect(() => {
     const bookingsSearchCriteriaFrom = startWeek.toISOString();
@@ -186,10 +241,42 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
     );
   }, [loadQuery, triggerReload, startWeek, organizationId, locationId, teamId, customerId]);
 
+  // Load floor plan data when needed
+  useEffect(() => {
+    if (showFloorPlan && locationId) {
+      const now = startOfDay();
+      loadFloorPlanQuery({
+        locationId,
+        organizationId,
+        dateFromToGetAvailableResources: now.toISOString(),
+        dateUntilToGetAvailableResources: now.add(1, 'hour').toISOString(),
+      });
+    }
+  }, [showFloorPlan, locationId, organizationId, loadFloorPlanQuery]);
+
   const handleReloadRequired = () => {
     startTransition(() => {
       setTriggerReload(triggerReload + 1);
     });
+  };
+
+  const handleCloseFloorPlan = () => {
+    // Remove the showFloorPlan query parameter
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('showFloorPlan');
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  const handleBookResource = (resourceId: string) => {
+    // Close the floor plan modal
+    handleCloseFloorPlan();
+
+    // Navigate to bookings with the selected resource
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('showFloorPlan');
+    params.set('showBookingDialog', 'true');
+    params.set('defaultResourceId', resourceId);
+    router.push(`${window.location.pathname}?${params.toString()}`);
   };
 
   if (!queryReference) {
@@ -197,17 +284,35 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoModernOrganization
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        customerId={customerId}
-        locationId={locationId}
-        teamId={teamId}
-        defaultStartWeek={startWeek}
-      />
-    </ErrorBoundary>
+    <>
+      <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+        <MemoModernOrganization
+          queryReference={queryReference}
+          onReloadRequired={handleReloadRequired}
+          organizationId={organizationId}
+          customerId={customerId}
+          locationId={locationId}
+          teamId={teamId}
+          defaultStartWeek={startWeek}
+          showBookingDialog={showBookingDialog}
+          defaultResourceId={defaultResourceId}
+          onLocationNameChange={setCurrentLocationName}
+        />
+      </ErrorBoundary>
+
+      {/* Floor Plan Modal */}
+      {showFloorPlan && locationId && floorPlanQueryReference && (
+        <FloorPlanModalWithQuery
+          queryReference={floorPlanQueryReference}
+          organizationId={organizationId}
+          locationId={locationId}
+          locationName={currentLocationName}
+          isOpen={true}
+          onClose={handleCloseFloorPlan}
+          onBookResource={handleBookResource}
+        />
+      )}
+    </>
   );
 };
 

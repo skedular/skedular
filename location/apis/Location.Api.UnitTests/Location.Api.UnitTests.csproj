@@ -28,6 +28,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Location.Api\Location.Api.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Testing.Shared\Testing.Shared.csproj"/>
     </ItemGroup>
 
 </Project>

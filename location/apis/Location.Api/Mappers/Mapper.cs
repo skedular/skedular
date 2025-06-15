@@ -24,6 +24,7 @@ using UpdateResourceInput = Location.Api.GraphQL.UpdateResourceInput;
 using ResourceEdge = Location.Api.GraphQL.ResourceEdge;
 using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
+using ResourcePosition = Location.Api.GraphQL.ResourcePosition;
 
 namespace Location.Api.Mappers;
 
@@ -60,6 +61,9 @@ public interface IMapper
     LocationDetails? MapTo(Shared.Models.Location? src);
     ResourceDetails MapTo(Shared.Models.Resource src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
+    FloorPlanDetails? MapTo(Shared.Models.FloorPlan? src);
+    IEnumerable<FloorPlanDetails> MapTo(IEnumerable<Shared.Models.FloorPlan> src);
+    ResourcePosition MapTo(Shared.Models.ResourcePosition src);
 
     LocationAnalytics MapTo(
         string name,
@@ -86,6 +90,8 @@ public interface IMapper
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src);
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src);
     public WeekOpeningHours? MapTo(GraphQL.WeekOpeningHours? src);
+    Shared.Models.FloorPlan MapFloorPlan(Shared.Database.Entities.FloorPlan src);
+    Shared.Models.ResourcePosition MapResourcePosition(Shared.Database.Entities.ResourcePosition src);
 }
 
 public class Mapper : IMapper
@@ -113,6 +119,7 @@ public class Mapper : IMapper
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+        location.FloorPlans = src.FloorPlans.Select(MapFloorPlan).ToList();
 
         return location;
     }
@@ -205,7 +212,8 @@ public class Mapper : IMapper
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(MapTo),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
-                LocationTags = MapTo(src.Tags)
+                LocationTags = MapTo(src.Tags),
+                FloorPlans = MapTo(src.FloorPlans)
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -222,7 +230,8 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
-            Tags = MapTo(src.OrganizationTags).ToList()
+            Tags = MapTo(src.OrganizationTags).ToList(),
+            ResourcePosition = src.ResourcePosition != null ? MapResourcePosition(src.ResourcePosition) : null
         };
 
     public Resource MapTo(
@@ -613,6 +622,44 @@ public class Mapper : IMapper
 
     private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
 
+    public FloorPlanDetails? MapTo(Shared.Models.FloorPlan? src) =>
+        src is null
+            ? null
+            : new FloorPlanDetails
+            {
+                Id = src.Id,
+                Name = src.Name,
+                FloorLevel = src.FloorLevel,
+                FloorName = src.FloorName,
+                ImagePath = src.ImagePath,
+                ThumbnailPath = src.ThumbnailPath,
+                Width = src.Width,
+                Height = src.Height,
+                IsActive = src.IsActive,
+                ResourcePositions = src.ResourcePositions.Select(MapToResourcePosition).ToList()
+            };
+
+    public IEnumerable<FloorPlanDetails> MapTo(IEnumerable<Shared.Models.FloorPlan> src) => src.Select(MapTo)!;
+
+    private static ResourcePosition MapToResourcePosition(Shared.Models.ResourcePosition src) =>
+        new()
+        {
+            Id = src.Id,
+            X = src.X,
+            Y = src.Y,
+            Width = src.Width,
+            Height = src.Height,
+            Shape = src.Shape,
+            Metadata = src.Metadata != null ? System.Text.Json.JsonSerializer.Serialize(src.Metadata) : null,
+            Resource = new ResourceDetails
+            {
+                Id = src.Resource.Id,
+                Name = src.Resource.Name
+            }
+        };
+    
+    public ResourcePosition MapTo(Shared.Models.ResourcePosition src) => MapToResourcePosition(src);
+
     private static Shared.Models.Organization MapTo(Organization src) =>
         new()
         {
@@ -868,4 +915,61 @@ public class Mapper : IMapper
 
     private static ResourceType MapToGrpcResponse(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), TagType = src.Type.ToNullableOrganizationTagType() };
+
+    public Shared.Models.FloorPlan MapFloorPlan(Shared.Database.Entities.FloorPlan src)
+    {
+        return new Shared.Models.FloorPlan
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Name = src.Name,
+            FloorLevel = src.FloorLevel,
+            FloorName = src.FloorName,
+            ImagePath = src.ImagePath,
+            ThumbnailPath = src.ThumbnailPath,
+            Width = src.Width,
+            Height = src.Height,
+            IsActive = src.IsActive,
+            // Don't map Location here to avoid circular reference
+            ResourcePositions = src.ResourcePositions.Select(rp => new Shared.Models.ResourcePosition
+            {
+                Id = rp.Id,
+                CreatedAt = rp.CreatedAt,
+                ModifiedAt = rp.ModifiedAt,
+                X = rp.X,
+                Y = rp.Y,
+                Width = rp.Width,
+                Height = rp.Height,
+                Shape = rp.Shape,
+                Metadata = rp.Metadata,
+                Resource = MapTo(rp.Resource)
+                // Don't map FloorPlan here to avoid circular reference
+            }).ToList()
+        };
+    }
+
+    public Shared.Models.ResourcePosition MapResourcePosition(Shared.Database.Entities.ResourcePosition src)
+    {
+        return new Shared.Models.ResourcePosition
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            X = src.X,
+            Y = src.Y,
+            Width = src.Width,
+            Height = src.Height,
+            Shape = src.Shape,
+            Metadata = src.Metadata,
+            Resource = new Shared.Models.Resource
+            {
+                Id = src.Resource.Id,
+                Name = src.Resource.Name
+                // Only map basic resource info to avoid circular reference
+            }
+            // Don't map FloorPlan here to avoid circular reference
+        };
+    }
 }

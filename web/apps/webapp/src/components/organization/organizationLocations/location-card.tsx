@@ -2,6 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
+import MapIcon from '@mui/icons-material/Map';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -28,6 +29,8 @@ import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
@@ -207,6 +210,11 @@ const LocationCard = ({
     setLocationRemoveConfirmationDialogOpen(false);
   };
 
+  const handleViewFloorPlanClick = () => {
+    // Navigate to organization page with floor plan view query params
+    router.push(`${getOrganizationBookingsBaseLink(integratedPlatrform, organizationId)}?locationId=${locationDetails.id}&showFloorPlan=true`);
+  };
+
   const handleConfirmRemovingLocationClick = () => {
     const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
 
@@ -332,6 +340,11 @@ const LocationCard = ({
                 <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
               <PushToRight />
+              <Tooltip title="View floor plan and book resources">
+                <Button variant="outlined" size="small" startIcon={<MapIcon />} onClick={handleViewFloorPlanClick} sx={{ textTransform: 'none', mr: 1 }}>
+                  Floor Plan
+                </Button>
+              </Tooltip>
               <NewBookingButton
                 onReloadRequired={onReloadRequired}
                 defaultDate={defaultDate}

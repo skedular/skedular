@@ -1,6 +1,13 @@
+using Api.Shared;
+using Api.Shared.Services;
+using Enterprise.Shared.Storage;
+using HotChocolate.Execution.Configuration;
+using Location.Api.GraphQL;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
+using Location.Shared.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Location.Api;
 
@@ -20,7 +27,17 @@ public static class Extensions
             .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()
             .AddScoped<IResourceService, ResourceService>()
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
+            .AddScoped<IWorkaroundService, WorkaroundService>()
+            .AddScoped<IFileStorageService, LocalFileStorageService>()
+            .AddScoped<IFloorPlanStorageService, FloorPlanStorageService>()
+            .AddScoped<IFloorPlanService, FloorPlanService>()
+            .Configure<FormOptions>(options =>
+            {
+                // Set the limit to 50 MB (maybe a bit too much!)
+                options.MultipartBodyLengthLimit = Constants.MaxFileUploadSize;
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

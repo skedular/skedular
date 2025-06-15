@@ -94,6 +94,7 @@ public class LocationDetails : Node
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("primaryFeatureImageUrl")] public string? PrimaryFeatureImageUrl { get; set; }
+    [GraphQLName("floorPlans")] public IEnumerable<FloorPlanDetails> FloorPlans { get; set; } = [];
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
@@ -367,4 +368,139 @@ public class UpdateLocationResourceAvailableHoursInput
     public bool OverrideAvailableHours { get; set; }
 
     [GraphQLName("availableHours")] public WeekOpeningHours? AvailableHours { get; set; }
+}
+
+[GraphQLName("UpdateResourcePositionInput")]
+public class UpdateResourcePositionInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resourceId")] public string ResourceId { get; set; } = string.Empty;
+    [GraphQLName("floorPlanId")] public string FloorPlanId { get; set; } = string.Empty;
+    [GraphQLName("x")] public int X { get; set; }
+    [GraphQLName("y")] public int Y { get; set; }
+    [GraphQLName("width")] public int Width { get; set; }
+    [GraphQLName("height")] public int Height { get; set; }
+    [GraphQLName("shape")] public string? Shape { get; set; }
+    [GraphQLName("metadata")] public string? Metadata { get; set; }
+}
+
+[GraphQLName("ResourcePosition")]
+public class ResourcePosition
+{
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("x")] public int X { get; set; }
+    [GraphQLName("y")] public int Y { get; set; }
+    [GraphQLName("width")] public int Width { get; set; }
+    [GraphQLName("height")] public int Height { get; set; }
+    [GraphQLName("shape")] public string? Shape { get; set; }
+    [GraphQLName("metadata")] public string? Metadata { get; set; }
+    [GraphQLName("resource")] public ResourceDetails Resource { get; set; } = new();
+}
+
+[GraphQLName("ResourcePositionPayload")]
+public class ResourcePositionPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resourcePosition")] public ResourcePosition ResourcePosition { get; set; } = new();
+}
+
+[GraphQLName("RemoveResourcePositionInput")]
+public class RemoveResourcePositionInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resourceId")] public string ResourceId { get; set; } = string.Empty;
+}
+
+[GraphQLName("RemoveResourcePositionPayload")]
+public class RemoveResourcePositionPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("success")] public bool Success { get; set; }
+}
+
+[GraphQLName("AddFloorPlanInput")]
+public class AddFloorPlanInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("locationId")] public string LocationId { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("floorLevel")] public int FloorLevel { get; set; }
+    [GraphQLName("floorName")] public string? FloorName { get; set; }
+    [GraphQLName("imageBase64")] public string ImageBase64 { get; set; } = string.Empty;
+    [GraphQLName("imageFileName")] public string ImageFileName { get; set; } = string.Empty;
+}
+
+[GraphQLName("UpdateFloorPlanInput")]
+public class UpdateFloorPlanInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("floorLevel")] public int FloorLevel { get; set; }
+    [GraphQLName("floorName")] public string? FloorName { get; set; }
+    [GraphQLName("isActive")] public bool IsActive { get; set; }
+}
+
+[GraphQLName("DeleteFloorPlanInput")]
+public class DeleteFloorPlanInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+}
+
+[GraphQLName("FloorPlanDetails")]
+public class FloorPlanDetails : Node
+{
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("floorLevel")] public int FloorLevel { get; set; }
+    [GraphQLName("floorName")] public string? FloorName { get; set; }
+    [GraphQLName("imagePath")] public string ImagePath { get; set; } = string.Empty;
+    [GraphQLName("thumbnailPath")] public string? ThumbnailPath { get; set; }
+    [GraphQLName("width")] public int Width { get; set; }
+    [GraphQLName("height")] public int Height { get; set; }
+    [GraphQLName("isActive")] public bool IsActive { get; set; }
+    [GraphQLName("resourcePositions")] public IEnumerable<ResourcePosition> ResourcePositions { get; set; } = [];
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[GraphQLName("FloorPlanPayload")]
+public class FloorPlanPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("floorPlan")] public FloorPlanDetails FloorPlan { get; set; } = new();
+}
+
+[GraphQLName("DeleteFloorPlanPayload")]
+public class DeleteFloorPlanPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("success")] public bool Success { get; set; }
+}
+
+[GraphQLName("ResourcePositionInput")]
+public class ResourcePositionInput
+{
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("resourceId")] public string ResourceId { get; set; } = string.Empty;
+    [GraphQLName("x")] public int X { get; set; }
+    [GraphQLName("y")] public int Y { get; set; }
+    [GraphQLName("width")] public int Width { get; set; }
+    [GraphQLName("height")] public int Height { get; set; }
+    [GraphQLName("shape")] public string? Shape { get; set; }
+    [GraphQLName("metadata")] public string? Metadata { get; set; }
+}
+
+[GraphQLName("UpdateResourcePositionsInput")]
+public class UpdateResourcePositionsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("floorPlanId")] public string FloorPlanId { get; set; } = string.Empty;
+    [GraphQLName("positions")] public IEnumerable<ResourcePositionInput> Positions { get; set; } = [];
+}
+
+[GraphQLName("UpdateResourcePositionsPayload")]
+public class UpdateResourcePositionsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resourcePositions")] public IEnumerable<ResourcePosition> ResourcePositions { get; set; } = [];
 }

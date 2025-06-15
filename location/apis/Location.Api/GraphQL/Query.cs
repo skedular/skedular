@@ -160,4 +160,12 @@ public class Query(IMapper mapper, IVersionService versionService)
     [UseResolverScope]
     public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken) =>
         mapper.MapTo(await resourceService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    public async Task<FloorPlanDetails?> FloorPlanAsync(string id, [Service] IFloorPlanService floorPlanService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    public async Task<IEnumerable<FloorPlanDetails>> FloorPlansByLocationAsync(string locationId, [Service] IFloorPlanService floorPlanService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await floorPlanService.GetByLocationIdAsync(locationId, cancellationToken));
 }

@@ -28,6 +28,7 @@ import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
+import FloorPlanList from '@/components/location/floorPlans/floor-plan-list';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -224,6 +225,30 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                 openAllDay
                 from
                 until
+              }
+            }
+          }
+          floorPlans {
+            id
+            name
+            floorLevel
+            floorName
+            imagePath
+            thumbnailPath
+            width
+            height
+            isActive
+            resourcePositions {
+              id
+              x
+              y
+              width
+              height
+              shape
+              metadata
+              resource {
+                id
+                name
               }
             }
           }
@@ -1493,6 +1518,27 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               }}
               onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
             />
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['floor-plans'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Floor Plans" />
+                  <BodyIconTypography label="Manage floor plans and position resources" />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            {section === 'floor-plans' && location.floorPlans && (
+              <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <FloorPlanList floorPlans={location.floorPlans} locationId={locationId} organizationId={organizationId} resources={resources} onReloadRequired={onReloadRequired} />
+              </Box>
+            )}
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

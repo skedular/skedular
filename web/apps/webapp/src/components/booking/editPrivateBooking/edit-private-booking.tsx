@@ -651,9 +651,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
-              setFrom(values!.date);
-              setAllDay(values!.allDay);
-
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -701,9 +698,28 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                       <StackColumn>
                         <StackRow>
                           <Box sx={{ width: 'fit-content' }}>
-                            <DatePicker name="date" required={requiredFields.date} />
+                            <DatePicker
+                              name="date"
+                              required={requiredFields.date}
+                              fieldProps={{
+                                onChange: (value: any) => {
+                                  if (value && dayjs.isDayjs(value)) {
+                                    setFrom(value);
+                                  }
+                                },
+                              }}
+                            />
                           </Box>
-                          <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                          <Switches
+                            name="allDay"
+                            required={requiredFields.allDay}
+                            data={{ label: 'All Day', value: 'allDay' }}
+                            fieldProps={{
+                              onChange: (event: any) => {
+                                setAllDay(event.target.checked);
+                              },
+                            }}
+                          />
                         </StackRow>
 
                         <Box sx={{ width: 'fit-content' }}>

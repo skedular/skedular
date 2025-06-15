@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4af6df84e0ef9b23d2070ecc99f7cdcb>>
+ * @generated SignedSource<<c89a4d42107213f741ce343dd2426357>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,30 @@ export type organizationLocation_query$data = {
     readonly about: string | null | undefined;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
+    readonly floorPlans: ReadonlyArray<{
+      readonly floorLevel: number;
+      readonly floorName: string | null | undefined;
+      readonly height: number;
+      readonly id: string;
+      readonly imagePath: string;
+      readonly isActive: boolean;
+      readonly name: string;
+      readonly resourcePositions: ReadonlyArray<{
+        readonly height: number;
+        readonly id: string;
+        readonly metadata: string | null | undefined;
+        readonly resource: {
+          readonly id: string;
+          readonly name: string;
+        };
+        readonly shape: string | null | undefined;
+        readonly width: number;
+        readonly x: number;
+        readonly y: number;
+      }>;
+      readonly thumbnailPath: string | null | undefined;
+      readonly width: number;
+    }>;
     readonly id: string;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -152,7 +176,21 @@ v3 = [
     "name": "until",
     "storageKey": null
   }
-];
+],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -449,6 +487,111 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "FloorPlanDetails",
+          "kind": "LinkedField",
+          "name": "floorPlans",
+          "plural": true,
+          "selections": [
+            (v0/*: any*/),
+            (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "floorLevel",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "floorName",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "imagePath",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "thumbnailPath",
+              "storageKey": null
+            },
+            (v4/*: any*/),
+            (v5/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isActive",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ResourcePosition",
+              "kind": "LinkedField",
+              "name": "resourcePositions",
+              "plural": true,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "x",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "y",
+                  "storageKey": null
+                },
+                (v4/*: any*/),
+                (v5/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "shape",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "metadata",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "ResourceDetails",
+                  "kind": "LinkedField",
+                  "name": "resource",
+                  "plural": false,
+                  "selections": [
+                    (v0/*: any*/),
+                    (v2/*: any*/)
+                  ],
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -486,6 +629,6 @@ return {
 };
 })();
 
-(node as any).hash = "277f6f6e18e9b60962bc339f2b26a3bd";
+(node as any).hash = "e589353a0d48694d4d9f6dce5c68dc6f";
 
 export default node;
