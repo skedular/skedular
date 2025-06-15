@@ -10,7 +10,7 @@ namespace Organization.Api.Services;
 
 public interface IStripeCustomerService
 {
-    Task<StripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken);
+    Task<OrganizationStripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class StripeCustomerService(
@@ -19,7 +19,7 @@ public class StripeCustomerService(
     IRandomHelper randomHelper,
     ICreatable<Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
-    public async Task<StripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<OrganizationStripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
@@ -27,22 +27,22 @@ public class StripeCustomerService(
             throw new OrganizationNotFound();
         }
 
-        if (organization.StripeCustomer is not null)
+        if (organization.OrganizationStripeCustomer is not null)
         {
-            return organization.StripeCustomer;
+            return organization.OrganizationStripeCustomer;
         }
 
         var stripeCustomer = await customerCreateService.CreateAsync(
             mapper.MapToStripeCustomerCreateOption(organization),
             new RequestOptions { IdempotencyKey = organization.Id, StripeAccount = null },
             cancellationToken);
-        organization.StripeCustomer = repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
+        organization.OrganizationStripeCustomer = repositoryFactory.OrganizationStripeCustomerRepository.Add(new OrganizationStripeCustomer
         {
             Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, Organization = organization
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return organization.StripeCustomer;
+        return organization.OrganizationStripeCustomer;
     }
 }

@@ -12,7 +12,7 @@ public class Organization : ModelBaseWithDeleted
     public string? LogoUrl { get; set; }
     public OrganizationType Type { get; set; }
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
-    public bool HasAttachedPaymentMethod => StripePaymentMethods.Count != 0;
+    public bool HasAttachedPaymentMethod => OrganizationStripePaymentMethods.Count != 0;
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
@@ -32,8 +32,8 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<Tag> Tags { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
-    public StripeCustomer? StripeCustomer { get; set; }
+    public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }
     public OrganizationBillingDetails? BillingDetails { get; set; }
 
     public bool HasFutureBooking { get; set; }

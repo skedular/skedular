@@ -1,4 +1,3 @@
-using Api.Shared;
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +19,7 @@ public class ResourcePosition : EntityBaseWithDeleted
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ResourceId { get; set; }
     public virtual Resource Resource { get; set; }
-    
+
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string FloorPlanId { get; set; }
     public virtual FloorPlan FloorPlan { get; set; }

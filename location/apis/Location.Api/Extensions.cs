@@ -1,8 +1,5 @@
-using Api.Shared;
 using Api.Shared.Services;
 using Enterprise.Shared.Storage;
-using HotChocolate.Execution.Configuration;
-using Location.Api.GraphQL;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;

@@ -45,9 +45,9 @@ public class StripeIntegrations(
             ArgumentNullException.ThrowIfNull(paymentMethod);
             ArgumentNullException.ThrowIfNull(paymentMethod.Card);
 
-            var stripePaymentMethod = mapper.MapTo(paymentMethod, args.SetupIntentId, organization);
-            stripePaymentMethod.Id = randomHelper.Generate();
-            repositoryFactory.StripePaymentMethodRepository.Add(stripePaymentMethod);
+            var organizationStripePaymentMethod = mapper.MapTo(paymentMethod, args.SetupIntentId, organization);
+            organizationStripePaymentMethod.Id = randomHelper.Generate();
+            repositoryFactory.OrganizationStripePaymentMethodRepository.Add(organizationStripePaymentMethod);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         else

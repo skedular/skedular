@@ -7,7 +7,7 @@ namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class StripePaymentMethod : EntityBaseWithDeleted
+public class OrganizationStripePaymentMethod : EntityBaseWithDeleted
 {
     public string? SetupIntentId { get; set; }
     public string? PaymentMethodId { get; set; }
@@ -22,13 +22,13 @@ public class StripePaymentMethod : EntityBaseWithDeleted
     public string? CardLastFourDigit { get; set; }
 
     public virtual Organization Organization { get; set; }
-    public virtual ICollection<StripePaymentIntent> StripePaymentIntents { get; set; } = [];
+    public virtual ICollection<OrganizationStripePaymentIntent> OrganizationStripePaymentIntents { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class StripePaymentMethodConfiguration : IEntityTypeConfiguration<StripePaymentMethod>
+public class OrganizationStripePaymentMethodConfiguration : IEntityTypeConfiguration<OrganizationStripePaymentMethod>
 {
-    public void Configure(EntityTypeBuilder<StripePaymentMethod> builder)
+    public void Configure(EntityTypeBuilder<OrganizationStripePaymentMethod> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
 

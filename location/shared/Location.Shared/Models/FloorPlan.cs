@@ -12,7 +12,7 @@ public class FloorPlan : ModelBaseWithDeleted
     public int Width { get; set; }
     public int Height { get; set; }
     public bool IsActive { get; set; } = true;
-    
+
     public Location Location { get; set; } = new();
     public ICollection<ResourcePosition> ResourcePositions { get; set; } = [];
 }

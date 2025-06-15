@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
 
-public class StripePaymentMethod : ModelBaseWithDeleted
+public class OrganizationStripePaymentMethod : ModelBaseWithDeleted
 {
     public string? SetupIntentId { get; set; }
     public string? PaymentMethodId { get; set; }
@@ -17,5 +17,5 @@ public class StripePaymentMethod : ModelBaseWithDeleted
     public string? CardLastFourDigit { get; set; }
 
     public Organization? Organization { get; set; }
-    public ICollection<StripePaymentIntent> StripePaymentIntents { get; set; } = [];
+    public ICollection<OrganizationStripePaymentIntent> OrganizationStripePaymentIntents { get; set; } = [];
 }

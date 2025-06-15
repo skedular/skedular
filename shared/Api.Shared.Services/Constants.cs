@@ -109,12 +109,12 @@ public static class Constants
     public const int MaxStripeCheckoutSessionIdLength = 100;
     public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
 
-    public static Uri EmptyUri = new("about:blank");
-    
     // Floor plan related constants
     public const int MaxFilePathLength = 500;
     public const int MaxShapeNameLength = 50;
-    
+
     // File upload size limits
     public const int MaxFileUploadSize = 52428800; // 50 MB in bytes
+
+    public static Uri EmptyUri = new("about:blank");
 }

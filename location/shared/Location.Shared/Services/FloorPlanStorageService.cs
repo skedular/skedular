@@ -1,6 +1,5 @@
 using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Random;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -10,12 +9,12 @@ namespace Location.Shared.Services;
 public interface IFloorPlanStorageService
 {
     Task<(string imageUrl, string? thumbnailUrl, int width, int height)> SaveFloorPlanAsync(
-        byte[] imageContent, 
-        string fileName, 
+        byte[] imageContent,
+        string fileName,
         string contentType,
         int thumbnailWidth = 200,
         int thumbnailHeight = 200);
-    
+
     Task DeleteFloorPlanAsync(string imageUrl, string? thumbnailUrl);
 }
 
@@ -51,13 +50,9 @@ public class FloorPlanStorageService(
         try
         {
             using var thumbnailStream = new MemoryStream();
-            
+
             using var thumbnailImage = image.Clone(ctx => ctx
-                .Resize(new ResizeOptions
-                {
-                    Size = new Size(thumbnailWidth, thumbnailHeight),
-                    Mode = ResizeMode.Max
-                }));
+                .Resize(new ResizeOptions { Size = new Size(thumbnailWidth, thumbnailHeight), Mode = ResizeMode.Max }));
 
             await thumbnailImage.SaveAsPngAsync(thumbnailStream);
             thumbnailStream.Position = 0;

@@ -16,8 +16,8 @@ public class OrganizationOffering : EntityBaseWithDeleted
     public int UnitPrice { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? StripePaymentIntentId { get; set; }
-    public virtual StripePaymentIntent? StripePaymentIntent { get; set; }
+    public string? OrganizationStripePaymentIntentId { get; set; }
+    public virtual OrganizationStripePaymentIntent? OrganizationStripePaymentIntent { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
@@ -32,9 +32,9 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationOfferings);
         builder
-            .HasOne(item => item.StripePaymentIntent)
+            .HasOne(item => item.OrganizationStripePaymentIntent)
             .WithOne(item => item.OrganizationOffering)
-            .HasForeignKey<OrganizationOffering>(item => item.StripePaymentIntentId);
+            .HasForeignKey<OrganizationOffering>(item => item.OrganizationStripePaymentIntentId);
 
         builder.HasIndex(item => item.Code);
         builder.HasIndex(item => item.Start);

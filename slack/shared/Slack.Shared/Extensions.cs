@@ -159,7 +159,7 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(marketplaceConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(marketplaceConfiguration.GrpcUrl);
-        
+
         var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
         ArgumentNullException.ThrowIfNull(coreConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);

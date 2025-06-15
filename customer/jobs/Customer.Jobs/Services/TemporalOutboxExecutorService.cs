@@ -1,6 +1,6 @@
 using System.Text.Json;
-using Enterprise.Shared.Outbox;
 using Customer.Shared.Workflows;
+using Enterprise.Shared.Outbox;
 using Temporalio.Client;
 using Temporalio.Exceptions;
 

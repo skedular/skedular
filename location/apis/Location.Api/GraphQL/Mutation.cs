@@ -1,20 +1,18 @@
+using System.Text.Json;
 using Api.Shared.Services;
-using Enterprise.Shared.Sanitization;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Security;
+using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
-using Location.Api.Exceptions;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
-using Location.Shared.Database;
-using Location.Shared.Models;
+using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Path = System.IO.Path;
 
 namespace Location.Api.GraphQL;
 
@@ -150,9 +148,9 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        
+
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(input.LocationId, cancellationToken)
-            ?? throw new LocationNotFound();
+                       ?? throw new LocationNotFound();
 
         if (!organizationAuthorizationService.CanModify(location.Organization, customer))
         {
@@ -160,28 +158,28 @@ public class Mutation(IMapper mapper)
         }
 
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository
-            .Query(new Specification<Shared.Database.Entities.FloorPlan>
+            .Query(new Specification<FloorPlan>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     query.LocationId == input.LocationId &&
                                     query.FloorLevel == input.FloorLevel
             })
             .FirstOrDefaultAsync(cancellationToken);
-            
+
         if (existingFloorPlan != null)
         {
             throw new FloorPlanWithSameFloorLevelExists(input.FloorLevel);
         }
 
         var imageData = Convert.FromBase64String(input.ImageBase64);
-        var fileName = $"{Guid.NewGuid()}{System.IO.Path.GetExtension(input.ImageFileName)}";
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(input.ImageFileName)}";
         var contentType = GetContentType(input.ImageFileName);
         var (imagePath, thumbnailPath, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
-            imageData, 
-            fileName, 
+            imageData,
+            fileName,
             contentType);
 
-        var floorPlan = new Shared.Database.Entities.FloorPlan
+        var floorPlan = new FloorPlan
         {
             Id = randomHelper.Generate(),
             LocationId = input.LocationId,
@@ -219,16 +217,12 @@ public class Mutation(IMapper mapper)
             ResourcePositions = []
         };
 
-        return new FloorPlanPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            FloorPlan = mapper.MapTo(floorPlanModel)!
-        };
+        return new FloorPlanPayload { ClientMutationId = input.ClientMutationId, FloorPlan = mapper.MapTo(floorPlanModel)! };
     }
-    
+
     private static string GetContentType(string fileName)
     {
-        var extension = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
         return extension switch
         {
             ".jpg" or ".jpeg" => "image/jpeg",
@@ -253,11 +247,7 @@ public class Mutation(IMapper mapper)
             null, // No image update needed here
             cancellationToken);
 
-        return new FloorPlanPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            FloorPlan = mapper.MapTo(floorPlan)!
-        };
+        return new FloorPlanPayload { ClientMutationId = input.ClientMutationId, FloorPlan = mapper.MapTo(floorPlan)! };
     }
 
     [UseResolverScope]
@@ -268,11 +258,7 @@ public class Mutation(IMapper mapper)
     {
         await floorPlanService.DeleteAsync(input.Id, cancellationToken);
 
-        return new DeleteFloorPlanPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            Success = true
-        };
+        return new DeleteFloorPlanPayload { ClientMutationId = input.ClientMutationId, Success = true };
     }
 
     [UseResolverScope]
@@ -290,7 +276,7 @@ public class Mutation(IMapper mapper)
             {
                 try
                 {
-                    metadata = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(position.Metadata);
+                    metadata = JsonSerializer.Deserialize<Dictionary<string, object>>(position.Metadata);
                 }
                 catch
                 {
@@ -312,11 +298,7 @@ public class Mutation(IMapper mapper)
             resourcePositions.Add(mapper.MapTo(resourcePosition));
         }
 
-        return new UpdateResourcePositionsPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            ResourcePositions = resourcePositions
-        };
+        return new UpdateResourcePositionsPayload { ClientMutationId = input.ClientMutationId, ResourcePositions = resourcePositions };
     }
 
     [UseResolverScope]
@@ -330,7 +312,7 @@ public class Mutation(IMapper mapper)
         {
             try
             {
-                metadata = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(input.Metadata);
+                metadata = JsonSerializer.Deserialize<Dictionary<string, object>>(input.Metadata);
             }
             catch
             {
@@ -349,11 +331,7 @@ public class Mutation(IMapper mapper)
             metadata,
             cancellationToken);
 
-        return new ResourcePositionPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            ResourcePosition = mapper.MapTo(resourcePosition)
-        };
+        return new ResourcePositionPayload { ClientMutationId = input.ClientMutationId, ResourcePosition = mapper.MapTo(resourcePosition) };
     }
 
     [UseResolverScope]
@@ -363,11 +341,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         await floorPlanService.RemoveResourcePositionAsync(input.ResourceId, cancellationToken);
-        
-        return new RemoveResourcePositionPayload
-        {
-            ClientMutationId = input.ClientMutationId,
-            Success = true
-        };
+
+        return new RemoveResourcePositionPayload { ClientMutationId = input.ClientMutationId, Success = true };
     }
 }

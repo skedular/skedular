@@ -12,7 +12,7 @@ using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
-using StripePaymentMethod = Organization.Shared.Database.Entities.StripePaymentMethod;
+using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
@@ -21,7 +21,7 @@ public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
     InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
-    StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
+    OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
     Models.Organization MapTo(Database.Entities.Organization src);
 }
 
@@ -103,7 +103,7 @@ public class Mapper : IMapper
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
 
-    public StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization) =>
+    public OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization) =>
         new()
         {
             SetupIntentId = setupIntentId,

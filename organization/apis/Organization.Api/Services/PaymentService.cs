@@ -74,10 +74,10 @@ public class PaymentService(
             throw new UnauthorizedAccessException();
         }
 
-        organization.StripeCustomer ??= await stripeCustomerService.AddAsync(organization.Id, cancellationToken);
+        organization.OrganizationStripeCustomer ??= await stripeCustomerService.AddAsync(organization.Id, cancellationToken);
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = organization.StripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions { Customer = organization.OrganizationStripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
             new RequestOptions(),
             cancellationToken);
 
@@ -99,13 +99,14 @@ public class PaymentService(
     public async Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken);
-        if (stripePaymentMethod is null)
+        var organizationStripePaymentMethod =
+            await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken);
+        if (organizationStripePaymentMethod is null)
         {
             throw new OrganizationPaymentMethodNotFound();
         }
 
-        var organization = stripePaymentMethod.Organization;
+        var organization = organizationStripePaymentMethod.Organization;
         organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
         if (organization is null)
         {
@@ -119,10 +120,10 @@ public class PaymentService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.StripePaymentMethodRepository.Remove(stripePaymentMethod);
+        repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
         repositoryFactory.OrganizationRepository.Update(organization);
 
-        if (organization.StripePaymentMethods.All(item => item.DeletedAt is not null))
+        if (organization.OrganizationStripePaymentMethods.All(item => item.DeletedAt is not null))
         {
             var now = timeProvider.GetUtcNow();
             var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
@@ -193,13 +194,14 @@ public class PaymentService(
             }
         }
 
-        var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
+        var paymentMethod =
+            await paymentMethodRetrievableService.GetAsync(organizationStripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
         if (paymentMethod is not null)
         {
             await paymentMethodService.DetachAsync(
-                stripePaymentMethod.PaymentMethodId,
+                organizationStripePaymentMethod.PaymentMethodId,
                 new PaymentMethodDetachOptions(),
-                new RequestOptions { IdempotencyKey = $"DetachPaymentMethod-{stripePaymentMethod.Id}" },
+                new RequestOptions { IdempotencyKey = $"DetachPaymentMethod-{organizationStripePaymentMethod.Id}" },
                 cancellationToken);
         }
 

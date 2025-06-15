@@ -38,8 +38,8 @@ public class Organization : EntityBaseWithDeleted
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
-    public virtual StripeCustomer? StripeCustomer { get; set; }
+    public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public virtual OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }
     public virtual OrganizationBillingDetails? BillingDetails { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -65,7 +65,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
-        builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Organization);
+        builder.HasMany(item => item.OrganizationStripePaymentMethods).WithOne(item => item.Organization);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);

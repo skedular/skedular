@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL;
+using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
@@ -33,8 +34,6 @@ using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Update
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
-using StripeCustomer = Organization.Shared.Models.StripeCustomer;
-using StripePaymentMethod = Organization.Shared.Models.StripePaymentMethod;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 
 namespace Organization.Api.Mappers;
@@ -192,8 +191,8 @@ public class Mapper : IMapper
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
         organization.BillingDetails = MapTo(src.BillingDetails, organization);
-        organization.StripePaymentMethods = MapTo(src.StripePaymentMethods, organization).ToList();
-        organization.StripeCustomer = MapTo(src.StripeCustomer, organization);
+        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
 
         return organization;
     }
@@ -359,7 +358,7 @@ public class Mapper : IMapper
                 {
                     Type = src.MemberVisibilityPolicy, Name = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicyName()
                 },
-            PaymentMethods = MapTo(src.StripePaymentMethods),
+            PaymentMethods = MapTo(src.OrganizationStripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
@@ -1427,9 +1426,9 @@ public class Mapper : IMapper
                 Country = src.Country
             };
 
-    private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+    private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);
 
-    private static OrganizationPaymentMethod MapTo(StripePaymentMethod src) =>
+    private static OrganizationPaymentMethod MapTo(OrganizationStripePaymentMethod src) =>
         new()
         {
             Id = src.Id,
@@ -1444,10 +1443,11 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src, Shared.Models.Organization organization) =>
+    private static OrganizationStripeCustomer? MapTo(Shared.Database.Entities.OrganizationStripeCustomer? src,
+        Shared.Models.Organization organization) =>
         src is null
             ? null
-            : new StripeCustomer
+            : new OrganizationStripeCustomer
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
@@ -1457,11 +1457,12 @@ public class Mapper : IMapper
                 Organization = organization
             };
 
-    private static IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src,
+    private static IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src, Shared.Models.Organization organization) =>
+    private static OrganizationStripePaymentMethod MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src,
+        Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,

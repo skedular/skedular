@@ -29,9 +29,9 @@ public interface IRepositoryFactory
     ITermsOfUseRepository TermsOfUseRepository { get; }
     IJoinInvitationRepository JoinInvitationRepository { get; }
     ITagRepository TagRepository { get; }
-    IStripeCustomerRepository StripeCustomerRepository { get; }
-    IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
-    IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    IOrganizationStripeCustomerRepository OrganizationStripeCustomerRepository { get; }
+    IOrganizationStripePaymentIntentRepository OrganizationStripePaymentIntentRepository { get; }
+    IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
 }
 
@@ -61,9 +61,9 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
         TagRepository = new TagRepository(_dbContext, timeProvider);
-        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
-        StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
-        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
+        OrganizationStripeCustomerRepository = new OrganizationOrganizationStripeCustomerRepository(_dbContext, timeProvider);
+        OrganizationStripePaymentIntentRepository = new OrganizationOrganizationStripePaymentIntentRepository(_dbContext, timeProvider);
+        OrganizationStripePaymentMethodRepository = new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
         OrganizationBillingDetailsRepository = new OrganizationOrganizationBillingDetailsRepository(_dbContext, timeProvider);
     }
 
@@ -87,8 +87,8 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public ITermsOfUseRepository TermsOfUseRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }
     public ITagRepository TagRepository { get; }
-    public IStripeCustomerRepository StripeCustomerRepository { get; }
-    public IStripePaymentIntentRepository StripePaymentIntentRepository { get; }
-    public IStripePaymentMethodRepository StripePaymentMethodRepository { get; }
+    public IOrganizationStripeCustomerRepository OrganizationStripeCustomerRepository { get; }
+    public IOrganizationStripePaymentIntentRepository OrganizationStripePaymentIntentRepository { get; }
+    public IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     public IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
 }

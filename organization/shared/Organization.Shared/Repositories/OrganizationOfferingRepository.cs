@@ -21,9 +21,10 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
     public async Task<OrganizationOffering?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationOffering
             .Include(query => query.Organization)
-            .ThenInclude(query => query.StripeCustomer)
+            .ThenInclude(query => query.OrganizationStripeCustomer)
             .Include(query => query.Organization)
-            .ThenInclude(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
+            .ThenInclude(query =>
+                query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue))
             .Include(query => query.OrganizationOfferingActiveMembers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

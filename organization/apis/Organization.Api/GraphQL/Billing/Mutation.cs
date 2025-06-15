@@ -16,10 +16,7 @@ public class Mutation(IMapper mapper)
     {
         var organizationBillingDetails = await organizationBillingService.AddAsync(mapper.MapTo(input), cancellationToken);
 
-        return new OrganizationPayload
-        {
-            ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)!
-        };
+        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)! };
     }
 
     [UseResolverScope]
@@ -30,9 +27,6 @@ public class Mutation(IMapper mapper)
     {
         var organizationBillingDetails = await organizationBillingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
 
-        return new OrganizationPayload
-        {
-            ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)!
-        };
+        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organizationBillingDetails)! };
     }
 }

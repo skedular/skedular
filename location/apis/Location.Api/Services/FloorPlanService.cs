@@ -13,15 +13,15 @@ namespace Location.Api.Services;
 public interface IFloorPlanService
 {
     Task<FloorPlan> AddAsync(
-        string locationId, 
-        string name, 
+        string locationId,
+        string name,
         int floorLevel,
         string? floorName,
         IFormFile imageFile,
         CancellationToken cancellationToken);
 
     Task<FloorPlan> UpdateAsync(
-        string floorPlanId, 
+        string floorPlanId,
         string? name,
         string? floorName,
         bool? isActive,
@@ -33,12 +33,12 @@ public interface IFloorPlanService
     Task<ICollection<FloorPlan>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 
     Task<ResourcePosition> UpdateResourcePositionAsync(
-        string resourceId, 
+        string resourceId,
         string floorPlanId,
         int x,
         int y,
         int width,
-        int height, 
+        int height,
         string? shape,
         Dictionary<string, object>? metadata,
         CancellationToken cancellationToken);

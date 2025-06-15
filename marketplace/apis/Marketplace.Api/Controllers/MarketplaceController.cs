@@ -7,7 +7,7 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Marketplace.V1.Version;
 namespace Marketplace.Api.Controllers;
 
 [ApiController]
-public class MarketplaceController(IVersionService versionService,IWorkaroundService workaroundService) : MarketplaceControllerBase
+public class MarketplaceController(IVersionService versionService, IWorkaroundService workaroundService) : MarketplaceControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {

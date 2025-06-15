@@ -7,7 +7,7 @@ namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class StripeCustomer : EntityBaseWithDeleted
+public class OrganizationStripeCustomer : EntityBaseWithDeleted
 {
     public string StripeCustomerId { get; set; }
 
@@ -17,15 +17,18 @@ public class StripeCustomer : EntityBaseWithDeleted
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class StripeCustomerConfiguration : IEntityTypeConfiguration<StripeCustomer>
+public class OrganizationStripeCustomerConfiguration : IEntityTypeConfiguration<OrganizationStripeCustomer>
 {
-    public void Configure(EntityTypeBuilder<StripeCustomer> builder)
+    public void Configure(EntityTypeBuilder<OrganizationStripeCustomer> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
 
-        builder.HasOne(item => item.Organization).WithOne(item => item.StripeCustomer).HasForeignKey<StripeCustomer>(item => item.OrganizationId);
+        builder
+            .HasOne(item => item.Organization)
+            .WithOne(item => item.OrganizationStripeCustomer)
+            .HasForeignKey<OrganizationStripeCustomer>(item => item.OrganizationId);
 
         builder.HasIndex(item => item.StripeCustomerId);
     }

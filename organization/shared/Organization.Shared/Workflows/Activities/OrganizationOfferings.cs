@@ -43,22 +43,23 @@ public class OrganizationOfferings(
             return;
         }
 
-        if (organizationOffering.Organization.StripeCustomer is null || organizationOffering.Organization.StripeCustomer.IsDeleted())
+        if (organizationOffering.Organization.OrganizationStripeCustomer is null ||
+            organizationOffering.Organization.OrganizationStripeCustomer.IsDeleted())
         {
             throw new OrganizationStripeCustomerRelationshipIsNotSetYet();
         }
 
-        if (organizationOffering.Organization.StripePaymentMethods.Count == 0)
+        if (organizationOffering.Organization.OrganizationStripePaymentMethods.Count == 0)
         {
             throw new OrganizationPaymentMethodNotFound();
         }
 
-        var stripePaymentMethod = organizationOffering.Organization.StripePaymentMethods.First();
+        var organizationStripePaymentMethod = organizationOffering.Organization.OrganizationStripePaymentMethods.First();
         var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
-                Customer = organizationOffering.Organization.StripeCustomer.StripeCustomerId,
-                PaymentMethod = stripePaymentMethod.PaymentMethodId,
+                Customer = organizationOffering.Organization.OrganizationStripeCustomer.StripeCustomerId,
+                PaymentMethod = organizationStripePaymentMethod.PaymentMethodId,
                 Amount = totalCost,
                 // TODO: 20240601 : Morteza: Currency should not be probably hard-coded
                 Currency = "usd",
@@ -68,11 +69,11 @@ public class OrganizationOfferings(
             new RequestOptions { IdempotencyKey = organizationOffering.Id },
             cancellationToken);
 
-        repositoryFactory.StripePaymentIntentRepository.Add(
-            new StripePaymentIntent
+        repositoryFactory.OrganizationStripePaymentIntentRepository.Add(
+            new OrganizationStripePaymentIntent
             {
                 Id = paymentIntent.Id,
-                StripePaymentMethod = stripePaymentMethod,
+                OrganizationStripePaymentMethod = organizationStripePaymentMethod,
                 Amount = paymentIntent.Amount,
                 Currency = paymentIntent.Currency,
                 OrganizationOffering = organizationOffering

@@ -51,8 +51,9 @@ internal static class OrganizationExtensions
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.PhysicalAddress)
             .Include(query => query.BillingDetails)
-            .Include(query => query.StripeCustomer)
-            .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue));
+            .Include(query => query.OrganizationStripeCustomer)
+            .Include(query =>
+                query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
 
         return includeAllOfferings
             ? updatedQuery
@@ -61,8 +62,8 @@ internal static class OrganizationExtensions
                 .ThenInclude(query => query.OrganizationMember)
                 .ThenInclude(query => query.Customer)
                 .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
-                .ThenInclude(query => query.StripePaymentIntent)
-                .ThenInclude(query => query.StripePaymentMethod)
+                .ThenInclude(query => query.OrganizationStripePaymentIntent)
+                .ThenInclude(query => query.OrganizationStripePaymentMethod)
                 .Include(query => query.IndustrySubCategories)
                 .ThenInclude(query => query.IndustryMainCategory)
                 .Include(query => query.Locations)
@@ -77,8 +78,8 @@ internal static class OrganizationExtensions
                 .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                     .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
-                .ThenInclude(query => query.StripePaymentIntent)
-                .ThenInclude(query => query.StripePaymentMethod)
+                .ThenInclude(query => query.OrganizationStripePaymentIntent)
+                .ThenInclude(query => query.OrganizationStripePaymentMethod)
                 .Include(query => query.IndustrySubCategories)
                 .ThenInclude(query => query.IndustryMainCategory)
                 .Include(query => query.Locations)

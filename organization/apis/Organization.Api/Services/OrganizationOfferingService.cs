@@ -45,7 +45,7 @@ public class OrganizationOfferingService(
             throw new UnauthorizedAccessException();
         }
 
-        if (offering.UnitPrice != 0 && organization.StripePaymentMethods.Count == 0)
+        if (offering.UnitPrice != 0 && organization.OrganizationStripePaymentMethods.Count == 0)
         {
             throw new PaymentMethodRequired();
         }
