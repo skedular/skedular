@@ -9,4 +9,5 @@ public static class Constants
     public const int MaxWorkflowExecutionArgsLength = 10240;
     public const string OrganizationSsoCookiePrefix = "skedular-sso";
     public const string OrganizationSsoCookieHeader = "X-SSO-Cookies";
+    public static Uri EmptyUri = new("about:blank");
 }

@@ -1,6 +1,6 @@
 namespace Enterprise.Shared.Cdn;
 
-public class Cloudflare
+public class CloudflareConfiguration
 {
     public const string Key = "Cloudflare";
 

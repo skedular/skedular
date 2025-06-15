@@ -21,7 +21,7 @@ public static class OpenTelemetryExtensions
 {
     public static IServiceCollection ConfigureOpenTelemetry(this IServiceCollection services, IConfiguration configuration, string appName)
     {
-        var openTelemetrySettings = configuration.GetSection(OpenTelemetrySettings.Key).Get<OpenTelemetrySettings>();
+        var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
 
         services
             .AddSingleton<IActivityAccessor, ActivityAccessor>()
@@ -45,17 +45,17 @@ public static class OpenTelemetryExtensions
                         .AddRuntimeInstrumentation()
                         .AddNpgsqlInstrumentation();
 
-                    if (openTelemetrySettings is null)
+                    if (openTelemetryConfiguration is null)
                     {
                         return;
                     }
 
-                    if (openTelemetrySettings.MetricsIngestEnabled)
+                    if (openTelemetryConfiguration.MetricsIngestEnabled)
                     {
                         metrics.AddMeter(MeterProviderNaming.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
                     }
 
-                    if (openTelemetrySettings.ConsoleEnabled)
+                    if (openTelemetryConfiguration.ConsoleEnabled)
                     {
                         metrics.AddConsoleExporter();
                     }
@@ -84,7 +84,7 @@ public static class OpenTelemetryExtensions
                     .AddNpgsql()
                     .AddHotChocolateInstrumentation();
 
-                if (openTelemetrySettings is not null && openTelemetrySettings.EntityFrameworkEnabled)
+                if (openTelemetryConfiguration is not null && openTelemetryConfiguration.EntityFrameworkEnabled)
                 {
                     tracing.AddEntityFrameworkCoreInstrumentation(options =>
                     {
@@ -109,24 +109,24 @@ public static class OpenTelemetryExtensions
                     .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
                     .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
 
-                if (openTelemetrySettings is null)
+                if (openTelemetryConfiguration is null)
                 {
                     return;
                 }
 
-                if (openTelemetrySettings.ConsoleEnabled)
+                if (openTelemetryConfiguration.ConsoleEnabled)
                 {
                     tracing.AddConsoleExporter();
                 }
 
-                if (!string.IsNullOrWhiteSpace(openTelemetrySettings.ZipkinEndpoint))
+                if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.ZipkinEndpoint))
                 {
-                    tracing.AddZipkinExporter(options => options.Endpoint = new Uri(openTelemetrySettings.ZipkinEndpoint));
+                    tracing.AddZipkinExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.ZipkinEndpoint));
                 }
 
-                if (!string.IsNullOrWhiteSpace(openTelemetrySettings.JaegerEndpoint))
+                if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.JaegerEndpoint))
                 {
-                    tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetrySettings.JaegerEndpoint));
+                    tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.JaegerEndpoint));
                 }
             });
 

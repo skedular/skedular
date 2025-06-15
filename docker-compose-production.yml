@@ -146,6 +146,7 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
@@ -263,6 +264,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
@@ -361,6 +363,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
@@ -459,6 +462,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
@@ -496,6 +500,7 @@ services:
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
@@ -615,6 +620,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
@@ -713,6 +719,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
@@ -811,6 +818,7 @@ services:
       OpenTelemetry__MetricsIngestEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
+      Cdn__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod

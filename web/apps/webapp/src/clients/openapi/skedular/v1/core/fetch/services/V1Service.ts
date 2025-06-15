@@ -43,4 +43,25 @@ export class V1Service {
             mediaType: 'multipart/form-data',
         });
     }
+    /**
+     * Serve static file from local CDN
+     * Returns a file stored in the local CDN by filename
+     * @param filename Name of the file to return
+     * @returns binary File successfully returned
+     * @throws ApiError
+     */
+    public getPublicCdnFile(
+        filename: string,
+    ): CancelablePromise<Blob> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/v1/core/cdn/{filename}',
+            path: {
+                'filename': filename,
+            },
+            errors: {
+                404: `File not found`,
+            },
+        });
+    }
 }

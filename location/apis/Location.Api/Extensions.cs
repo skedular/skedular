@@ -1,10 +1,8 @@
-using Api.Shared.Services;
 using Enterprise.Shared.Storage;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Services;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Location.Api;
 
@@ -27,14 +25,7 @@ public static class Extensions
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IFileStorageService, LocalFileStorageService>()
             .AddScoped<IFloorPlanStorageService, FloorPlanStorageService>()
-            .AddScoped<IFloorPlanService, FloorPlanService>()
-            .Configure<FormOptions>(options =>
-            {
-                // Set the limit to 50 MB (maybe a bit too much!)
-                options.MultipartBodyLengthLimit = Constants.MaxFileUploadSize;
-                options.ValueLengthLimit = int.MaxValue;
-                options.MultipartHeadersLengthLimit = int.MaxValue;
-            });
+            .AddScoped<IFloorPlanService, FloorPlanService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

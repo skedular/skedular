@@ -18,6 +18,7 @@ export { $Error } from './schemas/$Error';
 export { $FileUploadResponse } from './schemas/$FileUploadResponse';
 export { $Version } from './schemas/$Version';
 
+export { CdnService } from './services/CdnService';
 export { CoreService } from './services/CoreService';
 export { PublicService } from './services/PublicService';
 export { V1Service } from './services/V1Service';

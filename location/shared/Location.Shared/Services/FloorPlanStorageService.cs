@@ -43,7 +43,7 @@ public class FloorPlanStorageService(
         var uniqueFileName = $"{FloorPlanPrefix}/{uniqueId}{extension}";
 
         using var imageStream = new MemoryStream(imageContent);
-        var (_, imageUrl) = await cdnService.UploadAsync(imageStream, contentType, uniqueFileName, CancellationToken.None);
+        var (_, imageUrl) = await cdnService.UploadAsync(imageStream, contentType, uniqueFileName, extension, CancellationToken.None);
 
         string? thumbnailUrl = null;
 
@@ -58,7 +58,7 @@ public class FloorPlanStorageService(
             thumbnailStream.Position = 0;
 
             var thumbnailFileName = $"{ThumbnailPrefix}/{uniqueId}_thumb.png";
-            var (_, thumbUrl) = await cdnService.UploadAsync(thumbnailStream, "image/png", thumbnailFileName, CancellationToken.None);
+            var (_, thumbUrl) = await cdnService.UploadAsync(thumbnailStream, "image/png", thumbnailFileName, extension, CancellationToken.None);
             thumbnailUrl = thumbUrl.ToString();
 
             logger.LogInformation(

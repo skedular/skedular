@@ -1,6 +1,6 @@
 ﻿namespace Enterprise.Shared.Telemetry.Configurations;
 
-public class OpenTelemetrySettings
+public class OpenTelemetryConfiguration
 {
     public const string Key = "OpenTelemetry";
 

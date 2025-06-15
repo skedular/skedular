@@ -44,6 +44,7 @@ paths:
         - v1
         - core
         - public
+        - cdn
       summary: Upload file with public access
       operationId: uploadPublicAccessFile
       requestBody:
@@ -68,6 +69,38 @@ paths:
 
         default:
           description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/core/cdn/{filename}:
+    get:
+      tags:
+        - v1
+        - core
+        - public
+        - cdn
+      summary: Serve static file from local CDN
+      description: Returns a file stored in the local CDN by filename
+      operationId: getPublicCdnFile
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          description: Name of the file to return
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File successfully returned
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found
           content:
             application/json:
               schema:

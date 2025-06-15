@@ -94,7 +94,6 @@ public static class Constants
     public const int MaxStripeConnectAccountRefreshCodeLength = 50;
 
     public const int MaxStripeSetupIntentIdLength = 100;
-    public const int MaxStripeClientSecretLength = 200;
     public const int MaxStripePaymentMethodIdLength = 100;
     public const int MaxStripeCardBrandLength = 20;
     public const int MaxStripeCardCountryLength = 10;
@@ -103,7 +102,6 @@ public static class Constants
     public const int MaxStripeCardFundingLength = 50;
     public const int MaxStripeCardIssuerLength = 20;
     public const int MaxStripeCardLastFourDigitLength = 10;
-    public const int MaxStripePaymentMethodStatusLength = 50;
     public const int MaxStripeProductIdLength = 100;
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
@@ -112,9 +110,4 @@ public static class Constants
     // Floor plan related constants
     public const int MaxFilePathLength = 500;
     public const int MaxShapeNameLength = 50;
-
-    // File upload size limits
-    public const int MaxFileUploadSize = 52428800; // 50 MB in bytes
-
-    public static Uri EmptyUri = new("about:blank");
 }
