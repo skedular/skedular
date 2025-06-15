@@ -5,5 +5,8 @@
 export type FileUploadResponse = {
     id: string;
     cdnUrl: string;
+    contentType?: string | null;
+    width?: number | null;
+    height?: number | null;
 };
 

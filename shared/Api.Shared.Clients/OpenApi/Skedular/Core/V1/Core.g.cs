@@ -547,6 +547,15 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.V1
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string CdnUrl { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("contentType")]
+        public string? ContentType { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("width")]
+        public int? Width { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("height")]
+        public int? Height { get; set; } = default!;
+
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
         [System.Text.Json.Serialization.JsonExtensionData]

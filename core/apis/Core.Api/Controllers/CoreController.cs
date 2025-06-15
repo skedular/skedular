@@ -22,10 +22,18 @@ public class CoreController(IVersionService versionService, IFileUploaderService
 
     public override async Task<ActionResult<FileUploadResponse>> UploadPublicAccessFile(IFormFile file, CancellationToken cancellationToken = default)
     {
-        var uploadResponse =
-            await fileUploaderService.UploadAsync(file.OpenReadStream(), file.ContentType, Path.GetExtension(file.FileName), cancellationToken);
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream, cancellationToken);
+        var cdnFile = await fileUploaderService.UploadAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), cancellationToken);
 
-        return new FileUploadResponse { Id = uploadResponse.Item1, CdnUrl = uploadResponse.Item2.ToString() };
+        return new FileUploadResponse
+        {
+            Id = cdnFile.Id,
+            CdnUrl = cdnFile.CdnUrl.ToString(),
+            ContentType = cdnFile.ContentType,
+            Width = cdnFile.Width,
+            Height = cdnFile.Height
+        };
     }
 
     public override async Task<IActionResult> GetPublicCdnFile(string filename, CancellationToken cancellationToken = default)

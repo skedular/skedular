@@ -18,6 +18,8 @@ public static class Constants
 
     public const int MaxUrlLength = 2000;
 
+    public const int MaxContentTypeLength = 100;
+
     public const int MaxTimezoneLength = 64;
 
     public const int MaxLocaleLength = 32;

@@ -157,3 +157,14 @@ components:
           type: string
         cdnUrl:
           type: string
+        contentType:
+          type: string
+          nullable: true
+        width:
+          type: integer
+          format: int32
+          nullable: true
+        height:
+          type: integer
+          format: int32
+          nullable: true

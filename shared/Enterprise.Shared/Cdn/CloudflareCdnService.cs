@@ -32,7 +32,7 @@ public class CloudflareCdnService(CloudflareConfiguration cloudflareConfiguratio
             Key = fileName,
             InputStream = stream,
             ContentType = contentType,
-            AutoCloseStream = true,
+            AutoCloseStream = false,
             DisablePayloadSigning = true
         };
 

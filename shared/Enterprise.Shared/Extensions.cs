@@ -6,6 +6,7 @@ using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Image;
 using Enterprise.Shared.Logging;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security;
@@ -155,6 +156,7 @@ public static class Extensions
             .AddHttpContextAccessor()
             .AddMemoryCache()
             .AddSingleton<IVersionService, VersionService<TProgram>>()
+            .AddSingleton<IImageHelper, ImageHelper>()
             .AddSingleton<IContext, Context.Context>()
             .AddSingleton(new System.Random())
             .AddSingleton<IRandomHelper, RandomHelper>()
