@@ -1535,11 +1535,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               <Divider />
             </StackColumn>
 
-            {section === 'floor-plans' && location.floorPlans && (
-              <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FloorPlanList floorPlans={location.floorPlans} locationId={locationId} organizationId={organizationId} resources={resources} onReloadRequired={onReloadRequired} />
-              </Box>
-            )}
+            <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <FloorPlanList floorPlans={location.floorPlans} locationId={locationId} organizationId={organizationId} resources={resources} onReloadRequired={onReloadRequired} />
+            </Box>
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
