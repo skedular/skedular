@@ -17,7 +17,7 @@ type Props = {
   defaultAspectRatio: number;
   previewImageHeight: number;
   previewImageWidth: number;
-  onUploadCompleted: (url: string) => void;
+  onUploadCompleted: (cdnFile: FileUploadResponse) => void;
 };
 
 const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) =>
@@ -128,8 +128,8 @@ const ImageFileUploader = ({ defaultImageUrl, defaultAspectRatio, previewImageHe
       const client = new SkedularCoreV1Client({ BASE: '/api' });
       const response = (await client.core.uploadPublicAccessFile({ file })) as FileUploadResponse;
 
-      setUploadedImageUrl(response.cdnUrl);
-      onUploadCompleted(response.cdnUrl);
+      setUploadedImageUrl(response.original.cdnUrl);
+      onUploadCompleted(response);
 
       toast.update(toastId, {
         ...successNotificationOptions,

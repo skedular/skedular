@@ -1,3 +1,4 @@
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
@@ -430,8 +431,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     router.back();
   };
 
-  const handleFeatureImageUploadCompleted = (url: string) => {
-    setPrimaryFeatureImageUrl(url);
+  const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
+    setPrimaryFeatureImageUrl(response.original.cdnUrl);
   };
 
   if (!rootData.product) {

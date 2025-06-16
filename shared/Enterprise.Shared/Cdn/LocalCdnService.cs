@@ -12,6 +12,7 @@ public class LocalCdnService(CdnConfiguration cdnConfiguration) : ICdnService
         string? extension,
         CancellationToken cancellationToken)
     {
+        stream.Position = 0;
         fileName = string.IsNullOrWhiteSpace(extension) ? fileName : $"{fileName}{extension}";
 
         var fullPath = Path.Combine(cdnConfiguration.LocalCdnPath, fileName);

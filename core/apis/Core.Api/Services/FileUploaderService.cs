@@ -25,10 +25,7 @@ public class FileUploaderService(
         var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var id = randomHelper.Generate();
         var (storageUrl, cdnUrl) = await cdnService.UploadAsync(stream, contentType, id, extension, cancellationToken);
-
-        stream.Position = 0;
         var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
-
         var cdnFile = new Shared.Database.Entities.CdnFile
         {
             Id = id,
@@ -39,6 +36,26 @@ public class FileUploaderService(
             Height = response.IsImage ? response.Height : null,
             UploadedBy = customerEntity
         };
+
+        if (response.IsImage)
+        {
+            var thumbnailResponse = await imageHelper.CreateThumbnailAsync(stream, cancellationToken);
+
+            try
+            {
+                var (thumbnailStorageUrl, thumbnailCdnUrl) =
+                    await cdnService.UploadAsync(thumbnailResponse.ThumbnailStream, contentType, $"{id}_thumbnail", ".png", cancellationToken);
+                cdnFile.ThumbnailStorageUrl = thumbnailStorageUrl.ToString();
+                cdnFile.ThumbnailCdnUrl = thumbnailCdnUrl.ToString();
+                cdnFile.ThumbnailHeight = thumbnailResponse.Height;
+                cdnFile.ThumbnailWidth = thumbnailResponse.Width;
+                cdnFile.ThumbnailContentType = thumbnailResponse.ContentType;
+            }
+            finally
+            {
+                await thumbnailResponse.ThumbnailStream.DisposeAsync();
+            }
+        }
 
         repositoryFactory.CdnFileRepository.Add(cdnFile);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

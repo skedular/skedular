@@ -1,3 +1,4 @@
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -15,6 +16,7 @@ import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
+import FloorPlanList from '@/components/location/floorPlans/floor-plan-list';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -28,7 +30,6 @@ import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
-import FloorPlanList from '@/components/location/floorPlans/floor-plan-list';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -1221,8 +1222,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     });
   };
 
-  const handleFeatureImageUploadCompleted = (url: string) => {
-    setPrimaryFeatureImageUrl(url);
+  const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
+    setPrimaryFeatureImageUrl(response.original.cdnUrl);
   };
 
   if (!rootData.location) {

@@ -1,3 +1,4 @@
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
@@ -259,8 +260,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     });
   };
 
-  const handleFeatureImageUploadCompleted = (url: string) => {
-    setPrimaryFeatureImageUrl(url);
+  const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
+    setPrimaryFeatureImageUrl(response.original.cdnUrl);
   };
 
   return (

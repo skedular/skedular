@@ -13,6 +13,7 @@ public class CloudflareCdnService(CloudflareConfiguration cloudflareConfiguratio
         string? extension,
         CancellationToken cancellationToken)
     {
+        stream.Position = 0;
         var uri = new Uri($"https://{cloudflareConfiguration.AccountId}.r2.cloudflarestorage.com");
         using var client = new AmazonS3Client(
             new BasicAWSCredentials(cloudflareConfiguration.AccessKey, cloudflareConfiguration.SecretKey),

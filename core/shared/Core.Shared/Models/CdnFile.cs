@@ -9,5 +9,10 @@ public class CdnFile : ModelBase
     public string? ContentType { get; set; }
     public int? Width { get; set; }
     public int? Height { get; set; }
+    public Uri? ThumbnailStorageUrl { get; set; }
+    public Uri? ThumbnailCdnUrl { get; set; }
+    public string? ThumbnailContentType { get; set; }
+    public int? ThumbnailWidth { get; set; }
+    public int? ThumbnailHeight { get; set; }
     public Customer UploadedBy { get; set; } = new();
 }

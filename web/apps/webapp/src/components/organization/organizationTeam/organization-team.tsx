@@ -1,3 +1,4 @@
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { CustomerAvatar } from '@/components/avatars';
 import {
   AppBarWithStackColumn,
@@ -841,8 +842,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     },
   ];
 
-  const handleFeatureImageUploadCompleted = (url: string) => {
-    setPrimaryFeatureImageUrl(url);
+  const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
+    setPrimaryFeatureImageUrl(response.original.cdnUrl);
   };
 
   const team = rootData.team;

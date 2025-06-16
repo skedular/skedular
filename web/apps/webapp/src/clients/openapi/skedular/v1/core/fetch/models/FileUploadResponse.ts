@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { cdnFile } from './cdnFile';
 export type FileUploadResponse = {
     id: string;
-    cdnUrl: string;
-    contentType?: string | null;
-    width?: number | null;
-    height?: number | null;
+    original: cdnFile;
+    thumbnail?: cdnFile | null;
 };
 

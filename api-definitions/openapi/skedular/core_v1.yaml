@@ -151,10 +151,22 @@ components:
       type: object
       required:
         - id
-        - cdnUrl
+        - original
       properties:
         id:
           type: string
+        original:
+          $ref: "#/components/schemas/cdnFile"
+        thumbnail:
+          $ref: "#/components/schemas/cdnFile"
+          nullable: true
+
+    cdnFile:
+      type: object
+      required:
+        - id
+        - cdnUrl
+      properties:
         cdnUrl:
           type: string
         contentType:

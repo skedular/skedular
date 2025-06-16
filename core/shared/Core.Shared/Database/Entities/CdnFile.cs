@@ -14,6 +14,11 @@ public class CdnFile : EntityBase
     public string? ContentType { get; set; }
     public int? Width { get; set; }
     public int? Height { get; set; }
+    public string? ThumbnailStorageUrl { get; set; }
+    public string? ThumbnailCdnUrl { get; set; }
+    public string? ThumbnailContentType { get; set; }
+    public int? ThumbnailWidth { get; set; }
+    public int? ThumbnailHeight { get; set; }
 
     public virtual Customer UploadedBy { get; set; }
 }
@@ -28,6 +33,10 @@ public class CdnFileConfiguration : IEntityTypeConfiguration<CdnFile>
         builder.Property(item => item.StorageUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.CdnUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.ContentType).HasMaxLength(Constants.MaxContentTypeLength);
+
+        builder.Property(item => item.ThumbnailStorageUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.ThumbnailCdnUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.ThumbnailContentType).HasMaxLength(Constants.MaxContentTypeLength);
 
         builder.HasOne(item => item.UploadedBy).WithMany(item => item.CdnFiles);
         

@@ -1,4 +1,5 @@
 using Api.Shared.Services.OpenApi.Skedular.Core.V1;
+using Core.Api.Mappers;
 using Core.Api.Services;
 using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Version;
@@ -8,7 +9,8 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Core.V1.Version;
 namespace Core.Api.Controllers;
 
 [ApiController]
-public class CoreController(IVersionService versionService, IFileUploaderService fileUploaderService, ICdnService cdnService) : CoreControllerBase
+public class CoreController(IVersionService versionService, IFileUploaderService fileUploaderService, ICdnService cdnService, IMapper mapper)
+    : CoreControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -24,16 +26,9 @@ public class CoreController(IVersionService versionService, IFileUploaderService
     {
         using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream, cancellationToken);
-        var cdnFile = await fileUploaderService.UploadAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), cancellationToken);
 
-        return new FileUploadResponse
-        {
-            Id = cdnFile.Id,
-            CdnUrl = cdnFile.CdnUrl.ToString(),
-            ContentType = cdnFile.ContentType,
-            Width = cdnFile.Width,
-            Height = cdnFile.Height
-        };
+        return mapper.MapTo(
+            await fileUploaderService.UploadAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), cancellationToken));
     }
 
     public override async Task<IActionResult> GetPublicCdnFile(string filename, CancellationToken cancellationToken = default)

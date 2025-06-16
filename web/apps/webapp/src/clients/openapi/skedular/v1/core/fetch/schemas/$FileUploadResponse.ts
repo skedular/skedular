@@ -8,23 +8,13 @@ export const $FileUploadResponse = {
             type: 'string',
             isRequired: true,
         },
-        cdnUrl: {
-            type: 'string',
+        original: {
+            type: 'cdnFile',
             isRequired: true,
         },
-        contentType: {
-            type: 'string',
+        thumbnail: {
+            type: 'cdnFile',
             isNullable: true,
-        },
-        width: {
-            type: 'number',
-            isNullable: true,
-            format: 'int32',
-        },
-        height: {
-            type: 'number',
-            isNullable: true,
-            format: 'int32',
         },
     },
 } as const;
