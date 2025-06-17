@@ -78,6 +78,12 @@ internal static class TagExtensions
                 OrganizationTagOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
+                OrganizationTagOrderField.Description => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Description)
+                    : query.ThenByDescending(x => x.Description),
+                OrganizationTagOrderField.Type => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Type)
+                    : query.ThenByDescending(x => x.Type),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

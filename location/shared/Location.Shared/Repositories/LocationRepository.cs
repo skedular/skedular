@@ -114,6 +114,12 @@ internal static class LocationExtensions
                 LocationOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
+                LocationOrderField.About => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.About)
+                    : query.ThenByDescending(x => x.About),
+                LocationOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Timezone)
+                    : query.ThenByDescending(x => x.Timezone),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }
