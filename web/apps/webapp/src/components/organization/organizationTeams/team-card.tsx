@@ -83,7 +83,13 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
             }
           }
         }
-        primaryFeatureImageUrl
+        primaryFeatureImage {
+          thumbnail {
+            url
+            height
+            width
+          }
+        }
         hasFutureBooking
         canModify
         canDelete
@@ -291,7 +297,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
-        {teamDetails.primaryFeatureImageUrl && <CardMedia component="img" image={teamDetails.primaryFeatureImageUrl} />}
+        {teamDetails.primaryFeatureImage && teamDetails.primaryFeatureImage.thumbnail && <CardMedia component="img" image={teamDetails.primaryFeatureImage.thumbnail.url} />}
         <CardHeader
           title={
             <StackRow>

@@ -58,7 +58,7 @@ message Team {
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
     Location primaryLocation = 9;
-    string primaryFeatureImageUrl = 10;
+    CdnImageFile primaryFeatureImage = 10;
 }
 
 message Admin_GetInput {
@@ -115,7 +115,7 @@ message AddInput {
     string timezone = 5;
     repeated TeamMember members = 6;
     string primaryLocationId = 7;
-    string primaryFeatureImageUrl = 8;
+    CdnImageFile primaryFeatureImage = 8;
 }
 
 message UpdateInput {
@@ -126,7 +126,7 @@ message UpdateInput {
     string timezone = 5;
     repeated TeamMember members = 6;
     string primaryLocationId = 7;
-    string primaryFeatureImageUrl = 8;
+    CdnImageFile primaryFeatureImage = 8;
 }
 
 message RemoveInput {
@@ -184,4 +184,15 @@ enum OrganizationMemberRole {
     OrganizationMemberRoleOwner = 0;
     OrganizationMemberRoleAdministrator = 1;
     OrganizationMemberRoleMember = 2;
+}
+
+message CdnImageFile {
+    CdnFile original = 1;
+    CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+    string url = 1;
+    int32 height = 2;
+    int32 width = 3;
 }

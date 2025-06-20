@@ -565,9 +565,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Core.V1
     public partial class CdnFile
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("cdnUrl")]
+        [System.Text.Json.Serialization.JsonPropertyName("url")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string CdnUrl { get; set; } = default!;
+        public string Url { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("contentType")]
         public string? ContentType { get; set; } = default!;

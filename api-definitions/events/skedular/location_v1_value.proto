@@ -43,7 +43,7 @@ message Location {
   Address physicalAddress = 10;
   string contactEmail = 11;
   string contactPhone = 12;
-  string primaryFeatureImageUrl = 13;
+  CdnImageFile primaryFeatureImage = 13;
 }
 
 message Resource {
@@ -95,4 +95,15 @@ message Address {
   string province = 6;
   string zipcode = 7;
   string country = 8;
+}
+
+message CdnImageFile {
+  CdnFile original = 1;
+  CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+  string url = 1;
+  int32 height = 2;
+  int32 width = 3;
 }

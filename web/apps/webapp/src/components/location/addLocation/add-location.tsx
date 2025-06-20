@@ -7,7 +7,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -94,7 +95,18 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           timezone
           contactEmail
           contactPhone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
           physicalAddress {
             addressLine1
             addressLine2
@@ -126,7 +138,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
     commitCompleteLocationOnboarding({
@@ -163,6 +175,16 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
   }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitAddLocation({
       variables: {
@@ -175,7 +197,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           timezone,
           contactEmail,
           contactPhone,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -243,7 +265,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             timezone,
             contactEmail,
             contactPhone,
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -261,7 +283,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   return (
@@ -288,20 +310,37 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             validate={validateLocationDetails}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <SectionIconTypography label="Location Setup" />
-                  <BodyIconTypography label="Edit your location name and details" />
+                  <BodyIconTypography label="Add your location name and details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <FormFieldLabel label="Feature image">
-                    <ImageFileUploader
-                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                      previewImageHeight={locationFeatureImageHeight}
-                      previewImageWidth={locationFeatureImageWidth}
-                      onUploadCompleted={handleFeatureImageUploadCompleted}
-                    />
+                    <StackColumn>
+                      {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                        <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                      )}
+                      <ImageFileUploaderWithCropper
+                        defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                        previewImageHeight={locationFeatureImageHeight}
+                        previewImageWidth={locationFeatureImageWidth}
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                      />
+                    </StackColumn>
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Name">
@@ -367,7 +406,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <StackRow>
                     {showDismiss && (
                       <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>

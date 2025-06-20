@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,7 +24,7 @@ public class Product : EntityBaseWithDeleted
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
-    public string? PrimaryFeatureImageUrl { get; set; }
+    public CdnImageFile? PrimaryFeatureImage { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -50,7 +51,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
         builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
-        builder.Property(item => item.PrimaryFeatureImageUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductProductTag);

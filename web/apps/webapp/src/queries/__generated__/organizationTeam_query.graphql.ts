@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eeb70a064337e36c97ae71e174585824>>
+ * @generated SignedSource<<2b5a9f886f7c9ce45bde996b978567df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,18 @@ export type organizationTeam_query$data = {
     readonly about: string | null | undefined;
     readonly id: string;
     readonly name: string;
-    readonly primaryFeatureImageUrl: string | null | undefined;
+    readonly primaryFeatureImage: {
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    } | null | undefined;
     readonly primaryLocation: {
       readonly name: string;
       readonly uniqueId: string;
@@ -39,7 +50,30 @@ var v0 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [
     {
@@ -90,8 +124,32 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "primaryFeatureImageUrl",
+          "concreteType": "CdnImageFile",
+          "kind": "LinkedField",
+          "name": "primaryFeatureImage",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "original",
+              "plural": false,
+              "selections": (v1/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "thumbnail",
+              "plural": false,
+              "selections": (v1/*: any*/),
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -134,6 +192,6 @@ return {
 };
 })();
 
-(node as any).hash = "ef35ebc51f63b4345ab959fcfef468a1";
+(node as any).hash = "8dfc7aa7c082d350e851ece337614dd1";
 
 export default node;

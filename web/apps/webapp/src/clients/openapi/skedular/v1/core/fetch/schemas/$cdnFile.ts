@@ -4,7 +4,7 @@
 /* eslint-disable */
 export const $cdnFile = {
     properties: {
-        cdnUrl: {
+        url: {
             type: 'string',
             isRequired: true,
         },

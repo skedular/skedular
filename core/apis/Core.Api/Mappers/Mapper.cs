@@ -51,13 +51,13 @@ public class Mapper : IMapper
             Id = src.Id,
             Original = new global::Api.Shared.Services.OpenApi.Skedular.Core.V1.CdnFile
             {
-                CdnUrl = src.CdnUrl.ToString(), ContentType = src.ContentType, Width = src.Width, Height = src.Height
+                Url = src.CdnUrl.ToString(), ContentType = src.ContentType, Width = src.Width, Height = src.Height
             },
             Thumbnail = src.ThumbnailCdnUrl is null
                 ? null
                 : new global::Api.Shared.Services.OpenApi.Skedular.Core.V1.CdnFile
                 {
-                    CdnUrl = src.ThumbnailCdnUrl.ToString(),
+                    Url = src.ThumbnailCdnUrl.ToString(),
                     ContentType = src.ThumbnailContentType,
                     Width = src.ThumbnailWidth,
                     Height = src.ThumbnailHeight

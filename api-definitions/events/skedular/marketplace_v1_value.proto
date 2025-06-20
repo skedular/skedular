@@ -54,5 +54,16 @@ message ProductVersion {
   int32 numberOfResourcesToBook = 13;
   repeated string productTagIds = 14;
   repeated string locationTagIds = 15;
-  string primaryFeatureImageUrl = 16;
+  CdnImageFile primaryFeatureImage = 16;
+}
+
+message CdnImageFile {
+  CdnFile original = 1;
+  CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+  string url = 1;
+  int32 height = 2;
+  int32 width = 3;
 }

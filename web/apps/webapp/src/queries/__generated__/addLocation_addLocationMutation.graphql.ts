@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86d4cb37b465b7901c67bea7dfa2eadf>>
+ * @generated SignedSource<<dcad95f4465b44c230b61fea5576c580>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type AddLocationInput = {
   name: string;
   organizationId: string;
   physicalAddress: LocationAddressDetailsInput;
-  primaryFeatureImageUrl?: string | null | undefined;
+  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
 };
 export type LocationAddressDetailsInput = {
@@ -30,6 +30,15 @@ export type LocationAddressDetailsInput = {
   province?: string | null | undefined;
   suburb: string;
   zipcode: string;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type addLocation_addLocationMutation$variables = {
   input: AddLocationInput;
@@ -56,7 +65,18 @@ export type addLocation_addLocationMutation$data = {
         readonly suburb: string;
         readonly zipcode: string;
       };
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -83,7 +103,18 @@ export type addLocation_addLocationMutation$rawResponse = {
         readonly suburb: string;
         readonly zipcode: string;
       };
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -110,6 +141,29 @@ v1 = {
   "storageKey": null
 },
 v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+],
+v3 = [
   {
     "alias": null,
     "args": [
@@ -171,8 +225,32 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "primaryFeatureImageUrl",
+            "concreteType": "CdnImageFile",
+            "kind": "LinkedField",
+            "name": "primaryFeatureImage",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "original",
+                "plural": false,
+                "selections": (v2/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": (v2/*: any*/),
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -274,7 +352,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addLocation_addLocationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -283,19 +361,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addLocation_addLocationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "899c0f9c864925f000cb27dfa4aab04c",
+    "cacheID": "80771aacff7f68575853230adf951feb",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImageUrl\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e2352aa94c4de169698f90a487c84185";
+(node as any).hash = "b8a324af09189ab095fdda4784e69eb9";
 
 export default node;

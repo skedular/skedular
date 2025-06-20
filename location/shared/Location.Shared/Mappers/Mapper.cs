@@ -26,7 +26,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString(),
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
             PhysicalAddress = MapTo(src.PhysicalAddress)
@@ -123,4 +123,10 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString()
             };
+
+    private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
+        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

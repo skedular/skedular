@@ -21,7 +21,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import { Search } from '@/components/search';
 import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -45,6 +45,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -104,7 +105,18 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name
           about
           timezone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
           primaryLocation {
             uniqueId
             name
@@ -156,7 +168,18 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name
           about
           timezone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
           primaryLocation {
             uniqueId
             name
@@ -241,7 +264,25 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const validate = makeValidate(teamSchema);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.team?.primaryFeatureImageUrl);
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
+    rootData.team?.primaryFeatureImage && rootData.team?.primaryFeatureImage.original
+      ? {
+          id: '',
+          original: {
+            url: rootData.team?.primaryFeatureImage.original.url,
+            height: rootData.team?.primaryFeatureImage.original.height,
+            width: rootData.team?.primaryFeatureImage.original.width,
+          },
+          thumbnail: rootData.team?.primaryFeatureImage.thumbnail
+            ? {
+                url: rootData.team?.primaryFeatureImage.thumbnail.url,
+                height: rootData.team?.primaryFeatureImage.thumbnail.height,
+                width: rootData.team?.primaryFeatureImage.thumbnail.width,
+              }
+            : null,
+        }
+      : null,
+  );
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -325,6 +366,16 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     }
 
     const toastId = themedToast(<NotificationContent content={`Updating team '${team.name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitUpdateTeam({
       variables: {
@@ -334,7 +385,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name,
           about,
           timezone,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
           primaryLocationId,
         },
       },
@@ -366,7 +417,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             name,
             about,
             timezone,
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
             primaryLocation: null,
           },
         },
@@ -843,7 +894,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   ];
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   const team = rootData.team;
@@ -866,7 +917,11 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
                     ref={(divElement) => {
                       sectionRefs.current['setup'] = divElement;
                     }}
@@ -886,15 +941,25 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Feature Image">
-                      <ImageFileUploader
-                        defaultImageUrl={primaryFeatureImageUrl}
-                        defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
-                        previewImageHeight={teamFeatureImageHeight}
-                        previewImageWidth={teamFeatureImageWidth}
-                        onUploadCompleted={handleFeatureImageUploadCompleted}
-                      />
+                      <StackColumn>
+                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                        )}
+                        <ImageFileUploaderWithCropper
+                          defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
+                          previewImageHeight={teamFeatureImageHeight}
+                          previewImageWidth={teamFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
@@ -911,7 +976,11 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   </StackColumn>
 
                   <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
                     ref={(divElement) => {
                       sectionRefs.current['location'] = divElement;
                     }}
@@ -921,13 +990,25 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Primary Location">
                       <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1029,7 +1110,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               <Divider />
             </StackColumn>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <StackRow
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+              }}
+            >
               <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveTeamClicked} sx={{ textTransform: 'none' }}>
                 Remove Team
               </Button>

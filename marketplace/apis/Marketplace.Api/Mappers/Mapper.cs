@@ -79,7 +79,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -101,7 +101,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -121,7 +121,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -153,7 +153,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -195,7 +195,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
+        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -223,7 +223,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = organization,
@@ -284,7 +284,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList()
         };
@@ -318,7 +318,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = productVersion.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImageUrl = productVersion.PrimaryFeatureImageUrl;
+        dest.PrimaryFeatureImage = productVersion.PrimaryFeatureImage;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -344,7 +344,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
+        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;

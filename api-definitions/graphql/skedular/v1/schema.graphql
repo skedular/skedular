@@ -170,6 +170,17 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type CdnFile {
+  height: Int
+  url: String!
+  width: Int
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
 type CurrencyDetails {
   name: String!
   type: Currency!
@@ -377,7 +388,7 @@ type LocationDetails {
   openingHours: OpeningHours!
   organization: Location_OrganizationDetails!
   physicalAddress: LocationAddressDetails!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFile
   resources: [ResourceDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
   roomCapacity: Int!
@@ -924,7 +935,7 @@ type ProductDetails {
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFile
   productTags: [Marketplace_OrganizationTagDetails!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -1135,7 +1146,7 @@ type TeamDetails {
   members: [TeamMemberDetails!]!
   name: String!
   organization: Team_OrganizationDetails!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFile
   primaryLocation: Team_LocationDetails
   timezone: String
 }
@@ -1340,7 +1351,7 @@ input AddLocationInput {
   name: String!
   organizationId: String!
   physicalAddress: LocationAddressDetailsInput!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   timezone: String
 }
 
@@ -1426,7 +1437,7 @@ input AddProductInput {
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   productTagIds: [String!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -1464,7 +1475,7 @@ input AddTeamInput {
   name: String!
   organizationId: String!
   organizationMemberIds: [String!]!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   primaryLocationId: String
   timezone: String
 }
@@ -1535,6 +1546,17 @@ input CancelInvitationToJoinTeamInput {
 input CancelOrganizationOfferingInput {
   clientMutationId: String
   id: String!
+}
+
+input CdnFileInput {
+  height: Int
+  url: String!
+  width: Int
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input ChangeOrganizationMemberRoleInput {
@@ -2026,7 +2048,7 @@ input UpdateLocationInput {
   locationTagIds: [String!]!
   name: String!
   physicalAddress: LocationAddressDetailsInput!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   timezone: String
 }
 
@@ -2141,7 +2163,7 @@ input UpdateProductInput {
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   productTagIds: [String!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -2195,7 +2217,7 @@ input UpdateTeamAndTeamMembersInput {
   name: String!
   organizationId: String!
   organizationMemberIds: [String!]!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   primaryLocationId: String
   timezone: String
 }
@@ -2205,7 +2227,7 @@ input UpdateTeamInput {
   clientMutationId: String
   id: String!
   name: String!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   primaryLocationId: String
   timezone: String
 }

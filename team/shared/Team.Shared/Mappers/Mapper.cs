@@ -3,6 +3,8 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Team.Shared.Models;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
 using TeamMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember;
 
@@ -25,7 +27,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString(),
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id
         };
@@ -69,4 +71,10 @@ public class Mapper : IMapper
             InvitedById = src.CreatedBy.Id,
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
+
+    private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
+        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

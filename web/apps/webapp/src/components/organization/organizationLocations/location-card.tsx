@@ -2,7 +2,6 @@ import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
-import MapIcon from '@mui/icons-material/Map';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -16,7 +15,9 @@ import type { locationCard_deleteLocationMutation } from '@/queries/__generated_
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_query$key } from '@/queries/__generated__/locationCard_query.graphql';
 import type { locationCard_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerPreferredLocationMutation.graphql';
+import MapIcon from '@mui/icons-material/Map';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -28,9 +29,8 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
-import Box from '@mui/system/Box';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
@@ -113,7 +113,13 @@ const LocationCard = ({
           zipcode
           country
         }
-        primaryFeatureImageUrl
+        primaryFeatureImage {
+          thumbnail {
+            url
+            height
+            width
+          }
+        }
         hasFutureBooking
         canModify
         canDelete
@@ -332,7 +338,9 @@ const LocationCard = ({
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {locationDetails.primaryFeatureImageUrl && <CardMedia component="img" image={locationDetails.primaryFeatureImageUrl} />}
+        {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
+          <CardMedia component="img" image={locationDetails.primaryFeatureImage.thumbnail.url} />
+        )}
         <CardHeader
           title={
             <StackRow>

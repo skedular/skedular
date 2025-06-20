@@ -38,7 +38,13 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
         organization {
           uniqueId
         }
-        primaryFeatureImageUrl
+        primaryFeatureImage {
+          thumbnail {
+            url
+            height
+            width
+          }
+        }
       }
     `,
     rootDataRelay,
@@ -50,7 +56,9 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {productDetails.primaryFeatureImageUrl && <CardMedia component="img" image={productDetails.primaryFeatureImageUrl} />}
+        {productDetails.primaryFeatureImage && productDetails.primaryFeatureImage.thumbnail && (
+          <CardMedia component="img" image={productDetails.primaryFeatureImage.thumbnail.url} />
+        )}
         <CardHeader
           title={
             <StackRow>

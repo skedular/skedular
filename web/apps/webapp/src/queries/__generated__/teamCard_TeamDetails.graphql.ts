@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d220ec30a42f4dfde3f5ae17265e675e>>
+ * @generated SignedSource<<030424dc0349ea449caf1aaa4f2699e2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,13 @@ export type teamCard_TeamDetails$data = {
   readonly organization: {
     readonly uniqueId: string;
   };
-  readonly primaryFeatureImageUrl: string | null | undefined;
+  readonly primaryFeatureImage: {
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
   readonly " $fragmentType": "teamCard_TeamDetails";
 };
 export type teamCard_TeamDetails$key = {
@@ -148,8 +154,44 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "primaryFeatureImageUrl",
+      "concreteType": "CdnImageFile",
+      "kind": "LinkedField",
+      "name": "primaryFeatureImage",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnFile",
+          "kind": "LinkedField",
+          "name": "thumbnail",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "height",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "width",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -179,6 +221,6 @@ return {
 };
 })();
 
-(node as any).hash = "77ce06a52bf5b6dd3e725a7bd1d42f79";
+(node as any).hash = "cb8bf1c35e4abdf1e2c65f6a22ec7c72";
 
 export default node;

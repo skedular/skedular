@@ -6,7 +6,7 @@ import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCu
 import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -16,6 +16,7 @@ import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -259,7 +260,18 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name
             color
           }
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
       }
     }
@@ -283,7 +295,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<string | null>('1');
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
     onCancel();
@@ -313,6 +325,16 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
     const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitAddProduct({
       variables: {
@@ -334,7 +356,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           productTagIds,
           locationTagIds,
           organizationId,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
         },
       },
       onCompleted: (_, errors) => {
@@ -386,7 +408,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
           },
         },
       },
@@ -394,7 +416,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   return (
@@ -438,20 +460,37 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <SectionIconTypography label="Product Setup" />
                     <BodyIconTypography label="Edit your product name and details" />
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Feature image">
-                      <ImageFileUploader
-                        defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
-                        previewImageHeight={productFeatureImageHeight}
-                        previewImageWidth={productFeatureImageWidth}
-                        onUploadCompleted={handleFeatureImageUploadCompleted}
-                      />
+                      <StackColumn>
+                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                        )}
+                        <ImageFileUploaderWithCropper
+                          defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
+                          previewImageHeight={productFeatureImageHeight}
+                          previewImageWidth={productFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
@@ -494,7 +533,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       <Switches
                         name="bookAllLocationResources"
                         required={requiredFields.bookAllLocationResources}
-                        data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
+                        data={{
+                          label: 'Book all location resources',
+                          value: 'bookAllLocationResources',
+                        }}
                         helperText="If checked, all location resources will be booked for this product."
                       />
                     </FormFieldLabel>
@@ -516,7 +558,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                         <Switches
                           name="requireConsecutiveDays"
                           required={requiredFields.requireConsecutiveDays}
-                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
+                          data={{
+                            label: 'Must book consecutive days',
+                            value: 'requireConsecutiveDays',
+                          }}
                           helperText="If checked, only consecutive days booking allowed for this product."
                         />
                       </FormFieldLabel>
@@ -529,7 +574,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     )}
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />

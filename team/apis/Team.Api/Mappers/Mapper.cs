@@ -3,6 +3,8 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Team.Api.GraphQL;
+using CdnFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnFile;
+using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnImageFile;
 using Customer = Team.Shared.Models.Customer;
 using Identity = Team.Shared.Models.Identity;
 using JoinInvitation = Team.Shared.Models.JoinInvitation;
@@ -76,7 +78,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             Organization = MapTo(src.Organization),
             PrimaryLocation = MapTo(src.PrimaryLocation)
         };
@@ -125,7 +127,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
-        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
+        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.Organization = organization;
         dest.PrimaryLocation = primaryLocation;
         return dest;
@@ -140,7 +142,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
-                PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+                PrimaryFeatureImage = src.PrimaryFeatureImage,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
@@ -184,7 +186,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
@@ -200,7 +202,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
@@ -211,7 +213,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
@@ -266,7 +268,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
             PrimaryLocation =
                 string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
@@ -299,7 +301,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
@@ -312,7 +314,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
@@ -518,4 +520,16 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name
             };
+
+    private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>
+        src is null ? null : new global::Api.Shared.Services.Models.CdnImageFile(MapTo(src.Original), MapTo(src.Thumbnail));
+
+    private static global::Api.Shared.Services.Models.CdnFile? MapTo(CdnFile? src) =>
+        src is null ? null : new global::Api.Shared.Services.Models.CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
+
+    private static CdnImageFile? MapTo(global::Api.Shared.Services.Models.CdnImageFile? src) =>
+        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(global::Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

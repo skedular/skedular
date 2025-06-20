@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66b9eefd0d8749de5ab2c4db221fae9e>>
+ * @generated SignedSource<<9ce3a9fd5edf737479186ec7643956e2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,13 @@ export type locationCard_LocationDetails$data = {
     readonly suburb: string;
     readonly zipcode: string;
   };
-  readonly primaryFeatureImageUrl: string | null | undefined;
+  readonly primaryFeatureImage: {
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
   readonly resources: ReadonlyArray<{
     readonly id: string;
   }>;
@@ -193,8 +199,44 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "primaryFeatureImageUrl",
+      "concreteType": "CdnImageFile",
+      "kind": "LinkedField",
+      "name": "primaryFeatureImage",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnFile",
+          "kind": "LinkedField",
+          "name": "thumbnail",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "height",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "width",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -236,6 +278,6 @@ return {
 };
 })();
 
-(node as any).hash = "cd7d98aa9649d122e9f268a82b7ee30d";
+(node as any).hash = "c2f42885602b8a0b0a3b6676efc027bf";
 
 export default node;

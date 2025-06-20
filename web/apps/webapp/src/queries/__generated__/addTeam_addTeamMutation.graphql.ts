@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a790e682b500124b3b5b31714cd831b4>>
+ * @generated SignedSource<<39ec34e5c913dc842f9cc829770666dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,9 +17,18 @@ export type AddTeamInput = {
   name: string;
   organizationId: string;
   organizationMemberIds: ReadonlyArray<string>;
-  primaryFeatureImageUrl?: string | null | undefined;
+  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type addTeam_addTeamMutation$variables = {
   input: AddTeamInput;
@@ -30,7 +39,18 @@ export type addTeam_addTeamMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -41,7 +61,18 @@ export type addTeam_addTeamMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -61,6 +92,29 @@ var v0 = [
   }
 ],
 v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+],
+v2 = [
   {
     "alias": null,
     "args": [
@@ -114,8 +168,32 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "primaryFeatureImageUrl",
+            "concreteType": "CdnImageFile",
+            "kind": "LinkedField",
+            "name": "primaryFeatureImage",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "original",
+                "plural": false,
+                "selections": (v1/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": (v1/*: any*/),
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -131,7 +209,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addTeam_addTeamMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -140,19 +218,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addTeam_addTeamMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "459b593fd62c48cd92264c7c60e0b20a",
+    "cacheID": "bf7ed9d0160da759b79dfcf742e55ac0",
     "id": null,
     "metadata": {},
     "name": "addTeam_addTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImageUrl\n    }\n  }\n}\n"
+    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "94936ae8eeb201f075a89ca7ed1b5937";
+(node as any).hash = "03d4ad8184797fcddd39a14f965de6b2";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfcca6d12d80d1bbc8fa2aa31a66116a>>
+ * @generated SignedSource<<c6fe3744ab859b2f47eba5104c9ab4a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,13 @@ export type productCard_ProductDetails$data = {
   readonly priceUnit: {
     readonly name: string;
   };
-  readonly primaryFeatureImageUrl: string | null | undefined;
+  readonly primaryFeatureImage: {
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
   readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -138,8 +144,44 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "primaryFeatureImageUrl",
+      "concreteType": "CdnImageFile",
+      "kind": "LinkedField",
+      "name": "primaryFeatureImage",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnFile",
+          "kind": "LinkedField",
+          "name": "thumbnail",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "height",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "width",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -148,6 +190,6 @@ return {
 };
 })();
 
-(node as any).hash = "56f9c50935293155c0ba5ac3e2d7b46c";
+(node as any).hash = "29965db4c6bf8c0e0081af96e4cdbe3c";
 
 export default node;

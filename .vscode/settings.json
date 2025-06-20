@@ -5,5 +5,9 @@
   },
   "git.autorefresh": true,
   "dotnet.defaultSolution": "disable",
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/*.js": true,
+    "**/*.js.map": true
+  }
 }

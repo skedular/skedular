@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc0414032fa41d69c4ff9f22a82a2ae6>>
+ * @generated SignedSource<<84b10edd2aaa123bcfd9378fa329552b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,10 +26,19 @@ export type UpdateProductInput = {
   organizationId: string;
   price: string;
   priceUnit: PriceUnit;
-  primaryFeatureImageUrl?: string | null | undefined;
+  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   productTagIds: ReadonlyArray<string>;
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type editProduct_updateProductMutation$variables = {
   input: UpdateProductInput;
@@ -60,7 +69,18 @@ export type editProduct_updateProductMutation$data = {
         readonly name: string;
         readonly type: PriceUnit;
       };
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -97,7 +117,18 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly name: string;
         readonly type: PriceUnit;
       };
-      readonly primaryFeatureImageUrl: string | null | undefined;
+      readonly primaryFeatureImage: {
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -157,6 +188,29 @@ v3 = [
   }
 ],
 v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "alias": null,
     "args": [
@@ -300,8 +354,32 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "primaryFeatureImageUrl",
+            "concreteType": "CdnImageFile",
+            "kind": "LinkedField",
+            "name": "primaryFeatureImage",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "original",
+                "plural": false,
+                "selections": (v4/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": (v4/*: any*/),
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -317,7 +395,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -326,19 +404,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "d83c6386ba34e8d919cc42e2c41aa3b2",
+    "cacheID": "80a67fa1b078c6fd8c73834d63323d06",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      primaryFeatureImageUrl\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0ad17d99b3a0f626f4f9df83e4dc4e83";
+(node as any).hash = "f2727fcce1655e9fe3b3ddcc9ad498b9";
 
 export default node;

@@ -92,14 +92,14 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: File successfully returned
           content:
             application/octet-stream:
               schema:
                 type: string
                 format: binary
-        '404':
+        "404":
           description: File not found
           content:
             application/json:
@@ -165,9 +165,9 @@ components:
       type: object
       required:
         - id
-        - cdnUrl
+        - url
       properties:
-        cdnUrl:
+        url:
           type: string
         contentType:
           type: string

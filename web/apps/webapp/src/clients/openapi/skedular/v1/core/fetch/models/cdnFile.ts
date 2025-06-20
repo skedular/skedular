@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type cdnFile = {
-    cdnUrl: string;
+    url: string;
     contentType?: string | null;
     width?: number | null;
     height?: number | null;

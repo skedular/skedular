@@ -8,7 +8,7 @@ import { OrganizationMemberSelector } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -20,6 +20,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -82,7 +83,18 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           name
           about
           timezone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
       }
     }
@@ -100,7 +112,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateTeamDetails = makeValidate(teamSchema);
   const requiredTeamDetailsFields = makeRequired(teamSchema);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState<string>('');
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
     commitCompleteTeamOnboarding({
@@ -128,6 +140,16 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
     const id = nanoid();
     const customerIds = !organizationId ? [rootData.me.id] : [];
     const toastId = themedToast(<NotificationContent content={`Adding team '${name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitAddTeam({
       variables: {
@@ -137,7 +159,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           name,
           about,
           timezone,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
           customerIds,
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
@@ -197,7 +219,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             name,
             about,
             timezone,
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
           },
         },
       },
@@ -205,7 +227,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   if (!rootData.me) {
@@ -224,20 +246,37 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             validate={validateTeamDetails}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <SectionIconTypography label="Team Setup" />
-                  <BodyIconTypography label="Edit your team name and details" />
+                  <BodyIconTypography label="Add your team name and details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <FormFieldLabel label="Feature image">
-                    <ImageFileUploader
-                      defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
-                      previewImageHeight={teamFeatureImageHeight}
-                      previewImageWidth={teamFeatureImageWidth}
-                      onUploadCompleted={handleFeatureImageUploadCompleted}
-                    />
+                    <StackColumn>
+                      {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                        <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                      )}
+                      <ImageFileUploaderWithCropper
+                        defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
+                        previewImageHeight={teamFeatureImageHeight}
+                        previewImageWidth={teamFeatureImageWidth}
+                        onUploadCompleted={handleFeatureImageUploadCompleted}
+                      />
+                    </StackColumn>
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Name">
@@ -253,25 +292,49 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <SectionIconTypography label="Location Settings" />
                   <BodyIconTypography label="Assign team to locations" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <FormFieldLabel label="Primary Location">
                     <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <SectionIconTypography label="Team Members" />
                   <BodyIconTypography label="Manage your team members" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <FormFieldLabel label="Organization Users">
                     <OrganizationMemberSelector
                       rootDataRelay={rootData}
@@ -284,7 +347,13 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <StackRow>
                     {showDismiss && (
                       <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>

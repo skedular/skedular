@@ -20,7 +20,7 @@ namespace Location.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -620,9 +620,8 @@ namespace Location.Shared.Database.Migrations
                     b.Property<string>("PhysicalAddressId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("PrimaryFeatureImageUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                    b.Property<CdnImageFile>("PrimaryFeatureImage")
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("Timezone")
                         .HasMaxLength(64)

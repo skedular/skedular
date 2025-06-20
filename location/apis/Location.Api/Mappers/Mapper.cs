@@ -19,6 +19,8 @@ using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
 using AddResourceInput = Location.Api.GraphQL.AddResourceInput;
+using CdnFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnFile;
+using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnImageFile;
 using FloorPlan = Location.Shared.Models.FloorPlan;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -111,7 +113,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
             Tags = MapTo(src.OrganizationTags).ToList()
@@ -162,7 +164,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = organization,
             OrganizationTags = organizationTags
@@ -180,7 +182,7 @@ public class Mapper : IMapper
         dest.Timezone = src.Timezone;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl;
+        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.OpeningHours = src.OpeningHours;
         dest.PhysicalAddress = physicalAddress;
         dest.OrganizationTags = organizationTags;
@@ -198,7 +200,7 @@ public class Mapper : IMapper
                 Timezone = src.Timezone,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
-                PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+                PrimaryFeatureImage = src.PrimaryFeatureImage,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
@@ -372,7 +374,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -392,7 +394,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = src.PrimaryFeatureImage,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -445,7 +447,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -460,7 +462,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString(),
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
             Permissions = new Permissions
@@ -490,7 +492,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -504,7 +506,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl,
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -965,4 +967,16 @@ public class Mapper : IMapper
 
     private static ResourceType MapToGrpcResponse(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), TagType = src.Type.ToNullableOrganizationTagType() };
+
+    private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>
+        src is null ? null : new global::Api.Shared.Services.Models.CdnImageFile(MapTo(src.Original), MapTo(src.Thumbnail));
+
+    private static global::Api.Shared.Services.Models.CdnFile? MapTo(CdnFile? src) =>
+        src is null ? null : new global::Api.Shared.Services.Models.CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
+
+    private static CdnImageFile? MapTo(global::Api.Shared.Services.Models.CdnImageFile? src) =>
+        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(global::Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

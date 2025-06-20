@@ -29,7 +29,7 @@ import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -54,6 +54,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -168,7 +169,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           contactEmail
           contactPhone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
           physicalAddress {
             addressLine1
             addressLine2
@@ -322,7 +334,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           contactEmail
           contactPhone
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
           physicalAddress {
             addressLine1
             addressLine2
@@ -589,8 +612,25 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.location?.primaryFeatureImageUrl);
-
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
+    rootData.location?.primaryFeatureImage && rootData.location?.primaryFeatureImage.original
+      ? {
+          id: '',
+          original: {
+            url: rootData.location?.primaryFeatureImage.original.url,
+            height: rootData.location?.primaryFeatureImage.original.height,
+            width: rootData.location?.primaryFeatureImage.original.width,
+          },
+          thumbnail: rootData.location?.primaryFeatureImage.thumbnail
+            ? {
+                url: rootData.location?.primaryFeatureImage.thumbnail.url,
+                height: rootData.location?.primaryFeatureImage.thumbnail.height,
+                width: rootData.location?.primaryFeatureImage.thumbnail.width,
+              }
+            : null,
+        }
+      : null,
+  );
   const [resourceNameSearchText, setResourceNameSearchText] = useState<string>('');
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
@@ -668,6 +708,16 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     }
 
     const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitUpdateLocation({
       variables: {
@@ -679,7 +729,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone,
           contactEmail,
           contactPhone,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -722,7 +772,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             timezone,
             contactEmail,
             contactPhone,
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -1223,7 +1273,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   if (!rootData.location) {
@@ -1233,7 +1283,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const resourceRows: ResourceRowType[] = resources.map((resource) => ({
     id: resource.id,
     resource,
-    resourceType: { id: resource.resourceType.uniqueId, name: resource.resourceType.name, color: resource.resourceType.color },
+    resourceType: {
+      id: resource.resourceType.uniqueId,
+      name: resource.resourceType.name,
+      color: resource.resourceType.color,
+    },
     customTags: resource.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     zones: resource.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     productTags: resource.productTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
@@ -1386,7 +1440,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
                     ref={(divElement) => {
                       sectionRefs.current['setup'] = divElement;
                     }}
@@ -1406,15 +1464,25 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Feature Image">
-                      <ImageFileUploader
-                        defaultImageUrl={primaryFeatureImageUrl}
-                        defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                        previewImageHeight={locationFeatureImageHeight}
-                        previewImageWidth={locationFeatureImageWidth}
-                        onUploadCompleted={handleFeatureImageUploadCompleted}
-                      />
+                      <StackColumn>
+                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                        )}
+                        <ImageFileUploaderWithCropper
+                          defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                          previewImageHeight={locationFeatureImageHeight}
+                          previewImageWidth={locationFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
@@ -1480,7 +1548,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1535,7 +1609,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               <Divider />
             </StackColumn>
 
-            <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <Box
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+              }}
+            >
               <FloorPlanList floorPlans={location.floorPlans} locationId={locationId} organizationId={organizationId} resources={resources} onReloadRequired={onReloadRequired} />
             </Box>
 
@@ -1632,7 +1712,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               <Divider />
             </StackColumn>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <StackRow
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+              }}
+            >
               <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
                 Remove Location
               </Button>

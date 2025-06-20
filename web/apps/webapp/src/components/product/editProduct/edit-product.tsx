@@ -3,7 +3,7 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
 import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -242,7 +243,18 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           organization {
             uniqueId
           }
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
         openingHoursMinutesStep
         ...multipleChoicesProductTags_query
@@ -288,7 +300,18 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
-          primaryFeatureImageUrl
+          primaryFeatureImage {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
       }
     }
@@ -319,7 +342,25 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   );
   const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
-  const [primaryFeatureImageUrl, setPrimaryFeatureImageUrl] = useState(rootData.product?.primaryFeatureImageUrl);
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
+    rootData.product?.primaryFeatureImage && rootData.product?.primaryFeatureImage.original
+      ? {
+          id: '',
+          original: {
+            url: rootData.product?.primaryFeatureImage.original.url,
+            height: rootData.product?.primaryFeatureImage.original.height,
+            width: rootData.product?.primaryFeatureImage.original.width,
+          },
+          thumbnail: rootData.product?.primaryFeatureImage.thumbnail
+            ? {
+                url: rootData.product?.primaryFeatureImage.thumbnail.url,
+                height: rootData.product?.primaryFeatureImage.thumbnail.height,
+                width: rootData.product?.primaryFeatureImage.thumbnail.width,
+              }
+            : null,
+        }
+      : null,
+  );
 
   const handleProductDetailUpdateClick = ({
     name,
@@ -348,6 +389,16 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
     const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
     const toastId = themedToast(<NotificationContent content={`Updating product '${product.name}'...`} />, infoNotificationOptions);
+    const finalPrimaryFeatureImage = primaryFeatureImage
+      ? {
+          original: primaryFeatureImage.original
+            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
+            : null,
+          thumbnail: primaryFeatureImage.thumbnail
+            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
+            : null,
+        }
+      : null;
 
     commitUpdateProduct({
       variables: {
@@ -369,7 +420,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           productTagIds,
           locationTagIds,
           organizationId: product.organization.uniqueId,
-          primaryFeatureImageUrl,
+          primaryFeatureImage: finalPrimaryFeatureImage,
         },
       },
       onCompleted: (_, errors) => {
@@ -420,7 +471,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            primaryFeatureImageUrl,
+            primaryFeatureImage: finalPrimaryFeatureImage,
           },
         },
       },
@@ -432,7 +483,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImageUrl(response.original.cdnUrl);
+    setPrimaryFeatureImage(response);
   };
 
   if (!rootData.product) {
@@ -480,21 +531,37 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <SectionIconTypography label="Edit Product" />
                     <BodyIconTypography label="Edit your product details" />
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Feature Image">
-                      <ImageFileUploader
-                        defaultImageUrl={primaryFeatureImageUrl}
-                        defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
-                        previewImageHeight={productFeatureImageHeight}
-                        previewImageWidth={productFeatureImageWidth}
-                        onUploadCompleted={handleFeatureImageUploadCompleted}
-                      />
+                      <StackColumn>
+                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                        )}
+                        <ImageFileUploaderWithCropper
+                          defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
+                          previewImageHeight={productFeatureImageHeight}
+                          previewImageWidth={productFeatureImageWidth}
+                          onUploadCompleted={handleFeatureImageUploadCompleted}
+                        />
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Name">
@@ -537,7 +604,10 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                       <Switches
                         name="bookAllLocationResources"
                         required={requiredFields.bookAllLocationResources}
-                        data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
+                        data={{
+                          label: 'Book all location resources',
+                          value: 'bookAllLocationResources',
+                        }}
                         helperText="If checked, all location resources will be booked for this product."
                       />
                     </FormFieldLabel>
@@ -559,7 +629,10 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                         <Switches
                           name="requireConsecutiveDays"
                           required={requiredFields.requireConsecutiveDays}
-                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
+                          data={{
+                            label: 'Must book consecutive days',
+                            value: 'requireConsecutiveDays',
+                          }}
                           helperText="If checked, only consecutive days booking allowed for this product."
                         />
                       </FormFieldLabel>
@@ -572,7 +645,13 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                     )}
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update

@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +13,7 @@ public class Team : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public string? PrimaryFeatureImageUrl { get; set; }
+    public CdnImageFile? PrimaryFeatureImage { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
@@ -31,7 +32,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
-        builder.Property(item => item.PrimaryFeatureImageUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Teams);
         builder.HasOne(item => item.PrimaryLocation).WithMany(item => item.PrimaryLocationForTeams);

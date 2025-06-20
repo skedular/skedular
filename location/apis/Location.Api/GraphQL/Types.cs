@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -22,9 +23,7 @@ public class AddLocationInput
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-
-    [GraphQLName("primaryFeatureImageUrl")]
-    public string? PrimaryFeatureImageUrl { get; set; }
+    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
 }
 
 [GraphQLName("UpdateLocationInput")]
@@ -39,9 +38,7 @@ public class UpdateLocationInput
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-
-    [GraphQLName("primaryFeatureImageUrl")]
-    public string? PrimaryFeatureImageUrl { get; set; }
+    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -97,10 +94,7 @@ public class LocationDetails : Node
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-
-    [GraphQLName("primaryFeatureImageUrl")]
-    public string? PrimaryFeatureImageUrl { get; set; }
-
+    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("floorPlans")] public IEnumerable<FloorPlanDetails> FloorPlans { get; set; } = [];
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

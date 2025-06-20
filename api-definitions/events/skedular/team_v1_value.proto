@@ -42,7 +42,7 @@ message Team {
   string organizationId = 6;
   string timezone = 7;
   string primaryLocationId = 8;
-  string primaryFeatureImageUrl = 9;
+  CdnImageFile primaryFeatureImage = 9;
 }
 
 enum Role {
@@ -76,4 +76,15 @@ message InvitationToJoinTeam {
   string teamId = 3;
   string invitedById = 4;
   string inviteeId = 5;
+}
+
+message CdnImageFile {
+  CdnFile original = 1;
+  CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+  string url = 1;
+  int32 height = 2;
+  int32 width = 3;
 }

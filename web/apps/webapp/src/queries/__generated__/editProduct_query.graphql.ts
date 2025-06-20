@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e81770deae37df9a641ef620aca5989>>
+ * @generated SignedSource<<fe709f91952347302db8360ab255d950>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,7 +41,18 @@ export type editProduct_query$data = {
       readonly name: string;
       readonly type: PriceUnit;
     };
-    readonly primaryFeatureImageUrl: string | null | undefined;
+    readonly primaryFeatureImage: {
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    } | null | undefined;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
@@ -91,6 +102,29 @@ v3 = [
     "args": null,
     "kind": "ScalarField",
     "name": "color",
+    "storageKey": null
+  }
+],
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
     "storageKey": null
   }
 ];
@@ -252,8 +286,32 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "primaryFeatureImageUrl",
+          "concreteType": "CdnImageFile",
+          "kind": "LinkedField",
+          "name": "primaryFeatureImage",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "original",
+              "plural": false,
+              "selections": (v4/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "thumbnail",
+              "plural": false,
+              "selections": (v4/*: any*/),
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -292,6 +350,6 @@ return {
 };
 })();
 
-(node as any).hash = "db3acb7846c1d730673c5232c478be40";
+(node as any).hash = "04b400dc00655074bef49884ded82df6";
 
 export default node;

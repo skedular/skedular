@@ -11,6 +11,17 @@ type CancelInvitationToJoinTeamPayload {
   clientMutationId: String
 }
 
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
 type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
 }
@@ -71,7 +82,7 @@ type TeamDetails {
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFile
   id: ID!
 }
 
@@ -174,7 +185,7 @@ input AddTeamInput {
   timezone: String
   customerIds: [String!]!
   organizationMemberIds: [String!]!
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
 }
 
 input AddTeamMemberInput {
@@ -187,6 +198,17 @@ input AddTeamMemberInput {
 input CancelInvitationToJoinTeamInput {
   clientMutationId: String
   id: String!
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input ChangeTeamMemberRoleInput {
@@ -263,7 +285,7 @@ input UpdateTeamAndTeamMembersInput {
   organizationId: String!
   primaryLocationId: String
   timezone: String
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
   customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
@@ -275,7 +297,7 @@ input UpdateTeamInput {
   about: String
   primaryLocationId: String
   timezone: String
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
 }
 
 input UpdateTeamMembersInput {

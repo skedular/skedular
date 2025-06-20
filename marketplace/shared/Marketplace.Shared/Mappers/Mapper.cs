@@ -1,6 +1,8 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile;
 using Product = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product;
 using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion;
 
@@ -40,7 +42,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImageUrl = src.PrimaryFeatureImageUrl.ToSafeString()
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage)
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
@@ -48,4 +50,10 @@ public class Mapper : IMapper
 
         return productVersion;
     }
+
+    private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
+        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

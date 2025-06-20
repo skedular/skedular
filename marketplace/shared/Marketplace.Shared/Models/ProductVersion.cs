@@ -18,7 +18,7 @@ public class ProductVersion : ModelBase
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
-    public string? PrimaryFeatureImageUrl { get; set; }
+    public CdnImageFile? PrimaryFeatureImage { get; set; }
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];

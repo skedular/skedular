@@ -3,6 +3,17 @@ schema {
   mutation: Mutation
 }
 
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
 type DeleteFloorPlanPayload {
   clientMutationId: String
   success: Boolean!
@@ -80,7 +91,7 @@ type LocationDetails {
   locationTags: [Location_OrganizationTagDetails!]!
   contactEmail: String
   contactPhone: String
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFile
   floorPlans: [FloorPlanDetails!]!
   id: ID!
 }
@@ -277,7 +288,7 @@ input AddLocationInput {
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
 }
 
 input AddResourceInput {
@@ -293,6 +304,17 @@ input AddResourceInput {
   color: String
   capacity: Int!
   organizationResourceTypeId: String!
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input DeactivateResourcesInput {
@@ -398,7 +420,7 @@ input UpdateLocationInput {
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
-  primaryFeatureImageUrl: String
+  primaryFeatureImage: CdnImageFileInput
 }
 
 input UpdateLocationOpeningHoursInput {
