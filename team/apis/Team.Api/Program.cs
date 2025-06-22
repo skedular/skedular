@@ -32,7 +32,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")

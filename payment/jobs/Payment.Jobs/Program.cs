@@ -25,7 +25,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "paymentdb")
             .AddKafkaOutboxBackgroundService<PaymentDbContext>()
             .AddTemporalOutboxBackgroundService<PaymentDbContext>()

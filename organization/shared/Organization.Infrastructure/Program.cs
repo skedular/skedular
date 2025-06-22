@@ -24,7 +24,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
             .AddRepositoryFactory()
             .AddServices()

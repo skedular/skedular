@@ -46,7 +46,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")

@@ -28,7 +28,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<PaymentDbContext>(configuration, environment, "paymentdb")

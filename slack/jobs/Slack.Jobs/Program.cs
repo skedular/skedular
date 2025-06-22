@@ -29,7 +29,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
             .AddTemporalOutboxBackgroundService<SlackDbContext>()

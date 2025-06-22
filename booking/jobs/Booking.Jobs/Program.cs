@@ -27,7 +27,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddKafkaOutboxBackgroundService<BookingDbContext>()
             .AddTemporalOutboxBackgroundService<BookingDbContext>()

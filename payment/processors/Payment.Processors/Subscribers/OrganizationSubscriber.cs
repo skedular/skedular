@@ -3,7 +3,6 @@ using Enterprise.Shared.Kafka.Consume;
 using Payment.Processors.Mappers;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;
-using Payment.Shared.Services;
 using Address = Payment.Shared.Models.Address;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
@@ -15,8 +14,7 @@ namespace Payment.Processors.Subscribers;
 public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    IStripeCustomerService stripeCustomerService)
+    IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)

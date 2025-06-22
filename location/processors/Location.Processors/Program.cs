@@ -30,7 +30,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,

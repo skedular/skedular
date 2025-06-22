@@ -30,7 +30,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddKafkaReliableEventConsumers<
                 MsTeamsInternalSubscriber,

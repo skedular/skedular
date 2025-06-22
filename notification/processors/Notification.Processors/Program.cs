@@ -30,7 +30,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddKafkaReliableEventConsumers<
                 NotificationSubscriber,

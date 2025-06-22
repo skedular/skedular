@@ -34,7 +34,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")

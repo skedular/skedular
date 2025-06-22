@@ -35,7 +35,6 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
