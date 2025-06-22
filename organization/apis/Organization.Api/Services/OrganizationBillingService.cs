@@ -128,11 +128,11 @@ public class OrganizationBillingService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var organizationBillingDetailsEntity =
+        existingOrganizationBillingDetails =
             mapper.MergeToEntity(organizationBillingDetails, existingOrganizationBillingDetails, existingOrganization);
-        repositoryFactory.OrganizationBillingDetailsRepository.Update(organizationBillingDetailsEntity);
+        repositoryFactory.OrganizationBillingDetailsRepository.Update(existingOrganizationBillingDetails);
 
-        existingOrganization.BillingDetails = organizationBillingDetailsEntity;
+        existingOrganization.BillingDetails = existingOrganizationBillingDetails;
 
         var mappedOrganization = mapper.MapTo(existingOrganization);
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);

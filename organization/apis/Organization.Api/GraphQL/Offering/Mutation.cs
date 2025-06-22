@@ -1,0 +1,30 @@
+using Api.Shared.Services.Offering;
+using HotChocolate;
+using HotChocolate.Types;
+using Organization.Api.Services;
+
+namespace Organization.Api.GraphQL.Offering;
+
+[MutationType]
+public class Mutation
+{
+    [UseResolverScope]
+    public async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
+        UpdateOrganizationOfferingInput input,
+        [Service] IOrganizationOfferingService organizationOfferingService,
+        CancellationToken cancellationToken)
+    {
+        await organizationOfferingService.UpdateOfferingAsync(input.Id, input.OfferingCode.ToOfferingCode(), cancellationToken);
+        return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
+    }
+
+    [UseResolverScope]
+    public async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
+        CancelOrganizationOfferingInput input,
+        [Service] IOrganizationOfferingService organizationOfferingService,
+        CancellationToken cancellationToken)
+    {
+        await organizationOfferingService.CancelOfferingAsync(input.Id, cancellationToken);
+        return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
+    }
+}

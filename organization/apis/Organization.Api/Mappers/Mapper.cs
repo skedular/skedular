@@ -5,9 +5,14 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL;
+using Organization.Api.GraphQL.Analytics;
+using Organization.Api.GraphQL.Member;
+using Organization.Api.GraphQL.Offering;
+using Organization.Api.GraphQL.Sso;
+using Organization.Api.GraphQL.Tag;
 using Organization.Shared.Models;
 using Stripe;
-using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
+using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
 using Address = Organization.Shared.Database.Entities.Address;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
@@ -29,7 +34,7 @@ using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
-using UpdateCustomTagInput = Organization.Api.GraphQL.UpdateCustomTagInput;
+using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
@@ -100,8 +105,8 @@ public interface IMapper
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src, Shared.Models.Organization organization);
     Tag MapTo(AddCustomTagInput src);
     Tag MapTo(UpdateCustomTagInput src);
-    Tag MapTo(GraphQL.AddZoneInput src);
-    Tag MapTo(GraphQL.UpdateZoneInput src);
+    Tag MapTo(GraphQL.Tag.AddZoneInput src);
+    Tag MapTo(GraphQL.Tag.UpdateZoneInput src);
     OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 
@@ -125,7 +130,6 @@ public interface IMapper
         Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
 
-    OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src);
     Tag MapTo(AddProductTagInput src);
     Tag MapTo(UpdateProductTagInput src);
     Tag MapTo(AddLocationTagInput src);
@@ -142,8 +146,6 @@ public interface IMapper
     CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src);
     Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src);
     Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src);
-    GraphQL.Billing.OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src);
-
     Shared.Models.OrganizationBillingDetails MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput src);
 
     Shared.Models.OrganizationBillingDetails MapTo(
@@ -398,9 +400,9 @@ public class Mapper : IMapper
         new()
         {
             MemberAttendancePercentage = organizationMemberAttendancePercentages
-                .Select(item => new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage }),
+                .Select(item => new GraphQL.Analytics.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage }),
             DailyBookingsTotals = organizationDailyBookingsTotals
-                .Select(item => new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
+                .Select(item => new GraphQL.Analytics.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
         };
 
     public Shared.Models.Organization MapTo(AddOrganizationInput src)
@@ -600,7 +602,7 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    public Tag MapTo(GraphQL.AddZoneInput src) =>
+    public Tag MapTo(GraphQL.Tag.AddZoneInput src) =>
         new()
         {
             Id = src.Id.ToSafeString(),
@@ -611,7 +613,7 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    public Tag MapTo(GraphQL.UpdateZoneInput src) =>
+    public Tag MapTo(GraphQL.Tag.UpdateZoneInput src) =>
         new()
         {
             Id = src.Id,
@@ -728,19 +730,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src) =>
-        src is null
-            ? null
-            : new OrganizationSsoSetting
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                EntityId = src.EntityId,
-                LoginUrl = src.LoginUrl,
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl
-            };
-
     public Tag MapTo(AddProductTagInput src) =>
         new()
         {
@@ -852,21 +841,6 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            CompanyName = src.CompanyName,
-            Email = src.Email,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country
-        };
-
-    public GraphQL.Billing.OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
             CompanyName = src.CompanyName,
             Email = src.Email,
             AddressLine1 = src.AddressLine1,
@@ -1482,4 +1456,17 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit,
             Organization = organization
         };
+
+    private static OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src) =>
+        src is null
+            ? null
+            : new OrganizationSsoSetting
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                EntityId = src.EntityId,
+                LoginUrl = src.LoginUrl,
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
 }

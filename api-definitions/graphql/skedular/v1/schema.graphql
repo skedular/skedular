@@ -977,6 +977,7 @@ type Query {
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
+  deskResourceType: OrganizationTagType!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlansByLocation(locationId: String!): [FloorPlanDetails!]! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
@@ -1017,6 +1018,8 @@ type Query {
   organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
   organizationVersion: Version!
+  otherResourceType: OrganizationTagType!
+  parkingResourceType: OrganizationTagType!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
   pendingInvitationsCount: Int! @cost(weight: "10")
@@ -1027,6 +1030,7 @@ type Query {
   productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection! @cost(weight: "10")
+  roomResourceType: OrganizationTagType!
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
   ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
@@ -2373,6 +2377,17 @@ enum OrganizationTagOrderField {
   DESCRIPTION
   NAME
   TYPE
+}
+
+enum OrganizationTagType {
+  CUSTOM
+  LOCATION
+  PRODUCT
+  RESOURCE_DESK
+  RESOURCE_OTHERS
+  RESOURCE_PARKING
+  RESOURCE_ROOM
+  ZONE
 }
 
 enum OrganizationType {
