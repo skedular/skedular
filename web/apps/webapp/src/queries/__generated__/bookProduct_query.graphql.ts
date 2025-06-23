@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fff30b73aaf9563873cb5cb93af4f2bd>>
+ * @generated SignedSource<<c04e9e85091229cac39878023d4ba99f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly openingHoursMinutesStep: number;
   readonly product: {
     readonly bookAllLocationResources: boolean;

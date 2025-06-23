@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfbb1ac8e02ee8b474560cc8885ccf76>>
+ * @generated SignedSource<<5480b2d01ab9012e2b3c71191718de9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,7 +43,7 @@ export type organizationLocations_rootQuery$data = {
     readonly preferredLocations: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly organization: {
     readonly canModify: boolean;
   } | null | undefined;

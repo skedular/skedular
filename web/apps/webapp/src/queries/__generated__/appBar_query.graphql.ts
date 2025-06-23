@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<662b7fc32a4c297183c68926ba46bf61>>
+ * @generated SignedSource<<725d0eea808e10632fa5825cd6f5c36d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type appBar_query$data = {
     readonly id: string;
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
-  } | null | undefined;
+  };
   readonly myOrganizations: ReadonlyArray<{
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;

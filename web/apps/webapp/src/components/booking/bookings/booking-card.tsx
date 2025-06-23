@@ -253,10 +253,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
   };
 
   const handleJoinClick = () => {
-    if (!rootData.me) {
-      return;
-    }
-
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5e57b0c7773fd49c3959c24f046e6bb>>
+ * @generated SignedSource<<b337a44011b3b3fadf763edf8c2ecdd0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type logrocket_query$data = {
     readonly id: string;
     readonly middleName: string | null | undefined;
     readonly title: string | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "logrocket_query";
 };
 export type logrocket_query$key = {

@@ -172,7 +172,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     setMobileDrawerOpen(newOpen);
   };
 
-  if (!rootData.me || !rootData.myOrganizations) {
+  if (!rootData.myOrganizations) {
     return <></>;
   }
 

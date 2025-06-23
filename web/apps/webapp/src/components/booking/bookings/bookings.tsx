@@ -351,10 +351,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
   };
 
   const handleJoinClick = (bookingId: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const bookingDetails = bookings.find((item) => item.id === bookingId);
     if (!bookingDetails) {
       return;

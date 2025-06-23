@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84eb8e4f3c16e0d34951e4ee3a65c7e0>>
+ * @generated SignedSource<<adf5f83f535c6030f33264b40495e9e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationUserLeftSideNavigationMenuContent_query$data = {
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationUserLeftSideNavigationMenuContent_query";
 };
 export type organizationUserLeftSideNavigationMenuContent_query$key = {

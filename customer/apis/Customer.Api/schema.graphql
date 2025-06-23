@@ -159,7 +159,7 @@ type PageInfo {
 
 type Query {
   customerVersion: Version!
-  me: CustomerDetails @cost(weight: "10")
+  me: CustomerDetails! @cost(weight: "10")
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection! @cost(weight: "10")
 }

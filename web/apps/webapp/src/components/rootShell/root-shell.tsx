@@ -163,7 +163,7 @@ const RootShell = ({
     );
   }
 
-  if (!rootData.me || !areCustomerRecordsSync()) {
+  if (!areCustomerRecordsSync()) {
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 

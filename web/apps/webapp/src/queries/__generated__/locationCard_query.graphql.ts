@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<01f2266d451c181f0698a2deda945d58>>
+ * @generated SignedSource<<25da9e09cd37a6d83f96f5c542cc80e3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type locationCard_query$data = {
     readonly preferredLocations: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "locationCard_query";
 };
 export type locationCard_query$key = {

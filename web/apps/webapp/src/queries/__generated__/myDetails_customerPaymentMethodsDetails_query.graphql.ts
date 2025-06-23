@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd2c981b81e208bd8b3c72ec7b26ed72>>
+ * @generated SignedSource<<4f155678bd189ade2c7a7f5983322ca6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type myDetails_customerPaymentMethodsDetails_query$data = {
       readonly cardLastFourDigit: string | null | undefined;
       readonly id: string;
     }>;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "myDetails_customerPaymentMethodsDetails_query";
 };
 export type myDetails_customerPaymentMethodsDetails_query$key = {

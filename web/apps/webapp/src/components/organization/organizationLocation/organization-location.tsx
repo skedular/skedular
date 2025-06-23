@@ -1078,10 +1078,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   };
 
   const handleSetAsPreferredResourceClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const resourceDetails = resources.find((item) => item.id === id);
     if (!resourceDetails) {
       return;
@@ -1123,18 +1119,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   };
 
   const handleRemoveAsPreferredResourceClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const resourceDetails = resources.find((item) => item.id === id);
     if (!resourceDetails) {
       return;
     }
-    if (!rootData.me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Removing resource '${resourceDetails.name}' as your preferred resource...`} />, infoNotificationOptions);
 
     commitRemoveCustomerPreferredResource({

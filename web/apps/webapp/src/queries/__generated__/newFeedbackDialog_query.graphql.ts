@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3031eafadff6f9b3cfa38fab925f2b9>>
+ * @generated SignedSource<<12a2166dbad8ea4d224a9ebc1fd516d6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type newFeedbackDialog_query$data = {
     readonly givenName: string | null | undefined;
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "newFeedbackDialog_query";
 };
 export type newFeedbackDialog_query$key = {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<500cab3de46e9b87d85ff2e5d331cf3f>>
+ * @generated SignedSource<<f0cba7b4e0dd5f50ef2a0b6c548d6769>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type organizationAdmin_query$data = {
     readonly preferredZones: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{
     readonly subCategories: ReadonlyArray<{
       readonly id: string;

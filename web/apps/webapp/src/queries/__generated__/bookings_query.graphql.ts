@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<332551c546a5ba367d757eb168047c6a>>
+ * @generated SignedSource<<c44576854dce5d1db6f2ec40f7008af0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type bookings_query$data = {
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
     readonly photoUrl: string | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
   readonly " $fragmentType": "bookings_query";
 };

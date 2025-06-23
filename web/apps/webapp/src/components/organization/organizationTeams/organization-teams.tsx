@@ -276,10 +276,6 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   };
 
   const handleSetAsPreferredTeamClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const teamDetails = teams.find((item) => item.id === id);
     if (!teamDetails) {
       return;
@@ -321,10 +317,6 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   };
 
   const handleRemoveAsPreferredTeamClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const teamDetails = teams.find((item) => item.id === id);
     if (!teamDetails) {
       return;

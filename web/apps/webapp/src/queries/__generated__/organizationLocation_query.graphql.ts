@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78f75eac227b8bf59eeb93bb4a7b664f>>
+ * @generated SignedSource<<64ac6b47ce025d803242be3bdd4d12ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -121,7 +121,7 @@ export type organizationLocation_query$data = {
     readonly preferredResources: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly openingHoursMinutesStep: number;
   readonly organization: {
     readonly type: {

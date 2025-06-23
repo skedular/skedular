@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d49e4d4af69e2f93322ad80027227406>>
+ * @generated SignedSource<<6fafd63898b61bce2ba72fb1e5d36bfc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type addTeam_rootQuery$variables = {
 export type addTeam_rootQuery$data = {
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly organization?: {
     readonly id: string;
     readonly name: string;

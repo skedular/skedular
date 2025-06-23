@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ec6548af6c2cc48d492aa1ffbca4eb6>>
+ * @generated SignedSource<<b41dbb5abdc6cb68e86250969c457a9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type newBookingDialog_query$data = {
   };
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
   readonly " $fragmentType": "newBookingDialog_query";

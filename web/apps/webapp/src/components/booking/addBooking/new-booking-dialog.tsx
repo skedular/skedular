@@ -435,10 +435,6 @@ const NewBookingDialog = ({
   }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
 
   const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, type }: BookingDetails) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const id = nanoid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -578,10 +574,6 @@ const NewBookingDialog = ({
   };
 
   const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardDebounceTimeout);
-
-  if (!rootData.me) {
-    return <></>;
-  }
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>

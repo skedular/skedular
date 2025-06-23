@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2e4f6f4e31b8f2012bfdf3b8ce24156>>
+ * @generated SignedSource<<c0128b698c3195bb88363071adf24402>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type rootShell_rootQuery$data = {
   readonly marketplaceCustomerRecordSynced: boolean;
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly msTeamsCustomerRecordSynced: boolean;
   readonly myOrganizations: ReadonlyArray<{
     readonly id: string;

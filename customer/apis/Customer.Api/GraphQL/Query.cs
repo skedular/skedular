@@ -23,7 +23,7 @@ public class Query(IMapper mapper, IVersionService versionService)
     }
 
     [UseResolverScope]
-    public async Task<CustomerDetails?> MeAsync([Service] ICustomerService customerService, CancellationToken cancellationToken) =>
+    public async Task<CustomerDetails> MeAsync([Service] ICustomerService customerService, CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]

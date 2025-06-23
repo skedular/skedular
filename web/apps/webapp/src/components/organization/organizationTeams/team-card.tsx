@@ -219,10 +219,6 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   };
 
   const handleSetAsPreferredTeamClicked = () => {
-    if (!rootData.me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitAddCustomerPreferredTeam({
@@ -257,10 +253,6 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   };
 
   const handleRemoveAsPreferredTeamClicked = () => {
-    if (!rootData.me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitRemoveCustomerPreferredTeam({

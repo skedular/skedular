@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<479ab619d8b5a5ee4fd78353aa294e0d>>
+ * @generated SignedSource<<8dd9a6b4607c4b16697ea2820f077e3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,7 @@ export type organizationTeams_rootQuery$data = {
     readonly preferredTeams: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "organizationTeams_teams_query" | "teamCard_query">;
 };
 export type organizationTeams_rootQuery = {

@@ -431,10 +431,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   };
 
   const handleAddClick = ({ date, quantity, resources: resourceIds, type }: BookingDetails) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const id = nanoid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;

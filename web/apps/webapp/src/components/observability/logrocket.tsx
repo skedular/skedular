@@ -25,10 +25,6 @@ const LogRocketComponent = ({ rootDataRelay }: Props) => {
   );
 
   useEffect(() => {
-    if (!rootData.me) {
-      return;
-    }
-
     LogRocket.identify(rootData.me?.id, {
       email: rootData.me?.email ?? '',
       title: rootData.me?.title ?? '',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5750d782a0cf9c55c306b0cf2a051fa>>
+ * @generated SignedSource<<f6c0139b822b82b6d5bdaf0851579497>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type teamCard_query$data = {
     readonly preferredTeams: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "teamCard_query";
 };
 export type teamCard_query$key = {

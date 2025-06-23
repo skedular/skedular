@@ -257,10 +257,6 @@ const LocationCard = ({
   };
 
   const handleSetAsPreferredLocationClicked = () => {
-    if (!rootData.me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitAddCustomerPreferredLocation({
@@ -295,10 +291,6 @@ const LocationCard = ({
   };
 
   const handleRemoveAsPreferredLocationClicked = () => {
-    if (!rootData.me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitRemoveCustomerPreferredLocation({

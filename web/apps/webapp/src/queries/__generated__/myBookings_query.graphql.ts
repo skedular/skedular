@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12132794620a6760522f232c570f055a>>
+ * @generated SignedSource<<afe3c900177fd5a57ae6896351a67caf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type myBookings_query$data = {
   readonly me: {
     readonly id: string;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "myBookings_query";
 };
 export type myBookings_query$key = {

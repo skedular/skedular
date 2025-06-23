@@ -993,7 +993,7 @@ type Query {
   marketplaceBookingTypes: [BookingTypeDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   marketplaceVersion: Version!
-  me: CustomerDetails @cost(weight: "10")
+  me: CustomerDetails! @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f82c46e9113b348117b5748a6c93eb20>>
+ * @generated SignedSource<<a9f4a5feec5dbb4ff6e1d9b1f9fda91a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,7 @@ export type myDetails_rootQuery$data = {
     readonly photoUrl: string | null | undefined;
     readonly timezone: string | null | undefined;
     readonly title: string | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"myDetails_customerPaymentMethodsDetails_query">;
 };
 export type myDetails_rootQuery = {

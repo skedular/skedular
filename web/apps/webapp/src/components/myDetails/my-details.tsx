@@ -309,10 +309,6 @@ const MyDetails = ({ queryReference }: Props) => {
   };
 
   const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: CustomerBillingDetails) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const billingDetails = rootData.me.billingDetails;
     if (billingDetails) {
       const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);

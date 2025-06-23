@@ -133,10 +133,6 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   };
 
   const handleTeamAddClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const id = nanoid();
     const customerIds = !organizationId ? [rootData.me.id] : [];
     const toastId = themedToast(<NotificationContent content={`Adding team '${name}'...`} />, infoNotificationOptions);
@@ -229,10 +225,6 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
     setPrimaryFeatureImage(response);
   };
-
-  if (!rootData.me) {
-    return <></>;
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>

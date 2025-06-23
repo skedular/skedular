@@ -1341,16 +1341,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   };
 
   const handleSetAsPreferredZoneClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const organizationTagDetails = zones.find((item) => item.id === id);
     if (!organizationTagDetails) {
-      return;
-    }
-
-    if (!rootData.me) {
       return;
     }
 
@@ -1390,16 +1382,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   };
 
   const handleRemoveAsPreferredZoneClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const organizationTagDetails = zones.find((item) => item.id === id);
     if (!organizationTagDetails) {
-      return;
-    }
-
-    if (!rootData.me) {
       return;
     }
 
@@ -1439,16 +1423,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   };
 
   const handleSetAsPreferredCustomTagClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const organizationTagDetails = customTags.find((item) => item.id === id);
     if (!organizationTagDetails) {
-      return;
-    }
-
-    if (!rootData.me) {
       return;
     }
 
@@ -1488,16 +1464,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   };
 
   const handleRemoveAsPreferredCustomTagClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const organizationTagDetails = customTags.find((item) => item.id === id);
     if (!organizationTagDetails) {
-      return;
-    }
-
-    if (!rootData.me) {
       return;
     }
 

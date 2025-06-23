@@ -342,10 +342,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   };
 
   const handleSetAsPreferredLocationClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const locationDetails = locations.find((item) => item.id === id);
     if (!locationDetails) {
       return;
@@ -387,10 +383,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   };
 
   const handleRemoveAsPreferredLocationClicked = (id: string) => {
-    if (!rootData.me) {
-      return;
-    }
-
     const locationDetails = locations.find((item) => item.id === id);
     if (!locationDetails) {
       return;
