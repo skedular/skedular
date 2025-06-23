@@ -1,0 +1,52 @@
+using Enterprise.Shared;
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
+using HotChocolate;
+using HotChocolate.Types;
+using Location.Api.Mappers;
+using Location.Api.Services;
+using Location.Shared.Models;
+
+namespace Location.Api.GraphQL.FloorPlan;
+
+[QueryType]
+public class Query(IMapper mapper)
+{
+    [UseResolverScope]
+    public async Task<FloorPlanDetails?> FloorPlanAsync(
+        string id,
+        [Service] IFloorPlanService floorPlanService,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    public async Task<FloorPlanConnection> FloorPlansAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        FloorPlanWhereInput where,
+        IEnumerable<FloorPlanOrderInput>? orderBy,
+        [Service] IFloorPlanService floorPlanService,
+        CancellationToken cancellationToken)
+    {
+        var (paginatedInfo, edges, totalCount) = await floorPlanService.GetPaginatedFloorPlansAsync(
+            new PaginationInputParam(after, first, before, last),
+            new FloorPlanSearchCriteria(where.LocationId),
+            orderBy.ToSafeCollection().Select(item => new FloorPlanOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
+
+        return new FloorPlanConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo),
+            TotalCount = totalCount
+        };
+    }
+}

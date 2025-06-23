@@ -1,11 +1,11 @@
 import { BodyIconTypography } from '@/components/commons';
-import { EditIcon, OpeningHoursIcon, ResourceIcon, FloorPlanIcon } from '@/components/icons';
+import { EditIcon, FloorPlanIcon, OpeningHoursIcon, ResourceIcon } from '@/components/icons';
 import {
+  getOrganizationLocationFloorPlansBaseLink,
   getOrganizationLocationManageLocationBaseLink,
   getOrganizationLocationManageResourcesBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
-  getOrganizationLocationFloorPlansBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
@@ -129,7 +129,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Floor Plans"
+                label="Manage Floor Plans"
                 startElement={!hideIcons && <FloorPlanIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === floorPlansLink && paletteMode === 'dark'}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64ac6b47ce025d803242be3bdd4d12ec>>
+ * @generated SignedSource<<1d31fc9c1fae91aa9f5e7d7160e328f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,30 +16,6 @@ export type organizationLocation_query$data = {
     readonly about: string | null | undefined;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
-    readonly floorPlans: ReadonlyArray<{
-      readonly floorLevel: number;
-      readonly floorName: string | null | undefined;
-      readonly height: number;
-      readonly id: string;
-      readonly imagePath: string;
-      readonly isActive: boolean;
-      readonly name: string;
-      readonly resourcePositions: ReadonlyArray<{
-        readonly height: number;
-        readonly id: string;
-        readonly metadata: string | null | undefined;
-        readonly resource: {
-          readonly id: string;
-          readonly name: string;
-        };
-        readonly shape: string | null | undefined;
-        readonly width: number;
-        readonly x: number;
-        readonly y: number;
-      }>;
-      readonly thumbnailPath: string | null | undefined;
-      readonly width: number;
-    }>;
     readonly id: string;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -158,21 +134,7 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
-  "storageKey": null
-},
-v5 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -180,10 +142,22 @@ v5 = [
     "name": "url",
     "storageKey": null
   },
-  (v3/*: any*/),
-  (v4/*: any*/)
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
 ],
-v6 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -346,7 +320,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v5/*: any*/),
+              "selections": (v3/*: any*/),
               "storageKey": null
             },
             {
@@ -356,7 +330,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v5/*: any*/),
+              "selections": (v3/*: any*/),
               "storageKey": null
             }
           ],
@@ -465,7 +439,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -475,7 +449,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -485,7 +459,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -495,7 +469,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -505,7 +479,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -515,7 +489,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -525,112 +499,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "FloorPlanDetails",
-          "kind": "LinkedField",
-          "name": "floorPlans",
-          "plural": true,
-          "selections": [
-            (v0/*: any*/),
-            (v2/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "floorLevel",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "floorName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "imagePath",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "thumbnailPath",
-              "storageKey": null
-            },
-            (v4/*: any*/),
-            (v3/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "isActive",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourcePosition",
-              "kind": "LinkedField",
-              "name": "resourcePositions",
-              "plural": true,
-              "selections": [
-                (v0/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "x",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "y",
-                  "storageKey": null
-                },
-                (v4/*: any*/),
-                (v3/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "shape",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "metadata",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "ResourceDetails",
-                  "kind": "LinkedField",
-                  "name": "resource",
-                  "plural": false,
-                  "selections": [
-                    (v0/*: any*/),
-                    (v2/*: any*/)
-                  ],
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -675,6 +544,6 @@ return {
 };
 })();
 
-(node as any).hash = "bb929112b20e8579f21f40419acaad71";
+(node as any).hash = "1d365c4bb1fa87c1df2ee5fa7125627f";
 
 export default node;

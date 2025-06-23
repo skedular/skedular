@@ -12,11 +12,12 @@ import {
   StackRow,
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
+import { FloorPlanCard } from '@/components/floorPlan';
+import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
-import FloorPlanList from '@/components/location/floorPlans/floor-plan-list';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -39,6 +40,8 @@ import type { organizationLocation_addCustomerPreferredResourceMutation } from '
 import type { organizationLocation_deactivateResourcesMutation } from '@/queries/__generated__/organizationLocation_deactivateResourcesMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_deleteResourcesMutation } from '@/queries/__generated__/organizationLocation_deleteResourcesMutation.graphql';
+import type { organizationLocation_floorPlans_query$key } from '@/queries/__generated__/organizationLocation_floorPlans_query.graphql';
+import type { organizationLocation_floorPlans_refetchableFragment } from '@/queries/__generated__/organizationLocation_floorPlans_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
 import type { organizationLocation_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_resources_query$key } from '@/queries/__generated__/organizationLocation_resources_query.graphql';
@@ -66,6 +69,7 @@ import OrganizationLocationLeftSideNavigationMenuContent from './organization-lo
 type Props = {
   rootDataRelay: organizationLocation_query$key;
   rootDataResourcesRelay: organizationLocation_resources_query$key;
+  rootDataFloorPlansRelay: organizationLocation_floorPlans_query$key;
   onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
@@ -147,7 +151,7 @@ type ResourceRowType = {
   capacity: number;
 };
 
-const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadRequired, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataFloorPlansRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
@@ -241,30 +245,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               }
             }
           }
-          floorPlans {
-            id
-            name
-            floorLevel
-            floorName
-            imagePath
-            thumbnailPath
-            width
-            height
-            isActive
-            resourcePositions {
-              id
-              x
-              y
-              width
-              height
-              shape
-              metadata
-              resource {
-                id
-                name
-              }
-            }
-          }
         }
         openingHoursMinutesStep
         ...multipleChoicesLocationTags_query
@@ -285,6 +265,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }
+          orderBy: $resourcesSortingValues
         ) @connection(key: "organizationLocation_resources") {
           __id
           totalCount
@@ -322,6 +303,27 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       }
     `,
     rootDataResourcesRelay,
+  );
+
+  const [rootDataFloorPlans, refetchFloorPlans] = useRefetchableFragment<organizationLocation_floorPlans_refetchableFragment, organizationLocation_floorPlans_query$key>(
+    graphql`
+      fragment organizationLocation_floorPlans_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationLocation_floorPlans_refetchableFragment") {
+        floorPlans(first: $count, after: $cursor, where: { locationId: $locationId }, orderBy: $floorPlansSortingValues) @connection(key: "organizationLocation_floorPlans") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+              ...floorPlanCard_FloorPlanDetails
+            }
+          }
+        }
+      }
+    `,
+    rootDataFloorPlansRelay,
   );
 
   const [commitUpdateLocation] = useMutation<organizationLocation_updateLocationMutation>(graphql`
@@ -650,6 +652,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
   const resourcesConnectionIds = useMemo(() => [rootDataResources.resources.__id], [rootDataResources.resources]);
   const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [selectedResourceId, resources]);
+
+  const floorPlans = useMemo(() => rootDataFloorPlans.floorPlans.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataFloorPlans.floorPlans]);
+  const floorPlansConnectionIds = useMemo(() => [rootDataFloorPlans.floorPlans.__id], [rootDataFloorPlans.floorPlans]);
 
   useEffect(() => {
     if (!section || section === 'setup') {
@@ -1123,6 +1128,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     if (!resourceDetails) {
       return;
     }
+
     const toastId = themedToast(<NotificationContent content={`Removing resource '${resourceDetails.name}' as your preferred resource...`} />, infoNotificationOptions);
 
     commitRemoveCustomerPreferredResource({
@@ -1590,22 +1596,24 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             >
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
-                  <SectionIconTypography label="Floor Plans" />
-                  <BodyIconTypography label="Manage floor plans and position resources" />
+                  <SectionIconTypography label="Manage Floor Plans" />
+                  <BodyIconTypography label="Manage your location floor plans details" />
+                </Grid>
+
+                <Grid>
+                  <NewFloorplanButton organizationId={organizationId} locationId={locationId} />
                 </Grid>
               </GridContainer>
               <Divider />
-            </StackColumn>
 
-            <Box
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-              }}
-            >
-              <FloorPlanList floorPlans={location.floorPlans} locationId={locationId} organizationId={organizationId} resources={resources} onReloadRequired={onReloadRequired} />
-            </Box>
+              <GridContainer>
+                {floorPlans.map((floorPlan) => (
+                  <Grid key={floorPlan.id}>
+                    <FloorPlanCard floorPlanDetailsRelay={floorPlan} connectionIds={floorPlansConnectionIds} organizationId={organizationId} locationId={locationId} />
+                  </Grid>
+                ))}
+              </GridContainer>
+            </StackColumn>
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

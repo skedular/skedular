@@ -35,8 +35,8 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const [id, setId] = useState<string>(allId);
   const allItems = useMemo(() => (rootData.customTags?.edges ? rootData.customTags.edges.map(({ node }) => node) : []), [rootData.customTags]);
+  const [id, setId] = useState<string>(allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;

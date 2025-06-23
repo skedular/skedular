@@ -103,3 +103,12 @@ export const getOrganizationStripeConnectAccountBaseLink = (integratedPlatrform:
   `${getOrganizationBaseLink(integratedPlatrform, id)}/stripe-connect-accounts/${stripeConnectAccountId}`;
 export const getOrganizationStripeConnectAccountAddLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/stripe-connect-accounts/add`;
+
+export const getOrganizationLocationFloorPlanAddLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans/add`;
+
+export const getOrganizationLocationFloorPlanAdminEditLink = (integratedPlatrform: string | undefined, id: string, locationId: string, floorPlanId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans/admin/${floorPlanId}`;
+
+export const getOrganizationLocationFloorPlansLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans`;

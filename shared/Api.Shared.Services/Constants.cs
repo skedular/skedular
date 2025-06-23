@@ -109,7 +109,5 @@ public static class Constants
     public const int MaxStripeCheckoutSessionIdLength = 100;
     public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
 
-    // Floor plan related constants
-    public const int MaxFilePathLength = 500;
-    public const int MaxShapeNameLength = 50;
+    public const int MaxFloorPlanNameLength = 100;
 }

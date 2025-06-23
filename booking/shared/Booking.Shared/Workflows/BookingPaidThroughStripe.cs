@@ -8,7 +8,5 @@ public record BookingPaidThroughStripeInput(string BookingId);
 public class BookingPaidThroughStripe
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(BookingPaidThroughStripeInput args)
-    {
-    }
+    public Task ExecuteAsync(BookingPaidThroughStripeInput args) => Task.CompletedTask;
 }

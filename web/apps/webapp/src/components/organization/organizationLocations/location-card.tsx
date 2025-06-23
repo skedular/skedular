@@ -1,8 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
-import { EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
+import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationFloorPlansLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
@@ -15,7 +15,6 @@ import type { locationCard_deleteLocationMutation } from '@/queries/__generated_
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_query$key } from '@/queries/__generated__/locationCard_query.graphql';
 import type { locationCard_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerPreferredLocationMutation.graphql';
-import MapIcon from '@mui/icons-material/Map';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -217,8 +216,7 @@ const LocationCard = ({
   };
 
   const handleViewFloorPlanClick = () => {
-    // Navigate to organization page with floor plan view query params
-    router.push(`${getOrganizationBookingsBaseLink(integratedPlatrform, organizationId)}?locationId=${locationDetails.id}&showFloorPlan=true`);
+    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationId, locationDetails.id));
   };
 
   const handleConfirmRemovingLocationClick = () => {
@@ -341,7 +339,7 @@ const LocationCard = ({
               </Link>
               <PushToRight />
               <Tooltip title="View floor plan and book resources">
-                <Button variant="outlined" size="small" startIcon={<MapIcon />} onClick={handleViewFloorPlanClick} sx={{ textTransform: 'none', mr: 1 }}>
+                <Button variant="outlined" size="small" startIcon={<FloorPlanIcon />} onClick={handleViewFloorPlanClick} sx={{ textTransform: 'none', mr: 1 }}>
                   Floor Plan
                 </Button>
               </Tooltip>

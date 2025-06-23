@@ -44,7 +44,7 @@
     "@vercel/otel": "^1.13.0",
     "@vercel/speed-insights": "^1.2.0",
     "@vis.gl/react-google-maps": "^1.5.3",
-    "@workos-inc/authkit-nextjs": "^2.3.3",
+    "@workos-inc/authkit-nextjs": "2.3.3",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "cookies-next": "^6.0.0",
     "countries-list": "^3.1.1",

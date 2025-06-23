@@ -14,27 +14,28 @@ type CdnImageFile {
   thumbnail: CdnFile
 }
 
-type DeleteFloorPlanPayload {
-  clientMutationId: String
-  success: Boolean!
-}
-
 type DesksOccupancyPercentage {
   date: DateTime!
   percentage: Float!
 }
 
+type FloorPlanConnection {
+  pageInfo: PageInfo!
+  edges: [FloorPlanEdge!]!
+  totalCount: Int
+}
+
 type FloorPlanDetails {
   name: String!
-  floorLevel: Int!
-  floorName: String
-  imagePath: String!
-  thumbnailPath: String
-  width: Int!
-  height: Int!
-  isActive: Boolean!
-  resourcePositions: [ResourcePosition!]!
+  image: CdnImageFile!
+  resourcePositions: [ResourcePositionDetails!]!
+  resourceCount: Int!
   id: ID!
+}
+
+type FloorPlanEdge {
+  node: FloorPlanDetails!
+  cursor: String!
 }
 
 type FloorPlanPayload {
@@ -92,7 +93,6 @@ type LocationDetails {
   contactEmail: String
   contactPhone: String
   primaryFeatureImage: CdnImageFile
-  floorPlans: [FloorPlanDetails!]!
   id: ID!
 }
 
@@ -120,23 +120,21 @@ type Location_OrganizationTagDetails {
 }
 
 type Mutation {
+  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
+  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
+  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
+  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload! @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
+  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResources(input: DeleteResourcesInput!): ResourcesPayload @cost(weight: "10")
   activateResources(input: ActivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload @cost(weight: "10")
-  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload @cost(weight: "10")
   updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload @cost(weight: "10")
-  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
-  deleteFloorPlan(input: DeleteFloorPlanInput!): DeleteFloorPlanPayload! @cost(weight: "10")
-  updateResourcePositions(input: UpdateResourcePositionsInput!): UpdateResourcePositionsPayload! @cost(weight: "10")
-  updateResourcePosition(input: UpdateResourcePositionInput!): ResourcePositionPayload! @cost(weight: "10")
-  removeResourcePosition(input: RemoveResourcePositionInput!): RemoveResourcePositionPayload! @cost(weight: "10")
 }
 
 type OpeningHours {
@@ -160,22 +158,17 @@ type PageInfo {
 }
 
 type Query {
-  locationVersion: Version!
-  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
+  floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): FloorPlanConnection! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ResourceConnection! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
-  floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlansByLocation(locationId: String!): [FloorPlanDetails!]! @cost(weight: "10")
-}
-
-type RemoveResourcePositionPayload {
-  clientMutationId: String
-  success: Boolean!
 }
 
 type ResourceConnection {
@@ -209,20 +202,11 @@ type ResourcePayload {
   resource: ResourceDetails!
 }
 
-type ResourcePosition {
+type ResourcePositionDetails {
   id: ID!
   x: Int!
   y: Int!
-  width: Int!
-  height: Int!
-  shape: String
-  metadata: String
   resource: ResourceDetails!
-}
-
-type ResourcePositionPayload {
-  clientMutationId: String
-  resourcePosition: ResourcePosition!
 }
 
 type ResourcesPayload {
@@ -233,11 +217,6 @@ type ResourcesPayload {
 type RoomsOccupancyPercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type UpdateResourcePositionsPayload {
-  clientMutationId: String
-  resourcePositions: [ResourcePosition!]!
 }
 
 type VariedDateOpeningHours {
@@ -269,12 +248,11 @@ input ActivateResourcesInput {
 
 input AddFloorPlanInput {
   clientMutationId: String
+  id: String
   locationId: String!
   name: String!
-  floorLevel: Int!
-  floorName: String
-  imageBase64: String!
-  imageFileName: String!
+  image: CdnImageFileInput!
+  resourcePositions: [ResourcePositionInput!]
 }
 
 input AddLocationInput {
@@ -342,6 +320,15 @@ input DeleteResourcesInput {
   ids: [String!]!
 }
 
+input FloorPlanOrderInput {
+  direction: OrderDirection!
+  field: FloorPlanOrderField!
+}
+
+input FloorPlanWhereInput {
+  locationId: String!
+}
+
 input LocationAddressDetailsInput {
   addressLine1: String!
   addressLine2: String
@@ -372,25 +359,15 @@ input OpeningHoursDetailsInput {
   until: String
 }
 
-input RemoveResourcePositionInput {
-  clientMutationId: String
-  resourceId: String!
-}
-
 input ResourceOrderInput {
   direction: OrderDirection!
   field: ResourceOrderField!
 }
 
 input ResourcePositionInput {
-  id: String
   resourceId: String!
   x: Int!
   y: Int!
-  width: Int!
-  height: Int!
-  shape: String
-  metadata: String
 }
 
 input ResourceWhereInput {
@@ -399,15 +376,15 @@ input ResourceWhereInput {
   customTagIds: [String!]
   zoneIds: [String!]
   productTagIds: [String!]
+  floorPlanId: String
 }
 
 input UpdateFloorPlanInput {
   clientMutationId: String
   id: String!
   name: String!
-  floorLevel: Int!
-  floorName: String
-  isActive: Boolean!
+  image: CdnImageFileInput!
+  resourcePositions: [ResourcePositionInput!]
 }
 
 input UpdateLocationInput {
@@ -450,22 +427,10 @@ input UpdateResourceInput {
   organizationResourceTypeId: String!
 }
 
-input UpdateResourcePositionInput {
-  clientMutationId: String
-  resourceId: String!
-  floorPlanId: String!
-  x: Int!
-  y: Int!
-  width: Int!
-  height: Int!
-  shape: String
-  metadata: String
-}
-
 input UpdateResourcePositionsInput {
   clientMutationId: String
   floorPlanId: String!
-  positions: [ResourcePositionInput!]!
+  resourcePositions: [ResourcePositionInput!]!
 }
 
 input WeekOpeningHoursInput {
@@ -476,6 +441,10 @@ input WeekOpeningHoursInput {
   friday: OpeningHoursDetailsInput!
   saturday: OpeningHoursDetailsInput!
   sunday: OpeningHoursDetailsInput!
+}
+
+enum FloorPlanOrderField {
+  NAME
 }
 
 enum LocationOrderField {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f954aaaff4adb7c007e82e138ac0e50>>
+ * @generated SignedSource<<05ee8f19d2c22be605becad3efb4e495>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,12 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
+export type ResourceOrderField = "NAME" | "%future added value";
+export type ResourceOrderInput = {
+  direction: OrderDirection;
+  field: ResourceOrderField;
+};
 export type organizationLocation_resources_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
@@ -17,6 +23,7 @@ export type organizationLocation_resources_refetchableFragment$variables = {
   resourceCustomTagIds?: ReadonlyArray<string> | null | undefined;
   resourceNameSearchText?: string | null | undefined;
   resourceZoneIds?: ReadonlyArray<string> | null | undefined;
+  resourcesSortingValues?: ReadonlyArray<ResourceOrderInput> | null | undefined;
 };
 export type organizationLocation_resources_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationLocation_resources_query">;
@@ -57,6 +64,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "resourceZoneIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "resourcesSortingValues"
   }
 ],
 v1 = [
@@ -69,6 +81,11 @@ v1 = [
     "kind": "Variable",
     "name": "first",
     "variableName": "count"
+  },
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "resourcesSortingValues"
   },
   {
     "fields": [
@@ -320,7 +337,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "where"
+          "where",
+          "orderBy"
         ],
         "handle": "connection",
         "key": "organizationLocation_resources",
@@ -330,16 +348,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "01e5d4d9030ece3163a84260490f2a25",
+    "cacheID": "8658ee7dbb96c99ff67d9ed3fbed1546",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_resources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n  $resourceCustomTagIds: [String!]\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n) {\n  ...organizationLocation_resources_query_1G22uz\n}\n\nfragment organizationLocation_resources_query_1G22uz on Query {\n  resources(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        capacity\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        productTags {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n  $resourceCustomTagIds: [String!]\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...organizationLocation_resources_query_1G22uz\n}\n\nfragment organizationLocation_resources_query_1G22uz on Query {\n  resources(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}, orderBy: $resourcesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        capacity\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        productTags {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8ba48ee9e271dd94833b86f8cddb04de";
+(node as any).hash = "b675ef443b61f487faccf6e6ce0fffd4";
 
 export default node;

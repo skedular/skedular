@@ -36,8 +36,8 @@ const TeamSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
     rootDataRelay,
   );
 
-  const [id, setId] = useState<string>(defaultValue ?? allId);
   const allItems = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
+  const [id, setId] = useState<string>(defaultValue ?? allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;

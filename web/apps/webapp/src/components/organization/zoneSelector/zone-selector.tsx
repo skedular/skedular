@@ -35,8 +35,8 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const [id, setId] = useState<string>(allId);
   const allItems = useMemo(() => (rootData.zones?.edges ? rootData.zones.edges.map(({ node }) => node) : []), [rootData.zones]);
+  const [id, setId] = useState<string>(allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;

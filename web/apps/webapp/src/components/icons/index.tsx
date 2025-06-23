@@ -1,3 +1,6 @@
+import type { SxProps, Theme } from '@mui/system';
+import TooltipIcon from './tooltip-icon';
+
 import AddCircle from '@mui/icons-material/AddCircle';
 import Business from '@mui/icons-material/Business';
 import Category from '@mui/icons-material/Category';
@@ -18,9 +21,6 @@ import Settings from '@mui/icons-material/Settings';
 import Sms from '@mui/icons-material/Sms';
 import WbIridescent from '@mui/icons-material/WbIridescent';
 
-import type { SxProps, Theme } from '@mui/system';
-import TooltipIcon from './tooltip-icon';
-
 export { default as StripeConnectAccountIcon } from '@mui/icons-material/AccountBalanceWallet';
 export { default as AddIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
 export { default as AnalyticsIcon } from '@mui/icons-material/Analytics';
@@ -37,25 +37,29 @@ export { default as DangerIcon } from '@mui/icons-material/Dangerous';
 export { default as DarkModeIcon } from '@mui/icons-material/DarkMode';
 export { default as DashboardIcon } from '@mui/icons-material/Dashboard';
 export { default as DeleteIcon } from '@mui/icons-material/Delete';
+export { default as DeskIcon } from '@mui/icons-material/Desk';
 export { default as TickIcon } from '@mui/icons-material/Done';
 export { default as EditIcon } from '@mui/icons-material/Edit';
 export { default as ErrorIcon } from '@mui/icons-material/Error';
 export { default as FeedIcon } from '@mui/icons-material/Feed';
 export { default as FeedbackIcon } from '@mui/icons-material/Feedback';
 export { default as GridViewIcon } from '@mui/icons-material/GridView';
-export { default as FloorPlanIcon } from '@mui/icons-material/Map';
 export { default as InstallIcon } from '@mui/icons-material/InstallDesktop';
 export { default as ArrowDownIcon } from '@mui/icons-material/KeyboardArrowDown';
 export { default as ArrowLeftIcon } from '@mui/icons-material/KeyboardArrowLeft';
 export { default as ArrowRightIcon } from '@mui/icons-material/KeyboardArrowRight';
 export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
+export { default as ParkingIcon } from '@mui/icons-material/LocalParking';
 export { default as ClosedAllDayIcon } from '@mui/icons-material/Lock';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
+export { default as FloorPlanIcon } from '@mui/icons-material/Map';
+export { default as RoomIcon } from '@mui/icons-material/MeetingRoom';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as HamburgerMenuIcon } from '@mui/icons-material/MenuRounded';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
 export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
+export { default as OtherResourceIcon } from '@mui/icons-material/NotListedLocation';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon, default as ProfileIcon } from '@mui/icons-material/Person';

@@ -54,6 +54,8 @@ export enum MoreActionsMenuOptionType {
   DeactivateProduct,
   EditOrganizationStripeConnectAccount,
   DeleteOrganizationStripeConnectAccount,
+  EditFloorPlan,
+  DeleteFloorPlan,
 }
 
 export type MoreActionsMenuItemType = {
@@ -70,7 +72,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   },
   [MoreActionsMenuOptionType.DeleteBooking]: {
     id: MoreActionsMenuOptionType.DeleteBooking,
-    label: 'Delete',
+    label: 'Remove Booking',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.EditTeam]: {
@@ -263,6 +265,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount]: {
     id: MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount,
     label: 'Remove Stripe Connect Account',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditFloorPlan]: {
+    id: MoreActionsMenuOptionType.EditFloorPlan,
+    label: 'Edit Floor Plan',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteFloorPlan]: {
+    id: MoreActionsMenuOptionType.DeleteFloorPlan,
+    label: 'Remove Floor Plan',
     icon: <DeleteIcon color="warning" />,
   },
 };

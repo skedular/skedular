@@ -40,10 +40,9 @@ type StripeConnectAccountDetails = {
   name: string;
 };
 
-const stripeConnectAccountSchema = () =>
-  object({
-    name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
-  });
+const stripeConnectAccountSchema = object({
+  name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
+});
 
 const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<editStripeConnectAccount_query$key>(
@@ -82,8 +81,8 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema());
-  const requiredFields = makeRequired(stripeConnectAccountSchema());
+  const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema);
+  const requiredFields = makeRequired(stripeConnectAccountSchema);
   const [name, setName] = useState(rootData.organizationStripeConnectAccount?.name);
 
   const handleStripeConnectAccountDetailUpdateClick = ({ name }: StripeConnectAccountDetails) => {

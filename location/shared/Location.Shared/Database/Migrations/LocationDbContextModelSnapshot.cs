@@ -455,27 +455,9 @@ namespace Location.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("FloorLevel")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("FloorName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Height")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ImagePath")
+                    b.Property<CdnImageFile>("Image")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("LocationId")
                         .IsRequired()
@@ -486,12 +468,8 @@ namespace Location.Shared.Database.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("ThumbnailPath")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -499,28 +477,17 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<int>("Width")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("FloorLevel");
-
-                    b.HasIndex("IsActive");
-
                     b.HasIndex("LocationId");
 
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("LocationId", "FloorLevel")
-                        .IsUnique()
-                        .HasFilter("\"DeletedAt\" IS NULL");
 
                     b.ToTable("FloorPlan");
                 });
@@ -983,18 +950,9 @@ namespace Location.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("FloorPlanId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Height")
-                        .HasColumnType("integer");
-
-                    b.Property<Dictionary<string, object>>("Metadata")
-                        .HasColumnType("jsonb");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1003,18 +961,11 @@ namespace Location.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Shape")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("integer");
 
                     b.Property<int>("X")
                         .HasColumnType("integer");
@@ -1025,8 +976,6 @@ namespace Location.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
 
                     b.HasIndex("FloorPlanId");
 

@@ -39,7 +39,7 @@ public class CdnFileConfiguration : IEntityTypeConfiguration<CdnFile>
         builder.Property(item => item.ThumbnailContentType).HasMaxLength(Constants.MaxContentTypeLength);
 
         builder.HasOne(item => item.UploadedBy).WithMany(item => item.CdnFiles);
-        
+
         builder.HasIndex(item => item.ContentType);
     }
 }

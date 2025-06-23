@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,14 +10,8 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class FloorPlan : EntityBaseWithDeleted
 {
-    public string Name { get; set; } = string.Empty;
-    public int FloorLevel { get; set; }
-    public string? FloorName { get; set; }
-    public string ImagePath { get; set; } = string.Empty;
-    public string? ThumbnailPath { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public bool IsActive { get; set; } = true;
+    public string Name { get; set; }
+    public CdnImageFile Image { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string LocationId { get; set; }
@@ -32,23 +27,13 @@ public class FloorPlanConfiguration : IEntityTypeConfiguration<FloorPlan>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceNameLength);
-        builder.Property(item => item.FloorLevel).HasDefaultValue(0);
-        builder.Property(item => item.FloorName).HasMaxLength(Constants.MaxResourceNameLength);
-        builder.Property(item => item.ImagePath).HasMaxLength(Constants.MaxFilePathLength);
-        builder.Property(item => item.ThumbnailPath).HasMaxLength(Constants.MaxFilePathLength);
-        builder.Property(item => item.IsActive).HasDefaultValue(true);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxFloorPlanNameLength);
+        builder.Property(item => item.Image).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Location)
             .WithMany(item => item.FloorPlans)
             .HasForeignKey(item => item.LocationId);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.LocationId);
-        builder.HasIndex(item => item.FloorLevel);
-        builder.HasIndex(item => item.IsActive);
-        builder.HasIndex(item => new { item.LocationId, item.FloorLevel })
-            .IsUnique()
-            .HasFilter("\"DeletedAt\" IS NULL");
     }
 }

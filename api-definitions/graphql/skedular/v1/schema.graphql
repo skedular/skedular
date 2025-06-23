@@ -301,27 +301,28 @@ type Customer_OrganizationTagDetails {
   uniqueId: ID!
 }
 
-type DeleteFloorPlanPayload {
-  clientMutationId: String
-  success: Boolean!
-}
-
 type DesksOccupancyPercentage {
   date: DateTime!
   percentage: Float!
 }
 
+type FloorPlanConnection {
+  edges: [FloorPlanEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
 type FloorPlanDetails {
-  floorLevel: Int!
-  floorName: String
-  height: Int!
   id: ID!
-  imagePath: String!
-  isActive: Boolean!
+  image: CdnImageFile!
   name: String!
-  resourcePositions: [ResourcePosition!]!
-  thumbnailPath: String
-  width: Int!
+  resourceCount: Int!
+  resourcePositions: [ResourcePositionDetails!]!
+}
+
+type FloorPlanEdge {
+  cursor: String!
+  node: FloorPlanDetails!
 }
 
 type FloorPlanPayload {
@@ -380,7 +381,6 @@ type LocationDetails {
   contactPhone: String
   customTags: [Location_OrganizationTagDetails!]!
   deskCapacity: Int!
-  floorPlans: [FloorPlanDetails!]!
   hasFutureBooking: Boolean!
   id: ID!
   locationTags: [Location_OrganizationTagDetails!]!
@@ -476,7 +476,7 @@ type Mutation {
   deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload @cost(weight: "10")
-  deleteFloorPlan(input: DeleteFloorPlanInput!): DeleteFloorPlanPayload! @cost(weight: "10")
+  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
@@ -503,7 +503,6 @@ type Mutation {
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
-  removeResourcePosition(input: RemoveResourcePositionInput!): RemoveResourcePositionPayload! @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
@@ -527,8 +526,7 @@ type Mutation {
   updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
-  updateResourcePosition(input: UpdateResourcePositionInput!): ResourcePositionPayload! @cost(weight: "10")
-  updateResourcePositions(input: UpdateResourcePositionsInput!): UpdateResourcePositionsPayload! @cost(weight: "10")
+  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload! @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
   updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
@@ -979,7 +977,7 @@ type Query {
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlansByLocation(locationId: String!): [FloorPlanDetails!]! @cost(weight: "10")
+  floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): FloorPlanConnection! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
@@ -1061,11 +1059,6 @@ type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
-type RemoveResourcePositionPayload {
-  clientMutationId: String
-  success: Boolean!
-}
-
 type ResourceConnection {
   edges: [ResourceEdge!]!
   pageInfo: PageInfo!
@@ -1097,20 +1090,11 @@ type ResourcePayload {
   resource: ResourceDetails!
 }
 
-type ResourcePosition {
-  height: Int!
+type ResourcePositionDetails {
   id: ID!
-  metadata: String
   resource: ResourceDetails!
-  shape: String
-  width: Int!
   x: Int!
   y: Int!
-}
-
-type ResourcePositionPayload {
-  clientMutationId: String
-  resourcePosition: ResourcePosition!
 }
 
 type ResourcesPayload {
@@ -1241,11 +1225,6 @@ type UpdateOrganizationSsoSettingsPayload {
   organization: OrganizationDetails!
 }
 
-type UpdateResourcePositionsPayload {
-  clientMutationId: String
-  resourcePositions: [ResourcePosition!]!
-}
-
 type VariedDateOpeningHours {
   date: DateTime!
   openingHoursDetails: OpeningHoursDetails!
@@ -1337,12 +1316,11 @@ input AddCustomerPreferredTeamInput {
 
 input AddFloorPlanInput {
   clientMutationId: String
-  floorLevel: Int!
-  floorName: String
-  imageBase64: String!
-  imageFileName: String!
+  id: String
+  image: CdnImageFileInput!
   locationId: String!
   name: String!
+  resourcePositions: [ResourcePositionInput!]
 }
 
 input AddLocationInput {
@@ -1742,6 +1720,15 @@ input DeleteZonesInput {
   ids: [String!]!
 }
 
+input FloorPlanOrderInput {
+  direction: OrderDirection!
+  field: FloorPlanOrderField!
+}
+
+input FloorPlanWhereInput {
+  locationId: String!
+}
+
 input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
   emails: [String!]!
@@ -1922,11 +1909,6 @@ input RemoveOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
-input RemoveResourcePositionInput {
-  clientMutationId: String
-  resourceId: String!
-}
-
 input RemoveTeamMemberInput {
   clientMutationId: String
   id: String!
@@ -1943,18 +1925,14 @@ input ResourceOrderInput {
 }
 
 input ResourcePositionInput {
-  height: Int!
-  id: String
-  metadata: String
   resourceId: String!
-  shape: String
-  width: Int!
   x: Int!
   y: Int!
 }
 
 input ResourceWhereInput {
   customTagIds: [String!]
+  floorPlanId: String
   locationId: String!
   nameContains: String
   productTagIds: [String!]
@@ -2036,11 +2014,10 @@ input UpdateCustomerDetailsInput {
 
 input UpdateFloorPlanInput {
   clientMutationId: String
-  floorLevel: Int!
-  floorName: String
   id: String!
-  isActive: Boolean!
+  image: CdnImageFileInput!
   name: String!
+  resourcePositions: [ResourcePositionInput!]
 }
 
 input UpdateLocationInput {
@@ -2195,22 +2172,10 @@ input UpdateResourceInput {
   zoneIds: [String!]!
 }
 
-input UpdateResourcePositionInput {
-  clientMutationId: String
-  floorPlanId: String!
-  height: Int!
-  metadata: String
-  resourceId: String!
-  shape: String
-  width: Int!
-  x: Int!
-  y: Int!
-}
-
 input UpdateResourcePositionsInput {
   clientMutationId: String
   floorPlanId: String!
-  positions: [ResourcePositionInput!]!
+  resourcePositions: [ResourcePositionInput!]!
 }
 
 input UpdateTeamAndTeamMembersInput {
@@ -2316,6 +2281,10 @@ enum FeedbackChannelType {
   MS_TEAMS
   SLACK
   WEB
+}
+
+enum FloorPlanOrderField {
+  NAME
 }
 
 enum LocationOrderField {

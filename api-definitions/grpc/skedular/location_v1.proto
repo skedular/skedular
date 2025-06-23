@@ -263,6 +263,7 @@ message ResourceWhereInput {
     string locationId = 1;
     string nameContains = 2;
     repeated string tagIds = 3;
+    string floorPlanId = 4;
 }
 
 message ResourceOrderInput {

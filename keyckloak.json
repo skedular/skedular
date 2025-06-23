@@ -11,8 +11,18 @@
         "name": "skedularapp",
         "enabled": true,
         "publicClient": true,
-        "redirectUris": ["http://localhost:10200/*", "http://127.0.0.1:10200/*", "http://127.0.0.1:15000/*", "http://localhost:15000/*"],
-        "webOrigins": ["http://127.0.0.1:15000", "http://127.0.0.1:10200", "http://localhost:15000", "http://localhost:10200"],
+        "redirectUris": [
+          "http://localhost:10200/*",
+          "http://127.0.0.1:10200/*",
+          "http://127.0.0.1:15000/*",
+          "http://localhost:15000/*"
+        ],
+        "webOrigins": [
+          "http://127.0.0.1:15000",
+          "http://127.0.0.1:10200",
+          "http://localhost:15000",
+          "http://localhost:10200"
+        ],
         "directAccessGrantsEnabled": true,
         "rootUrl": "http://127.0.0.1:10200/",
         "adminUrl": "http://127.0.0.1:10200/v1/organization/acs",
@@ -52,7 +62,10 @@
         "authenticationFlowBindingOverrides": {},
         "fullScopeAllowed": true,
         "nodeReRegistrationTimeout": -1,
-        "defaultClientScopes": ["saml_organization", "role_list"],
+        "defaultClientScopes": [
+          "saml_organization",
+          "role_list"
+        ],
         "optionalClientScopes": [],
         "access": {
           "view": true,

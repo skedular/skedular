@@ -24,12 +24,15 @@ const RootQuery = graphql`
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
+    $resourcesSortingValues: [ResourceOrderInput!]
+    $floorPlansSortingValues: [FloorPlanOrderInput!]
   ) {
     location(id: $locationId) {
       name
     }
     ...organizationLocation_query
     ...organizationLocation_resources_query
+    ...organizationLocation_floorPlans_query
   }
 `;
 
@@ -67,6 +70,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, locationId
       <OrganizationLocation
         rootDataRelay={rootData}
         rootDataResourcesRelay={rootData}
+        rootDataFloorPlansRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
         locationId={locationId}
@@ -128,6 +132,18 @@ const RootPageWithRelay = () => {
           },
         ],
         multipleChoicesLocationTagsSortingValues: [
+          {
+            direction: 'ASCENDING',
+            field: 'NAME',
+          },
+        ],
+        resourcesSortingValues: [
+          {
+            direction: 'ASCENDING',
+            field: 'NAME',
+          },
+        ],
+        floorPlansSortingValues: [
           {
             direction: 'ASCENDING',
             field: 'NAME',

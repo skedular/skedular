@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78696c7e820251091d1965e4e3986f3a>>
+ * @generated SignedSource<<837ff7ee995ac8a00dd5b42419b0f6c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -110,6 +110,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "resourceZoneIds"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "resourcesSortingValues"
     }
   ],
   "kind": "Fragment",
@@ -140,6 +144,11 @@ return {
     {
       "alias": "resources",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "resourcesSortingValues"
+        },
         {
           "fields": [
             {
@@ -331,6 +340,6 @@ return {
 };
 })();
 
-(node as any).hash = "8ba48ee9e271dd94833b86f8cddb04de";
+(node as any).hash = "b675ef443b61f487faccf6e6ce0fffd4";
 
 export default node;

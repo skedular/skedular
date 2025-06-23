@@ -240,14 +240,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 
   const locations = useMemo(() => rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.locations]);
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
-
-  const organizationMembers = useMemo(() => {
-    if (!rootData.organizationMembers) {
-      return [];
-    }
-
-    return rootData.organizationMembers.edges.map((edge) => edge.node);
-  }, [rootData.organizationMembers]);
+  const organizationMembers = useMemo(() => (rootData.organizationMembers ? rootData.organizationMembers.edges.map((edge) => edge.node) : []), [rootData.organizationMembers]);
 
   const handleRefetch = useCallback(
     (customTagIds: string[], zoneIds: string[]) => {

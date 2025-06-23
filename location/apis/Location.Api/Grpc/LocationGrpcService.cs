@@ -193,7 +193,7 @@ public class LocationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new ResourceSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds),
+            new ResourceSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds, request.Where.FloorPlanId),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending

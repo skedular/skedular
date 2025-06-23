@@ -1,8 +1,9 @@
-import { SmallIconTypography } from '@/components/commons';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@/components/generics';
-import { ArrowDownIcon } from '@/components/icons';
-import { startOfDay, toShortDate } from '@/libs/utils';
-import Button from '@mui/material/Button';
+import { CalendarIcon } from '@/components/icons';
+import { DefaultSelect } from '@/components/styled';
+import { startOfDay, toShortDateWithoutWeekDay } from '@/libs/utils';
+import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { Dayjs } from 'dayjs';
@@ -18,7 +19,7 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
   const [date, setDate] = useState(defaultDate ?? startOfDay());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleChanged = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -45,9 +46,22 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
 
   return (
     <>
-      <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-        <SmallIconTypography label={toShortDate(date)} />
-      </Button>
+      <DefaultSelect
+        displayEmpty
+        open={false}
+        onClick={handleChanged}
+        size="small"
+        renderValue={() => (
+          <StackRow>
+            <LeadIconTypography label="Date" startElement={<CalendarIcon />} />
+            <Divider orientation="vertical" flexItem />
+            <PushToRight />
+            <SmallIconTypography label={toShortDateWithoutWeekDay(date)} />
+          </StackRow>
+        )}
+        value=""
+      />
+
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -57,14 +71,7 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
           horizontal: 'left',
         }}
       >
-        <StaticDatePicker
-          slots={{
-            toolbar: EmptyCalendarToolbar,
-          }}
-          slotProps={SimpleCalendarSlotProps}
-          defaultValue={date}
-          onChange={handleChange}
-        />
+        <StaticDatePicker slots={{ toolbar: EmptyCalendarToolbar }} slotProps={SimpleCalendarSlotProps} defaultValue={date} onChange={handleChange} />
       </Popover>
     </>
   );

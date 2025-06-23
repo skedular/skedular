@@ -1,339 +1,370 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
-using Location.Api.Exceptions;
+using HotChocolate.Types.Pagination;
 using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
+using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Api.Services;
 
 public interface IFloorPlanService
 {
-    Task<FloorPlan> AddAsync(
-        string locationId,
-        string name,
-        int floorLevel,
-        string? floorName,
-        IFormFile imageFile,
-        CancellationToken cancellationToken);
+    Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<FloorPlan> AddAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken);
+    Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken);
+    Task<FloorPlan> DeleteAsync(string id, CancellationToken cancellationToken);
 
-    Task<FloorPlan> UpdateAsync(
+    Task<FloorPlan> UpdateResourcePositionsAsync(
         string floorPlanId,
-        string? name,
-        string? floorName,
-        bool? isActive,
-        IFormFile? imageFile,
+        ICollection<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken);
 
-    Task DeleteAsync(string floorPlanId, CancellationToken cancellationToken);
-    Task<FloorPlan?> GetByIdAsync(string floorPlanId, CancellationToken cancellationToken);
-    Task<ICollection<FloorPlan>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
-
-    Task<ResourcePosition> UpdateResourcePositionAsync(
-        string resourceId,
-        string floorPlanId,
-        int x,
-        int y,
-        int width,
-        int height,
-        string? shape,
-        Dictionary<string, object>? metadata,
+    Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
+        PaginationInputParam paginationInputParam,
+        FloorPlanSearchCriteria searchCriteria,
+        ICollection<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken);
-
-    Task RemoveResourcePositionAsync(string resourceId, CancellationToken cancellationToken);
 }
 
 public class FloorPlanService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
+    ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IFloorPlanStorageService floorPlanStorageService,
     ICachedCustomerService cachedCustomerService,
     IRandomHelper randomHelper,
     IMapper mapper) : IFloorPlanService
 {
-    private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
-
-    public async Task<FloorPlan> AddAsync(
-        string locationId,
-        string name,
-        int floorLevel,
-        string? floorName,
-        IFormFile imageFile,
-        CancellationToken cancellationToken)
+    public async Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        if (imageFile.Length > MaxFileSize)
-        {
-            throw new FileSizeExceedsLimit();
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(id, cancellationToken) ?? throw new FloorPlanNotFound();
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
-
-        if (!organizationAuthorizationService.CanModify(location.Organization, customer))
+        if (!organizationAuthorizationService.CanView(existingLocation.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        // Check if floor plan already exists for this floor level
-        var existingFloorPlan = await repositoryFactory.FloorPlanRepository
-            .GetByLocationIdAndFloorLevelAsync(locationId, floorLevel, cancellationToken);
-        if (existingFloorPlan != null)
-        {
-            throw new FloorPlanAlreadyExistsForLevel(floorLevel);
-        }
-
-        using var stream = new MemoryStream();
-        await imageFile.CopyToAsync(stream, cancellationToken);
-        var imageContent = stream.ToArray();
-
-        var fileName = $"{randomHelper.Generate()}{Path.GetExtension(imageFile.FileName)}";
-        var (imageUrl, thumbnailUrl, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
-            imageContent,
-            fileName,
-            imageFile.ContentType ?? "image/jpeg");
-
-        var floorPlan = new Shared.Database.Entities.FloorPlan
-        {
-            LocationId = locationId,
-            Name = name,
-            FloorLevel = floorLevel,
-            FloorName = floorName,
-            ImagePath = imageUrl,
-            ThumbnailPath = thumbnailUrl,
-            Width = width,
-            Height = height,
-            IsActive = true
-        };
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        repositoryFactory.FloorPlanRepository.Add(floorPlan);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return mapper.MapFloorPlan(floorPlan);
+        return mapper.MapTo(existingFloorPlan);
     }
 
-    public async Task<FloorPlan> UpdateAsync(
-        string floorPlanId,
-        string? name,
-        string? floorName,
-        bool? isActive,
-        IFormFile? imageFile,
-        CancellationToken cancellationToken)
+    public async Task<FloorPlan> AddAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken) ??
-                       throw new LocationNotFound();
+        ArgumentNullException.ThrowIfNull(floorPlan.Location);
+        ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Location.Id);
 
-        if (!organizationAuthorizationService.CanModify(location.Organization, customer))
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
+
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        if (!string.IsNullOrWhiteSpace(name))
+        if (!string.IsNullOrWhiteSpace(floorPlan.Id))
         {
-            floorPlan.Name = name;
-        }
-
-        if (floorName != null)
-        {
-            floorPlan.FloorName = floorName;
-        }
-
-        if (isActive.HasValue)
-        {
-            floorPlan.IsActive = isActive.Value;
-        }
-
-        if (imageFile != null)
-        {
-            if (imageFile.Length > MaxFileSize)
+            var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlan.Id, cancellationToken);
+            if (existingFloorPlan is not null)
             {
-                throw new FileSizeExceedsLimit();
+                if (existingFloorPlan.Location.Id != existingLocation.Id)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                return await UpdateInternalAsync(floorPlan, updateResourcePositions, existingFloorPlan, existingLocation, cancellationToken);
+            }
+        }
+        else
+        {
+            floorPlan.Id = randomHelper.Generate();
+            foreach (var resourcePosition in floorPlan.ResourcePositions)
+            {
+                resourcePosition.FloorPlan.Id = floorPlan.Id;
+            }
+        }
+
+        var resourcePositions = floorPlan.ResourcePositions;
+        ICollection<Resource> resources = [];
+        if (updateResourcePositions)
+        {
+            resources = resourcePositions.Count == 0
+                ? []
+                : await repositoryFactory.ResourceRepository.GetByIdsAsync(
+                    resourcePositions.Select(item => item.Resource.Id).ToList(),
+                    cancellationToken);
+            if (resources.Any(item => item.Location.Id != existingLocation.Id))
+            {
+                throw new ResourceAndFloorPlanLocationMismatch();
             }
 
-            await floorPlanStorageService.DeleteFloorPlanAsync(floorPlan.ImagePath, floorPlan.ThumbnailPath);
-
-            using var stream = new MemoryStream();
-            await imageFile.CopyToAsync(stream, cancellationToken);
-            var imageContent = stream.ToArray();
-
-            var fileName = $"{randomHelper.Generate()}{Path.GetExtension(imageFile.FileName)}";
-            var (imageUrl, thumbnailUrl, width, height) = await floorPlanStorageService.SaveFloorPlanAsync(
-                imageContent,
-                fileName,
-                imageFile.ContentType ?? "image/jpeg");
-
-            floorPlan.ImagePath = imageUrl;
-            floorPlan.ThumbnailPath = thumbnailUrl;
-            floorPlan.Width = width;
-            floorPlan.Height = height;
+            if (resources.Any(item => item.ResourcePosition is not null))
+            {
+                throw new ResourceIsPlacedOnDifferentFloorPlan();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.FloorPlanRepository.Update(floorPlan);
+        var floorPlanEntity = mapper.MapTo(floorPlan, existingLocation, []);
+        if (updateResourcePositions)
+        {
+            floorPlanEntity.ResourcePositions = resourcePositions
+                .Select(resourcePosition =>
+                {
+                    resourcePosition.Id = randomHelper.Generate();
+
+                    return repositoryFactory.ResourcePositionRepository.Add(
+                        mapper.MapToEntity(
+                            resourcePosition,
+                            resources.First(item => item.Id == resourcePosition.Resource.Id),
+                            floorPlanEntity));
+                }).ToList();
+        }
+
+        repositoryFactory.FloorPlanRepository.Add(floorPlanEntity);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapFloorPlan(floorPlan);
+        return floorPlan;
     }
 
-    public async Task DeleteAsync(string floorPlanId, CancellationToken cancellationToken)
+    public async Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken) ??
-                       throw new LocationNotFound();
-        if (!organizationAuthorizationService.CanModify(location.Organization, customer))
+        ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Id);
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlan.Id, cancellationToken) ??
+                                throw new FloorPlanNotFound();
+
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
+
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        await floorPlanStorageService.DeleteFloorPlanAsync(floorPlan.ImagePath, floorPlan.ThumbnailPath);
+        return await UpdateInternalAsync(floorPlan, updateResourcePositions, existingFloorPlan, existingLocation, cancellationToken);
+    }
+
+    public async Task<FloorPlan> DeleteAsync(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(id, cancellationToken) ?? throw new FloorPlanNotFound();
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
+
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        {
+            throw new UnauthorizedAccessException();
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.FloorPlanRepository.Remove(floorPlan);
+        repositoryFactory.ResourcePositionRepository.RemoveRange(existingFloorPlan.ResourcePositions);
+        existingFloorPlan.ResourcePositions = [];
+        repositoryFactory.FloorPlanRepository.Remove(existingFloorPlan);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(existingFloorPlan);
     }
 
-    public async Task<FloorPlan?> GetByIdAsync(string floorPlanId, CancellationToken cancellationToken)
-    {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken);
-        if (floorPlan == null)
-        {
-            return null;
-        }
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.LocationId, cancellationToken);
-        if (location == null)
-        {
-            return null;
-        }
-
-        if (!organizationAuthorizationService.CanView(location.Organization, customer))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        return mapper.MapFloorPlan(floorPlan);
-    }
-
-    public async Task<ICollection<FloorPlan>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken)
-    {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!organizationAuthorizationService.CanView(location.Organization, customer))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        var floorPlans = await repositoryFactory.FloorPlanRepository.GetByLocationIdAsync(locationId, cancellationToken);
-        return floorPlans.Select(mapper.MapFloorPlan).ToList();
-    }
-
-    public async Task<ResourcePosition> UpdateResourcePositionAsync(
-        string resourceId,
+    public async Task<FloorPlan> UpdateResourcePositionsAsync(
         string floorPlanId,
-        int x,
-        int y,
-        int width,
-        int height,
-        string? shape,
-        Dictionary<string, object>? metadata,
+        ICollection<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ??
+                                throw new FloorPlanNotFound();
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken) ?? throw new ResourceNotFound();
-        var floorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ?? throw new FloorPlanNotFound();
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        if (resource.Location.Id != floorPlan.LocationId)
+        var resources = resourcePositions.Count == 0
+            ? []
+            : await repositoryFactory.ResourceRepository.GetByIdsAsync(
+                resourcePositions.Select(item => item.Resource.Id).ToList(),
+                cancellationToken);
+
+        if (resources.Any(item => item.Location.Id != existingFloorPlan.Location.Id))
         {
             throw new ResourceAndFloorPlanLocationMismatch();
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
-                       throw new LocationNotFound();
-        if (!organizationAuthorizationService.CanModify(location.Organization, customer))
+        if (resources.Any(item => item.ResourcePosition is not null && item.ResourcePosition.FloorPlan.Id != floorPlanId))
         {
-            throw new UnauthorizedAccessException();
+            throw new ResourceIsPlacedOnDifferentFloorPlan();
         }
+
+        var resourcePositionToRemove = existingFloorPlan.ResourcePositions
+            .Where(resourcePosition => resourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
+            .ToList();
+        var updatedResourcePosition = existingFloorPlan.ResourcePositions
+            .Where(resourcePosition => resourcePositions.Any(item => item.Resource.Id == resourcePosition.Resource.Id))
+            .Select(resourcePosition =>
+            {
+                var matchingResourcePosition = resourcePositions.First(item => item.Resource.Id == resourcePosition.Resource.Id);
+                matchingResourcePosition.Id = resourcePosition.Id;
+
+                return repositoryFactory.ResourcePositionRepository.Update(
+                    mapper.MergeToEntity(
+                        matchingResourcePosition,
+                        resourcePosition,
+                        resources.First(item => item.Id == resourcePosition.Resource.Id),
+                        existingFloorPlan));
+            })
+            .ToList();
+
+        var addedResourcePosition = resourcePositions
+            .Where(resourcePosition => existingFloorPlan.ResourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
+            .Select(resourcePosition =>
+            {
+                resourcePosition.Id = randomHelper.Generate();
+
+                return repositoryFactory.ResourcePositionRepository.Add(
+                    mapper.MapToEntity(
+                        resourcePosition,
+                        resources.First(item => item.Id == resourcePosition.Resource.Id),
+                        existingFloorPlan));
+            })
+            .ToList();
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var existingPosition = await repositoryFactory.ResourcePositionRepository.GetByResourceIdAsync(resourceId, cancellationToken);
-
-        if (existingPosition != null)
-        {
-            existingPosition.FloorPlanId = floorPlanId;
-            existingPosition.X = x;
-            existingPosition.Y = y;
-            existingPosition.Width = width;
-            existingPosition.Height = height;
-            existingPosition.Shape = shape;
-            existingPosition.Metadata = metadata;
-
-            repositoryFactory.ResourcePositionRepository.Update(existingPosition);
-        }
-        else
-        {
-            // new position
-            existingPosition = new Shared.Database.Entities.ResourcePosition
-            {
-                Id = randomHelper.Generate(),
-                ResourceId = resourceId,
-                FloorPlanId = floorPlanId,
-                X = x,
-                Y = y,
-                Width = width,
-                Height = height,
-                Shape = shape,
-                Metadata = metadata
-            };
-
-            repositoryFactory.ResourcePositionRepository.Add(existingPosition);
-        }
+        repositoryFactory.ResourcePositionRepository.RemoveRange(resourcePositionToRemove);
+        existingFloorPlan.ResourcePositions = addedResourcePosition.Concat(updatedResourcePosition).ToList();
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapResourcePosition(existingPosition);
+        return mapper.MapTo(existingFloorPlan);
     }
 
-    public async Task RemoveResourcePositionAsync(string resourceId, CancellationToken cancellationToken)
+    public async Task<(PaginatedInfo, ICollection<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
+        PaginationInputParam paginationInputParam,
+        FloorPlanSearchCriteria searchCriteria,
+        ICollection<FloorPlanOrder> orderByFields,
+        CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);
 
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(resourceId, cancellationToken) ?? throw new ResourceNotFound();
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
-                       throw new LocationNotFound();
-
-        if (!organizationAuthorizationService.CanModify(location.Organization, customer))
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingLocation =
+            await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
+        if (!organizationAuthorizationService.CanView(existingLocation.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var position = await repositoryFactory.ResourcePositionRepository.GetByResourceIdAsync(resourceId, cancellationToken);
-        if (position == null)
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.FloorPlanRepository.GetPaginatedFloorPlansAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
+
+        return (paginatedInfo, edges.Select(item => new Edge<FloorPlan>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+    }
+
+    private async Task<FloorPlan> UpdateInternalAsync(
+        FloorPlan floorPlan,
+        bool updateResourcePositions,
+        Shared.Database.Entities.FloorPlan existingFloorPlan,
+        Shared.Database.Entities.Location existingLocation,
+        CancellationToken cancellationToken)
+    {
+        ICollection<Shared.Database.Entities.ResourcePosition> resourcePositionToRemove = [];
+        ICollection<Shared.Database.Entities.ResourcePosition> updatedResourcePosition = [];
+        ICollection<Shared.Database.Entities.ResourcePosition> addedResourcePosition = [];
+
+        if (updateResourcePositions)
         {
-            return; // Already removed
+            var resourcePositions = floorPlan.ResourcePositions;
+            var resources = resourcePositions.Count == 0
+                ? []
+                : await repositoryFactory.ResourceRepository.GetByIdsAsync(
+                    resourcePositions.Select(item => item.Resource.Id).ToList(),
+                    cancellationToken);
+
+            if (resources.Any(item => item.Location.Id != existingFloorPlan.Location.Id))
+            {
+                throw new ResourceAndFloorPlanLocationMismatch();
+            }
+
+            if (resources.Any(item => item.ResourcePosition is not null && item.ResourcePosition.FloorPlan.Id != floorPlan.Id))
+            {
+                throw new ResourceIsPlacedOnDifferentFloorPlan();
+            }
+
+            resourcePositionToRemove = existingFloorPlan.ResourcePositions
+                .Where(resourcePosition => resourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
+                .ToList();
+            updatedResourcePosition = existingFloorPlan.ResourcePositions
+                .Where(resourcePosition => resourcePositions.Any(item => item.Resource.Id == resourcePosition.Resource.Id))
+                .Select(resourcePosition =>
+                {
+                    var matchingResourcePosition = resourcePositions.First(item => item.Resource.Id == resourcePosition.Resource.Id);
+                    matchingResourcePosition.Id = resourcePosition.Id;
+
+                    return repositoryFactory.ResourcePositionRepository.Update(
+                        mapper.MergeToEntity(
+                            matchingResourcePosition,
+                            resourcePosition,
+                            resources.First(item => item.Id == resourcePosition.Resource.Id),
+                            existingFloorPlan));
+                })
+                .ToList();
+
+            var copiedExistingFloorPlan = existingFloorPlan;
+            addedResourcePosition = resourcePositions
+                .Where(resourcePosition => copiedExistingFloorPlan.ResourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
+                .Select(resourcePosition =>
+                {
+                    resourcePosition.Id = randomHelper.Generate();
+
+                    return repositoryFactory.ResourcePositionRepository.Add(
+                        mapper.MapToEntity(
+                            resourcePosition,
+                            resources.First(item => item.Id == resourcePosition.Resource.Id),
+                            copiedExistingFloorPlan));
+                })
+                .ToList();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.ResourcePositionRepository.Remove(position);
+        if (updateResourcePositions)
+        {
+            repositoryFactory.ResourcePositionRepository.RemoveRange(resourcePositionToRemove);
+        }
+
+        existingFloorPlan = mapper.MergeTo(
+            floorPlan,
+            existingFloorPlan,
+            existingLocation,
+            updateResourcePositions ? addedResourcePosition.Concat(updatedResourcePosition).ToList() : null);
+        repositoryFactory.FloorPlanRepository.Update(existingFloorPlan);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return floorPlan;
     }
 }

@@ -70,15 +70,12 @@ public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("
 
 public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
 
-public class CustomerStripeCustomerRelationshipIsNotSetYet() : Exception("Customer Stripe customer relationship is not set yet");
-
-public class StripePriceRelationshipIsNotSetYet() : Exception("Stripe price relationship is not set yet");
-
 public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross organization product booking not allowed");
 
 public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
 
 public class OrganizationPaymentMethodNotFound() : Exception("Organization payment method not found");
 
-public class FloorPlanWithSameFloorLevelExists(int floorLevel)
-    : Exception($"A floor plan already exists for floor level {floorLevel}. Please choose a different floor level.");
+public class ResourceAndFloorPlanLocationMismatch() : Exception("Resource and floor plan must belong to the same location");
+
+public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("Resource is placed on different floor plan");

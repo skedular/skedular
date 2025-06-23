@@ -13,7 +13,6 @@ namespace Location.Shared.Repositories;
 
 public interface IResourceRepository : IRepository<Resource>
 {
-    Task<ICollection<Resource>> GetAllAsync(string locationId, CancellationToken cancellationToken);
     Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Resource Add(Resource resource);
@@ -34,7 +33,7 @@ internal static class ResourceExtensions
         originalQuery
             .Include(query => query.Location)
             .Include(query => query.ResourcePosition)
-            .ThenInclude(query => query!.FloorPlan)
+            .ThenInclude(query => query.FloorPlan)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)
@@ -49,6 +48,12 @@ internal static class ResourceExtensions
         if (searchCriteria.TagIds.Count != 0)
         {
             query = query.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.FloorPlanId))
+        {
+            query = query.Where(item =>
+                item.ResourcePosition == null || (item.ResourcePosition != null && item.ResourcePosition.FloorPlan.Id == searchCriteria.FloorPlanId));
         }
 
         return query;
@@ -82,12 +87,6 @@ internal static class ResourceExtensions
 public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
-    public async Task<ICollection<Resource>> GetAllAsync(string locationId, CancellationToken cancellationToken) =>
-        await DbContext.Resource
-            .Where(query => !query.Location.DeletedAt.HasValue && query.Location.Id == locationId)
-            .AddDependentObjects()
-            .ToListAsync(cancellationToken);
-
     public async Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddDependentObjects()
