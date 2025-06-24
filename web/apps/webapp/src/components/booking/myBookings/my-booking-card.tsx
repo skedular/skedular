@@ -14,7 +14,6 @@ import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/m
 import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
-
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
@@ -22,12 +21,12 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   bookingDetailsRelay: myBookingCard_BookingDetails$key;
@@ -160,7 +159,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: bookingDetails.id,
         },
       },

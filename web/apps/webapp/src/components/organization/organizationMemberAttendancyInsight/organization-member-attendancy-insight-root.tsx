@@ -7,10 +7,10 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
-import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 import OrganizationMemberAttendancyInsight from './organization-member-attendancy-insight';
 
 type Props = {
@@ -41,7 +41,7 @@ type RelayProps = {
 
 const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onReloadRequired }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onRe
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       onReloadRequired();
     });

@@ -34,12 +34,12 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import LocationCard from './location-card';
 
 type Props = {
@@ -306,7 +306,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: locationDetails.id,
         },
       },
@@ -345,7 +345,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     commitAddCustomerPreferredLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           locationId: locationDetails.id,
         },
       },
@@ -386,7 +386,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     commitRemoveCustomerPreferredLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           locationId: locationDetails.id,
         },
       },
@@ -672,7 +672,7 @@ type RelayProps = {
 
 const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationLocations_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -716,7 +716,7 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

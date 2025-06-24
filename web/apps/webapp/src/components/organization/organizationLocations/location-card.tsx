@@ -31,12 +31,12 @@ import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   rootDataRelay: locationCard_query$key;
@@ -226,7 +226,7 @@ const LocationCard = ({
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: locationDetails.id,
         },
       },
@@ -260,7 +260,7 @@ const LocationCard = ({
     commitAddCustomerPreferredLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           locationId: locationDetails.id,
         },
       },
@@ -294,7 +294,7 @@ const LocationCard = ({
     commitRemoveCustomerPreferredLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           locationId: locationDetails.id,
         },
       },

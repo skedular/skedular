@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -10,7 +11,6 @@ import type { addOrganizationTeamMemberDialog_organizationMembers_refetchableFra
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { Autocomplete, makeRequired, makeValidate } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
@@ -147,7 +147,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: teamId,
           organizationMemberId: member,
         },

@@ -40,11 +40,11 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
-import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
@@ -538,7 +538,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: productsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedProducts.ids
             .values()
             .map((id) => id as string)
@@ -580,7 +580,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: productsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedProductId],
         },
       },
@@ -616,7 +616,7 @@ const OrganizationMarketplaceSetup = ({
     commitDeactivateProducts({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedProducts.ids
             .values()
             .map((id) => id as string)
@@ -654,7 +654,7 @@ const OrganizationMarketplaceSetup = ({
     commitActivateProducts({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedProducts.ids
             .values()
             .map((id) => id as string)
@@ -696,7 +696,7 @@ const OrganizationMarketplaceSetup = ({
     commitDeactivateProducts({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [productDetails.id],
         },
       },
@@ -735,7 +735,7 @@ const OrganizationMarketplaceSetup = ({
     commitActivateProducts({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [productDetails.id],
         },
       },
@@ -803,7 +803,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: productTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedProductTags.ids
             .values()
             .map((id) => id as string)
@@ -845,7 +845,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: productTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedProductTagId],
         },
       },
@@ -914,7 +914,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: locationTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedLocationTags.ids
             .values()
             .map((id) => id as string)
@@ -956,7 +956,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: locationTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedLocationTagId],
         },
       },
@@ -1027,7 +1027,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: organizationStripeConnectAccountsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedOrganizationStripeConnectAccounts.ids
             .values()
             .map((id) => id as string)
@@ -1069,7 +1069,7 @@ const OrganizationMarketplaceSetup = ({
       variables: {
         connectionIds: organizationStripeConnectAccountsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedOrganizationStripeConnectAccountId],
         },
       },

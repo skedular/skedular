@@ -11,12 +11,12 @@ import type { editOrganizationCustomTagDialog_updateCustomTagMutation } from '@/
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -86,7 +86,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
     commitUpdateCustomTag({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: customTagId,
           name,
           description,
@@ -184,7 +184,7 @@ type RelayProps = {
 
 const EditOrganizationCustomTagDialogWithRelay = ({ onReloadRequired, customTagId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<editOrganizationCustomTagDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -200,7 +200,7 @@ const EditOrganizationCustomTagDialogWithRelay = ({ onReloadRequired, customTagI
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       if (onReloadRequired) {
         onReloadRequired();

@@ -9,11 +9,11 @@ import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloor
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageFloorPlans_rootQuery(
@@ -91,7 +91,7 @@ const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageFloorPlans_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { organizationId, locationId } = useParams();
   let finalOrganizationId = '';
@@ -174,7 +174,7 @@ const RootPageWithRelay = () => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

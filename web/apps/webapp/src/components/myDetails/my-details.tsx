@@ -34,13 +34,13 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import { getRootLink } from '../links';
 import AddMyPaymentMethodDialog from './add-my-payment-method-dialog';
@@ -257,7 +257,7 @@ const MyDetails = ({ queryReference }: Props) => {
     commitUpdateCustomerDetails({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: me.id,
           timezone,
           designation,
@@ -316,7 +316,7 @@ const MyDetails = ({ queryReference }: Props) => {
       commitUpdateMyBillingDetails({
         variables: {
           input: {
-            clientMutationId: nanoid(),
+            clientMutationId: uuid(),
             id: billingDetails.id,
             companyName,
             email,
@@ -371,13 +371,13 @@ const MyDetails = ({ queryReference }: Props) => {
         },
       });
     } else {
-      const id = nanoid();
+      const id = uuid();
       const toastId = themedToast(<NotificationContent content={`Adding billing...`} />, infoNotificationOptions);
 
       commitAddMyBillingDetails({
         variables: {
           input: {
-            clientMutationId: nanoid(),
+            clientMutationId: uuid(),
             id,
             companyName,
             email,
@@ -448,7 +448,7 @@ const MyDetails = ({ queryReference }: Props) => {
     commitRemoveCustomerPaymentMethod({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
         },
       },
@@ -702,7 +702,7 @@ type RelayProps = {
 
 const MyDetailsWithRelay = ({ onReloadRequired }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<myDetails_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -716,7 +716,7 @@ const MyDetailsWithRelay = ({ onReloadRequired }: RelayProps) => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       onReloadRequired();
     });

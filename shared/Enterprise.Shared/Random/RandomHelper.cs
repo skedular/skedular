@@ -1,23 +1,17 @@
-using NanoidDotNet;
-
 namespace Enterprise.Shared.Random;
 
 public interface IRandomHelper
 {
-    string Generate(string alphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", int size = 21);
-
-    IReadOnlyCollection<string> GenerateMany(int count, string alphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        int size = 21);
+    Guid GenerateGuid();
+    IReadOnlyCollection<Guid> GenerateManyGuids(int count);
+    string Generate();
+    IReadOnlyCollection<string> GenerateMany(int count);
 }
 
 public class RandomHelper : IRandomHelper
 {
-    public string Generate(string alphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", int size = 21) =>
-        Nanoid.Generate(alphabet, size);
-
-    public IReadOnlyCollection<string> GenerateMany(
-        int count,
-        string alphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        int size = 21) =>
-        Enumerable.Range(0, count).Select(_ => Nanoid.Generate(alphabet, size)).ToList();
+    public Guid GenerateGuid() => Guid.CreateVersion7();
+    public IReadOnlyCollection<Guid> GenerateManyGuids(int count) => Enumerable.Range(0, count).Select(_ => GenerateGuid()).ToList();
+    public string Generate() => GenerateGuid().ToString();
+    public IReadOnlyCollection<string> GenerateMany(int count) => GenerateManyGuids(count).Select(item => item.ToString()).ToList();
 }

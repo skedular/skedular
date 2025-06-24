@@ -2,10 +2,10 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import type { pageStartInstallMsTeams_rootQuery } from '@/queries/__generated__/pageStartInstallMsTeams_rootQuery.graphql';
-import { nanoid } from 'nanoid';
 import { memo, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageStartInstallMsTeams_rootQuery {
@@ -36,7 +36,7 @@ const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageStartInstallMsTeams_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const RootPageWithRelay = () => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

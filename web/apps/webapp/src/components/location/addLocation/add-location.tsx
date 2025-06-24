@@ -18,13 +18,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
@@ -144,7 +144,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     commitCompleteLocationOnboarding({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
         },
       },
       onCompleted: () => {
@@ -173,7 +173,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     country,
     locationTagIds,
   }: LocationDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
       ? {
@@ -189,7 +189,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     commitAddLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           name,
           about,
@@ -223,7 +223,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
         commitCompleteLocationOnboarding({
           variables: {
             input: {
-              clientMutationId: nanoid(),
+              clientMutationId: uuid(),
             },
           },
           onCompleted: (_, errors) => {
@@ -446,7 +446,7 @@ type RelayProps = {
 
 const AddLocationWithRelay = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addLocation_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -468,7 +468,7 @@ const AddLocationWithRelay = ({ onReloadRequired, organizationId, onAdded, onCan
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
       onReloadRequired();
     });
   };

@@ -22,12 +22,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, number, object, string } from 'yup';
 
 type Props = {
@@ -147,7 +147,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
   };
 
   const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding resource '${name}'...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
 
@@ -155,7 +155,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           locationId,
           name,
@@ -315,7 +315,7 @@ type RelayProps = {
 
 const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addResourceDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -355,7 +355,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       if (onReloadRequired) {
         onReloadRequired();

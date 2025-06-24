@@ -44,13 +44,13 @@ import Select from '@mui/material/Select';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -380,7 +380,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: team.id,
           name,
           about,
@@ -435,7 +435,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitChangeTeamMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -474,7 +474,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitChangeTeamMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -514,7 +514,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -572,7 +572,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitChangeTeamMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
           status: 'INACTIVE',
         },
@@ -612,7 +612,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitChangeTeamMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
           status: 'ACTIVE',
         },
@@ -653,7 +653,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
         },
       },
@@ -692,7 +692,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitChangeTeamMemberRole({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           role,
         },
@@ -746,7 +746,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     commitDeleteTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: team.id,
         },
       },

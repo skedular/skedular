@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using Enterprise.Shared.Events;
 using Google.Protobuf.WellKnownTypes;
 
-using NanoidDotNet;
-
 #nullable enable
 
 namespace {{ namespace }};
@@ -39,15 +37,15 @@ public partial class {{ event_type }} : IMetadataEvent
         string domainSource,
         string appSource,
         Type type,
-        string correlationId,
-        string? id = null) =>
+        string? correlationId,
+        Guid? id = null) =>
         new() {
-            Id = id ?? NanoidDotNet.Nanoid.Generate(),
+            Id = id.HasValue ? id.Value.ToString() : Guid.CreateVersion7().ToString(),
             DomainSource = domainSource,
             AppSource = appSource,
             Type = type,
-            Time = Timestamp.FromDateTime(System.DateTime.UtcNow),
-            CorrelationId = correlationId,
+            Time = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow()),
+            CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.CreateVersion7().ToString() : correlationId,
     };
 
     public string GetTopicName(string prefix)

@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingType } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
@@ -23,7 +24,6 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -514,7 +514,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     commitUpdateBooking({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: booking.id,
           from,
           until,

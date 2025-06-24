@@ -30,12 +30,12 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import TeamCard from './team-card';
 
 type Props = {
@@ -247,7 +247,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: teamDetails.id,
         },
       },
@@ -286,7 +286,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     commitAddCustomerPreferredTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           teamId: teamDetails.id,
         },
       },
@@ -327,7 +327,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     commitRemoveCustomerPreferredTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           teamId: teamDetails.id,
         },
       },
@@ -523,7 +523,7 @@ type RelayProps = {
 
 const TeamsWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationTeams_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -551,7 +551,7 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

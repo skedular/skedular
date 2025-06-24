@@ -1,7 +1,7 @@
 import { authkit } from '@workos-inc/authkit-nextjs';
 import { Buffer } from 'buffer';
-import { nanoid } from 'nanoid';
 import { NextRequest, NextResponse } from 'next/server';
+import { v7 as uuid } from 'uuid';
 
 const federatedGraphQLEndpoint = new URL('v1/graphql', process.env.GATEWAY_ENDPOINT).href;
 
@@ -11,7 +11,7 @@ const handler = async (request: NextRequest) => {
 
   const headers = {
     'Content-Type': request.headers.get('Content-Type') ?? 'application/json',
-    'X-Correlation-Id': request.headers.get('X-Correlation-Id') ?? nanoid(),
+    'X-Correlation-Id': request.headers.get('X-Correlation-Id') ?? uuid(),
     Authorization: authorization ? authorization : `Bearer ${session.accessToken}`,
     'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('skedular-sso'))), 'binary').toString('base64'),
   };

@@ -20,13 +20,13 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -219,7 +219,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
     commitUpdateFloorPlan({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: floorPlan.id,
           name,
           image: finalImage,

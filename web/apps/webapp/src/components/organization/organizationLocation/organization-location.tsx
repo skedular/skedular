@@ -56,13 +56,13 @@ import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
 
@@ -727,7 +727,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitUpdateLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: location.id,
           name,
           about,
@@ -855,7 +855,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitDeactivateResources({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedResources.ids
             .values()
             .map((id) => id as string)
@@ -893,7 +893,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitActivateResources({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedResources.ids
             .values()
             .map((id) => id as string)
@@ -932,7 +932,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
       variables: {
         connectionIds: resourcesConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedResources.ids
             .values()
             .map((id) => id as string)
@@ -974,7 +974,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitDeactivateResources({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [resourceDetails.id],
         },
       },
@@ -1013,7 +1013,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitActivateResources({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [resourceDetails.id],
         },
       },
@@ -1053,7 +1053,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
       variables: {
         connectionIds: resourcesConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [resourceDetails.id],
         },
       },
@@ -1093,7 +1093,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitAddCustomerPreferredResource({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           resourceId: resourceDetails.id,
         },
       },
@@ -1134,7 +1134,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitRemoveCustomerPreferredResource({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           resourceId: resourceDetails.id,
         },
       },
@@ -1179,7 +1179,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitDeleteLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: location.id,
         },
       },
@@ -1220,7 +1220,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     commitUpdateLocationOpeningHours({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: location.id,
           weekOpeningHours,
         },

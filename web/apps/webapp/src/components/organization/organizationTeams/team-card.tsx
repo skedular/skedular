@@ -24,12 +24,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   rootDataRelay: teamCard_query$key;
@@ -190,7 +190,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: teamDetails.id,
         },
       },
@@ -224,7 +224,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     commitAddCustomerPreferredTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           teamId: teamDetails.id,
         },
       },
@@ -258,7 +258,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     commitRemoveCustomerPreferredTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           teamId: teamDetails.id,
         },
       },

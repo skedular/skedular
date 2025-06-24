@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -13,7 +14,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
@@ -403,7 +403,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateProduct({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: product.id,
           name,
           description,

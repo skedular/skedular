@@ -1,11 +1,11 @@
-import { nanoid } from 'nanoid';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { v7 as uuid } from 'uuid';
 
 export function createNetwork(endpoint: string, token?: string | null | undefined) {
   return Network.create(async (params, variables) => {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
-      'X-Correlation-Id': nanoid(),
+      'X-Correlation-Id': uuid(),
     };
 
     if (token) {

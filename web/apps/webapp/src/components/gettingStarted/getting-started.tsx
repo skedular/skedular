@@ -14,12 +14,12 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   rootDataRelay: gettingStarted_query$key;
@@ -86,7 +86,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
     commitCompleteOrganizationMemberOnboarding({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationId,
         },
       },

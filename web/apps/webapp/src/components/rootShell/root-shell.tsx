@@ -18,12 +18,12 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 import StackRow from '../commons/stack-row';
 import { getOrganizationSsoSignInBaseLink, getRootLink } from '../links';
 
@@ -219,7 +219,7 @@ type RelayProps = {
 
 const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { user, loading } = useAuth();
   const [signInUrl, setSignInUrl] = useState('');
@@ -273,7 +273,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

@@ -24,12 +24,12 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
+import { v7 as uuid } from 'uuid';
 import { array, boolean, mixed, object, string } from 'yup';
 
 type Props = {
@@ -435,7 +435,7 @@ const NewBookingDialog = ({
   }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
 
   const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, type }: BookingDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
@@ -453,7 +453,7 @@ const NewBookingDialog = ({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           from,
           until,

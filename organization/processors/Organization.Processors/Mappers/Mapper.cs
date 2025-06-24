@@ -262,6 +262,8 @@ public class Mapper : IMapper
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
+        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
 
         return organization;
     }
@@ -581,4 +583,48 @@ public class Mapper : IMapper
             Color = src.Color,
             Organization = organization
         };
+
+    private static OrganizationStripeCustomer? MapTo(
+        Shared.Database.Entities.OrganizationStripeCustomer? src,
+        Shared.Models.Organization organization) =>
+        src is null
+            ? null
+            : new OrganizationStripeCustomer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                StripeCustomerId = src.StripeCustomerId,
+                Organization = organization
+            };
+
+    private static IEnumerable<OrganizationStripePaymentMethod> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static OrganizationStripePaymentMethod MapTo(
+        Shared.Database.Entities.OrganizationStripePaymentMethod src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            SetupIntentId = src.SetupIntentId,
+            PaymentMethodId = src.PaymentMethodId,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit,
+            Organization = organization
+        };
+
 }

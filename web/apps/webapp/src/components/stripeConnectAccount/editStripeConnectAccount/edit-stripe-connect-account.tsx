@@ -23,12 +23,12 @@ import Grid from '@mui/material/Grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -96,7 +96,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
     commitUpdateOrganizationStripeConnectAccount({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: account.id,
           name,
         },

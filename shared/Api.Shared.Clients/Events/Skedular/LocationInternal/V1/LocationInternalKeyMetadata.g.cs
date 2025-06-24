@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using Enterprise.Shared.Events;
 using Google.Protobuf.WellKnownTypes;
 
-using NanoidDotNet;
-
 #nullable enable
 
 namespace Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key;

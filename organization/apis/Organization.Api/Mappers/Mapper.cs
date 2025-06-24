@@ -1417,7 +1417,8 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static OrganizationStripeCustomer? MapTo(Shared.Database.Entities.OrganizationStripeCustomer? src,
+    private static OrganizationStripeCustomer? MapTo(
+        Shared.Database.Entities.OrganizationStripeCustomer? src,
         Shared.Models.Organization organization) =>
         src is null
             ? null
@@ -1431,11 +1432,13 @@ public class Mapper : IMapper
                 Organization = organization
             };
 
-    private static IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src,
+    private static IEnumerable<OrganizationStripePaymentMethod> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static OrganizationStripePaymentMethod MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src,
+    private static OrganizationStripePaymentMethod MapTo(
+        Shared.Database.Entities.OrganizationStripePaymentMethod src,
         Shared.Models.Organization organization) =>
         new()
         {

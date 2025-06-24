@@ -42,7 +42,7 @@ public class StripeConnectAccountLinkService(
         StripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
     {
-        var code = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
+        var code = randomHelper.Generate();
         var accountLink = await accountLinkCreateService.CreateAsync(
             new AccountLinkCreateOptions
             {

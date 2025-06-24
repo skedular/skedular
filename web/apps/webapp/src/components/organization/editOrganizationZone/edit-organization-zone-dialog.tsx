@@ -11,12 +11,12 @@ import type { editOrganizationZoneDialog_updateZoneMutation } from '@/queries/__
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -86,7 +86,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
     commitUpdateZone({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: zoneId,
           name,
           description,
@@ -184,7 +184,7 @@ type RelayProps = {
 
 const EditOrganizationZoneDialogWithRelay = ({ onReloadRequired, zoneId, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<editOrganizationZoneDialog_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -200,7 +200,7 @@ const EditOrganizationZoneDialogWithRelay = ({ onReloadRequired, zoneId, isDialo
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       if (onReloadRequired) {
         onReloadRequired();

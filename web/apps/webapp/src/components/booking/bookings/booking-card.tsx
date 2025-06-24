@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
@@ -22,7 +23,6 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
@@ -223,7 +223,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: bookingDetails.id,
         },
       },
@@ -253,14 +253,14 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
   };
 
   const handleJoinClick = () => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
     commitAddBooking({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           from: bookingDetails.from,
           until: bookingDetails.until,

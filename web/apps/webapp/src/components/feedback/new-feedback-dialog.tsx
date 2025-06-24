@@ -9,11 +9,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -61,13 +61,13 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   const inMsTeams = useContext(InMsTeamsContext);
 
   const handleSubmitFeedbackClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Submitting feedback...`} />, infoNotificationOptions);
 
     commitSubmitCustomerFeedback({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           feedbackContent,
           channel: inMsTeams ? 'MS_TEAMS' : 'WEB',

@@ -29,12 +29,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import OrganizationUsersLeftSideNavigationMenuContent from './organization-users-left-side-navigation-menu-content';
 
 type Props = {
@@ -277,7 +277,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -316,7 +316,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -356,7 +356,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedMembers.ids
             .values()
             .map((id) => id as string)
@@ -432,7 +432,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
           status: 'INACTIVE',
         },
@@ -472,7 +472,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
           status: 'ACTIVE',
         },
@@ -513,7 +513,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [memberDetails.id],
         },
       },
@@ -554,7 +554,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     commitChangeOrganizationMemberRole({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           role,
         },
@@ -817,7 +817,7 @@ type RelayProps = {
 
 const OrganizationUsersWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationUsers_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -833,7 +833,7 @@ const OrganizationUsersWithRelay = ({ organizationId }: RelayProps) => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

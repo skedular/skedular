@@ -24,12 +24,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 
 type Props = {
@@ -157,13 +157,13 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
     zipcode,
     country,
   }: OrganizationDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
     commitAddOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           name,
           about,
@@ -199,7 +199,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
         commitCompleteOrganizationOnboarding({
           variables: {
             input: {
-              clientMutationId: nanoid(),
+              clientMutationId: uuid(),
             },
           },
           onCompleted: (_, errors) => {
@@ -395,7 +395,7 @@ type RelayProps = {
 
 const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel, addLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -409,7 +409,7 @@ const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCan
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       onReloadRequired();
     });

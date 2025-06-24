@@ -8,10 +8,10 @@ import type { organizationMarketplacePublic_rootQuery } from '@/queries/__genera
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
-import { nanoid } from 'nanoid';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 import ProductCard from './product-card';
 
 type Props = {
@@ -76,7 +76,7 @@ type RelayProps = {
 
 const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMarketplacePublic_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) 
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

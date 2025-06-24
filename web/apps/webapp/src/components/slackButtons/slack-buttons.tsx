@@ -1,6 +1,6 @@
 import { encodeBase64 } from '@/libs/utils';
-import { nanoid } from 'nanoid';
 import { memo } from 'react';
+import { v7 as uuid } from 'uuid';
 
 const parameterizedUrl =
   'https://slack.com/oauth/v2/authorize?scope=app_mentions:read,channels:join,channels:manage,channels:read,chat:write,team:read,users:read,users:read.email,users.profile:read&user_scope=users.profile:read,users.profile:write&state=$SLACK_STATE$&redirect_uri=$SLACK_REDIRECT_URL$&client_id=$SLACK_CLIENT_ID$';
@@ -14,7 +14,7 @@ interface State {
 
 const SlackButton = () => {
   const state: State = {
-    correlationId: nanoid(),
+    correlationId: uuid(),
   };
 
   const originalUrl = parameterizedUrl

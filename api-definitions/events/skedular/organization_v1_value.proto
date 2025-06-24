@@ -52,7 +52,9 @@ message Organization {
   Address physicalAddress = 14;
   string contactEmail = 15;
   string contactPhone = 16;
-  OrganizationBillingDetails billingDetails = 17;
+  BillingDetails billingDetails = 17;
+  StripeCustomer stripeCustomer = 18;
+  repeated StripePaymentMethod stripePaymentMethods = 19;
 }
 
 enum Role {
@@ -121,7 +123,7 @@ message Address {
   string country = 8;
 }
 
-message OrganizationBillingDetails {
+message BillingDetails {
   string id = 1;
   string companyName = 2;
   string email = 3;
@@ -132,4 +134,14 @@ message OrganizationBillingDetails {
   string province = 8;
   string zipcode = 9;
   string country = 10;
+}
+
+message StripeCustomer {
+  string id = 1;
+  string stripeCustomerId = 2;
+}
+
+message StripePaymentMethod {
+  string id = 1;
+  string setupIntentId = 2;
 }

@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { DefaultDialogTitle } from '@/components/commons';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationPaymentMethodSetupForm } from '@/components/organization';
@@ -11,7 +12,6 @@ import DialogContent from '@mui/material/DialogContent';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -59,7 +59,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
     commitAddOrganizationPaymentMethodIntent({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationId,
         },
       },

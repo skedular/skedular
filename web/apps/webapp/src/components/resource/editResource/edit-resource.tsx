@@ -24,12 +24,12 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Switch from '@mui/material/Switch';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, number, object, string } from 'yup';
 
 type Props = {
@@ -391,7 +391,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateResource({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: resource.id,
           name,
           inactive: resource.inactive,
@@ -463,7 +463,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateLocationResourceAvailableHours({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: resource.id,
           overrideAvailableHours: isAvailableHoursOverridden,
           availableHours: isAvailableHoursOverridden ? weekOpeningHours : null,
@@ -528,7 +528,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateLocationResourceAvailableHours({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: resource.id,
           overrideAvailableHours: false,
           availableHours: null,

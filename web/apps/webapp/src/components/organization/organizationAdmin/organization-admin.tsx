@@ -71,12 +71,12 @@ import Switch from '@mui/material/Switch';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
@@ -663,7 +663,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitUpdateOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: organization.id,
           name,
           about,
@@ -755,7 +755,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       commitUpdateOrganizationBillingDetails({
         variables: {
           input: {
-            clientMutationId: nanoid(),
+            clientMutationId: uuid(),
             id: billingDetails.id,
             companyName,
             email,
@@ -810,13 +810,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         },
       });
     } else {
-      const id = nanoid();
+      const id = uuid();
       const toastId = themedToast(<NotificationContent content={`Adding organization '${organization.name}' billing...`} />, infoNotificationOptions);
 
       commitAddOrganizationBillingDetails({
         variables: {
           input: {
-            clientMutationId: nanoid(),
+            clientMutationId: uuid(),
             organizationId: organization.id,
             id,
             companyName,
@@ -885,7 +885,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitUpdateOrganizationSsoSettings({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationId: organization.id,
           entityId,
           loginUrl,
@@ -946,7 +946,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitRemoveOrganizationSsoSettings({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationId: organization.id,
         },
       },
@@ -1021,7 +1021,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       variables: {
         connectionIds: zonesConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedZones.ids
             .values()
             .map((id) => id as string)
@@ -1063,7 +1063,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       variables: {
         connectionIds: zonesConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedZoneId],
         },
       },
@@ -1129,7 +1129,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       variables: {
         connectionIds: customTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: seledctedCustomTags.ids
             .values()
             .map((id) => id as string)
@@ -1171,7 +1171,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       variables: {
         connectionIds: customTagsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [selectedCustomTagId],
         },
       },
@@ -1219,7 +1219,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
         },
       },
@@ -1260,7 +1260,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitCancelOrganizationOffering({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: rootDataOrganization.organization.id,
         },
       },
@@ -1305,7 +1305,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitUpdateOrganizationOffering({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: rootDataOrganization.organization.id,
           offeringCode: code,
         },
@@ -1351,7 +1351,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationTagId: organizationTagDetails.id,
         },
       },
@@ -1392,7 +1392,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationTagId: organizationTagDetails.id,
         },
       },
@@ -1433,7 +1433,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationTagId: organizationTagDetails.id,
         },
       },
@@ -1474,7 +1474,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationTagId: organizationTagDetails.id,
         },
       },
@@ -1515,7 +1515,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     commitDeleteOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: rootDataOrganization.organization.id,
         },
       },

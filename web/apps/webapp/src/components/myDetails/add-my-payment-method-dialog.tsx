@@ -10,10 +10,10 @@ import DialogContent from '@mui/material/DialogContent';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import MyPaymentMethodSetupForm from './my-payment-method-setup-form';
 
 type Props = {
@@ -58,7 +58,7 @@ const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
     commitAddCustomerPaymentMethodIntent({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
         },
       },
       onCompleted: (response, errors) => {

@@ -1,17 +1,18 @@
+import { v7 as uuid } from 'uuid';
 import { LocationAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  ErrorTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  LeadIconTypography,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
+    AppBarWithStackColumn,
+    BodyIconTypography,
+    ErrorTypography,
+    FormFieldLabel,
+    FormStackColumn,
+    LeadIconTypography,
+    PushToRight,
+    SectionIconTypography,
+    SmallIconTypography,
+    StackColumn,
+    StackRow,
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
@@ -36,7 +37,6 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -431,7 +431,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   };
 
   const handleAddClick = ({ date, quantity, resources: resourceIds, type }: BookingDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(start, { timeFrom, timeUntil });
@@ -449,7 +449,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           customerIds: [customerId],
           from,

@@ -24,13 +24,13 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 const RootQuery = graphql`
@@ -157,7 +157,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
     commitCompleteLocationOnboarding({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
         },
       },
       onCompleted: () => {
@@ -172,7 +172,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
   };
 
   const handleFloorPlanAddClick = ({ name }: FloorPlanDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
     if (
@@ -201,7 +201,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
     commitAddLocation({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           locationId,
           name,
@@ -226,7 +226,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
         commitCompleteLocationOnboarding({
           variables: {
             input: {
-              clientMutationId: nanoid(),
+              clientMutationId: uuid(),
             },
           },
           onCompleted: (_, errors) => {
@@ -470,14 +470,14 @@ type RelayProps = {
 
 const AddFloorPlanWithRelay = ({ onReloadRequired, locationId, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addFloorPlan_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
       {
         locationId,
-        floorPlanId: nanoid(),
+        floorPlanId: uuid(),
         resourcesSortingValues: [
           {
             direction: 'ASCENDING',
@@ -493,7 +493,7 @@ const AddFloorPlanWithRelay = ({ onReloadRequired, locationId, onAdded, onCancel
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
       onReloadRequired();
     });
   };

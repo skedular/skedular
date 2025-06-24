@@ -9,11 +9,11 @@ import type { pageOrganizationUser_rootQuery } from '@/queries/__generated__/pag
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationUser_rootQuery, Record<string, unknown>>;
@@ -67,7 +67,7 @@ const MemoUserPage = memo(UserPage);
 
 const UserPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationUser_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { organizationId, customerId } = useParams();
   let finalOrganizationId = '';
@@ -118,7 +118,7 @@ const UserPageWithRelay = () => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

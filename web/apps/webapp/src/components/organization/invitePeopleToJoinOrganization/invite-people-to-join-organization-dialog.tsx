@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
 import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
@@ -7,7 +8,6 @@ import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganiza
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
@@ -67,7 +67,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
     commitInviteCustomersToJoinOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           organizationId,
           emails: emails
             .split(/[\s,]+/)

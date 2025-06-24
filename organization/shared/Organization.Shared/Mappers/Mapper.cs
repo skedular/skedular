@@ -6,7 +6,6 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
 using Stripe;
 using Address = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address;
-using OrganizationBillingDetails = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingDetails;
 using Customer = Organization.Shared.Models.Customer;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
@@ -54,7 +53,8 @@ public class Mapper : IMapper
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            BillingDetails = MapTo(src.BillingDetails)
+            BillingDetails = MapTo(src.BillingDetails),
+            StripeCustomer = MapTo(src.OrganizationStripeCustomer)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -89,6 +89,8 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             }
         }));
+
+        organization.StripePaymentMethods.AddRange(MapTo(src.OrganizationStripePaymentMethods));
 
         return organization;
     }
@@ -181,10 +183,10 @@ public class Mapper : IMapper
                 Country = src.Country.ToSafeString()
             };
 
-    private static OrganizationBillingDetails? MapTo(Models.OrganizationBillingDetails? src) =>
+    private static BillingDetails? MapTo(OrganizationBillingDetails? src) =>
         src is null
             ? null
-            : new OrganizationBillingDetails
+            : new BillingDetails
             {
                 Id = src.Id,
                 CompanyName = src.CompanyName.ToSafeString(),
@@ -407,4 +409,14 @@ public class Mapper : IMapper
             Color = src.Color,
             Organization = organization
         };
+
+    private static IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Models.OrganizationStripePaymentMethod> src) => src.Select(MapTo);
+
+    private static StripePaymentMethod MapTo(Models.OrganizationStripePaymentMethod src) =>
+        new() { Id = src.Id, SetupIntentId = src.SetupIntentId };
+
+    private static StripeCustomer? MapTo(OrganizationStripeCustomer? src) =>
+        src is null
+            ? null
+            : new StripeCustomer { Id = src.Id, StripeCustomerId = src.StripeCustomerId };
 }

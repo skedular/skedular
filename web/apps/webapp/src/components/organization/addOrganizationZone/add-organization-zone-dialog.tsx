@@ -7,11 +7,11 @@ import type { addOrganizationZoneDialog_addZoneMutation } from '@/queries/__gene
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -57,14 +57,14 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
   };
 
   const handleAddClick = ({ name, description }: ZoneDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
 
     commitAddZone({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           organizationId,
           name,

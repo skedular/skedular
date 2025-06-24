@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid';
 import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -15,7 +16,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -118,7 +118,7 @@ const Notifications = ({ queryReference }: Props) => {
     commitRejectInvitationToJoinOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: notification.sourceId,
         },
       },
@@ -159,7 +159,7 @@ const Notifications = ({ queryReference }: Props) => {
     commitAcceptInvitationToJoinOrganization({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: notification.sourceId,
         },
       },
@@ -200,7 +200,7 @@ const Notifications = ({ queryReference }: Props) => {
     commitRejectInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: notification.sourceId,
         },
       },
@@ -241,7 +241,7 @@ const Notifications = ({ queryReference }: Props) => {
     commitAcceptInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: notification.sourceId,
         },
       },
@@ -278,7 +278,7 @@ const Notifications = ({ queryReference }: Props) => {
 
         return {
           id: notification.id,
-          changeTriggerId: rejectedOrAccepted ? nanoid() : undefined,
+          changeTriggerId: rejectedOrAccepted ? uuid() : undefined,
         };
       }),
     [myNotifications, rejectedIds, acceptedIds],
@@ -392,7 +392,7 @@ const MemoNotifications = memo(Notifications);
 
 const NotificationsWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<notifications_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -413,7 +413,7 @@ const NotificationsWithRelay = () => {
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
     });
   };
 

@@ -8,11 +8,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -55,13 +55,13 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
   };
 
   const handleStripeConnectAccountAddClick = ({ name }: StripeConnectAccountDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding Stripe Connect account '${name}'...`} />, infoNotificationOptions);
 
     commitAddStripeConnectAccount({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           name,
           organizationId,

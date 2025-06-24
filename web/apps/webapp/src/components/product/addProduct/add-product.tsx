@@ -15,7 +15,6 @@ import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_ro
 import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -23,6 +22,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 
 type Props = {
@@ -318,7 +318,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     productTagIds,
     locationTagIds,
   }: ProductDetails) => {
-    const id = nanoid();
+    const id = uuid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
     const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
     const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
@@ -339,7 +339,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     commitAddProduct({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           name,
           description,
@@ -607,7 +607,7 @@ type RelayProps = {
 
 const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addProduct_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
@@ -649,7 +649,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReloadId(uuid());
 
       onReloadRequired();
     });

@@ -22,11 +22,11 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import dayjs, { Dayjs } from 'dayjs';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import BookingCard from './booking-card';
 
 type Props = {
@@ -321,7 +321,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: bookingDetails.id,
         },
       },
@@ -357,14 +357,14 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     }
 
     const shortDateFormatFrom = toShortDate(bookingDetails.from);
-    const id = nanoid();
+    const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
     commitAddBooking({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id,
           customerIds: [rootData.me.id],
           from: bookingDetails.from,

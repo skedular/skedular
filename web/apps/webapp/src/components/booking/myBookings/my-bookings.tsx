@@ -22,11 +22,11 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import dayjs, { Dayjs } from 'dayjs';
-import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import MyBookingCard from './my-booking-card';
 
 type Props = {
@@ -267,7 +267,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: bookingDetails.id,
         },
       },

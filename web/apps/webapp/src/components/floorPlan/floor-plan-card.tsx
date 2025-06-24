@@ -15,12 +15,12 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
-import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   floorPlanDetailsRelay: floorPlanCard_FloorPlanDetails$key;
@@ -99,7 +99,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationId, l
       variables: {
         connectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: floorPlanDetails.id,
         },
       },

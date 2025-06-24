@@ -29,12 +29,12 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useRef } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import OrganizationUserLeftSideNavigationMenuContent from './organization-user-left-side-navigation-menu-content';
 
@@ -228,7 +228,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     commitUpdateCustomerDetails({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           id: customerId,
           timezone,
           designation,
@@ -289,7 +289,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [member.id],
           status: 'INACTIVE',
         },
@@ -328,7 +328,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     commitChangeOrganizationMembersStatus({
       variables: {
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [member.id],
           status: 'ACTIVE',
         },
@@ -368,7 +368,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
       variables: {
         connectionIds: teamsConnectionIds,
         input: {
-          clientMutationId: nanoid(),
+          clientMutationId: uuid(),
           ids: [member.id],
         },
       },
