@@ -27,7 +27,7 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value {
             "Ch9tc3RlYW1zX2ludGVybmFsX3YxX3ZhbHVlLnByb3RvEg9tc3RlYW1zaW50",
             "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8iWAoFRXZl",
             "bnQSKwoIbWV0YWRhdGEYASABKAsyGS5tc3RlYW1zaW50ZXJuYWwuTWV0YWRh",
-            "dGESFwoNQXp1cmVUZW5hbnRJZBgCIAEoCUgAQgkKB3BheWxvYWQipQEKCE1l",
+            "dGESFwoNYXp1cmVUZW5hbnRJZBgCIAEoCUgAQgkKB3BheWxvYWQipQEKCE1l",
             "dGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglh",
             "cHBTb3VyY2UYAyABKAkSIwoEdHlwZRgEIAEoDjIVLm1zdGVhbXNpbnRlcm5h",
             "bC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
@@ -116,7 +116,7 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "AzureTenantId" field.</summary>
+    /// <summary>Field number for the "azureTenantId" field.</summary>
     public const int AzureTenantIdFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -127,13 +127,13 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value {
         payloadCase_ = PayloadOneofCase.AzureTenantId;
       }
     }
-    /// <summary>Gets whether the "AzureTenantId" field is set</summary>
+    /// <summary>Gets whether the "azureTenantId" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasAzureTenantId {
       get { return payloadCase_ == PayloadOneofCase.AzureTenantId; }
     }
-    /// <summary> Clears the value of the oneof if it's currently set to "AzureTenantId" </summary>
+    /// <summary> Clears the value of the oneof if it's currently set to "azureTenantId" </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearAzureTenantId() {

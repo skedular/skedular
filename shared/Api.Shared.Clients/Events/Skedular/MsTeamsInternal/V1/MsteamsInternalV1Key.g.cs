@@ -25,7 +25,7 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch1tc3RlYW1zX2ludGVybmFsX3YxX2tleS5wcm90bxIPbXN0ZWFtc2ludGVy",
-            "bmFsIhwKA0tleRIVCg1BenVyZVRlbmFudElkGAEgASgJQjyqAjlBcGkuU2hh",
+            "bmFsIhwKA0tleRIVCg1henVyZVRlbmFudElkGAEgASgJQjyqAjlBcGkuU2hh",
             "cmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1zVGVhbXNJbnRlcm5hbC5W",
             "MS5LZXliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -83,7 +83,7 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key {
       return new Key(this);
     }
 
-    /// <summary>Field number for the "AzureTenantId" field.</summary>
+    /// <summary>Field number for the "azureTenantId" field.</summary>
     public const int AzureTenantIdFieldNumber = 1;
     private string azureTenantId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

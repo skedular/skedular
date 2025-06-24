@@ -12,7 +12,7 @@ enum Type {
 message Event {
   Metadata metadata = 1;
   oneof payload {
-    string AzureTenantId = 2;
+    string azureTenantId = 2;
   }
 }
 

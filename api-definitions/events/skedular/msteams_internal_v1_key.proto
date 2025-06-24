@@ -4,5 +4,5 @@ package msteamsinternal;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key";
 
 message Key {
-    string AzureTenantId = 1;
+    string azureTenantId = 1;
 }

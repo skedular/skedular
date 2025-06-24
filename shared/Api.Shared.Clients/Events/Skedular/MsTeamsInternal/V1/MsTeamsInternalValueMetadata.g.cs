@@ -22,7 +22,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 3,
     deadLetterTopicName: "msteams.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package msteamsinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value\";enum Type {  RefreshAzureTenantTeamsAndChannels = 0;}message Event {  Metadata metadata = 1;  oneof payload {    string AzureTenantId = 2;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]
+    protobufSchema: "syntax = \"proto3\";package msteamsinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value\";enum Type {  RefreshAzureTenantTeamsAndChannels = 0;}message Event {  Metadata metadata = 1;  oneof payload {    string azureTenantId = 2;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

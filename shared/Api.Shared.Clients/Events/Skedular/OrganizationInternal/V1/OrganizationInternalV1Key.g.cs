@@ -26,7 +26,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
           string.Concat(
             "CiJvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfa2V5LnByb3RvEhRvcmdhbml6",
             "YXRpb25pbnRlcm5hbCI0CgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAkS",
-            "FQoNQXp1cmVUZW5hbnRJZBgCIAEoCUJBqgI+QXBpLlNoYXJlZC5DbGllbnRz",
+            "FQoNYXp1cmVUZW5hbnRJZBgCIAEoCUJBqgI+QXBpLlNoYXJlZC5DbGllbnRz",
             "LkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6YXRpb25JbnRlcm5hbC5WMS5LZXli",
             "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -97,7 +97,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       }
     }
 
-    /// <summary>Field number for the "AzureTenantId" field.</summary>
+    /// <summary>Field number for the "azureTenantId" field.</summary>
     public const int AzureTenantIdFieldNumber = 2;
     private string azureTenantId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
