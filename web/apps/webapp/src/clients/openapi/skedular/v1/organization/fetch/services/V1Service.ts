@@ -129,4 +129,61 @@ export class V1Service {
             },
         });
     }
+    /**
+     * return OrganizationStripeConnectAccount onboarding refresh URL
+     * @param code
+     * @returns any should never be returned
+     * @returns Error unexpected error
+     * @throws ApiError
+     */
+    public refreshOrganizationStripeConnectAccountOnboarding(
+        code: string,
+    ): CancelablePromise<any | Error> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/v1/organization/organization-stripe-connect-account/refresh-onboarding-url',
+            query: {
+                'code': code,
+            },
+            errors: {
+                302: `redirect to OrganizationStripeConnectAccounts new onboarding URL`,
+            },
+        });
+    }
+    /**
+     * Stripe Platform Account Webhook
+     * @param stripeSignature Stripe webhook signature
+     * @returns any the status of processing the Stripe Platform Account event
+     * @returns Error unexpected error
+     * @throws ApiError
+     */
+    public processStripePlatformAccountEvent(
+        stripeSignature?: string,
+    ): CancelablePromise<any | Error> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/v1/organization/stripe/platform/account/webhook',
+            headers: {
+                'Stripe-Signature': stripeSignature,
+            },
+        });
+    }
+    /**
+     * Stripe Connect Account Webhook
+     * @param stripeSignature Stripe webhook signature
+     * @returns any the status of processing the Stripe Connect Account event
+     * @returns Error unexpected error
+     * @throws ApiError
+     */
+    public processStripeConnectAccountEvent(
+        stripeSignature?: string,
+    ): CancelablePromise<any | Error> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/v1/organization/stripe/connect/account/webhook',
+            headers: {
+                'Stripe-Signature': stripeSignature,
+            },
+        });
+    }
 }

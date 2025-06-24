@@ -6,6 +6,7 @@ using Organization.Shared.Configurations;
 using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 
 namespace Organization.Shared;
 
@@ -15,7 +16,8 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -44,7 +46,10 @@ public static class Extensions
             .AddScoped<IOrganizationStripeCustomerRepository, OrganizationOrganizationStripeCustomerRepository>()
             .AddScoped<IOrganizationStripePaymentIntentRepository, OrganizationOrganizationStripePaymentIntentRepository>()
             .AddScoped<IOrganizationStripePaymentMethodRepository, OrganizationStripePaymentMethodRepository>()
-            .AddScoped<IOrganizationBillingDetailsRepository, OrganizationOrganizationBillingDetailsRepository>();
+            .AddScoped<IOrganizationBillingDetailsRepository, OrganizationOrganizationBillingDetailsRepository>()
+            .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
+            .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
+            .AddScoped<IOrganizationStripeConnectAccountAuthorizationRepository, OrganizationStripeConnectAccountAuthorizationRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

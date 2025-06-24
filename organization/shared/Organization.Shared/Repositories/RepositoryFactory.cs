@@ -33,6 +33,9 @@ public interface IRepositoryFactory
     IOrganizationStripePaymentIntentRepository OrganizationStripePaymentIntentRepository { get; }
     IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
+    IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
+    IOrganizationStripeConnectAccountAuthorizationRepository OrganizationStripeConnectAccountAuthorizationRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, IRepositoryFactory
@@ -65,6 +68,10 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         OrganizationStripePaymentIntentRepository = new OrganizationOrganizationStripePaymentIntentRepository(_dbContext, timeProvider);
         OrganizationStripePaymentMethodRepository = new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
         OrganizationBillingDetailsRepository = new OrganizationOrganizationBillingDetailsRepository(_dbContext, timeProvider);
+        OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
+        OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
+        OrganizationStripeConnectAccountAuthorizationRepository =
+            new OrganizationStripeConnectAccountAuthorizationRepository(_dbContext, timeProvider);
     }
 
     public IAddressRepository AddressRepository { get; }
@@ -91,4 +98,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IOrganizationStripePaymentIntentRepository OrganizationStripePaymentIntentRepository { get; }
     public IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     public IOrganizationBillingDetailsRepository OrganizationBillingDetailsRepository { get; }
+    public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
+    public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
+    public IOrganizationStripeConnectAccountAuthorizationRepository OrganizationStripeConnectAccountAuthorizationRepository { get; }
 }

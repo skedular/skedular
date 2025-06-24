@@ -3,11 +3,11 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
-using Payment.Shared.Models;
+using Organization.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace Payment.Api.GraphQL;
+namespace Organization.Api.GraphQL.Stripe;
 
 [GraphQLName("AddOrganizationStripeConnectAccountInput")]
 public class AddOrganizationStripeConnectAccountInput
@@ -102,11 +102,3 @@ public class OrganizationStripeConnectAccountConnection : Enterprise.Shared.Grap
 [GraphQLName("OrganizationStripeConnectAccountEdge")]
 public class OrganizationStripeConnectAccountEdge(OrganizationStripeConnectAccountDetails node, string cursor)
     : Edge<OrganizationStripeConnectAccountDetails>(node, cursor);
-
-[GraphQLName("Payment_OrganizationDetails")]
-public class OrganizationDetails
-{
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("website")] public string? Website { get; set; }
-}

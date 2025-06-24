@@ -17,8 +17,14 @@ export { $Error } from './schemas/$Error';
 export { $Version } from './schemas/$Version';
 
 export { AzureService } from './services/AzureService';
+export { ConnectService } from './services/ConnectService';
+export { OnboardingService } from './services/OnboardingService';
 export { OrganizationService } from './services/OrganizationService';
+export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentMethodService } from './services/PaymentMethodService';
+export { PlatformService } from './services/PlatformService';
 export { SsoService } from './services/SsoService';
+export { StripeService } from './services/StripeService';
 export { TenantService } from './services/TenantService';
 export { V1Service } from './services/V1Service';
+export { WebhookService } from './services/WebhookService';

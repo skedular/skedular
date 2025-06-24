@@ -2,17 +2,17 @@ import { v7 as uuid } from 'uuid';
 import { LocationAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import {
-    AppBarWithStackColumn,
-    BodyIconTypography,
-    ErrorTypography,
-    FormFieldLabel,
-    FormStackColumn,
-    LeadIconTypography,
-    PushToRight,
-    SectionIconTypography,
-    SmallIconTypography,
-    StackColumn,
-    StackRow,
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  ErrorTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';

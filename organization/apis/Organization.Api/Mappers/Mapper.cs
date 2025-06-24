@@ -9,6 +9,7 @@ using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Sso;
+using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
 using Organization.Shared.Models;
 using Stripe;
@@ -38,7 +39,9 @@ using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
+using OrganizationDetails = Organization.Api.GraphQL.OrganizationDetails;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 
 namespace Organization.Api.Mappers;
@@ -155,6 +158,11 @@ public interface IMapper
         Shared.Models.OrganizationBillingDetails? src);
 
     Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src);
+    AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src);
+    OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Shared.Database.Entities.Organization organization);
+    Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
+    OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
+    OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
 }
 
 public class Mapper : IMapper
@@ -195,6 +203,7 @@ public class Mapper : IMapper
         organization.BillingDetails = MapTo(src.BillingDetails, organization);
         organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
+        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
 
         return organization;
     }
@@ -920,6 +929,123 @@ public class Mapper : IMapper
                 Country = src.Country
             };
 
+    public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
+        new()
+        {
+            BusinessProfile = new AccountBusinessProfileOptions
+            {
+                Name = src.Name,
+                Url = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
+                SupportUrl = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
+                SupportEmail = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+                SupportPhone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
+            },
+            Company = new AccountCompanyOptions
+            {
+                Name = src.Name,
+                Address = src.PhysicalAddress is null
+                    ? null
+                    : new AddressOptions
+                    {
+                        Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
+                        Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
+                        City = src.PhysicalAddress?.City.ToSafeString(),
+                        State = src.PhysicalAddress?.Province.ToSafeString(),
+                        PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
+                        Country = src.PhysicalAddress?.Country.ToSafeString()
+                    },
+                Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
+            },
+            BusinessType = "company",
+            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
+            Capabilities =
+                new AccountCapabilitiesOptions
+                {
+                    CardPayments = new AccountCapabilitiesCardPaymentsOptions { Requested = true },
+                    Transfers = new AccountCapabilitiesTransfersOptions { Requested = true }
+                },
+            Type = "standard",
+            Metadata = new Dictionary<string, string> { { "organizationId", src.Id } }
+        };
+
+    public OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Shared.Database.Entities.Organization organization) =>
+        new()
+        {
+            Id = id,
+            StripeAccountId = src.Id,
+            Name = name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type.ToSafeString(),
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            CompanyName = src.Company?.Name,
+            Url = organization.Website,
+            SupportUrl = organization.Website,
+            ContactEmail = src.Email,
+            ContactPhone = src.Company?.Phone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString(),
+            CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString(),
+            Organization = organization
+        };
+
+    public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            StripeAccountId = src.StripeAccountId,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            Url = src.Url,
+            SupportUrl = src.SupportUrl,
+            CompanyName = src.CompanyName,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            Organization = MapTo(src.Organization!),
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+        };
+
+    public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountDetails
+            {
+                Id = src.Id,
+                Name = src.Name,
+                ChargesEnabled = src.ChargesEnabled,
+                PayoutsEnabled = src.PayoutsEnabled,
+                Type = src.Type,
+                Country = src.Country,
+                DefaultCurrency = src.DefaultCurrency,
+                BusinessType = src.BusinessType,
+                CompanyName = src.CompanyName,
+                Url = src.Url,
+                SupportUrl = src.SupportUrl,
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone,
+                CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+                CapabilitiesTransfers = src.CapabilitiesTransfers,
+                OnboardingUrl = src.OnboardingUrl,
+                OnboardingCompleted = src.OnboardingCompleted,
+                Organization = MapTo(src.Organization)!
+            };
+
+    public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
@@ -1434,8 +1560,7 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationStripePaymentMethod> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src,
-        Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
+        Shared.Models.Organization organization) => src.Select(item => MapTo(item, organization));
 
     private static OrganizationStripePaymentMethod MapTo(
         Shared.Database.Entities.OrganizationStripePaymentMethod src,
@@ -1472,4 +1597,46 @@ public class Mapper : IMapper
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
+
+    private static OrganizationStripeConnectAccountAuthorization? MapTo(
+        Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
+
+    private static IEnumerable<Shared.Models.OrganizationStripeConnectAccount> MapTo(
+        IEnumerable<OrganizationStripeConnectAccount> src,
+        Shared.Models.Organization organization) => src.Select(item => MapTo(item, organization));
+
+    private static Shared.Models.OrganizationStripeConnectAccount MapTo(
+        OrganizationStripeConnectAccount src,
+        Shared.Models.Organization organization) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        DeletedAt = src.DeletedAt,
+        StripeAccountId = src.StripeAccountId,
+        Name = src.Name,
+        ChargesEnabled = src.ChargesEnabled,
+        PayoutsEnabled = src.PayoutsEnabled,
+        Type = src.Type,
+        Country = src.Country,
+        DefaultCurrency = src.DefaultCurrency,
+        BusinessType = src.BusinessType,
+        Url = src.Url,
+        SupportUrl = src.SupportUrl,
+        CompanyName = src.CompanyName,
+        ContactEmail = src.ContactEmail,
+        ContactPhone = src.ContactPhone,
+        DetailsSubmitted = src.DetailsSubmitted,
+        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+        CapabilitiesTransfers = src.CapabilitiesTransfers,
+        OnboardingUrl = src.OnboardingUrl,
+        Organization = organization,
+        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+    };
 }

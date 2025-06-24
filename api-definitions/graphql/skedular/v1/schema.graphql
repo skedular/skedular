@@ -813,7 +813,7 @@ type OrganizationStripeConnectAccountDetails {
   name: String!
   onboardingCompleted: Boolean!
   onboardingUrl: String!
-  organization: Payment_OrganizationDetails!
+  organization: OrganizationDetails!
   payoutsEnabled: Boolean!
   supportUrl: String
   type: String!
@@ -896,12 +896,6 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
-}
-
-type Payment_OrganizationDetails {
-  name: String!
-  uniqueId: ID!
-  website: String
 }
 
 type PriceUnitDetails {

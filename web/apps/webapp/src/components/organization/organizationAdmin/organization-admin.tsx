@@ -153,7 +153,7 @@ const organizationBillingSchema = object({
   country: string().required('Country is required'),
 });
 
-type OrganziationSsoSettingsDetails = {
+type OrganizationSsoSettingsDetails = {
   entityId: string;
   loginUrl: string;
   appFederationMetadataUrl: string;
@@ -874,7 +874,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
   };
 
-  const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
+  const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganizationSsoSettingsDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -1746,7 +1746,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
                     ref={(divElement) => {
                       sectionRefs.current['setup'] = divElement;
                     }}
@@ -1756,7 +1760,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredOrganizationDetailsFields.name} />
                     </FormFieldLabel>
@@ -1834,7 +1844,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1862,7 +1878,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
                     ref={(divElement) => {
                       sectionRefs.current['billing-payment-setup'] = divElement;
                     }}
@@ -1872,7 +1892,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Company name">
                       <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
                     </FormFieldLabel>
@@ -1910,7 +1936,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: defaultPadding,
+                      paddingRight: defaultPadding,
+                      paddingTop: defaultPadding,
+                    }}
+                  >
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1921,7 +1953,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               )}
             />
 
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <StackColumn
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+              }}
+            >
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Payment Method" />
@@ -1940,7 +1978,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             </StackColumn>
 
             {paymentMethodExist && (
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <StackColumn
+                sx={{
+                  paddingLeft: defaultPadding,
+                  paddingRight: defaultPadding,
+                  paddingTop: defaultPadding,
+                }}
+              >
                 <StackRow>
                   {organization.paymentMethods.map((item) => (
                     <StackColumn key={item.id}>
@@ -1955,7 +1999,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             )}
 
             {!paymentMethodExist && (
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <StackColumn
+                sx={{
+                  paddingLeft: defaultPadding,
+                  paddingRight: defaultPadding,
+                  paddingTop: defaultPadding,
+                }}
+              >
                 <SmallIconTypography label="No payment method setup yet" />
               </StackColumn>
             )}
@@ -1972,7 +2022,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
-                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
                       ref={(divElement) => {
                         sectionRefs.current['sso-setup'] = divElement;
                       }}
@@ -1982,7 +2036,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       <Divider />
                     </StackColumn>
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                    >
                       <FormFieldLabel label="Enable Sign sign-on">
                         <Switch defaultChecked={ssoEnabled} onChange={handleEnableSsoChange} />
                       </FormFieldLabel>
@@ -2005,7 +2065,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </StackColumn>
 
                     {ssoEnabled && (
-                      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackColumn
+                        sx={{
+                          paddingLeft: defaultPadding,
+                          paddingRight: defaultPadding,
+                          paddingTop: defaultPadding,
+                        }}
+                      >
                         <StackRow>
                           <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                             Update
@@ -2231,7 +2297,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                         {availableOffering.unitPrice > 0 && (
                           <ExtraLargeHeadingIconTypography label={(availableOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
                         )}
-                        {availableOffering.isEnterprise && <ExtraLargeHeadingIconTypography label="TBC" sx={{ paddingTop: 4, color: coal }} />}
+                        {availableOffering.isEnterprise && (
+                          <ExtraLargeHeadingIconTypography
+                            label="TBC"
+                            sx={{
+                              paddingTop: 4,
+                              color: coal,
+                            }}
+                          />
+                        )}
                         <BodyIconTypography label="$" sx={{ color: coal }} />
                       </StackRow>
 
@@ -2289,7 +2363,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       )}
 
                       {organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
-                        <Button href="mailto:support@getskedular.com" variant="contained" sx={{ textTransform: 'none', backgroundColor: 'black', color: 'white' }}>
+                        <Button
+                          href="mailto:support@getskedular.com"
+                          variant="contained"
+                          sx={{
+                            textTransform: 'none',
+                            backgroundColor: 'black',
+                            color: 'white',
+                          }}
+                        >
                           Contact Us
                         </Button>
                       )}
@@ -2310,7 +2392,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               <Divider />
             </StackColumn>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <StackRow
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+              }}
+            >
               <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveOrganizationClicked} sx={{ textTransform: 'none' }}>
                 Remove Organization
               </Button>

@@ -5,24 +5,12 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { ConnectService } from './services/ConnectService';
-import { OnboardingService } from './services/OnboardingService';
-import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentService } from './services/PaymentService';
-import { PlatformService } from './services/PlatformService';
-import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
-import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBillingV1Client {
-    public readonly connect: ConnectService;
-    public readonly onboarding: OnboardingService;
-    public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly payment: PaymentService;
-    public readonly platform: PlatformService;
-    public readonly stripe: StripeService;
     public readonly v1: V1Service;
-    public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -36,14 +24,8 @@ export class SkedularBillingV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
-        this.connect = new ConnectService(this.request);
-        this.onboarding = new OnboardingService(this.request);
-        this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.payment = new PaymentService(this.request);
-        this.platform = new PlatformService(this.request);
-        this.stripe = new StripeService(this.request);
         this.v1 = new V1Service(this.request);
-        this.webhook = new WebhookService(this.request);
     }
 }
 

@@ -2558,6 +2558,235 @@ namespace Organization.Shared.Database.Migrations
                     b.ToTable("OrganizationSsoSetting");
                 });
 
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccount", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("BusinessType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CapabilitiesCardPayments")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CapabilitiesTransfers")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("ChargesEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("CompanyName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ContactEmail")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<string>("ContactPhone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DefaultCurrency")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("DetailsSubmitted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("OnboardingUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("PayoutsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("StripeAccountId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SupportUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CapabilitiesCardPayments");
+
+                    b.HasIndex("CapabilitiesTransfers");
+
+                    b.HasIndex("ChargesEnabled");
+
+                    b.HasIndex("Country");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DefaultCurrency");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("DetailsSubmitted");
+
+                    b.HasIndex("IsDefault");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("PayoutsEnabled");
+
+                    b.HasIndex("StripeAccountId");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("OrganizationStripeConnectAccount");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsAuthorized")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationStripeConnectAccountId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("IsAuthorized");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationStripeConnectAccountId")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationStripeConnectAccountAuthorization");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccountRefreshCode", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationStripeConnectAccountId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RedirectUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationStripeConnectAccountId");
+
+                    b.ToTable("OrganizationStripeConnectAccountRefreshCode");
+                });
+
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeCustomer", b =>
                 {
                     b.Property<string>("Id")
@@ -3109,6 +3338,39 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccount", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("OrganizationStripeConnectAccounts")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.OrganizationStripeConnectAccount", "OrganizationStripeConnectAccount")
+                        .WithOne("OrganizationStripeConnectAccountAuthorization")
+                        .HasForeignKey("Organization.Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization", "OrganizationStripeConnectAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrganizationStripeConnectAccount");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccountRefreshCode", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.OrganizationStripeConnectAccount", "OrganizationStripeConnectAccount")
+                        .WithMany("OrganizationStripeConnectAccountRefreshCodes")
+                        .HasForeignKey("OrganizationStripeConnectAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrganizationStripeConnectAccount");
+                });
+
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeCustomer", b =>
                 {
                     b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
@@ -3208,6 +3470,8 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Navigation("OrganizationSsoSettings");
 
+                    b.Navigation("OrganizationStripeConnectAccounts");
+
                     b.Navigation("OrganizationStripeCustomer");
 
                     b.Navigation("OrganizationStripePaymentMethods");
@@ -3225,6 +3489,13 @@ namespace Organization.Shared.Database.Migrations
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationOffering", b =>
                 {
                     b.Navigation("OrganizationOfferingActiveMembers");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripeConnectAccount", b =>
+                {
+                    b.Navigation("OrganizationStripeConnectAccountAuthorization");
+
+                    b.Navigation("OrganizationStripeConnectAccountRefreshCodes");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationStripePaymentIntent", b =>

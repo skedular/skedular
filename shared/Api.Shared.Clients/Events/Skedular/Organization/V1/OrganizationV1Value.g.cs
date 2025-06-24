@@ -35,7 +35,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
             "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
             "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCKRBQoMT3JnYW5pemF0",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCLUBQoMT3JnYW5pemF0",
             "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
             "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
             "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
@@ -50,48 +50,51 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "KAsyHC5vcmdhbml6YXRpb24uQmlsbGluZ0RldGFpbHMSNAoOc3RyaXBlQ3Vz",
             "dG9tZXIYEiABKAsyHC5vcmdhbml6YXRpb24uU3RyaXBlQ3VzdG9tZXISPwoU",
             "c3RyaXBlUGF5bWVudE1ldGhvZHMYEyADKAsyIS5vcmdhbml6YXRpb24uU3Ry",
-            "aXBlUGF5bWVudE1ldGhvZCJ8ChJPcmdhbml6YXRpb25NZW1iZXISCgoCaWQY",
-            "ASABKAkSEgoKY3VzdG9tZXJJZBgCIAEoCRIgCgRyb2xlGAMgASgOMhIub3Jn",
-            "YW5pemF0aW9uLlJvbGUSJAoGc3RhdHVzGAQgASgOMhQub3JnYW5pemF0aW9u",
-            "LlN0YXR1cyLRAQoIT2ZmZXJpbmcSCgoCaWQYASABKAkSDAoEY29kZRgCIAEo",
-            "CRIpCgVzdGFydBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAS",
-            "JwoDZW5kGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIRCglh",
-            "dXRvUmVuZXcYBSABKAgSEQoJdW5pdFByaWNlGAYgASgFEhkKEWFjdGl2ZUN1",
-            "c3RvbWVySWRzGAcgAygJEhYKDm9yZ2FuaXphdGlvbklkGAggASgJIhYKCExv",
-            "Y2F0aW9uEgoKAmlkGAEgASgJIpkBChxJbnZpdGF0aW9uVG9Kb2luT3JnYW5p",
-            "emF0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2ds",
-            "ZS5wcm90b2J1Zi5UaW1lc3RhbXASFgoOb3JnYW5pemF0aW9uSWQYAyABKAkS",
-            "EwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRlZUlkGAUgASgJIlEKA1Rh",
-            "ZxIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMg",
-            "ASgJEgwKBHR5cGUYBCABKAkSDQoFY29sb3IYBSABKAkifQoXT3JnYW5pemF0",
-            "aW9uU3NvU2V0dGluZ3MSCgoCaWQYASABKAkSEAoIZW50aXR5SWQYAiABKAkS",
-            "EAoIbG9naW5VcmwYAyABKAkSIAoYYXBwRmVkZXJhdGlvbk1ldGFkYXRhVXJs",
-            "GAQgASgJEhAKCGlzQWN0aXZlGAUgASgIIpMBCgdBZGRyZXNzEgoKAmlkGAEg",
-            "ASgJEhQKDGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRyZXNzTGluZTIYAyAB",
-            "KAkSDgoGc3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkSEAoIcHJvdmluY2UY",
-            "BiABKAkSDwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5GAggASgJIr4BCg5C",
-            "aWxsaW5nRGV0YWlscxIKCgJpZBgBIAEoCRITCgtjb21wYW55TmFtZRgCIAEo",
-            "CRINCgVlbWFpbBgDIAEoCRIUCgxhZGRyZXNzTGluZTEYBCABKAkSFAoMYWRk",
-            "cmVzc0xpbmUyGAUgASgJEg4KBnN1YnVyYhgGIAEoCRIMCgRjaXR5GAcgASgJ",
-            "EhAKCHByb3ZpbmNlGAggASgJEg8KB3ppcGNvZGUYCSABKAkSDwoHY291bnRy",
-            "eRgKIAEoCSI2Cg5TdHJpcGVDdXN0b21lchIKCgJpZBgBIAEoCRIYChBzdHJp",
-            "cGVDdXN0b21lcklkGAIgASgJIjgKE1N0cmlwZVBheW1lbnRNZXRob2QSCgoC",
-            "aWQYASABKAkSFQoNc2V0dXBJbnRlbnRJZBgCIAEoCSqtAQoEVHlwZRIYChRP",
-            "cmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQ",
-            "ARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhIn",
-            "CiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09y",
-            "Z2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQ",
-            "ABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoK",
-            "BkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50",
-            "cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90",
-            "bzM="));
+            "aXBlUGF5bWVudE1ldGhvZBJBChVzdHJpcGVDb25uZWN0QWNjb3VudHMYFCAD",
+            "KAsyIi5vcmdhbml6YXRpb24uU3RyaXBlQ29ubmVjdEFjY291bnQifAoST3Jn",
+            "YW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiAB",
+            "KAkSIAoEcm9sZRgDIAEoDjISLm9yZ2FuaXphdGlvbi5Sb2xlEiQKBnN0YXR1",
+            "cxgEIAEoDjIULm9yZ2FuaXphdGlvbi5TdGF0dXMi0QEKCE9mZmVyaW5nEgoK",
+            "AmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29n",
+            "bGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5w",
+            "cm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQ",
+            "cmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdh",
+            "bml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQoc",
+            "SW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglk",
+            "ZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYK",
+            "Dm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEK",
+            "CWludml0ZWVJZBgFIAEoCSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgC",
+            "IAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNv",
+            "bG9yGAUgASgJIn0KF09yZ2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEg",
+            "ASgJEhAKCGVudGl0eUlkGAIgASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFw",
+            "cEZlZGVyYXRpb25NZXRhZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEo",
+            "CCKTAQoHQWRkcmVzcxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiAB",
+            "KAkSFAoMYWRkcmVzc0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRj",
+            "aXR5GAUgASgJEhAKCHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkS",
+            "DwoHY291bnRyeRgIIAEoCSK+AQoOQmlsbGluZ0RldGFpbHMSCgoCaWQYASAB",
+            "KAkSEwoLY29tcGFueU5hbWUYAiABKAkSDQoFZW1haWwYAyABKAkSFAoMYWRk",
+            "cmVzc0xpbmUxGAQgASgJEhQKDGFkZHJlc3NMaW5lMhgFIAEoCRIOCgZzdWJ1",
+            "cmIYBiABKAkSDAoEY2l0eRgHIAEoCRIQCghwcm92aW5jZRgIIAEoCRIPCgd6",
+            "aXBjb2RlGAkgASgJEg8KB2NvdW50cnkYCiABKAkiNgoOU3RyaXBlQ3VzdG9t",
+            "ZXISCgoCaWQYASABKAkSGAoQc3RyaXBlQ3VzdG9tZXJJZBgCIAEoCSI4ChNT",
+            "dHJpcGVQYXltZW50TWV0aG9kEgoKAmlkGAEgASgJEhUKDXNldHVwSW50ZW50",
+            "SWQYAiABKAkiTgoUU3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkS",
+            "FwoPc3RyaXBlQWNjb3VudElkGAIgASgJEhEKCWlzRGVmYXVsdBgDIAEoCCqt",
+            "AQoEVHlwZRIYChRPcmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXph",
+            "dGlvbkRlbGV0ZWQQARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9u",
+            "VXBzZXJ0ZWQQAhInCiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVs",
+            "ZXRlZBADEh8KG09yZ2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJv",
+            "bGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIq",
+            "IgoGU3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5T",
+            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYx",
+            "LlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy", "PhysicalAddress", "ContactEmail", "ContactPhone", "BillingDetails", "StripeCustomer", "StripePaymentMethods" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy", "PhysicalAddress", "ContactEmail", "ContactPhone", "BillingDetails", "StripeCustomer", "StripePaymentMethods", "StripeConnectAccounts" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -101,7 +104,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.BillingDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.BillingDetails.Parser, new[]{ "Id", "CompanyName", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeCustomer), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeCustomer.Parser, new[]{ "Id", "StripeCustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod.Parser, new[]{ "Id", "SetupIntentId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod.Parser, new[]{ "Id", "SetupIntentId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount.Parser, new[]{ "Id", "StripeAccountId", "IsDefault" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1176,6 +1180,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       billingDetails_ = other.billingDetails_ != null ? other.billingDetails_.Clone() : null;
       stripeCustomer_ = other.stripeCustomer_ != null ? other.stripeCustomer_.Clone() : null;
       stripePaymentMethods_ = other.stripePaymentMethods_.Clone();
+      stripeConnectAccounts_ = other.stripeConnectAccounts_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1409,6 +1414,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return stripePaymentMethods_; }
     }
 
+    /// <summary>Field number for the "stripeConnectAccounts" field.</summary>
+    public const int StripeConnectAccountsFieldNumber = 20;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount> _repeated_stripeConnectAccounts_codec
+        = pb::FieldCodec.ForMessage(162, global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount> stripeConnectAccounts_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount> StripeConnectAccounts {
+      get { return stripeConnectAccounts_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1443,6 +1459,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (!object.Equals(BillingDetails, other.BillingDetails)) return false;
       if (!object.Equals(StripeCustomer, other.StripeCustomer)) return false;
       if(!stripePaymentMethods_.Equals(other.stripePaymentMethods_)) return false;
+      if(!stripeConnectAccounts_.Equals(other.stripeConnectAccounts_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1469,6 +1486,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (billingDetails_ != null) hash ^= BillingDetails.GetHashCode();
       if (stripeCustomer_ != null) hash ^= StripeCustomer.GetHashCode();
       hash ^= stripePaymentMethods_.GetHashCode();
+      hash ^= stripeConnectAccounts_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1551,6 +1569,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteMessage(StripeCustomer);
       }
       stripePaymentMethods_.WriteTo(output, _repeated_stripePaymentMethods_codec);
+      stripeConnectAccounts_.WriteTo(output, _repeated_stripeConnectAccounts_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1625,6 +1644,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteMessage(StripeCustomer);
       }
       stripePaymentMethods_.WriteTo(ref output, _repeated_stripePaymentMethods_codec);
+      stripeConnectAccounts_.WriteTo(ref output, _repeated_stripeConnectAccounts_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1684,6 +1704,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(StripeCustomer);
       }
       size += stripePaymentMethods_.CalculateSize(_repeated_stripePaymentMethods_codec);
+      size += stripeConnectAccounts_.CalculateSize(_repeated_stripeConnectAccounts_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1763,6 +1784,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         StripeCustomer.MergeFrom(other.StripeCustomer);
       }
       stripePaymentMethods_.Add(other.stripePaymentMethods_);
+      stripeConnectAccounts_.Add(other.stripeConnectAccounts_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1876,6 +1898,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             stripePaymentMethods_.AddEntriesFrom(input, _repeated_stripePaymentMethods_codec);
             break;
           }
+          case 162: {
+            stripeConnectAccounts_.AddEntriesFrom(input, _repeated_stripeConnectAccounts_codec);
+            break;
+          }
         }
       }
     #endif
@@ -1987,6 +2013,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 154: {
             stripePaymentMethods_.AddEntriesFrom(ref input, _repeated_stripePaymentMethods_codec);
+            break;
+          }
+          case 162: {
+            stripeConnectAccounts_.AddEntriesFrom(ref input, _repeated_stripeConnectAccounts_codec);
             break;
           }
         }
@@ -5463,6 +5493,278 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 18: {
             SetupIntentId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class StripeConnectAccount : pb::IMessage<StripeConnectAccount>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<StripeConnectAccount> _parser = new pb::MessageParser<StripeConnectAccount>(() => new StripeConnectAccount());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<StripeConnectAccount> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public StripeConnectAccount() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public StripeConnectAccount(StripeConnectAccount other) : this() {
+      id_ = other.id_;
+      stripeAccountId_ = other.stripeAccountId_;
+      isDefault_ = other.isDefault_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public StripeConnectAccount Clone() {
+      return new StripeConnectAccount(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "stripeAccountId" field.</summary>
+    public const int StripeAccountIdFieldNumber = 2;
+    private string stripeAccountId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string StripeAccountId {
+      get { return stripeAccountId_; }
+      set {
+        stripeAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "isDefault" field.</summary>
+    public const int IsDefaultFieldNumber = 3;
+    private bool isDefault_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsDefault {
+      get { return isDefault_; }
+      set {
+        isDefault_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as StripeConnectAccount);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(StripeConnectAccount other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (StripeAccountId != other.StripeAccountId) return false;
+      if (IsDefault != other.IsDefault) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (StripeAccountId.Length != 0) hash ^= StripeAccountId.GetHashCode();
+      if (IsDefault != false) hash ^= IsDefault.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (StripeAccountId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(StripeAccountId);
+      }
+      if (IsDefault != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(IsDefault);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (StripeAccountId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(StripeAccountId);
+      }
+      if (IsDefault != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(IsDefault);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (StripeAccountId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeAccountId);
+      }
+      if (IsDefault != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(StripeConnectAccount other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.StripeAccountId.Length != 0) {
+        StripeAccountId = other.StripeAccountId;
+      }
+      if (other.IsDefault != false) {
+        IsDefault = other.IsDefault;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            StripeAccountId = input.ReadString();
+            break;
+          }
+          case 24: {
+            IsDefault = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            StripeAccountId = input.ReadString();
+            break;
+          }
+          case 24: {
+            IsDefault = input.ReadBool();
             break;
           }
         }

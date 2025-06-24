@@ -1,7 +1,5 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using HotChocolate.Types.Pagination;
-using Payment.Api.GraphQL;
 using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
@@ -17,8 +15,6 @@ public interface IMapper
     AccountCreateOptions MapToStripeAccountRequest(Organization src);
     StripeConnectAccount MapTo(Account src, string id, string name, Organization organization);
     Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
-    OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.StripeConnectAccount? src);
-    OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.StripeConnectAccount> src);
 }
 
 public class Mapper : IMapper
@@ -123,33 +119,6 @@ public class Mapper : IMapper
             StripeConnectAccountAuthorization = MapTo(src.StripeConnectAccountAuthorization)
         };
 
-    public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.StripeConnectAccount? src) =>
-        src is null
-            ? null
-            : new OrganizationStripeConnectAccountDetails
-            {
-                Id = src.Id,
-                Name = src.Name,
-                ChargesEnabled = src.ChargesEnabled,
-                PayoutsEnabled = src.PayoutsEnabled,
-                Type = src.Type,
-                Country = src.Country,
-                DefaultCurrency = src.DefaultCurrency,
-                BusinessType = src.BusinessType,
-                CompanyName = src.CompanyName,
-                Url = src.Url,
-                SupportUrl = src.SupportUrl,
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone,
-                CapabilitiesCardPayments = src.CapabilitiesCardPayments,
-                CapabilitiesTransfers = src.CapabilitiesTransfers,
-                OnboardingUrl = src.OnboardingUrl,
-                OnboardingCompleted = src.OnboardingCompleted,
-                Organization = MapTo(src.Organization!)
-            };
-
-    public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.StripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
-
     private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -157,9 +126,6 @@ public class Mapper : IMapper
         src is null
             ? null
             : new Shared.Models.Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
-
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new() { UniqueId = src.Id, Name = src.Name.ToSafeString(), Website = src.Website };
 
     private static Shared.Models.Organization MapTo(Organization src) =>
         new()

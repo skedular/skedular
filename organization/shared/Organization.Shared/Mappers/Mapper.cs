@@ -91,6 +91,7 @@ public class Mapper : IMapper
         }));
 
         organization.StripePaymentMethods.AddRange(MapTo(src.OrganizationStripePaymentMethods));
+        organization.StripeConnectAccounts.AddRange(MapTo(src.OrganizationStripeConnectAccounts));
 
         return organization;
     }
@@ -419,4 +420,9 @@ public class Mapper : IMapper
         src is null
             ? null
             : new StripeCustomer { Id = src.Id, StripeCustomerId = src.StripeCustomerId };
+
+    private static IEnumerable<StripeConnectAccount> MapTo(IEnumerable<OrganizationStripeConnectAccount> src) => src.Select(MapTo);
+
+    private static StripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+        new() { Id = src.Id, StripeAccountId = src.StripeAccountId.ToSafeString(), IsDefault = src.IsDefault };
 }

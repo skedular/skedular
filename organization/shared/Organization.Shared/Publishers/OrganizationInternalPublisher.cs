@@ -11,6 +11,7 @@ public interface IOrganizationInternalPublisher
 {
     Task PublishRecordOrganizationDailyMemberCountAsync(IEnumerable<string> organizationIds, CancellationToken cancellationToken);
     Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, CancellationToken cancellationToken);
+    Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
 public class OrganizationInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
@@ -48,4 +49,20 @@ public class OrganizationInternalPublisher(ApplicationConfiguration applicationC
             };
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
+
+    public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
+    {
+        var key = new Key { StripeConnectAccountWebhookKey = id };
+        var @event = new Event
+        {
+            Metadata = Event.NewMetadata(
+                applicationConfiguration.DomainSource,
+                applicationConfiguration.AppSource,
+                Type.StripeConnectAccountWebhookEventReceived,
+                context.GetCorrelationId()),
+            StripeConnectAccountWebhookEventPayload = payload
+        };
+
+        await publisher.PublishAsync(key, @event, cancellationToken);
+    }
 }

@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using Organization.Shared.Models;
+using Stripe;
 using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using AzureTenantMember = Organization.Shared.Database.Entities.AzureTenantMember;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
@@ -13,6 +14,7 @@ using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
+using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 
 namespace Organization.Processors.Mappers;
 
@@ -69,6 +71,7 @@ public interface IMapper
     Shared.Models.AzureTenantMember MapTo(User src);
     AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant);
     AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest, AzureTenant azureTenant);
+    OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
 }
 
 public class Mapper : IMapper
@@ -264,6 +267,7 @@ public class Mapper : IMapper
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
         organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
 
         return organization;
     }
@@ -342,6 +346,26 @@ public class Mapper : IMapper
         dest.PhotoUrl504 = src.PhotoUrl504;
         dest.PhotoUrl648 = src.PhotoUrl648;
         dest.AzureTenant = azureTenant;
+        return dest;
+    }
+
+    public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
+    {
+        dest.StripeAccountId = src.Id;
+        dest.ChargesEnabled = src.ChargesEnabled;
+        dest.PayoutsEnabled = src.PayoutsEnabled;
+        dest.Type = src.Type.ToSafeString();
+        dest.Country = src.Country;
+        dest.DefaultCurrency = src.DefaultCurrency;
+        dest.BusinessType = src.BusinessType;
+        dest.CompanyName = src.BusinessProfile?.Name;
+        dest.Url = src.BusinessProfile?.Url;
+        dest.SupportUrl = src.BusinessProfile?.SupportUrl;
+        dest.ContactEmail = src.Email;
+        dest.ContactPhone = src.BusinessProfile?.SupportPhone;
+        dest.DetailsSubmitted = src.DetailsSubmitted;
+        dest.CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString();
+        dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
         return dest;
     }
 
@@ -627,4 +651,45 @@ public class Mapper : IMapper
             Organization = organization
         };
 
+    private static IEnumerable<Shared.Models.OrganizationStripeConnectAccount> MapTo(
+        IEnumerable<OrganizationStripeConnectAccount> src,
+        Shared.Models.Organization organization) => src.Select(item => MapTo(item, organization));
+
+    private static OrganizationStripeConnectAccountAuthorization? MapTo(
+        Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
+
+    private static Shared.Models.OrganizationStripeConnectAccount MapTo(
+        OrganizationStripeConnectAccount src,
+        Shared.Models.Organization organization) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        DeletedAt = src.DeletedAt,
+        StripeAccountId = src.StripeAccountId,
+        Name = src.Name,
+        ChargesEnabled = src.ChargesEnabled,
+        PayoutsEnabled = src.PayoutsEnabled,
+        Type = src.Type,
+        Country = src.Country,
+        DefaultCurrency = src.DefaultCurrency,
+        BusinessType = src.BusinessType,
+        Url = src.Url,
+        SupportUrl = src.SupportUrl,
+        CompanyName = src.CompanyName,
+        ContactEmail = src.ContactEmail,
+        ContactPhone = src.ContactPhone,
+        DetailsSubmitted = src.DetailsSubmitted,
+        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+        CapabilitiesTransfers = src.CapabilitiesTransfers,
+        OnboardingUrl = src.OnboardingUrl,
+        Organization = organization,
+        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+    };
 }

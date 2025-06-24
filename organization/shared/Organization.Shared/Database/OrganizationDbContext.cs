@@ -34,6 +34,9 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<OrganizationStripePaymentIntent> OrganizationStripePaymentIntent { get; set; }
     public DbSet<OrganizationStripePaymentMethod> OrganizationStripePaymentMethod { get; set; }
     public DbSet<OrganizationBillingDetails> OrganizationBillingDetails { get; set; }
+    public DbSet<OrganizationStripeConnectAccount> OrganizationStripeConnectAccount { get; set; }
+    public DbSet<OrganizationStripeConnectAccountAuthorization> OrganizationStripeConnectAccountAuthorization { get; set; }
+    public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 

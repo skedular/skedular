@@ -73,8 +73,8 @@ public interface IMapper
         Shared.Database.Entities.Address dest,
         Shared.Database.Entities.Organization organization);
 
-    StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest);
-    Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
+    Shared.Database.Entities.StripeConnectAccount MergeTo(Account src, Shared.Database.Entities.StripeConnectAccount dest);
+    Shared.Models.StripeConnectAccount MapTo(Shared.Database.Entities.StripeConnectAccount src);
     Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
 
     ProductVersion MapToEntity(
@@ -365,7 +365,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest)
+    public Shared.Database.Entities.StripeConnectAccount MergeTo(Account src, Shared.Database.Entities.StripeConnectAccount dest)
     {
         dest.StripeAccountId = src.Id;
         dest.ChargesEnabled = src.ChargesEnabled;
@@ -385,7 +385,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src) =>
+    public Shared.Models.StripeConnectAccount MapTo(Shared.Database.Entities.StripeConnectAccount src) =>
         new()
         {
             Id = src.Id,

@@ -26,7 +26,7 @@ on:
 jobs:
   build:
     name: "Build"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
@@ -48,6 +48,8 @@ jobs:
 
       - name: Lint, Validate and Plan - staging
         uses: "./.github/actions/lint-validate-infrastructure"
+        env:
+          TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./organization/shared/infrastructure/workspaces/staging
@@ -62,6 +64,8 @@ jobs:
 
       - name: Lint, Validate and Plan - production
         uses: "./.github/actions/lint-validate-infrastructure"
+        env:
+          TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./organization/shared/infrastructure/workspaces/production
@@ -71,7 +75,7 @@ jobs:
   staging:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to staging"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
@@ -93,13 +97,15 @@ jobs:
 
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
+        env:
+          TF_VAR_stripe_api_key: ${{ secrets.STAGING_STRIPE_API_KEY }}
         with:
           workingDirectory: ./organization/shared/infrastructure/workspaces/staging
 
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to production"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
@@ -121,5 +127,7 @@ jobs:
 
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
+        env:
+          TF_VAR_stripe_api_key: ${{ secrets.PRODUCTION_STRIPE_API_KEY }}
         with:
           workingDirectory: ./organization/shared/infrastructure/workspaces/production

@@ -46,6 +46,10 @@ type Mutation {
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload @cost(weight: "10")
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
@@ -245,6 +249,48 @@ type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
 }
 
+type OrganizationStripeConnectAccountConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  totalCount: Int
+}
+
+type OrganizationStripeConnectAccountDetails {
+  name: String!
+  chargesEnabled: Boolean!
+  payoutsEnabled: Boolean!
+  type: String!
+  country: String
+  defaultCurrency: String
+  businessType: String
+  companyName: String
+  url: String
+  supportUrl: String
+  contactEmail: String
+  contactPhone: String
+  capabilitiesTransfers: String!
+  capabilitiesCardPayments: String!
+  onboardingUrl: String!
+  onboardingCompleted: Boolean!
+  organization: OrganizationDetails!
+  id: ID!
+}
+
+type OrganizationStripeConnectAccountEdge {
+  node: OrganizationStripeConnectAccountDetails!
+  cursor: String!
+}
+
+type OrganizationStripeConnectAccountPayload {
+  clientMutationId: String
+  account: OrganizationStripeConnectAccountDetails!
+}
+
+type OrganizationStripeConnectAccountsPayload {
+  clientMutationId: String
+  accounts: [OrganizationStripeConnectAccountDetails!]!
+}
+
 type OrganizationTagConnection {
   pageInfo: PageInfo!
   edges: [OrganizationTagEdge!]!
@@ -328,6 +374,8 @@ type Query {
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
+  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
   roomResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
@@ -425,6 +473,14 @@ input AddOrganizationPaymentMethodIntentInput {
   organizationId: String!
 }
 
+input AddOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String
+  organizationId: String!
+  name: String!
+  redirectUrl: String!
+}
+
 input AddProductTagInput {
   clientMutationId: String
   id: String
@@ -500,6 +556,16 @@ input DeleteOrganizationInput {
   id: String!
 }
 
+input DeleteOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteOrganizationStripeConnectAccountsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteProductTagInput {
   clientMutationId: String
   id: String!
@@ -555,6 +621,17 @@ input OrganizationMemberWhereInput {
 input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField!
+}
+
+input OrganizationStripeConnectAccountOrderInput {
+  direction: OrderDirection!
+  field: OrganizationStripeConnectAccountOrderField!
+}
+
+input OrganizationStripeConnectAccountWhereInput {
+  organizationId: String!
+  nameContains: String
+  onboardingCompleted: Boolean
 }
 
 input OrganizationTagOrderInput {
@@ -656,6 +733,12 @@ input UpdateOrganizationSsoSettingsInput {
   isActive: Boolean!
 }
 
+input UpdateOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+}
+
 input UpdateProductTagInput {
   clientMutationId: String
   id: String!
@@ -709,6 +792,10 @@ enum OrganizationMemberVisibilityPolicy {
 }
 
 enum OrganizationOrderField {
+  NAME
+}
+
+enum OrganizationStripeConnectAccountOrderField {
   NAME
 }
 

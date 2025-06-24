@@ -236,7 +236,7 @@ const OrganizationMarketplaceSetup = ({
               onboardingUrl
               onboardingCompleted
               organization {
-                uniqueId
+                id
               }
             }
           }
@@ -1008,7 +1008,7 @@ const OrganizationMarketplaceSetup = ({
         router.push(
           getOrganizationStripeConnectAccountBaseLink(
             integratedPlatrform,
-            organizationStripeConnectAccountDetails.organization?.uniqueId!,
+            organizationStripeConnectAccountDetails.organization?.id!,
             organizationStripeConnectAccountDetails.id,
           ),
         );

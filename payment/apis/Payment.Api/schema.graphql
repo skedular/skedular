@@ -1,75 +1,10 @@
 schema {
   query: Query
-  mutation: Mutation
-}
-
-type Mutation {
-  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
-  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
-  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
-  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload @cost(weight: "10")
-}
-
-type OrganizationStripeConnectAccountConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationStripeConnectAccountEdge!]!
-  totalCount: Int
-}
-
-type OrganizationStripeConnectAccountDetails {
-  name: String!
-  chargesEnabled: Boolean!
-  payoutsEnabled: Boolean!
-  type: String!
-  country: String
-  defaultCurrency: String
-  businessType: String
-  companyName: String
-  url: String
-  supportUrl: String
-  contactEmail: String
-  contactPhone: String
-  capabilitiesTransfers: String!
-  capabilitiesCardPayments: String!
-  onboardingUrl: String!
-  onboardingCompleted: Boolean!
-  organization: Payment_OrganizationDetails!
-  id: ID!
-}
-
-type OrganizationStripeConnectAccountEdge {
-  node: OrganizationStripeConnectAccountDetails!
-  cursor: String!
-}
-
-type OrganizationStripeConnectAccountPayload {
-  clientMutationId: String
-  account: OrganizationStripeConnectAccountDetails!
-}
-
-type OrganizationStripeConnectAccountsPayload {
-  clientMutationId: String
-  accounts: [OrganizationStripeConnectAccountDetails!]!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
-}
-
-type Payment_OrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  website: String
 }
 
 type Query {
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
-  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
 }
 
 type Version {
@@ -77,50 +12,6 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
-}
-
-input AddOrganizationStripeConnectAccountInput {
-  clientMutationId: String
-  id: String
-  organizationId: String!
-  name: String!
-  redirectUrl: String!
-}
-
-input DeleteOrganizationStripeConnectAccountInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteOrganizationStripeConnectAccountsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input OrganizationStripeConnectAccountOrderInput {
-  direction: OrderDirection!
-  field: OrganizationStripeConnectAccountOrderField!
-}
-
-input OrganizationStripeConnectAccountWhereInput {
-  organizationId: String!
-  nameContains: String
-  onboardingCompleted: Boolean
-}
-
-input UpdateOrganizationStripeConnectAccountInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-}
-
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
-}
-
-enum OrganizationStripeConnectAccountOrderField {
-  NAME
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

@@ -16,6 +16,8 @@ public interface IOrganizationAuthorizationService
     bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewPaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
+    bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
+    bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
@@ -81,6 +83,20 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         };
 
     public bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
+    public bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+        };
+
+    public bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) => 
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,

@@ -1,33 +1,33 @@
-using Api.Shared.Services;
-using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;
 using Flurl;
 using Microsoft.AspNetCore.Mvc;
-using Payment.Shared.Database.Entities;
-using Payment.Shared.Repositories;
+using Organization.Shared.Database.Entities;
+using Organization.Shared.Repositories;
 using Stripe;
 
-namespace Payment.Shared.Services;
+namespace Organization.Shared.Services;
 
-public interface IStripeConnectAccountLinkService
+public interface IOrganizationStripeConnectAccountLinkService
 {
-    Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
+    Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string redirectUrl,
-        StripeConnectAccount accountEntity,
+        OrganizationStripeConnectAccount accountEntity,
         CancellationToken cancellationToken);
 }
 
-public class StripeConnectAccountLinkService(
+public class OrganizationStripeConnectAccountLinkService(
     ApplicationConfiguration applicationConfiguration,
     IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
-    ICreatable<AccountLink, AccountLinkCreateOptions> accountLinkCreateService) : IStripeConnectAccountLinkService
+    ICreatable<AccountLink, AccountLinkCreateOptions> accountLinkCreateService) : IOrganizationStripeConnectAccountLinkService
 {
     private readonly Lazy<string> _refreshLinkBaseUrl = new(() =>
     {
-        var method = typeof(PaymentControllerBase).GetMethod(nameof(PaymentControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
+        var method = typeof(OrganizationControllerBase).GetMethod(
+            nameof(OrganizationControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
         ArgumentNullException.ThrowIfNull(method);
 
         var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
@@ -36,10 +36,10 @@ public class StripeConnectAccountLinkService(
         return routeAttribute.Template;
     });
 
-    public async Task<(StripeConnectAccountRefreshCode, string)> CreateLinkAsync(
+    public async Task<(OrganizationStripeConnectAccountRefreshCode, string)> CreateLinkAsync(
         string id,
         string redirectUrl,
-        StripeConnectAccount accountEntity,
+        OrganizationStripeConnectAccount accountEntity,
         CancellationToken cancellationToken)
     {
         var code = randomHelper.Generate();
@@ -54,12 +54,12 @@ public class StripeConnectAccountLinkService(
             new RequestOptions(),
             cancellationToken);
 
-        var accountRefreshCodeEntity = new StripeConnectAccountRefreshCode
+        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, StripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
         };
 
-        _ = repositoryFactory.StripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
+        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
 
         return (accountRefreshCodeEntity, accountLink.Url);
     }

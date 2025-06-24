@@ -12,8 +12,7 @@ namespace Payment.Processors.Subscribers;
 public class CustomerSubscriber(
     ILogger<CustomerSubscriber> logger,
     IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    IStripeCustomerService stripeCustomerService)
+    IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -31,7 +30,7 @@ public class CustomerSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleCustomerUpsertedEventAsync(@event, customer, existingCustomer, cancellationToken);
+                    await HandleCustomerUpsertedEventAsync(customer, existingCustomer, cancellationToken);
                 }
                 break;
 
@@ -60,7 +59,6 @@ public class CustomerSubscriber(
     }
 
     private async Task HandleCustomerUpsertedEventAsync(
-        Event @event,
         Customer customer,
         Shared.Database.Entities.Customer? existingCustomer,
         CancellationToken cancellationToken)
@@ -78,7 +76,6 @@ public class CustomerSubscriber(
             _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }
 
-        _ = await stripeCustomerService.UpsertCustomerAsync(customer, existingCustomer, null, @event.Metadata.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

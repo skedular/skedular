@@ -5,6 +5,7 @@ using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 using Organization.Processors.Subscribers;
 using Organization.Shared;
@@ -69,7 +70,8 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddGrpcServices(configuration)
-            .AddTemporalClient(configuration);
+            .AddTemporalClient(configuration)
+            .AddStripe(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

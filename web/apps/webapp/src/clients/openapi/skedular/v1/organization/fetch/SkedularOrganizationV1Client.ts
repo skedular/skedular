@@ -6,19 +6,31 @@ import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { AzureService } from './services/AzureService';
+import { ConnectService } from './services/ConnectService';
+import { OnboardingService } from './services/OnboardingService';
 import { OrganizationService } from './services/OrganizationService';
+import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentMethodService } from './services/PaymentMethodService';
+import { PlatformService } from './services/PlatformService';
 import { SsoService } from './services/SsoService';
+import { StripeService } from './services/StripeService';
 import { TenantService } from './services/TenantService';
 import { V1Service } from './services/V1Service';
+import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
     public readonly azure: AzureService;
+    public readonly connect: ConnectService;
+    public readonly onboarding: OnboardingService;
     public readonly organization: OrganizationService;
+    public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly paymentMethod: PaymentMethodService;
+    public readonly platform: PlatformService;
     public readonly sso: SsoService;
+    public readonly stripe: StripeService;
     public readonly tenant: TenantService;
     public readonly v1: V1Service;
+    public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -33,11 +45,17 @@ export class SkedularOrganizationV1Client {
             ENCODE_PATH: config?.ENCODE_PATH,
         });
         this.azure = new AzureService(this.request);
+        this.connect = new ConnectService(this.request);
+        this.onboarding = new OnboardingService(this.request);
         this.organization = new OrganizationService(this.request);
+        this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);
+        this.platform = new PlatformService(this.request);
         this.sso = new SsoService(this.request);
+        this.stripe = new StripeService(this.request);
         this.tenant = new TenantService(this.request);
         this.v1 = new V1Service(this.request);
+        this.webhook = new WebhookService(this.request);
     }
 }
 

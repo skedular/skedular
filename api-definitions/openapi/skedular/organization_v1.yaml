@@ -188,6 +188,92 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /v1/organization/organization-stripe-connect-account/refresh-onboarding-url:
+    get:
+      tags:
+        - v1
+        - organization
+        - organizationStripeConnectAccounts
+        - onboarding
+      summary: return OrganizationStripeConnectAccount onboarding refresh URL
+      operationId: refreshOrganizationStripeConnectAccountOnboarding
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: should never be returned
+        "302":
+          description: redirect to OrganizationStripeConnectAccounts new onboarding URL
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/organization/stripe/platform/account/webhook:
+    post:
+      tags:
+        - v1
+        - organization
+        - stripe
+        - webhook
+        - platform
+      summary: Stripe Platform Account Webhook
+      operationId: processStripePlatformAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Platform Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/organization/stripe/connect/account/webhook:
+    post:
+      tags:
+        - v1
+        - organization
+        - stripe
+        - webhook
+        - connect
+      summary: Stripe Connect Account Webhook
+      operationId: processStripeConnectAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Error:

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ecfb0e7a8f197a2b2608d16b63187df>>
+ * @generated SignedSource<<7bb724ad067913a3288892e1d19a70be>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly onboardingCompleted: boolean;
         readonly onboardingUrl: string;
         readonly organization: {
-          readonly uniqueId: string;
+          readonly id: string;
         };
         readonly supportUrl: string | null | undefined;
         readonly url: string | null | undefined;
@@ -46,7 +46,14 @@ import organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchabl
 const node: ReaderFragment = (function(){
 var v0 = [
   "organizationStripeConnectAccounts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -151,13 +158,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -238,18 +239,12 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Payment_OrganizationDetails",
+                  "concreteType": "OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "uniqueId",
-                      "storageKey": null
-                    }
+                    (v1/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -319,6 +314,6 @@ return {
 };
 })();
 
-(node as any).hash = "0d83ee3fc6a3b60ca239e98107073bc1";
+(node as any).hash = "203b1348e703c338f31d1f123e13fd62";
 
 export default node;

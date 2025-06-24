@@ -1,10 +1,10 @@
 ﻿using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
-using Payment.Api.Mappers;
-using Payment.Api.Services;
+using Organization.Api.Mappers;
+using Organization.Api.Services;
 
-namespace Payment.Api.GraphQL;
+namespace Organization.Api.GraphQL.Stripe;
 
 [MutationType]
 public class Mutation(IMapper mapper)

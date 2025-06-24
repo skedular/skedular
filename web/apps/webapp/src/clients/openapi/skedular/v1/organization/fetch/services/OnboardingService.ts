@@ -19,7 +19,7 @@ export class OnboardingService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/v1/payment/organization-stripe-connect-account/refresh-onboarding-url',
+            url: '/v1/organization/organization-stripe-connect-account/refresh-onboarding-url',
             query: {
                 'code': code,
             },

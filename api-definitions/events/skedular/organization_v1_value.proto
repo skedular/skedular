@@ -55,6 +55,7 @@ message Organization {
   BillingDetails billingDetails = 17;
   StripeCustomer stripeCustomer = 18;
   repeated StripePaymentMethod stripePaymentMethods = 19;
+  repeated StripeConnectAccount stripeConnectAccounts = 20;
 }
 
 enum Role {
@@ -144,4 +145,10 @@ message StripeCustomer {
 message StripePaymentMethod {
   string id = 1;
   string setupIntentId = 2;
+}
+
+message StripeConnectAccount {
+  string id = 1;
+  string stripeAccountId = 2;
+  bool isDefault = 3;
 }

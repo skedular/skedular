@@ -35,6 +35,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }
     public OrganizationBillingDetails? BillingDetails { get; set; }
+    public ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
 
     public bool HasFutureBooking { get; set; }
     public bool HasLocation { get; set; }

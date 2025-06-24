@@ -19,25 +19,13 @@ export class OrganizationStripeConnectAccountsService {
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/v1/payment/organization-stripe-connect-account/refresh-onboarding-url',
+            url: '/v1/organization/organization-stripe-connect-account/refresh-onboarding-url',
             query: {
                 'code': code,
             },
             errors: {
                 302: `redirect to OrganizationStripeConnectAccounts new onboarding URL`,
             },
-        });
-    }
-    /**
-     * republish all OrganizationStripeConnectAccounts
-     * @returns any the status of republishing all OrganizationStripeConnectAccounts
-     * @returns Error unexpected error
-     * @throws ApiError
-     */
-    public republishAllOrganizationStripeConnectAccounts(): CancelablePromise<any | Error> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/v1/payment/organization-stripe-connect-account/republish-all',
         });
     }
 }

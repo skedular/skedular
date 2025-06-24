@@ -25,14 +25,15 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CiJvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfa2V5LnByb3RvEhRvcmdhbml6",
-            "YXRpb25pbnRlcm5hbCI0CgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAkS",
-            "FQoNYXp1cmVUZW5hbnRJZBgCIAEoCUJBqgI+QXBpLlNoYXJlZC5DbGllbnRz",
-            "LkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6YXRpb25JbnRlcm5hbC5WMS5LZXli",
-            "BnByb3RvMw=="));
+            "YXRpb25pbnRlcm5hbCJcCgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAkS",
+            "FQoNYXp1cmVUZW5hbnRJZBgCIAEoCRImCh5zdHJpcGVDb25uZWN0QWNjb3Vu",
+            "dFdlYmhvb2tLZXkYAyABKAlCQaoCPkFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
+            "dHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uSW50ZXJuYWwuVjEuS2V5YgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key.Parser, new[]{ "OrganizationId", "AzureTenantId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key.Parser, new[]{ "OrganizationId", "AzureTenantId", "StripeConnectAccountWebhookKey" }, null, null, null, null)
           }));
     }
     #endregion
@@ -76,6 +77,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     public Key(Key other) : this() {
       organizationId_ = other.organizationId_;
       azureTenantId_ = other.azureTenantId_;
+      stripeConnectAccountWebhookKey_ = other.stripeConnectAccountWebhookKey_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -109,6 +111,18 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       }
     }
 
+    /// <summary>Field number for the "stripeConnectAccountWebhookKey" field.</summary>
+    public const int StripeConnectAccountWebhookKeyFieldNumber = 3;
+    private string stripeConnectAccountWebhookKey_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string StripeConnectAccountWebhookKey {
+      get { return stripeConnectAccountWebhookKey_; }
+      set {
+        stripeConnectAccountWebhookKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -126,6 +140,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       }
       if (OrganizationId != other.OrganizationId) return false;
       if (AzureTenantId != other.AzureTenantId) return false;
+      if (StripeConnectAccountWebhookKey != other.StripeConnectAccountWebhookKey) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -135,6 +150,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       int hash = 1;
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (AzureTenantId.Length != 0) hash ^= AzureTenantId.GetHashCode();
+      if (StripeConnectAccountWebhookKey.Length != 0) hash ^= StripeConnectAccountWebhookKey.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -161,6 +177,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(AzureTenantId);
       }
+      if (StripeConnectAccountWebhookKey.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(StripeConnectAccountWebhookKey);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -179,6 +199,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(AzureTenantId);
       }
+      if (StripeConnectAccountWebhookKey.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(StripeConnectAccountWebhookKey);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -194,6 +218,9 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       }
       if (AzureTenantId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AzureTenantId);
+      }
+      if (StripeConnectAccountWebhookKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -212,6 +239,9 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       }
       if (other.AzureTenantId.Length != 0) {
         AzureTenantId = other.AzureTenantId;
+      }
+      if (other.StripeConnectAccountWebhookKey.Length != 0) {
+        StripeConnectAccountWebhookKey = other.StripeConnectAccountWebhookKey;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -240,6 +270,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
             AzureTenantId = input.ReadString();
             break;
           }
+          case 26: {
+            StripeConnectAccountWebhookKey = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -265,6 +299,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
           }
           case 18: {
             AzureTenantId = input.ReadString();
+            break;
+          }
+          case 26: {
+            StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
         }
