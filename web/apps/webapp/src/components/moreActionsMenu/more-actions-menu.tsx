@@ -54,6 +54,7 @@ export enum MoreActionsMenuOptionType {
   DeactivateProduct,
   EditOrganizationStripeConnectAccount,
   DeleteOrganizationStripeConnectAccount,
+  SetOrganizationStripeConnectAccountAsDefault,
   EditFloorPlan,
   DeleteFloorPlan,
 }
@@ -266,6 +267,10 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount,
     label: 'Remove Stripe Connect Account',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.SetOrganizationStripeConnectAccountAsDefault]: {
+    id: MoreActionsMenuOptionType.SetOrganizationStripeConnectAccountAsDefault,
+    label: 'Set as Default',
   },
   [MoreActionsMenuOptionType.EditFloorPlan]: {
     id: MoreActionsMenuOptionType.EditFloorPlan,

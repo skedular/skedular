@@ -29,6 +29,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
@@ -241,6 +242,40 @@ public class OrganizationStripeConnectAccountService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl;
+    }
+
+    public async Task<OrganizationStripeConnectAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
+                      throw new OrganizationStripeConnectAccountNotFound();
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+                                    throw new OrganizationNotFound();
+        if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganizations, customer))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        foreach (var existingAccount in existingOrganizations.OrganizationStripeConnectAccounts.Where(item => item.Id != id))
+        {
+            existingAccount.IsDefault = false;
+            repositoryFactory.OrganizationStripeConnectAccountRepository.Update(existingAccount);
+        }
+
+        account.IsDefault = true;
+        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
+        var mappedAccount = mapper.MapTo(account);
+
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganizations)], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return mappedAccount;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(

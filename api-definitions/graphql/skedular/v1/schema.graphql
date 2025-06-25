@@ -506,6 +506,7 @@ type Mutation {
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
+  setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
   toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
@@ -810,6 +811,7 @@ type OrganizationStripeConnectAccountDetails {
   country: String
   defaultCurrency: String
   id: ID!
+  isDefault: Boolean!
   name: String!
   onboardingCompleted: Boolean!
   onboardingUrl: String!
@@ -1936,6 +1938,11 @@ input ResourceWhereInput {
 input SetCustomerDefaultOrganizationInput {
   clientMutationId: String
   organizationId: String!
+}
+
+input SetOrganizationStripeConnectAccountAsDefaultInput {
+  clientMutationId: String
+  id: String!
 }
 
 input SubmitCustomerFeedbackInput {

@@ -31,6 +31,7 @@ import type { organizationMarketplaceSetup_products_query$key } from '@/queries/
 import type { organizationMarketplaceSetup_products_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_products_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_productTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_query.graphql';
 import type { organizationMarketplaceSetup_productTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_refetchableFragment.graphql';
+import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -84,6 +85,7 @@ type LocationTagRowType = {
 
 type OrganizationStripeConnectAccountRowType = {
   id: string;
+  isDefault: boolean;
   name: string;
   companyName: string | null | undefined;
   country: string | null | undefined;
@@ -224,6 +226,7 @@ const OrganizationMarketplaceSetup = ({
           edges {
             node {
               id
+              isDefault
               name
               country
               defaultCurrency
@@ -335,6 +338,17 @@ const OrganizationMarketplaceSetup = ({
           organization {
             uniqueId
           }
+        }
+      }
+    }
+  `);
+
+  const [commitSetOrganizationStripeConnectAccountAsDefault] = useMutation<organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation>(graphql`
+    mutation organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation($input: SetOrganizationStripeConnectAccountAsDefaultInput!) @raw_response_type {
+      setOrganizationStripeConnectAccountAsDefault(input: $input) {
+        account {
+          id
+          isDefault
         }
       }
     }
@@ -453,6 +467,7 @@ const OrganizationMarketplaceSetup = ({
   );
   const organizationStripeConnectAccountMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetOrganizationStripeConnectAccountAsDefault],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount],
   ];
 
@@ -1006,18 +1021,71 @@ const OrganizationMarketplaceSetup = ({
         }
 
         router.push(
-          getOrganizationStripeConnectAccountBaseLink(
-            integratedPlatrform,
-            organizationStripeConnectAccountDetails.organization?.id!,
-            organizationStripeConnectAccountDetails.id,
-          ),
+          getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, organizationStripeConnectAccountDetails.organization?.id!, organizationStripeConnectAccountDetails.id),
         );
+        break;
+
+      case MoreActionsMenuOptionType.SetOrganizationStripeConnectAccountAsDefault:
+        handleSetOrganizationStripeConnectAccountAsDefault();
         break;
 
       case MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount:
         handleRemoveOrganizationStripeConnectAccountClick();
         break;
     }
+  };
+
+  const handleSetOrganizationStripeConnectAccountAsDefault = () => {
+    if (!organizationStripeConnectAccountDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting stripe connect account ${organizationStripeConnectAccountDetails.name} as default...`} />,
+      infoNotificationOptions,
+    );
+
+    commitSetOrganizationStripeConnectAccountAsDefault({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: organizationStripeConnectAccountDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${joinErrors(errors)}`} />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Stripe connect account ${organizationStripeConnectAccountDetails.name} is set as default.`} />,
+        });
+
+        handleRefetchOrganizationStripeConnectAccounts(organizationStripeConnectAccountNameSearchText);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        setOrganizationStripeConnectAccountAsDefault: {
+          account: {
+            id: organizationStripeConnectAccountDetails.id,
+            isDefault: true,
+          },
+        },
+      },
+    });
   };
 
   const handleRemoveOrganizationStripeConnectAccountsClick = () => {
@@ -1344,6 +1412,7 @@ const OrganizationMarketplaceSetup = ({
 
   const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((account) => ({
     id: account.id,
+    isDefault: account.isDefault,
     name: account.name,
     companyName: account.companyName,
     country: getCountryData(account.country as TCountryCode).name,
@@ -1447,6 +1516,28 @@ const OrganizationMarketplaceSetup = ({
       },
       display: 'flex',
       minWidth: 150,
+    },
+    {
+      field: 'isDefault',
+      headerName: 'Default',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Yes" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="No" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
     },
     {
       field: 'More Actions',

@@ -108,10 +108,10 @@ importers:
         version: 0.202.0(@opentelemetry/api@1.9.0)
       '@stripe/react-stripe-js':
         specifier: ^3.7.0
-        version: 3.7.0(@stripe/stripe-js@7.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 3.7.0(@stripe/stripe-js@7.4.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@stripe/stripe-js':
-        specifier: ^7.3.1
-        version: 7.3.1
+        specifier: ^7.4.0
+        version: 7.4.0
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
@@ -125,8 +125,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@workos-inc/authkit-nextjs':
-        specifier: 2.3.3
-        version: 2.3.3(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^2.4.1
+        version: 2.4.1(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       babel-plugin-react-compiler:
         specifier: 19.1.0-rc.2
         version: 19.1.0-rc.2
@@ -216,8 +216,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@types/node':
-        specifier: ^24.0.3
-        version: 24.0.3
+        specifier: ^24.0.4
+        version: 24.0.4
       '@types/pino':
         specifier: ^7.0.5
         version: 7.0.5
@@ -246,8 +246,8 @@ importers:
         specifier: ^16.11.0
         version: 16.11.0
       prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
+        specifier: ^3.6.0
+        version: 3.6.0
       relay-compiler:
         specifier: ^20.0.0
         version: 20.0.0
@@ -1222,8 +1222,8 @@ packages:
       react: '>=16.8.0 <20.0.0'
       react-dom: '>=16.8.0 <20.0.0'
 
-  '@stripe/stripe-js@7.3.1':
-    resolution: {integrity: sha512-pTzb864TQWDRQBPLgSPFRoyjSDUqpCkbEgTzpsjiTjGz1Z5SxZNXJek28w1s6Dyry4CyW4/Izj5jHE/J9hCJYQ==}
+  '@stripe/stripe-js@7.4.0':
+    resolution: {integrity: sha512-lQHQPfXPTBeh0XFjq6PqSBAyR7umwcJbvJhXV77uGCUDD6ymXJU/f2164ydLMLCCceNuPlbV9b+1smx98efwWQ==}
     engines: {node: '>=12.16'}
 
   '@swc/counter@0.1.3':
@@ -1346,8 +1346,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@types/node@24.0.3':
-    resolution: {integrity: sha512-R4I/kzCYAdRLzfiCabn9hxWfbuHS573x+r0dJMkkzThEa7pbrcDWK+9zu3e7aBOouf+rQAciqPFMnxwr0aWgKg==}
+  '@types/node@24.0.4':
+    resolution: {integrity: sha512-ulyqAkrhnuNq9pB76DRBTkcS6YsmDALy6Ua63V8OhrOBgbcYt6IOdzpw5P1+dyRIyMerzLkeYWBeOXPpA9GMAA==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -1606,10 +1606,10 @@ packages:
       react: '>=16.8.0 || ^19.0 || ^19.0.0-rc'
       react-dom: '>=16.8.0 || ^19.0 || ^19.0.0-rc'
 
-  '@workos-inc/authkit-nextjs@2.3.3':
-    resolution: {integrity: sha512-Oa9GGMch3eV1JUjgdnacuY8QnyN5gSLtIidMmqzIdWRLe374UMy/YReHKh+pUk6+QeSDjMS8PZDlEIiteVcSAA==}
+  '@workos-inc/authkit-nextjs@2.4.1':
+    resolution: {integrity: sha512-GqUlrMhiuMXUNCxJh+StiUq8GaP+JpdMSnJA8j44DC0czL52gI0AlKvqMdFUjWcop3JmHXTwXfPJEMxGbvdZwA==}
     peerDependencies:
-      next: ^13.5.9 || ^14.2.25 || ^15.2.3
+      next: ^13.5.9 || ^14.2.26 || ^15.2.3
       react: ^18.0 || ^19.0.0
       react-dom: ^18.0 || ^19.0.0
 
@@ -3247,8 +3247,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.5.3:
-    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+  prettier@3.6.0:
+    resolution: {integrity: sha512-ujSB9uXHJKzM/2GBuE0hBOUgC77CN3Bnpqa+g80bkv3T3A93wL/xlzDATHhnhkzifz/UE2SNOvmbTz5hSkDlHw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -4922,14 +4922,14 @@ snapshots:
 
   '@rushstack/eslint-patch@1.11.0': {}
 
-  '@stripe/react-stripe-js@3.7.0(@stripe/stripe-js@7.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@stripe/react-stripe-js@3.7.0(@stripe/stripe-js@7.4.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@stripe/stripe-js': 7.3.1
+      '@stripe/stripe-js': 7.4.0
       prop-types: 15.8.1
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@stripe/stripe-js@7.3.1': {}
+  '@stripe/stripe-js@7.4.0': {}
 
   '@swc/counter@0.1.3': {}
 
@@ -4944,20 +4944,20 @@ snapshots:
 
   '@types/accepts@1.3.7':
     dependencies:
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/atob-lite@2.0.2': {}
 
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/btoa-lite@1.0.2': {}
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/content-disposition@0.5.8': {}
 
@@ -4968,7 +4968,7 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/express': 4.17.22
       '@types/keygrip': 1.0.6
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/d3-color@3.1.3': {}
 
@@ -4996,7 +4996,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -5023,7 +5023,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.9':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/keygrip@1.0.6': {}
 
@@ -5040,7 +5040,7 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/keygrip': 1.0.6
       '@types/koa-compose': 3.2.8
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/lodash.debounce@4.0.9':
     dependencies:
@@ -5062,7 +5062,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-  '@types/node@24.0.3':
+  '@types/node@24.0.4':
     dependencies:
       undici-types: 7.8.0
 
@@ -5100,12 +5100,12 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 24.0.3
+      '@types/node': 24.0.4
       '@types/send': 0.17.4
 
   '@types/xmldom@0.1.34': {}
@@ -5290,7 +5290,7 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@workos-inc/authkit-nextjs@2.3.3(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@workos-inc/authkit-nextjs@2.4.1(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@workos-inc/node': 7.53.0(next@15.3.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       iron-session: 8.0.4
@@ -7163,7 +7163,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.5.3: {}
+  prettier@3.6.0: {}
 
   process-nextick-args@2.0.1: {}
 

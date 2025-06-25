@@ -1032,6 +1032,7 @@ public class Mapper : IMapper
             : new OrganizationStripeConnectAccountDetails
             {
                 Id = src.Id,
+                IsDefault = src.IsDefault,
                 Name = src.Name,
                 ChargesEnabled = src.ChargesEnabled,
                 PayoutsEnabled = src.PayoutsEnabled,

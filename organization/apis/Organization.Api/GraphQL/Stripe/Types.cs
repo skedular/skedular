@@ -58,6 +58,7 @@ public class OrganizationStripeConnectAccountsPayload
 [GraphQLName("OrganizationStripeConnectAccountDetails")]
 public class OrganizationStripeConnectAccountDetails : Node
 {
+    [GraphQLName("isDefault")] public bool IsDefault { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("chargesEnabled")] public bool ChargesEnabled { get; set; }
     [GraphQLName("payoutsEnabled")] public bool PayoutsEnabled { get; set; }
@@ -102,3 +103,10 @@ public class OrganizationStripeConnectAccountConnection : Enterprise.Shared.Grap
 [GraphQLName("OrganizationStripeConnectAccountEdge")]
 public class OrganizationStripeConnectAccountEdge(OrganizationStripeConnectAccountDetails node, string cursor)
     : Edge<OrganizationStripeConnectAccountDetails>(node, cursor);
+
+[GraphQLName("SetOrganizationStripeConnectAccountAsDefaultInput")]
+public class SetOrganizationStripeConnectAccountAsDefaultInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+}

@@ -50,6 +50,7 @@ type Mutation {
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload @cost(weight: "10")
+  setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
@@ -256,6 +257,7 @@ type OrganizationStripeConnectAccountConnection {
 }
 
 type OrganizationStripeConnectAccountDetails {
+  isDefault: Boolean!
   name: String!
   chargesEnabled: Boolean!
   payoutsEnabled: Boolean!
@@ -666,6 +668,11 @@ input RemoveOrganizationPaymentMethodInput {
 input RemoveOrganizationSsoSettingsInput {
   clientMutationId: String
   organizationId: String!
+}
+
+input SetOrganizationStripeConnectAccountAsDefaultInput {
+  clientMutationId: String
+  id: String!
 }
 
 input ToggleOrganizationSsoInput {

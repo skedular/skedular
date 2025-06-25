@@ -52,4 +52,14 @@ public class Mutation(IMapper mapper)
             ClientMutationId = input.ClientMutationId, Accounts = accounts.Select(item => mapper.MapTo(item)!)
         };
     }
+    
+    [UseResolverScope]
+    public async Task<OrganizationStripeConnectAccountPayload?> SetOrganizationStripeConnectAccountAsDefaultAsync(
+        SetOrganizationStripeConnectAccountAsDefaultInput input,
+        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        CancellationToken cancellationToken)
+    {
+        var account = await organizationStripeConnectAccountService.SetAsDefaultAsync(input.Id, cancellationToken);
+        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
+    }
 }
