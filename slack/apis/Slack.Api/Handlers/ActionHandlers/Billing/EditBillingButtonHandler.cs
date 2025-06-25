@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using EmailValidation;
 using Enterprise.Shared;
@@ -5,7 +6,6 @@ using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
-using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;

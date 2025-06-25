@@ -1,5 +1,4 @@
-﻿using Location.Shared.Configurations;
-using Location.Shared.Mappers;
+﻿using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +8,9 @@ namespace Location.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -43,13 +45,4 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>();
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
-        ArgumentNullException.ThrowIfNull(locationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
-
-        return services.AddSingleton(locationConfiguration);
-    }
 }

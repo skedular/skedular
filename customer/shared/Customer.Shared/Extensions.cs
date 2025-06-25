@@ -1,4 +1,3 @@
-using Customer.Shared.Configurations;
 using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
@@ -9,6 +8,9 @@ namespace Customer.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -43,14 +45,4 @@ public static class Extensions
         services
             .AddScoped<ICustomerOutboxPublisher, CustomerOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
-        ArgumentNullException.ThrowIfNull(customerConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
-
-        return services
-            .AddSingleton(customerConfiguration);
-    }
 }

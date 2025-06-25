@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared.Grpc;
@@ -15,7 +16,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class CancelBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -51,7 +52,7 @@ public class CancelBookingButtonHandler(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

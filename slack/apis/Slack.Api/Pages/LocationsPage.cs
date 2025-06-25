@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
@@ -41,7 +42,7 @@ public interface ILocationsPage
 
 public class LocationsPage(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
@@ -262,7 +263,7 @@ public class LocationsPage(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -274,7 +275,7 @@ public class LocationsPage(
 
     public async Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
         }

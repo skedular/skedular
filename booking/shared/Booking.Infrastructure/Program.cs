@@ -2,7 +2,6 @@
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 
@@ -14,10 +13,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication
-            .CreateBuilder(args)
-            .AddDefaultServices<Program>();
-
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -28,6 +24,7 @@ public class Program
             .AddRepositoryFactory()
             .AddServices()
             .AddJobs()
+            .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddPublishers();

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -60,4 +61,14 @@ public static class Extensions
         services
             .AddSingleton<AsyncPageRenderingService>()
             .AddHostedService(sp => sp.GetRequiredService<AsyncPageRenderingService>());
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
+        ArgumentNullException.ThrowIfNull(slackConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(slackConfiguration);
+    }
 }

@@ -1,9 +1,9 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
-using Booking.Shared.Configurations;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;

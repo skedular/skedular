@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MsTeams.Shared.Configurations;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
@@ -9,6 +8,9 @@ namespace MsTeams.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -38,14 +40,4 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var msTeamsConfiguration = configuration.GetSection(MsTeamsConfiguration.Key).Get<MsTeamsConfiguration>();
-        ArgumentNullException.ThrowIfNull(msTeamsConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsConfiguration.ApiKey);
-
-        return services
-            .AddSingleton(msTeamsConfiguration);
-    }
 }

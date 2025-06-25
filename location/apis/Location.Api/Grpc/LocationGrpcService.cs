@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
@@ -8,7 +9,6 @@ using Grpc.Core;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
-using Location.Shared.Configurations;
 using Location.Shared.Models;
 using LocationOrderField = Location.Shared.Models.LocationOrderField;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;

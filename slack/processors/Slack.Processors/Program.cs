@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
@@ -17,10 +16,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication
-            .CreateBuilder(args)
-            .AddDefaultServices<Program>();
-
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -53,6 +49,7 @@ public class Program
                 Event>(kafkaConfiguration);
 
         services
+            .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -61,7 +58,7 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddSlack(configuration, _ => { })
-            .AddGrpcServices(configuration);
+            .AddGrpcClients(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

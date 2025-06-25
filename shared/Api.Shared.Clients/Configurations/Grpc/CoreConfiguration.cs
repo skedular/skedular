@@ -1,4 +1,4 @@
-namespace Core.Shared.Configurations;
+namespace Api.Shared.Clients.Configurations.Grpc;
 
 public class CoreConfiguration
 {

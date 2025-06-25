@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
@@ -34,7 +35,7 @@ public interface ISettingsPage
 
 public class SettingsPage(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     OrganizationConfiguration organizationConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
@@ -134,7 +135,7 @@ public class SettingsPage(
 
     public async Task Handle(ChannelSelectAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -146,7 +147,7 @@ public class SettingsPage(
 
     public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -158,7 +159,7 @@ public class SettingsPage(
 
     public async Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
         }

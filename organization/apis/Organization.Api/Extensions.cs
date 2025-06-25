@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
@@ -33,4 +34,14 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+        ArgumentNullException.ThrowIfNull(organizationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(organizationConfiguration);
+    }
 }

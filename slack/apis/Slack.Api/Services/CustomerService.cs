@@ -6,7 +6,7 @@ using Slack.Api.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Customer = Slack.Shared.Models.Customer;
-using CustomerConfiguration = Slack.Shared.Configurations.CustomerConfiguration;
+using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
 
 namespace Slack.Api.Services;
 

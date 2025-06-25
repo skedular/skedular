@@ -1,4 +1,3 @@
-using Booking.Shared.Configurations;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -10,6 +9,9 @@ namespace Booking.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -50,14 +52,4 @@ public static class Extensions
         services
             .AddScoped<IBookingInternalOutboxPublisher, BookingInternalOutboxPublisher>()
             .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
-        ArgumentNullException.ThrowIfNull(bookingConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
-
-        return services
-            .AddSingleton(bookingConfiguration);
-    }
 }

@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared.Grpc;
@@ -15,7 +16,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Commons;
 
 public class DismissSetupPreferredZonesButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -51,7 +52,7 @@ public class DismissSetupPreferredZonesButtonHandler(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

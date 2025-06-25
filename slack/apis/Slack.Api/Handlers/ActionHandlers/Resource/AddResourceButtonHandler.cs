@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
@@ -25,7 +26,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
 public class AddResourceButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     OrganizationConfiguration organizationConfiguration,
@@ -172,7 +173,7 @@ public class AddResourceButtonHandler(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

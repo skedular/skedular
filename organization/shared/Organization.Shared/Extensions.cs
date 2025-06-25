@@ -1,3 +1,5 @@
+using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Clients.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,14 @@ namespace Organization.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration)
+    {
+        var organizationConfigurationService = configuration.GetSection(OrganizationConfigurationService.Key).Get<OrganizationConfigurationService>();
+        ArgumentNullException.ThrowIfNull(organizationConfigurationService);
+
+        return services.AddSingleton(organizationConfigurationService);
+    }
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -62,21 +72,14 @@ public static class Extensions
             .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {
-        var organizationConfiguration =
-            configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
-        ArgumentNullException.ThrowIfNull(organizationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
-
-        var customerConfiguration =
-            configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
         ArgumentNullException.ThrowIfNull(customerConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
-        var locationConfiguration =
-            configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
         ArgumentNullException.ThrowIfNull(locationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
@@ -85,7 +88,6 @@ public static class Extensions
         services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
 
         return services
-            .AddSingleton(organizationConfiguration)
             .AddSingleton(customerConfiguration)
             .AddSingleton(locationConfiguration);
     }

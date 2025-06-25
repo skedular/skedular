@@ -4,7 +4,6 @@ using Booking.Processors.Subscribers;
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
@@ -18,10 +17,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication
-            .CreateBuilder(args)
-            .AddDefaultServices<Program>();
-
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -62,6 +58,7 @@ public class Program
                 Event>(kafkaConfiguration);
 
         services
+            .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -69,7 +66,6 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddGrpcServices(configuration)
             .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();

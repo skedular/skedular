@@ -1,7 +1,7 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
-using Customer.Shared.Configurations;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;

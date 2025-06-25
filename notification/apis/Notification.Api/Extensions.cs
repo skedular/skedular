@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 
@@ -16,4 +17,14 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var notificationConfiguration = configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
+        ArgumentNullException.ThrowIfNull(notificationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(notificationConfiguration);
+    }
 }

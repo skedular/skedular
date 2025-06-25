@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
@@ -20,7 +21,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Zone;
 
 public class AddZoneButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     ICustomerService customerService,
@@ -76,7 +77,7 @@ public class AddZoneButtonHandler(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

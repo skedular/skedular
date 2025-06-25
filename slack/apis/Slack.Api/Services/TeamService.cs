@@ -3,7 +3,7 @@ using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
 using Team = Slack.Shared.Models.Team;
-using TeamConfiguration = Slack.Shared.Configurations.TeamConfiguration;
+using TeamConfiguration = Api.Shared.Clients.Configurations.Grpc.TeamConfiguration;
 
 namespace Slack.Api.Services;
 

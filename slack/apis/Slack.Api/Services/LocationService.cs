@@ -3,7 +3,7 @@ using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
 using Location = Slack.Shared.Models.Location;
-using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 
 namespace Slack.Api.Services;
 

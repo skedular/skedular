@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
@@ -21,7 +22,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class AddTeamButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     TeamConfiguration teamConfiguration,
     TeamService.TeamServiceClient teamServiceClient,
     ICustomerService customerService,
@@ -110,7 +111,7 @@ public class AddTeamButtonHandler(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
@@ -15,10 +14,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication
-            .CreateBuilder(args)
-            .AddDefaultServices<Program>();
-
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -32,6 +28,7 @@ public class Program
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
             .AddTemporalOutboxBackgroundService<SlackDbContext>()
+            .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -41,7 +38,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddSlack(configuration, _ => { })
-            .AddGrpcServices(configuration);
+            .AddGrpcClients(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

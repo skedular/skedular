@@ -1,11 +1,9 @@
+using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Clients.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Marketplace.V1;
-using Api.Shared.Services.Grpc.Skedular.Notification.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Api.Shared.Services.Grpc.Skedular.Payment.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +19,44 @@ namespace Slack.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration)
+    {
+        var slackConfigurationService = configuration.GetSection(SlackConfigurationService.Key).Get<SlackConfigurationService>();
+        ArgumentNullException.ThrowIfNull(slackConfigurationService);
+
+        if (string.IsNullOrWhiteSpace(slackConfigurationService.AppId))
+        {
+            Console.Error.WriteLine("slackConfiguration.AppId is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfigurationService.ClientId))
+        {
+            Console.Error.WriteLine("slackConfiguration.ClientId is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfigurationService.ClientSecret))
+        {
+            Console.Error.WriteLine("slackConfiguration.ClientSecret is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfigurationService.SigningSecret))
+        {
+            Console.Error.WriteLine("slackConfiguration.SigningSecret is null");
+        }
+
+        if (slackConfigurationService.RedirectUrl is null)
+        {
+            Console.Error.WriteLine("slackConfiguration.RedirectUrl is null");
+        }
+
+        if (slackConfigurationService.SuccessInstallUrl is null)
+        {
+            Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
+        }
+
+        return services.AddSingleton(slackConfigurationService);
+    }
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -63,7 +99,7 @@ public static class Extensions
         IConfiguration configuration,
         Action<AspNetSlackServiceConfiguration>? configure)
     {
-        var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
+        var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfigurationService>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);
 
         if (string.IsNullOrWhiteSpace(slackConfiguration.SigningSecret))
@@ -80,46 +116,8 @@ public static class Extensions
             });
     }
 
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {
-        var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
-        ArgumentNullException.ThrowIfNull(slackConfiguration);
-
-        if (string.IsNullOrWhiteSpace(slackConfiguration.ApiKey))
-        {
-            Console.Error.WriteLine("slackConfiguration.ApiKey is null");
-        }
-
-        if (string.IsNullOrWhiteSpace(slackConfiguration.AppId))
-        {
-            Console.Error.WriteLine("slackConfiguration.AppId is null");
-        }
-
-        if (string.IsNullOrWhiteSpace(slackConfiguration.ClientId))
-        {
-            Console.Error.WriteLine("slackConfiguration.ClientId is null");
-        }
-
-        if (string.IsNullOrWhiteSpace(slackConfiguration.ClientSecret))
-        {
-            Console.Error.WriteLine("slackConfiguration.ClientSecret is null");
-        }
-
-        if (string.IsNullOrWhiteSpace(slackConfiguration.SigningSecret))
-        {
-            Console.Error.WriteLine("slackConfiguration.SigningSecret is null");
-        }
-
-        if (slackConfiguration.RedirectUrl is null)
-        {
-            Console.Error.WriteLine("slackConfiguration.RedirectUrl is null");
-        }
-
-        if (slackConfiguration.SuccessInstallUrl is null)
-        {
-            Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
-        }
-
         var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
@@ -135,56 +133,27 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
-        var notificationConfiguration = configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
-        ArgumentNullException.ThrowIfNull(notificationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(notificationConfiguration.GrpcUrl);
-
         var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
         ArgumentNullException.ThrowIfNull(organizationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
-
-        var paymentConfiguration = configuration.GetSection(PaymentConfiguration.Key).Get<PaymentConfiguration>();
-        ArgumentNullException.ThrowIfNull(paymentConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(paymentConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(paymentConfiguration.GrpcUrl);
 
         var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
         ArgumentNullException.ThrowIfNull(teamConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(teamConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(teamConfiguration.GrpcUrl);
 
-        var marketplaceConfiguration = configuration.GetSection(MarketplaceConfiguration.Key).Get<MarketplaceConfiguration>();
-        ArgumentNullException.ThrowIfNull(marketplaceConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(marketplaceConfiguration.GrpcUrl);
-
-        var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
-        ArgumentNullException.ThrowIfNull(coreConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(coreConfiguration.GrpcUrl);
-
         services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
         services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
-        services.AddGrpcClient<NotificationService.NotificationServiceClient>(GrpcClients.ConfigureNotification);
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
-        services.AddGrpcClient<PaymentService.PaymentServiceClient>(GrpcClients.ConfigurePayment);
         services.AddGrpcClient<TeamService.TeamServiceClient>(GrpcClients.ConfigureTeam);
-        services.AddGrpcClient<MarketplaceService.MarketplaceServiceClient>(GrpcClients.ConfigureMarketplace);
-        services.AddGrpcClient<CoreService.CoreServiceClient>(GrpcClients.ConfigureCore);
 
         return services
-            .AddSingleton(slackConfiguration)
             .AddSingleton(bookingConfiguration)
             .AddSingleton(customerConfiguration)
             .AddSingleton(locationConfiguration)
-            .AddSingleton(notificationConfiguration)
             .AddSingleton(organizationConfiguration)
-            .AddSingleton(paymentConfiguration)
-            .AddSingleton(teamConfiguration)
-            .AddSingleton(marketplaceConfiguration)
-            .AddSingleton(coreConfiguration);
+            .AddSingleton(teamConfiguration);
     }
 }

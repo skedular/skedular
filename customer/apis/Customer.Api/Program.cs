@@ -3,7 +3,6 @@ using Customer.Shared;
 using Customer.Shared.Configurations;
 using Customer.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
@@ -20,10 +19,7 @@ public class Program
 
     public static WebApplication CreateHostBuilder(string[] args)
     {
-        var builder = WebApplication
-            .CreateBuilder(args)
-            .AddDefaultServices<Program>();
-
+        var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
@@ -38,6 +34,7 @@ public class Program
             .AddSecurity()
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

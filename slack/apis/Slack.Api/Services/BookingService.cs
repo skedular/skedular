@@ -1,7 +1,7 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
-using Slack.Shared.Configurations;
 using Slack.Shared.Models;
 
 namespace Slack.Api.Services;

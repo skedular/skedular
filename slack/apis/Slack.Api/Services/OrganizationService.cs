@@ -3,7 +3,7 @@ using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
 using Organization = Slack.Shared.Models.Organization;
-using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Slack.Api.Services;
 

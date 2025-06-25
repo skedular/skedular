@@ -9,9 +9,9 @@ using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_AddInput;
-using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using Organization = Slack.Shared.Database.Entities.Organization;
-using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Slack.Api.Services;
 

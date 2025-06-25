@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Notification.Shared.Configurations;
 using Notification.Shared.Mappers;
 using Notification.Shared.Repositories;
 
@@ -8,6 +7,9 @@ namespace Notification.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -33,14 +35,4 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var notificationConfiguration = configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
-        ArgumentNullException.ThrowIfNull(notificationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
-
-        return services
-            .AddSingleton(notificationConfiguration);
-    }
 }

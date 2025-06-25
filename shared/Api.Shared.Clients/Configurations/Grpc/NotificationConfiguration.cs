@@ -1,9 +1,9 @@
-namespace Notification.Shared.Configurations;
+namespace Api.Shared.Clients.Configurations.Grpc;
 
 public class NotificationConfiguration
 {
     public const string Key = "Notification";
 
     public string ApiKey { get; set; } = string.Empty;
-    public Uri? BaseUri { get; set; }
+    public Uri? GrpcUrl { get; set; }
 }

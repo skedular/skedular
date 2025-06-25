@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
@@ -37,7 +38,7 @@ public interface ICustomTagsPage
 
 public class CustomTagsPage(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     OrganizationConfiguration organizationConfiguration,
     CustomerConfiguration customerConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
@@ -225,7 +226,7 @@ public class CustomTagsPage(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -237,7 +238,7 @@ public class CustomTagsPage(
 
     public async Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
         }

@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
@@ -36,7 +37,7 @@ public interface IBookingsPage
 
 public class BookingsPage(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
@@ -187,7 +188,7 @@ public class BookingsPage(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -199,7 +200,7 @@ public class BookingsPage(
 
     public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
         }
@@ -211,7 +212,7 @@ public class BookingsPage(
 
     public async Task Handle(DatePickerAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
         }

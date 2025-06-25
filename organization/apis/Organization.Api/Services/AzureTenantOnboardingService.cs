@@ -9,8 +9,8 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Workflows;
-using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
 using Location = Organization.Shared.Database.Entities.Location;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 
 namespace Organization.Api.Services;
 

@@ -16,13 +16,13 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Stripe;
 using Customer = Organization.Shared.Models.Customer;
-using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
-using CustomerConfiguration = Organization.Shared.Configurations.CustomerConfiguration;
 using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event;
 using Location = Organization.Shared.Database.Entities.Location;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type;
 using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
+using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
 
 namespace Organization.Processors.Subscribers;
 

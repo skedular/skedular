@@ -1,4 +1,3 @@
-using Marketplace.Shared.Configurations;
 using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
@@ -9,6 +8,9 @@ namespace Marketplace.Shared;
 
 public static class Extensions
 {
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+        services;
+
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
 
@@ -37,14 +39,4 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddScoped<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        var msTeamsConfiguration = configuration.GetSection(MarketplaceConfiguration.Key).Get<MarketplaceConfiguration>();
-        ArgumentNullException.ThrowIfNull(msTeamsConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsConfiguration.ApiKey);
-
-        return services
-            .AddSingleton(msTeamsConfiguration);
-    }
 }

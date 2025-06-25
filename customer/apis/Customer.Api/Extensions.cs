@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Api.Services.Authorization;
@@ -31,5 +32,16 @@ public static class Extensions
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
             .AddScoped<IMyBillingService, MyBillingService>();
 
-    public static IServiceCollection AddJobs(this IServiceCollection services) => services;
+    public static IServiceCollection AddJobs(this IServiceCollection services) =>
+        services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        ArgumentNullException.ThrowIfNull(customerConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(customerConfiguration);
+    }
 }

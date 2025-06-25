@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
 using Payment.Api.Services.Authorization;
@@ -17,4 +18,14 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var paymentConfiguration = configuration.GetSection(PaymentConfiguration.Key).Get<PaymentConfiguration>();
+        ArgumentNullException.ThrowIfNull(paymentConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(paymentConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(paymentConfiguration);
+    }
 }

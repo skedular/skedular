@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -25,4 +26,14 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
+        ArgumentNullException.ThrowIfNull(bookingConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
+
+        return services
+            .AddSingleton(bookingConfiguration);
+    }
 }

@@ -1,14 +1,13 @@
 ﻿using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
-using Payment.Api.Mappers;
 using Payment.Api.Services;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Payment.Api.GraphQL;
 
 [QueryType]
-public class Query(IMapper mapper, IVersionService versionService)
+public class Query(IVersionService versionService)
 {
     [UseResolverScope]
     public Version PaymentVersion()

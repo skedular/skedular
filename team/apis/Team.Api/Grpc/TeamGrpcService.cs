@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
@@ -8,7 +9,6 @@ using Grpc.Core;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
-using Team.Shared.Configurations;
 using Team.Shared.Models;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;

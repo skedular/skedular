@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
@@ -9,7 +10,6 @@ using Grpc.Core;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
-using Organization.Shared.Configurations;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using BillingDetails = Api.Shared.Services.Grpc.Skedular.Organization.V1.BillingDetails;
@@ -320,8 +320,7 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<BillingDetails> GetBillingDetails(GetBillingDetailsInput request,
-        ServerCallContext context)
+    public override async Task<BillingDetails> GetBillingDetails(GetBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -25,4 +26,13 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        ArgumentNullException.ThrowIfNull(locationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+
+        return services.AddSingleton(locationConfiguration);
+    }
 }

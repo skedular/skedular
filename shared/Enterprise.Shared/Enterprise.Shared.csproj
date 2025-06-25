@@ -14,7 +14,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.2.1"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.3"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.11"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.10.1"/>
@@ -61,7 +61,7 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.6"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.6.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.82.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.83.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.9.4"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.12.0"/>
@@ -71,7 +71,7 @@
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.2"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.12.0-beta.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0"/>

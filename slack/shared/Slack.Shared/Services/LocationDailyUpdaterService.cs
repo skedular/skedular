@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
@@ -5,7 +6,6 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Components;
-using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Mappers;
@@ -14,7 +14,7 @@ using SlackNet.Blocks;
 using SlackNet.WebApi;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_GetInput;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection;
 
 namespace Slack.Shared.Services;

@@ -24,7 +24,7 @@ public interface IPageNavigator
 
 public class PageNavigator(
     AsyncPageRenderingService asyncPageRenderingService,
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     IHomePage homePage,
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
@@ -62,7 +62,7 @@ public class PageNavigator(
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        if (slackConfiguration.EnableAsyncMode)
+        if (slackConfigurationService.EnableAsyncMode)
         {
             asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
         }

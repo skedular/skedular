@@ -14,7 +14,7 @@ public interface IWorkspaceService
 }
 
 public class WorkspaceService(
-    SlackConfiguration slackConfiguration,
+    SlackConfigurationService slackConfigurationService,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IWorkspaceOnboardingService workspaceOnboardingService,
@@ -26,11 +26,11 @@ public class WorkspaceService(
     public async Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken)
     {
         var response = await new SlackServiceBuilder().GetApiClient().OAuthV2.Access(
-            slackConfiguration.ClientId,
-            slackConfiguration.ClientSecret,
+            slackConfigurationService.ClientId,
+            slackConfigurationService.ClientSecret,
             code,
             null,
-            slackConfiguration.RedirectUrl!.ToString(),
+            slackConfigurationService.RedirectUrl!.ToString(),
             null,
             cancellationToken);
         ArgumentNullException.ThrowIfNull(response.Team);
@@ -56,6 +56,6 @@ public class WorkspaceService(
             await transaction.CommitAsync(cancellationToken);
         }
 
-        return slackConfiguration.SuccessInstallUrl!.ToString().SetQueryParam("app", slackConfiguration.AppId);
+        return slackConfigurationService.SuccessInstallUrl!.ToString().SetQueryParam("app", slackConfigurationService.AppId);
     }
 }

@@ -1,9 +1,9 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
-using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
