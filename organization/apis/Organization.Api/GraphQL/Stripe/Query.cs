@@ -11,7 +11,7 @@ using Organization.Shared.Models;
 namespace Organization.Api.GraphQL.Stripe;
 
 [QueryType]
-public class Query(IMapper mapper, IVersionService versionService)
+public class Query(IMapper mapper)
 {
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountDetails?> OrganizationStripeConnectAccountAsync(
@@ -35,6 +35,7 @@ public class Query(IMapper mapper, IVersionService versionService)
             new PaginationInputParam(after, first, before, last),
             new OrganizationStripeConnectAccountSearchCriteria(where.OrganizationId, where.NameContains, where.OnboardingCompleted),
             orderBy.ToSafeCollection().Select(item => new OrganizationStripeConnectAccountOrder(item.Direction, item.Field)).ToList(),
+            false,
             cancellationToken);
 
         return new OrganizationStripeConnectAccountConnection

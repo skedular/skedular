@@ -73,8 +73,8 @@ public interface IMapper
         Shared.Database.Entities.Address dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.StripeConnectAccount MergeTo(Account src, Shared.Database.Entities.StripeConnectAccount dest);
-    Shared.Models.StripeConnectAccount MapTo(Shared.Database.Entities.StripeConnectAccount src);
+    StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest);
+    Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src);
     Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
 
     ProductVersion MapToEntity(
@@ -150,10 +150,7 @@ public class Mapper : IMapper
             Name = organizationAfterState.Name,
             Website = organizationAfterState.Website,
             Type = organizationAfterState.Type.ToOrganizationType(),
-            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
-            ContactEmail = organizationAfterState.ContactEmail,
-            ContactPhone = organizationAfterState.ContactPhone,
-            PhysicalAddress = MapTo(organizationAfterState.PhysicalAddress)
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -362,7 +359,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.StripeConnectAccount MergeTo(Account src, Shared.Database.Entities.StripeConnectAccount dest)
+    public StripeConnectAccount MergeTo(Account src, StripeConnectAccount dest)
     {
         dest.StripeAccountId = src.Id;
         dest.ChargesEnabled = src.ChargesEnabled;
@@ -382,7 +379,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Models.StripeConnectAccount MapTo(Shared.Database.Entities.StripeConnectAccount src) =>
+    public Shared.Models.StripeConnectAccount MapTo(StripeConnectAccount src) =>
         new()
         {
             Id = src.Id,
@@ -554,21 +551,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 LineItems = src.LineItems ?? [],
                 Schedules = src.Schedules ?? []
-            };
-
-    private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
-        src is null
-            ? null
-            : new Address
-            {
-                Id = src.Id,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country
             };
 
     private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>

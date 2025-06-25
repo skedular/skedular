@@ -12,7 +12,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Configurations;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using OrganizationBillingDetails = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails;
+using BillingDetails = Api.Shared.Services.Grpc.Skedular.Organization.V1.BillingDetails;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using TermsOfUse = Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse;
 using Version = Api.Shared.Services.Grpc.Skedular.Organization.V1.Version;
@@ -28,6 +28,7 @@ public class OrganizationGrpcService(
     IOrganizationService organizationService,
     IOrganizationMemberService organizationMemberService,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     ITagService tagService,
     IOrganizationBillingService organizationBillingService,
     IMapper mapper) : OrganizationService.OrganizationServiceBase
@@ -58,6 +59,50 @@ public class OrganizationGrpcService(
                 request.OfferingCode,
                 true,
                 context.CancellationToken));
+    }
+
+    public override async Task<StripeConnectAccountConnection> Admin_GetStripeConnectAccounts(
+        Admin_GeStripeConnectAccountsInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await organizationStripeConnectAccountService.GetPaginatedAccountsAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new OrganizationStripeConnectAccountSearchCriteria(
+                request.Where.OrganizationId,
+                request.Where.NameContains,
+                request.Where.OnboardingCompleted),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    StripeConnectAccountOrderField.StripeConnectAccountName => OrganizationStripeConnectAccountOrderField.Name,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new OrganizationStripeConnectAccountOrder(direction, field);
+            }).ToList(),
+            true,
+            context.CancellationToken);
+
+        var connection = new StripeConnectAccountConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        return connection;
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Get(
@@ -275,8 +320,7 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<OrganizationBillingDetails> GetOrganizationBillingDetails(
-        GetOrganizationBillingDetailsInput request,
+    public override async Task<BillingDetails> GetBillingDetails(GetBillingDetailsInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
@@ -284,9 +328,7 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(await organizationBillingService.GetByOrganizationIdAsync(request.OrganizationId, context.CancellationToken));
     }
 
-    public override async Task<OrganizationBillingDetails> AddOrganizationBillingDetails(
-        AddOrganizationBillingDetailsInput request,
-        ServerCallContext context)
+    public override async Task<BillingDetails> AddBillingDetails(AddBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
         var organization = await organizationBillingService.AddAsync(mapper.MapTo(request), context.CancellationToken);
@@ -294,9 +336,7 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(organization.BillingDetails);
     }
 
-    public override async Task<OrganizationBillingDetails> UpdateOrganizationBillingDetails(
-        UpdateOrganizationBillingDetailsInput request,
-        ServerCallContext context)
+    public override async Task<BillingDetails> UpdateBillingDetails(UpdateBillingDetailsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
         var organization = await organizationBillingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken);

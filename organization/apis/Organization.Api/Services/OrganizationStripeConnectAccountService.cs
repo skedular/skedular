@@ -35,6 +35,7 @@ public interface IOrganizationStripeConnectAccountService
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
 
@@ -282,17 +283,21 @@ public class OrganizationStripeConnectAccountService(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.OrganizationId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanViewStripeConnectAccount(organization, customer))
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            if (!organizationAuthorizationService.CanViewStripeConnectAccount(organization, customer))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetPaginatedAccountsAsync(

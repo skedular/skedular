@@ -297,8 +297,8 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var billingInfo = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
-            new GetOrganizationBillingDetailsInput { OrganizationId = workspace.Organization.Id },
+        var billingInfo = await organizationServiceClient.GetBillingDetailsAsync(
+            new GetBillingDetailsInput { OrganizationId = workspace.Organization.Id },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
@@ -333,8 +333,8 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var organizationBillingDetails = await organizationServiceClient.GetOrganizationBillingDetailsAsync(
-            new GetOrganizationBillingDetailsInput { OrganizationId = workspace.Organization.Id },
+        var organizationBillingDetails = await organizationServiceClient.GetBillingDetailsAsync(
+            new GetBillingDetailsInput { OrganizationId = workspace.Organization.Id },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

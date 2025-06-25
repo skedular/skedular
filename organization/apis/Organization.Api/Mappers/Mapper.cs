@@ -125,7 +125,6 @@ public interface IMapper
 
     IEnumerable<string> MapTo(Offering offering);
     OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src);
-    OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src);
     Shared.Database.Entities.OrganizationSsoSetting MapToEntity(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
@@ -149,20 +148,16 @@ public interface IMapper
     CustomerCreateOptions MapToStripeCustomerCreateOption(Shared.Database.Entities.Organization src);
     Shared.Models.OrganizationBillingDetails MapTo(AddOrganizationBillingDetailsInput src);
     Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src);
-    Shared.Models.OrganizationBillingDetails MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput src);
-
-    Shared.Models.OrganizationBillingDetails MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateOrganizationBillingDetailsInput src);
-
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails MapToGrpcResponse(
-        Shared.Models.OrganizationBillingDetails? src);
-
+    Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src);
+    Shared.Models.OrganizationBillingDetails MapTo(UpdateBillingDetailsInput src);
+    BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src);
     Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src);
     AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src);
     OrganizationStripeConnectAccount MapTo(Account src, string id, string name, bool isDefault, Shared.Database.Entities.Organization organization);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
+    StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
 }
 
 public class Mapper : IMapper
@@ -713,14 +708,6 @@ public class Mapper : IMapper
             IsActive = src.IsActive
         };
 
-    public OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
-        src is null
-            ? null
-            : new OrganizationSsoSettingsDetails
-            {
-                EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
-            };
-
     public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(
         OrganizationSsoSetting src,
         Shared.Database.Entities.Organization organization) =>
@@ -861,8 +848,7 @@ public class Mapper : IMapper
             Country = src.Country
         };
 
-    public Shared.Models.OrganizationBillingDetails MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput src) =>
+    public Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
         new()
         {
             Id = src.Id.ToSafeString(),
@@ -878,8 +864,7 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Shared.Models.OrganizationBillingDetails MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateOrganizationBillingDetailsInput src) =>
+    public Shared.Models.OrganizationBillingDetails MapTo(UpdateBillingDetailsInput src) =>
         new()
         {
             Id = src.Id.ToSafeString(),
@@ -894,11 +879,10 @@ public class Mapper : IMapper
             Country = src.Country
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails MapToGrpcResponse(
-        Shared.Models.OrganizationBillingDetails? src) =>
+    public BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src) =>
         src is null
-            ? new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails { Id = string.Empty }
-            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingDetails
+            ? new BillingDetails { Id = string.Empty }
+            : new BillingDetails
             {
                 Id = src.Id,
                 CompanyName = src.CompanyName.ToSafeString(),
@@ -1022,7 +1006,7 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = MapTo(src.Organization!),
+            Organization = MapTo(src.Organization),
             OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
         };
 
@@ -1053,6 +1037,8 @@ public class Mapper : IMapper
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+    public StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => 
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1648,4 +1634,37 @@ public class Mapper : IMapper
         Organization = organization,
         OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
     };
+
+    private static StripeConnectAccount MapToGrpcResponse(Shared.Models.OrganizationStripeConnectAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            IsDefault = src.IsDefault,
+            StripeAccountId = src.StripeAccountId.ToSafeString(),
+            Name = src.Name.ToSafeString(),
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type.ToSafeString(),
+            Country = src.Country.ToSafeString(),
+            DefaultCurrency = src.DefaultCurrency.ToSafeString(),
+            BusinessType = src.BusinessType.ToSafeString(),
+            CompanyName = src.CompanyName.ToSafeString(),
+            Url = src.Url.ToSafeString(),
+            SupportUrl = src.SupportUrl.ToSafeString(),
+            ContactEmail = src.ContactEmail.ToSafeString(),
+            ContactPhone = src.ContactPhone.ToSafeString(),
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
+            OnboardingUrl = src.OnboardingUrl.ToSafeString(),
+            OnboardingCompleted = src.OnboardingCompleted,
+        };
+    
+    private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
+        src is null
+            ? null
+            : new OrganizationSsoSettingsDetails
+            {
+                EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
 }

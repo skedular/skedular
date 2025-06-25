@@ -49,13 +49,6 @@ message Organization {
   OrganizationSsoSettings ssoSettings = 11;
   string type = 12;
   string memberVisibilityPolicy = 13;
-  Address physicalAddress = 14;
-  string contactEmail = 15;
-  string contactPhone = 16;
-  BillingDetails billingDetails = 17;
-  StripeCustomer stripeCustomer = 18;
-  repeated StripePaymentMethod stripePaymentMethods = 19;
-  repeated StripeConnectAccount stripeConnectAccounts = 20;
 }
 
 enum Role {
@@ -111,44 +104,4 @@ message OrganizationSsoSettings {
   string loginUrl = 3;
   string appFederationMetadataUrl = 4;
   bool isActive = 5;
-}
-
-message Address {
-  string id = 1;
-  string addressLine1 = 2;
-  string addressLine2 = 3;
-  string suburb = 4;
-  string city = 5;
-  string province = 6;
-  string zipcode = 7;
-  string country = 8;
-}
-
-message BillingDetails {
-  string id = 1;
-  string companyName = 2;
-  string email = 3;
-  string addressLine1 = 4;
-  string addressLine2 = 5;
-  string suburb = 6;
-  string city = 7;
-  string province = 8;
-  string zipcode = 9;
-  string country = 10;
-}
-
-message StripeCustomer {
-  string id = 1;
-  string stripeCustomerId = 2;
-}
-
-message StripePaymentMethod {
-  string id = 1;
-  string setupIntentId = 2;
-}
-
-message StripeConnectAccount {
-  string id = 1;
-  bool isDefault = 2;
-  string stripeAccountId = 3;
 }

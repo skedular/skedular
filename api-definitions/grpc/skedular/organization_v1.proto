@@ -8,6 +8,7 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Organization.V1";
 service OrganizationService {
     rpc Admin_Add (Admin_AddInput) returns (Organization);
     rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
+    rpc Admin_GetStripeConnectAccounts (Admin_GeStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc GetActiveOrganizationTermsOfUse (GetActiveOrganizationTermsOfUseInput) returns (TermsOfUse);
@@ -26,9 +27,9 @@ service OrganizationService {
     rpc AddZone (AddZoneInput) returns (Zone);
     rpc UpdateZone (UpdateZoneInput) returns (Zone);
     rpc RemoveZone (RemoveZoneInput) returns (Zone);
-    rpc GetOrganizationBillingDetails (GetOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
-    rpc AddOrganizationBillingDetails (AddOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
-    rpc UpdateOrganizationBillingDetails (UpdateOrganizationBillingDetailsInput) returns (OrganizationBillingDetails);
+    rpc GetBillingDetails (GetBillingDetailsInput) returns (BillingDetails);
+    rpc AddBillingDetails (AddBillingDetailsInput) returns (BillingDetails);
+    rpc UpdateBillingDetails (UpdateBillingDetailsInput) returns (BillingDetails);
 }
 
 message VersionInput {
@@ -77,6 +78,10 @@ message Admin_AddInput {
     string contactPhone = 13;
 }
 
+message Admin_GetOrganizationStripeConnectAccountsResponse {
+    repeated StripeConnectAccount accounts = 1;
+}
+
 message Organization {
     string id = 1;
     string name = 2;
@@ -96,7 +101,10 @@ message Organization {
     string memberVisibilityPolicy = 16;
     string contactEmail = 17;
     string contactPhone = 18;
-    OrganizationBillingDetails billingDetails = 19;
+    BillingDetails billingDetails = 19;
+    StripeCustomer stripeCustomer = 20;
+    repeated StripePaymentMethod stripePaymentMethods = 21;
+    repeated StripeConnectAccount stripeConnectAccounts = 22;
 }
 
 message IndustrySubCategory {
@@ -143,6 +151,15 @@ enum OrganizationMemberStatus
 message Admin_AddMemberInput {
     string id = 1;
     OrganizationMember member = 2;
+}
+
+message Admin_GeStripeConnectAccountsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    StripeConnectAccountWhereInput where = 5;
+    repeated StripeConnectAccountOrderInput orderBy = 6;
 }
 
 message GetPaginatedMembersInput {
@@ -367,11 +384,11 @@ message ResourceType {
     string color = 5;
 }
 
-message GetOrganizationBillingDetailsInput {
+message GetBillingDetailsInput {
     string organizationId = 1;
 }
 
-message AddOrganizationBillingDetailsInput {
+message AddBillingDetailsInput {
     string id = 1;
     string organizationId = 2;
     string companyName = 3;
@@ -385,7 +402,7 @@ message AddOrganizationBillingDetailsInput {
     string country = 11;
 }
 
-message UpdateOrganizationBillingDetailsInput {
+message UpdateBillingDetailsInput {
     string id = 1;
     string companyName = 2;
     string email = 3;
@@ -398,7 +415,7 @@ message UpdateOrganizationBillingDetailsInput {
     string country = 10;
 }
 
-message OrganizationBillingDetails {
+message BillingDetails {
     string id = 1;
     string companyName = 2;
     string email = 3;
@@ -409,4 +426,63 @@ message OrganizationBillingDetails {
     string province = 8;
     string zipcode = 9;
     string country = 10;
+}
+
+message StripeCustomer {
+    string id = 1;
+    string stripeCustomerId = 2;
+}
+
+message StripePaymentMethod {
+    string id = 1;
+    string setupIntentId = 2;
+}
+
+message StripeConnectAccountWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+    bool onboardingCompleted = 3;
+}
+
+message StripeConnectAccountOrderInput {
+    OrderDirection direction = 1;
+    StripeConnectAccountOrderField field = 2;
+}
+
+enum StripeConnectAccountOrderField {
+    StripeConnectAccountName = 0;
+}
+
+message StripeConnectAccountConnection {
+    PageInfo pageInfo = 1;
+    repeated StripeConnectAccountEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message StripeConnectAccountEdge {
+    StripeConnectAccount node = 1;
+    string cursor = 2;
+}
+
+message StripeConnectAccount {
+    string id = 1;
+    bool isDefault = 2;
+    string stripeAccountId = 3;
+    string Name = 4;
+    bool ChargesEnabled = 5;
+    bool PayoutsEnabled = 6;
+    string Type = 7;
+    string Country = 8;
+    string DefaultCurrency = 9;
+    string BusinessType = 10;
+    string CompanyName = 11;
+    string Url = 12;
+    string SupportUrl = 13;
+    string ContactEmail = 14;
+    string ContactPhone = 15;
+    bool DetailsSubmitted = 16;
+    string CapabilitiesTransfers = 17;
+    string CapabilitiesCardPayments = 18;
+    string OnboardingUrl = 19;
+    bool OnboardingCompleted = 20; 
 }

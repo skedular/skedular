@@ -12,7 +12,7 @@ using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
-using SetOrganizationBillingInfoInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddOrganizationBillingDetailsInput;
+using AddBillingDetailsInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddBillingDetailsInput;
 
 namespace Slack.Api.Handlers.ActionHandlers.Billing;
 
@@ -38,7 +38,7 @@ public class EditBillingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var setOrganizationBillingInfoInput = new SetOrganizationBillingInfoInput { OrganizationId = workspace.Organization.Id };
+        var setOrganizationBillingInfoInput = new AddBillingDetailsInput { OrganizationId = workspace.Organization.Id };
 
         if (values.TryGetValue(BillingActionTypes.CompanyName, out var companyNameBlock))
         {
@@ -255,7 +255,7 @@ public class EditBillingButtonHandler(
             throw new InvalidOperationException("country block is missing");
         }
 
-        await organizationServiceClient.AddOrganizationBillingDetailsAsync(
+        await organizationServiceClient.AddBillingDetailsAsync(
             setOrganizationBillingInfoInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
