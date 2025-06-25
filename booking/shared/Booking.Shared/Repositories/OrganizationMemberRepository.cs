@@ -9,10 +9,10 @@ namespace Booking.Shared.Repositories;
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
     Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -24,6 +24,12 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
                             query.Customer.Id == customerId &&
                             !query.Organization.DeletedAt.HasValue)
             .Include(query => query.Organization)
+            .Include(query => query.Customer)
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Where(query => query.Organization.Id == organizationId)
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 
@@ -47,10 +53,4 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
-
-    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
-        await DbContext.OrganizationMember
-            .Where(query => query.Organization.Id == organizationId)
-            .Include(query => query.Customer)
-            .ToListAsync(cancellationToken);
 }

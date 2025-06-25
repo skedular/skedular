@@ -91,7 +91,10 @@ public class Mapper : IMapper
         }));
 
         organization.StripePaymentMethods.AddRange(MapTo(src.OrganizationStripePaymentMethods));
-        organization.StripeConnectAccounts.AddRange(MapTo(src.OrganizationStripeConnectAccounts));
+        organization.StripeConnectAccounts.AddRange(
+            MapTo(src.OrganizationStripeConnectAccounts
+                .Where(organizationStripeConnectAccount => organizationStripeConnectAccount is
+                    { OnboardingCompleted: true, OrganizationStripeConnectAccountAuthorization.IsAuthorized: true })));
 
         return organization;
     }

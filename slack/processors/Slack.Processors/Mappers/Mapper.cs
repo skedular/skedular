@@ -144,27 +144,24 @@ public class Mapper : IMapper
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
-        organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
+        organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
         {
-            return new Shared.Models.OrganizationMember
+            Id = item.Id,
+            Role = item.Role switch
             {
-                Id = item.Id,
-                Role = item.Role switch
-                {
-                    Role.Owner => OrganizationMemberRole.Owner,
-                    Role.Administrator => OrganizationMemberRole.Administrator,
-                    Role.Member => OrganizationMemberRole.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Status = item.Status switch
-                {
-                    Status.Active => OrganizationMemberStatus.Active,
-                    Status.Inactive => OrganizationMemberStatus.Inactive,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Customer = new Customer { Id = item.CustomerId },
-                Organization = organization
-            };
+                Role.Owner => OrganizationMemberRole.Owner,
+                Role.Administrator => OrganizationMemberRole.Administrator,
+                Role.Member => OrganizationMemberRole.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = item.Status switch
+            {
+                Status.Active => OrganizationMemberStatus.Active,
+                Status.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = new Customer { Id = item.CustomerId },
+            Organization = organization
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
