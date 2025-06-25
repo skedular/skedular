@@ -1,4 +1,4 @@
-using Customer.Shared.Database;
+﻿using Customer.Shared.Database;
 using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -19,7 +19,7 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Database.Entities.Customer Update(Database.Entities.Customer customer);
     Database.Entities.Customer Remove(Database.Entities.Customer customer);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int )> GetPaginatedCustomersAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
         ICollection<CustomerOrder> orderByFields,
@@ -223,7 +223,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
         return DbContext.Customer.Update(customer).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int )>
+    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)>
         GetPaginatedCustomersAsync(
             PaginationInputParam paginationInputParam,
             CustomerSearchCriteria searchCriteria,

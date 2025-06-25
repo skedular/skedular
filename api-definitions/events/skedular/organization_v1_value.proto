@@ -149,6 +149,6 @@ message StripePaymentMethod {
 
 message StripeConnectAccount {
   string id = 1;
-  string stripeAccountId = 2;
-  bool isDefault = 3;
+  bool isDefault = 2;
+  string stripeAccountId = 3;
 }

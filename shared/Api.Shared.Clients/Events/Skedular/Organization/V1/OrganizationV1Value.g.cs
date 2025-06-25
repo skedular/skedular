@@ -79,7 +79,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "ZXISCgoCaWQYASABKAkSGAoQc3RyaXBlQ3VzdG9tZXJJZBgCIAEoCSI4ChNT",
             "dHJpcGVQYXltZW50TWV0aG9kEgoKAmlkGAEgASgJEhUKDXNldHVwSW50ZW50",
             "SWQYAiABKAkiTgoUU3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkS",
-            "FwoPc3RyaXBlQWNjb3VudElkGAIgASgJEhEKCWlzRGVmYXVsdBgDIAEoCCqt",
+            "EQoJaXNEZWZhdWx0GAIgASgIEhcKD3N0cmlwZUFjY291bnRJZBgDIAEoCSqt",
             "AQoEVHlwZRIYChRPcmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXph",
             "dGlvbkRlbGV0ZWQQARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9u",
             "VXBzZXJ0ZWQQAhInCiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVs",
@@ -105,7 +105,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.BillingDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.BillingDetails.Parser, new[]{ "Id", "CompanyName", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeCustomer), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeCustomer.Parser, new[]{ "Id", "StripeCustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripePaymentMethod.Parser, new[]{ "Id", "SetupIntentId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount.Parser, new[]{ "Id", "StripeAccountId", "IsDefault" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.StripeConnectAccount.Parser, new[]{ "Id", "IsDefault", "StripeAccountId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -5538,8 +5538,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public StripeConnectAccount(StripeConnectAccount other) : this() {
       id_ = other.id_;
-      stripeAccountId_ = other.stripeAccountId_;
       isDefault_ = other.isDefault_;
+      stripeAccountId_ = other.stripeAccountId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -5561,20 +5561,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "stripeAccountId" field.</summary>
-    public const int StripeAccountIdFieldNumber = 2;
-    private string stripeAccountId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string StripeAccountId {
-      get { return stripeAccountId_; }
-      set {
-        stripeAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "isDefault" field.</summary>
-    public const int IsDefaultFieldNumber = 3;
+    public const int IsDefaultFieldNumber = 2;
     private bool isDefault_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5582,6 +5570,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return isDefault_; }
       set {
         isDefault_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "stripeAccountId" field.</summary>
+    public const int StripeAccountIdFieldNumber = 3;
+    private string stripeAccountId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string StripeAccountId {
+      get { return stripeAccountId_; }
+      set {
+        stripeAccountId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -5601,8 +5601,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (StripeAccountId != other.StripeAccountId) return false;
       if (IsDefault != other.IsDefault) return false;
+      if (StripeAccountId != other.StripeAccountId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5611,8 +5611,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (StripeAccountId.Length != 0) hash ^= StripeAccountId.GetHashCode();
       if (IsDefault != false) hash ^= IsDefault.GetHashCode();
+      if (StripeAccountId.Length != 0) hash ^= StripeAccountId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5635,13 +5635,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (StripeAccountId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(StripeAccountId);
-      }
       if (IsDefault != false) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(16);
         output.WriteBool(IsDefault);
+      }
+      if (StripeAccountId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(StripeAccountId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -5657,13 +5657,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (StripeAccountId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(StripeAccountId);
-      }
       if (IsDefault != false) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(16);
         output.WriteBool(IsDefault);
+      }
+      if (StripeAccountId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(StripeAccountId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -5678,11 +5678,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
-      if (StripeAccountId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeAccountId);
-      }
       if (IsDefault != false) {
         size += 1 + 1;
+      }
+      if (StripeAccountId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeAccountId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -5699,11 +5699,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.Id.Length != 0) {
         Id = other.Id;
       }
-      if (other.StripeAccountId.Length != 0) {
-        StripeAccountId = other.StripeAccountId;
-      }
       if (other.IsDefault != false) {
         IsDefault = other.IsDefault;
+      }
+      if (other.StripeAccountId.Length != 0) {
+        StripeAccountId = other.StripeAccountId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -5728,12 +5728,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             Id = input.ReadString();
             break;
           }
-          case 18: {
-            StripeAccountId = input.ReadString();
+          case 16: {
+            IsDefault = input.ReadBool();
             break;
           }
-          case 24: {
-            IsDefault = input.ReadBool();
+          case 26: {
+            StripeAccountId = input.ReadString();
             break;
           }
         }
@@ -5759,12 +5759,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             Id = input.ReadString();
             break;
           }
-          case 18: {
-            StripeAccountId = input.ReadString();
+          case 16: {
+            IsDefault = input.ReadBool();
             break;
           }
-          case 24: {
-            IsDefault = input.ReadBool();
+          case 26: {
+            StripeAccountId = input.ReadString();
             break;
           }
         }

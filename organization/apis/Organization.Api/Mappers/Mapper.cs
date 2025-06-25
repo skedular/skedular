@@ -159,7 +159,7 @@ public interface IMapper
 
     Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src);
     AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src);
-    OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Shared.Database.Entities.Organization organization);
+    OrganizationStripeConnectAccount MapTo(Account src, string id, string name, bool isDefault, Shared.Database.Entities.Organization organization);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
@@ -968,10 +968,16 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "organizationId", src.Id } }
         };
 
-    public OrganizationStripeConnectAccount MapTo(Account src, string id, string name, Shared.Database.Entities.Organization organization) =>
+    public OrganizationStripeConnectAccount MapTo(
+        Account src,
+        string id,
+        string name, 
+        bool isDefault,
+        Shared.Database.Entities.Organization organization) =>
         new()
         {
             Id = id,
+            IsDefault = isDefault,
             StripeAccountId = src.Id,
             Name = name,
             ChargesEnabled = src.ChargesEnabled,
@@ -998,6 +1004,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
+            IsDefault = src.IsDefault,
             StripeAccountId = src.StripeAccountId,
             Name = src.Name,
             ChargesEnabled = src.ChargesEnabled,
@@ -1619,6 +1626,7 @@ public class Mapper : IMapper
         CreatedAt = src.CreatedAt,
         ModifiedAt = src.ModifiedAt,
         DeletedAt = src.DeletedAt,
+        IsDefault = src.IsDefault,
         StripeAccountId = src.StripeAccountId,
         Name = src.Name,
         ChargesEnabled = src.ChargesEnabled,

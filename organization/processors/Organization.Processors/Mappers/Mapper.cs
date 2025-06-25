@@ -672,6 +672,7 @@ public class Mapper : IMapper
         CreatedAt = src.CreatedAt,
         ModifiedAt = src.ModifiedAt,
         DeletedAt = src.DeletedAt,
+        IsDefault = src.IsDefault,
         StripeAccountId = src.StripeAccountId,
         Name = src.Name,
         ChargesEnabled = src.ChargesEnabled,

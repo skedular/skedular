@@ -27,7 +27,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
     Database.Entities.Organization Update(Database.Entities.Organization organization);
     Database.Entities.Organization Remove(Database.Entities.Organization organization);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int )> GetPaginatedOrganizationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationSearchCriteria searchCriteria,
         ICollection<OrganizationOrder> orderByFields,

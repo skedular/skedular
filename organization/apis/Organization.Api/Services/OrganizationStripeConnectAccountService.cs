@@ -94,7 +94,7 @@ public class OrganizationStripeConnectAccountService(
             mapper.MapToStripeAccountRequest(organization),
             new RequestOptions { IdempotencyKey = id },
             cancellationToken);
-        var accountEntity = mapper.MapTo(stripeConnectAccount, id, nickname, organization);
+        var accountEntity = mapper.MapTo(stripeConnectAccount, id, nickname, organization.OrganizationStripeConnectAccounts.Count == 0, organization);
         var (accountRefreshCodeEntity, url) = await organizationStripeConnectAccountLinkService.CreateLinkAsync(
             stripeConnectAccount.Id,
             redirectUrl,

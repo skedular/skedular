@@ -424,5 +424,5 @@ public class Mapper : IMapper
     private static IEnumerable<StripeConnectAccount> MapTo(IEnumerable<OrganizationStripeConnectAccount> src) => src.Select(MapTo);
 
     private static StripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
-        new() { Id = src.Id, StripeAccountId = src.StripeAccountId.ToSafeString(), IsDefault = src.IsDefault };
+        new() { Id = src.Id, IsDefault = src.IsDefault, StripeAccountId = src.StripeAccountId.ToSafeString() };
 }

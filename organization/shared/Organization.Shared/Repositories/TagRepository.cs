@@ -19,7 +19,7 @@ public interface ITagRepository : IRepository<Tag>
     void RemoveRange(ICollection<Tag> tags);
     Tag Remove(Tag tag);
 
-    Task<(PaginatedInfo, ICollection<Edge<Tag>>, int )> GetPaginatedTagsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
         ICollection<TagOrder> orderByFields,
