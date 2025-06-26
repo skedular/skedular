@@ -161,18 +161,23 @@ message Booking {
 
 message Customer {
     string id = 1;
-    string name = 2;
-    string givenName = 3;
-    string middleName = 4;
-    string familyName = 5;
-    string photoUrl = 6;
-    string photoUrl24 = 7;
-    string photoUrl32 = 8;
-    string photoUrl48 = 9;
-    string photoUrl72 = 10;
-    string photoUrl192 = 11;
-    string photoUrl512 = 12;
-    repeated Identity identities = 13;
+    repeated Identity identities = 2;
+    string designation = 3;
+    string title = 4;
+    string name = 5;
+    string givenName = 6;
+    string middleName = 7;
+    string familyName = 8;
+    string photoUrl = 9;
+    string photoUrl24 = 10;
+    string photoUrl32 = 11;
+    string photoUrl48 = 12;
+    string photoUrl72 = 13;
+    string photoUrl192 = 14;
+    string photoUrl512 = 15;
+    string timezone = 16;
+    string locale = 17;
+    string phoneNumber = 18;
 }
 
 message Identity {
@@ -184,6 +189,8 @@ message Identity {
 message Organization {
     string id = 1;
     string name = 2;
+    string contactEmail = 3;
+    string contactPhone = 4;
 }
 
 message Location {

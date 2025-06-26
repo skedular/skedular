@@ -54,11 +54,6 @@
         <ProjectReference Include="..\..\organization\processors\Organization.Processors\Organization.Processors.csproj"/>
         <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\payment\shared\Payment.Infrastructure\Payment.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj"/>
-        <ProjectReference Include="..\..\payment\processors\Payment.Processors\Payment.Processors.csproj"/>
-        <ProjectReference Include="..\..\payment\jobs\Payment.Jobs\Payment.Jobs.csproj"/>
-
         <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj"/>
         <ProjectReference Include="..\..\slack\processors\Slack.Processors\Slack.Processors.csproj"/>

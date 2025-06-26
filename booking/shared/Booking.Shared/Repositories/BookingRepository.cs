@@ -8,14 +8,13 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using BookingCheckoutSession = Booking.Shared.Database.Entities.BookingCheckoutSession;
+using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 
 namespace Booking.Shared.Repositories;
 
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Booking>> GetAllExpiredBookingsAsync(CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Booking Add(Database.Entities.Booking booking);
     Database.Entities.Booking Update(Database.Entities.Booking booking);
@@ -30,7 +29,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, BookingCheckoutSession?> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -55,7 +54,7 @@ internal static class BookingExtensions
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer)
             .Include(query => query.ProductVersions)
-            .Include(query => query.BookingCheckoutSession);
+            .Include(query => query.StripeCheckoutSession);
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,
@@ -224,19 +223,6 @@ public class BookingRepository(
         await DbContext.Booking
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<ICollection<Database.Entities.Booking>> GetAllExpiredBookingsAsync(CancellationToken cancellationToken) =>
-        await DbContext.Booking
-            .Where(query => !query.DeletedAt.HasValue && query.IsPaymentRequired &&
-                            query.CreatedAt < bookingCheckoutSessionHelperService.GetExpiryDateTimeOffset() &&
-                            query.Status != BookingStatusConstants.PaymentExpired &&
-                            query.Status != BookingStatusConstants.PaymentRecordNeverCreated &&
-                            (query.BookingCheckoutSession == null ||
-                             (query.BookingCheckoutSession != null &&
-                              query.BookingCheckoutSession.PaymentStatus != PaymentStatusConstants.NoPaymentRequired &&
-                              query.BookingCheckoutSession.PaymentStatus != PaymentStatusConstants.Paid)))
-            .AddDependentObjects()
-            .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking

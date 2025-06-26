@@ -18,7 +18,7 @@ namespace Booking.Shared.Publishers;
 public interface IBookingOutboxPublisher
 {
     void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
-    void ExecuteWorkflowBookingPaidThroughStripe(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
+    void ExecuteWorkflowPayBookingUsingStripeCheckoutSession(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
 }
 
 public class BookingOutboxPublisher(
@@ -27,7 +27,8 @@ public class BookingOutboxPublisher(
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     TemporalConfiguration temporalConfiguration,
-    ITemporalOutboxWorkflowExecutor<BookingPaidThroughStripe, BookingPaidThroughStripeInput> temporalOutboxBookingPaidThroughStripeWorkflowExecutor)
+    ITemporalOutboxWorkflowExecutor<PayBookingUsingStripeCheckoutSession, BookingPaidThroughStripeInput>
+        temporalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutor)
     : IBookingOutboxPublisher
 {
     public void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
@@ -49,12 +50,12 @@ public class BookingOutboxPublisher(
         }
     }
 
-    public void ExecuteWorkflowBookingPaidThroughStripe(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
+    public void ExecuteWorkflowPayBookingUsingStripeCheckoutSession(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
     {
         foreach (var booking in bookings)
         {
-            temporalOutboxBookingPaidThroughStripeWorkflowExecutor.Execute(
-                new BookingPaidThroughStripeInput(booking.Id),
+            temporalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutor.Execute(
+                new BookingPaidThroughStripeInput(booking.Id, booking.BookingCheckoutSessionExpiry),
                 new WorkflowOptions
                 {
                     Id = booking.Id,

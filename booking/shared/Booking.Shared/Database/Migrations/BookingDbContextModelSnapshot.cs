@@ -20,7 +20,7 @@ namespace Booking.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -140,65 +140,6 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("Booking");
                 });
 
-            modelBuilder.Entity("Booking.Shared.Database.Entities.BookingCheckoutSession", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<decimal?>("AmountTotal")
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<string>("BookingId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CheckoutUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Currency")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PaymentStatus")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId")
-                        .IsUnique();
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("PaymentStatus");
-
-                    b.ToTable("BookingCheckoutSession");
-                });
-
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
@@ -214,6 +155,10 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Designation")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -225,6 +170,10 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Locale")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
                     b.Property<string>("MiddleName")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -235,6 +184,10 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("PhotoUrl")
                         .HasMaxLength(2000)
@@ -263,6 +216,14 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("PhotoUrl72")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -392,6 +353,14 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ContactEmail")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<string>("ContactPhone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -878,6 +847,232 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("ResourceBookingSlot");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeCheckoutSession", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal?>("AmountTotal")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CheckoutUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("StripeCheckoutSessionId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeCustomerCustomerId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("PaymentStatus");
+
+                    b.HasIndex("StripeCheckoutSessionId");
+
+                    b.HasIndex("StripeCustomerCustomerId");
+
+                    b.ToTable("StripeCheckoutSession");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeCustomer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeAccountId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeCustomerId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("StripeAccountId");
+
+                    b.HasIndex("StripeCustomerId");
+
+                    b.ToTable("StripeCustomer");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripePrice", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProductVersionId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripePriceId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeProductId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ProductVersionId")
+                        .IsUnique();
+
+                    b.HasIndex("StripeProductId")
+                        .IsUnique();
+
+                    b.ToTable("StripePrice");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeProduct", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProductVersionId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeAccountId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeProductId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ProductVersionId")
+                        .IsUnique();
+
+                    b.HasIndex("StripeAccountId");
+
+                    b.ToTable("StripeProduct");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
@@ -1331,17 +1526,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("PaidByOrganization");
                 });
 
-            modelBuilder.Entity("Booking.Shared.Database.Entities.BookingCheckoutSession", b =>
-                {
-                    b.HasOne("Booking.Shared.Database.Entities.Booking", "Booking")
-                        .WithOne("BookingCheckoutSession")
-                        .HasForeignKey("Booking.Shared.Database.Entities.BookingCheckoutSession", "BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "DefaultOrganization")
@@ -1452,6 +1636,64 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Resource");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeCheckoutSession", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", "Booking")
+                        .WithOne("StripeCheckoutSession")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripeCheckoutSession", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.StripeCustomer", "StripeCustomer")
+                        .WithMany("StripeCheckoutSessions")
+                        .HasForeignKey("StripeCustomerCustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("StripeCustomer");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeCustomer", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
+                        .WithMany("StripeCustomers")
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("StripeCustomers")
+                        .HasForeignKey("OrganizationId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripePrice", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
+                        .WithOne("StripePrice")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripePrice", "ProductVersionId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.StripeProduct", "StripeProduct")
+                        .WithOne("StripePrice")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripePrice", "StripeProductId");
+
+                    b.Navigation("ProductVersion");
+
+                    b.Navigation("StripeProduct");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeProduct", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
+                        .WithOne("StripeProduct")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripeProduct", "ProductVersionId");
+
+                    b.Navigation("ProductVersion");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>
@@ -1709,7 +1951,7 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Booking", b =>
                 {
-                    b.Navigation("BookingCheckoutSession");
+                    b.Navigation("StripeCheckoutSession");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
@@ -1725,6 +1967,8 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("PaidBookings");
+
+                    b.Navigation("StripeCustomers");
 
                     b.Navigation("TeamMembers");
                 });
@@ -1748,6 +1992,8 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Navigation("Products");
 
+                    b.Navigation("StripeCustomers");
+
                     b.Navigation("Tags");
 
                     b.Navigation("Teams");
@@ -1758,9 +2004,26 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("ProductVersions");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.ProductVersion", b =>
+                {
+                    b.Navigation("StripePrice");
+
+                    b.Navigation("StripeProduct");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Resource", b =>
                 {
                     b.Navigation("ResourceBookingSlots");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeCustomer", b =>
+                {
+                    b.Navigation("StripeCheckoutSessions");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.StripeProduct", b =>
+                {
+                    b.Navigation("StripePrice");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>

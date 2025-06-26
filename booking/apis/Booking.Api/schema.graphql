@@ -83,6 +83,8 @@ type Booking_CurrencyDetails {
 
 type Booking_CustomerDetails {
   uniqueId: ID!
+  designation: String
+  title: String
   name: String
   givenName: String
   middleName: String
@@ -94,6 +96,9 @@ type Booking_CustomerDetails {
   photoUrl72: String
   photoUrl192: String
   photoUrl512: String
+  timezone: String
+  locale: String
+  phoneNumber: String
 }
 
 type Booking_LocationDetails {
@@ -110,6 +115,8 @@ type Booking_OrganizationCustomTagDetails {
 type Booking_OrganizationDetails {
   uniqueId: ID!
   name: String!
+  contactEmail: String
+  contactPhone: String
 }
 
 type Booking_OrganizationZoneDetails {

@@ -102,10 +102,13 @@ type Booking_CurrencyDetails {
 }
 
 type Booking_CustomerDetails {
+  designation: String
   familyName: String
   givenName: String
+  locale: String
   middleName: String
   name: String
+  phoneNumber: String
   photoUrl: String
   photoUrl192: String
   photoUrl24: String
@@ -113,6 +116,8 @@ type Booking_CustomerDetails {
   photoUrl48: String
   photoUrl512: String
   photoUrl72: String
+  timezone: String
+  title: String
   uniqueId: ID!
 }
 
@@ -128,6 +133,8 @@ type Booking_OrganizationCustomTagDetails {
 }
 
 type Booking_OrganizationDetails {
+  contactEmail: String
+  contactPhone: String
   name: String!
   uniqueId: ID!
 }
@@ -1014,8 +1021,6 @@ type Query {
   organizationVersion: Version!
   otherResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
-  paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
-  paymentVersion: Version!
   pendingInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")

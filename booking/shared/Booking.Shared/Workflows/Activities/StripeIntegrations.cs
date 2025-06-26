@@ -1,0 +1,220 @@
+using Api.Shared.Services;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Models;
+using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
+using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Random;
+using Stripe;
+using Stripe.Checkout;
+using Temporalio.Activities;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using StripeCustomer = Booking.Shared.Database.Entities.StripeCustomer;
+
+namespace Booking.Shared.Workflows.Activities;
+
+public record UpsertProductAndPricingInput(string BookingId);
+
+public record UpsertProductAndPricingResponse(string StripeConnectAccountId);
+
+public record UpsertBookingRelatedStripeCustomerInput(string BookingId, string StripeConnectAccountId);
+
+public record UpsertBookingRelatedStripeCustomerResponse(string StripeCustomerId);
+
+public record CreateCheckoutSessionAsyncInput(string BookingId, string StripeConnectAccountId, string StripeCustomerId);
+
+public record CreateCheckoutSessionAsyncResponse(PaymentStatus PaymentStatus);
+
+public class StripeIntegrations(
+    ApplicationConfiguration applicationConfiguration,
+    IRepositoryFactory repositoryFactory,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    IStripeProductPricingService stripeProductPricingService,
+    IStripeCustomerService stripeCustomerService,
+    ICreatable<Session, SessionCreateOptions> sessionCreateService,
+    IRandomHelper randomHelper,
+    IMapper mapper)
+{
+    [Activity]
+    public async Task<UpsertProductAndPricingResponse?> UpsertProductAndPricingAsync(UpsertProductAndPricingInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
+        if (booking is null || booking.IsDeleted())
+        {
+            return null;
+        }
+
+        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+        if (productVersions.Count != productVersionIds.Count)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+        if (organizationIds.Count > 1)
+        {
+            throw new CrossOrganizationProductBookingNotAllowed();
+        }
+
+        var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
+            new Admin_GeStripeConnectAccountsInput
+            {
+                After = string.Empty,
+                First = -1,
+                Before = string.Empty,
+                Last = -1,
+                Where = new StripeConnectAccountWhereInput
+                {
+                    OrganizationId = productVersions.First().Product.Organization.Id, OnboardingCompleted = true
+                }
+            },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+        var stripeConnectAccountId = stripeConnectAccountConnection.Edges.Select(item => item.Node).First(item => item.IsDefault).StripeAccountId;
+
+        foreach (var productVersion in productVersions)
+        {
+            if (productVersion.StripeProduct is not null && productVersion.StripePrice is not null)
+            {
+                continue;
+            }
+
+            var (stripeProduct, stripePrice) = await stripeProductPricingService.UpsertProductPricingAsync(
+                mapper.MapTo(productVersion),
+                productVersion,
+                stripeConnectAccountId,
+                cancellationToken);
+
+            productVersion.StripeProduct = stripeProduct;
+            productVersion.StripePrice = stripePrice;
+            _ = repositoryFactory.ProductVersionRepository.Update(productVersion);
+        }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new UpsertProductAndPricingResponse(stripeConnectAccountId);
+    }
+
+    [Activity]
+    public async Task<UpsertBookingRelatedStripeCustomerResponse?> UpsertBookingRelatedStripeCustomerAsync(
+        UpsertBookingRelatedStripeCustomerInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
+        if (booking is null || booking.IsDeleted())
+        {
+            return null;
+        }
+
+        StripeCustomer stripeCustomer;
+        if (booking.PaidByCustomer is not null)
+        {
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, true, cancellationToken) ??
+                           throw new CustomerNotFound();
+            stripeCustomer = await stripeCustomerService.AddCustomerAsync(customer, args.StripeConnectAccountId, cancellationToken);
+
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        else if (booking.PaidByOrganization is not null)
+        {
+            var organization =
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken) ??
+                throw new OrganizationNotFound();
+            stripeCustomer = await stripeCustomerService.AddCustomerAsync(organization, args.StripeConnectAccountId, cancellationToken);
+
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
+
+        return new UpsertBookingRelatedStripeCustomerResponse(stripeCustomer.StripeCustomerId);
+    }
+
+    [Activity]
+    public async Task<CreateCheckoutSessionAsyncResponse?> CreateCheckoutSessionAsync(CreateCheckoutSessionAsyncInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
+        if (booking is null || booking.IsDeleted())
+        {
+            return null;
+        }
+
+        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+        var lineItems = booking.LineItems.SelectMany(item =>
+        {
+            var productVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
+
+            return booking.Schedules.Select(schedule => new SessionLineItemOptions
+            {
+                Price = productVersion.StripePrice!.StripePriceId,
+                Quantity = productVersion.PriceUnit switch
+                {
+                    PriceUnitConstants.PerMinute => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * item.Quantity,
+                    PriceUnitConstants.PerHour => Convert.ToInt32((schedule.Until - schedule.From).TotalHours) * item.Quantity,
+                    PriceUnitConstants.PerUse => item.Quantity,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            });
+        }).ToList();
+
+        if (booking.StripeCheckoutSession is not null)
+        {
+            return new CreateCheckoutSessionAsyncResponse(booking.StripeCheckoutSession.PaymentStatus.ToPaymentStatus());
+        }
+
+        var session = await sessionCreateService.CreateAsync(
+            new SessionCreateOptions
+            {
+                Customer = args.StripeCustomerId,
+                LineItems = lineItems,
+                Mode = "payment",
+                UiMode = "hosted",
+                PaymentMethodTypes = ["card"],
+                ClientReferenceId = booking.Id,
+                SuccessUrl = applicationConfiguration.WebAppBaseDomain,
+                CancelUrl = applicationConfiguration.WebAppBaseDomain
+            },
+            new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = args.StripeConnectAccountId },
+            cancellationToken);
+
+        var stripeCustomer =
+            await repositoryFactory.StripeCustomerRepository.GetByStripeCustomerIdAsync(args.StripeCustomerId, cancellationToken) ??
+            throw new StripeCustomerNotFound();
+        var stripeCheckoutSession = new StripeCheckoutSession
+        {
+            Id = randomHelper.Generate(),
+            StripeCheckoutSessionId = session.Id,
+            CheckoutUrl = session.Url,
+            PaymentStatus = session.PaymentStatus switch
+            {
+                "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
+                "unpaid" => PaymentStatusConstants.Pending,
+                "paid" => PaymentStatusConstants.Paid,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            AmountTotal = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100,
+            Currency = session.Currency,
+            StripeCustomer = stripeCustomer
+        };
+
+        stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
+
+        booking.StripeCheckoutSession = stripeCheckoutSession;
+
+        _ = repositoryFactory.BookingRepository.Update(booking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new CreateCheckoutSessionAsyncResponse(stripeCheckoutSession.PaymentStatus.ToPaymentStatus());
+    }
+}

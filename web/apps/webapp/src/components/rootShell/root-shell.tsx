@@ -52,7 +52,6 @@ const RootQuery = graphql`
     msTeamsCustomerRecordSynced
     notificationCustomerRecordSynced
     organizationCustomerRecordSynced
-    paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     coreCustomerRecordSynced
@@ -104,7 +103,6 @@ const RootShell = ({
       rootData?.msTeamsCustomerRecordSynced &&
       rootData?.notificationCustomerRecordSynced &&
       rootData?.organizationCustomerRecordSynced &&
-      rootData?.paymentCustomerRecordSynced &&
       rootData?.slackCustomerRecordSynced &&
       rootData?.teamCustomerRecordSynced &&
       rootData?.coreCustomerRecordSynced,
@@ -115,7 +113,6 @@ const RootShell = ({
       rootData?.msTeamsCustomerRecordSynced,
       rootData?.notificationCustomerRecordSynced,
       rootData?.organizationCustomerRecordSynced,
-      rootData?.paymentCustomerRecordSynced,
       rootData?.slackCustomerRecordSynced,
       rootData?.teamCustomerRecordSynced,
       rootData?.coreCustomerRecordSynced,

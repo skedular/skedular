@@ -19,7 +19,6 @@
         <Protobuf Include="../../../api-definitions/grpc/skedular/team_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
-
     <ItemGroup>
         <PackageReference Include="SlackNet" Version="0.16.1"/>
         <PackageReference Include="SlackNet.AspNetCore" Version="0.16.1"/>

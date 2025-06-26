@@ -228,5 +228,6 @@ or
 # Stripe forward command
 
 ```shell
-stripe listen -l --forward-to http://0.0.0.0:10100/v1/organization/stripe/platform/account/webhook --forward-connect-to http://0.0.0.0:10100/v1/organization/stripe/connect/account/webhook
+stripe listen -l --forward-to http://0.0.0.0:9000/v1/organization/stripe/platform/account/webhook --forward-connect-to http://0.0.0.0:9000/v1/organization/stripe/connect/account/webhook
+stripe listen -l --forward-to http://0.0.0.0:9000/v1/booking/stripe/platform/account/webhook --forward-connect-to http://0.0.0.0:9000/v1/booking/stripe/connect/account/webhook
 ```

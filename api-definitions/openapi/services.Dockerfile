@@ -174,26 +174,6 @@ RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /outpu
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/payment_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Payment.V1 \
-  /Classname:Payment \
-  /Output:/output/Skedular/Payment/V1/Payment.g.cs \
-  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
-  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
-  /ControllerStyle:abstract \
-  /HandleReferences:true \
-  /ArrayType:System.Collections.Generic.IList \
-  /DictionaryType:System.Collections.Generic.IDictionary \
-  /UseActionResultType:true \
-  /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson \
-  /ExcludedTypeNames:FileParameter
-
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Payment/V1/Payment.g.cs
-
-RUN nswag \
-  openapi2cscontroller \
   /Input:/openapi/skedular/slack_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.V1 \
   /Classname:Slack \

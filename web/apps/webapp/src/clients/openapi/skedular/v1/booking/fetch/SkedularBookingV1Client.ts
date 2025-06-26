@@ -6,11 +6,19 @@ import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { BookingService } from './services/BookingService';
+import { ConnectService } from './services/ConnectService';
+import { PlatformService } from './services/PlatformService';
+import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
+import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBookingV1Client {
     public readonly booking: BookingService;
+    public readonly connect: ConnectService;
+    public readonly platform: PlatformService;
+    public readonly stripe: StripeService;
     public readonly v1: V1Service;
+    public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -25,7 +33,11 @@ export class SkedularBookingV1Client {
             ENCODE_PATH: config?.ENCODE_PATH,
         });
         this.booking = new BookingService(this.request);
+        this.connect = new ConnectService(this.request);
+        this.platform = new PlatformService(this.request);
+        this.stripe = new StripeService(this.request);
         this.v1 = new V1Service(this.request);
+        this.webhook = new WebhookService(this.request);
     }
 }
 

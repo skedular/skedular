@@ -111,7 +111,7 @@ public class PaymentService(
         repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
         repositoryFactory.OrganizationRepository.Update(organization);
 
-        if (organization.OrganizationStripePaymentMethods.All(item => item.DeletedAt is not null))
+        if (organization.OrganizationStripePaymentMethods.All(item => item.IsDeleted()))
         {
             var now = timeProvider.GetUtcNow();
             var organizationOffering = await repositoryFactory.OrganizationOfferingRepository

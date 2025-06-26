@@ -174,26 +174,6 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/payment_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Payment.V1 \
-  /Classname:PaymentClient \
-  /Output:/output/Skedular/Payment/V1/Payment.g.cs \
-  /GenerateClientClasses:true \
-  /OperationGenerationMode:SingleClientFromOperationId \
-  /GenerateClientInterfaces:true \
-  /InjectHttpClient:true \
-  /UseBaseUrl:false \
-  /GenerateOptionalParameters:true \
-  /GenerateJsonMethods:false \
-  /ArrayType:System.Collections.Generic.IList \
-  /DictionaryType:System.Collections.Generic.IDictionary \
-  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
-  /GenerateDtoTypes:true \
-  /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson
-
-RUN nswag \
-  openapi2csclient \
   /Input:/openapi/skedular/slack_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.V1 \
   /Classname:SlackClient \

@@ -27,7 +27,6 @@ public class Program
             MsTeams.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Notification.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Organization.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Payment.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Team.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Core.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken)

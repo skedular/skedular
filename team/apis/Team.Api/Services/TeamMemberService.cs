@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
@@ -281,14 +282,14 @@ public class TeamMemberService(
         existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         var mappedTeam = mapper.MapTo(existingTeam);
-        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
 
         teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+        existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
         return mapper.MapTo(existingTeam);
     }
 
@@ -373,7 +374,7 @@ public class TeamMemberService(
         repositoryFactory.TeamMemberRepository.Remove(teamMemberToRemove);
 
         var mappedTeam = mapper.MapTo(existingTeam);
-        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
 
         teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 
@@ -440,7 +441,7 @@ public class TeamMemberService(
             teams.Select(item =>
             {
                 var mapped = mapper.MapTo(item);
-                mapped.TeamMembers = mapped.TeamMembers.Where(organizationMember => organizationMember.DeletedAt is null).ToList();
+                mapped.TeamMembers = mapped.TeamMembers.Where(organizationMember => organizationMember.IsNotDeleted()).ToList();
 
                 return mapped;
             }),
@@ -505,7 +506,7 @@ public class TeamMemberService(
 
         if (existingTeamMember is not null)
         {
-            if (existingTeamMember.DeletedAt is not null)
+            if (existingTeamMember.IsDeleted())
             {
                 existingTeamMember.DeletedAt = null;
                 existingTeamMember.Role = TeamMemberRoleConstants.Member;
@@ -515,7 +516,7 @@ public class TeamMemberService(
 
                 _ = repositoryFactory.TeamMemberRepository.Update(existingTeamMember);
                 var mappedTeam = mapper.MapTo(existingTeam);
-                mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+                mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
 
                 teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 

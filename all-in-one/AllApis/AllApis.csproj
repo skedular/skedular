@@ -25,7 +25,6 @@
         <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
         <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
         <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
-        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj"/>
         <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj"/>
         <ProjectReference Include="..\..\team\apis\Team.Api\Team.Api.csproj"/>
         <ProjectReference Include="..\..\core\apis\Core.Api\Core.Api.csproj"/>

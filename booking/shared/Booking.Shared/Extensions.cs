@@ -1,3 +1,6 @@
+using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Clients.Grpc;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -18,9 +21,11 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<IResourceBookingSlotHelperService, ResourceBookingSlotHelperService>()
+            .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
             .AddScoped<IResourceBookingSlotsHelperService, ResourceBookingSlotsHelperService>()
             .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
-            .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>();
+            .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
+            .AddScoped<IStripeCustomerService, StripeCustomerService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services.AddScoped<IRepositoryFactory, RepositoryFactory>();
@@ -28,7 +33,6 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
             .AddScoped<IBookingRepository, BookingRepository>()
-            .AddScoped<IBookingCheckoutSessionRepository, BookingCheckoutSessionRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
@@ -41,7 +45,11 @@ public static class Extensions
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
             .AddScoped<IProductRepository, ProductRepository>()
-            .AddScoped<IProductVersionRepository, ProductVersionRepository>();
+            .AddScoped<IProductVersionRepository, ProductVersionRepository>()
+            .AddScoped<IStripeProductRepository, StripeProductRepository>()
+            .AddScoped<IStripePriceRepository, StripePriceRepository>()
+            .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
+            .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
@@ -52,4 +60,17 @@ public static class Extensions
         services
             .AddScoped<IBookingInternalOutboxPublisher, BookingInternalOutboxPublisher>()
             .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
+
+    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+        ArgumentNullException.ThrowIfNull(organizationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
+
+        services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
+
+        return services
+            .AddSingleton(organizationConfiguration);
+    }
 }

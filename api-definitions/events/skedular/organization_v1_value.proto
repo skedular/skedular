@@ -48,7 +48,9 @@ message Organization {
   repeated Tag tags = 10;
   OrganizationSsoSettings ssoSettings = 11;
   string type = 12;
-  string memberVisibilityPolicy = 13;
+  string contactEmail = 13;
+  string contactPhone = 14;
+  string memberVisibilityPolicy = 15;
 }
 
 enum Role {

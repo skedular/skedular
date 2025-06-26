@@ -69,6 +69,8 @@ public class BookingConnection : Enterprise.Shared.GraphQL.Types.Connection<Book
 public class CustomerDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("designation")] public string? Designation { get; set; }
+    [GraphQLName("title")] public string? Title { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("givenName")] public string? GivenName { get; set; }
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
@@ -80,6 +82,9 @@ public class CustomerDetails
     [GraphQLName("photoUrl72")] public string? PhotoUrl72 { get; set; }
     [GraphQLName("photoUrl192")] public string? PhotoUrl192 { get; set; }
     [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
+    [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("locale")] public string? Locale { get; set; }
+    [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
 }
 
 [GraphQLName("BookingDetails")]
@@ -155,6 +160,8 @@ public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 }
 
 [GraphQLName("BookingPayload")]

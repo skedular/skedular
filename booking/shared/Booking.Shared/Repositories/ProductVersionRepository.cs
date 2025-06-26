@@ -16,13 +16,15 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
 
 internal static class ProductVersionExtensions
 {
-    internal static IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects(
+    internal static IIncludableQueryable<ProductVersion, StripePrice?> AddDependentObjects(
         this IQueryable<ProductVersion> originalQuery) =>
         originalQuery
             .Include(query => query.Product)
             .ThenInclude(query => query.Organization)
             .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
+            .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.StripeProduct)
+            .Include(query => query.StripePrice);
 }
 
 public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider timeProvider)

@@ -8,13 +8,13 @@ namespace Booking.Jobs.Services;
 
 public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITemporalOutboxExecutor
 {
-    private static readonly string s_bookingPaidThroughStripeType = typeof(BookingPaidThroughStripe).ToWorkflowType();
+    private static readonly string s_payBookingUsingStripeCheckoutSession = typeof(PayBookingUsingStripeCheckoutSession).ToWorkflowType();
 
     public async Task StartWorkflowAsync(string workflowType, string? executionArgs, WorkflowOptions workflowOptions)
     {
         await temporalClient.Connection.ConnectAsync();
 
-        if (workflowType == s_bookingPaidThroughStripeType)
+        if (workflowType == s_payBookingUsingStripeCheckoutSession)
         {
             try
             {
@@ -23,7 +23,7 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync(
-                    (BookingPaidThroughStripe workflow) => workflow.ExecuteAsync(input),
+                    (PayBookingUsingStripeCheckoutSession workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)

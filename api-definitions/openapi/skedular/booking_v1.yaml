@@ -126,6 +126,64 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /v1/booking/stripe/platform/account/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - stripe
+        - webhook
+        - platform
+      summary: Stripe Platform Account Webhook
+      operationId: processStripePlatformAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Platform Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/booking/stripe/connect/account/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - stripe
+        - webhook
+        - connect
+      summary: Stripe Connect Account Webhook
+      operationId: processStripeConnectAccountEvent
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Error:

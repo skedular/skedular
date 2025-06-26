@@ -7,6 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 
 namespace Booking.Processors;
@@ -49,10 +50,6 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
-                PaymentSubscriber,
-                Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 MarketplaceSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
@@ -66,7 +63,9 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddTemporalClient(configuration);
+            .AddGrpcClients(configuration)
+            .AddTemporalClient(configuration)
+            .AddStripe(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

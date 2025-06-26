@@ -4,6 +4,7 @@ using Booking.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Payment;
 
 namespace Booking.Infrastructure;
 
@@ -27,7 +28,8 @@ public class Program
             .AddDomainSharedConfigurations(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
-            .AddPublishers();
+            .AddPublishers()
+            .AddStripe(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

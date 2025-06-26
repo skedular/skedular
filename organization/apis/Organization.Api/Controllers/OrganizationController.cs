@@ -127,7 +127,7 @@ public class OrganizationController(
 
             if (stripeConfiguration.LogStripPlatformAccountWebhookMessages)
             {
-                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/platform");
+                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/organization/platform");
                 Directory.CreateDirectory(tempFileDirectoryPath);
                 var tempFilePath = Path.Combine(tempFileDirectoryPath,
                     $"{timeProvider.GetUtcNow().ToString("o", CultureInfo.InvariantCulture)}.json");
@@ -135,7 +135,7 @@ public class OrganizationController(
                 logger.LogInformation("Stripe Platform account event JSON logged to file: {FilePath}", tempFilePath);
             }
 
-            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.PlatformAccountWebhookKey, throwOnApiVersionMismatch: false);
+            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.OrganizationPlatformAccountWebhookKey, throwOnApiVersionMismatch: false);
 
             return Ok();
         }
@@ -164,7 +164,7 @@ public class OrganizationController(
 
             if (stripeConfiguration.LogStripeConnectAccountWebhookMessages)
             {
-                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/connect");
+                var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/organization/connect");
                 Directory.CreateDirectory(tempFileDirectoryPath);
                 var tempFilePath = Path.Combine(tempFileDirectoryPath,
                     $"{timeProvider.GetUtcNow().ToString("o", CultureInfo.InvariantCulture)}.json");
@@ -175,7 +175,7 @@ public class OrganizationController(
             var stripeEvent = EventUtility.ConstructEvent(
                 json,
                 stripe_Signature,
-                stripeConfiguration.ConnectAccountWebhookKey,
+                stripeConfiguration.OrganizationConnectAccountWebhookKey,
                 throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
             {
@@ -210,26 +210,6 @@ public class OrganizationController(
                             cancellationToken);
                     }
 
-                    break;
-
-                case EventTypes.CustomerCreated:
-                case EventTypes.CustomerUpdated:
-                case EventTypes.CustomerDeleted:
-                    var customer = stripeEvent.Data.Object as Customer;
-                    ArgumentNullException.ThrowIfNull(customer);
-
-                    await organizationInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(customer.Id, json, cancellationToken);
-                    break;
-
-                case EventTypes.ChargePending:
-                case EventTypes.ChargeSucceeded:
-                case EventTypes.ChargeUpdated:
-                case EventTypes.ChargeExpired:
-                case EventTypes.ChargeFailed:
-                    var charge = stripeEvent.Data.Object as Charge;
-                    ArgumentNullException.ThrowIfNull(charge);
-
-                    await organizationInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(charge.Id, json, cancellationToken);
                     break;
             }
 

@@ -36,10 +36,6 @@ public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgra
             {
                 EndpointUri = subgraphsConfigurations.Organization.Uri ?? new Uri("https+http://organizationapi/v1/graphql")
             },
-            nameof(subgraphsConfigurations.Payment) => configuration with
-            {
-                EndpointUri = subgraphsConfigurations.Payment.Uri ?? new Uri("https+http://paymentapi/v1/graphql")
-            },
             nameof(subgraphsConfigurations.Slack) => configuration with
             {
                 EndpointUri = subgraphsConfigurations.Slack.Uri ?? new Uri("https+http://slackapi/v1/graphql")

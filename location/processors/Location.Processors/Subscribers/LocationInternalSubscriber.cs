@@ -56,7 +56,7 @@ public class LocationInternalSubscriber(
         {
             Id = randomHelper.Generate(),
             Count = location.Resources
-                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk) && item.DeletedAt is null),
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk) && item.IsNotDeleted()),
             Date = startOfToday,
             Location = location
         });
@@ -89,7 +89,7 @@ public class LocationInternalSubscriber(
         {
             Id = randomHelper.Generate(),
             Count = location.Resources
-                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom) && item.DeletedAt is null),
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom) && item.IsNotDeleted()),
             Date = startOfToday,
             Location = location
         });

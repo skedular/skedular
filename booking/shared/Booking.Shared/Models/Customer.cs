@@ -19,6 +19,7 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<Booking> CreatedBookings { get; set; } = [];
     public ICollection<Booking> LastModifiedBookings { get; set; } = [];
     public ICollection<Booking> DeletedBookings { get; set; } = [];
+    public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

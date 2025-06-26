@@ -9,7 +9,6 @@ namespace Booking.Shared.Repositories;
 public interface IResourceRepository : IRepository<Resource>
 {
     Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetAllAsync(string locationId, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
@@ -37,20 +36,6 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
-
-    public async Task<ICollection<Resource>> GetAllAsync(string locationId, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
-        includeAllRelatedEntities
-            ? await DbContext.Resource
-                .Where(query => query.Location != null && !query.Location.DeletedAt.HasValue && query.Location.Id == locationId)
-                .Include(query => query.PreferredByCustomers)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-                .ToListAsync(cancellationToken)
-            : await DbContext.Resource
-                .Where(query => query.Location != null && !query.Location.DeletedAt.HasValue && query.Location.Id == locationId)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-                .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Resource>> GetByIdsAsync(
         ICollection<string> ids,

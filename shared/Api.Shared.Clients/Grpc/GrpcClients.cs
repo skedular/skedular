@@ -30,9 +30,6 @@ public static class GrpcClients
     public static void ConfigureOrganization(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<OrganizationConfiguration>().GrpcUrl;
 
-    public static void ConfigurePayment(IServiceProvider provider, GrpcClientFactoryOptions client) =>
-        client.Address = provider.GetRequiredService<PaymentConfiguration>().GrpcUrl;
-
     public static void ConfigureSlack(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<SlackConfiguration>().GrpcUrl;
 

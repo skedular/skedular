@@ -12,7 +12,7 @@ module "shared_common" {
 
 resource "stripe_webhook_endpoint" "webhook_platform_account" {
   url         = "https://${module.shared_common.api_domain_name}/v1/organization/stripe/platform/account/webhook"
-  description = "Stripe Platform Account Webhook for Skedular"
+  description = "Stripe Platform Account Webhook for Skedular - Organization Domain"
   connect     = false
   api_version = "2025-03-31.basil"
   enabled_events = [
@@ -29,7 +29,7 @@ resource "aws_ssm_parameter" "stripe_webhook_platform_account_secret" {
 
 resource "stripe_webhook_endpoint" "webhook_connect_account" {
   url         = "https://${module.shared_common.api_domain_name}/v1/organization/stripe/connect/account/webhook"
-  description = "Stripe Connect Account Webhook for Skedular"
+  description = "Stripe Connect Account Webhook for Skedular - Organization Domain"
   connect     = true
   api_version = "2025-03-31.basil"
   enabled_events = [

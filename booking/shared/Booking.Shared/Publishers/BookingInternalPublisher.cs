@@ -10,7 +10,7 @@ namespace Booking.Shared.Publishers;
 public interface IBookingInternalPublisher
 {
     Task PublishGenerateResourceBookingSlotAsync(IEnumerable<string> resourceIds, CancellationToken cancellationToken);
-    Task PublishPurgeExpiredBookingAsync(IEnumerable<string> bookingIds, CancellationToken cancellationToken);
+    Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
 public class BookingInternalPublisher(
@@ -36,20 +36,19 @@ public class BookingInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishPurgeExpiredBookingAsync(IEnumerable<string> bookingIds, CancellationToken cancellationToken) =>
-        await Task.WhenAll(bookingIds.Select(async bookingId =>
+    public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
+    {
+        var key = new Key { StripeConnectAccountWebhookKey = id };
+        var @event = new Event
         {
-            var key = new Key { BookingId = bookingId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.PurgeExpiredBooking,
-                    context.GetCorrelationId()),
-                BookingId = bookingId
-            };
+            Metadata = Event.NewMetadata(
+                applicationConfiguration.DomainSource,
+                applicationConfiguration.AppSource,
+                Type.StripeConnectAccountWebhookEventReceived,
+                context.GetCorrelationId()),
+            StripeConnectAccountWebhookEventPayload = payload
+        };
 
-            await publisher.PublishAsync(key, @event, cancellationToken);
-        }));
+        await publisher.PublishAsync(key, @event, cancellationToken);
+    }
 }

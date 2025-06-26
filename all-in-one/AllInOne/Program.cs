@@ -27,7 +27,6 @@ public class Program
             MsTeams.Infrastructure.Program.MigrateAsync(MsTeams.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Notification.Infrastructure.Program.MigrateAsync(Notification.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Organization.Infrastructure.Program.MigrateAsync(Organization.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
-            Payment.Infrastructure.Program.MigrateAsync(Payment.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Slack.Infrastructure.Program.MigrateAsync(Slack.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Core.Infrastructure.Program.MigrateAsync(Core.Infrastructure.Program.CreateHostBuilder(args), cancellationToken)
@@ -55,9 +54,6 @@ public class Program
             Organization.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Organization.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Organization.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Payment.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Payment.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Payment.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Processors.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

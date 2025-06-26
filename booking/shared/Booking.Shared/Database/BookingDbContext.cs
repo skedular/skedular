@@ -11,7 +11,6 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     : DbContextBase<BookingDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
 {
     public DbSet<Entities.Booking> Booking { get; set; }
-    public DbSet<BookingCheckoutSession> BookingCheckoutSession { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
@@ -25,6 +24,10 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<ResourceBookingSlot> ResourceBookingSlot { get; set; }
+    public DbSet<StripeProduct> StripeProduct { get; set; }
+    public DbSet<StripePrice> StripePrice { get; set; }
+    public DbSet<StripeCustomer> StripeCustomer { get; set; }
+    public DbSet<StripeCheckoutSession> StripeCheckoutSession { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
 

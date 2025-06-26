@@ -138,7 +138,6 @@ services:
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
@@ -165,7 +164,6 @@ services:
     ports:
       - 49000:9000
       - 40000:10000
-      - 40100:10100
       - 40200:10200
       - 40300:10300
       - 40400:10400
@@ -198,7 +196,6 @@ services:
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
@@ -212,7 +209,6 @@ services:
       Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
       Subgraphs__Notification__Url: http://localhost:10400/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
-      Subgraphs__Payment__Url: http://localhost:10100/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
@@ -226,8 +222,6 @@ services:
       Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
-      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://staging-apis-01:10102
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
@@ -236,11 +230,6 @@ services:
       Marketplace__GrpcUrl: http://staging-apis-01:11002
       Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://staging-apis-01:11102
-      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -269,11 +258,18 @@ services:
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -305,7 +301,6 @@ services:
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
@@ -322,8 +317,6 @@ services:
       Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
-      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://staging-apis-01:10102
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
@@ -332,11 +325,6 @@ services:
       Marketplace__GrpcUrl: http://staging-apis-01:11002
       Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://staging-apis-01:11102
-      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -368,11 +356,18 @@ services:
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10130/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -404,7 +399,6 @@ services:
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${STAGING_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
@@ -421,8 +415,6 @@ services:
       Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
-      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://staging-apis-01:10102
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://staging-apis-01:10702
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
@@ -431,11 +423,6 @@ services:
       Marketplace__GrpcUrl: http://staging-apis-01:11002
       Core__ApiKey: ${STAGING_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://staging-apis-01:11102
-      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -467,11 +454,18 @@ services:
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: true
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10120/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -492,7 +486,6 @@ services:
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
@@ -521,7 +514,6 @@ services:
     ports:
       - 9000:9000
       - 10000:10000
-      - 10100:10100
       - 10200:10200
       - 10300:10300
       - 10400:10400
@@ -554,7 +546,6 @@ services:
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
@@ -568,8 +559,6 @@ services:
       Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
       Subgraphs__Notification__Url: http://localhost:10400/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
-      Subgraphs__Payment__Url: http://localhost:10100/v1/graphql
-      Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
@@ -582,8 +571,6 @@ services:
       Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://production-apis-01:10202
-      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
@@ -592,11 +579,6 @@ services:
       Marketplace__GrpcUrl: http://production-apis-01:11002
       Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://production-apis-01:11102
-      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -625,11 +607,18 @@ services:
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1  && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1  && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -661,7 +650,6 @@ services:
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
@@ -678,8 +666,6 @@ services:
       Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://production-apis-01:10202
-      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
@@ -688,11 +674,6 @@ services:
       Marketplace__GrpcUrl: http://production-apis-01:11002
       Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://production-apis-01:11102
-      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -724,11 +705,18 @@ services:
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10130/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -760,7 +748,6 @@ services:
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
       ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
-      ConnectionStrings__paymentdb: ${PRODUCTION_POSTGRES_PAYMENT_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
@@ -777,8 +764,6 @@ services:
       Notification__GrpcUrl: http://production-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://production-apis-01:10202
-      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
-      Payment__GrpcUrl: http://production-apis-01:10102
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://production-apis-01:10702
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
@@ -787,11 +772,6 @@ services:
       Marketplace__GrpcUrl: http://production-apis-01:11002
       Core__ApiKey: ${PRODUCTION_SKEDULAR_CORE_APIKEY}
       Core__GrpcUrl: http://production-apis-01:11102
-      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
-      Stripe__PlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_PLATFORM_ACCOUNT_WEBHOOK_KEY}
-      Stripe__ConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -823,11 +803,18 @@ services:
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__OrganizationPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
+      Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
+      Stripe__RemoveStripeConnectAccountFromStripe: false
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10120/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s

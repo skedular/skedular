@@ -1,8 +1,0 @@
-syntax = "proto3";
-package paymentinternal;
-
-option csharp_namespace = "Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key";
-
-message Key {
-  string stripeConnectAccountWebhookKey = 1;
-}

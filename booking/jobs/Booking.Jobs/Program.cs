@@ -1,10 +1,12 @@
 using Booking.Shared;
 using Booking.Shared.Database;
 using Booking.Shared.Workflows;
+using Booking.Shared.Workflows.Activities;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 using Temporalio.Extensions.Hosting;
 
@@ -34,11 +36,15 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
-            .AddServices();
+            .AddServices()
+            .AddGrpcClients(configuration)
+            .AddStripe(configuration);
 
         services
             .AddTemporalWorker(configuration)
-            .AddWorkflow<BookingPaidThroughStripe>();
+            .AddWorkflow<PayBookingUsingStripeCheckoutSession>()
+            .AddScopedActivities<StripeIntegrations>()
+            .AddScopedActivities<BookingIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

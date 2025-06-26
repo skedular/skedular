@@ -8,8 +8,6 @@ public class OrganizationBillingDetailsNotFound() : Exception("Organization bill
 
 public class CustomerBillingDetailsNotFound() : Exception("Customer billing details not found");
 
-public class OrganizationNameIsInvalid() : Exception("Organization name is invalid");
-
 public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");
 
 public class OrganizationMemberNotFound() : Exception("Organization member not found");
@@ -79,3 +77,5 @@ public class OrganizationPaymentMethodNotFound() : Exception("Organization payme
 public class ResourceAndFloorPlanLocationMismatch() : Exception("Resource and floor plan must belong to the same location");
 
 public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("Resource is placed on different floor plan");
+
+public class StripeCustomerNotFound() : Exception("Stripe Customer not found");

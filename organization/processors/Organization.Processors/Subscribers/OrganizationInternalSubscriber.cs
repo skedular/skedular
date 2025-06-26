@@ -80,7 +80,7 @@ public class OrganizationInternalSubscriber(
         _ = repositoryFactory.DailyMemberCountRecordingRepository.Add(new DailyMemberCountRecording
         {
             Id = randomHelper.Generate(),
-            Count = organization.OrganizationMembers.Count(item => item.DeletedAt is null),
+            Count = organization.OrganizationMembers.Count(item => item.IsNotDeleted()),
             Date = startOfToday,
             Organization = organization
         });

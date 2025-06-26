@@ -37,6 +37,8 @@ public class Mapper : IMapper
             Website = src.Website.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type.ToOrganizationType(),
+            ContactEmail = src.ContactEmail.ToSafeString(),
+            ContactPhone = src.ContactPhone.ToSafeString(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             Offering = new Offering
             {

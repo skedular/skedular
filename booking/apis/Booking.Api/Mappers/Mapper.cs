@@ -7,7 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
-using BookingCheckoutSession = Booking.Shared.Database.Entities.BookingCheckoutSession;
+using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
@@ -47,7 +47,7 @@ public interface IMapper
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
         Shared.Database.Entities.Customer? deletedByCustomer,
         ICollection<ProductVersion> productVersions,
-        BookingCheckoutSession? bookingCheckoutSession);
+        StripeCheckoutSession? stripeCheckoutSession);
 
     Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -63,7 +63,7 @@ public interface IMapper
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
         Shared.Database.Entities.Customer? deletedByCustomer,
         ICollection<ProductVersion> productVersions,
-        BookingCheckoutSession? bookingCheckoutSession);
+        StripeCheckoutSession? stripeCheckoutSession);
 
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
@@ -104,7 +104,7 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
+            StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry
         };
@@ -119,6 +119,10 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                Designation = src.Designation,
+                Title = src.Title,
+                Timezone = src.Timezone,
+                Locale = src.Locale,
                 Name = src.Name,
                 GivenName = src.GivenName,
                 MiddleName = src.MiddleName,
@@ -130,6 +134,7 @@ public class Mapper : IMapper
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber,
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -159,7 +164,7 @@ public class Mapper : IMapper
                 Quantity = item.Quantity
             }),
             BookedOnMarketplace = src.BookedOnMarketplace,
-            BookingCheckoutSession = MapTo(src.BookingCheckoutSession),
+            BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry
         };
 
@@ -217,7 +222,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
         Shared.Database.Entities.Customer? deletedByCustomer,
         ICollection<ProductVersion> productVersions,
-        BookingCheckoutSession? bookingCheckoutSession) =>
+        StripeCheckoutSession? stripeCheckoutSession) =>
         MergeTo(
             src,
             new Shared.Database.Entities.Booking(),
@@ -232,7 +237,7 @@ public class Mapper : IMapper
             lastModifiedByCustomer,
             deletedByCustomer,
             productVersions,
-            bookingCheckoutSession);
+            stripeCheckoutSession);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -248,7 +253,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer? lastModifiedByCustomer,
         Shared.Database.Entities.Customer? deletedByCustomer,
         ICollection<ProductVersion> productVersions,
-        BookingCheckoutSession? bookingCheckoutSession)
+        StripeCheckoutSession? stripeCheckoutSession)
     {
         dest.Id = src.Id;
         dest.From = src.From;
@@ -271,7 +276,7 @@ public class Mapper : IMapper
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
         dest.ProductVersions = productVersions;
-        dest.BookingCheckoutSession = bookingCheckoutSession;
+        dest.StripeCheckoutSession = stripeCheckoutSession;
         return dest;
     }
 
@@ -313,7 +318,7 @@ public class Mapper : IMapper
             CreatedByCustomer = MapToGrpcResponse(src.CreatedByCustomer),
             LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
             DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
-            BookingCheckoutSession = MapToGrpcResponse(src.BookingCheckoutSession),
+            BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
             BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace
         };
@@ -464,6 +469,10 @@ public class Mapper : IMapper
         var customer = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer
         {
             Id = src.Id,
+            Designation = src.Designation.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            Timezone = src.Timezone.ToSafeString(),
+            Locale = src.Locale.ToSafeString(),
             Name = src.Name.ToSafeString(),
             GivenName = src.GivenName.ToSafeString(),
             MiddleName = src.MiddleName.ToSafeString(),
@@ -474,7 +483,8 @@ public class Mapper : IMapper
             PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
             PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString()
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
+            PhoneNumber = src.PhoneNumber.ToSafeString()
         };
 
         customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
@@ -489,7 +499,15 @@ public class Mapper : IMapper
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(Shared.Models.Organization? src) =>
-        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
+        src is null
+            ? null
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization
+            {
+                Id = src.Id,
+                Name = src.Name.ToSafeString(),
+                ContactEmail = src.ContactEmail.ToSafeString(),
+                ContactPhone = src.ContactPhone.ToSafeString()
+            };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(Shared.Models.Location? src) =>
         src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
@@ -515,6 +533,10 @@ public class Mapper : IMapper
             : new CustomerDetails
             {
                 UniqueId = src.Id,
+                Designation = src.Designation,
+                Title = src.Title,
+                Timezone = src.Timezone,
+                Locale = src.Locale,
                 Name = src.Name,
                 GivenName = src.GivenName,
                 MiddleName = src.MiddleName,
@@ -525,11 +547,20 @@ public class Mapper : IMapper
                 PhotoUrl48 = src.PhotoUrl48,
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512
+                PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber
             };
 
     private static OrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null ? null : new OrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+        src is null
+            ? null
+            : new OrganizationDetails
+            {
+                UniqueId = src.Id,
+                Name = src.Name.ToSafeString(),
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone
+            };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
@@ -560,6 +591,8 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
                 Type = src.Type.ToOrganizationType(),
@@ -681,7 +714,7 @@ public class Mapper : IMapper
     private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
     private static IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) => src.Select(MapTo);
 
-    private static BookingCheckoutSessionDetails? MapTo(Shared.Models.BookingCheckoutSession? src) =>
+    private static BookingCheckoutSessionDetails? MapTo(Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
             : new BookingCheckoutSessionDetails
@@ -698,11 +731,11 @@ public class Mapper : IMapper
                 CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
             };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession? MapToGrpcResponse(
-        Shared.Models.BookingCheckoutSession? src) =>
+    private static BookingCheckoutSession? MapToGrpcResponse(
+        Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCheckoutSession
+            : new BookingCheckoutSession
             {
                 Id = src.Id,
                 PaymentStatus = src.PaymentStatus switch
@@ -719,17 +752,16 @@ public class Mapper : IMapper
                 Currency = src.Currency.ToSafeString()
             };
 
-    private static Shared.Models.BookingCheckoutSession? MapTo(BookingCheckoutSession? src) =>
+    private static Shared.Models.StripeCheckoutSession? MapTo(StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new Shared.Models.BookingCheckoutSession
+            : new Shared.Models.StripeCheckoutSession
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                PaymentStatus = src.PaymentStatus?.ToNullablePaymentStatus() ?? PaymentStatus.Pending,
+                PaymentStatus = src.PaymentStatus.ToNullablePaymentStatus() ?? PaymentStatus.Pending,
                 AmountTotal = src.AmountTotal,
                 Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()

@@ -6,11 +6,13 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Temporalio.Client;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -47,7 +49,8 @@ public class BookingService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingService
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    ITemporalClient temporalClient) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -152,7 +155,7 @@ public class BookingService(
 
         if (booking.IsPaymentRequired)
         {
-            bookingOutboxPublisher.ExecuteWorkflowBookingPaidThroughStripe([booking], repositoryFactory.UnitOfWork);
+            bookingOutboxPublisher.ExecuteWorkflowPayBookingUsingStripeCheckoutSession([booking], repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -243,6 +246,25 @@ public class BookingService(
 
                 return item;
             }).ToList();
+        }
+
+        if (existingBooking.IsPaymentRequired)
+        {
+            try
+            {
+                var handle = temporalClient.GetWorkflowHandle<PayBookingUsingStripeCheckoutSession>(existingBooking.Id);
+
+                ArgumentNullException.ThrowIfNull(handle);
+
+                await handle.SignalAsync(
+                    workflow => workflow.DeleteBookingAsync(),
+                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+                );
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         return deletedBooking;
@@ -656,7 +678,7 @@ public class BookingService(
             callingCustomer,
             null,
             existingBooking.ProductVersions,
-            existingBooking.BookingCheckoutSession);
+            existingBooking.StripeCheckoutSession);
 
         bookingEntity.LineItems = existingLineItems;
         bookingEntity.BookedOnMarketplace = existingBookedOnMarketplace;

@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Temporal;
@@ -39,6 +40,8 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddGrpcServices(configuration)
+            .AddGrpcClients(configuration)
+            .AddStripe(configuration)
             .AddTemporalClient(configuration);
 
         services.AddGrpc();

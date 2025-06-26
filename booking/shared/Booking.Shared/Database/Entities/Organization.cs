@@ -15,6 +15,8 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public Offering? Offering { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -25,6 +27,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Product> Products { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<Booking> PaidBookings { get; set; } = [];
+    public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -42,6 +45,8 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .Property(item => item.MemberVisibilityPolicy)
             .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
+        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Name);

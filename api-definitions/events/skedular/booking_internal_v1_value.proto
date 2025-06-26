@@ -7,14 +7,14 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1
 
 enum Type {
   GenerateResourceBookingSlot = 0;
-  PurgeExpiredBooking = 1;
+  StripeConnectAccountWebhookEventReceived = 1;
 }
 
 message Event {
   Metadata metadata = 1;
   oneof payload {
     string resourceId = 2;
-    string bookingId = 3;
+    string stripeConnectAccountWebhookEventPayload = 3;
   }
 }
 

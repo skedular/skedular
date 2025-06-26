@@ -10,7 +10,6 @@ public interface IRepositoryFactory
     BookingDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IBookingRepository BookingRepository { get; }
-    IBookingCheckoutSessionRepository BookingCheckoutSessionRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
@@ -24,6 +23,10 @@ public interface IRepositoryFactory
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
+    IStripeProductRepository StripeProductRepository { get; }
+    IStripePriceRepository StripePriceRepository { get; }
+    IStripeCustomerRepository StripeCustomerRepository { get; }
+    IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
@@ -36,7 +39,6 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         _dbContext = dbContextFactory.CreateDbContext();
 
         BookingRepository = new BookingRepository(_dbContext, timeProvider, bookingCheckoutSessionHelperService);
-        BookingCheckoutSessionRepository = new BookingCheckoutSessionRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
@@ -50,10 +52,13 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        StripeProductRepository = new StripeProductRepository(_dbContext, timeProvider);
+        StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
+        StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
+        StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
     }
 
     public IBookingRepository BookingRepository { get; }
-    public IBookingCheckoutSessionRepository BookingCheckoutSessionRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
@@ -67,4 +72,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
+    public IStripeProductRepository StripeProductRepository { get; }
+    public IStripePriceRepository StripePriceRepository { get; }
+    public IStripeCustomerRepository StripeCustomerRepository { get; }
+    public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
 }
