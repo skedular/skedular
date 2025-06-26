@@ -12,8 +12,6 @@ public record PayBookingUsingStripeCheckoutSessionState(PaymentStatus? PaymentSt
 
 public record SetPaymentStatusArgs(PaymentStatus PaymentStatus);
 
-public record DeleteBookingArgs();
-
 [Workflow]
 public class PayBookingUsingStripeCheckoutSession
 {
@@ -112,7 +110,7 @@ public class PayBookingUsingStripeCheckoutSession
     }
 
     [WorkflowSignal]
-    public Task DeleteBookingAsync(DeleteBookingArgs args)
+    public Task DeleteBookingAsync()
     {
         ArgumentNullException.ThrowIfNull(_state);
 

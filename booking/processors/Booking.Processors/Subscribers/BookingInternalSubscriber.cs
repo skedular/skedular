@@ -214,15 +214,10 @@ public class BookingInternalSubscriber(
         await SignalBookingWorkflowAsync(stripeCheckoutSession, cancellationToken);
     }
 
-    private async Task SignalBookingWorkflowAsync(StripeCheckoutSession stripeCheckoutSession, CancellationToken cancellationToken)
-    {
-        var handle = temporalClient.GetWorkflowHandle<PayBookingUsingStripeCheckoutSession>(stripeCheckoutSession.Booking.Id);
-
-        ArgumentNullException.ThrowIfNull(handle);
-
-        await handle.SignalAsync(
-            workflow => workflow.SetPaymentStatusAsync(new SetPaymentStatusArgs(stripeCheckoutSession.PaymentStatus.ToPaymentStatus())),
-            new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
-        );
-    }
+    private async Task SignalBookingWorkflowAsync(StripeCheckoutSession stripeCheckoutSession, CancellationToken cancellationToken) =>
+        await temporalClient
+            .GetWorkflowHandle<PayBookingUsingStripeCheckoutSession>(stripeCheckoutSession.Booking.Id)
+            .SignalAsync(workflow => workflow.SetPaymentStatusAsync(new SetPaymentStatusArgs(stripeCheckoutSession.PaymentStatus.ToPaymentStatus())),
+                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+            );
 }

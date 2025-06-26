@@ -41,8 +41,6 @@ public class PaymentService(
     {
         var handle = temporalClient.GetWorkflowHandle<AddCustomerStripePaymentMethod>(clientSecret);
 
-        ArgumentNullException.ThrowIfNull(handle);
-
         await handle.SignalAsync(
             workflow => workflow.StripePaymentMethodEventReceivedAsync(new StripePaymentMethodEventState(redirectStatus)),
             new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }

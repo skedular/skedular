@@ -9,21 +9,31 @@ using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Publishers;
 
-public interface ITemporalOutboxWorkflowExecutor<TWorkflow, in TWorkflowArgs> where TWorkflow : class where TWorkflowArgs : class
+public interface ITemporalOutboxWorkflowExecutor<TWorkflow> where TWorkflow : class
 {
-    void Execute(TWorkflowArgs args, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork);
+    void Execute(WorkflowOptions workflowOptions, IUnitOfWork unitOfWork);
+    void Execute<TWorkflowArgs>(TWorkflowArgs executionArgs, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork) where TWorkflowArgs : class;
 }
 
-public class TemporalOutboxWorkflowExecutor<TWorkflow, TWorkflowArgs>(
+public class TemporalOutboxWorkflowExecutor<TWorkflow>(
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
     TimeProvider timeProvider)
-    : ITemporalOutboxWorkflowExecutor<TWorkflow, TWorkflowArgs> where TWorkflow : class where TWorkflowArgs : class
+    : ITemporalOutboxWorkflowExecutor<TWorkflow> where TWorkflow : class
 {
     private readonly string _workflowType = typeof(TWorkflow).ToWorkflowType();
 
-    public void Execute(TWorkflowArgs args, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork)
+    public void Execute(WorkflowOptions workflowOptions, IUnitOfWork unitOfWork) => ExecuteInternal(null, workflowOptions, unitOfWork);
+
+    public void Execute<TWorkflowArgs>(TWorkflowArgs executionArgs, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork)
+        where TWorkflowArgs : class
+    {
+        ArgumentNullException.ThrowIfNull(executionArgs);
+        ExecuteInternal(JsonSerializer.Serialize(executionArgs), workflowOptions, unitOfWork);
+    }
+
+    private void ExecuteInternal(string? executionArgs, WorkflowOptions workflowOptions, IUnitOfWork unitOfWork)
     {
         using (activityAccessor.GetActivitySource(TelemetryKeys.TemporalActivitySourceName).StartActivity(TelemetryKeys.TemporalEventSave))
         {
@@ -33,12 +43,11 @@ public class TemporalOutboxWorkflowExecutor<TWorkflow, TWorkflowArgs>(
             var dbContext = unitOfWork as ITemporalOutboxStore;
             ArgumentNullException.ThrowIfNull(dbContext);
 
-            ArgumentNullException.ThrowIfNull(args);
             dbContext.TemporalOutbox.Add(new TemporalOutbox
             {
                 Id = randomHelper.Generate(),
                 WorkflowType = _workflowType,
-                ExecutionArgs = JsonSerializer.Serialize(args),
+                ExecutionArgs = executionArgs,
                 WorkflowOptions = workflowOptions,
                 Timestamp = timeProvider.GetUtcNow()
             });

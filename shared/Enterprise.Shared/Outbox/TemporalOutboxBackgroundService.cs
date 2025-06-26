@@ -83,7 +83,11 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                     var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
 
                     outboxEvent.WorkflowOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
-                    await temporalOutboxExecutor.StartWorkflowAsync(outboxEvent.WorkflowType, outboxEvent.ExecutionArgs, outboxEvent.WorkflowOptions);
+                    await temporalOutboxExecutor.StartWorkflowAsync(
+                        outboxEvent.WorkflowType,
+                        outboxEvent.ExecutionArgs,
+                        outboxEvent.WorkflowOptions,
+                        cancellationToken);
 
                     activityAccessor.AddEvent(
                         "Publish Temporal Outbox Message",

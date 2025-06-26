@@ -6,7 +6,6 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
@@ -231,10 +230,7 @@ public class BookingService(
 
         if (existingBooking.IsPaymentRequired)
         {
-            bookingOutboxPublisher.SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(
-                deletedBooking.Id,
-                new DeleteBookingArgs(),
-                repositoryFactory.UnitOfWork);
+            bookingOutboxPublisher.SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

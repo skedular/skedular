@@ -1,6 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 using Notification.Infrastructure.Services;
 using Notification.Shared;
 using Notification.Shared.Database;
@@ -23,7 +24,8 @@ public class Program
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

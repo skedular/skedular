@@ -1,6 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 using Location.Infrastructure.Services;
 using Location.Shared;
 using Location.Shared.Database;
@@ -23,7 +24,8 @@ public class Program
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

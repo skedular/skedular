@@ -1,6 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 using Marketplace.Infrastructure.Services;
 using Marketplace.Shared;
 using Marketplace.Shared.Database;
@@ -23,7 +24,8 @@ public class Program
             .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

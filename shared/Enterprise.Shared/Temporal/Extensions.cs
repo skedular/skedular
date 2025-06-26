@@ -32,6 +32,7 @@ public static class Extensions
         return services
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
+            .AddSingleton<ITemporalHelperService, TemporalHelperService>()
             .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
             .Configure<ITemporalClient>(_ => { })
             .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue)
@@ -59,6 +60,7 @@ public static class Extensions
         return services
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
+            .AddSingleton<ITemporalHelperService, TemporalHelperService>()
             .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
             .Configure<ITemporalClient>(_ => { });
     }

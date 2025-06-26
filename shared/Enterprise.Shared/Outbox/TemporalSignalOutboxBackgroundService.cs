@@ -87,7 +87,8 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
                         outboxEvent.WorkflowId,
                         outboxEvent.SignalType,
                         outboxEvent.ExecutionArgs,
-                        outboxEvent.WorkflowSignalOptions);
+                        outboxEvent.WorkflowSignalOptions,
+                        cancellationToken);
 
                     activityAccessor.AddEvent(
                         "Publish Temporal Signal Outbox Message",

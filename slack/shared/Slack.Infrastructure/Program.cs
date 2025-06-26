@@ -1,6 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 using Slack.Infrastructure.Services;
 using Slack.Shared;
 using Slack.Shared.Database;
@@ -23,7 +24,8 @@ public class Program
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

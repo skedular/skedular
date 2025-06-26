@@ -4,6 +4,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
+using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Mappers;
@@ -21,6 +22,7 @@ public interface IOrganizationOutboxPublisher
     void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
     void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
     void ExecuteWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
+    void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
 
 public class OrganizationOutboxPublisher(
@@ -29,8 +31,8 @@ public class OrganizationOutboxPublisher(
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     TemporalConfiguration temporalConfiguration,
-    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering, ScheduleRenewOrganizationOfferingInput>
-        temporalOutboxRenewOrganizationOfferingExecutor)
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor)
     : IOrganizationOutboxPublisher
 {
     public void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork)
@@ -81,5 +83,13 @@ public class OrganizationOutboxPublisher(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
+            unitOfWork);
+
+    public void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            offeringId,
+            typeof(ScheduleRenewOrganizationOffering).GetMethod(nameof(ScheduleRenewOrganizationOffering.CancelOfferingAsync))!
+                .ToWorkflowSignalType(),
+            new WorkflowSignalOptions(),
             unitOfWork);
 }

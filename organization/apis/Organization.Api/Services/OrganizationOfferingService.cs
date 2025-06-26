@@ -64,6 +64,10 @@ public class OrganizationOfferingService(
 
         if (activeOffering is not null && activeOffering.Code != offeringCode)
         {
+            organizationOutboxPublisher.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(
+                activeOffering.Id,
+                repositoryFactory.UnitOfWork);
+            
             repositoryFactory.OrganizationOfferingRepository.Remove(activeOffering);
         }
 

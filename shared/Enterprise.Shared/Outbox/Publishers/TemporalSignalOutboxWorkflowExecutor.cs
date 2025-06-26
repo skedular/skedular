@@ -9,19 +9,44 @@ using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Publishers;
 
-public interface ITemporalSignalOutboxWorkflowExecutor<in TWorkflowSignalArgs> where TWorkflowSignalArgs : class
+public interface ITemporalSignalOutboxWorkflowExecutor
 {
-    void Signal(string workflowId, string signalType, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork);
+    void Signal(string workflowId, string signalType, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork);
+
+    void Signal<TWorkflowSignalArgs>(
+        string workflowId,
+        string signalType,
+        TWorkflowSignalArgs executionArgs,
+        WorkflowSignalOptions workflowSignalOptions,
+        IUnitOfWork unitOfWork) where TWorkflowSignalArgs : class;
 }
 
-public class TemporalSignalOutboxWorkflowExecutor<TWorkflowSignalArgs>(
+public class TemporalSignalOutboxWorkflowExecutor(
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
     TimeProvider timeProvider)
-    : ITemporalSignalOutboxWorkflowExecutor<TWorkflowSignalArgs> where TWorkflowSignalArgs : class
+    : ITemporalSignalOutboxWorkflowExecutor
 {
-    public void Signal(string workflowId, string signalType, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions,
+    public void Signal(string workflowId, string signalType, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork) =>
+        SignalInternal(workflowId, signalType, null, workflowSignalOptions, unitOfWork);
+
+    public void Signal<TWorkflowSignalArgs>(
+        string workflowId,
+        string signalType,
+        TWorkflowSignalArgs executionArgs,
+        WorkflowSignalOptions workflowSignalOptions,
+        IUnitOfWork unitOfWork) where TWorkflowSignalArgs : class
+    {
+        ArgumentNullException.ThrowIfNull(executionArgs);
+        SignalInternal(workflowId, signalType, JsonSerializer.Serialize(executionArgs), workflowSignalOptions, unitOfWork);
+    }
+
+    private void SignalInternal(
+        string workflowId,
+        string signalType,
+        string? executionArgs,
+        WorkflowSignalOptions workflowSignalOptions,
         IUnitOfWork unitOfWork)
     {
         using (activityAccessor
@@ -34,13 +59,12 @@ public class TemporalSignalOutboxWorkflowExecutor<TWorkflowSignalArgs>(
             var dbContext = unitOfWork as ITemporalSignalOutboxStore;
             ArgumentNullException.ThrowIfNull(dbContext);
 
-            ArgumentNullException.ThrowIfNull(args);
             dbContext.TemporalSignalOutbox.Add(new TemporalSignalOutbox
             {
                 Id = randomHelper.Generate(),
                 WorkflowId = workflowId,
                 SignalType = signalType,
-                ExecutionArgs = JsonSerializer.Serialize(args),
+                ExecutionArgs = executionArgs,
                 WorkflowSignalOptions = workflowSignalOptions,
                 Timestamp = timeProvider.GetUtcNow()
             });

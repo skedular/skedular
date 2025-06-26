@@ -1,6 +1,8 @@
 using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Workflows.Services;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +14,9 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+        services
+            .AddSingleton<IMapper, Mapper>()
+            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services;

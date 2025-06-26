@@ -2,6 +2,7 @@ using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Organization.Shared.Configurations;
@@ -9,6 +10,7 @@ using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
+using Organization.Shared.Workflows.Services;
 
 namespace Organization.Shared;
 
@@ -23,7 +25,10 @@ public static class Extensions
     }
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+        services
+            .AddSingleton<IMapper, Mapper>()
+            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services

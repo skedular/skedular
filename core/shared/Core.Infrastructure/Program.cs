@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 
 namespace Core.Infrastructure;
 
@@ -25,7 +26,8 @@ public class Program
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -4,6 +4,7 @@ using Customer.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 
 namespace Customer.Infrastructure;
 
@@ -23,7 +24,9 @@ public class Program
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -1,6 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Temporal;
 using MsTeams.Infrastructure.Services;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;
@@ -23,7 +24,8 @@ public class Program
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
             .AddRepositoryFactory()
             .AddServices()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

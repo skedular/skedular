@@ -4,5 +4,10 @@ namespace Enterprise.Shared.Outbox;
 
 public interface ITemporalSignalOutboxExecutor
 {
-    Task SignalAsync(string workflowId, string signalType, string? executionArgs, WorkflowSignalOptions workflowSignalOptions);
+    Task SignalAsync(
+        string workflowId,
+        string signalType,
+        string? executionArgs,
+        WorkflowSignalOptions workflowSignalOptions,
+        CancellationToken cancellationToken);
 }

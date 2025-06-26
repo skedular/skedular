@@ -1,6 +1,4 @@
 using Booking.Jobs.Jobs;
-using Booking.Jobs.Services;
-using Enterprise.Shared.Outbox;
 
 namespace Booking.Jobs;
 
@@ -10,9 +8,7 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>();
+        services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
