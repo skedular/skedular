@@ -8,7 +8,7 @@ using Organization.Shared.Database.Entities;
 namespace Organization.Shared.Database;
 
 public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
+    : DbContextBase<OrganizationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }
@@ -39,6 +39,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
+    public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>

@@ -16,12 +16,17 @@ public static class Extensions
             .AddSingleton(typeof(IKafkaOutboxEventPublisher<,>), typeof(KafkaOutboxEventPublisher<,>));
 
     public static IServiceCollection AddTemporalOutboxBackgroundService<TDbContext>(this IServiceCollection services)
-        where TDbContext : DbContext, ITemporalOutboxStore =>
-        services.AddHostedService<TemporalOutboxBackgroundService<TDbContext>>();
+        where TDbContext : DbContext, ITemporalOutboxStore, ITemporalSignalOutboxStore =>
+        services
+            .AddHostedService<TemporalOutboxBackgroundService<TDbContext>>()
+            .AddHostedService<TemporalSignalOutboxBackgroundService<TDbContext>>();
 
     public static IServiceCollection AddTemporalOutboxService(this IServiceCollection services) =>
         services
-            .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<,>), typeof(TemporalOutboxWorkflowExecutor<,>));
+            .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<,>), typeof(TemporalOutboxWorkflowExecutor<,>))
+            .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor<,>), typeof(TemporalSignalOutboxWorkflowExecutor<,>));
 
     public static string ToWorkflowType(this Type type) => type.FullName!;
+
+    public static string ToWorkflowSignalType(this Type type) => type.FullName!;
 }

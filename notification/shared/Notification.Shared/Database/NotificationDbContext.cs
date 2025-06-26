@@ -8,7 +8,7 @@ using Notification.Shared.Database.Entities;
 namespace Notification.Shared.Database;
 
 public class NotificationDbContext(DbContextOptions<NotificationDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<NotificationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
+    : DbContextBase<NotificationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -19,6 +19,7 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
     public DbSet<Team> Team { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
+    public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class NotificationDbContextDesignFactory : IDesignTimeDbContextFactory<NotificationDbContext>

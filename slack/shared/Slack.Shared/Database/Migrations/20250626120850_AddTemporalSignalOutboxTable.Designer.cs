@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Slack.Shared.Database;
@@ -13,9 +14,11 @@ using Temporalio.Client;
 namespace Slack.Shared.Database.Migrations
 {
     [DbContext(typeof(SlackDbContext))]
-    partial class SlackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250626120850_AddTemporalSignalOutboxTable")]
+    partial class AddTemporalSignalOutboxTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

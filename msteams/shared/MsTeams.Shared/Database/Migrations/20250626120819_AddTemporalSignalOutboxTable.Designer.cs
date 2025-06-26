@@ -3,19 +3,22 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Notification.Shared.Database;
+using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
 
 #nullable disable
 
-namespace Notification.Shared.Database.Migrations
+namespace MsTeams.Shared.Database.Migrations
 {
-    [DbContext(typeof(NotificationDbContext))]
-    partial class NotificationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MsTeamsDbContext))]
+    [Migration("20250626120819_AddTemporalSignalOutboxTable")]
+    partial class AddTemporalSignalOutboxTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +163,7 @@ namespace Notification.Shared.Database.Migrations
                     b.ToTable("TemporalSignalOutbox");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -175,52 +178,15 @@ namespace Notification.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FamilyName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("GivenName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("PhotoUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl192")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl24")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl32")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl48")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl512")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("PhotoUrl72")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                    b.Property<DateTimeOffset?>("TeamsAndChannelsLastRefreshedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -234,20 +200,167 @@ namespace Notification.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("FamilyName");
+                    b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("GivenName");
+                    b.HasIndex("OrganizationId");
 
-                    b.HasIndex("MiddleName");
+                    b.HasIndex("TeamsAndChannelsLastRefreshedAt");
+
+                    b.ToTable("AzureTenant");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AzureTenantId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("WebUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AzureTenantId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
 
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
+                    b.ToTable("AzureTenantTeam");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AzureTenantTeamId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("WebUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AzureTenantTeamId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("AzureTenantTeamChannel");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Timezone");
+
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(200)
@@ -294,7 +407,7 @@ namespace Notification.Shared.Database.Migrations
                     b.ToTable("Identity");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Location", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Location", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -312,12 +425,9 @@ namespace Notification.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -333,90 +443,12 @@ namespace Notification.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Notification", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("InvitedById")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("InviteeId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("LocationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SourceId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("TeamId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("EventRaisedAt");
-
-                    b.HasIndex("InvitedById");
-
-                    b.HasIndex("InviteeId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("SourceId");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("Type");
-
-                    b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -430,10 +462,6 @@ namespace Notification.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LogoUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("MemberVisibilityPolicy")
                         .IsRequired()
@@ -444,10 +472,6 @@ namespace Notification.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -470,12 +494,73 @@ namespace Notification.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Name");
-
                     b.ToTable("Organization");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.OrganizationSsoSetting", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("ACTIVE");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("Role");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("CustomerId", "OrganizationId")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationMember");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -532,7 +617,7 @@ namespace Notification.Shared.Database.Migrations
                     b.ToTable("OrganizationSsoSetting");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Team", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -550,12 +635,9 @@ namespace Notification.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -571,16 +653,47 @@ namespace Notification.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Team");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
-                    b.HasOne("Notification.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("AzureTenants")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+                {
+                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenant", "AzureTenant")
+                        .WithMany("AzureTenantTeams")
+                        .HasForeignKey("AzureTenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AzureTenant");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
+                {
+                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenantTeam", "AzureTenantTeam")
+                        .WithMany("AzureTenantTeamChannels")
+                        .HasForeignKey("AzureTenantTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AzureTenantTeam");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
+                {
+                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("Identities")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -589,96 +702,60 @@ namespace Notification.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Location", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
                 {
-                    b.HasOne("Notification.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("Locations")
-                        .HasForeignKey("OrganizationId");
+                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
+                        .WithMany("OrganizationMembers")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("OrganizationMembers")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Notification", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
-                    b.HasOne("Notification.Shared.Database.Entities.Customer", "InvitedBy")
-                        .WithMany("InvitedByNotifications")
-                        .HasForeignKey("InvitedById");
-
-                    b.HasOne("Notification.Shared.Database.Entities.Customer", "Invitee")
-                        .WithMany("InviteeNotifications")
-                        .HasForeignKey("InviteeId");
-
-                    b.HasOne("Notification.Shared.Database.Entities.Location", "Location")
-                        .WithMany("Notifications")
-                        .HasForeignKey("LocationId");
-
-                    b.HasOne("Notification.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("Notifications")
-                        .HasForeignKey("OrganizationId");
-
-                    b.HasOne("Notification.Shared.Database.Entities.Team", "Team")
-                        .WithMany("Notifications")
-                        .HasForeignKey("TeamId");
-
-                    b.Navigation("InvitedBy");
-
-                    b.Navigation("Invitee");
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("Notification.Shared.Database.Entities.OrganizationSsoSetting", b =>
-                {
-                    b.HasOne("Notification.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Notification.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .HasForeignKey("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Team", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
-                    b.HasOne("Notification.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("Teams")
-                        .HasForeignKey("OrganizationId");
-
-                    b.Navigation("Organization");
+                    b.Navigation("AzureTenantTeams");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+                {
+                    b.Navigation("AzureTenantTeamChannels");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
 
-                    b.Navigation("InvitedByNotifications");
-
-                    b.Navigation("InviteeNotifications");
+                    b.Navigation("OrganizationMembers");
                 });
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Location", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
                 {
-                    b.Navigation("Notifications");
-                });
+                    b.Navigation("AzureTenants");
 
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Organization", b =>
-                {
-                    b.Navigation("Locations");
-
-                    b.Navigation("Notifications");
+                    b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationSsoSettings");
-
-                    b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("Notification.Shared.Database.Entities.Team", b =>
-                {
-                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

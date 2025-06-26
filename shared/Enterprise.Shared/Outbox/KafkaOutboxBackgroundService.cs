@@ -126,9 +126,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                         outboxEvent.LastRetry);
                 }
 
-                logger.LogTrace("Saving changes to Message {MessageKey}", message.Key);
                 await dbContext.SaveChangesAsync(cancellationToken);
-                logger.LogTrace("Commiting transaction for Message {MessageKey}", message.Key);
                 await transaction.CommitAsync(cancellationToken);
             }
         }

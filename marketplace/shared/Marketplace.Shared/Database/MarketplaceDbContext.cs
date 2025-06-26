@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Marketplace.Shared.Database;
 
 public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<MarketplaceDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
+    : DbContextBase<MarketplaceDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -20,6 +20,7 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public DbSet<ProductVersion> ProductVersion { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
+    public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }
 
     public class MarketplaceDbContextDesignFactory : IDesignTimeDbContextFactory<MarketplaceDbContext>
     {

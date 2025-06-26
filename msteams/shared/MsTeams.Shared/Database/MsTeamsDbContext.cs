@@ -8,7 +8,7 @@ using MsTeams.Shared.Database.Entities;
 namespace MsTeams.Shared.Database;
 
 public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, CustomDbContextOptions customDbContextOptions)
-    : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore
+    : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<AzureTenant> AzureTenant { get; set; }
     public DbSet<AzureTenantTeam> AzureTenantTeam { get; set; }
@@ -22,6 +22,7 @@ public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, Custom
     public DbSet<Team> Team { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
+    public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }
 
     public class MsTeamsDbContextDesignFactory : IDesignTimeDbContextFactory<MsTeamsDbContext>
     {

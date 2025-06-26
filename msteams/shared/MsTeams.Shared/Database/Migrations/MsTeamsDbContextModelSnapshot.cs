@@ -19,7 +19,7 @@ namespace MsTeams.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -112,6 +112,52 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("TemporalOutbox");
+                });
+
+            modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.TemporalSignalOutbox", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ExecutionArgs")
+                        .HasMaxLength(10240)
+                        .HasColumnType("character varying(10240)");
+
+                    b.Property<DateTimeOffset?>("LastRetry")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProcessingErrors")
+                        .HasMaxLength(102400)
+                        .HasColumnType("character varying(102400)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SignalType")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WorkflowId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<WorkflowSignalOptions>("WorkflowSignalOptions")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LastRetry");
+
+                    b.HasIndex("RetryCount");
+
+                    b.ToTable("TemporalSignalOutbox");
                 });
 
             modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>

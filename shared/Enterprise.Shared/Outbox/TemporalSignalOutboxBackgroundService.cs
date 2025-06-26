@@ -14,20 +14,20 @@ using IsolationLevel = System.Data.IsolationLevel;
 
 namespace Enterprise.Shared.Outbox;
 
-public class TemporalOutboxBackgroundService<TDbContext>(
+public class TemporalSignalOutboxBackgroundService<TDbContext>(
     IDbContextFactory<TDbContext> contextFactory,
     IActivityAccessor activityAccessor,
-    ILogger<TemporalOutboxBackgroundService<TDbContext>> logger,
+    ILogger<TemporalSignalOutboxBackgroundService<TDbContext>> logger,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IServiceProvider serviceProvider)
-    : BackgroundService where TDbContext : DbContext, ITemporalOutboxStore
+    : BackgroundService where TDbContext : DbContext, ITemporalSignalOutboxStore
 {
     private const int CriticalRetryThreshold = 5;
 
-    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<TemporalOutbox?>>
+    private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<TemporalSignalOutbox?>>
         s_getOutboxItemQueryAsync =
-            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, TemporalOutbox?>((dbContext, thresholdRetryTime, cancellationToken) =>
-                dbContext.TemporalOutbox
+            EF.CompileAsyncQuery<TDbContext, DateTimeOffset, TemporalSignalOutbox?>((dbContext, thresholdRetryTime, cancellationToken) =>
+                dbContext.TemporalSignalOutbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
                     .OrderBy(query => query.RetryCount)
                     .FirstOrDefault(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime));
@@ -67,30 +67,34 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                 continue;
             }
 
-            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.TemporalActivitySourceName);
+            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.TemporalSignalActivitySourceName);
 
             using (dictionaryActivityPropagator.StartActivityFromPropagationContext(
                        new Dictionary<string, string>(),
                        activitySource,
-                       TelemetryKeys.TemporalEventSend,
+                       TelemetryKeys.TemporalSignalEventSend,
                        ActivityKind.Producer))
             {
                 try
                 {
-                    logger.LogTrace("Started executing workflow {WorkflowType}", outboxEvent.WorkflowType);
+                    logger.LogTrace("Signaling {SignalType}", outboxEvent.SignalType);
 
                     await using var scope = serviceProvider.CreateAsyncScope();
-                    var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
+                    var temporalSignalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalSignalOutboxExecutor>();
 
-                    outboxEvent.WorkflowOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
-                    await temporalOutboxExecutor.StartWorkflowAsync(outboxEvent.WorkflowType, outboxEvent.ExecutionArgs, outboxEvent.WorkflowOptions);
+                    outboxEvent.WorkflowSignalOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
+                    await temporalSignalOutboxExecutor.SignalAsync(
+                        outboxEvent.WorkflowId,
+                        outboxEvent.SignalType,
+                        outboxEvent.ExecutionArgs,
+                        outboxEvent.WorkflowSignalOptions);
 
                     activityAccessor.AddEvent(
-                        "Publish Temporal Outbox Message",
-                        "publish_temporal_outbox_message",
-                        new Dictionary<string, string> { [nameof(outboxEvent.WorkflowType)] = outboxEvent.WorkflowType });
+                        "Publish Temporal Signal Outbox Message",
+                        "publish_temporal_signal_outbox_message",
+                        new Dictionary<string, string> { [nameof(outboxEvent.SignalType)] = outboxEvent.SignalType });
 
-                    logger.LogTrace("Workflow {WorkflowType} execution started. Removing from outbox", outboxEvent.WorkflowType);
+                    logger.LogTrace("Signal {SignalType} execution started. Removing from outbox", outboxEvent.SignalType);
                     dbContext.Remove(outboxEvent);
                 }
                 catch (Exception ex)
@@ -104,8 +108,8 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                     activityAccessor.AddException(ex);
 
                     activityAccessor.AddEvent(
-                        "Retry Temporal Outbox Message",
-                        "retry_temporal_outbox_message",
+                        "Retry Temporal signal Outbox Message",
+                        "retry_temporal_signal_outbox_message",
                         new Dictionary<string, string>
                         {
                             [nameof(outboxEvent.LastRetry)] = outboxEvent.LastRetry?.ToString("O")!, [nameof(LogLevel)] = level.ToString("G")
@@ -114,8 +118,8 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                     logger.Log(
                         level,
                         ex,
-                        "Failed to execute workflow {WorkflowType}. Setting retry count to {RetryCount} and last retry to {LastRetry}",
-                        outboxEvent.WorkflowType,
+                        "Failed to signal {SignalType}. Setting retry count to {RetryCount} and last retry to {LastRetry}",
+                        outboxEvent.SignalType,
                         outboxEvent.RetryCount,
                         outboxEvent.LastRetry);
                 }
