@@ -228,6 +228,15 @@ public class BookingService(
             bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
+
+        if (existingBooking.IsPaymentRequired)
+        {
+            bookingOutboxPublisher.SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(
+                deletedBooking.Id,
+                new DeleteBookingArgs(),
+                repositoryFactory.UnitOfWork);
+        }
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -246,25 +255,6 @@ public class BookingService(
 
                 return item;
             }).ToList();
-        }
-
-        if (existingBooking.IsPaymentRequired)
-        {
-            try
-            {
-                var handle = temporalClient.GetWorkflowHandle<PayBookingUsingStripeCheckoutSession>(existingBooking.Id);
-
-                ArgumentNullException.ThrowIfNull(handle);
-
-                await handle.SignalAsync(
-                    workflow => workflow.DeleteBookingAsync(),
-                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
-                );
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
         }
 
         return deletedBooking;

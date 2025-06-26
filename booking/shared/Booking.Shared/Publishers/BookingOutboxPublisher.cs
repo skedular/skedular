@@ -6,6 +6,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
+using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
@@ -19,6 +20,8 @@ public interface IBookingOutboxPublisher
 {
     void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
     void ExecuteWorkflowPayBookingUsingStripeCheckoutSession(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingUsingStripeCheckoutSessionSetPaymentStatus(string bookingId, SetPaymentStatusArgs args, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(string bookingId, DeleteBookingArgs args, IUnitOfWork unitOfWork);
 }
 
 public class BookingOutboxPublisher(
@@ -28,7 +31,10 @@ public class BookingOutboxPublisher(
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     TemporalConfiguration temporalConfiguration,
     ITemporalOutboxWorkflowExecutor<PayBookingUsingStripeCheckoutSession, BookingPaidThroughStripeInput>
-        temporalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutor)
+        temporalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutor,
+    ITemporalSignalOutboxWorkflowExecutor<SetPaymentStatusArgs>
+        temporalSignalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutorSetPaymentStatus,
+    ITemporalSignalOutboxWorkflowExecutor<DeleteBookingArgs> temporalSignalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutorDeleteBooking)
     : IBookingOutboxPublisher
 {
     public void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
@@ -66,4 +72,28 @@ public class BookingOutboxPublisher(
                 unitOfWork);
         }
     }
+
+    public void SignalWorkflowPayBookingUsingStripeCheckoutSessionSetPaymentStatus(
+        string bookingId,
+        SetPaymentStatusArgs args,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutorSetPaymentStatus.Signal(
+            bookingId,
+            typeof(PayBookingUsingStripeCheckoutSession).GetMethod(nameof(PayBookingUsingStripeCheckoutSession.SetPaymentStatusAsync))!
+                .ToWorkflowSignalType(),
+            args,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(
+        string bookingId,
+        DeleteBookingArgs args,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxPayBookingUsingStripeCheckoutSessionWorkflowExecutorDeleteBooking.Signal(
+            bookingId,
+            typeof(PayBookingUsingStripeCheckoutSession).GetMethod(nameof(PayBookingUsingStripeCheckoutSession.DeleteBookingAsync))!
+                .ToWorkflowSignalType(),
+            args,
+            new WorkflowSignalOptions(),
+            unitOfWork);
 }

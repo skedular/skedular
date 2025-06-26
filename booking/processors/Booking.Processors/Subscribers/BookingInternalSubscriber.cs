@@ -221,7 +221,7 @@ public class BookingInternalSubscriber(
         ArgumentNullException.ThrowIfNull(handle);
 
         await handle.SignalAsync(
-            workflow => workflow.SetPaymentStatusAsync(stripeCheckoutSession.PaymentStatus.ToPaymentStatus()),
+            workflow => workflow.SetPaymentStatusAsync(new SetPaymentStatusArgs(stripeCheckoutSession.PaymentStatus.ToPaymentStatus())),
             new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
         );
     }

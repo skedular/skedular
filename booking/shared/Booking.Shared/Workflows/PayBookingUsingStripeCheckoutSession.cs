@@ -10,6 +10,10 @@ public record BookingPaidThroughStripeInput(string BookingId, DateTimeOffset Exp
 
 public record PayBookingUsingStripeCheckoutSessionState(PaymentStatus? PaymentStatus, bool BookingDeleted);
 
+public record SetPaymentStatusArgs(PaymentStatus PaymentStatus);
+
+public record DeleteBookingArgs();
+
 [Workflow]
 public class PayBookingUsingStripeCheckoutSession
 {
@@ -98,17 +102,17 @@ public class PayBookingUsingStripeCheckoutSession
     }
 
     [WorkflowSignal]
-    public Task SetPaymentStatusAsync(PaymentStatus paymentStatus)
+    public Task SetPaymentStatusAsync(SetPaymentStatusArgs args)
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { PaymentStatus = paymentStatus };
+        _state = _state with { PaymentStatus = args.PaymentStatus };
 
         return Task.CompletedTask;
     }
 
     [WorkflowSignal]
-    public Task DeleteBookingAsync()
+    public Task DeleteBookingAsync(DeleteBookingArgs args)
     {
         ArgumentNullException.ThrowIfNull(_state);
 

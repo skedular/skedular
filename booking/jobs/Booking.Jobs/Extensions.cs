@@ -11,7 +11,8 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services

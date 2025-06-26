@@ -9,24 +9,24 @@ using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Publishers;
 
-public interface ITemporalSignalOutboxWorkflowExecutor<TWorkflowSignal, in TWorkflowSignalArgs>
-    where TWorkflowSignal : class where TWorkflowSignalArgs : class
+public interface ITemporalSignalOutboxWorkflowExecutor<in TWorkflowSignalArgs> where TWorkflowSignalArgs : class
 {
-    void Execute(string workflowId, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork);
+    void Signal(string workflowId, string signalType, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork);
 }
 
-public class TemporalSignalOutboxWorkflowExecutor<TWorkflowSignal, TWorkflowSignalArgs>(
+public class TemporalSignalOutboxWorkflowExecutor<TWorkflowSignalArgs>(
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
     TimeProvider timeProvider)
-    : ITemporalSignalOutboxWorkflowExecutor<TWorkflowSignal, TWorkflowSignalArgs> where TWorkflowSignal : class where TWorkflowSignalArgs : class
+    : ITemporalSignalOutboxWorkflowExecutor<TWorkflowSignalArgs> where TWorkflowSignalArgs : class
 {
-    private readonly string _signalType = typeof(TWorkflowSignal).ToWorkflowSignalType();
-
-    public void Execute(string workflowId, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions, IUnitOfWork unitOfWork)
+    public void Signal(string workflowId, string signalType, TWorkflowSignalArgs args, WorkflowSignalOptions workflowSignalOptions,
+        IUnitOfWork unitOfWork)
     {
-        using (activityAccessor.GetActivitySource(TelemetryKeys.TemporalSignalActivitySourceName).StartActivity(TelemetryKeys.TemporalSignalEventSave))
+        using (activityAccessor
+                   .GetActivitySource(TelemetryKeys.TemporalSignalActivitySourceName)
+                   .StartActivity(TelemetryKeys.TemporalSignalEventSave))
         {
             dictionaryActivityPropagator.PropagateActivity(new Dictionary<string, string>());
 
@@ -39,7 +39,7 @@ public class TemporalSignalOutboxWorkflowExecutor<TWorkflowSignal, TWorkflowSign
             {
                 Id = randomHelper.Generate(),
                 WorkflowId = workflowId,
-                SignalType = _signalType,
+                SignalType = signalType,
                 ExecutionArgs = JsonSerializer.Serialize(args),
                 WorkflowSignalOptions = workflowSignalOptions,
                 Timestamp = timeProvider.GetUtcNow()

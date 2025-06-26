@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Outbox.Database;
+﻿using System.Reflection;
+using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Publishers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,9 +25,9 @@ public static class Extensions
     public static IServiceCollection AddTemporalOutboxService(this IServiceCollection services) =>
         services
             .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<,>), typeof(TemporalOutboxWorkflowExecutor<,>))
-            .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor<,>), typeof(TemporalSignalOutboxWorkflowExecutor<,>));
+            .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor<>), typeof(TemporalSignalOutboxWorkflowExecutor<>));
 
     public static string ToWorkflowType(this Type type) => type.FullName!;
 
-    public static string ToWorkflowSignalType(this Type type) => type.FullName!;
+    public static string ToWorkflowSignalType(this MethodInfo methodInfo) => $"{methodInfo.DeclaringType}.{methodInfo.Name}";
 }
