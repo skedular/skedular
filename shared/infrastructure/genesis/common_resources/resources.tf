@@ -145,8 +145,8 @@ module "marketplace" {
   environment       = var.environment
 }
 
-module "payment" {
-  source = "../modules/payment"
+module "booking" {
+  source = "../modules/booking"
 
   providers = {
     aws = aws
