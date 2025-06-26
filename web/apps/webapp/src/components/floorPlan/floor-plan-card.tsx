@@ -3,7 +3,7 @@ import { EllipseMenuIcon, LocationIcon } from '@/components/icons';
 import { getOrganizationLocationFloorPlanAdminEditLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { floorPlanCard_FloorPlanDetails$key } from '@/queries/__generated__/floorPlanCard_FloorPlanDetails.graphql';
@@ -62,7 +62,6 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationId, l
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
 
@@ -117,7 +116,6 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationId, l
           ...successNotificationOptions,
           render: <NotificationContent content={`Floor plan ${floorPlanDetails.name} removed.`} />,
         });
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {

@@ -4,7 +4,6 @@ import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
 import { MuiXLicense } from '@/libs/mui';
 import {
   DatePickerLocalizationProvider,
-  GlobalReloadIdProvider,
   GoogleAnalyticsProvider,
   InMsTeamsContext,
   InMsTeamsProvider,
@@ -77,18 +76,16 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   }, [inMsTeams]);
 
   return (
-    <GlobalReloadIdProvider>
-      <SelectedOrganizationProvider>
-        <ThemeProvider mode={paletteMode}>
-          <CssBaseline />
-          <DatePickerLocalizationProvider>
-            <AuthKitProvider>
-              <RelayProvider token={token}>{children}</RelayProvider>
-            </AuthKitProvider>
-          </DatePickerLocalizationProvider>
-        </ThemeProvider>
-      </SelectedOrganizationProvider>
-    </GlobalReloadIdProvider>
+    <SelectedOrganizationProvider>
+      <ThemeProvider mode={paletteMode}>
+        <CssBaseline />
+        <DatePickerLocalizationProvider>
+          <AuthKitProvider>
+            <RelayProvider token={token}>{children}</RelayProvider>
+          </AuthKitProvider>
+        </DatePickerLocalizationProvider>
+      </ThemeProvider>
+    </SelectedOrganizationProvider>
   );
 };
 

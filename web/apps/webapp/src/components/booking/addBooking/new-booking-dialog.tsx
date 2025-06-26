@@ -6,7 +6,7 @@ import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext } from '@/libs/providers';
 import { getCustomerFullName, isMidnight, joinErrors, keyboardDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { BookingType, newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
@@ -285,7 +285,6 @@ const NewBookingDialog = ({
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
@@ -502,7 +501,6 @@ const NewBookingDialog = ({
         });
 
         onAddClicked();
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {

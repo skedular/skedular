@@ -1,4 +1,3 @@
-import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
@@ -8,7 +7,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
@@ -28,6 +27,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   rootDataRelay: bookingCard_query$key;
@@ -178,7 +178,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
@@ -241,7 +240,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           ...successNotificationOptions,
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
         });
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -306,8 +304,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           ...successNotificationOptions,
           render: <NotificationContent content={message} />,
         });
-
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {

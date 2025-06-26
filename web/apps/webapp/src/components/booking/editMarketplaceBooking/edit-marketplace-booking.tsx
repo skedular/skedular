@@ -2,7 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
@@ -248,7 +248,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
@@ -364,7 +363,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} updated.`} />,
         });
 
-        UpdateGlobalReloadId();
         router.back();
       },
       onError: (error) => {

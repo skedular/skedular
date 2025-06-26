@@ -89,7 +89,7 @@ export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (integratedPl
   `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=location-tags-setup`;
 export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=stripe-connect-accounts-setup`;
-export const getOrganizationMarketplaceBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-public`;
+export const getOrganizationMarketplaceBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace`;
 export const getOrganizationProductBaseLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products/add`;

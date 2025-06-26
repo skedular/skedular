@@ -1,5 +1,4 @@
 export { default as DatePickerLocalizationProvider } from './date-picker-localization-provider';
-export { GlobalReloadIdContext, default as GlobalReloadIdProvider, UpdateGlobalReloadIdContext } from './global-reload-id-provider';
 export { default as GoogleAnalyticsProvider } from './google-analytics-provider';
 export { InMsTeamsContext, default as InMsTeamsProvider } from './in-msteams-provider';
 export { default as useIntegratedPlatrform } from './integrated-paltform-hook';

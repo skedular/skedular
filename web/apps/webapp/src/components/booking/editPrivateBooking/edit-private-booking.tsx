@@ -1,11 +1,10 @@
-import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceBookingType } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
@@ -30,6 +29,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
+import { v7 as uuid } from 'uuid';
 import { array, boolean, mixed, object, string } from 'yup';
 
 type Props = {
@@ -308,7 +308,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
@@ -541,7 +540,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} updated.`} />,
         });
 
-        UpdateGlobalReloadId();
         router.back();
       },
       onError: (error) => {

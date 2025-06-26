@@ -1,4 +1,3 @@
-import { v7 as uuid } from 'uuid';
 import { LocationAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import {
@@ -20,7 +19,7 @@ import { getOrganizationBookingBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DefaultSelect } from '@/components/styled';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { BookingType, bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
@@ -42,6 +41,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, mixed, number, object, string } from 'yup';
 
 type Props = {
@@ -222,7 +222,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
   const [date, setDate] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>(() => {
@@ -492,7 +491,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           render: <NotificationContent content={message} />,
         });
 
-        UpdateGlobalReloadId();
         router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, response.addBooking!.booking.id));
       },
       onError: (error) => {

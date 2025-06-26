@@ -1,30 +1,36 @@
-import CustomerAvatar from '@/components/avatars/customer-avatar';
+import { CustomerAvatar } from '@/components/avatars';
 import LocationAvatar from '@/components/avatars/location-avatar';
 import TeamAvatar from '@/components/avatars/team-avatar';
-import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography } from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import FormFieldLabel from '@/components/commons/form-field-label';
 import StackColumn from '@/components/commons/stack-column';
-import StackRow from '@/components/commons/stack-row';
+import { getOrganizationMarketplaceBaseLink } from '@/components/links';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
+import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/payMarketplaceBooking_booking_refetchableFragment.graphql';
-import Box from '@mui/material/Box';
+import type { payMarketplaceBooking_deleteBookingMutation } from '@/queries/__generated__/payMarketplaceBooking_deleteBookingMutation.graphql';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
+import Box from '@mui/system/Box';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   rootDataRelay: payMarketplaceBooking_booking_query$key;
   onReloadRequired?: () => void;
+  organizationId: string;
 };
 
-const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
+const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
   const [rootData, refetch] = useRefetchableFragment<payMarketplaceBooking_booking_refetchableFragment, payMarketplaceBooking_booking_query$key>(
     graphql`
       fragment payMarketplaceBooking_booking_query on Query @refetchable(queryName: "payMarketplaceBooking_booking_refetchableFragment") {
@@ -91,6 +97,17 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const [commitDeleteBooking] = useMutation<payMarketplaceBooking_deleteBookingMutation>(graphql`
+    mutation payMarketplaceBooking_deleteBookingMutation($input: DeleteBookingInput!) {
+      deleteBooking(input: $input) {
+        booking {
+          id
+        }
+      }
+    }
+  `);
+
+  const shortDateFormatFrom = toShortDate(rootData.booking?.from);
   const getTimeLeftToPayInSeconds = (bookingCheckoutSessionExpiry: string) => {
     const expirtTime = dayjs(bookingCheckoutSessionExpiry).utc();
     const currentTime = dayjs().utc();
@@ -98,6 +115,9 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
     return expirtTime.isBefore(currentTime) ? null : new Date(expirtTime.diff(currentTime, 'second') * 1000).toISOString().slice(11, 19);
   };
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [allDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
@@ -139,7 +159,55 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
   }, [rootData.booking]);
 
   const handleCloseClick = () => {
-    router.back();
+    router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationId));
+  };
+
+  const handleCancelBookingClick = () => {
+    const bookingDetails = rootData.booking;
+    if (!bookingDetails) {
+      return;
+    }
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Cancelling booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitDeleteBooking({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} cancelled.`} />,
+        });
+
+        router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationId));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}.`} />,
+        });
+      },
+    });
   };
 
   if (!rootData.booking) {
@@ -217,9 +285,14 @@ const PayMarketplaceBooking = ({ rootDataRelay }: Props) => {
                 <StackRow>
                   <SmallIconTypography label={`Time left to pay: ${timeLeftToPayInSeconds ? timeLeftToPayInSeconds : 'Expired'}`} color="error.main" />
                   {timeLeftToPayInSeconds && (
-                    <Button LinkComponent={Link} variant="contained" sx={defaultButtonStyle} href={booking.bookingCheckoutSession?.checkoutUrl}>
-                      Pay
-                    </Button>
+                    <>
+                      <Button LinkComponent={Link} variant="contained" href={booking.bookingCheckoutSession?.checkoutUrl}>
+                        Pay
+                      </Button>
+                      <Button variant="contained" onClick={handleCancelBookingClick} sx={defaultButtonStyle}>
+                        Cancel
+                      </Button>
+                    </>
                   )}
                 </StackRow>
               )}

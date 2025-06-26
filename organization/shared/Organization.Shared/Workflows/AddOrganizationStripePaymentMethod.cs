@@ -1,4 +1,5 @@
 using Organization.Shared.Workflows.Activities;
+using Temporalio.Common;
 using Temporalio.Exceptions;
 using Temporalio.Workflows;
 
@@ -32,7 +33,12 @@ public class AddOrganizationStripePaymentMethod
         var redirectUrl = await Workflow.ExecuteActivityAsync(
             (StripeIntegrations activity) => activity.SetOrganizationPaymentMethodAsync(
                 new SetOrganizationPaymentMethodInput(args.OrganizationId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
-            new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            });
 
         return redirectUrl;
     }

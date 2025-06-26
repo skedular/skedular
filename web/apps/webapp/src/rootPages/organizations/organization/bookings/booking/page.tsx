@@ -100,7 +100,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      {rootData.booking.bookedOnMarketplace && shouldPay && <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
+      {rootData.booking.bookedOnMarketplace && shouldPay && <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {rootData.booking.bookedOnMarketplace && !shouldPay && (
         <EditMarketplaceBooking
           rootDataRelay={rootData}

@@ -1,4 +1,5 @@
 using Customer.Shared.Workflows.Activities;
+using Temporalio.Common;
 using Temporalio.Exceptions;
 using Temporalio.Workflows;
 
@@ -10,7 +11,7 @@ public record AddCustomerStripePaymentMethodState(
     AddCustomerStripePaymentMethodInput Args,
     StripePaymentMethodEventState? StripePaymentMethodEventState);
 
-public record StripePaymentMethodEventState(string SetupIntentId, string RedirectStatus);
+public record StripePaymentMethodEventState(string RedirectStatus);
 
 [Workflow]
 public class AddCustomerStripePaymentMethod
@@ -32,7 +33,12 @@ public class AddCustomerStripePaymentMethod
         var redirectUrl = await Workflow.ExecuteActivityAsync(
             (StripeIntegrations activity) => activity.SetCustomerPaymentMethodAsync(
                 new SetCustomerPaymentMethodInput(args.CustomerId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
-            new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            });
 
         return redirectUrl;
     }

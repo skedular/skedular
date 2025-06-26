@@ -7,7 +7,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookings_addBookingMutation } from '@/queries/__generated__/bookings_addBookingMutation.graphql';
@@ -243,7 +243,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [selectedBookingId, setSelectedBookingId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -339,7 +338,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           ...successNotificationOptions,
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
         });
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -410,8 +408,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           ...successNotificationOptions,
           render: <NotificationContent content={message} />,
         });
-
-        UpdateGlobalReloadId();
       },
       onError: (error) => {
         toast.update(toastId, {
