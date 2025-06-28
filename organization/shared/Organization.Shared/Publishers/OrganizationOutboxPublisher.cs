@@ -81,7 +81,7 @@ public class OrganizationOutboxPublisher(
                 Id = args.OrganizationOfferingId,
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
             },
             unitOfWork);
 
