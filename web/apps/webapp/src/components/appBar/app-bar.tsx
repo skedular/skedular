@@ -172,10 +172,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     setMobileDrawerOpen(newOpen);
   };
 
-  if (!rootData.myOrganizations) {
-    return <></>;
-  }
-
   const customerName = getCustomerFullName({
     name: null,
     givenName: rootData.me?.givenName,

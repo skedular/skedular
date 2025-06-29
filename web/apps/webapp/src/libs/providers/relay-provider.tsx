@@ -1,6 +1,7 @@
 import { getEnvironment } from '@/clients/graphql/skedular';
+import { InMsTeamsContext } from '@/libs/providers';
 import type { PropsWithChildren } from 'react';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
 type Props = {
@@ -8,9 +9,8 @@ type Props = {
 };
 
 const RelayProvider = ({ children, token }: PropsWithChildren<Props>) => {
-  //  const isRunningInTeams = () => typeof window !== 'undefined' && window.name === 'embedded-page-container';
-  const isRunningInTeams = () => false;
-  const environment = useMemo(() => (isRunningInTeams() && !token ? null : getEnvironment('/api/v1/graphql', token)), [token]);
+  const inMsTeams = useContext(InMsTeamsContext);
+  const environment = useMemo(() => (inMsTeams && !token ? null : getEnvironment('/api/v1/graphql', token)), [token, inMsTeams]);
 
   if (!environment) {
     return <></>;

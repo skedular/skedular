@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { createContext } from 'react';
 import useIntegratedPlatrform from './integrated-paltform-hook';
 
-export const InMsTeamsContext = createContext<boolean>(typeof window !== 'undefined' && window.name === 'embedded-page-container');
+export const InMsTeamsContext = createContext<boolean>(false);
 
 const InMsTeamsProvider = ({ children }: PropsWithChildren) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
