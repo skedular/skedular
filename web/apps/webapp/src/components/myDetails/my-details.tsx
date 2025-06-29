@@ -15,6 +15,7 @@ import {
 } from '@/components/commons';
 import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon, NewIcon } from '@/components/icons';
+import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import type { RootError } from '@/components/relayError';
@@ -42,7 +43,6 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
-import { getRootLink } from '../links';
 import AddMyPaymentMethodDialog from './add-my-payment-method-dialog';
 
 type Props = {

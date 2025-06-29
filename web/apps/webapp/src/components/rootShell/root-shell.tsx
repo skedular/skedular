@@ -1,7 +1,8 @@
 import { AppBar } from '@/components/appBar';
 import { getSignInUrlAction } from '@/components/authActions';
-import { LeadIconTypography, PushToRight, SmallHeadingIconTypography } from '@/components/commons';
+import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
 import { LogoutIcon, SsoSigninIcon } from '@/components/icons';
+import { getOrganizationSsoSignInBaseLink, getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Notifications } from '@/components/notification/notifications';
@@ -24,8 +25,6 @@ import { memo, useCallback, useContext, useEffect, useState, useTransition } fro
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
-import StackRow from '../commons/stack-row';
-import { getOrganizationSsoSignInBaseLink, getRootLink } from '../links';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;

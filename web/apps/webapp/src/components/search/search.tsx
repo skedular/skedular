@@ -4,8 +4,8 @@ import { keyboardDebounceTimeout } from '@/libs/utils';
 import Divider from '@mui/material/Divider';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import type { SxProps, Theme } from '@mui/system';
-import debounce from 'lodash.debounce';
 import { memo } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   size?: 'small' | 'medium';
@@ -24,7 +24,7 @@ const Search = ({ size, placeholder, defaultValue, sx, onChange }: Props) => {
     onChange(event.target.value);
   };
 
-  const debounceChanged = debounce(handleChanged, keyboardDebounceTimeout);
+  const debounceChanged = useDebounceCallback(handleChanged, keyboardDebounceTimeout);
 
   return (
     <OutlinedInput
