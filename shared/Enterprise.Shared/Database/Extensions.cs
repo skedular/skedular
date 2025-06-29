@@ -20,10 +20,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         var dataSource = GetDatasource(services, true, connectionString);
@@ -56,10 +53,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         var dataSource = GetDatasource(services, false, connectionString);
@@ -91,10 +85,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         var dataSource = GetDatasource(services, true, connectionString);
@@ -127,10 +118,7 @@ public static class Extensions
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         var dataSource = GetDatasource(services, false, connectionString);
