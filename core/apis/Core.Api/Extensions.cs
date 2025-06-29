@@ -20,11 +20,11 @@ public static class Extensions
 
     public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var msTeamsConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
-        ArgumentNullException.ThrowIfNull(msTeamsConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsConfiguration.ApiKey);
+        var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
+        ArgumentNullException.ThrowIfNull(coreConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
 
         return services
-            .AddSingleton(msTeamsConfiguration);
+            .AddSingleton(coreConfiguration);
     }
 }
