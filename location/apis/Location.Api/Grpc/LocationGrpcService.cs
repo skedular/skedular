@@ -1,5 +1,5 @@
-using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;

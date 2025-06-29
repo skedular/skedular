@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd6db1d67cc40e231a8d6fb81ad0cad9>>
+ * @generated SignedSource<<eff0c31f4c3238fc4a78b4c77029a678>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type notifications_acceptInvitationToJoinTeamMutation$variables = {
 export type notifications_acceptInvitationToJoinTeamMutation$data = {
   readonly acceptInvitationToJoinTeam: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type notifications_acceptInvitationToJoinTeamMutation = {
   response: notifications_acceptInvitationToJoinTeamMutation$data;

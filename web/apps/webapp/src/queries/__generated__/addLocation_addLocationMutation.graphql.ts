@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dcad95f4465b44c230b61fea5576c580>>
+ * @generated SignedSource<<26da2a941a095d809fe6ed8c7a41f8ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -79,7 +79,7 @@ export type addLocation_addLocationMutation$data = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addLocation_addLocationMutation$rawResponse = {
   readonly addLocation: {
@@ -117,7 +117,7 @@ export type addLocation_addLocationMutation$rawResponse = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addLocation_addLocationMutation = {
   rawResponse: addLocation_addLocationMutation$rawResponse;

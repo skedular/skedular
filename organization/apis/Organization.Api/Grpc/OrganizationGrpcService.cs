@@ -1,5 +1,5 @@
-using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services;
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;

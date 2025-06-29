@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<238e9d2b082744d9ddb7686e09f3a918>>
+ * @generated SignedSource<<9993645b460df4d61affaab85e817669>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type addOrganizationZoneDialog_addZoneMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationZoneDialog_addZoneMutation$rawResponse = {
   readonly addZone: {
@@ -39,7 +39,7 @@ export type addOrganizationZoneDialog_addZoneMutation$rawResponse = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationZoneDialog_addZoneMutation = {
   rawResponse: addOrganizationZoneDialog_addZoneMutation$rawResponse;

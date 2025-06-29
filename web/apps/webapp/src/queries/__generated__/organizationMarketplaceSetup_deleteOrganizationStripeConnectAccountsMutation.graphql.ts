@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3faf78ceadc161c252043be074d990a>>
+ * @generated SignedSource<<836b956fbfd11fa4a13693299f8e1df3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationMarketplaceSetup_deleteOrganizationStripeConnectAccounts
     readonly accounts: ReadonlyArray<{
       readonly id: string;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation = {
   response: organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation$data;

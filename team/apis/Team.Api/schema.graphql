@@ -27,20 +27,20 @@ type InviteCustomersToJoinTeamPayload {
 }
 
 type Mutation {
-  addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
-  updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
-  deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
-  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
-  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
-  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
-  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
-  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload @cost(weight: "10")
-  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload @cost(weight: "10")
-  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
-  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
-  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
-  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload @cost(weight: "10")
-  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): CancelInvitationToJoinTeamPayload @cost(weight: "10")
+  addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
+  deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload! @cost(weight: "10")
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload! @cost(weight: "10")
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): CancelInvitationToJoinTeamPayload! @cost(weight: "10")
 }
 
 type PageInfo {

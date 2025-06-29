@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d7741ba1f3e2cce185138388642ed32>>
+ * @generated SignedSource<<dd1855de0243cd09e32da68f2d8a2e4d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type organizationLocations_addCustomerPreferredLocationMutation$data = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type organizationLocations_addCustomerPreferredLocationMutation = {
   response: organizationLocations_addCustomerPreferredLocationMutation$data;

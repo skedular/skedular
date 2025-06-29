@@ -22,8 +22,8 @@ public interface ILocationService
 {
     Task<Shared.Models.Location> AddAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken);
-    Task<Shared.Models.Location> DeleteAsync(string locationId, CancellationToken cancellationToken);
-    Task<Shared.Models.Location?> GetByIdAsync(string locationId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int )> GetPaginatedLocationsAsync(
@@ -143,12 +143,12 @@ public class LocationService(
         return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Location> DeleteAsync(string locationId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -171,9 +171,9 @@ public class LocationService(
         return deletedLocation;
     }
 
-    public async Task<Shared.Models.Location?> GetByIdAsync(string locationId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -181,7 +181,7 @@ public class LocationService(
             (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken);
         if (location is null)
         {
             return null;

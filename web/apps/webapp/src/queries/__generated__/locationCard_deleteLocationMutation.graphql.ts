@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5aa9805262ee28fff0106d88e0a416a>>
+ * @generated SignedSource<<141fbda1c7897d3428ecf794d795e1c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type locationCard_deleteLocationMutation$data = {
     readonly location: {
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type locationCard_deleteLocationMutation = {
   response: locationCard_deleteLocationMutation$data;

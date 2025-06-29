@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<975732f4084b93b5b8e3b1b245d332e2>>
+ * @generated SignedSource<<b6a9028c68896d76fe99f85aa9dca183>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type addOrganizationTeamMemberDialog_addTeamMemberMutation$data = {
       readonly role: TeamMemberRole | null | undefined;
       readonly status: TeamMemberStatus;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationTeamMemberDialog_addTeamMemberMutation = {
   response: addOrganizationTeamMemberDialog_addTeamMemberMutation$data;

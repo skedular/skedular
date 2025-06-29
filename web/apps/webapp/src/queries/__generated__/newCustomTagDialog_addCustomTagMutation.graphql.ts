@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad1640097369096df11578fba33f5c1a>>
+ * @generated SignedSource<<b1118624c3a3c24999d60823e96af97e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type newCustomTagDialog_addCustomTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type newCustomTagDialog_addCustomTagMutation$rawResponse = {
   readonly addCustomTag: {
@@ -39,7 +39,7 @@ export type newCustomTagDialog_addCustomTagMutation$rawResponse = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type newCustomTagDialog_addCustomTagMutation = {
   rawResponse: newCustomTagDialog_addCustomTagMutation$rawResponse;

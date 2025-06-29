@@ -9,7 +9,7 @@ namespace Organization.Api.GraphQL.Sso;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload?> UpdateOrganizationSsoSettingsAsync(
+    public async Task<UpdateOrganizationSsoSettingsPayload> UpdateOrganizationSsoSettingsAsync(
         UpdateOrganizationSsoSettingsInput input,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
@@ -20,7 +20,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload?> RemoveOrganizationSsoSettingsAsync(
+    public async Task<UpdateOrganizationSsoSettingsPayload> RemoveOrganizationSsoSettingsAsync(
         RemoveOrganizationSsoSettingsInput input,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
@@ -31,7 +31,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload?> ToggleOrganizationSsoAsync(
+    public async Task<UpdateOrganizationSsoSettingsPayload> ToggleOrganizationSsoAsync(
         ToggleOrganizationSsoInput input,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>

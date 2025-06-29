@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1286bdd55d7505efb31c570456e82b9>>
+ * @generated SignedSource<<1fd1fcbf5eeae234f2d207400cd12688>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,7 +45,7 @@ export type organizationLocation_deactivateResourcesMutation$data = {
         readonly uniqueId: string;
       }>;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationLocation_deactivateResourcesMutation = {
   response: organizationLocation_deactivateResourcesMutation$data;

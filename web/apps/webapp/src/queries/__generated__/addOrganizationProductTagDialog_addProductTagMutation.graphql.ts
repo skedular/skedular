@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e6bb773c8579e35a7a8c2accb4147b3>>
+ * @generated SignedSource<<a46c550208033b51ca3b36d1f373e8f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type addOrganizationProductTagDialog_addProductTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationProductTagDialog_addProductTagMutation$rawResponse = {
   readonly addProductTag: {
@@ -39,7 +39,7 @@ export type addOrganizationProductTagDialog_addProductTagMutation$rawResponse = 
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationProductTagDialog_addProductTagMutation = {
   rawResponse: addOrganizationProductTagDialog_addProductTagMutation$rawResponse;

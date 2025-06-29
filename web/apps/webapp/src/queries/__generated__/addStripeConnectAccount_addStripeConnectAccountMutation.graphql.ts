@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8aa6a9b8d59624f298111be526a23b5>>
+ * @generated SignedSource<<5a9ecaee4e87550ac5154c2f8f7b1b11>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type addStripeConnectAccount_addStripeConnectAccountMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse = {
   readonly addOrganizationStripeConnectAccount: {
@@ -33,7 +33,7 @@ export type addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse 
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addStripeConnectAccount_addStripeConnectAccountMutation = {
   rawResponse: addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse;

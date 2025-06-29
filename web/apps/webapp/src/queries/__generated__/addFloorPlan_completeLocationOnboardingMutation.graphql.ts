@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c783afc7c17dc340e9923147d5c7ddb7>>
+ * @generated SignedSource<<aace2a82ba22723f76c54dd61f0c96c9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type addFloorPlan_completeLocationOnboardingMutation$variables = {
 export type addFloorPlan_completeLocationOnboardingMutation$data = {
   readonly completeLocationOnboarding: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type addFloorPlan_completeLocationOnboardingMutation = {
   response: addFloorPlan_completeLocationOnboardingMutation$data;

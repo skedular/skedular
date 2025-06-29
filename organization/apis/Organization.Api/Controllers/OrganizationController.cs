@@ -135,7 +135,8 @@ public class OrganizationController(
                 logger.LogInformation("Stripe Platform account event JSON logged to file: {FilePath}", tempFilePath);
             }
 
-            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.OrganizationPlatformAccountWebhookKey, throwOnApiVersionMismatch: false);
+            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.OrganizationPlatformAccountWebhookKey,
+                throwOnApiVersionMismatch: false);
 
             return Ok();
         }

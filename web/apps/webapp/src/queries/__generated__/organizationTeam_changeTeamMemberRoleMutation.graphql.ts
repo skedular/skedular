@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18eb23e4f2187d8d2b04e4bfd45153c9>>
+ * @generated SignedSource<<f7d77e3500e1a968febb42768adaba5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,7 @@ export type organizationTeam_changeTeamMemberRoleMutation$data = {
       readonly role: TeamMemberRole | null | undefined;
       readonly status: TeamMemberStatus;
     } | null | undefined;
-  } | null | undefined;
+  };
 };
 export type organizationTeam_changeTeamMemberRoleMutation$rawResponse = {
   readonly changeTeamMemberRole: {
@@ -55,7 +55,7 @@ export type organizationTeam_changeTeamMemberRoleMutation$rawResponse = {
       readonly role: TeamMemberRole | null | undefined;
       readonly status: TeamMemberStatus;
     } | null | undefined;
-  } | null | undefined;
+  };
 };
 export type organizationTeam_changeTeamMemberRoleMutation = {
   rawResponse: organizationTeam_changeTeamMemberRoleMutation$rawResponse;

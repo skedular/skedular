@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a85d6ee22b4019b469b65faf07c9729>>
+ * @generated SignedSource<<a979317137e09aa338125c53e71be874>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type payMarketplaceBooking_deleteBookingMutation$data = {
     readonly booking: {
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type payMarketplaceBooking_deleteBookingMutation = {
   response: payMarketplaceBooking_deleteBookingMutation$data;

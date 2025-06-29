@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b9caf77c23095c2bb8188cf74ef1e03>>
+ * @generated SignedSource<<c10db8f534793fa828baf309687a70ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,7 +42,7 @@ export type myDetails_addMyBillingDetailsMutation$data = {
       } | null | undefined;
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type myDetails_addMyBillingDetailsMutation$rawResponse = {
   readonly addMyBillingDetails: {
@@ -61,7 +61,7 @@ export type myDetails_addMyBillingDetailsMutation$rawResponse = {
       } | null | undefined;
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type myDetails_addMyBillingDetailsMutation = {
   rawResponse: myDetails_addMyBillingDetailsMutation$rawResponse;

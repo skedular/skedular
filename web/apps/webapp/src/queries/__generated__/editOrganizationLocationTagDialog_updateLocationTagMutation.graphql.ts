@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95643c6dd05eca46be2d82280d9fc006>>
+ * @generated SignedSource<<6d02af9ecb8ebeaf571ad7c55117f504>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type editOrganizationLocationTagDialog_updateLocationTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationLocationTagDialog_updateLocationTagMutation$rawResponse = {
   readonly updateLocationTag: {
@@ -37,7 +37,7 @@ export type editOrganizationLocationTagDialog_updateLocationTagMutation$rawRespo
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationLocationTagDialog_updateLocationTagMutation = {
   rawResponse: editOrganizationLocationTagDialog_updateLocationTagMutation$rawResponse;

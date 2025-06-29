@@ -10,7 +10,7 @@ namespace Marketplace.Api.GraphQL;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<ProductPayload?> AddProductAsync(
+    public async Task<ProductPayload> AddProductAsync(
         AddProductInput input,
         [Service] IProductService productService,
         CancellationToken cancellationToken) =>
@@ -21,7 +21,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<ProductPayload?> UpdateProductAsync(
+    public async Task<ProductPayload> UpdateProductAsync(
         UpdateProductInput input,
         [Service] IProductService productService,
         CancellationToken cancellationToken) =>
@@ -32,7 +32,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<ProductsPayload?> DeleteProductsAsync(
+    public async Task<ProductsPayload> DeleteProductsAsync(
         DeleteProductsInput input,
         [Service] IProductService productService,
         CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ProductsPayload?> ActivateProductsAsync(
+    public async Task<ProductsPayload> ActivateProductsAsync(
         ActivateProductsInput input,
         [Service] IProductService productService,
         CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ProductsPayload?> DeactivateProductsAsync(
+    public async Task<ProductsPayload> DeactivateProductsAsync(
         DeactivateProductsInput input,
         [Service] IProductService productService,
         CancellationToken cancellationToken)

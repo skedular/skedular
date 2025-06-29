@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87903c519b5aa6b1db5a8fada67d8226>>
+ * @generated SignedSource<<2ed43e642aa139a1a043c5d96e021b0e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,7 @@ export type editResource_updateResourceMutation$data = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type editResource_updateResourceMutation$rawResponse = {
   readonly updateResource: {
@@ -181,7 +181,7 @@ export type editResource_updateResourceMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type editResource_updateResourceMutation = {
   rawResponse: editResource_updateResourceMutation$rawResponse;

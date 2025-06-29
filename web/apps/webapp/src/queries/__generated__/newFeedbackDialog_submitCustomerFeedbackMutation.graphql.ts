@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ad3b19661996ad776e7ac7bd73c5c45>>
+ * @generated SignedSource<<20f639cbe3a538b4ca7f52be162e7d07>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type newFeedbackDialog_submitCustomerFeedbackMutation$variables = {
 export type newFeedbackDialog_submitCustomerFeedbackMutation$data = {
   readonly submitCustomerFeedback: {
     readonly id: string;
-  } | null | undefined;
+  };
 };
 export type newFeedbackDialog_submitCustomerFeedbackMutation = {
   response: newFeedbackDialog_submitCustomerFeedbackMutation$data;

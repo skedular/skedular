@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0730d3413d3d2458bdbdebf7b30324d>>
+ * @generated SignedSource<<a41fa5bd2aa665de90b7dc9a08671174>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -110,7 +110,7 @@ export type editResource_updateLocationResourceAvailableHoursMutation$data = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type editResource_updateLocationResourceAvailableHoursMutation$rawResponse = {
   readonly updateLocationResourceAvailableHours: {
@@ -189,7 +189,7 @@ export type editResource_updateLocationResourceAvailableHoursMutation$rawRespons
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type editResource_updateLocationResourceAvailableHoursMutation = {
   rawResponse: editResource_updateLocationResourceAvailableHoursMutation$rawResponse;

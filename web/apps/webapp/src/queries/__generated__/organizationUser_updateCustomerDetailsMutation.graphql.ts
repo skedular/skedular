@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0cbb365880c6ef9e76228a8e7134b0e3>>
+ * @generated SignedSource<<1f93056d15d9905498d4fafb91f71d85>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type organizationUser_updateCustomerDetailsMutation$data = {
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationUser_updateCustomerDetailsMutation$rawResponse = {
   readonly updateCustomerDetails: {
@@ -52,7 +52,7 @@ export type organizationUser_updateCustomerDetailsMutation$rawResponse = {
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationUser_updateCustomerDetailsMutation = {
   rawResponse: organizationUser_updateCustomerDetailsMutation$rawResponse;

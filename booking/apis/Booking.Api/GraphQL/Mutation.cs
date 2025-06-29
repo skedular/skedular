@@ -9,7 +9,7 @@ namespace Booking.Api.GraphQL;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<BookingPayload?> AddBookingAsync(
+    public async Task<BookingPayload> AddBookingAsync(
         AddBookingInput input,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<BookingPayload?> UpdateBookingAsync(
+    public async Task<BookingPayload> UpdateBookingAsync(
         UpdateBookingInput input,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<BookingPayload?> DeleteBookingAsync(
+    public async Task<BookingPayload> DeleteBookingAsync(
         DeleteBookingInput input,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)

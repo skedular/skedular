@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39ec34e5c913dc842f9cc829770666dc>>
+ * @generated SignedSource<<f3cb9ee53c775237dcf6036061541d1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -53,7 +53,7 @@ export type addTeam_addTeamMutation$data = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addTeam_addTeamMutation$rawResponse = {
   readonly addTeam: {
@@ -75,7 +75,7 @@ export type addTeam_addTeamMutation$rawResponse = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addTeam_addTeamMutation = {
   rawResponse: addTeam_addTeamMutation$rawResponse;

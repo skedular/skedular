@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3461268fea9d9e826b3fa7ab50dfeeaa>>
+ * @generated SignedSource<<7d7515eca64c2f3a6e088421f01d7440>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type addOrganization_completeOrganizationOnboardingMutation$variables = {
 export type addOrganization_completeOrganizationOnboardingMutation$data = {
   readonly completeOrganizationOnboarding: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type addOrganization_completeOrganizationOnboardingMutation = {
   response: addOrganization_completeOrganizationOnboardingMutation$data;

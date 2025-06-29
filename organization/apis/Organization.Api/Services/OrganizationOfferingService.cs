@@ -67,7 +67,7 @@ public class OrganizationOfferingService(
             organizationOutboxPublisher.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(
                 activeOffering.Id,
                 repositoryFactory.UnitOfWork);
-            
+
             repositoryFactory.OrganizationOfferingRepository.Remove(activeOffering);
         }
 

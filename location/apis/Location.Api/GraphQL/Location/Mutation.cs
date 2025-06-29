@@ -9,7 +9,7 @@ namespace Location.Api.GraphQL.Location;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<LocationPayload?> AddLocationAsync(
+    public async Task<LocationPayload> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
@@ -20,7 +20,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<LocationPayload?> UpdateLocationAsync(
+    public async Task<LocationPayload> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
@@ -31,14 +31,14 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<LocationPayload?> DeleteLocationAsync(
+    public async Task<LocationPayload> DeleteLocationAsync(
         DeleteLocationInput input,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         new() { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))! };
 
     [UseResolverScope]
-    public async Task<LocationPayload?> UpdateLocationOpeningHoursAsync(
+    public async Task<LocationPayload> UpdateLocationOpeningHoursAsync(
         UpdateLocationOpeningHoursInput input,
         [Service] ILocationOpeningHoursService locationOpeningHoursService,
         CancellationToken cancellationToken) =>

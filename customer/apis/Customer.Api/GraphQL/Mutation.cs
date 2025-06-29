@@ -9,7 +9,7 @@ namespace Customer.Api.GraphQL;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
+    public async Task<CustomerPayload> CompleteOrganizationOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
+    public async Task<CustomerPayload> CompleteLocationOnboardingAsync(
         CompleteLocationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
+    public async Task<CustomerPayload> CompleteTeamOnboardingAsync(
         CompleteTeamOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
+    public async Task<CustomerPayload> CompleteDefaultOrganizationOnboardingAsync(
         CompleteDefaultOrganizationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -49,7 +49,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompletePreferredLocationOnboardingAsync(
+    public async Task<CustomerPayload> CompletePreferredLocationOnboardingAsync(
         CompletePreferredLocationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -59,7 +59,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
+    public async Task<CustomerPayload> CompletePreferredZoneOnboardingAsync(
         CompletePreferredZoneOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerPreferredLocationAsync(
+    public async Task<CustomerPayload> AddCustomerPreferredLocationAsync(
         AddCustomerPreferredLocationInput input,
         [Service] ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
@@ -83,7 +83,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerPreferredLocationAsync(
+    public async Task<CustomerPayload> RemoveCustomerPreferredLocationAsync(
         RemoveCustomerPreferredLocationInput input,
         [Service] ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
@@ -96,7 +96,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerPreferredTeamAsync(
+    public async Task<CustomerPayload> AddCustomerPreferredTeamAsync(
         AddCustomerPreferredTeamInput input,
         [Service] ICustomerTeamSettingsService customerTeamSettingsService,
         CancellationToken cancellationToken)
@@ -110,7 +110,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerPreferredTeamAsync(
+    public async Task<CustomerPayload> RemoveCustomerPreferredTeamAsync(
         RemoveCustomerPreferredTeamInput input,
         [Service] ICustomerTeamSettingsService customerTeamSettingsService,
         CancellationToken cancellationToken)
@@ -123,7 +123,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
+    public async Task<CustomerPayload> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
@@ -137,7 +137,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
+    public async Task<CustomerPayload> ClearCustomerDefaultOrganizationAsync(
         ClearCustomerDefaultOrganizationInput input,
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
@@ -148,7 +148,7 @@ public class Mutation(IMapper mapper)
 
 
     [UseResolverScope]
-    public async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
+    public async Task<SubmitCustomerFeedbackPayload> SubmitCustomerFeedbackAsync(
         SubmitCustomerFeedbackInput input,
         [Service] ICustomerFeedbackService customerFeedbackService,
         CancellationToken cancellationToken)
@@ -158,7 +158,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
+    public async Task<CustomerPayload> UpdateMyCustomerDetailsAsync(
         UpdateMyCustomerDetailsInput input,
         [Service] ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
@@ -177,7 +177,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> UpdateCustomerDetailsAsync(
+    public async Task<CustomerPayload> UpdateCustomerDetailsAsync(
         UpdateCustomerDetailsInput input,
         [Service] ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken) =>
@@ -195,7 +195,7 @@ public class Mutation(IMapper mapper)
             input.ClientMutationId);
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerPreferredOrganizationTagAsync(
+    public async Task<CustomerPayload> AddCustomerPreferredOrganizationTagAsync(
         AddCustomerPreferredOrganizationTagInput input,
         [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
         CancellationToken cancellationToken)
@@ -208,7 +208,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerPreferredOrganizationTagAsync(
+    public async Task<CustomerPayload> RemoveCustomerPreferredOrganizationTagAsync(
         RemoveCustomerPreferredOrganizationTagInput input,
         [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
         CancellationToken cancellationToken)
@@ -221,7 +221,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerPreferredResourceAsync(
+    public async Task<CustomerPayload> AddCustomerPreferredResourceAsync(
         AddCustomerPreferredResourceInput input,
         [Service] ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)
@@ -231,7 +231,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerPreferredResourceAsync(
+    public async Task<CustomerPayload> RemoveCustomerPreferredResourceAsync(
         RemoveCustomerPreferredResourceInput input,
         [Service] ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)

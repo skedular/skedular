@@ -10,7 +10,7 @@ namespace Organization.Api.GraphQL.Member;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberRoleAsync(
+    public async Task<OrganizationMemberDetailsPayload> ChangeOrganizationMemberRoleAsync(
         ChangeOrganizationMemberRoleInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken) =>
@@ -21,7 +21,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationMembersDetailsPayload?> ChangeOrganizationMembersStatusAsync(
+    public async Task<OrganizationMembersDetailsPayload> ChangeOrganizationMembersStatusAsync(
         ChangeOrganizationMembersStatusInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationMembersDetailsPayload?> RemoveOrganizationMembersAsync(
+    public async Task<OrganizationMembersDetailsPayload> RemoveOrganizationMembersAsync(
         RemoveOrganizationMembersInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
@@ -48,7 +48,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationMemberPayload?> CompleteOrganizationMemberOnboardingAsync(
+    public async Task<OrganizationMemberPayload> CompleteOrganizationMemberOnboardingAsync(
         CompleteOrganizationMemberOnboardingInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)

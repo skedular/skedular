@@ -556,10 +556,7 @@ public class Mapper : IMapper
             ? null
             : new OrganizationDetails
             {
-                UniqueId = src.Id,
-                Name = src.Name.ToSafeString(),
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone
+                UniqueId = src.Id, Name = src.Name.ToSafeString(), ContactEmail = src.ContactEmail, ContactPhone = src.ContactPhone
             };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>

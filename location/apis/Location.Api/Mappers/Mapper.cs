@@ -408,7 +408,7 @@ public class Mapper : IMapper
     {
         var location = new Shared.Models.Location
         {
-            Id = src.Id.ToSafeString(),
+            Id = src.Id,
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
@@ -611,7 +611,7 @@ public class Mapper : IMapper
         {
             dest.ResourcePositions = resourcePositions;
         }
-        
+
         return dest;
     }
 

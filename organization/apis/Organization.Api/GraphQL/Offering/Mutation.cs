@@ -9,7 +9,7 @@ namespace Organization.Api.GraphQL.Offering;
 public class Mutation
 {
     [UseResolverScope]
-    public async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
+    public async Task<UpdateOrganizationOfferingPayload> UpdateOrganizationOfferingAsync(
         UpdateOrganizationOfferingInput input,
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ public class Mutation
     }
 
     [UseResolverScope]
-    public async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
+    public async Task<CancelOrganizationOfferingPayload> CancelOrganizationOfferingAsync(
         CancelOrganizationOfferingInput input,
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)

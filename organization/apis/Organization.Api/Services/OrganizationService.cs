@@ -34,8 +34,8 @@ public interface IOrganizationService
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> DeleteAsync(string organizationId, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
@@ -238,12 +238,12 @@ public class OrganizationService(
         return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Organization> DeleteAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> DeleteAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanDelete(organization, customer))
@@ -277,11 +277,11 @@ public class OrganizationService(
         return deletedOrganization;
     }
 
-    public async Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken);
         if (organization is null)
         {
             return null;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a73e81b5daa8620f5d674e0a3bb0e081>>
+ * @generated SignedSource<<5798a1292a93aba1955ee7889dc57905>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationUsers_removeOrganizationUsersMutation$data = {
     readonly members: ReadonlyArray<{
       readonly id: string;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationUsers_removeOrganizationUsersMutation = {
   response: organizationUsers_removeOrganizationUsersMutation$data;

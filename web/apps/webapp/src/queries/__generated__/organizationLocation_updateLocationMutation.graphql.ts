@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00a827425098f5cf76398b039b3d0ca9>>
+ * @generated SignedSource<<36ff6d9cd1c2caceeaca0eba8b472d96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -124,7 +124,7 @@ export type organizationLocation_updateLocationMutation$data = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationLocation_updateLocationMutation$rawResponse = {
   readonly updateLocation: {
@@ -208,7 +208,7 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationLocation_updateLocationMutation = {
   rawResponse: organizationLocation_updateLocationMutation$rawResponse;

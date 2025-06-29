@@ -30,7 +30,7 @@ public class StripeProductConfiguration : IEntityTypeConfiguration<StripeProduct
         builder.Property(item => item.StripeAccountId).HasMaxLength(Constants.MaxStripeConnectAccountIdLength);
 
         builder.HasOne(item => item.ProductVersion).WithOne(item => item.StripeProduct).HasForeignKey<StripeProduct>(item => item.ProductVersionId);
-        
+
         builder.HasIndex(item => item.StripeAccountId);
     }
 }

@@ -10,7 +10,7 @@ namespace Location.Api.GraphQL.Resource;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<ResourcePayload?> AddResourceAsync(
+    public async Task<ResourcePayload> AddResourceAsync(
         AddResourceInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
@@ -21,7 +21,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<ResourcePayload?> UpdateResourceAsync(
+    public async Task<ResourcePayload> UpdateResourceAsync(
         UpdateResourceInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
@@ -32,14 +32,14 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<ResourcePayload?> DeleteResourceAsync(
+    public async Task<ResourcePayload> DeleteResourceAsync(
         DeleteResourceInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
         new() { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(await resourceService.DeleteAsync(input.Id, cancellationToken)) };
 
     [UseResolverScope]
-    public async Task<ResourcesPayload?> DeleteResourcesAsync(
+    public async Task<ResourcesPayload> DeleteResourcesAsync(
         DeleteResourcesInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
@@ -49,7 +49,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ResourcesPayload?> ActivateResourcesAsync(
+    public async Task<ResourcesPayload> ActivateResourcesAsync(
         ActivateResourcesInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
@@ -59,7 +59,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ResourcesPayload?> DeactivateResourcesAsync(
+    public async Task<ResourcesPayload> DeactivateResourcesAsync(
         DeactivateResourcesInput input,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ResourcePayload?> UpdateLocationResourceAvailableHoursAsync(
+    public async Task<ResourcePayload> UpdateLocationResourceAvailableHoursAsync(
         UpdateLocationResourceAvailableHoursInput input,
         [Service] IResourceAvailableHoursService resourceAvailableHoursService,
         CancellationToken cancellationToken) =>

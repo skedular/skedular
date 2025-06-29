@@ -1,7 +1,6 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a53e85e84930c9578aa549950d601195>>
+ * @generated SignedSource<<e6ebb9d59fc0d4680e2c43e3f90de255>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,7 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
       };
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse = {
   readonly updateLocationOpeningHours: {
@@ -174,7 +174,7 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
       };
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationLocation_updateLocationOpeningHoursMutation = {
   rawResponse: organizationLocation_updateLocationOpeningHoursMutation$rawResponse;

@@ -11,7 +11,6 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
-using Temporalio.Client;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -25,8 +24,8 @@ public interface IBookingService
 {
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> GetByIdAsync(string bookingId, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int )> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
@@ -48,8 +47,7 @@ public class BookingService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-    ITemporalClient temporalClient) : IBookingService
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -190,12 +188,12 @@ public class BookingService(
         return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
     }
 
-    public async Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
@@ -256,12 +254,12 @@ public class BookingService(
         return deletedBooking;
     }
 
-    public async Task<Shared.Models.Booking> GetByIdAsync(string bookingId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
         var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking));
 

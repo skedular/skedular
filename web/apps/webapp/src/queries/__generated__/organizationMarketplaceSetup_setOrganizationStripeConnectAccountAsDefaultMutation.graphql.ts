@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<095382779486d0801d2198c0344d6851>>
+ * @generated SignedSource<<7a1ecdfd722031db9ea31d91686a53e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDe
       readonly id: string;
       readonly isDefault: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation$rawResponse = {
   readonly setOrganizationStripeConnectAccountAsDefault: {
@@ -30,7 +30,7 @@ export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDe
       readonly id: string;
       readonly isDefault: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation = {
   rawResponse: organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation$rawResponse;

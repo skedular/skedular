@@ -435,7 +435,7 @@ public class Mapper : IMapper
     {
         var organization = new Shared.Models.Organization
         {
-            Id = src.Id.ToSafeString(),
+            Id = src.Id,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -955,7 +955,7 @@ public class Mapper : IMapper
     public OrganizationStripeConnectAccount MapTo(
         Account src,
         string id,
-        string name, 
+        string name,
         bool isDefault,
         Shared.Database.Entities.Organization organization) =>
         new()
@@ -1037,7 +1037,8 @@ public class Mapper : IMapper
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
-    public StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => 
+
+    public StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
@@ -1657,9 +1658,9 @@ public class Mapper : IMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
             CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
             OnboardingUrl = src.OnboardingUrl.ToSafeString(),
-            OnboardingCompleted = src.OnboardingCompleted,
+            OnboardingCompleted = src.OnboardingCompleted
         };
-    
+
     private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
         src is null
             ? null

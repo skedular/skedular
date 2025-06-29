@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16d854065129e9e97782c9049c29b3df>>
+ * @generated SignedSource<<81ad9314b20c301b56693133cc16970f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -65,7 +65,7 @@ export type addOrganization_addOrganizationMutation$data = {
       };
       readonly website: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
@@ -94,7 +94,7 @@ export type addOrganization_addOrganizationMutation$rawResponse = {
       };
       readonly website: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganization_addOrganizationMutation = {
   rawResponse: addOrganization_addOrganizationMutation$rawResponse;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7049c20378e84e493aa1cc413b252037>>
+ * @generated SignedSource<<2f80bf43a4e5fbfabad59acf5da6e298>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type myDetails_removeCustomerPaymentMethodMutation$variables = {
 export type myDetails_removeCustomerPaymentMethodMutation$data = {
   readonly removeCustomerPaymentMethod: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type myDetails_removeCustomerPaymentMethodMutation = {
   response: myDetails_removeCustomerPaymentMethodMutation$data;

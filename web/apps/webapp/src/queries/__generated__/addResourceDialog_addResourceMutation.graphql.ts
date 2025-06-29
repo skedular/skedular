@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27d06a5e327f3a1d826c36f7926e00ec>>
+ * @generated SignedSource<<4ecaae5c1dc2dcb63447e4b457ff3f3d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,7 +57,7 @@ export type addResourceDialog_addResourceMutation$data = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type addResourceDialog_addResourceMutation$rawResponse = {
   readonly addResource: {
@@ -89,7 +89,7 @@ export type addResourceDialog_addResourceMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type addResourceDialog_addResourceMutation = {
   rawResponse: addResourceDialog_addResourceMutation$rawResponse;

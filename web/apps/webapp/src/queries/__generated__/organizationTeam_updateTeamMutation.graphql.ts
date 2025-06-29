@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27346c58f99d34f360c91f2193054f82>>
+ * @generated SignedSource<<2de963c8a3ae6478e950e3428eb9037b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -54,7 +54,7 @@ export type organizationTeam_updateTeamMutation$data = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationTeam_updateTeamMutation$rawResponse = {
   readonly updateTeam: {
@@ -80,7 +80,7 @@ export type organizationTeam_updateTeamMutation$rawResponse = {
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationTeam_updateTeamMutation = {
   rawResponse: organizationTeam_updateTeamMutation$rawResponse;

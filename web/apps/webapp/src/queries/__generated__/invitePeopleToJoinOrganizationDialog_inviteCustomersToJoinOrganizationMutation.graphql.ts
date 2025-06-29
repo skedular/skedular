@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c41b0993182e047aee3d480ce1de14a>>
+ * @generated SignedSource<<415584a3109cbaf5b0b1091882ac38bf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizati
 export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$data = {
   readonly inviteCustomersToJoinOrganization: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation = {
   response: invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$data;

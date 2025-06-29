@@ -24,7 +24,7 @@ public class CoreController(IVersionService versionService, IFileUploaderService
 
     public override async Task<ActionResult<FileUploadResponse>> UploadPublicAccessFile(IFormFile file, CancellationToken cancellationToken = default)
     {
-        using var memoryStream = new MemoryStream();
+        await using var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream, cancellationToken);
 
         return mapper.MapTo(

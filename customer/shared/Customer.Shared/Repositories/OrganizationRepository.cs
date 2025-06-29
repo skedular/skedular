@@ -10,13 +10,12 @@ public interface IOrganizationRepository : IRepository<Organization>
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
     Task<Organization?> GetByIdAsync(
-        string customerId,
+        string id,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByCustomerIdAsync(string id, CancellationToken cancellationToken);
-    Organization Add(Organization organization);
+    Task<ICollection<Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -54,13 +53,6 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
         await DbContext.Organization
             .Where(query => query.OrganizationMembers.Any(item => item.CustomerId == customerId))
             .ToListAsync(cancellationToken);
-
-    public Organization Add(Organization organization)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Organization.Add(organization).Entity;
-    }
 
     public Organization Update(Organization organization)
     {

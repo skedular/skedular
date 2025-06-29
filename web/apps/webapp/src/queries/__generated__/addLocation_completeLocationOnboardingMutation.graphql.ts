@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<54a084b29ad032e37e747da55b32fb74>>
+ * @generated SignedSource<<d7f92200200534954457e7669bdd7032>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type addLocation_completeLocationOnboardingMutation$variables = {
 export type addLocation_completeLocationOnboardingMutation$data = {
   readonly completeLocationOnboarding: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type addLocation_completeLocationOnboardingMutation = {
   response: addLocation_completeLocationOnboardingMutation$data;

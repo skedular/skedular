@@ -8,7 +8,7 @@ namespace Organization.Api.GraphQL.Invitation;
 public class Mutation
 {
     [UseResolverScope]
-    public async Task<InviteCustomersToJoinOrganizationPayload?> InviteCustomersToJoinOrganizationAsync(
+    public async Task<InviteCustomersToJoinOrganizationPayload> InviteCustomersToJoinOrganizationAsync(
         InviteCustomersToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
@@ -18,7 +18,7 @@ public class Mutation
     }
 
     [UseResolverScope]
-    public async Task<AcceptInvitationToJoinOrganizationPayload?> AcceptInvitationToJoinOrganizationAsync(
+    public async Task<AcceptInvitationToJoinOrganizationPayload> AcceptInvitationToJoinOrganizationAsync(
         AcceptInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ public class Mutation
     }
 
     [UseResolverScope]
-    public async Task<RejectInvitationToJoinOrganizationPayload?> RejectInvitationToJoinOrganizationAsync(
+    public async Task<RejectInvitationToJoinOrganizationPayload> RejectInvitationToJoinOrganizationAsync(
         RejectInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ public class Mutation
     }
 
     [UseResolverScope]
-    public async Task<CancelInvitationToJoinOrganizationPayload?> CancelInvitationToJoinOrganizationAsync(
+    public async Task<CancelInvitationToJoinOrganizationPayload> CancelInvitationToJoinOrganizationAsync(
         CancelInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)

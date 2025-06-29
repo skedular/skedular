@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63a92dd463f59df2005eb281ca49c4e1>>
+ * @generated SignedSource<<ec46c05b7e5be527e1b7761eb7dc50f2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationMarketplaceSetup_deleteProductTagsMutation$data = {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationMarketplaceSetup_deleteProductTagsMutation = {
   response: organizationMarketplaceSetup_deleteProductTagsMutation$data;

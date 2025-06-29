@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e55715f5335c854c09d04b97e92ccd3c>>
+ * @generated SignedSource<<ecb5fb7da0d5c1bdc6073e2c55800231>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type notifications_rejectInvitationToJoinTeamMutation$variables = {
 export type notifications_rejectInvitationToJoinTeamMutation$data = {
   readonly rejectInvitationToJoinTeam: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type notifications_rejectInvitationToJoinTeamMutation = {
   response: notifications_rejectInvitationToJoinTeamMutation$data;

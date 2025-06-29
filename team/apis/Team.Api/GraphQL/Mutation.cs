@@ -10,7 +10,7 @@ namespace Team.Api.GraphQL;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<TeamPayload?> AddTeamAsync(
+    public async Task<TeamPayload> AddTeamAsync(
         AddTeamInput input,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamPayload?> UpdateTeamAsync(
+    public async Task<TeamPayload> UpdateTeamAsync(
         UpdateTeamInput input,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamPayload?> DeleteTeamAsync(
+    public async Task<TeamPayload> DeleteTeamAsync(
         DeleteTeamInput input,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamPayload?> UpdateTeamAndTeamMembersAsync(
+    public async Task<TeamPayload> UpdateTeamAndTeamMembersAsync(
         UpdateTeamAndTeamMembersInput input,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamPayload?> UpdateTeamMembersAsync(
+    public async Task<TeamPayload> UpdateTeamMembersAsync(
         UpdateTeamMembersInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMemberPayload?> AddTeamMemberAsync(
+    public async Task<TeamMemberPayload> AddTeamMemberAsync(
         AddTeamMemberInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
@@ -72,7 +72,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMemberPayload?> RemoveTeamMemberAsync(
+    public async Task<TeamMemberPayload> RemoveTeamMemberAsync(
         RemoveTeamMemberInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
@@ -82,7 +82,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberRoleAsync(
+    public async Task<TeamMemberDetailsPayload> ChangeTeamMemberRoleAsync(
         ChangeTeamMemberRoleInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken) =>
@@ -93,7 +93,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<TeamMembersDetailsPayload?> ChangeTeamMembersStatusAsync(
+    public async Task<TeamMembersDetailsPayload> ChangeTeamMembersStatusAsync(
         ChangeTeamMembersStatusInput input,
         [Service] ITeamMemberService organizationMemberService,
         CancellationToken cancellationToken)
@@ -107,7 +107,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMembersDetailsPayload?> RemoveTeamMembersAsync(
+    public async Task<TeamMembersDetailsPayload> RemoveTeamMembersAsync(
         RemoveTeamMembersInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
@@ -120,7 +120,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
+    public async Task<InviteCustomersToJoinTeamPayload> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
@@ -130,7 +130,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<AcceptInvitationToJoinTeamPayload?> AcceptInvitationToJoinTeamAsync(
+    public async Task<AcceptInvitationToJoinTeamPayload> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
@@ -140,7 +140,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<RejectInvitationToJoinTeamPayload?> RejectInvitationToJoinTeamAsync(
+    public async Task<RejectInvitationToJoinTeamPayload> RejectInvitationToJoinTeamAsync(
         RejectInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
@@ -150,7 +150,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CancelInvitationToJoinTeamPayload?> CancelInvitationToJoinTeamAsync(
+    public async Task<CancelInvitationToJoinTeamPayload> CancelInvitationToJoinTeamAsync(
         CancelInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)

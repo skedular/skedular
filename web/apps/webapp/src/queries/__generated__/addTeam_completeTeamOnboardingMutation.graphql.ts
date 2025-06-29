@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29ccb148ee1f0791a09675e4f4f39b94>>
+ * @generated SignedSource<<7a20adc2ff4d19f65fbf0279a30fb690>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type addTeam_completeTeamOnboardingMutation$variables = {
 export type addTeam_completeTeamOnboardingMutation$data = {
   readonly completeTeamOnboarding: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type addTeam_completeTeamOnboardingMutation = {
   response: addTeam_completeTeamOnboardingMutation$data;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28c6155fdb52eeb5c465e9ab12c92809>>
+ * @generated SignedSource<<4a8c005c38f137f32ba80f6a3c61cb57>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type organizationAdmin_removeOrganizationSsoSettingsMutation$data = {
         readonly loginUrl: string;
       } | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_removeOrganizationSsoSettingsMutation$rawResponse = {
   readonly removeOrganizationSsoSettings: {
@@ -38,7 +38,7 @@ export type organizationAdmin_removeOrganizationSsoSettingsMutation$rawResponse 
         readonly loginUrl: string;
       } | null | undefined;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_removeOrganizationSsoSettingsMutation = {
   rawResponse: organizationAdmin_removeOrganizationSsoSettingsMutation$rawResponse;

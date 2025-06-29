@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84b10edd2aaa123bcfd9378fa329552b>>
+ * @generated SignedSource<<771e712f6e0dc120ab77b97132900707>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -89,7 +89,7 @@ export type editProduct_updateProductMutation$data = {
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type editProduct_updateProductMutation$rawResponse = {
   readonly updateProduct: {
@@ -137,7 +137,7 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type editProduct_updateProductMutation = {
   rawResponse: editProduct_updateProductMutation$rawResponse;

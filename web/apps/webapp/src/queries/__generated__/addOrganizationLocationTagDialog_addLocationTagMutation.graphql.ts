@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f328706f37828d5bc6afc0dd4f2d7da>>
+ * @generated SignedSource<<0a295b63b38b652f525d8b88b341266d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type addOrganizationLocationTagDialog_addLocationTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationLocationTagDialog_addLocationTagMutation$rawResponse = {
   readonly addLocationTag: {
@@ -39,7 +39,7 @@ export type addOrganizationLocationTagDialog_addLocationTagMutation$rawResponse 
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type addOrganizationLocationTagDialog_addLocationTagMutation = {
   rawResponse: addOrganizationLocationTagDialog_addLocationTagMutation$rawResponse;

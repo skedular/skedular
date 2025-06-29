@@ -198,7 +198,7 @@ public class Mapper : IMapper
     public Shared.Models.Team MapTo(UpdateTeamInput src) =>
         new()
         {
-            Id = src.Id.ToSafeString(),
+            Id = src.Id,
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
@@ -209,7 +209,7 @@ public class Mapper : IMapper
     public Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src) =>
         new()
         {
-            Id = src.Id.ToSafeString(),
+            Id = src.Id,
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,

@@ -96,7 +96,7 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
         };
 
-    public bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) => 
+    public bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,

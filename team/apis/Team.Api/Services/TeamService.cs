@@ -21,8 +21,8 @@ public interface ITeamService
 {
     Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken);
     Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
-    Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken);
-    Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int )> GetPaginatedTeamsAsync(
@@ -178,12 +178,12 @@ public class TeamService(
         return await UpdateInternalAsync(team, existingTeam, customer, organization, primaryLocation, updateTeamMembers, cancellationToken);
     }
 
-    public async Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(existingTeam.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -230,9 +230,9 @@ public class TeamService(
         return deletedTeam;
     }
 
-    public async Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -240,7 +240,7 @@ public class TeamService(
             (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken);
         if (team is null)
         {
             return null;

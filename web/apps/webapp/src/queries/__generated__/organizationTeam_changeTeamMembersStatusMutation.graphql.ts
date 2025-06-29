@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<562fcd370ce50f60eae00faa8efc8ccb>>
+ * @generated SignedSource<<218fcebffb75dbb501714ee75457823a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,7 @@ export type organizationTeam_changeTeamMembersStatusMutation$data = {
       readonly role: TeamMemberRole | null | undefined;
       readonly status: TeamMemberStatus;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationTeam_changeTeamMembersStatusMutation = {
   response: organizationTeam_changeTeamMembersStatusMutation$data;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36698d5ed0d23af738b8e66897fdd4c3>>
+ * @generated SignedSource<<9edcd006304829484afe8551736679c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type teamCard_deleteTeamMutation$data = {
     readonly team: {
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type teamCard_deleteTeamMutation = {
   response: teamCard_deleteTeamMutation$data;

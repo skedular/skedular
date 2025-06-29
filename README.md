@@ -39,12 +39,12 @@ Skedular Mono Repository
 
    This starts:
 
-   - PostgreSQL database (port 5432)
-   - Redis cache (port 6379)
-   - Kafka message broker (port 9092)
-   - Keycloak authentication
-   - Temporal workflow engine
-   - Dozzle for log viewing (port 5001)
+    - PostgreSQL database (port 5432)
+    - Redis cache (port 6379)
+    - Kafka message broker (port 9092)
+    - Keycloak authentication
+    - Temporal workflow engine
+    - Dozzle for log viewing (port 5001)
 
 4. **Generate GraphQL schemas and federation gateway**
 

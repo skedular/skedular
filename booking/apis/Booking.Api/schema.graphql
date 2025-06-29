@@ -151,9 +151,9 @@ type LineItemDetails {
 }
 
 type Mutation {
-  addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
-  updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
-  deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
+  addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
+  updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
+  deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
 }
 
 type OrganizationAvailableResources {

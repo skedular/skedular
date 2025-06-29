@@ -1,5 +1,4 @@
 ﻿using Booking.Shared.Database;
-using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,14 +30,11 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(
-        IDbContextFactory<BookingDbContext> dbContextFactory,
-        TimeProvider timeProvider,
-        IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService)
+    public RepositoryFactory(IDbContextFactory<BookingDbContext> dbContextFactory, TimeProvider timeProvider)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        BookingRepository = new BookingRepository(_dbContext, timeProvider, bookingCheckoutSessionHelperService);
+        BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);

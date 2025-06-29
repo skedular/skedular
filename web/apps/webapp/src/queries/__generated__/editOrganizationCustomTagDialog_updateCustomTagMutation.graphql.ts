@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca9b662867f96bad818237fba198d483>>
+ * @generated SignedSource<<862755008b5ddb57d102f7aeb9335c8f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type editOrganizationCustomTagDialog_updateCustomTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationCustomTagDialog_updateCustomTagMutation$rawResponse = {
   readonly updateCustomTag: {
@@ -37,7 +37,7 @@ export type editOrganizationCustomTagDialog_updateCustomTagMutation$rawResponse 
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationCustomTagDialog_updateCustomTagMutation = {
   rawResponse: editOrganizationCustomTagDialog_updateCustomTagMutation$rawResponse;

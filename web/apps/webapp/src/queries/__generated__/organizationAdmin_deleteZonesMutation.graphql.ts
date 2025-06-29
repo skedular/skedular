@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15415f2346f531c49f0ec7f897a178aa>>
+ * @generated SignedSource<<cd7898520a0f916cc491b1e305ac5eb4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationAdmin_deleteZonesMutation$data = {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_deleteZonesMutation = {
   response: organizationAdmin_deleteZonesMutation$data;

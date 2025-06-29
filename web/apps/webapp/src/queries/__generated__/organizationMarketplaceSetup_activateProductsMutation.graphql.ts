@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86e6c6796d52bd63c8e8dc38c4a70ebc>>
+ * @generated SignedSource<<4f158bad698372dac1c2ebddd268c82b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type organizationMarketplaceSetup_activateProductsMutation$data = {
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
     }>;
-  } | null | undefined;
+  };
 };
 export type organizationMarketplaceSetup_activateProductsMutation = {
   response: organizationMarketplaceSetup_activateProductsMutation$data;

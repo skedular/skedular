@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad917acb630363a034f685f3b46a58fd>>
+ * @generated SignedSource<<42167099f1eae6c81f8a11f78e204fbb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type teamCard_addCustomerPreferredTeamMutation$data = {
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type teamCard_addCustomerPreferredTeamMutation = {
   response: teamCard_addCustomerPreferredTeamMutation$data;

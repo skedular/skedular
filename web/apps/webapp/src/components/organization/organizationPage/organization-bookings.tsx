@@ -69,7 +69,7 @@ const RootQuery = graphql`
   }
 `;
 
-const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, customerId, locationId, teamId, defaultStartWeek }: Props) => {
+const OrganizationBookings = ({ queryReference, onReloadRequired, organizationId, customerId, locationId, teamId, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organizationBookings_rootQuery>(RootQuery, queryReference);
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
@@ -135,7 +135,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   );
 };
 
-const MemoModernOrganization = memo(ModernOrganization);
+const MemoOrganizationBookings = memo(OrganizationBookings);
 
 type RelayProps = {
   organizationId: string;
@@ -198,7 +198,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoModernOrganization
+      <MemoOrganizationBookings
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         organizationId={organizationId}

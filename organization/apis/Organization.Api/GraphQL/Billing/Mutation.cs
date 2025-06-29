@@ -9,7 +9,7 @@ namespace Organization.Api.GraphQL.Billing;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<OrganizationPayload?> AddOrganizationBillingDetailsAsync(
+    public async Task<OrganizationPayload> AddOrganizationBillingDetailsAsync(
         AddOrganizationBillingDetailsInput input,
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationPayload?> UpdateOrganizationBillingDetailsAsync(
+    public async Task<OrganizationPayload> UpdateOrganizationBillingDetailsAsync(
         UpdateOrganizationBillingDetailsInput input,
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)

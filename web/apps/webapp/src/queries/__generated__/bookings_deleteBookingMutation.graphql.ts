@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc107ce20bffdfd5e74a81218584fad9>>
+ * @generated SignedSource<<8ae6624b490a31e57f089045e6246210>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type bookings_deleteBookingMutation$data = {
     readonly booking: {
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type bookings_deleteBookingMutation = {
   response: bookings_deleteBookingMutation$data;

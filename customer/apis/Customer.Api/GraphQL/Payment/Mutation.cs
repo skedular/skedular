@@ -22,7 +22,7 @@ public class Mutation(StripeConfiguration stripeConfiguration)
     }
 
     [UseResolverScope]
-    public async Task<RemoveCustomerPaymentMethodPayload?> RemoveCustomerPaymentMethodAsync(
+    public async Task<RemoveCustomerPaymentMethodPayload> RemoveCustomerPaymentMethodAsync(
         RemoveCustomerPaymentMethodInput input,
         [Service] IPaymentService paymentService,
         CancellationToken cancellationToken)

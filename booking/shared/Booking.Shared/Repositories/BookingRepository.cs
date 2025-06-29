@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Models;
-using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
@@ -213,10 +212,7 @@ internal static class BookingExtensions
     }
 }
 
-public class BookingRepository(
-    BookingDbContext dbContext,
-    TimeProvider timeProvider,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService)
+public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Database.Entities.Booking>(dbContext, timeProvider), IBookingRepository
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>

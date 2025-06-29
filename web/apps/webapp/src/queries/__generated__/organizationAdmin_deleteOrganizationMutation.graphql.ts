@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e70a281c631914acaf38b138df5bd4d>>
+ * @generated SignedSource<<655d53f6e29e8c31ec87b244c85b317e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type organizationAdmin_deleteOrganizationMutation$data = {
     readonly organization: {
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_deleteOrganizationMutation = {
   response: organizationAdmin_deleteOrganizationMutation$data;

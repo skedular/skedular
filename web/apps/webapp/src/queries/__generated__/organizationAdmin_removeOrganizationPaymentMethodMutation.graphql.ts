@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<696d4f9597fb970d8371f8c564d9962c>>
+ * @generated SignedSource<<7e1d8100171d29ee98a1cfee38ac712b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type organizationAdmin_removeOrganizationPaymentMethodMutation$variables 
 export type organizationAdmin_removeOrganizationPaymentMethodMutation$data = {
   readonly removeOrganizationPaymentMethod: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_removeOrganizationPaymentMethodMutation = {
   response: organizationAdmin_removeOrganizationPaymentMethodMutation$data;

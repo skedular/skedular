@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5d7bf937a9d8c6430a155e0bf14c464>>
+ * @generated SignedSource<<76d2597cdc8d894299d45bfed335cc0d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type organizationAdmin_cancelOrganizationOfferingMutation$variables = {
 export type organizationAdmin_cancelOrganizationOfferingMutation$data = {
   readonly cancelOrganizationOffering: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_cancelOrganizationOfferingMutation = {
   response: organizationAdmin_cancelOrganizationOfferingMutation$data;

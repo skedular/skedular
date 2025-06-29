@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9eb0bfc35d4e189feebfb06f0a2b8d19>>
+ * @generated SignedSource<<8c0657661c2491e216d7a6cded75aac5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -89,7 +89,7 @@ export type addProduct_addProductMutation$data = {
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type addProduct_addProductMutation$rawResponse = {
   readonly addProduct: {
@@ -137,7 +137,7 @@ export type addProduct_addProductMutation$rawResponse = {
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
     };
-  } | null | undefined;
+  };
 };
 export type addProduct_addProductMutation = {
   rawResponse: addProduct_addProductMutation$rawResponse;

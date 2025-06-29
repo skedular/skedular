@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68291d81bc71f73e387d9ba2dd24fc53>>
+ * @generated SignedSource<<b16e90781fcd4c694228a732bd8f3d0c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,7 +74,7 @@ export type bookings_addBookingMutation$data = {
       };
       readonly until: any;
     };
-  } | null | undefined;
+  };
 };
 export type bookings_addBookingMutation$rawResponse = {
   readonly addBooking: {
@@ -119,7 +119,7 @@ export type bookings_addBookingMutation$rawResponse = {
       };
       readonly until: any;
     };
-  } | null | undefined;
+  };
 };
 export type bookings_addBookingMutation = {
   rawResponse: bookings_addBookingMutation$rawResponse;

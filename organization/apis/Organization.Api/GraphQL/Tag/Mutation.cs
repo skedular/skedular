@@ -10,7 +10,7 @@ namespace Organization.Api.GraphQL.Tag;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddCustomTagAsync(
+    public async Task<OrganizationTagPayload> AddCustomTagAsync(
         AddCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -21,7 +21,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> UpdateCustomTagAsync(
+    public async Task<OrganizationTagPayload> UpdateCustomTagAsync(
         UpdateCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -32,7 +32,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> DeleteCustomTagAsync(
+    public async Task<OrganizationTagPayload> DeleteCustomTagAsync(
         DeleteCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -42,7 +42,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagsPayload?> DeleteCustomTagsAsync(
+    public async Task<OrganizationTagsPayload> DeleteCustomTagsAsync(
         DeleteCustomTagsInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddZoneAsync(
+    public async Task<OrganizationTagPayload> AddZoneAsync(
         AddZoneInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -63,7 +63,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> UpdateZoneAsync(
+    public async Task<OrganizationTagPayload> UpdateZoneAsync(
         UpdateZoneInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -74,7 +74,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> DeleteZoneAsync(
+    public async Task<OrganizationTagPayload> DeleteZoneAsync(
         DeleteZoneInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -84,7 +84,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagsPayload?> DeleteZonesAsync(
+    public async Task<OrganizationTagsPayload> DeleteZonesAsync(
         DeleteZonesInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
@@ -94,7 +94,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddProductTagAsync(
+    public async Task<OrganizationTagPayload> AddProductTagAsync(
         AddProductTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -105,7 +105,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> UpdateProductTagAsync(
+    public async Task<OrganizationTagPayload> UpdateProductTagAsync(
         UpdateProductTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -116,7 +116,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> DeleteProductTagAsync(
+    public async Task<OrganizationTagPayload> DeleteProductTagAsync(
         DeleteProductTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -126,7 +126,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagsPayload?> DeleteProductTagsAsync(
+    public async Task<OrganizationTagsPayload> DeleteProductTagsAsync(
         DeleteProductTagsInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
@@ -136,7 +136,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddLocationTagAsync(
+    public async Task<OrganizationTagPayload> AddLocationTagAsync(
         AddLocationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -147,7 +147,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> UpdateLocationTagAsync(
+    public async Task<OrganizationTagPayload> UpdateLocationTagAsync(
         UpdateLocationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -158,7 +158,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> DeleteLocationTagAsync(
+    public async Task<OrganizationTagPayload> DeleteLocationTagAsync(
         DeleteLocationTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -168,7 +168,7 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationTagsPayload?> DeleteLocationTagsAsync(
+    public async Task<OrganizationTagsPayload> DeleteLocationTagsAsync(
         DeleteLocationTagsInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)

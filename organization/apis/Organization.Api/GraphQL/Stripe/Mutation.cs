@@ -10,7 +10,7 @@ namespace Organization.Api.GraphQL.Stripe;
 public class Mutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountPayload?> AddOrganizationStripeConnectAccountAsync(
+    public async Task<OrganizationStripeConnectAccountPayload> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
@@ -21,7 +21,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountPayload?> UpdateOrganizationStripeConnectAccountAsync(
+    public async Task<OrganizationStripeConnectAccountPayload> UpdateOrganizationStripeConnectAccountAsync(
         UpdateOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountPayload?> DeleteOrganizationStripeConnectAccountAsync(
+    public async Task<OrganizationStripeConnectAccountPayload> DeleteOrganizationStripeConnectAccountAsync(
         DeleteOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountsPayload?> DeleteOrganizationStripeConnectAccountsAsync(
+    public async Task<OrganizationStripeConnectAccountsPayload> DeleteOrganizationStripeConnectAccountsAsync(
         DeleteOrganizationStripeConnectAccountsInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
@@ -52,9 +52,9 @@ public class Mutation(IMapper mapper)
             ClientMutationId = input.ClientMutationId, Accounts = accounts.Select(item => mapper.MapTo(item)!)
         };
     }
-    
+
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountPayload?> SetOrganizationStripeConnectAccountAsDefaultAsync(
+    public async Task<OrganizationStripeConnectAccountPayload> SetOrganizationStripeConnectAccountAsDefaultAsync(
         SetOrganizationStripeConnectAccountAsDefaultInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)

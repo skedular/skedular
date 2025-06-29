@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<638cb4ce79e7095d0c744115f9e6e766>>
+ * @generated SignedSource<<42ec03dc86a2a06b915dc969c0c8f5db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type organizationAdmin_updateOrganizationOfferingMutation$variables = {
 export type organizationAdmin_updateOrganizationOfferingMutation$data = {
   readonly updateOrganizationOffering: {
     readonly clientMutationId: string | null | undefined;
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_updateOrganizationOfferingMutation = {
   response: organizationAdmin_updateOrganizationOfferingMutation$data;

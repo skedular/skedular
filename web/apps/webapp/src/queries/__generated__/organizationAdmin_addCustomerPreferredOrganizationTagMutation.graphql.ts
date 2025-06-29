@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f9e5d57b824c745422fd474ec910d70>>
+ * @generated SignedSource<<033ddd020aef5b3d83c0cd2ca0208c1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type organizationAdmin_addCustomerPreferredOrganizationTagMutation$data =
         readonly uniqueId: string;
       }>;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_addCustomerPreferredOrganizationTagMutation = {
   response: organizationAdmin_addCustomerPreferredOrganizationTagMutation$data;

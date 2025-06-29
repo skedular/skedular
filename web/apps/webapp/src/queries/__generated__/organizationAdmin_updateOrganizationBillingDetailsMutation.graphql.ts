@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65fe4554de2d9d6c11561515a28747de>>
+ * @generated SignedSource<<94bd7f1994b663be66eed58cf6e3fcf8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,7 +42,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
       } | null | undefined;
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawResponse = {
   readonly updateOrganizationBillingDetails: {
@@ -61,7 +61,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawRespon
       } | null | undefined;
       readonly id: string;
     };
-  } | null | undefined;
+  };
 };
 export type organizationAdmin_updateOrganizationBillingDetailsMutation = {
   rawResponse: organizationAdmin_updateOrganizationBillingDetailsMutation$rawResponse;

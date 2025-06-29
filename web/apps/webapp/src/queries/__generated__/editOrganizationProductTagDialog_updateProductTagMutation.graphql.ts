@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e3ecf68e85842a9ad05117f969ed4bc>>
+ * @generated SignedSource<<098c737b62e8e16e3494c2c608735067>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type editOrganizationProductTagDialog_updateProductTagMutation$data = {
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationProductTagDialog_updateProductTagMutation$rawResponse = {
   readonly updateProductTag: {
@@ -37,7 +37,7 @@ export type editOrganizationProductTagDialog_updateProductTagMutation$rawRespons
       readonly id: string;
       readonly name: string;
     };
-  } | null | undefined;
+  };
 };
 export type editOrganizationProductTagDialog_updateProductTagMutation = {
   rawResponse: editOrganizationProductTagDialog_updateProductTagMutation$rawResponse;
