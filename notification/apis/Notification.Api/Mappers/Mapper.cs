@@ -1,7 +1,7 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
-using Notification.Api.GraphQL;
+using Notification.Api.GraphQL.Notification;
 using Notification.Shared.Models;
 
 namespace Notification.Api.Mappers;

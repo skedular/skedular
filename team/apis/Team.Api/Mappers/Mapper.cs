@@ -2,7 +2,8 @@ using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
-using Team.Api.GraphQL;
+using Team.Api.GraphQL.Member;
+using Team.Api.GraphQL.Team;
 using CdnFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnFile;
 using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnImageFile;
 using Customer = Team.Shared.Models.Customer;
@@ -13,7 +14,7 @@ using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
 using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
-using TeamEdge = Team.Api.GraphQL.TeamEdge;
+using TeamEdge = Team.Api.GraphQL.Team.TeamEdge;
 using TeamMember = Team.Shared.Models.TeamMember;
 using TeamMemberStatus = Api.Shared.Services.Models.TeamMemberStatus;
 

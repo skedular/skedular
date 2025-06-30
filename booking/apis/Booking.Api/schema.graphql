@@ -175,8 +175,6 @@ type PageInfo {
 }
 
 type Query {
-  bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookingTypes: [BookingTypeDetails!]!
   marketplaceBookingTypes: [BookingTypeDetails!]!
   bookingStatuses: [BookingStatusDetails!]!
@@ -187,6 +185,8 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type TeamBookingPermissions {

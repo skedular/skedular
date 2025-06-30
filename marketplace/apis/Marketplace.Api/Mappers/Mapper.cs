@@ -2,7 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
-using Marketplace.Api.GraphQL;
+using Marketplace.Api.GraphQL.Product;
 using Customer = Marketplace.Shared.Models.Customer;
 using Organization = Marketplace.Shared.Database.Entities.Organization;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;

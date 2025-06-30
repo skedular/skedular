@@ -127,6 +127,9 @@ type Customer_OrganizationTagDetails {
 type Mutation {
   addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
+  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
+  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
+  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
   completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload! @cost(weight: "10")
@@ -139,15 +142,12 @@ type Mutation {
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
-  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
-  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
 }
 
 type PageInfo {
@@ -158,9 +158,9 @@ type PageInfo {
 }
 
 type Query {
-  customerVersion: Version!
   me: CustomerDetails! @cost(weight: "10")
   customer(id: String!): CustomerDetails @cost(weight: "10")
+  customerVersion: Version!
   customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection! @cost(weight: "10")
 }
 

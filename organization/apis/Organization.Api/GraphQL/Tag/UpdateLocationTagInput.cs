@@ -1,0 +1,13 @@
+using HotChocolate;
+
+namespace Organization.Api.GraphQL.Tag;
+
+[GraphQLName("UpdateLocationTagInput")]
+public class UpdateLocationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}

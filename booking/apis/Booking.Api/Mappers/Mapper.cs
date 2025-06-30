@@ -1,14 +1,14 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
-using Booking.Api.GraphQL;
+using Booking.Api.GraphQL.Booking;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
-using BookingEdge = Booking.Api.GraphQL.BookingEdge;
+using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using BookingStatus = Api.Shared.Services.Models.BookingStatus;

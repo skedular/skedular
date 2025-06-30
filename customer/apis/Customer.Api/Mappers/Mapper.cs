@@ -1,7 +1,9 @@
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
-using Customer.Api.GraphQL;
 using Customer.Api.GraphQL.Billing;
+using Customer.Api.GraphQL.Customer;
+using Customer.Api.GraphQL.Feedback;
+using Customer.Api.GraphQL.Payment;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;

@@ -1,0 +1,19 @@
+using Api.Shared.Services.Models;
+using HotChocolate;
+
+namespace Location.Api.GraphQL.Location;
+
+[GraphQLName("UpdateLocationInput")]
+public class UpdateLocationInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("about")] public string? About { get; set; }
+    [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; } = new();
+    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+}

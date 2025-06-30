@@ -96,12 +96,12 @@ type ProductsPayload {
 }
 
 type Query {
+  product(id: String!): ProductDetails @cost(weight: "10")
+  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection! @cost(weight: "10")
   marketplaceVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   currencies: [CurrencyDetails!]!
   priceUnits: [PriceUnitDetails!]!
-  product(id: String!): ProductDetails @cost(weight: "10")
-  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection! @cost(weight: "10")
 }
 
 type Version {

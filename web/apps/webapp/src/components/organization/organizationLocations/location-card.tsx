@@ -198,7 +198,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
-        handleRemoveTeamClicked();
+        handleRemoveLocationClicked();
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
@@ -207,7 +207,7 @@ const LocationCard = ({
     }
   };
 
-  const handleRemoveTeamClicked = () => {
+  const handleRemoveLocationClicked = () => {
     setLocationRemoveConfirmationDialogOpen(true);
   };
 

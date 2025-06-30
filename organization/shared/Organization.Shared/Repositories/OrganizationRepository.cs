@@ -13,13 +13,6 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
 {
     Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken);
-
-    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
-        ICollection<string> ids,
-        bool includeAllOfferings,
-        CancellationToken cancellationToken);
-
     Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
@@ -160,20 +153,6 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
     public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await GetByIdsAsync(ids, false, cancellationToken);
 
-    public async Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects(includeAllOfferings)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
-        ICollection<string> ids,
-        bool includeAllOfferings,
-        CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeAllOfferings)
-            .ToListAsync(cancellationToken);
-
     public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue && query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
@@ -212,4 +191,18 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
             .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
+
+    private async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
+        ICollection<string> ids,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects(includeAllOfferings)
+            .ToListAsync(cancellationToken);
+
+    private async Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .AddDependentObjects(includeAllOfferings)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }
