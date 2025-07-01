@@ -1,11 +1,10 @@
 using HotChocolate;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
-[GraphQLName("OrganizationAddressDetails")]
-public class AddressDetails
+[GraphQLName("OrganizationAddressDetailsInput")]
+public class AddressDetailsInput
 {
-    [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
     [GraphQLName("addressLine1")] public string AddressLine1 { get; set; } = string.Empty;
     [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
     [GraphQLName("suburb")] public string Suburb { get; set; } = string.Empty;

@@ -36,6 +36,7 @@ public interface IRepositoryFactory
     IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     IOrganizationStripeConnectAccountAuthorizationRepository OrganizationStripeConnectAccountAuthorizationRepository { get; }
+    IOrganizationBankAccountRepository OrganizationBankAccountRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, IRepositoryFactory
@@ -72,6 +73,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationStripeConnectAccountAuthorizationRepository =
             new OrganizationStripeConnectAccountAuthorizationRepository(_dbContext, timeProvider);
+        OrganizationBankAccountRepository = new OrganizationBankAccountRepository(_dbContext, timeProvider);
     }
 
     public IAddressRepository AddressRepository { get; }
@@ -101,4 +103,5 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
     public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
     public IOrganizationStripeConnectAccountAuthorizationRepository OrganizationStripeConnectAccountAuthorizationRepository { get; }
+    public IOrganizationBankAccountRepository OrganizationBankAccountRepository { get; }
 }

@@ -7,7 +7,7 @@ using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Tag;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationDetails")]
 public class OrganizationDetails : Node

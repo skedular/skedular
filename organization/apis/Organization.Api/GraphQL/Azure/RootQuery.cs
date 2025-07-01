@@ -1,5 +1,6 @@
 using HotChocolate;
 using HotChocolate.Types;
+using Organization.Api.GraphQL.Organization;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 

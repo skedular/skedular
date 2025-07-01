@@ -15,7 +15,6 @@ public interface IOrganizationStripeConnectAccountRepository : IRepository<Organ
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByStripeAccountIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationStripeConnectAccount>> GetAllAsync(CancellationToken cancellationToken);
     OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Update(OrganizationStripeConnectAccount stripeConnectAccount);
     OrganizationStripeConnectAccount Remove(OrganizationStripeConnectAccount stripeConnectAccount);
@@ -104,12 +103,6 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
 
     public async Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
-
-    public async Task<ICollection<OrganizationStripeConnectAccount>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.OrganizationStripeConnectAccount
-            .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects()
-            .ToListAsync(cancellationToken);
 
     public OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount stripeConnectAccount)
     {

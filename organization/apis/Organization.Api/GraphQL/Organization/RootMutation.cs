@@ -3,7 +3,7 @@ using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [MutationType]
 public class RootMutation(IMapper mapper)

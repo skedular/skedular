@@ -1,6 +1,6 @@
 using HotChocolate;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationPayload")]
 public class OrganizationPayload

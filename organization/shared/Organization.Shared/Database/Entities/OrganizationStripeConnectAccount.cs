@@ -28,10 +28,7 @@ public class OrganizationStripeConnectAccount : EntityBaseWithDeleted
     public string CapabilitiesTransfers { get; set; }
     public string OnboardingUrl { get; set; }
 
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
-
     public virtual ICollection<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCodes { get; set; } = [];
     public virtual OrganizationStripeConnectAccountAuthorization? OrganizationStripeConnectAccountAuthorization { get; set; }
 }

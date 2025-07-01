@@ -1,7 +1,7 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("UpdateOrganizationInput")]
 public class UpdateOrganizationInput

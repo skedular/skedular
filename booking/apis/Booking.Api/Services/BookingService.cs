@@ -80,9 +80,7 @@ public class BookingService(
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
         var teams = await GetTeamAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
-        var customerEntities = await repositoryFactory.CustomerRepository
-            .Query(new Specification<Customer> { Criteria = query => !query.DeletedAt.HasValue && customerIds.Contains(query.Id) })
-            .ToListAsync(cancellationToken);
+        var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
         {
             throw new CustomerNotFound();
@@ -601,9 +599,7 @@ public class BookingService(
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
         var teams = await GetTeamAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
-        var customerEntities = await repositoryFactory.CustomerRepository.Query(
-                new Specification<Customer> { Criteria = query => !query.DeletedAt.HasValue && customerIds.Contains(query.Id) })
-            .ToListAsync(cancellationToken);
+        var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
         {
             throw new CustomerNotFound();

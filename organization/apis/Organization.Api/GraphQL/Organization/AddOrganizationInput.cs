@@ -3,7 +3,7 @@ using HotChocolate;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("AddOrganizationInput")]
 public class AddOrganizationInput

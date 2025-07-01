@@ -4,14 +4,14 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
-using Organization.Api.GraphQL;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
+using Organization.Api.GraphQL.Organization;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
-using Organization.Shared.Models;
+using Organization.Shared.Database.Entities;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
@@ -39,9 +39,12 @@ using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
-using OrganizationDetails = Organization.Api.GraphQL.OrganizationDetails;
+using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
+using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
+using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;
+using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationStripePaymentMethod;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 
 namespace Organization.Api.Mappers;
@@ -158,6 +161,14 @@ public interface IMapper
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
     StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
+    OrganizationBankAccount MapTo(Shared.Models.OrganizationBankAccount src, Shared.Database.Entities.Organization organization);
+
+    OrganizationBankAccount MergeTo(
+        Shared.Models.OrganizationBankAccount src,
+        OrganizationBankAccount dest,
+        Shared.Database.Entities.Organization organization);
+
+    Shared.Models.OrganizationBankAccount MapTo(OrganizationBankAccount src);
 }
 
 public class Mapper : IMapper
@@ -1040,6 +1051,38 @@ public class Mapper : IMapper
 
     public StripeConnectAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationStripeConnectAccount> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+
+    public OrganizationBankAccount MapTo(Shared.Models.OrganizationBankAccount src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationBankAccount(), organization);
+
+    public OrganizationBankAccount MergeTo(
+        Shared.Models.OrganizationBankAccount src,
+        OrganizationBankAccount dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.IsDefault = src.IsDefault;
+        dest.Name = src.Name;
+        dest.BankName = src.BankName;
+        dest.AccountHolderName = src.AccountHolderName;
+        dest.AccountNumber = src.AccountNumber;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public Shared.Models.OrganizationBankAccount MapTo(OrganizationBankAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            IsDefault = src.IsDefault,
+            Name = src.Name,
+            BankName = src.BankName,
+            AccountHolderName = src.AccountHolderName,
+            AccountNumber = src.AccountNumber
+        };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);

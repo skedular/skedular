@@ -2,7 +2,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using Organization.Shared.Models;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationOrderInput")]
 public class OrganizationOrderInput

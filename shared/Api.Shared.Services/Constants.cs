@@ -110,4 +110,9 @@ public static class Constants
     public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
 
     public const int MaxFloorPlanNameLength = 100;
+
+    public const int MaxOrganizationBankAccountNameLength = 200;
+    public const int MaxOrganizationBankNameLength = 100;
+    public const int MaxOrganizationAccountHolderNameLength = 200;
+    public const int MaxOrganizationAccountNumberLength = 100;
 }

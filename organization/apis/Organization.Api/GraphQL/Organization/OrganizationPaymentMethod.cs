@@ -2,7 +2,7 @@ using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
-namespace Organization.Api.GraphQL;
+namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationPaymentMethod")]
 public class OrganizationPaymentMethod : Node

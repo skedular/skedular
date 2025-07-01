@@ -79,3 +79,5 @@ public class ResourceAndFloorPlanLocationMismatch() : Exception("Resource and fl
 public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("Resource is placed on different floor plan");
 
 public class StripeCustomerNotFound() : Exception("Stripe Customer not found");
+
+public class OrganizationBankAccountNotFound() : Exception("Organization Bank Account not found");

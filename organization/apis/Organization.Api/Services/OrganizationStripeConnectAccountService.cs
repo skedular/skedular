@@ -261,10 +261,10 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        foreach (var existingAccount in existingOrganizations.OrganizationStripeConnectAccounts.Where(item => item.Id != id))
+        foreach (var item in existingOrganizations.OrganizationStripeConnectAccounts.Where(item => item.Id != id))
         {
-            existingAccount.IsDefault = false;
-            repositoryFactory.OrganizationStripeConnectAccountRepository.Update(existingAccount);
+            item.IsDefault = false;
+            repositoryFactory.OrganizationStripeConnectAccountRepository.Update(item);
         }
 
         account.IsDefault = true;

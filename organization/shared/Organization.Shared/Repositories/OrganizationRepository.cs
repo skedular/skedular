@@ -50,7 +50,8 @@ internal static class OrganizationExtensions
             .Include(query =>
                 query.OrganizationStripeConnectAccounts.Where(organizationStripeConnectAccount =>
                     !organizationStripeConnectAccount.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationStripeConnectAccountAuthorization);
+            .ThenInclude(query => query.OrganizationStripeConnectAccountAuthorization)
+            .Include(query => query.OrganizationBankAccounts.Where(organizationBankAccount => !organizationBankAccount.DeletedAt.HasValue));
 
         return includeAllOfferings
             ? updatedQuery

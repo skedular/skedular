@@ -1,6 +1,7 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Organization.Api.GraphQL.Organization;
 
 namespace Organization.Api.GraphQL.Stripe;
 

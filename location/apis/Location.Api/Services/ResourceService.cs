@@ -16,13 +16,13 @@ namespace Location.Api.Services;
 
 public interface IResourceService
 {
-    Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken);
     Task<Resource> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Resource>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Resource>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Resource>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
@@ -42,27 +42,6 @@ public class ResourceService(
     IMapper mapper,
     ILocationOutboxPublisher locationOutboxPublisher) : IResourceService
 {
-    public async Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
-        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
-                               throw new LocationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
-        {
-            throw new NoMoreInteractionAllowed();
-        }
-
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        return mapper.MapTo(resource);
-    }
-
     public async Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         foreach (var tag in resource.Tags)
@@ -336,6 +315,27 @@ public class ResourceService(
         await transaction.CommitAsync(cancellationToken);
 
         return updatedResources;
+    }
+
+    public async Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        {
+            throw new NoMoreInteractionAllowed();
+        }
+
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        return mapper.MapTo(resource);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(

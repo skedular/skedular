@@ -25,7 +25,7 @@ public class OrganizationBillingDetails : EntityBase
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class BillingDetailsConfiguration : IEntityTypeConfiguration<OrganizationBillingDetails>
+public class OrganizationBillingDetailsConfiguration : IEntityTypeConfiguration<OrganizationBillingDetails>
 {
     public void Configure(EntityTypeBuilder<OrganizationBillingDetails> builder)
     {

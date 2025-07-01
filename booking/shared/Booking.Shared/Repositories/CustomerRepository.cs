@@ -12,6 +12,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     void Update(Customer customer);
     Customer Remove(Customer customer);
 }
@@ -48,16 +49,23 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
     public async Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
         await DbContext.Customer.AddDependentObjects(includeActiveItemsOnly).FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Customer?> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        bool includeActiveItemsOnly,
-        CancellationToken cancellationToken) =>
+    public async Task<Customer?>
+        GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(includeActiveItemsOnly)
             .FirstOrDefaultAsync(query =>
                     !query.DeletedAt.HasValue &&
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
+
+    public async Task<ICollection<Customer>> GetByIdsAsync(
+        ICollection<string> ids,
+        bool includeActiveItemsOnly,
+        CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
+            .AddDependentObjects(includeActiveItemsOnly)
+            .ToListAsync(cancellationToken);
 
     public void Update(Customer customer)
     {

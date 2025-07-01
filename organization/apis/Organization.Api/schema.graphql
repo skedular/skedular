@@ -38,11 +38,11 @@ type Mutation {
   completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
   cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
-  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
   toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
@@ -364,8 +364,6 @@ type Query {
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
-  organizationVersion: Version!
-  openingHoursMinutesStep: Int!
   organizationTypes: [OrganizationTypeDetails!]!
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -374,6 +372,8 @@ type Query {
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
+  organizationVersion: Version!
+  openingHoursMinutesStep: Int!
   isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")

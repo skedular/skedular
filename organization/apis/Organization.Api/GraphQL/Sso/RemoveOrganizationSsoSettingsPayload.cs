@@ -1,4 +1,5 @@
 using HotChocolate;
+using Organization.Api.GraphQL.Organization;
 
 namespace Organization.Api.GraphQL.Sso;
 

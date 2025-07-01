@@ -1,4 +1,3 @@
-using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Enterprise.Shared.Version;
 using HotChocolate;
@@ -8,7 +7,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace Booking.Api.GraphQL;
 
 [QueryType]
-public class RootQuery(IMapper mapper, IVersionService versionService)
+public class RootQuery(IVersionService versionService)
 {
     [UseResolverScope]
     public Version BookingVersion()
