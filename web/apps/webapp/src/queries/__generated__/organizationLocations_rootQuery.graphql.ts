@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5480b2d01ab9012e2b3c71191718de9c>>
+ * @generated SignedSource<<c165156d7ffe941a07a1ec03f090b49a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -204,7 +204,7 @@ v18 = {
     },
     (v14/*: any*/)
   ],
-  "concreteType": "OrganizationMemberConnection",
+  "concreteType": "ConnectionOfOrganizationMemberEdge",
   "kind": "LinkedField",
   "name": "organizationMembers",
   "plural": false,
@@ -455,7 +455,7 @@ return {
           },
           (v14/*: any*/)
         ],
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
@@ -472,7 +472,7 @@ return {
           },
           (v14/*: any*/)
         ],
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
@@ -482,7 +482,7 @@ return {
       {
         "alias": null,
         "args": (v25/*: any*/),
-        "concreteType": "LocationConnection",
+        "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,

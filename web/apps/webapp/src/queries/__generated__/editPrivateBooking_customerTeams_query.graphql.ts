@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b916b6b13833e8fa1b7233fe726580c>>
+ * @generated SignedSource<<d8073795b12b6d7909ba850124e98f8a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -89,7 +89,7 @@ const node: ReaderFragment = {
               "name": "where"
             }
           ],
-          "concreteType": "TeamConnection",
+          "concreteType": "ConnectionOfTeamEdge",
           "kind": "LinkedField",
           "name": "customerTeams",
           "plural": false,

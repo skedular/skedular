@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb5ee16926a74a94f4d99f1c38ff9fc8>>
+ * @generated SignedSource<<ee3b7afb41040a80552447611fc54776>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -158,7 +158,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "BookingConnection",
+        "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,

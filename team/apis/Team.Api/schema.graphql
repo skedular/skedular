@@ -22,6 +22,18 @@ type CdnImageFile {
   thumbnail: CdnFile
 }
 
+type ConnectionOfTeamEdge {
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int
+}
+
+type ConnectionOfTeamMemberEdge {
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int
+}
+
 type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
 }
@@ -52,23 +64,17 @@ type PageInfo {
 
 type Query {
   teamMemberRoles: [TeamMemberRole!]!
-  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): TeamMemberConnection! @cost(weight: "10")
+  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   teamVersion: Version!
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
-  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection! @cost(weight: "10")
-  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection! @cost(weight: "10")
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
 }
 
 type RejectInvitationToJoinTeamPayload {
   clientMutationId: String
-}
-
-type TeamConnection {
-  pageInfo: PageInfo!
-  edges: [TeamEdge!]!
-  totalCount: Int
 }
 
 type TeamDetails {
@@ -89,12 +95,6 @@ type TeamDetails {
 type TeamEdge {
   node: TeamDetails!
   cursor: String!
-}
-
-type TeamMemberConnection {
-  pageInfo: PageInfo!
-  edges: [TeamMemberEdge!]!
-  totalCount: Int
 }
 
 type TeamMemberDetails {

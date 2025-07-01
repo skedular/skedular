@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5c9315aad7aabe8d69a116e26211af1e>>
+ * @generated SignedSource<<5d5f6758d857808c79849fb2d69144a2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -139,7 +139,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "ProductConnection",
+        "concreteType": "ConnectionOfProductEdge",
         "kind": "LinkedField",
         "name": "products",
         "plural": false,

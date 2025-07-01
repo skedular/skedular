@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6562945742dcd97639e03fa8ac86785c>>
+ * @generated SignedSource<<44a00ab352a437146c1644786aabe7f5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -128,7 +128,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationStripeConnectAccountConnection",
+        "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccounts",
         "plural": false,

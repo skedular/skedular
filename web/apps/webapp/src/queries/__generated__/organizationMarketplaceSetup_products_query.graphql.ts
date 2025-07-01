@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5df8ed4410adc1341cf95711f5ad470>>
+ * @generated SignedSource<<9452e4c44915e07c1b912f93892e079d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -144,7 +144,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "ProductConnection",
+      "concreteType": "ConnectionOfProductEdge",
       "kind": "LinkedField",
       "name": "__organizationMarketplaceSetup_products_connection",
       "plural": false,

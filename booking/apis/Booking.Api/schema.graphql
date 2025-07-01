@@ -13,12 +13,6 @@ type BookingCheckoutSessionDetails {
   currencyToDisplay: String!
 }
 
-type BookingConnection {
-  pageInfo: PageInfo!
-  edges: [BookingEdge!]!
-  totalCount: Int
-}
-
 type BookingDetails {
   from: DateTime!
   until: DateTime!
@@ -145,6 +139,12 @@ type Booking_TeamDetails {
   name: String!
 }
 
+type ConnectionOfBookingEdge {
+  pageInfo: PageInfo!
+  edges: [BookingEdge!]!
+  totalCount: Int
+}
+
 type LineItemDetails {
   productVersion: Booking_ProductVersionDetails!
   quantity: Int!
@@ -179,7 +179,7 @@ type Query {
   marketplaceBookingTypes: [BookingTypeDetails!]!
   bookingStatuses: [BookingStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection! @cost(weight: "10")
+  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")

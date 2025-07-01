@@ -33,12 +33,6 @@ type BookingCheckoutSessionDetails {
   uniqueId: ID!
 }
 
-type BookingConnection {
-  edges: [BookingEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type BookingDetails {
   bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
@@ -188,6 +182,84 @@ type CdnImageFile {
   thumbnail: CdnFile
 }
 
+type ConnectionOfBookingEdge {
+  edges: [BookingEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfCustomerEdge {
+  edges: [CustomerEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfFloorPlanEdge {
+  edges: [FloorPlanEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfLocationEdge {
+  edges: [LocationEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfNotificationEdge {
+  edges: [NotificationEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationEdge {
+  edges: [OrganizationEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationMemberEdge {
+  edges: [OrganizationMemberEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationStripeConnectAccountEdge {
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationTagEdge {
+  edges: [OrganizationTagEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfProductEdge {
+  edges: [ProductEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfResourceEdge {
+  edges: [ResourceEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfTeamEdge {
+  edges: [TeamEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfTeamMemberEdge {
+  edges: [TeamMemberEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
 type CurrencyDetails {
   name: String!
   type: Currency!
@@ -204,12 +276,6 @@ type CustomerBillingDetails {
   province: String
   suburb: String!
   zipcode: String!
-}
-
-type CustomerConnection {
-  edges: [CustomerEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type CustomerDetails {
@@ -313,12 +379,6 @@ type DesksOccupancyPercentage {
   percentage: Float!
 }
 
-type FloorPlanConnection {
-  edges: [FloorPlanEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type FloorPlanDetails {
   id: ID!
   image: CdnImageFile!
@@ -366,12 +426,6 @@ type LocationAnalytics {
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   name: String!
   roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
-}
-
-type LocationConnection {
-  edges: [LocationEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type LocationDailyBookingsTotal {
@@ -541,12 +595,6 @@ type Mutation {
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
 }
 
-type NotificationConnection {
-  edges: [NotificationEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type NotificationDetails {
   eventRaisedAt: DateTime!
   id: ID!
@@ -663,12 +711,6 @@ type OrganizationBookingPermissions {
   canUpdateBooking: Boolean!
 }
 
-type OrganizationConnection {
-  edges: [OrganizationEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type OrganizationDailyBookingsTotal {
   date: DateTime!
   total: Int!
@@ -726,12 +768,6 @@ type OrganizationIndustrySubCategoryReferenceDetails {
 type OrganizationMemberAttendancePercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type OrganizationMemberConnection {
-  edges: [OrganizationMemberEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type OrganizationMemberDetails {
@@ -801,12 +837,6 @@ type OrganizationSsoSettingsDetails {
   loginUrl: String!
 }
 
-type OrganizationStripeConnectAccountConnection {
-  edges: [OrganizationStripeConnectAccountEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type OrganizationStripeConnectAccountDetails {
   businessType: String
   capabilitiesCardPayments: String!
@@ -842,12 +872,6 @@ type OrganizationStripeConnectAccountPayload {
 type OrganizationStripeConnectAccountsPayload {
   accounts: [OrganizationStripeConnectAccountDetails!]!
   clientMutationId: String
-}
-
-type OrganizationTagConnection {
-  edges: [OrganizationTagEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type OrganizationTagDetails {
@@ -912,12 +936,6 @@ type PriceUnitDetails {
   type: PriceUnit!
 }
 
-type ProductConnection {
-  edges: [ProductEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type ProductDetails {
   bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
@@ -965,7 +983,7 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection! @cost(weight: "10")
+  bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
   bookingStatuses: [BookingStatusDetails!]!
   bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
@@ -973,23 +991,23 @@ type Query {
   coreVersion: Version!
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
-  customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection! @cost(weight: "10")
-  customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection! @cost(weight: "10")
+  customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): ConnectionOfCustomerEdge! @cost(weight: "10")
+  customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): ConnectionOfTeamEdge! @cost(weight: "10")
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
+  customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): FloorPlanConnection! @cost(weight: "10")
+  floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection! @cost(weight: "10")
+  locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
+  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   locationVersion: Version!
   marketplaceBookingTypes: [BookingTypeDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -998,7 +1016,7 @@ type Query {
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
-  myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
+  myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): ConnectionOfNotificationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1010,13 +1028,13 @@ type Query {
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection! @cost(weight: "10")
+  organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
-  organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
+  organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): ConnectionOfOrganizationEdge! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
-  organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
   organizationVersion: Version!
   otherResourceType: OrganizationTagType!
@@ -1024,11 +1042,11 @@ type Query {
   pendingInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
-  products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ProductConnection! @cost(weight: "10")
+  products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
+  productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
-  resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection! @cost(weight: "10")
+  resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ConnectionOfResourceEdge! @cost(weight: "10")
   roomResourceType: OrganizationTagType!
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
@@ -1037,11 +1055,11 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   teamMemberRoles: [TeamMemberRole!]!
-  teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): TeamMemberConnection! @cost(weight: "10")
-  teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): TeamConnection! @cost(weight: "10")
+  teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): ConnectionOfTeamMemberEdge! @cost(weight: "10")
+  teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): ConnectionOfTeamEdge! @cost(weight: "10")
   teamVersion: Version!
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
+  zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {
@@ -1058,12 +1076,6 @@ type RemoveCustomerPaymentMethodPayload {
 
 type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
-}
-
-type ResourceConnection {
-  edges: [ResourceEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type ResourceDetails {
@@ -1119,12 +1131,6 @@ type TeamBookingPermissions {
   canUpdateBooking: Boolean!
 }
 
-type TeamConnection {
-  edges: [TeamEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type TeamDetails {
   about: String
   canDelete: Boolean!
@@ -1143,12 +1149,6 @@ type TeamDetails {
 type TeamEdge {
   cursor: String!
   node: TeamDetails!
-}
-
-type TeamMemberConnection {
-  edges: [TeamMemberEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
 }
 
 type TeamMemberDetails {

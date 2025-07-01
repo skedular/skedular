@@ -21,6 +21,30 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type ConnectionOfOrganizationEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge!]!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationMemberEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationMemberEdge!]!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationStripeConnectAccountEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  totalCount: Int
+}
+
+type ConnectionOfOrganizationTagEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationTagEdge!]!
+  totalCount: Int
+}
+
 type InviteCustomersToJoinOrganizationPayload {
   clientMutationId: String
 }
@@ -112,12 +136,6 @@ type OrganizationBillingDetails {
   id: ID!
 }
 
-type OrganizationConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationEdge!]!
-  totalCount: Int
-}
-
 type OrganizationDailyBookingsTotal {
   date: DateTime!
   total: Int!
@@ -175,12 +193,6 @@ type OrganizationIndustrySubCategoryReferenceDetails {
 type OrganizationMemberAttendancePercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type OrganizationMemberConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationMemberEdge!]!
-  totalCount: Int
 }
 
 type OrganizationMemberDetails {
@@ -250,12 +262,6 @@ type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
 }
 
-type OrganizationStripeConnectAccountConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationStripeConnectAccountEdge!]!
-  totalCount: Int
-}
-
 type OrganizationStripeConnectAccountDetails {
   isDefault: Boolean!
   name: String!
@@ -291,12 +297,6 @@ type OrganizationStripeConnectAccountPayload {
 type OrganizationStripeConnectAccountsPayload {
   clientMutationId: String
   accounts: [OrganizationStripeConnectAccountDetails!]!
-}
-
-type OrganizationTagConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationTagEdge!]!
-  totalCount: Int
 }
 
 type OrganizationTagDetails {
@@ -362,7 +362,7 @@ type Query {
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection! @cost(weight: "10")
+  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
@@ -370,25 +370,25 @@ type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organization(id: String!): OrganizationDetails @cost(weight: "10")
-  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection! @cost(weight: "10")
+  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
   isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
-  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
   roomResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
   otherResourceType: OrganizationTagType!
-  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
+  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
+  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 

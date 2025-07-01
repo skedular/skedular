@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8956065fb5c68ba8d130b945497d5976>>
+ * @generated SignedSource<<f66f48387135ddd0ac4b7bd8637af049>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -112,7 +112,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationTagConnection",
+      "concreteType": "ConnectionOfOrganizationTagEdge",
       "kind": "LinkedField",
       "name": "__organizationMarketplaceSetup_productTags_connection",
       "plural": false,

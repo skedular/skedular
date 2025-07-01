@@ -61,7 +61,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await organizationService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationConnection> OrganizationsAsync(
+    public async Task<Connection<OrganizationEdge>> OrganizationsAsync(
         string? after,
         int? first,
         string? before,
@@ -77,7 +77,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new OrganizationConnection
+        return new Connection<OrganizationEdge>
         {
             PageInfo = new PageInfo
             {

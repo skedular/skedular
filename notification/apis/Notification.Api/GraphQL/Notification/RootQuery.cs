@@ -23,7 +23,7 @@ public class RootQuery(IMapper mapper, IVersionService versionService)
             : 0;
 
     [UseResolverScope]
-    public async Task<NotificationConnection> MyNotificationsAsync(
+    public async Task<Connection<NotificationEdge>> MyNotificationsAsync(
         string? after,
         int? first,
         string? before,
@@ -39,7 +39,7 @@ public class RootQuery(IMapper mapper, IVersionService versionService)
             orderBy.ToSafeCollection().Select(item => new NotificationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new NotificationConnection
+        return new Connection<NotificationEdge>
         {
             PageInfo = new PageInfo
             {

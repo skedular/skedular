@@ -20,7 +20,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<FloorPlanConnection> FloorPlansAsync(
+    public async Task<Connection<FloorPlanEdge>> FloorPlansAsync(
         string? after,
         int? first,
         string? before,
@@ -36,7 +36,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new FloorPlanOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new FloorPlanConnection
+        return new Connection<FloorPlanEdge>
         {
             PageInfo = new PageInfo
             {

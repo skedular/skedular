@@ -26,7 +26,7 @@ public class RootQuery(IMapper mapper)
     public OrganizationTagType OtherResourceType() => OrganizationTagType.ResourceOthers;
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection> CustomTagsAsync(
+    public async Task<Connection<OrganizationTagEdge>> CustomTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -50,7 +50,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection> ZonesAsync(
+    public async Task<Connection<OrganizationTagEdge>> ZonesAsync(
         string? after,
         int? first,
         string? before,
@@ -74,7 +74,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection> ProductTagsAsync(
+    public async Task<Connection<OrganizationTagEdge>> ProductTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -98,7 +98,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection> LocationTagsAsync(
+    public async Task<Connection<OrganizationTagEdge>> LocationTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -121,7 +121,7 @@ public class RootQuery(IMapper mapper)
     public async Task<OrganizationTagDetails?> LocationTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
-    private async Task<OrganizationTagConnection> OrganizationTagsAsync(
+    private async Task<Connection<OrganizationTagEdge>> OrganizationTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -137,7 +137,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new OrganizationTagConnection
+        return new Connection<OrganizationTagEdge>
         {
             PageInfo = new PageInfo
             {

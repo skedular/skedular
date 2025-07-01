@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<837ff7ee995ac8a00dd5b42419b0f6c8>>
+ * @generated SignedSource<<e6e098248f11e8153966e5671c8445d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -176,7 +176,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "ResourceConnection",
+      "concreteType": "ConnectionOfResourceEdge",
       "kind": "LinkedField",
       "name": "__organizationLocation_resources_connection",
       "plural": false,

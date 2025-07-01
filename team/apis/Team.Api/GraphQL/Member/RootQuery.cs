@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.Mappers;
@@ -12,13 +11,13 @@ using Team.Shared.Models;
 namespace Team.Api.GraphQL.Member;
 
 [QueryType]
-public class RootQuery(IMapper mapper, IVersionService versionService)
+public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
     public IEnumerable<TeamMemberRole> TeamMemberRoles() => [TeamMemberRole.Owner, TeamMemberRole.Administrator, TeamMemberRole.Member];
 
     [UseResolverScope]
-    public async Task<TeamMemberConnection> TeamMembersAsync(
+    public async Task<Connection<TeamMemberEdge>> TeamMembersAsync(
         string? after,
         int? first,
         string? before,
@@ -36,7 +35,7 @@ public class RootQuery(IMapper mapper, IVersionService versionService)
             orderBy.ToSafeCollection().Select(item => new TeamMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new TeamMemberConnection
+        return new Connection<TeamMemberEdge>
         {
             PageInfo = new PageInfo
             {

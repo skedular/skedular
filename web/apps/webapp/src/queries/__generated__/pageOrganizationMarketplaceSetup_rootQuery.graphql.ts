@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76b413deaa38e3ba12a51d90d89e5cda>>
+ * @generated SignedSource<<8d8f1929c2ef64266f5f9c7a0e34e9a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -351,7 +351,7 @@ return {
       {
         "alias": null,
         "args": (v10/*: any*/),
-        "concreteType": "ProductConnection",
+        "concreteType": "ConnectionOfProductEdge",
         "kind": "LinkedField",
         "name": "products",
         "plural": false,
@@ -492,7 +492,7 @@ return {
       {
         "alias": null,
         "args": (v19/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "productTags",
         "plural": false,
@@ -511,7 +511,7 @@ return {
       {
         "alias": null,
         "args": (v21/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,
@@ -530,7 +530,7 @@ return {
       {
         "alias": null,
         "args": (v22/*: any*/),
-        "concreteType": "OrganizationStripeConnectAccountConnection",
+        "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccounts",
         "plural": false,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e883587e3fd34262bc1c47b38f4b46e>>
+ * @generated SignedSource<<2b74c44c92f70617d920f84f55ea7c70>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -101,7 +101,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "FloorPlanConnection",
+      "concreteType": "ConnectionOfFloorPlanEdge",
       "kind": "LinkedField",
       "name": "__organizationLocation_floorPlans_connection",
       "plural": false,

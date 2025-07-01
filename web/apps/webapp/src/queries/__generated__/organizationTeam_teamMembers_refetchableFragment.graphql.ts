@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc59cfa415268c81235b336026515fad>>
+ * @generated SignedSource<<163799ad15fe7317a3b7d867c5414184>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -111,7 +111,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "TeamMemberConnection",
+        "concreteType": "ConnectionOfTeamMemberEdge",
         "kind": "LinkedField",
         "name": "teamMembers",
         "plural": false,

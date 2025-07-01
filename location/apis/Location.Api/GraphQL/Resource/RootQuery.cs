@@ -13,7 +13,7 @@ namespace Location.Api.GraphQL.Resource;
 public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<ResourceConnection> ResourcesAsync(
+    public async Task<Connection<ResourceEdge>> ResourcesAsync(
         string? after,
         int? first,
         string? before,
@@ -33,7 +33,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new ResourceOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new ResourceConnection
+        return new Connection<ResourceEdge>
         {
             PageInfo = new PageInfo
             {

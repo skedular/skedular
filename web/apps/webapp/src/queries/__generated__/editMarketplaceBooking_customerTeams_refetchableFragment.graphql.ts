@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<750e31d51ac0efed7392dd67307a59cd>>
+ * @generated SignedSource<<82705729bac55268713a7871cf85e19c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -105,7 +105,7 @@ return {
                 "name": "where"
               }
             ],
-            "concreteType": "TeamConnection",
+            "concreteType": "ConnectionOfTeamEdge",
             "kind": "LinkedField",
             "name": "customerTeams",
             "plural": false,

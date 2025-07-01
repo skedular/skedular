@@ -2,7 +2,7 @@ schema {
   query: Query
 }
 
-type NotificationConnection {
+type ConnectionOfNotificationEdge {
   pageInfo: PageInfo!
   edges: [NotificationEdge!]!
   totalCount: Int
@@ -66,7 +66,7 @@ type PageInfo {
 
 type Query {
   pendingInvitationsCount: Int! @cost(weight: "10")
-  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): NotificationConnection! @cost(weight: "10")
+  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): ConnectionOfNotificationEdge! @cost(weight: "10")
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }

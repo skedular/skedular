@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92e6c63dd65282289478939ad892778e>>
+ * @generated SignedSource<<ed61b0b511384d31ad27da611ad0ae6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -463,7 +463,7 @@ return {
       {
         "alias": null,
         "args": (v13/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "productTags",
         "plural": false,
@@ -482,7 +482,7 @@ return {
       {
         "alias": null,
         "args": (v16/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,

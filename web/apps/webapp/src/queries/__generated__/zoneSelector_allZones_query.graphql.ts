@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cef8e516d1369b363898dd6aeec4a99>>
+ * @generated SignedSource<<c5df57b2c737a38d17377b12e5b75ae5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,7 +64,7 @@ const node: ReaderFragment = {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationTagConnection",
+      "concreteType": "ConnectionOfOrganizationTagEdge",
       "kind": "LinkedField",
       "name": "zones",
       "plural": false,

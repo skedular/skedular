@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14fcd5db7e7370db5775ebf6932e40c5>>
+ * @generated SignedSource<<95740f7428fd914fb647a7f0bddbb9d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,7 +63,7 @@ const node: ReaderFragment = {
           "name": "where"
         }
       ],
-      "concreteType": "FloorPlanConnection",
+      "concreteType": "ConnectionOfFloorPlanEdge",
       "kind": "LinkedField",
       "name": "floorPlans",
       "plural": false,

@@ -14,7 +14,7 @@ namespace Customer.Api.GraphQL.Settings;
 public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<CustomerConnection> CustomersByPreferredLocationAsync(
+    public async Task<Connection<CustomerEdge>> CustomersByPreferredLocationAsync(
         string? after,
         int? first,
         string? before,
@@ -32,7 +32,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new CustomerOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new CustomerConnection
+        return new Connection<CustomerEdge>
         {
             PageInfo = new PageInfo
             {

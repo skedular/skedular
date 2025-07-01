@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<024c52c090316fa3c8f3d515c9eb7908>>
+ * @generated SignedSource<<863634437342bc6d3050141b227a57c6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -287,7 +287,7 @@ return {
       {
         "alias": null,
         "args": (v7/*: any*/),
-        "concreteType": "ResourceConnection",
+        "concreteType": "ConnectionOfResourceEdge",
         "kind": "LinkedField",
         "name": "resources",
         "plural": false,

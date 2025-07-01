@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5095d88aba3ea8b2c2909024e79cc95d>>
+ * @generated SignedSource<<9988b6d1493b0000b7625a271b1e95d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -201,7 +201,7 @@ return {
       {
         "alias": null,
         "args": (v4/*: any*/),
-        "concreteType": "TeamConnection",
+        "concreteType": "ConnectionOfTeamEdge",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
@@ -310,7 +310,7 @@ return {
       {
         "alias": null,
         "args": (v4/*: any*/),
-        "concreteType": "TeamConnection",
+        "concreteType": "ConnectionOfTeamEdge",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
@@ -463,7 +463,7 @@ return {
       {
         "alias": null,
         "args": (v16/*: any*/),
-        "concreteType": "OrganizationMemberConnection",
+        "concreteType": "ConnectionOfOrganizationMemberEdge",
         "kind": "LinkedField",
         "name": "organizationMembers",
         "plural": false,

@@ -17,7 +17,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<ProductConnection> ProductsAsync(
+    public async Task<Connection<ProductEdge>> ProductsAsync(
         string? after,
         int? first,
         string? before,
@@ -37,7 +37,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new ProductConnection
+        return new Connection<ProductEdge>
         {
             PageInfo = new PageInfo
             {

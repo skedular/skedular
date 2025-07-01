@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c8e0689d681f6307a5efb307c46fe42>>
+ * @generated SignedSource<<3c3ae167078207dd71b06811219655c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -117,7 +117,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "FloorPlanConnection",
+        "concreteType": "ConnectionOfFloorPlanEdge",
         "kind": "LinkedField",
         "name": "floorPlans",
         "plural": false,

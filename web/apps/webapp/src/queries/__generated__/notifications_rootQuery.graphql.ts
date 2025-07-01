@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65b3ec1779c89e9b974d1d5628fa74a6>>
+ * @generated SignedSource<<da67b4b2c93dfe3622356d00b413f0ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -83,7 +83,7 @@ v3 = [
         "value": {}
       }
     ],
-    "concreteType": "NotificationConnection",
+    "concreteType": "ConnectionOfNotificationEdge",
     "kind": "LinkedField",
     "name": "myNotifications",
     "plural": false,

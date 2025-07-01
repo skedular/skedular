@@ -52,7 +52,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<BookingConnection> BookingsAsync(
+    public async Task<Connection<BookingEdge>> BookingsAsync(
         string? after,
         int? first,
         string? before,
@@ -92,7 +92,7 @@ public class RootQuery(IMapper mapper)
             false,
             cancellationToken);
 
-        return new BookingConnection
+        return new Connection<BookingEdge>
         {
             PageInfo = new PageInfo
             {

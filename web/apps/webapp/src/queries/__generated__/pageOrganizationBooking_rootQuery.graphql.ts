@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b850f314d874c43bda38944aedc9a94>>
+ * @generated SignedSource<<08871918453956e4a5178063196991dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -590,7 +590,7 @@ return {
             "name": "where"
           }
         ],
-        "concreteType": "LocationConnection",
+        "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
@@ -641,7 +641,7 @@ return {
       {
         "alias": null,
         "args": (v31/*: any*/),
-        "concreteType": "OrganizationMemberConnection",
+        "concreteType": "ConnectionOfOrganizationMemberEdge",
         "kind": "LinkedField",
         "name": "organizationMembers",
         "plural": false,
@@ -761,7 +761,7 @@ return {
                 "name": "where"
               }
             ],
-            "concreteType": "TeamConnection",
+            "concreteType": "ConnectionOfTeamEdge",
             "kind": "LinkedField",
             "name": "customerTeams",
             "plural": false,

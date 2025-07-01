@@ -20,7 +20,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await organizationStripeConnectAccountService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationStripeConnectAccountConnection> OrganizationStripeConnectAccountsAsync(
+    public async Task<Connection<OrganizationStripeConnectAccountEdge>> OrganizationStripeConnectAccountsAsync(
         string? after,
         int? first,
         string? before,
@@ -37,7 +37,7 @@ public class RootQuery(IMapper mapper)
             false,
             cancellationToken);
 
-        return new OrganizationStripeConnectAccountConnection
+        return new Connection<OrganizationStripeConnectAccountEdge>
         {
             PageInfo = new PageInfo
             {

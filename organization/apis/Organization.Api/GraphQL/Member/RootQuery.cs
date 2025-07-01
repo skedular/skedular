@@ -22,7 +22,7 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public async Task<OrganizationMemberConnection> OrganizationMembersAsync(
+    public async Task<Connection<OrganizationMemberEdge>> OrganizationMembersAsync(
         string? after,
         int? first,
         string? before, int? last,
@@ -39,7 +39,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new OrganizationMemberConnection
+        return new Connection<OrganizationMemberEdge>
         {
             PageInfo = new PageInfo
             {

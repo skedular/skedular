@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<259a8053b297dfab5c7932bb0b43573a>>
+ * @generated SignedSource<<1f3c96e82f53e0312a27512d7c2e85c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -189,7 +189,7 @@ return {
       {
         "alias": null,
         "args": (v4/*: any*/),
-        "concreteType": "LocationConnection",
+        "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,

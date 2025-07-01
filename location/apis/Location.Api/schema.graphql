@@ -14,15 +14,27 @@ type CdnImageFile {
   thumbnail: CdnFile
 }
 
-type DesksOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
-}
-
-type FloorPlanConnection {
+type ConnectionOfFloorPlanEdge {
   pageInfo: PageInfo!
   edges: [FloorPlanEdge!]!
   totalCount: Int
+}
+
+type ConnectionOfLocationEdge {
+  pageInfo: PageInfo!
+  edges: [LocationEdge!]!
+  totalCount: Int
+}
+
+type ConnectionOfResourceEdge {
+  pageInfo: PageInfo!
+  edges: [ResourceEdge!]!
+  totalCount: Int
+}
+
+type DesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
 }
 
 type FloorPlanDetails {
@@ -59,12 +71,6 @@ type LocationAnalytics {
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
-}
-
-type LocationConnection {
-  pageInfo: PageInfo!
-  edges: [LocationEdge!]!
-  totalCount: Int
 }
 
 type LocationDailyBookingsTotal {
@@ -159,22 +165,16 @@ type PageInfo {
 
 type Query {
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
-  floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): FloorPlanConnection! @cost(weight: "10")
+  floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
-  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection! @cost(weight: "10")
+  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
-  resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ResourceConnection! @cost(weight: "10")
+  resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-}
-
-type ResourceConnection {
-  pageInfo: PageInfo!
-  edges: [ResourceEdge!]!
-  totalCount: Int
 }
 
 type ResourceDetails {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d14fdfe03f6612a5adefa2f86e01698>>
+ * @generated SignedSource<<7af5d7798d85c148de54745fb665a559>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -149,7 +149,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "TeamConnection",
+        "concreteType": "ConnectionOfTeamEdge",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,

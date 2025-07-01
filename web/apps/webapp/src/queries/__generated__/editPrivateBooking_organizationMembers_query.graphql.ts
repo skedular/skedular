@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39955deffe13d66ddef2350fa66cfe94>>
+ * @generated SignedSource<<2099787c23641ec63b6cc1b8b2b455ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -116,7 +116,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationMemberConnection",
+      "concreteType": "ConnectionOfOrganizationMemberEdge",
       "kind": "LinkedField",
       "name": "__bookingDetailsSelectorQuery_organizationMembers_connection",
       "plural": false,

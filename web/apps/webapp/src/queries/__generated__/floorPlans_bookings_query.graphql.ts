@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<88aa24b4838cc75ecdb13e7b4cc9d2ee>>
+ * @generated SignedSource<<e0d11d940eae5c7fe6d00494c176a60a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -130,7 +130,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "BookingConnection",
+      "concreteType": "ConnectionOfBookingEdge",
       "kind": "LinkedField",
       "name": "__floorPlans_bookings_connection",
       "plural": false,

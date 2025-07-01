@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2dbf167dc6e9a9afd01fd3dea10fac7b>>
+ * @generated SignedSource<<7b1471a44f744b5bc2d3b4514442dfba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -131,7 +131,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationStripeConnectAccountConnection",
+      "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
       "kind": "LinkedField",
       "name": "__organizationMarketplaceSetup_organizationStripeConnectAccounts_connection",
       "plural": false,

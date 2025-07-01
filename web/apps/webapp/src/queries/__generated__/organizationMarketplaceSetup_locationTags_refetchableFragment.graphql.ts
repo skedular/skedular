@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<873566f64febc8a6bff2478a15fbdd5f>>
+ * @generated SignedSource<<6506d52228126f22b43b74a724924883>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -121,7 +121,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,

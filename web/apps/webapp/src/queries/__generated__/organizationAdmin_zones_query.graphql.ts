@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a43cf6b25a61475b2719a70d76bc4308>>
+ * @generated SignedSource<<46d91340587559f80b45cc6333455ca1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationTagConnection",
+      "concreteType": "ConnectionOfOrganizationTagEdge",
       "kind": "LinkedField",
       "name": "__organizationAdmin_zones_connection",
       "plural": false,

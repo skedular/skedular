@@ -14,6 +14,12 @@ type CdnImageFile {
   thumbnail: CdnFile
 }
 
+type ConnectionOfProductEdge {
+  pageInfo: PageInfo!
+  edges: [ProductEdge!]!
+  totalCount: Int
+}
+
 type CurrencyDetails {
   type: Currency!
   name: String!
@@ -48,12 +54,6 @@ type PageInfo {
 type PriceUnitDetails {
   type: PriceUnit!
   name: String!
-}
-
-type ProductConnection {
-  pageInfo: PageInfo!
-  edges: [ProductEdge!]!
-  totalCount: Int
 }
 
 type ProductDetails {
@@ -97,7 +97,7 @@ type ProductsPayload {
 
 type Query {
   product(id: String!): ProductDetails @cost(weight: "10")
-  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection! @cost(weight: "10")
+  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ConnectionOfProductEdge! @cost(weight: "10")
   marketplaceVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   currencies: [CurrencyDetails!]!

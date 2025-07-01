@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b41dbb5abdc6cb68e86250969c457a9f>>
+ * @generated SignedSource<<0af125c93782fa93afb16e2c58c1c870>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -88,7 +88,7 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "LocationConnection",
+      "concreteType": "ConnectionOfLocationEdge",
       "kind": "LinkedField",
       "name": "locations",
       "plural": false,

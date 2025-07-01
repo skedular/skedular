@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fafd63898b61bce2ba72fb1e5d36bfc>>
+ * @generated SignedSource<<abbaa1c66f701d1cadd81a1ad6c0ad4b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -203,7 +203,7 @@ return {
           {
             "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
             "args": (v10/*: any*/),
-            "concreteType": "OrganizationMemberConnection",
+            "concreteType": "ConnectionOfOrganizationMemberEdge",
             "kind": "LinkedField",
             "name": "organizationMembers",
             "plural": false,
@@ -345,7 +345,7 @@ return {
                 "name": "where"
               }
             ],
-            "concreteType": "LocationConnection",
+            "concreteType": "ConnectionOfLocationEdge",
             "kind": "LinkedField",
             "name": "locations",
             "plural": false,

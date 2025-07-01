@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<626c0d7e19dc3b3bf2842970b72d38a1>>
+ * @generated SignedSource<<73fcf01995cf69bdfb83cb879f3a87e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -722,7 +722,7 @@ return {
       {
         "alias": null,
         "args": (v20/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,
@@ -779,7 +779,7 @@ return {
           },
           (v19/*: any*/)
         ],
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
@@ -796,7 +796,7 @@ return {
           },
           (v19/*: any*/)
         ],
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
@@ -806,7 +806,7 @@ return {
       {
         "alias": null,
         "args": (v29/*: any*/),
-        "concreteType": "ResourceConnection",
+        "concreteType": "ConnectionOfResourceEdge",
         "kind": "LinkedField",
         "name": "resources",
         "plural": false,
@@ -917,7 +917,7 @@ return {
       {
         "alias": null,
         "args": (v30/*: any*/),
-        "concreteType": "FloorPlanConnection",
+        "concreteType": "ConnectionOfFloorPlanEdge",
         "kind": "LinkedField",
         "name": "floorPlans",
         "plural": false,

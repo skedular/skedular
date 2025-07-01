@@ -9,6 +9,12 @@ type AddCustomerPaymentMethodIntentPayload {
   clientSecret: String!
 }
 
+type ConnectionOfCustomerEdge {
+  pageInfo: PageInfo!
+  edges: [CustomerEdge!]!
+  totalCount: Int
+}
+
 type CustomerBillingDetails {
   companyName: String
   email: String!
@@ -20,12 +26,6 @@ type CustomerBillingDetails {
   zipcode: String!
   country: String!
   id: ID!
-}
-
-type CustomerConnection {
-  pageInfo: PageInfo!
-  edges: [CustomerEdge!]!
-  totalCount: Int
 }
 
 type CustomerDetails {
@@ -161,7 +161,7 @@ type Query {
   me: CustomerDetails! @cost(weight: "10")
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customerVersion: Version!
-  customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection! @cost(weight: "10")
+  customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): ConnectionOfCustomerEdge! @cost(weight: "10")
 }
 
 type RemoveCustomerPaymentMethodPayload {

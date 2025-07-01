@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<adc502b31b0c7995892e56a768a1a366>>
+ * @generated SignedSource<<bf5124f1958ff4d2e6920df15572a949>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -89,7 +89,7 @@ const node: ReaderFragment = {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationStripeConnectAccountConnection",
+      "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
       "kind": "LinkedField",
       "name": "__singleChoiceOrganizationStripeConnectAccount_organizationStripeConnectAccounts_connection",
       "plural": false,

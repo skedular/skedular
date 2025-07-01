@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23939c18f7787a525cc5cbfeda1afd52>>
+ * @generated SignedSource<<edd9cf4a978c087ca26544845757c74a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ const node: ReaderFragment = {
           "name": "where"
         }
       ],
-      "concreteType": "LocationConnection",
+      "concreteType": "ConnectionOfLocationEdge",
       "kind": "LinkedField",
       "name": "locations",
       "plural": false,

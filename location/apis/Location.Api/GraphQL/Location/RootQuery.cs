@@ -17,7 +17,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
-    public async Task<LocationConnection> LocationsAsync(
+    public async Task<Connection<LocationEdge>> LocationsAsync(
         string? after,
         int? first,
         string? before,
@@ -38,7 +38,7 @@ public class RootQuery(IMapper mapper)
             false,
             cancellationToken);
 
-        return new LocationConnection
+        return new Connection<LocationEdge>
         {
             PageInfo = new PageInfo
             {

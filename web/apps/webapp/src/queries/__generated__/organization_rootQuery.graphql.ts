@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0242846ad6e0e9c76a784d17559864d7>>
+ * @generated SignedSource<<0d15dbcca154e51fe61383a0e3fcec77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -371,7 +371,7 @@ return {
           },
           (v16/*: any*/)
         ],
-        "concreteType": "LocationConnection",
+        "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
@@ -407,7 +407,7 @@ return {
         "args": [
           (v16/*: any*/)
         ],
-        "concreteType": "TeamConnection",
+        "concreteType": "ConnectionOfTeamEdge",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
@@ -453,7 +453,7 @@ return {
       {
         "alias": null,
         "args": (v19/*: any*/),
-        "concreteType": "BookingConnection",
+        "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,

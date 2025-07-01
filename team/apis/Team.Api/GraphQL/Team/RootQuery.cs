@@ -17,7 +17,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await teamService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
-    public async Task<TeamConnection> TeamsAsync(
+    public async Task<Connection<TeamEdge>> TeamsAsync(
         string? after,
         int? first,
         string? before,
@@ -33,7 +33,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new TeamConnection
+        return new Connection<TeamEdge>
         {
             PageInfo = new PageInfo
             {
@@ -48,7 +48,7 @@ public class RootQuery(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamConnection> CustomerTeamsAsync(
+    public async Task<Connection<TeamEdge>> CustomerTeamsAsync(
         string? after,
         int? first,
         string? before,
@@ -64,7 +64,7 @@ public class RootQuery(IMapper mapper)
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
-        return new TeamConnection
+        return new Connection<TeamEdge>
         {
             PageInfo = new PageInfo
             {

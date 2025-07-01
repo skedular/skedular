@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<adc89d9a69cad284dd060724a84c8fb2>>
+ * @generated SignedSource<<51ab06898d5db03c7801dcc16b602978>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -128,7 +128,7 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationMemberConnection",
+        "concreteType": "ConnectionOfOrganizationMemberEdge",
         "kind": "LinkedField",
         "name": "organizationMembers",
         "plural": false,
