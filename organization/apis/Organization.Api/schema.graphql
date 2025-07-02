@@ -21,6 +21,12 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type ConnectionOfOrganizationBankAccountEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationBankAccountEdge!]!
+  totalCount: Int
+}
+
 type ConnectionOfOrganizationEdge {
   pageInfo: PageInfo!
   edges: [OrganizationEdge!]!
@@ -50,6 +56,11 @@ type InviteCustomersToJoinOrganizationPayload {
 }
 
 type Mutation {
+  addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
+  setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload! @cost(weight: "10")
@@ -121,6 +132,32 @@ type OrganizationAddressDetails {
 type OrganizationAnalytics {
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+}
+
+type OrganizationBankAccountDetails {
+  isDefault: Boolean!
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
+  organization: OrganizationDetails!
+  id: ID!
+}
+
+type OrganizationBankAccountEdge {
+  node: OrganizationBankAccountDetails!
+  cursor: String!
+}
+
+type OrganizationBankAccountPayload {
+  clientMutationId: String
+  organizationBankAccounts: OrganizationBankAccountDetails!
+}
+
+type OrganizationBankAccountsPayload {
+  clientMutationId: String
+  organizationBankAccounts: [OrganizationBankAccountDetails!]!
 }
 
 type OrganizationBillingDetails {
@@ -291,12 +328,12 @@ type OrganizationStripeConnectAccountEdge {
 
 type OrganizationStripeConnectAccountPayload {
   clientMutationId: String
-  account: OrganizationStripeConnectAccountDetails!
+  organizationStripeConnectAccount: OrganizationStripeConnectAccountDetails!
 }
 
 type OrganizationStripeConnectAccountsPayload {
   clientMutationId: String
-  accounts: [OrganizationStripeConnectAccountDetails!]!
+  organizationStripeConnectAccounts: [OrganizationStripeConnectAccountDetails!]!
 }
 
 type OrganizationTagDetails {
@@ -361,6 +398,8 @@ type Query {
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+  organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
+  organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
@@ -437,6 +476,17 @@ input AddLocationTagInput {
   description: String
   organizationId: String!
   color: String
+}
+
+input AddOrganizationBankAccountInput {
+  clientMutationId: String
+  id: String
+  organizationId: String!
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
 }
 
 input AddOrganizationBillingDetailsInput {
@@ -553,6 +603,16 @@ input DeleteLocationTagsInput {
   ids: [String!]!
 }
 
+input DeleteOrganizationBankAccountInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteOrganizationBankAccountsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteOrganizationInput {
   clientMutationId: String
   id: String!
@@ -607,6 +667,17 @@ input OrganizationAddressDetailsInput {
   province: String
   zipcode: String!
   country: String!
+}
+
+input OrganizationBankAccountOrderInput {
+  direction: OrderDirection!
+  field: OrganizationBankAccountOrderField!
+}
+
+input OrganizationBankAccountWhereInput {
+  organizationId: String!
+  nameContains: String
+  onboardingCompleted: Boolean
 }
 
 input OrganizationMemberOrderInput {
@@ -670,6 +741,11 @@ input RemoveOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input SetOrganizationBankAccountAsDefaultInput {
+  clientMutationId: String
+  id: String!
+}
+
 input SetOrganizationStripeConnectAccountAsDefaultInput {
   clientMutationId: String
   id: String!
@@ -695,6 +771,16 @@ input UpdateLocationTagInput {
   name: String!
   description: String
   color: String
+}
+
+input UpdateOrganizationBankAccountInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  bankName: String!
+  accountHolderName: String!
+  accountNumber: String!
+  country: String!
 }
 
 input UpdateOrganizationBillingDetailsInput {
@@ -770,6 +856,10 @@ input ZoneOrganizationTagWhereInput {
 enum OrderDirection {
   ASCENDING
   DESCENDING
+}
+
+enum OrganizationBankAccountOrderField {
+  NAME
 }
 
 enum OrganizationMemberOrderField {

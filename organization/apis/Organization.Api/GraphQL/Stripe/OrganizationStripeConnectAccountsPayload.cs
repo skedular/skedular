@@ -6,5 +6,7 @@ namespace Organization.Api.GraphQL.Stripe;
 public class OrganizationStripeConnectAccountsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("accounts")] public IEnumerable<OrganizationStripeConnectAccountDetails> Accounts { get; set; } = [];
+
+    [GraphQLName("organizationStripeConnectAccounts")]
+    public IEnumerable<OrganizationStripeConnectAccountDetails> OrganizationStripeConnectAccounts { get; set; } = [];
 }

@@ -14,6 +14,7 @@ public class OrganizationBankAccount : EntityBaseWithDeleted
     public string BankName { get; set; }
     public string AccountHolderName { get; set; }
     public string AccountNumber { get; set; }
+    public string Country { get; set; }
 
     public virtual Organization Organization { get; set; }
 }
@@ -29,6 +30,7 @@ public class OrganizationBankAccountConfiguration : IEntityTypeConfiguration<Org
         builder.Property(item => item.BankName).HasMaxLength(Constants.MaxOrganizationBankNameLength);
         builder.Property(item => item.AccountHolderName).HasMaxLength(Constants.MaxOrganizationAccountHolderNameLength);
         builder.Property(item => item.AccountNumber).HasMaxLength(Constants.MaxOrganizationAccountNumberLength);
+        builder.Property(item => item.Country).HasMaxLength(Constants.MaxCountryLength);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationBankAccounts);
 

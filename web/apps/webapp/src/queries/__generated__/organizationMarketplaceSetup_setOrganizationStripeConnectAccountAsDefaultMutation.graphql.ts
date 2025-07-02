@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a1ecdfd722031db9ea31d91686a53e6>>
+ * @generated SignedSource<<b5f9b3960a9128cde6bdba58e56ad751>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDe
 };
 export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation$data = {
   readonly setOrganizationStripeConnectAccountAsDefault: {
-    readonly account: {
+    readonly organizationStripeConnectAccount: {
       readonly id: string;
       readonly isDefault: boolean;
     };
@@ -26,7 +26,7 @@ export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDe
 };
 export type organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation$rawResponse = {
   readonly setOrganizationStripeConnectAccountAsDefault: {
-    readonly account: {
+    readonly organizationStripeConnectAccount: {
       readonly id: string;
       readonly isDefault: boolean;
     };
@@ -66,7 +66,7 @@ v1 = [
         "args": null,
         "concreteType": "OrganizationStripeConnectAccountDetails",
         "kind": "LinkedField",
-        "name": "account",
+        "name": "organizationStripeConnectAccount",
         "plural": false,
         "selections": [
           {
@@ -108,16 +108,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "80c5395aff2cff39c2170f3bed8364b7",
+    "cacheID": "2b4d18cb14f3d4da87fb4ac19167f9fe",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation(\n  $input: SetOrganizationStripeConnectAccountAsDefaultInput!\n) {\n  setOrganizationStripeConnectAccountAsDefault(input: $input) {\n    account {\n      id\n      isDefault\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation(\n  $input: SetOrganizationStripeConnectAccountAsDefaultInput!\n) {\n  setOrganizationStripeConnectAccountAsDefault(input: $input) {\n    organizationStripeConnectAccount {\n      id\n      isDefault\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7b9a9ebc950d6a0dbbd43ff18580474c";
+(node as any).hash = "6e5c99b632f2cb52d5c1c6fec3e8c879";
 
 export default node;

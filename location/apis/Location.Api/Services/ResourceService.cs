@@ -330,7 +330,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        if (!organizationAuthorizationService.CanView(existingLocation.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }

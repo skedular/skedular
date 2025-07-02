@@ -70,7 +70,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
   const [commitUpdateOrganizationStripeConnectAccount] = useMutation<editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation>(graphql`
     mutation editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation($input: UpdateOrganizationStripeConnectAccountInput!) @raw_response_type {
       updateOrganizationStripeConnectAccount(input: $input) {
-        account {
+        organizationStripeConnectAccount {
           id
           name
         }
@@ -126,7 +126,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
       },
       optimisticResponse: {
         updateOrganizationStripeConnectAccount: {
-          account: {
+          organizationStripeConnectAccount: {
             id: account.id,
             name,
           },

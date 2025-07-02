@@ -35,7 +35,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
   const [commitAddStripeConnectAccount] = useMutation<addStripeConnectAccount_addStripeConnectAccountMutation>(graphql`
     mutation addStripeConnectAccount_addStripeConnectAccountMutation($input: AddOrganizationStripeConnectAccountInput!) @raw_response_type {
       addOrganizationStripeConnectAccount(input: $input) {
-        account {
+        organizationStripeConnectAccount {
           id
           name
         }
@@ -94,7 +94,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
       },
       optimisticResponse: {
         addOrganizationStripeConnectAccount: {
-          account: {
+          organizationStripeConnectAccount: {
             id,
             name,
           },

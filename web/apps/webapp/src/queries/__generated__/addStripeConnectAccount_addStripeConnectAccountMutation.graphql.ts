@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5a9ecaee4e87550ac5154c2f8f7b1b11>>
+ * @generated SignedSource<<b8380d9702eedb368a0763184ba280df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type addStripeConnectAccount_addStripeConnectAccountMutation$variables = 
 };
 export type addStripeConnectAccount_addStripeConnectAccountMutation$data = {
   readonly addOrganizationStripeConnectAccount: {
-    readonly account: {
+    readonly organizationStripeConnectAccount: {
       readonly id: string;
       readonly name: string;
     };
@@ -29,7 +29,7 @@ export type addStripeConnectAccount_addStripeConnectAccountMutation$data = {
 };
 export type addStripeConnectAccount_addStripeConnectAccountMutation$rawResponse = {
   readonly addOrganizationStripeConnectAccount: {
-    readonly account: {
+    readonly organizationStripeConnectAccount: {
       readonly id: string;
       readonly name: string;
     };
@@ -69,7 +69,7 @@ v1 = [
         "args": null,
         "concreteType": "OrganizationStripeConnectAccountDetails",
         "kind": "LinkedField",
-        "name": "account",
+        "name": "organizationStripeConnectAccount",
         "plural": false,
         "selections": [
           {
@@ -111,16 +111,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f0c6de506bb4e839a5b1e5156ace8334",
+    "cacheID": "1a75f231e8eb502f9a4a9cde56228178",
     "id": null,
     "metadata": {},
     "name": "addStripeConnectAccount_addStripeConnectAccountMutation",
     "operationKind": "mutation",
-    "text": "mutation addStripeConnectAccount_addStripeConnectAccountMutation(\n  $input: AddOrganizationStripeConnectAccountInput!\n) {\n  addOrganizationStripeConnectAccount(input: $input) {\n    account {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation addStripeConnectAccount_addStripeConnectAccountMutation(\n  $input: AddOrganizationStripeConnectAccountInput!\n) {\n  addOrganizationStripeConnectAccount(input: $input) {\n    organizationStripeConnectAccount {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f1b6c4c6e87c1214ba514292840912b5";
+(node as any).hash = "f490ab5fd527786bde910ebddb6c0e0b";
 
 export default node;

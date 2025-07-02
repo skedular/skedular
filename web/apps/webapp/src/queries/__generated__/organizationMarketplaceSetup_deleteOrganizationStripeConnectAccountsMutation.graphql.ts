@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<836b956fbfd11fa4a13693299f8e1df3>>
+ * @generated SignedSource<<e63a4820725af825301eea8fab86fdf7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type organizationMarketplaceSetup_deleteOrganizationStripeConnectAccounts
 };
 export type organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation$data = {
   readonly deleteOrganizationStripeConnectAccounts: {
-    readonly accounts: ReadonlyArray<{
+    readonly organizationStripeConnectAccounts: ReadonlyArray<{
       readonly id: string;
     }>;
   };
@@ -76,7 +76,7 @@ return {
             "args": null,
             "concreteType": "OrganizationStripeConnectAccountDetails",
             "kind": "LinkedField",
-            "name": "accounts",
+            "name": "organizationStripeConnectAccounts",
             "plural": true,
             "selections": [
               (v2/*: any*/)
@@ -109,7 +109,7 @@ return {
             "args": null,
             "concreteType": "OrganizationStripeConnectAccountDetails",
             "kind": "LinkedField",
-            "name": "accounts",
+            "name": "organizationStripeConnectAccounts",
             "plural": true,
             "selections": [
               (v2/*: any*/),
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1455c638d8fcd9cd17cfcc367474f514",
+    "cacheID": "8a07ad36e65c93ed1c0aaf2defd03ba7",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation(\n  $input: DeleteOrganizationStripeConnectAccountsInput!\n) {\n  deleteOrganizationStripeConnectAccounts(input: $input) {\n    accounts {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation(\n  $input: DeleteOrganizationStripeConnectAccountsInput!\n) {\n  deleteOrganizationStripeConnectAccounts(input: $input) {\n    organizationStripeConnectAccounts {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b24d6e0925ca141a558d0e5cd090887a";
+(node as any).hash = "467aa4d03eb43b844c5ff6718989a229";
 
 export default node;

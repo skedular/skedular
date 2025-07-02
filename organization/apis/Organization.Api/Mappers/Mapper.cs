@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL.Analytics;
+using Organization.Api.GraphQL.BankAccount;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Organization;
@@ -169,6 +170,10 @@ public interface IMapper
         Shared.Database.Entities.Organization organization);
 
     Shared.Models.OrganizationBankAccount MapTo(OrganizationBankAccount src);
+    Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src);
+    Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src);
+    OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
+    OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
 }
 
 public class Mapper : IMapper
@@ -1066,6 +1071,7 @@ public class Mapper : IMapper
         dest.BankName = src.BankName;
         dest.AccountHolderName = src.AccountHolderName;
         dest.AccountNumber = src.AccountNumber;
+        dest.Country = src.Country;
         dest.Organization = organization;
         return dest;
     }
@@ -1081,8 +1087,49 @@ public class Mapper : IMapper
             Name = src.Name,
             BankName = src.BankName,
             AccountHolderName = src.AccountHolderName,
-            AccountNumber = src.AccountNumber
+            AccountNumber = src.AccountNumber,
+            Country = src.Country
         };
+
+    public Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            BankName = src.BankName,
+            AccountHolderName = src.AccountHolderName,
+            AccountNumber = src.AccountNumber,
+            Country = src.Country,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            BankName = src.BankName,
+            AccountHolderName = src.AccountHolderName,
+            AccountNumber = src.AccountNumber,
+            Country = src.Country
+        };
+
+    public OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src) =>
+        src is null
+            ? null
+            : new OrganizationBankAccountDetails
+            {
+                Id = src.Id,
+                IsDefault = src.IsDefault,
+                Name = src.Name,
+                BankName = src.BankName,
+                AccountHolderName = src.AccountHolderName,
+                AccountNumber = src.AccountNumber,
+                Country = src.Country,
+                Organization = MapTo(src.Organization)!
+            };
+
+    public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);

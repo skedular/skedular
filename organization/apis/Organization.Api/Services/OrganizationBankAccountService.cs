@@ -17,8 +17,9 @@ public interface IOrganizationBankAccountService
     Task<OrganizationBankAccount> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<OrganizationBankAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<OrganizationBankAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
+    Task<OrganizationBankAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedOrganizationBankAccountsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
         ICollection<OrganizationBankAccountOrder> orderByFields,
@@ -167,7 +168,23 @@ public class OrganizationBankAccountService(
         return organizationBankAccount;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedOrganizationBankAccountsAsync(
+    public async Task<OrganizationBankAccount> GetByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var resource = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resource.Organization.Id, cancellationToken) ??
+                                   throw new OrganizationNotFound();
+        if (!organizationAuthorizationService.CanView(existingOrganization, customer))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        return mapper.MapTo(resource);
+    }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
         ICollection<OrganizationBankAccountOrder> orderByFields,

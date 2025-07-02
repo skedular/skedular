@@ -13,36 +13,40 @@ public class RootMutation(IMapper mapper)
     public async Task<OrganizationStripeConnectAccountPayload> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        CancellationToken cancellationToken)
-    {
-        var account = await organizationStripeConnectAccountService.AddAsync(
-            input.Id,
-            input.OrganizationId,
-            input.Name,
-            input.RedirectUrl,
-            cancellationToken);
-        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationStripeConnectAccount = mapper.MapTo(
+                await organizationStripeConnectAccountService.AddAsync(
+                    input.Id,
+                    input.OrganizationId,
+                    input.Name,
+                    input.RedirectUrl,
+                    cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> UpdateOrganizationStripeConnectAccountAsync(
         UpdateOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        CancellationToken cancellationToken)
-    {
-        var account = await organizationStripeConnectAccountService.UpdateAsync(input.Id, input.Name, cancellationToken);
-        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationStripeConnectAccount = mapper.MapTo(await organizationStripeConnectAccountService.UpdateAsync(input.Id, input.Name, cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> DeleteOrganizationStripeConnectAccountAsync(
         DeleteOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        CancellationToken cancellationToken)
-    {
-        var account = await organizationStripeConnectAccountService.DeleteAsync(input.Id, cancellationToken);
-        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationStripeConnectAccount = mapper.MapTo(await organizationStripeConnectAccountService.DeleteAsync(input.Id, cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountsPayload> DeleteOrganizationStripeConnectAccountsAsync(
@@ -53,7 +57,7 @@ public class RootMutation(IMapper mapper)
         var accounts = await organizationStripeConnectAccountService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationStripeConnectAccountsPayload
         {
-            ClientMutationId = input.ClientMutationId, Accounts = accounts.Select(item => mapper.MapTo(item)!)
+            ClientMutationId = input.ClientMutationId, OrganizationStripeConnectAccounts = accounts.Select(item => mapper.MapTo(item)!)
         };
     }
 
@@ -64,6 +68,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var account = await organizationStripeConnectAccountService.SetAsDefaultAsync(input.Id, cancellationToken);
-        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account)! };
+        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, OrganizationStripeConnectAccount = mapper.MapTo(account)! };
     }
 }

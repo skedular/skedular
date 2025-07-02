@@ -282,7 +282,7 @@ const OrganizationMarketplaceSetup = ({
   const [commitDeleteOrganizationStripeConnectAccounts] = useMutation<organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation>(graphql`
     mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation($connectionIds: [ID!]!, $input: DeleteOrganizationStripeConnectAccountsInput!) {
       deleteOrganizationStripeConnectAccounts(input: $input) {
-        accounts {
+        organizationStripeConnectAccounts {
           id @deleteEdge(connections: $connectionIds)
         }
       }
@@ -346,7 +346,7 @@ const OrganizationMarketplaceSetup = ({
   const [commitSetOrganizationStripeConnectAccountAsDefault] = useMutation<organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation>(graphql`
     mutation organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation($input: SetOrganizationStripeConnectAccountAsDefaultInput!) @raw_response_type {
       setOrganizationStripeConnectAccountAsDefault(input: $input) {
-        account {
+        organizationStripeConnectAccount {
           id
           isDefault
         }
@@ -1079,7 +1079,7 @@ const OrganizationMarketplaceSetup = ({
       },
       optimisticResponse: {
         setOrganizationStripeConnectAccountAsDefault: {
-          account: {
+          organizationStripeConnectAccount: {
             id: organizationStripeConnectAccountDetails.id,
             isDefault: true,
           },
