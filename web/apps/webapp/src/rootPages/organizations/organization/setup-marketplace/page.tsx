@@ -27,6 +27,7 @@ const RootQuery = graphql`
     $productTagNameSearchText: String
     $locationTagNameSearchText: String
     $organizationStripeConnectAccountNameSearchText: String
+    $organizationBankAccountNameSearchText: String
   ) {
     organization(id: $organizationId) {
       name
@@ -35,6 +36,7 @@ const RootQuery = graphql`
     ...organizationMarketplaceSetup_productTags_query
     ...organizationMarketplaceSetup_locationTags_query
     ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query
+    ...organizationMarketplaceSetup_organizationBankAccounts_query
   }
 `;
 
@@ -67,6 +69,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
         rootDataProductTagsRelay={rootData}
         rootDataLocationTagsRelay={rootData}
         rootDataOrganizationStripeConnectAccountsRelay={rootData}
+        rootDataOrganizationBankAccountsRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
       />

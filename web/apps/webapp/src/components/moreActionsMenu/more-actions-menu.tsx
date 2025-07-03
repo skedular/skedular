@@ -57,6 +57,9 @@ export enum MoreActionsMenuOptionType {
   SetOrganizationStripeConnectAccountAsDefault,
   EditFloorPlan,
   DeleteFloorPlan,
+  EditOrganizationBankAccount,
+  DeleteOrganizationBankAccount,
+  SetOrganizationBankAccountAsDefault,
 }
 
 export type MoreActionsMenuItemType = {
@@ -281,6 +284,20 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteFloorPlan,
     label: 'Remove Floor Plan',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditOrganizationBankAccount]: {
+    id: MoreActionsMenuOptionType.EditOrganizationBankAccount,
+    label: 'Edit Bank Account',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteOrganizationBankAccount]: {
+    id: MoreActionsMenuOptionType.DeleteOrganizationBankAccount,
+    label: 'Remove Bank Account',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault]: {
+    id: MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault,
+    label: 'Set as Default',
   },
 };
 

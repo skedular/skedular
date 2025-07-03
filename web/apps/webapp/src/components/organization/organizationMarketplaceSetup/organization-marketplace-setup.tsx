@@ -1,6 +1,7 @@
+import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import { AppBarWithStackColumn, BodyIconTypography, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
-import { getOrganizationBaseLink, getOrganizationProductBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganizationProductBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { LocationTag } from '@/components/locationTag';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -20,17 +21,21 @@ import { joinErrors } from '@/libs/utils';
 import type { organizationMarketplaceSetup_activateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_activateProductsMutation.graphql';
 import type { organizationMarketplaceSetup_deactivateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deactivateProductsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteLocationTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteLocationTagsMutation.graphql';
+import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
 import type { organizationMarketplaceSetup_locationTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_query.graphql';
 import type { organizationMarketplaceSetup_locationTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_refetchableFragment.graphql';
+import type { organizationMarketplaceSetup_organizationBankAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_query.graphql';
+import type { organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_query.graphql';
 import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_products_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_products_query.graphql';
 import type { organizationMarketplaceSetup_products_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_products_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_productTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_query.graphql';
 import type { organizationMarketplaceSetup_productTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_refetchableFragment.graphql';
+import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -53,6 +58,7 @@ type Props = {
   rootDataProductTagsRelay: organizationMarketplaceSetup_productTags_query$key;
   rootDataLocationTagsRelay: organizationMarketplaceSetup_locationTags_query$key;
   rootDataOrganizationStripeConnectAccountsRelay: organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key;
+  rootDataOrganizationBankAccountsRelay: organizationMarketplaceSetup_organizationBankAccounts_query$key;
   onReloadRequired: () => void;
   organizationId: string;
 };
@@ -98,11 +104,22 @@ type OrganizationStripeConnectAccountRowType = {
   requiresOnboarding: boolean;
 };
 
+type OrganizationBankAccountRowType = {
+  id: string;
+  isDefault: boolean;
+  name: string;
+  bankName: string;
+  accountHolderName: string;
+  accountNumber: string;
+  country: string;
+};
+
 const OrganizationMarketplaceSetup = ({
   rootDataProductsRelay,
   rootDataProductTagsRelay,
   rootDataLocationTagsRelay,
   rootDataOrganizationStripeConnectAccountsRelay,
+  rootDataOrganizationBankAccountsRelay,
   onReloadRequired,
   organizationId,
 }: Props) => {
@@ -249,6 +266,42 @@ const OrganizationMarketplaceSetup = ({
     rootDataOrganizationStripeConnectAccountsRelay,
   );
 
+  const [rootDataOrganizationBankAccounts, refetchOrganizationBankAccounts] = useRefetchableFragment<
+    organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment,
+    organizationMarketplaceSetup_organizationBankAccounts_query$key
+  >(
+    graphql`
+      fragment organizationMarketplaceSetup_organizationBankAccounts_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment") {
+        organizationBankAccounts(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, nameContains: $organizationBankAccountNameSearchText }
+          orderBy: [{ direction: ASCENDING, field: NAME }]
+        ) @connection(key: "organizationMarketplaceSetup_organizationBankAccounts") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              isDefault
+              name
+              bankName
+              accountHolderName
+              accountNumber
+              country
+              organization {
+                id
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataOrganizationBankAccountsRelay,
+  );
+
   const [commitDeleteProduct] = useMutation<organizationMarketplaceSetup_deleteProductsMutation>(graphql`
     mutation organizationMarketplaceSetup_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
       deleteProducts(input: $input) {
@@ -279,6 +332,28 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
+  const [commitActivateProducts] = useMutation<organizationMarketplaceSetup_activateProductsMutation>(graphql`
+    mutation organizationMarketplaceSetup_activateProductsMutation($input: ActivateProductsInput!) @raw_response_type {
+      activateProducts(input: $input) {
+        products {
+          id
+          inactive
+        }
+      }
+    }
+  `);
+
+  const [commitDeactivateProducts] = useMutation<organizationMarketplaceSetup_deactivateProductsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deactivateProductsMutation($input: DeactivateProductsInput!) @raw_response_type {
+      deactivateProducts(input: $input) {
+        products {
+          id
+          inactive
+        }
+      }
+    }
+  `);
+
   const [commitDeleteOrganizationStripeConnectAccounts] = useMutation<organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation>(graphql`
     mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation($connectionIds: [ID!]!, $input: DeleteOrganizationStripeConnectAccountsInput!) {
       deleteOrganizationStripeConnectAccounts(input: $input) {
@@ -289,64 +364,31 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitActivateProducts] = useMutation<organizationMarketplaceSetup_activateProductsMutation>(graphql`
-    mutation organizationMarketplaceSetup_activateProductsMutation($input: ActivateProductsInput!) {
-      activateProducts(input: $input) {
-        products {
-          id
-          inactive
-          name
-          description
-          priceToDisplay
-          priceUnit {
-            name
-          }
-          numberOfResourcesToBook
-          minDurationMinutes
-          maxDurationMinutes
-          bookAllLocationResources
-          recurrenceWindowDays
-          requireConsecutiveDays
-          maxBookingSpreadDays
-          organization {
-            uniqueId
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitDeactivateProducts] = useMutation<organizationMarketplaceSetup_deactivateProductsMutation>(graphql`
-    mutation organizationMarketplaceSetup_deactivateProductsMutation($input: DeactivateProductsInput!) {
-      deactivateProducts(input: $input) {
-        products {
-          id
-          inactive
-          name
-          description
-          priceToDisplay
-          priceUnit {
-            name
-          }
-          numberOfResourcesToBook
-          minDurationMinutes
-          maxDurationMinutes
-          bookAllLocationResources
-          recurrenceWindowDays
-          requireConsecutiveDays
-          maxBookingSpreadDays
-          organization {
-            uniqueId
-          }
-        }
-      }
-    }
-  `);
-
   const [commitSetOrganizationStripeConnectAccountAsDefault] = useMutation<organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation>(graphql`
     mutation organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation($input: SetOrganizationStripeConnectAccountAsDefaultInput!) @raw_response_type {
       setOrganizationStripeConnectAccountAsDefault(input: $input) {
         organizationStripeConnectAccount {
+          id
+          isDefault
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteOrganizationBankAccounts] = useMutation<organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation($connectionIds: [ID!]!, $input: DeleteOrganizationBankAccountsInput!) {
+      deleteOrganizationBankAccounts(input: $input) {
+        organizationBankAccounts {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitSetOrganizationBankAccountAsDefault] = useMutation<organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation>(graphql`
+    mutation organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation($input: SetOrganizationBankAccountAsDefaultInput!) @raw_response_type {
+      setOrganizationBankAccountAsDefault(input: $input) {
+        organizationBankAccount {
           id
           isDefault
         }
@@ -490,6 +532,46 @@ const OrganizationMarketplaceSetup = ({
       });
     },
     [refetchOrganizationStripeConnectAccounts],
+  );
+
+  const [organizationBankAccountNameSearchText, setOrganizationBankAccountNameSearchText] = useState<string>('');
+  const [seledctedOrganizationBankAccounts, setSeledctedOrganizationBankAccounts] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedOrganizationBankAccountId, setSelectedOrganizationBankAccountId] = useState<null | string>(null);
+  const [organizationBankAccountMoreActionsAnchorEl, setOrganizationBankAccountMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const organizationBankAccountMoreActionsMenuOpen = Boolean(organizationBankAccountMoreActionsAnchorEl);
+  const organizationBankAccounts = useMemo(
+    () => rootDataOrganizationBankAccounts.organizationBankAccounts.edges.map(({ node }) => node),
+    [rootDataOrganizationBankAccounts.organizationBankAccounts],
+  );
+  const organizationBankAccountsConnectionIds = useMemo(
+    () => [rootDataOrganizationBankAccounts.organizationBankAccounts.__id],
+    [rootDataOrganizationBankAccounts.organizationBankAccounts],
+  );
+  const organizationBankAccountMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationBankAccount],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteOrganizationBankAccount],
+  ];
+
+  const organizationBankAccountDetails = useMemo(
+    () => organizationBankAccounts.find((item) => item.id === selectedOrganizationBankAccountId),
+    [selectedOrganizationBankAccountId, organizationBankAccounts],
+  );
+
+  const handleRefetchOrganizationBankAccounts = useCallback(
+    (organizationBankAccountNameSearchText: string) => {
+      startTransition(() => {
+        refetchOrganizationBankAccounts(
+          {
+            organizationBankAccountNameSearchText,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchOrganizationBankAccounts],
   );
 
   useEffect(() => {
@@ -665,15 +747,16 @@ const OrganizationMarketplaceSetup = ({
 
   const handleActivateProductsClick = () => {
     const toastId = themedToast(<NotificationContent content={'Activating products...'} />, infoNotificationOptions);
+    const ids = seledctedProducts.ids
+      .values()
+      .map((id) => id as string)
+      .toArray();
 
     commitActivateProducts({
       variables: {
         input: {
           clientMutationId: uuid(),
-          ids: seledctedProducts.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
+          ids,
         },
       },
       onCompleted: (_, errors) => {
@@ -697,6 +780,14 @@ const OrganizationMarketplaceSetup = ({
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to activate products. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        activateProducts: {
+          products: ids.map((id) => ({
+            id,
+            inactive: false,
+          })),
+        },
       },
     });
   };
@@ -736,6 +827,16 @@ const OrganizationMarketplaceSetup = ({
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to deactivate product. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        deactivateProducts: {
+          products: [
+            {
+              id: productDetails.id,
+              inactive: true,
+            },
+          ],
+        },
       },
     });
   };
@@ -1167,6 +1268,165 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
+  const handleOrganizationBankAccountsSearchTextChange = (str: string) => {
+    setOrganizationBankAccountNameSearchText(str);
+
+    handleRefetchOrganizationBankAccounts(str);
+  };
+
+  const handleSelectedOrganizationBankAccountsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedOrganizationBankAccounts(newRowSelectionModel);
+  };
+
+  const handleOrganizationBankAccountMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setOrganizationBankAccountMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditOrganizationBankAccount:
+        if (!organizationBankAccountDetails) {
+          return;
+        }
+
+        router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization?.id!, organizationBankAccountDetails.id));
+        break;
+
+      case MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault:
+        handleSetOrganizationBankAccountAsDefault();
+        break;
+
+      case MoreActionsMenuOptionType.DeleteOrganizationBankAccount:
+        handleRemoveOrganizationBankAccountClick();
+        break;
+    }
+  };
+
+  const handleSetOrganizationBankAccountAsDefault = () => {
+    if (!organizationBankAccountDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Setting bank account ${organizationBankAccountDetails.name} as default...`} />, infoNotificationOptions);
+
+    commitSetOrganizationBankAccountAsDefault({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: organizationBankAccountDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Bank account ${organizationBankAccountDetails.name} is set as default.`} />,
+        });
+
+        handleRefetchOrganizationBankAccounts(organizationBankAccountNameSearchText);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        setOrganizationBankAccountAsDefault: {
+          organizationBankAccount: {
+            id: organizationBankAccountDetails.id,
+            isDefault: true,
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveOrganizationBankAccountsClick = () => {
+    const toastId = themedToast(<NotificationContent content="Removing Bank accounts ..." />, infoNotificationOptions);
+
+    commitDeleteOrganizationBankAccounts({
+      variables: {
+        connectionIds: organizationBankAccountsConnectionIds,
+        input: {
+          clientMutationId: uuid(),
+          ids: seledctedOrganizationBankAccounts.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Bank accounts removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveOrganizationBankAccountClick = () => {
+    if (!selectedOrganizationBankAccountId) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content="Removing Bank accounts ..." />, infoNotificationOptions);
+
+    commitDeleteOrganizationBankAccounts({
+      variables: {
+        connectionIds: organizationBankAccountsConnectionIds,
+        input: {
+          clientMutationId: uuid(),
+          ids: [selectedOrganizationBankAccountId],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Bank accounts removed.`} />,
+        });
+
+        setSelectedOrganizationBankAccountId(null);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const handleCloseClick = () => {
     router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
   };
@@ -1561,6 +1821,101 @@ const OrganizationMarketplaceSetup = ({
     },
   ];
 
+  const organizationBankAccountRows: OrganizationBankAccountRowType[] = organizationBankAccounts.map((account) => ({
+    id: account.id,
+    isDefault: account.isDefault,
+    name: account.name,
+    accountHolderName: account.accountHolderName,
+    accountNumber: account.accountNumber,
+    bankName: account.bankName,
+    country: getCountryData(account.country as TCountryCode).name,
+  }));
+
+  const organizationBankAccountColumns: GridColDef<(typeof organizationBankAccountRows)[number]>[] = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'bankName',
+      headerName: 'Bank Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'accountHolderName',
+      headerName: 'Account Holder Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'accountNumber',
+      headerName: 'Account Number',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'country',
+      headerName: 'Country',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'isDefault',
+      headerName: 'Default',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Yes" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="No" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
+    },
+    {
+      field: 'More Actions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedOrganizationBankAccountId(params.id as string);
+              setOrganizationBankAccountMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
+      ),
+      flex: 1,
+    },
+  ];
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -1646,7 +2001,89 @@ const OrganizationMarketplaceSetup = ({
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No Stripe Connect account found' }}
+                localeText={{ noRowsLabel: 'No stripe connect account found' }}
+              />
+            </StackRow>
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['bank-accounts-setup'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Bank Accounts" />
+                  <BodyIconTypography label="Edit your organization Bank accounts details" />
+                </Grid>
+
+                <Grid>
+                  <NewBankAccountButton organizationId={organizationId} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search
+                size="small"
+                placeholder="Search for accounts"
+                defaultValue={organizationBankAccountNameSearchText}
+                onChange={handleOrganizationBankAccountsSearchTextChange}
+              />
+            </GridContainer>
+            {seledctedOrganizationBankAccounts.ids.size > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedOrganizationBankAccounts.ids.size} records selected`} />
+                    <PushToRight />
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveOrganizationBankAccountsClick}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Remove Bank Account
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedOrganizationBankAccounts}
+                onRowSelectionModelChange={handleSelectedOrganizationBankAccountsChanged}
+                rows={organizationBankAccountRows}
+                columns={organizationBankAccountColumns}
+                hideFooterPagination={organizationBankAccountRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: organizationBankAccountRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No bank account found' }}
               />
             </StackRow>
             <StackColumn
@@ -1895,6 +2332,13 @@ const OrganizationMarketplaceSetup = ({
         open={organizationStripeConnectAccountMoreActionsMenuOpen}
         onMenuItemClick={handleOrganizationStripeConnectAccountMoreActionsMenuItemClick}
         options={organizationStripeConnectAccountMoreActionsOption}
+      />
+
+      <MoreActionsMenu
+        anchorEl={organizationBankAccountMoreActionsAnchorEl}
+        open={organizationBankAccountMoreActionsMenuOpen}
+        onMenuItemClick={handleOrganizationBankAccountMoreActionsMenuItemClick}
+        options={organizationBankAccountMoreActionsOption}
       />
 
       {selectedProductTagId && (

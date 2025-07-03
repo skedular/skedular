@@ -14,8 +14,8 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.3.1"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.11"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.4"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.12"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.10.1"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.10.1"/>
@@ -31,7 +31,7 @@
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10"/>
         <PackageReference Include="StackExchange.Redis" Version="2.8.41"/>
-        <PackageReference Include="Stripe.net" Version="48.2.0"/>
+        <PackageReference Include="Stripe.net" Version="48.3.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1"/>
         <PackageReference Include="System.Reactive" Version="6.0.1"/>
@@ -61,7 +61,7 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.6"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.6.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.83.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.84.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.9.4"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.12.0"/>

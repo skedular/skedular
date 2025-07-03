@@ -80,15 +80,17 @@ export const getOrganizationTeamAddLink = (integratedPlatrform: string | undefin
 export const getOrganizationLocationAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add`;
 
 export const getOrganizationMarketplaceSetupBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace`;
 export const getOrganizationMarketplaceSetupProductsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=products-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=products-setup`;
 export const getOrganizationMarketplaceSetupProductTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=product-tags-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=product-tags-setup`;
 export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=location-tags-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=location-tags-setup`;
 export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace-setup?section=stripe-connect-accounts-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=stripe-connect-accounts-setup`;
+export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=bank-accounts-setup`;
 export const getOrganizationMarketplaceBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace`;
 export const getOrganizationProductBaseLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}`;
@@ -112,3 +114,7 @@ export const getOrganizationLocationFloorPlanAdminEditLink = (integratedPlatrfor
 
 export const getOrganizationLocationFloorPlansLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/${locationId}/floorPlans`;
+
+export const getOrganizationBankAccountBaseLink = (integratedPlatrform: string | undefined, id: string, bankAccountId: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/${bankAccountId}`;
+export const getOrganizationBankAccountAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/add`;

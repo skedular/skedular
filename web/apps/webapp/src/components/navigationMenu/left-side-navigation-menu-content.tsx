@@ -347,7 +347,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                   )}
                   {!collapsed && (
                     <BodyIconTypography
-                      label="Marketplace Setup"
+                      label="Setup Marketplace"
                       startElement={!hideIcons && <MarketplaceIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}

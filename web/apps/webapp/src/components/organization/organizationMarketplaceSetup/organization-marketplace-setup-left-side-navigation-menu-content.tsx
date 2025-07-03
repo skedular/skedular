@@ -1,6 +1,7 @@
 import { BodyIconTypography } from '@/components/commons';
-import { LocationTagIcon, ProductIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
+import { BankAccountIcon, LocationTagIcon, ProductIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
+  getOrganizationMarketplaceSetupBankAccountsBaseLink,
   getOrganizationMarketplaceSetupLocationTagsBaseLink,
   getOrganizationMarketplaceSetupProductsBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
@@ -66,6 +67,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationId);
+  const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationId);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationId);
   const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationId);
   const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(integratedPlatrform, organizationId);
@@ -100,6 +102,25 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={bankAccountsLink}>
+          <ListItemButton selected={fullPath === bankAccountsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === bankAccountsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <BankAccountIcon color="inherit" />} invertDefaultColor={fullPath === bankAccountsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Bank Account"
+                startElement={!hideIcons && <BankAccountIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === bankAccountsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

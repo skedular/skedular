@@ -26,10 +26,9 @@ type StripeConnectAccountDetails = {
   name: string;
 };
 
-const stripeConnectAccountSchema = () =>
-  object({
-    name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
-  });
+const stripeConnectAccountSchema = object({
+  name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
+});
 
 const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
   const [commitAddStripeConnectAccount] = useMutation<addStripeConnectAccount_addStripeConnectAccountMutation>(graphql`
@@ -45,8 +44,8 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema());
-  const requiredFields = makeRequired(stripeConnectAccountSchema());
+  const validateStripeConnectAccountDetails = makeValidate(stripeConnectAccountSchema);
+  const requiredFields = makeRequired(stripeConnectAccountSchema);
   const [name, setName] = useState('');
 
   const handleCloseClick = () => {

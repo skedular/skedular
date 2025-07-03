@@ -1,6 +1,6 @@
 'use client';
 
-import Page from '@/rootPages/organizations/organization/marketplace-setup/page';
+import Page from '@/rootPages/organizations/organization/bank-accounts/add/page';
 import { memo } from 'react';
 
 const RootPage = () => <Page />;

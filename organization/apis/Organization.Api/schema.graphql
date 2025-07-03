@@ -152,7 +152,7 @@ type OrganizationBankAccountEdge {
 
 type OrganizationBankAccountPayload {
   clientMutationId: String
-  organizationBankAccounts: OrganizationBankAccountDetails!
+  organizationBankAccount: OrganizationBankAccountDetails!
 }
 
 type OrganizationBankAccountsPayload {

@@ -1088,7 +1088,8 @@ public class Mapper : IMapper
             BankName = src.BankName,
             AccountHolderName = src.AccountHolderName,
             AccountNumber = src.AccountNumber,
-            Country = src.Country
+            Country = src.Country,
+            Organization = MapTo(src.Organization)
         };
 
     public Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src) =>
