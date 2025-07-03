@@ -73,7 +73,8 @@ export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded'
 export { default as SsoSigninIcon } from '@mui/icons-material/Security';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
-export { default as MarketplaceIcon } from '@mui/icons-material/Storefront';
+export { default as MarketplaceIcon } from '@mui/icons-material/Store';
+export { default as SetupMarketplaceIcon } from '@mui/icons-material/Storefront';
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';
 export { default as SSOIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';

@@ -1,5 +1,17 @@
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
-import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MarketplaceIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
+import {
+  AnalyticsIcon,
+  BookingIcon,
+  CollpaseDrawerIcon,
+  HomeIcon,
+  LocationIcon,
+  MarketplaceIcon,
+  MembersIcon,
+  SettingsIcon,
+  SetupMarketplaceIcon,
+  TeamIcon,
+  UpgradeIcon,
+} from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -315,14 +327,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                 >
                   {collapsed && (
                     <BodyIconTypography
-                      startElement={!hideIcons && <MarketplaceIcon color="inherit" />}
+                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
                       invertDefaultColor={pathName.startsWith(organizationMarketplaceBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
                     <BodyIconTypography
                       label="Marketplace"
-                      startElement={!hideIcons && <MarketplaceIcon color="inherit" />}
+                      startElement={!hideIcons && <SetupMarketplaceIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationMarketplaceBaseLink) && paletteMode === 'dark'}
                     />
