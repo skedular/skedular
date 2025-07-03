@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { Version } from '../models/Version';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -11,10 +11,10 @@ export class V1Service {
     /**
      * return API version
      * @returns Version the version of the API
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public getVersion(): CancelablePromise<Version | Error> {
+    public getVersion(): CancelablePromise<Version | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/team/version',
@@ -24,12 +24,12 @@ export class V1Service {
      * republish team
      * @param teamId
      * @returns any the status of team republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public republish(
         teamId: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/team/{teamId}/republish',
@@ -41,10 +41,10 @@ export class V1Service {
     /**
      * republish all teams
      * @returns any the status of team republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishAll(): CancelablePromise<any | Error> {
+    public republishAll(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/team/republish-all',

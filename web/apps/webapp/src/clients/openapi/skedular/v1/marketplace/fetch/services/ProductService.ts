@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class ProductService {
@@ -11,12 +11,12 @@ export class ProductService {
      * republish organization products
      * @param organizationId
      * @returns any the status of all organization products republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public republishAllOrganizationProducts(
         organizationId: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/marketplace/{organizationId}/products/republish-all',
@@ -28,10 +28,10 @@ export class ProductService {
     /**
      * republish all products
      * @returns any the status of all products republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishAllProducts(): CancelablePromise<any | Error> {
+    public republishAllProducts(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/marketplace/products/republish-all',

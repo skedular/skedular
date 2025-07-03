@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { Version } from '../models/Version';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -11,10 +11,10 @@ export class MarketplaceService {
     /**
      * return API version
      * @returns Version the version of the API
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public getVersion(): CancelablePromise<Version | Error> {
+    public getVersion(): CancelablePromise<Version | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/marketplace/version',
@@ -24,12 +24,12 @@ export class MarketplaceService {
      * republish organization products
      * @param organizationId
      * @returns any the status of all organization products republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public republishAllOrganizationProducts(
         organizationId: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/marketplace/{organizationId}/products/republish-all',
@@ -41,10 +41,10 @@ export class MarketplaceService {
     /**
      * republish all products
      * @returns any the status of all products republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishAllProducts(): CancelablePromise<any | Error> {
+    public republishAllProducts(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/marketplace/products/republish-all',

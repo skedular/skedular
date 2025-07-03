@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class OrganizationStripeConnectAccountsService {
@@ -11,12 +11,12 @@ export class OrganizationStripeConnectAccountsService {
      * return OrganizationStripeConnectAccount onboarding refresh URL
      * @param code
      * @returns any should never be returned
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public refreshOrganizationStripeConnectAccountOnboarding(
         code: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/organization/organization-stripe-connect-account/refresh-onboarding-url',

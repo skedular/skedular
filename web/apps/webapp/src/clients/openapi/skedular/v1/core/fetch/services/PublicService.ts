@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
 import type { FileUploadResponse } from '../models/FileUploadResponse';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class PublicService {
@@ -12,7 +12,7 @@ export class PublicService {
      * Upload file with public access
      * @param formData
      * @returns FileUploadResponse the response of uploading file
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public uploadPublicAccessFile(
@@ -22,7 +22,7 @@ export class PublicService {
              */
             file?: Blob;
         },
-    ): CancelablePromise<FileUploadResponse | Error> {
+    ): CancelablePromise<FileUploadResponse | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/v1/core/uploadPublicAccessFile',

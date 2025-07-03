@@ -36,23 +36,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
 components:
   schemas:
-    Error:
+    ProblemDetails:
       type: object
-      required:
-        - code
-        - message
+      additionalProperties: {}
       properties:
-        code:
+        type:
+          type: string
+        title:
+          type: string
+        status:
           type: integer
           format: int32
-          description: Error code
-        message:
+        detail:
           type: string
-          description: Error message
+        instance:
+          type: string
 
     Version:
       type: object

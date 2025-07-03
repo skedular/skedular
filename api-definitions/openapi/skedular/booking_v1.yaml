@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/{bookingId}/republish:
     put:
@@ -61,7 +61,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/republish-all:
     put:
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/republish-all-resources-slots:
     put:
@@ -99,7 +99,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/resources-slots/{resourceId}/republish:
     put:
@@ -124,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/stripe/platform/account/webhook:
     post:
@@ -153,7 +153,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/booking/stripe/connect/account/webhook:
     post:
@@ -182,23 +182,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
 components:
   schemas:
-    Error:
+    ProblemDetails:
       type: object
-      required:
-        - code
-        - message
+      additionalProperties: {}
       properties:
-        code:
+        type:
+          type: string
+        title:
+          type: string
+        status:
           type: integer
           format: int32
-          description: Error code
-        message:
+        detail:
           type: string
-          description: Error message
+        instance:
+          type: string
 
     Version:
       type: object

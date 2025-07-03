@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { Version } from '../models/Version';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -11,10 +11,10 @@ export class V1Service {
     /**
      * return API version
      * @returns Version the version of the API
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public getVersion(): CancelablePromise<Version | Error> {
+    public getVersion(): CancelablePromise<Version | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/organization/version',
@@ -24,12 +24,12 @@ export class V1Service {
      * republish organization
      * @param organizationId
      * @returns any the status of organization republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public republish(
         organizationId: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/organization/{organizationId}/republish',
@@ -41,10 +41,10 @@ export class V1Service {
     /**
      * republish all organizations
      * @returns any the status of organization republishing
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishAll(): CancelablePromise<any | Error> {
+    public republishAll(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/v1/organization/republish-all',
@@ -96,10 +96,10 @@ export class V1Service {
     /**
      * sso acs
      * @returns any sso acs
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public ssoAcs(): CancelablePromise<any | Error> {
+    public ssoAcs(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/v1/organization/acs',
@@ -111,14 +111,14 @@ export class V1Service {
      * @param setupIntentClientSecret
      * @param redirectStatus
      * @returns any the readiness status
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public addPaymentMethod(
         setupIntent: string,
         setupIntentClientSecret: string,
         redirectStatus: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/organization/add-payment-method',
@@ -133,12 +133,12 @@ export class V1Service {
      * return OrganizationStripeConnectAccount onboarding refresh URL
      * @param code
      * @returns any should never be returned
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public refreshOrganizationStripeConnectAccountOnboarding(
         code: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/v1/organization/organization-stripe-connect-account/refresh-onboarding-url',
@@ -154,12 +154,12 @@ export class V1Service {
      * Stripe Platform Account Webhook
      * @param stripeSignature Stripe webhook signature
      * @returns any the status of processing the Stripe Platform Account event
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public processStripePlatformAccountEvent(
         stripeSignature?: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/v1/organization/stripe/platform/account/webhook',
@@ -172,12 +172,12 @@ export class V1Service {
      * Stripe Connect Account Webhook
      * @param stripeSignature Stripe webhook signature
      * @returns any the status of processing the Stripe Connect Account event
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public processStripeConnectAccountEvent(
         stripeSignature?: string,
-    ): CancelablePromise<any | Error> {
+    ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/v1/organization/stripe/connect/account/webhook',

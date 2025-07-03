@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/{organizationId}/republish:
     put:
@@ -61,7 +61,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/republish-all:
     put:
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/azure-tenant-admin-consent-url:
     get:
@@ -150,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/add-payment-method:
     get:
@@ -186,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/organization-stripe-connect-account/refresh-onboarding-url:
     get:
@@ -215,7 +215,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/stripe/platform/account/webhook:
     post:
@@ -244,7 +244,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
   /v1/organization/stripe/connect/account/webhook:
     post:
@@ -273,23 +273,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
 
 components:
   schemas:
-    Error:
+    ProblemDetails:
       type: object
-      required:
-        - code
-        - message
+      additionalProperties: {}
       properties:
-        code:
+        type:
+          type: string
+        title:
+          type: string
+        status:
           type: integer
           format: int32
-          description: Error code
-        message:
+        detail:
           type: string
-          description: Error message
+        instance:
+          type: string
 
     Version:
       type: object

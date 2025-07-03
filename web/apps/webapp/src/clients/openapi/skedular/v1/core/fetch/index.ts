@@ -11,13 +11,13 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { cdnFile } from './models/cdnFile';
-export type { Error } from './models/Error';
 export type { FileUploadResponse } from './models/FileUploadResponse';
+export type { ProblemDetails } from './models/ProblemDetails';
 export type { Version } from './models/Version';
 
 export { $cdnFile } from './schemas/$cdnFile';
-export { $Error } from './schemas/$Error';
 export { $FileUploadResponse } from './schemas/$FileUploadResponse';
+export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
 export { CdnService } from './services/CdnService';

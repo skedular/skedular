@@ -87,22 +87,23 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Error
+    public partial class ProblemDetails
     {
-        /// <summary>
-        /// Error code
-        /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("code")]
-        public int Code { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonPropertyName("type")]
+        public string Type { get; set; } = default!;
 
-        /// <summary>
-        /// Error message
-        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("title")]
+        public string Title { get; set; } = default!;
 
-        [System.Text.Json.Serialization.JsonPropertyName("message")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Message { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonPropertyName("status")]
+        public int Status { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("detail")]
+        public string Detail { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("instance")]
+        public string Instance { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 

@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Error } from '../models/Error';
+import type { ProblemDetails } from '../models/ProblemDetails';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class SsoService {
@@ -10,10 +10,10 @@ export class SsoService {
     /**
      * sso acs
      * @returns any sso acs
-     * @returns Error unexpected error
+     * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public ssoAcs(): CancelablePromise<any | Error> {
+    public ssoAcs(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/v1/organization/acs',
