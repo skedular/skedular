@@ -17,4 +17,6 @@ public class AddBookingInput
     [GraphQLName("type")] public BookingType Type { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
+    [GraphQLName("paymentMethod")] public BookingPaymentMethod? PaymentMethod { get; set; }
+    [GraphQLName("sendInvoice")] public bool? SendInvoice { get; set; }
 }

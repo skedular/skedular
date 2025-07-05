@@ -18,6 +18,9 @@ public class Booking : ModelBaseWithDeleted
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
     public bool BookedOnMarketplace { get; set; }
+    public BookingPaymentMethod? PaymentMethod { get; set; }
+    public bool? SendInvoice { get; set; }
+    public string? InvoiceUrl { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {

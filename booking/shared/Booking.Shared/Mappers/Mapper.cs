@@ -8,6 +8,7 @@ using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Book
 using Customer = Booking.Shared.Database.Entities.Customer;
 using LineItem = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using PaymentMethod = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod;
 using Product = Booking.Shared.Models.Product;
 using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
 
@@ -53,9 +54,9 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                BookingStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending,
-                BookingStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
-                BookingStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
+                BookingStatus.PaymentPending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending,
+                BookingStatus.PaymentRejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
+                BookingStatus.PaymentConfirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
                 BookingStatus.PaymentExpired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentExpired,
                 BookingStatus.PaymentRecordNeverCreated =>
                     Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentRecordNeverCreated,
@@ -63,7 +64,15 @@ public class Mapper : IMapper
             },
             IsPaymentRequired = src.IsPaymentRequired,
             BookedOnMarketplace = src.BookedOnMarketplace,
-            BookingCheckoutSession = MapTo(src.StripeCheckoutSession)
+            BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
+            PaymentMethod = src.PaymentMethod switch
+            {
+                BookingPaymentMethod.Card => PaymentMethod.Card,
+                BookingPaymentMethod.BankAccount => PaymentMethod.BankAccount,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            SendInvoice = src.SendInvoice ?? false,
+            InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
 
         if (src.PaidByCustomer is not null)
@@ -199,7 +208,10 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            ProductVersions = MapTo(src.ProductVersions).ToList()
+            ProductVersions = MapTo(src.ProductVersions).ToList(),
+            PaymentMethod = src.PaymentMethod.ToBookingPaymentMethod(),
+            SendInvoice = src.SendInvoice,
+            InvoiceUrl = src.InvoiceUrl
         };
 
 

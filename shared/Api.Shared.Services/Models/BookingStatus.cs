@@ -2,18 +2,18 @@ namespace Api.Shared.Services.Models;
 
 public enum BookingStatus
 {
-    Pending,
-    Rejected,
-    Confirmed,
+    PaymentPending,
+    PaymentRejected,
+    PaymentConfirmed,
     PaymentExpired,
     PaymentRecordNeverCreated
 }
 
 public static class BookingStatusConstants
 {
-    public const string Pending = "PENDING";
-    public const string Rejected = "REJECTED";
-    public const string Confirmed = "CONFIRMED";
+    public const string PaymentPending = "PAYMENT_PENDING";
+    public const string PaymentRejected = "PAYMENT_REJECTED";
+    public const string PaymentConfirmed = "PAYMENT_CONFIRMED";
     public const string PaymentExpired = "PAYMENT_EXPIRED";
     public const string PaymentRecordNeverCreated = "PAYMENT_RECORD_NEVER_CREATED";
 }
@@ -23,9 +23,9 @@ public static class BookingStatusExtensions
     public static BookingStatus ToBookingStatus(this string src) =>
         src switch
         {
-            BookingStatusConstants.Pending => BookingStatus.Pending,
-            BookingStatusConstants.Rejected => BookingStatus.Rejected,
-            BookingStatusConstants.Confirmed => BookingStatus.Confirmed,
+            BookingStatusConstants.PaymentPending => BookingStatus.PaymentPending,
+            BookingStatusConstants.PaymentRejected => BookingStatus.PaymentRejected,
+            BookingStatusConstants.PaymentConfirmed => BookingStatus.PaymentConfirmed,
             BookingStatusConstants.PaymentExpired => BookingStatus.PaymentExpired,
             BookingStatusConstants.PaymentRecordNeverCreated => BookingStatus.PaymentRecordNeverCreated,
             _ => throw new ArgumentOutOfRangeException()
@@ -36,9 +36,9 @@ public static class BookingStatusExtensions
             ? null
             : src switch
             {
-                BookingStatusConstants.Pending => BookingStatus.Pending,
-                BookingStatusConstants.Rejected => BookingStatus.Rejected,
-                BookingStatusConstants.Confirmed => BookingStatus.Confirmed,
+                BookingStatusConstants.PaymentPending => BookingStatus.PaymentPending,
+                BookingStatusConstants.PaymentRejected => BookingStatus.PaymentRejected,
+                BookingStatusConstants.PaymentConfirmed => BookingStatus.PaymentConfirmed,
                 BookingStatusConstants.PaymentExpired => BookingStatus.PaymentExpired,
                 BookingStatusConstants.PaymentRecordNeverCreated => BookingStatus.PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
@@ -47,9 +47,9 @@ public static class BookingStatusExtensions
     public static string ToBookingStatus(this BookingStatus src) =>
         src switch
         {
-            BookingStatus.Pending => BookingStatusConstants.Pending,
-            BookingStatus.Rejected => BookingStatusConstants.Rejected,
-            BookingStatus.Confirmed => BookingStatusConstants.Confirmed,
+            BookingStatus.PaymentPending => BookingStatusConstants.PaymentPending,
+            BookingStatus.PaymentRejected => BookingStatusConstants.PaymentRejected,
+            BookingStatus.PaymentConfirmed => BookingStatusConstants.PaymentConfirmed,
             BookingStatus.PaymentExpired => BookingStatusConstants.PaymentExpired,
             BookingStatus.PaymentRecordNeverCreated => BookingStatusConstants.PaymentRecordNeverCreated,
             _ => throw new ArgumentOutOfRangeException()
@@ -60,9 +60,9 @@ public static class BookingStatusExtensions
             ? string.Empty
             : src switch
             {
-                BookingStatus.Pending => BookingStatusConstants.Pending,
-                BookingStatus.Rejected => BookingStatusConstants.Rejected,
-                BookingStatus.Confirmed => BookingStatusConstants.Confirmed,
+                BookingStatus.PaymentPending => BookingStatusConstants.PaymentPending,
+                BookingStatus.PaymentRejected => BookingStatusConstants.PaymentRejected,
+                BookingStatus.PaymentConfirmed => BookingStatusConstants.PaymentConfirmed,
                 BookingStatus.PaymentExpired => BookingStatusConstants.PaymentExpired,
                 BookingStatus.PaymentRecordNeverCreated => BookingStatusConstants.PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
@@ -71,9 +71,9 @@ public static class BookingStatusExtensions
     public static string ToBookingStatusName(this BookingStatus src) =>
         src switch
         {
-            BookingStatus.Pending => "Pending",
-            BookingStatus.Rejected => "Rejected",
-            BookingStatus.Confirmed => "Confirmed",
+            BookingStatus.PaymentPending => "Pending payment",
+            BookingStatus.PaymentRejected => "Payment rejected",
+            BookingStatus.PaymentConfirmed => "Payment confirmed",
             BookingStatus.PaymentExpired => "Payment expired",
             BookingStatus.PaymentRecordNeverCreated => "Payment record never created",
             _ => throw new ArgumentOutOfRangeException()
@@ -82,9 +82,9 @@ public static class BookingStatusExtensions
     public static string ToBookingStatusName(this string src) =>
         src switch
         {
-            BookingStatusConstants.Pending => "Pending",
-            BookingStatusConstants.Rejected => "Rejected",
-            BookingStatusConstants.Confirmed => "Confirmed",
+            BookingStatusConstants.PaymentPending => "Pending payment",
+            BookingStatusConstants.PaymentRejected => "Payment rejected",
+            BookingStatusConstants.PaymentConfirmed => "Payment confirmed",
             BookingStatusConstants.PaymentExpired => "Payment expired",
             BookingStatusConstants.PaymentRecordNeverCreated => "Payment record never created",
             _ => throw new ArgumentOutOfRangeException()

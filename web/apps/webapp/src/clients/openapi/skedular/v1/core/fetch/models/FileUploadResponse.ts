@@ -2,8 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {File} from './File';
-
+import type { File } from './File';
 export type FileUploadResponse = {
     id: string;
     original: File;

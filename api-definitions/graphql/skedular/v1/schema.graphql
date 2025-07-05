@@ -41,6 +41,7 @@ type BookingDetails {
   deletedByCustomer: Booking_CustomerDetails
   from: DateTime!
   id: ID!
+  invoiceUrl: String
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [Booking_OrganizationDetails!]!
@@ -51,7 +52,9 @@ type BookingDetails {
   notes: String
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
+  paymentMethod: BookingPaymentMethod
   resources: [BookingResourceDetails!]!
+  sendInvoice: Boolean
   status: BookingStatusDetails!
   type: BookingTypeDetails!
   until: DateTime!
@@ -65,6 +68,11 @@ type BookingEdge {
 type BookingPayload {
   booking: BookingDetails!
   clientMutationId: String
+}
+
+type BookingPaymentMethodTypeDetails {
+  name: String!
+  type: BookingPaymentMethod!
 }
 
 type BookingResourceDetails {
@@ -1020,6 +1028,7 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
+  bookingPaymentMethodTypes: [BookingPaymentMethodTypeDetails!]!
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
   bookingStatuses: [BookingStatusDetails!]!
   bookingTypes: [BookingTypeDetails!]!
@@ -1315,7 +1324,9 @@ input AddBookingInput {
   lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]!
+  paymentMethod: BookingPaymentMethod
   resourceIds: [String!]!
+  sendInvoice: Boolean
   teamIds: [String!]!
   type: BookingType!
   until: DateTime!
@@ -2331,12 +2342,17 @@ enum BookingOrderField {
   TYPE
 }
 
+enum BookingPaymentMethod {
+  BANK_ACCOUNT
+  CARD
+}
+
 enum BookingStatus {
-  CONFIRMED
+  PAYMENT_CONFIRMED
   PAYMENT_EXPIRED
+  PAYMENT_PENDING
   PAYMENT_RECORD_NEVER_CREATED
-  PENDING
-  REJECTED
+  PAYMENT_REJECTED
 }
 
 enum BookingType {

@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {FileUploadResponse} from '../models/FileUploadResponse';
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
+import type { FileUploadResponse } from '../models/FileUploadResponse';
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class PrivateService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Upload file with private access
      * @param formData
@@ -33,7 +30,6 @@ export class PrivateService {
             mediaType: 'multipart/form-data',
         });
     }
-
     /**
      * Serve static file from local private storage
      * Returns a file stored in the local private storage by filename

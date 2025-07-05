@@ -28,6 +28,9 @@ type BookingDetails {
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
   createdByCustomer: Booking_CustomerDetails
+  paymentMethod: BookingPaymentMethod
+  sendInvoice: Boolean
+  invoiceUrl: String
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
@@ -45,6 +48,11 @@ type BookingEdge {
 type BookingPayload {
   clientMutationId: String
   booking: BookingDetails!
+}
+
+type BookingPaymentMethodTypeDetails {
+  type: BookingPaymentMethod!
+  name: String!
 }
 
 type BookingResourceDetails {
@@ -181,6 +189,7 @@ type Query {
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  bookingPaymentMethodTypes: [BookingPaymentMethodTypeDetails!]!
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
@@ -214,6 +223,8 @@ input AddBookingInput {
   type: BookingType!
   resourceIds: [String!]!
   lineItems: [LineItemInput!]!
+  paymentMethod: BookingPaymentMethod
+  sendInvoice: Boolean
 }
 
 input AvailableResourcesWhereInput {
@@ -290,10 +301,15 @@ enum BookingOrderField {
   STATUS
 }
 
+enum BookingPaymentMethod {
+  CARD
+  BANK_ACCOUNT
+}
+
 enum BookingStatus {
-  PENDING
-  REJECTED
-  CONFIRMED
+  PAYMENT_PENDING
+  PAYMENT_REJECTED
+  PAYMENT_CONFIRMED
   PAYMENT_EXPIRED
   PAYMENT_RECORD_NEVER_CREATED
 }

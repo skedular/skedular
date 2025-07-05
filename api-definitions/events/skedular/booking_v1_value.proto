@@ -49,6 +49,9 @@ message Booking {
   repeated LineItem lineItems = 20;
   BookingCheckoutSession bookingCheckoutSession = 21;
   bool bookedOnMarketplace = 22;
+  PaymentMethod PaymentMethod = 23;
+  bool SendInvoice = 24;
+  string InvoiceUrl = 25;
 }
 
 enum BookingType
@@ -102,4 +105,9 @@ message BookingCheckoutSession {
   PaymentStatus paymentStatus = 3;
   string amountTotal = 4;
   string currency = 5;
+}
+
+enum PaymentMethod {
+  PaymentMethodCard = 0;
+  PaymentMethodBankAccount = 1;
 }

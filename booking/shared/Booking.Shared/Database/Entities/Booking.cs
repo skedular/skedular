@@ -19,6 +19,9 @@ public class Booking : EntityBaseWithDeleted
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
     public bool BookedOnMarketplace { get; set; }
+    public string? PaymentMethod { get; set; }
+    public bool? SendInvoice { get; set; }
+    public string? InvoiceUrl { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
@@ -44,9 +47,11 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
-        builder.Property(item => item.Status).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.Confirmed);
+        builder.Property(item => item.Status).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.PaymentConfirmed);
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
         builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
+        builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
+        builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
@@ -69,5 +74,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Status);
         builder.HasIndex(item => item.IsPaymentRequired);
+        builder.HasIndex(item => item.PaymentMethod);
+        builder.HasIndex(item => item.SendInvoice);
     }
 }

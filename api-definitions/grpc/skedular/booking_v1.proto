@@ -123,6 +123,11 @@ enum PaymentStatus {
     PaymentStatusExpired = 4;
 }
 
+enum PaymentMethod {
+    PaymentMethodCard = 0;
+    PaymentMethodBankAccount = 1;
+}
+
 message BookingConnection {
     PageInfo pageInfo = 1;
     repeated BookingEdge edges = 2;
@@ -157,6 +162,9 @@ message Booking {
     BookingCheckoutSession bookingCheckoutSession = 20;
     google.protobuf.Timestamp bookingCheckoutSessionExpiry = 21;
     bool bookedOnMarketplace = 22;
+    PaymentMethod PaymentMethod = 23;
+    bool SendInvoice = 24;
+    string InvoiceUrl = 25;
 }
 
 message Customer {

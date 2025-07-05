@@ -126,7 +126,7 @@ public class BookingService(
         }
 
         booking.IsPaymentRequired = booking.LineItems.Count != 0;
-        booking.Status = booking.LineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
+        booking.Status = booking.LineItems.Count == 0 ? BookingStatus.PaymentConfirmed : BookingStatus.PaymentPending;
 
         var bookingEntity = mapper.MapTo(
             booking,
@@ -642,7 +642,10 @@ public class BookingService(
         var existingBookedOnMarketplace = existingBooking.BookedOnMarketplace;
 
         booking.IsPaymentRequired = existingLineItems.Count != 0;
-        booking.Status = existingLineItems.Count == 0 ? BookingStatus.Confirmed : BookingStatus.Pending;
+        booking.Status = existingLineItems.Count == 0 ? BookingStatus.PaymentConfirmed : BookingStatus.PaymentPending;
+        booking.PaymentMethod = existingBooking.PaymentMethod.ToBookingPaymentMethod();
+        booking.SendInvoice = existingBooking.SendInvoice;
+        booking.InvoiceUrl = existingBooking.InvoiceUrl;
 
         var bookingEntity = mapper.MergeTo(
             booking,
@@ -663,7 +666,6 @@ public class BookingService(
         bookingEntity.LineItems = existingLineItems;
         bookingEntity.BookedOnMarketplace = existingBookedOnMarketplace;
 
-        bookingEntity.Status = BookingStatusConstants.Confirmed;
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(bookingEntity));
 
