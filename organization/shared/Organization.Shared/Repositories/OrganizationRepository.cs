@@ -35,6 +35,7 @@ internal static class OrganizationExtensions
     {
         var updatedQuery = originalQuery
             .Include(query => query.OrganizationSsoSettings)
+            .Include(query => query.OrganizationTaxDetails)
             .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
             .ThenInclude(query => query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
             .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))

@@ -1,6 +1,6 @@
 ﻿using Enterprise.Shared.Database;
 using Organization.Shared.Database;
-using Address = Organization.Shared.Database.Entities.Address;
+using Organization.Shared.Database.Entities;
 
 namespace Organization.Shared.Repositories;
 

@@ -65,7 +65,8 @@ public static class Extensions
             .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
             .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
             .AddScoped<IOrganizationStripeConnectAccountAuthorizationRepository, OrganizationStripeConnectAccountAuthorizationRepository>()
-            .AddScoped<IOrganizationBankAccountRepository, OrganizationBankAccountRepository>();
+            .AddScoped<IOrganizationBankAccountRepository, OrganizationBankAccountRepository>()
+            .AddScoped<IOrganizationTaxDetailsRepository, OrganizationTaxDetailsRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
