@@ -53,9 +53,9 @@ type BookingDetails {
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
   paymentMethod: BookingPaymentMethod
+  paymentStatus: BookingPaymentStatusDetails!
   resources: [BookingResourceDetails!]!
   sendInvoice: Boolean
-  status: BookingStatusDetails!
   type: BookingTypeDetails!
   until: DateTime!
 }
@@ -75,6 +75,11 @@ type BookingPaymentMethodTypeDetails {
   type: BookingPaymentMethod!
 }
 
+type BookingPaymentStatusDetails {
+  name: String!
+  type: BookingPaymentStatus!
+}
+
 type BookingResourceDetails {
   capacity: Int!
   color: String
@@ -86,11 +91,6 @@ type BookingResourceDetails {
   requireBookingApproval: Boolean!
   uniqueId: ID!
   zones: [Booking_OrganizationZoneDetails!]!
-}
-
-type BookingStatusDetails {
-  name: String!
-  type: BookingStatus!
 }
 
 type BookingTypeDetails {
@@ -1029,8 +1029,8 @@ type Query {
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookingPaymentMethodTypes: [BookingPaymentMethodTypeDetails!]!
+  bookingPaymentStatuses: [BookingPaymentStatusDetails!]!
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
-  bookingStatuses: [BookingStatusDetails!]!
   bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
   coreCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1568,7 +1568,7 @@ input BookingWhereInput {
   nameContains: String
   notesContains: String
   organizationIds: [String!]
-  status: BookingStatus
+  status: BookingPaymentStatus
   teamIds: [String!]
   toGt: DateTime
   toGte: DateTime
@@ -2347,7 +2347,7 @@ enum BookingPaymentMethod {
   CARD
 }
 
-enum BookingStatus {
+enum BookingPaymentStatus {
   PAYMENT_CONFIRMED
   PAYMENT_EXPIRED
   PAYMENT_PENDING

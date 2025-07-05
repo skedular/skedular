@@ -33,7 +33,7 @@ message Booking {
   google.protobuf.Timestamp until = 4;
   string notes = 5;
   BookingType type = 6;
-  BookingStatus status = 7;
+  BookingPaymentStatus paymentStatus = 7;
   bool isPaymentRequired = 8;
   repeated string involvedCustomerIds = 9;
   repeated string involvedOrganizationIds = 10;
@@ -78,10 +78,11 @@ message BookingSchedule {
   google.protobuf.Timestamp until = 2;
 }
 
-enum BookingStatus {
-  Pending = 0;
-  Rejected = 1;
-  Confirmed = 2;
+enum BookingPaymentStatus
+{
+  PaymentPending = 0;
+  PaymentRejected = 1;
+  PaymentConfirmed = 2;
   PaymentExpired = 3;
   PaymentRecordNeverCreated = 4;
 }

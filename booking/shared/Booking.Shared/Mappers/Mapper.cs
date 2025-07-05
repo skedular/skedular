@@ -52,14 +52,14 @@ public class Mapper : IMapper
                 BookingType.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Status = src.Status switch
+            PaymentStatus = src.PaymentStatus switch
             {
-                BookingStatus.PaymentPending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Pending,
-                BookingStatus.PaymentRejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Rejected,
-                BookingStatus.PaymentConfirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.Confirmed,
-                BookingStatus.PaymentExpired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentExpired,
-                BookingStatus.PaymentRecordNeverCreated =>
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.PaymentRecordNeverCreated,
+                BookingPaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentPending,
+                BookingPaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentRejected,
+                BookingPaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentConfirmed,
+                BookingPaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentExpired,
+                BookingPaymentStatus.RecordNeverCreated =>
+                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
@@ -193,7 +193,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
-            Status = src.Status.ToBookingStatus(),
+            PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,

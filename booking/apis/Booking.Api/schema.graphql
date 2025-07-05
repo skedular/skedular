@@ -18,7 +18,7 @@ type BookingDetails {
   until: DateTime!
   notes: String
   type: BookingTypeDetails!
-  status: BookingStatusDetails!
+  paymentStatus: BookingPaymentStatusDetails!
   resources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
@@ -55,6 +55,11 @@ type BookingPaymentMethodTypeDetails {
   name: String!
 }
 
+type BookingPaymentStatusDetails {
+  type: BookingPaymentStatus!
+  name: String!
+}
+
 type BookingResourceDetails {
   uniqueId: ID!
   name: String!
@@ -66,11 +71,6 @@ type BookingResourceDetails {
   customTags: [Booking_OrganizationCustomTagDetails!]!
   zones: [Booking_OrganizationZoneDetails!]!
   customers: [Booking_CustomerDetails!]!
-}
-
-type BookingStatusDetails {
-  type: BookingStatus!
-  name: String!
 }
 
 type BookingTypeDetails {
@@ -185,7 +185,7 @@ type PageInfo {
 type Query {
   bookingTypes: [BookingTypeDetails!]!
   marketplaceBookingTypes: [BookingTypeDetails!]!
-  bookingStatuses: [BookingStatusDetails!]!
+  bookingPaymentStatuses: [BookingPaymentStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
@@ -254,7 +254,7 @@ input BookingWhereInput {
   toLte: DateTime
   notesContains: String
   type: BookingType
-  status: BookingStatus
+  status: BookingPaymentStatus
   nameContains: String
   organizationIds: [String!]
   locationIds: [String!]
@@ -306,7 +306,7 @@ enum BookingPaymentMethod {
   BANK_ACCOUNT
 }
 
-enum BookingStatus {
+enum BookingPaymentStatus {
   PAYMENT_PENDING
   PAYMENT_REJECTED
   PAYMENT_CONFIRMED

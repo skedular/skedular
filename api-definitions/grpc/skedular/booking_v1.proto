@@ -106,11 +106,11 @@ enum BookingType
     NonWorkingDay = 9;
 }
 
-enum BookingStatus
+enum BookingPaymentStatus
 {
-    Pending = 0;
-    Rejected = 1;
-    Confirmed = 2;
+    PaymentPending = 0;
+    PaymentRejected = 1;
+    PaymentConfirmed = 2;
     PaymentExpired = 3;
     PaymentRecordNeverCreated = 4;
 }
@@ -146,7 +146,7 @@ message Booking {
     string notes = 4;
     repeated Resource resources = 5;
     BookingType type = 6;
-    BookingStatus status = 7;
+    BookingPaymentStatus paymentStatus = 7;
     bool isPaymentRequired = 8;
     repeated Customer involvedCustomers = 9;
     repeated Organization involvedOrganizations = 10;

@@ -38,13 +38,13 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public IEnumerable<BookingStatusDetails> BookingStatuses() =>
+    public IEnumerable<BookingPaymentStatusDetails> BookingPaymentStatuses() =>
     [
-        new() { Type = BookingStatus.PaymentPending, Name = BookingStatusConstants.PaymentPending.ToBookingStatusName() },
-        new() { Type = BookingStatus.PaymentRejected, Name = BookingStatusConstants.PaymentRejected.ToBookingStatusName() },
-        new() { Type = BookingStatus.PaymentConfirmed, Name = BookingStatusConstants.PaymentConfirmed.ToBookingStatusName() },
-        new() { Type = BookingStatus.PaymentExpired, Name = BookingStatusConstants.PaymentExpired.ToBookingStatusName() },
-        new() { Type = BookingStatus.PaymentRecordNeverCreated, Name = BookingStatusConstants.PaymentRecordNeverCreated.ToBookingStatusName() }
+        new() { Type = BookingPaymentStatus.Pending, Name = BookingPaymentStatusConstants.Pending.ToBookingPaymentStatusName() },
+        new() { Type = BookingPaymentStatus.Rejected, Name = BookingPaymentStatusConstants.Rejected.ToBookingPaymentStatusName() },
+        new() { Type = BookingPaymentStatus.Confirmed, Name = BookingPaymentStatusConstants.Confirmed.ToBookingPaymentStatusName() },
+        new() { Type = BookingPaymentStatus.Expired, Name = BookingPaymentStatusConstants.Expired.ToBookingPaymentStatusName() },
+        new() { Type = BookingPaymentStatus.RecordNeverCreated, Name = BookingPaymentStatusConstants.RecordNeverCreated.ToBookingPaymentStatusName() }
     ];
 
     [UseResolverScope]

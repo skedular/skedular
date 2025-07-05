@@ -126,7 +126,7 @@ public class BookingService(
         }
 
         booking.IsPaymentRequired = booking.LineItems.Count != 0;
-        booking.Status = booking.LineItems.Count == 0 ? BookingStatus.PaymentConfirmed : BookingStatus.PaymentPending;
+        booking.PaymentStatus = booking.LineItems.Count == 0 ? BookingPaymentStatus.Confirmed : BookingPaymentStatus.Pending;
 
         var bookingEntity = mapper.MapTo(
             booking,
@@ -642,7 +642,7 @@ public class BookingService(
         var existingBookedOnMarketplace = existingBooking.BookedOnMarketplace;
 
         booking.IsPaymentRequired = existingLineItems.Count != 0;
-        booking.Status = existingLineItems.Count == 0 ? BookingStatus.PaymentConfirmed : BookingStatus.PaymentPending;
+        booking.PaymentStatus = existingLineItems.Count == 0 ? BookingPaymentStatus.Confirmed : BookingPaymentStatus.Pending;
         booking.PaymentMethod = existingBooking.PaymentMethod.ToBookingPaymentMethod();
         booking.SendInvoice = existingBooking.SendInvoice;
         booking.InvoiceUrl = existingBooking.InvoiceUrl;

@@ -15,7 +15,7 @@ public class Booking : EntityBaseWithDeleted
     public string? Notes { get; set; }
     public string Type { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; }
-    public string Status { get; set; }
+    public string PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
     public bool BookedOnMarketplace { get; set; }
@@ -47,7 +47,10 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
-        builder.Property(item => item.Status).HasMaxLength(Constants.MaxBookingStatusLength).HasDefaultValue(BookingStatusConstants.PaymentConfirmed);
+        builder
+            .Property(item => item.PaymentStatus)
+            .HasMaxLength(Constants.MaxBookingPaymentStatusLength)
+            .HasDefaultValue(BookingPaymentStatusConstants.Confirmed);
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
         builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
@@ -72,7 +75,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.Until);
         builder.HasIndex(item => item.Notes);
         builder.HasIndex(item => item.Type);
-        builder.HasIndex(item => item.Status);
+        builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.IsPaymentRequired);
         builder.HasIndex(item => item.PaymentMethod);
         builder.HasIndex(item => item.SendInvoice);

@@ -9,9 +9,9 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
+using BookingPaymentStatus = Api.Shared.Services.Models.BookingPaymentStatus;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
-using BookingStatus = Api.Shared.Services.Models.BookingStatus;
 using Customer = Booking.Shared.Models.Customer;
 using Identity = Booking.Shared.Models.Identity;
 using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
@@ -89,7 +89,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
-            Status = src.Status.ToBookingStatus(),
+            PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
@@ -149,7 +149,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
-            Status = new BookingStatusDetails { Type = src.Status, Name = src.Status.ToBookingStatusName() },
+            PaymentStatus = new BookingPaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToBookingPaymentStatusName() },
             IsPaymentRequired = src.IsPaymentRequired,
             Resources = MapTo(src.Resources),
             InvolvedCustomers = MapTo(src.InvolvedCustomers),
@@ -268,7 +268,7 @@ public class Mapper : IMapper
         dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
-        dest.Status = src.Status.ToBookingStatus();
+        dest.PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
@@ -313,13 +313,13 @@ public class Mapper : IMapper
                 BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Status = src.Status switch
+            PaymentStatus = src.PaymentStatus switch
             {
-                BookingStatus.PaymentPending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Pending,
-                BookingStatus.PaymentRejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Rejected,
-                BookingStatus.PaymentConfirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.Confirmed,
-                BookingStatus.PaymentExpired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus.PaymentExpired,
-                BookingStatus.PaymentRecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingStatus
+                BookingPaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentPending,
+                BookingPaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentRejected,
+                BookingPaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentConfirmed,
+                BookingPaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentExpired,
+                BookingPaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus
                     .PaymentRecordNeverCreated,
                 _ => throw new ArgumentOutOfRangeException()
             },

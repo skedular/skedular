@@ -120,7 +120,7 @@ internal static class BookingExtensions
 
         if (searchCriteria.Status is not null)
         {
-            query = query.Where(item => item.Type == searchCriteria.Status.Value.ToBookingStatus());
+            query = query.Where(item => item.Type == searchCriteria.Status.Value.ToBookingPaymentStatus());
         }
 
         if (searchCriteria.OrganizationIds.Count != 0)
@@ -186,8 +186,8 @@ internal static class BookingExtensions
                 ? originalQuery.OrderBy(x => x.Type)
                 : originalQuery.OrderByDescending(x => x.Type),
             BookingOrderField.Status => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Status)
-                : originalQuery.OrderByDescending(x => x.Status),
+                ? originalQuery.OrderBy(x => x.PaymentStatus)
+                : originalQuery.OrderByDescending(x => x.PaymentStatus),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -205,8 +205,8 @@ internal static class BookingExtensions
                     ? query.ThenBy(x => x.Type)
                     : query.ThenByDescending(x => x.Type),
                 BookingOrderField.Status => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Status)
-                    : query.ThenByDescending(x => x.Status),
+                    ? query.ThenBy(x => x.PaymentStatus)
+                    : query.ThenByDescending(x => x.PaymentStatus),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }
