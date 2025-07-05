@@ -35,14 +35,14 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Autocomplete, Checkboxes, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import { array, mixed, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: bookProduct_query$key;
@@ -80,10 +80,12 @@ type ResourceDetails = {
 
 type BookingDetails = {
   date: Dayjs;
+  notes: string;
   quantity: number;
   resources: string[];
   type: string;
   paymentMethod: string;
+  sendInvoice: boolean;
 };
 
 const bookingSchema = (numberOfResourcesToBook: number) =>
@@ -105,8 +107,10 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
 
         return value?.length <= numberOfResourcesToBook * quantity;
       }),
+    notes: string().notRequired(),
     type: string().required('Type is required'),
     paymentMethod: string().required('Payment method is required'),
+    sendInvoice: boolean().required('Send invoice is required'),
   });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -184,6 +188,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
+          notes
           until
           type {
             type
@@ -220,6 +225,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             type
             name
           }
+          sendInvoice
         }
       }
     }
@@ -250,8 +256,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
+  const [notes, setNotes] = useState<string>('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
   const [paymentMethod, setPaymentMethod] = useState<string>('CARD');
+  const [sendInvoice, setSendInvoice] = useState<boolean>(true);
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -437,7 +445,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, quantity, resources: resourceIds, type, paymentMethod }: BookingDetails) => {
+  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, sendInvoice }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -461,12 +469,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           customerIds: [customerId],
           from,
           until,
+          notes,
           organizationIds: [organizationId],
           teamIds: [],
           resourceIds,
           type: type as BookingType,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
           paymentMethod: paymentMethod as BookingPaymentMethod,
+          sendInvoice,
         },
       },
       onCompleted: (response, errors) => {
@@ -514,6 +524,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             id,
             from,
             until,
+            notes,
             type: {
               type: type as BookingType,
               name: '',
@@ -534,6 +545,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               type: paymentMethod as BookingPaymentMethod,
               name: '',
             },
+            sendInvoice,
           },
         },
       },
@@ -576,6 +588,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               quantity,
               type: bookingType,
               paymentMethod,
+              notes,
+              sendInvoice,
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
@@ -584,6 +598,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               setQuantity(values!.quantity);
               setBookingType(values!.type);
               setPaymentMethod(values!.paymentMethod);
+              setNotes(values!.notes);
+              setSendInvoice(values!.sendInvoice);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -607,6 +623,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
                     <FormFieldLabel>
                       <ErrorTypography errorMessage={dateTimeErrorMessage} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Notes">
+                      <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Quantity">
@@ -775,6 +795,17 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
                     <FormFieldLabel label="Payment Method">
                       <SingleChoiceBookingPaymentMethodType rootDataRelay={rootData} name="paymentMethod" required={requiredFields.paymentMethod} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="">
+                      <Checkboxes
+                        name="sendInvoice"
+                        data={{
+                          label: 'Send Invoice',
+                          value: true,
+                        }}
+                        required={requiredFields.sendInvoice}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Total Price">
