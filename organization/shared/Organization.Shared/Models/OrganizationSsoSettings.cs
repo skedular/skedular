@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
 
-public class OrganizationSsoSetting : ModelBase
+public class OrganizationSsoSettings : ModelBase
 {
     public bool IsActive { get; set; }
     public string EntityId { get; set; } = string.Empty;

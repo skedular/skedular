@@ -5,10 +5,10 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Sso;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
+using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Constants = Enterprise.Shared.Security.Sso.Models.Constants;
-using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
 using OrganizationSsoValidationResult = Organization.Shared.Configurations.OrganizationSsoValidationResult;
 
 namespace Organization.Api.Services;
@@ -16,7 +16,7 @@ namespace Organization.Api.Services;
 public interface IOrganizationSsoService
 {
     Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
@@ -40,7 +40,7 @@ public class OrganizationSsoService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (ssoSettings is null || !ssoSettings.IsActive)
         {
             return false;
@@ -57,20 +57,20 @@ public class OrganizationSsoService(
             !string.IsNullOrWhiteSpace(item.Email) && item.Email.Equals(userSsoContext.Email, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    public async Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(ssoSetting.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(ssoSetting.Organization.Id);
+        ArgumentNullException.ThrowIfNull(ssoSettings.Organization);
+        ArgumentException.ThrowIfNullOrWhiteSpace(ssoSettings.Organization.Id);
 
         // Validate SSO settings first
-        var validationResult = await ValidateSsoConfigurationAsync(ssoSetting, cancellationToken);
+        var validationResult = await ValidateSsoConfigurationAsync(ssoSettings, cancellationToken);
         if (!validationResult.IsMetadataValid || !validationResult.IsCertificateValid)
         {
             throw new InvalidSsoConfiguration();
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(ssoSetting.Organization.Id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(ssoSettings.Organization.Id, cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
@@ -81,14 +81,14 @@ public class OrganizationSsoService(
 
         if (organization.OrganizationSsoSettings is null)
         {
-            ssoSetting.Id = randomHelper.Generate();
-            repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapToEntity(ssoSetting, organization));
+            ssoSettings.Id = randomHelper.Generate();
+            repositoryFactory.OrganizationSsoSettingsRepository.Add(mapper.MapToEntity(ssoSettings, organization));
         }
         else
         {
-            ssoSetting.Id = organization.OrganizationSsoSettings.Id;
-            repositoryFactory.OrganizationSsoSettingRepository.Update(
-                mapper.MergeToEntity(ssoSetting, organization.OrganizationSsoSettings, organization));
+            ssoSettings.Id = organization.OrganizationSsoSettings.Id;
+            repositoryFactory.OrganizationSsoSettingsRepository.Update(
+                mapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization));
         }
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
@@ -118,7 +118,7 @@ public class OrganizationSsoService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        _ = repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
+        _ = repositoryFactory.OrganizationSsoSettingsRepository.Remove(organization.OrganizationSsoSettings);
         organization.OrganizationSsoSettings = null;
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
@@ -133,7 +133,8 @@ public class OrganizationSsoService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
+        var existingOrganizationSsoSetting =
+            await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
             return string.Empty;
@@ -160,7 +161,7 @@ public class OrganizationSsoService(
         var samlOriginId = samlResponse.InResponseTo.StartsWith(Constants.SamlIdPrefix)
             ? samlResponse.InResponseTo[Constants.SamlIdPrefix.Length..]
             : samlResponse.InResponseTo;
-        var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(samlOriginId, cancellationToken);
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(samlOriginId, cancellationToken);
         if (ssoSettings is null)
         {
             throw new OrganizationSsoIsNotYetSetup();
@@ -198,7 +199,7 @@ public class OrganizationSsoService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         organization.OrganizationSsoSettings.IsActive = isActive;
-        repositoryFactory.OrganizationSsoSettingRepository.Update(organization.OrganizationSsoSettings);
+        repositoryFactory.OrganizationSsoSettingsRepository.Update(organization.OrganizationSsoSettings);
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 
@@ -209,7 +210,7 @@ public class OrganizationSsoService(
     }
 
     public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(
-        OrganizationSsoSetting ssoSettings,
+        OrganizationSsoSettings ssoSettingses,
         CancellationToken cancellationToken)
     {
         var result = new OrganizationSsoValidationResult();
@@ -218,12 +219,12 @@ public class OrganizationSsoService(
         {
             // Test metadata
             result.IsMetadataValid = await samlAssertionConsumerService.ValidateMetadataAsync(
-                ssoSettings.AppFederationMetadataUrl,
+                ssoSettingses.AppFederationMetadataUrl,
                 cancellationToken);
 
             // Test certificate from metadata
             result.IsCertificateValid = await samlAssertionConsumerService.ValidateCertificateAsync(
-                ssoSettings.AppFederationMetadataUrl,
+                ssoSettingses.AppFederationMetadataUrl,
                 cancellationToken);
         }
         catch (Exception ex)

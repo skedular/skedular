@@ -35,7 +35,7 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<Team> Teams { get; set; } = [];
     public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
-    public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public virtual OrganizationSsoSettings? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];

@@ -7,7 +7,7 @@ namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class OrganizationSsoSetting : EntityBase
+public class OrganizationSsoSettings : EntityBase
 {
     public bool IsActive { get; set; }
     public string EntityId { get; set; }
@@ -20,16 +20,13 @@ public class OrganizationSsoSetting : EntityBase
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class OrganizationSsoConfiguration : IEntityTypeConfiguration<OrganizationSsoSetting>
+public class OrganizationSsoSettingsConfiguration : IEntityTypeConfiguration<OrganizationSsoSettings>
 {
-    public void Configure(EntityTypeBuilder<OrganizationSsoSetting> builder)
+    public void Configure(EntityTypeBuilder<OrganizationSsoSettings> builder)
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.IsActive)
-            .HasDefaultValue(true)
-            .IsRequired();
-
+        builder.Property(item => item.IsActive).HasDefaultValue(true).IsRequired();
         builder.Property(item => item.IsActive).HasDefaultValue(false);
         builder.Property(item => item.EntityId).HasMaxLength(Constants.MaxSsoEntityIdLength);
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -38,7 +35,7 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
         builder
             .HasOne(item => item.Organization)
             .WithOne(item => item.OrganizationSsoSettings)
-            .HasForeignKey<OrganizationSsoSetting>(item => item.OrganizationId);
+            .HasForeignKey<OrganizationSsoSettings>(item => item.OrganizationId);
 
         builder.HasIndex(item => item.IsActive);
     }

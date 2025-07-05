@@ -30,7 +30,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public ICollection<Tag> Tags { get; set; } = [];
-    public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public OrganizationSsoSettings? OrganizationSsoSettings { get; set; }
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }

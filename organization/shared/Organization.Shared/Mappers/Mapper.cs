@@ -9,7 +9,7 @@ using Customer = Organization.Shared.Models.Customer;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
-using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
@@ -150,10 +150,10 @@ public class Mapper : IMapper
         return organization;
     }
 
-    private static OrganizationSsoSettings? MapTo(OrganizationSsoSetting? src) =>
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings? MapTo(OrganizationSsoSettings? src) =>
         src is null
             ? null
-            : new OrganizationSsoSettings
+            : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings
             {
                 Id = src.Id,
                 EntityId = src.EntityId.ToSafeString(),

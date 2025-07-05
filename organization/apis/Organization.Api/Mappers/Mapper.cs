@@ -12,7 +12,6 @@ using Organization.Api.GraphQL.Organization;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
-using Organization.Shared.Database.Entities;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
@@ -39,9 +38,10 @@ using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
+using OrganizationBankAccount = Organization.Shared.Database.Entities.OrganizationBankAccount;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
-using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
+using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
 using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;
@@ -128,12 +128,12 @@ public interface IMapper
     Tag MapTo(UpdateZoneInput src);
 
     IEnumerable<string> MapTo(Offering offering);
-    OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src);
-    Shared.Database.Entities.OrganizationSsoSetting MapToEntity(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+    OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src);
+    Shared.Database.Entities.OrganizationSsoSettings MapToEntity(OrganizationSsoSettings src, Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
-        OrganizationSsoSetting src,
-        Shared.Database.Entities.OrganizationSsoSetting dest,
+    Shared.Database.Entities.OrganizationSsoSettings MergeToEntity(
+        OrganizationSsoSettings src,
+        Shared.Database.Entities.OrganizationSsoSettings dest,
         Shared.Database.Entities.Organization organization);
 
     Tag MapTo(AddProductTagInput src);
@@ -714,7 +714,7 @@ public class Mapper : IMapper
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
-    public OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src) =>
+    public OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src) =>
         new()
         {
             EntityId = src.EntityId,
@@ -724,14 +724,14 @@ public class Mapper : IMapper
             IsActive = src.IsActive
         };
 
-    public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(
-        OrganizationSsoSetting src,
+    public Shared.Database.Entities.OrganizationSsoSettings MapToEntity(
+        OrganizationSsoSettings src,
         Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.OrganizationSsoSetting(), organization);
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationSsoSettings(), organization);
 
-    public Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
-        OrganizationSsoSetting src,
-        Shared.Database.Entities.OrganizationSsoSetting dest,
+    public Shared.Database.Entities.OrganizationSsoSettings MergeToEntity(
+        OrganizationSsoSettings src,
+        Shared.Database.Entities.OrganizationSsoSettings dest,
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
@@ -1671,10 +1671,10 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src) =>
+    private static OrganizationSsoSettings? MapTo(Shared.Database.Entities.OrganizationSsoSettings? src) =>
         src is null
             ? null
-            : new OrganizationSsoSetting
+            : new OrganizationSsoSettings
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
@@ -1752,7 +1752,7 @@ public class Mapper : IMapper
             OnboardingCompleted = src.OnboardingCompleted
         };
 
-    private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
+    private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSettings? src) =>
         src is null
             ? null
             : new OrganizationSsoSettingsDetails
