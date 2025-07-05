@@ -41,6 +41,8 @@ public static class Extensions
     public static int? FromNullInt(this int value) => value == -1 ? null : value;
     public static string ToRoundedPrice(this decimal price) => price.ToString("0.00", CultureInfo.InvariantCulture);
     public static decimal FromRoundedPrice(this string price) => decimal.Parse(price);
+    public static string ToRoundedDecimal(this decimal value) => value.ToString("0.00", CultureInfo.InvariantCulture);
+    public static decimal FromRoundedDecimal(this string value) => decimal.Parse(value);
     public static string ToSafeString(this string? str) => string.IsNullOrWhiteSpace(str) ? string.Empty : str;
 
     public static async Task ForEachAsync<T>(this IEnumerable<T> list, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken)

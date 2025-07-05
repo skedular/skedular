@@ -12,6 +12,7 @@ using Organization.Api.GraphQL.Organization;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
+using Organization.Api.GraphQL.TaxDetails;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
@@ -175,6 +176,15 @@ public interface IMapper
     Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src);
     OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
     OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
+    
+    
+    OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src);
+    Shared.Database.Entities.OrganizationTaxDetails MapToEntity(OrganizationTaxDetails src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.OrganizationTaxDetails MergeToEntity(
+        OrganizationTaxDetails src,
+        Shared.Database.Entities.OrganizationTaxDetails dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -401,7 +411,8 @@ public class Mapper : IMapper
             ResourceTypes = src.Tags
                 .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                 .Select(item => MapTo(item)!),
-            SsoSettings = MapTo(src.OrganizationSsoSettings)
+            SsoSettings = MapTo(src.OrganizationSsoSettings),
+            TaxDetails = MapTo(src.OrganizationTaxDetails)
         };
     }
 
@@ -1132,6 +1143,30 @@ public class Mapper : IMapper
             };
 
     public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+    public OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src) =>
+        new()
+        {
+            GstNumber = src.GstNumber,
+             GstPercentage = src.GstPercentage.FromRoundedDecimal(),
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+        };
+
+    public Shared.Database.Entities.OrganizationTaxDetails MapToEntity(
+        OrganizationTaxDetails src, 
+        Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationTaxDetails(), organization);
+
+    public Shared.Database.Entities.OrganizationTaxDetails MergeToEntity(
+        OrganizationTaxDetails src, 
+        Shared.Database.Entities.OrganizationTaxDetails dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.GstNumber = src.GstNumber;
+        dest.GstPercentage = src.GstPercentage;
+        dest.Organization = organization;
+        return dest;
+    }
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1759,5 +1794,13 @@ public class Mapper : IMapper
             : new OrganizationSsoSettingsDetails
             {
                 EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
+    
+    private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
+        src is null
+            ? null
+            : new GraphQL.TaxDetails.OrganizationTaxDetails
+            {
+                GstNumber = src.GstNumber, GstPercentage = src.GstPercentage.ToRoundedDecimal()
             };
 }

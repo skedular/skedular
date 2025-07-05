@@ -171,7 +171,7 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 GstNumber = src.GstNumber.ToSafeString(),
-                GstPercentage = src.GstPercentage.ToRoundedPrice(),
+                GstPercentage = src.GstPercentage.ToRoundedDecimal(),
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>

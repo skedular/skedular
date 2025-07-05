@@ -6,6 +6,7 @@ using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Tag;
+using Organization.Api.GraphQL.TaxDetails;
 
 namespace Organization.Api.GraphQL.Organization;
 
@@ -51,6 +52,7 @@ public class OrganizationDetails : Node
     public bool HasAttachedPaymentMethod { get; set; }
 
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
+    [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

@@ -78,8 +78,8 @@ type Mutation {
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
-  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
@@ -101,6 +101,8 @@ type Mutation {
   updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
+  updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -206,6 +208,7 @@ type OrganizationDetails {
   paymentMethods: [OrganizationPaymentMethod!]!
   hasAttachedPaymentMethod: Boolean!
   ssoSettings: OrganizationSsoSettingsDetails
+  taxDetails: OrganizationTaxDetails
   id: ID!
 }
 
@@ -298,11 +301,6 @@ type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
 }
 
-type OrganizationSsoSettingsPayload {
-  clientMutationId: String
-  organization: OrganizationDetails!
-}
-
 type OrganizationStripeConnectAccountDetails {
   isDefault: Boolean!
   name: String!
@@ -361,6 +359,11 @@ type OrganizationTagPayload {
 type OrganizationTagsPayload {
   clientMutationId: String
   organizationTags: [OrganizationTagDetails!]!
+}
+
+type OrganizationTaxDetails {
+  gstNumber: String!
+  gstPercentage: String!
 }
 
 type OrganizationTermsOfUse {
@@ -740,6 +743,11 @@ input RemoveOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input RemoveOrganizationTaxDetailsInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
 input SetOrganizationBankAccountAsDefaultInput {
   clientMutationId: String
   id: String!
@@ -823,6 +831,13 @@ input UpdateOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String!
   name: String!
+}
+
+input UpdateOrganizationTaxDetailsInput {
+  clientMutationId: String
+  organizationId: String!
+  gstNumber: String!
+  gstPercentage: String!
 }
 
 input UpdateProductTagInput {

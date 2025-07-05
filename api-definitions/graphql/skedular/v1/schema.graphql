@@ -581,7 +581,8 @@ type Mutation {
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
+  removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
@@ -602,8 +603,9 @@ type Mutation {
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload! @cost(weight: "10")
@@ -788,6 +790,7 @@ type OrganizationDetails {
   physicalAddress: OrganizationAddressDetails!
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
+  taxDetails: OrganizationTaxDetails
   termsOfUse: OrganizationTermsOfUse
   type: OrganizationTypeDetails!
   website: String
@@ -882,11 +885,6 @@ type OrganizationSsoSettingsDetails {
   loginUrl: String!
 }
 
-type OrganizationSsoSettingsPayload {
-  clientMutationId: String
-  organization: OrganizationDetails!
-}
-
 type OrganizationStripeConnectAccountDetails {
   businessType: String
   capabilitiesCardPayments: String!
@@ -945,6 +943,11 @@ type OrganizationTagPayload {
 type OrganizationTagsPayload {
   clientMutationId: String
   organizationTags: [OrganizationTagDetails!]!
+}
+
+type OrganizationTaxDetails {
+  gstNumber: String!
+  gstPercentage: String!
 }
 
 type OrganizationTermsOfUse {
@@ -1992,6 +1995,11 @@ input RemoveOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input RemoveOrganizationTaxDetailsInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
 input RemoveTeamMemberInput {
   clientMutationId: String
   id: String!
@@ -2224,6 +2232,13 @@ input UpdateOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String!
   name: String!
+}
+
+input UpdateOrganizationTaxDetailsInput {
+  clientMutationId: String
+  gstNumber: String!
+  gstPercentage: String!
+  organizationId: String!
 }
 
 input UpdateProductInput {

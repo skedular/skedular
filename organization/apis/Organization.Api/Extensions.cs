@@ -31,7 +31,8 @@ public static class Extensions
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
             .AddScoped<IOrganizationBillingService, OrganizationBillingService>()
             .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
-            .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>();
+            .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
+            .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

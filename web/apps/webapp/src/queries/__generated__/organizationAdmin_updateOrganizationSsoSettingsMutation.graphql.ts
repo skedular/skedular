@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3256e39d9b815b315397d8739521640d>>
+ * @generated SignedSource<<6e3f387ed8a870a24d19df6b42955cdc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "OrganizationSsoSettingsPayload",
+    "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
     "name": "updateOrganizationSsoSettings",
     "plural": false,
