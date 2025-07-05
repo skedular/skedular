@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
+using Booking.Api.GraphQL.Payment;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
@@ -161,15 +162,22 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            LineItems = src.LineItems.Select(item => new LineItemDetails
-            {
-                ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
-                Quantity = item.Quantity
-            }),
+            LineItems =
+                src.LineItems.Select(item => new LineItemDetails
+                {
+                    ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
+                    Quantity = item.Quantity
+                }),
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry,
-            PaymentMethod = src.PaymentMethod,
+            PaymentMethod =
+                src.PaymentMethod is null
+                    ? null
+                    : new BookingPaymentMethodTypeDetails
+                    {
+                        Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToBookingPaymentMethodName()
+                    },
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };

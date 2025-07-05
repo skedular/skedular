@@ -65,15 +65,19 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
-            PaymentMethod = src.PaymentMethod switch
+            SendInvoice = src.SendInvoice ?? false,
+            InvoiceUrl = src.InvoiceUrl.ToSafeString()
+        };
+
+        if (src.PaymentMethod is not null)
+        {
+            booking.PaymentMethod = src.PaymentMethod switch
             {
                 BookingPaymentMethod.Card => PaymentMethod.Card,
                 BookingPaymentMethod.BankAccount => PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
-            },
-            SendInvoice = src.SendInvoice ?? false,
-            InvoiceUrl = src.InvoiceUrl.ToSafeString()
-        };
+            };
+        }
 
         if (src.PaidByCustomer is not null)
         {

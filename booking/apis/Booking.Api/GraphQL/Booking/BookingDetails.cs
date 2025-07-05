@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Booking.Api.GraphQL.Payment;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
@@ -22,7 +23,7 @@ public class BookingDetails : Node
     [GraphQLName("paidByCustomer")] public CustomerDetails? PaidByCustomer { get; set; }
     [GraphQLName("paidByOrganization")] public OrganizationDetails? PaidByOrganization { get; set; }
     [GraphQLName("createdByCustomer")] public CustomerDetails? CreatedByCustomer { get; set; }
-    [GraphQLName("paymentMethod")] public BookingPaymentMethod? PaymentMethod { get; set; }
+    [GraphQLName("paymentMethod")] public BookingPaymentMethodTypeDetails? PaymentMethod { get; set; }
     [GraphQLName("sendInvoice")] public bool? SendInvoice { get; set; }
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
 

@@ -52,7 +52,7 @@ type BookingDetails {
   notes: String
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
-  paymentMethod: BookingPaymentMethod
+  paymentMethod: BookingPaymentMethodTypeDetails
   paymentStatus: BookingPaymentStatusDetails!
   resources: [BookingResourceDetails!]!
   sendInvoice: Boolean
@@ -2348,11 +2348,11 @@ enum BookingPaymentMethod {
 }
 
 enum BookingPaymentStatus {
-  PAYMENT_CONFIRMED
-  PAYMENT_EXPIRED
-  PAYMENT_PENDING
-  PAYMENT_RECORD_NEVER_CREATED
-  PAYMENT_REJECTED
+  CONFIRMED
+  EXPIRED
+  PENDING
+  RECORD_NEVER_CREATED
+  REJECTED
 }
 
 enum BookingType {

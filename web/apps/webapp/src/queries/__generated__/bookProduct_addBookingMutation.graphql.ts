@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac709d95c772a8b16f004978edd2f57a>>
+ * @generated SignedSource<<6d4cc912f4e1fbddc7011b398b3786d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,6 +51,10 @@ export type bookProduct_addBookingMutation$data = {
         readonly name: string;
         readonly uniqueId: string;
       }>;
+      readonly paymentMethod: {
+        readonly name: string;
+        readonly type: BookingPaymentMethod;
+      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -91,6 +95,10 @@ export type bookProduct_addBookingMutation$rawResponse = {
         readonly name: string;
         readonly uniqueId: string;
       }>;
+      readonly paymentMethod: {
+        readonly name: string;
+        readonly type: BookingPaymentMethod;
+      } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
@@ -147,26 +155,36 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v5 = [
-  (v3/*: any*/),
+v6 = [
+  (v4/*: any*/),
   (v2/*: any*/),
-  (v4/*: any*/)
+  (v5/*: any*/)
 ],
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -202,16 +220,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "type",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        (v2/*: any*/)
-      ],
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -222,7 +231,7 @@ v6 = {
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v3/*: any*/),
+        (v4/*: any*/),
         (v2/*: any*/),
         {
           "alias": null,
@@ -263,7 +272,7 @@ v6 = {
       "name": "involvedOrganizations",
       "plural": true,
       "selections": [
-        (v3/*: any*/),
+        (v4/*: any*/),
         (v2/*: any*/)
       ],
       "storageKey": null
@@ -276,9 +285,9 @@ v6 = {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v3/*: any*/),
-        (v2/*: any*/),
         (v4/*: any*/),
+        (v2/*: any*/),
+        (v5/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -286,7 +295,7 @@ v6 = {
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v5/*: any*/),
+          "selections": (v6/*: any*/),
           "storageKey": null
         },
         {
@@ -296,10 +305,20 @@ v6 = {
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v5/*: any*/),
+          "selections": (v6/*: any*/),
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingPaymentMethodTypeDetails",
+      "kind": "LinkedField",
+      "name": "paymentMethod",
+      "plural": false,
+      "selections": (v3/*: any*/),
       "storageKey": null
     }
   ],
@@ -320,7 +339,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v6/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -342,7 +361,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -370,16 +389,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "de6761518cf94230661c49f74b0711ee",
+    "cacheID": "8ec4dcb5b8edbcafc948b68af50d01f3",
     "id": null,
     "metadata": {},
     "name": "bookProduct_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a0e44a19f87e8f4d769460f8e90bf3f6";
+(node as any).hash = "f7bfe5937d9c1caf4187ea2b6350a5f9";
 
 export default node;

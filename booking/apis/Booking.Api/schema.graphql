@@ -28,7 +28,7 @@ type BookingDetails {
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
   createdByCustomer: Booking_CustomerDetails
-  paymentMethod: BookingPaymentMethod
+  paymentMethod: BookingPaymentMethodTypeDetails
   sendInvoice: Boolean
   invoiceUrl: String
   lastModifiedByCustomer: Booking_CustomerDetails
@@ -307,11 +307,11 @@ enum BookingPaymentMethod {
 }
 
 enum BookingPaymentStatus {
-  PAYMENT_PENDING
-  PAYMENT_REJECTED
-  PAYMENT_CONFIRMED
-  PAYMENT_EXPIRED
-  PAYMENT_RECORD_NEVER_CREATED
+  PENDING
+  REJECTED
+  CONFIRMED
+  EXPIRED
+  RECORD_NEVER_CREATED
 }
 
 enum BookingType {

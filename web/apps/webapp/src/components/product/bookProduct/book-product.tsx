@@ -22,7 +22,7 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { BookingType, bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
+import type { BookingPaymentMethod, BookingType, bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
 import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
@@ -215,6 +215,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               name
               color
             }
+          }
+          paymentMethod {
+            type
+            name
           }
         }
       }
@@ -433,7 +437,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, quantity, resources: resourceIds, type }: BookingDetails) => {
+  const handleAddClick = ({ date, quantity, resources: resourceIds, type, paymentMethod }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -462,6 +466,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           resourceIds,
           type: type as BookingType,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
+          paymentMethod: paymentMethod as BookingPaymentMethod,
         },
       },
       onCompleted: (response, errors) => {
@@ -525,6 +530,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             ],
             involvedOrganizations: organizationId ? [{ uniqueId: organizationId, name: '' }] : [],
             resources: [],
+            paymentMethod: {
+              type: paymentMethod as BookingPaymentMethod,
+              name: '',
+            },
           },
         },
       },
