@@ -251,6 +251,7 @@ public static class Extensions
 
         if (app.Environment.IsDevelopment())
         {
+            app.MapOpenApi();
             app.UseOpenApi();
             app.UseSwaggerUi();
 
