@@ -78,9 +78,8 @@ type Mutation {
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
-  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
-  toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
@@ -299,6 +298,11 @@ type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
 }
 
+type OrganizationSsoSettingsPayload {
+  clientMutationId: String
+  organization: OrganizationDetails!
+}
+
 type OrganizationStripeConnectAccountDetails {
   isDefault: Boolean!
   name: String!
@@ -441,11 +445,6 @@ type RemoveOrganizationPaymentMethodPayload {
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
-}
-
-type UpdateOrganizationSsoSettingsPayload {
-  clientMutationId: String
-  organization: OrganizationDetails!
 }
 
 type Version {
@@ -749,12 +748,6 @@ input SetOrganizationBankAccountAsDefaultInput {
 input SetOrganizationStripeConnectAccountAsDefaultInput {
   clientMutationId: String
   id: String!
-}
-
-input ToggleOrganizationSsoInput {
-  clientMutationId: String
-  organizationId: String!
-  isActive: Boolean!
 }
 
 input UpdateCustomTagInput {

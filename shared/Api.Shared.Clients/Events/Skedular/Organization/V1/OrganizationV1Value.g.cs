@@ -35,7 +35,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
             "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
             "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCK0AwoMT3JnYW5pemF0",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCLuAwoMT3JnYW5pemF0",
             "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
             "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
             "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
@@ -43,45 +43,50 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "T2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRpb24uT2ZmZXJpbmcSFgoOYXp1",
             "cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlv",
             "bi5UYWcSOgoLc3NvU2V0dGluZ3MYCyABKAsyJS5vcmdhbml6YXRpb24uT3Jn",
-            "YW5pemF0aW9uU3NvU2V0dGluZ3MSDAoEdHlwZRgMIAEoCRIUCgxjb250YWN0",
-            "RW1haWwYDSABKAkSFAoMY29udGFjdFBob25lGA4gASgJEh4KFm1lbWJlclZp",
-            "c2liaWxpdHlQb2xpY3kYDyABKAkifAoST3JnYW5pemF0aW9uTWVtYmVyEgoK",
-            "AmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEoDjIS",
-            "Lm9yZ2FuaXphdGlvbi5Sb2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2FuaXph",
-            "dGlvbi5TdGF0dXMi0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUY",
-            "AiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
-            "YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAS",
-            "EQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3Rp",
-            "dmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIW",
-            "CghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9y",
-            "Z2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5n",
-            "b29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMg",
-            "ASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSJR",
-            "CgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlv",
-            "bhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJIn0KF09yZ2Fu",
-            "aXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCGVudGl0eUlkGAIg",
-            "ASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFwcEZlZGVyYXRpb25NZXRhZGF0",
-            "YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEoCCqtAQoEVHlwZRIYChRPcmdh",
-            "bml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIo",
-            "CiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJ",
-            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2Fu",
-            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQABIR",
-            "Cg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFj",
-            "dGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "YW5pemF0aW9uU3NvU2V0dGluZ3MSOAoKdGF4RGV0YWlscxgMIAEoCzIkLm9y",
+            "Z2FuaXphdGlvbi5Pcmdhbml6YXRpb25UYXhEZXRhaWxzEgwKBHR5cGUYDSAB",
+            "KAkSFAoMY29udGFjdEVtYWlsGA4gASgJEhQKDGNvbnRhY3RQaG9uZRgPIAEo",
+            "CRIeChZtZW1iZXJWaXNpYmlsaXR5UG9saWN5GBAgASgJInwKEk9yZ2FuaXph",
+            "dGlvbk1lbWJlchIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEiAK",
+            "BHJvbGUYAyABKA4yEi5vcmdhbml6YXRpb24uUm9sZRIkCgZzdGF0dXMYBCAB",
+            "KA4yFC5vcmdhbml6YXRpb24uU3RhdHVzItEBCghPZmZlcmluZxIKCgJpZBgB",
+            "IAEoCRIMCgRjb2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnBy",
+            "b3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9i",
+            "dWYuVGltZXN0YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UY",
+            "BiABKAUSGQoRYWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0",
+            "aW9uSWQYCCABKAkiFgoITG9jYXRpb24SCgoCaWQYASABKAkimQEKHEludml0",
+            "YXRpb25Ub0pvaW5Pcmdhbml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRl",
+            "ZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdh",
+            "bml6YXRpb25JZBgDIAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZp",
+            "dGVlSWQYBSABKAkiUQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkS",
+            "EwoLZGVzY3JpcHRpb24YAyABKAkSDAoEdHlwZRgEIAEoCRINCgVjb2xvchgF",
+            "IAEoCSJ9ChdPcmdhbml6YXRpb25Tc29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQ",
+            "CghlbnRpdHlJZBgCIAEoCRIQCghsb2dpblVybBgDIAEoCRIgChhhcHBGZWRl",
+            "cmF0aW9uTWV0YWRhdGFVcmwYBCABKAkSEAoIaXNBY3RpdmUYBSABKAgiTgoW",
+            "T3JnYW5pemF0aW9uVGF4RGV0YWlscxIKCgJpZBgBIAEoCRIRCglnc3ROdW1i",
+            "ZXIYAiABKAkSFQoNZ3N0UGVyY2VudGFnZRgDIAEoCSqtAQoEVHlwZRIYChRP",
+            "cmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQ",
+            "ARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhIn",
+            "CiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09y",
+            "Z2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQ",
+            "ABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoK",
+            "BkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50",
+            "cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "ContactEmail", "ContactPhone", "MemberVisibilityPolicy" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "MemberVisibilityPolicy" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails.Parser, new[]{ "Id", "GstNumber", "GstPercentage" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1148,6 +1153,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       azureTenantIds_ = other.azureTenantIds_.Clone();
       tags_ = other.tags_.Clone();
       ssoSettings_ = other.ssoSettings_ != null ? other.ssoSettings_.Clone() : null;
+      taxDetails_ = other.taxDetails_ != null ? other.taxDetails_.Clone() : null;
       type_ = other.type_;
       contactEmail_ = other.contactEmail_;
       contactPhone_ = other.contactPhone_;
@@ -1290,8 +1296,20 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "taxDetails" field.</summary>
+    public const int TaxDetailsFieldNumber = 12;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails taxDetails_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails TaxDetails {
+      get { return taxDetails_; }
+      set {
+        taxDetails_ = value;
+      }
+    }
+
     /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 12;
+    public const int TypeFieldNumber = 13;
     private string type_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1303,7 +1321,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     }
 
     /// <summary>Field number for the "contactEmail" field.</summary>
-    public const int ContactEmailFieldNumber = 13;
+    public const int ContactEmailFieldNumber = 14;
     private string contactEmail_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1315,7 +1333,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     }
 
     /// <summary>Field number for the "contactPhone" field.</summary>
-    public const int ContactPhoneFieldNumber = 14;
+    public const int ContactPhoneFieldNumber = 15;
     private string contactPhone_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1327,7 +1345,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     }
 
     /// <summary>Field number for the "memberVisibilityPolicy" field.</summary>
-    public const int MemberVisibilityPolicyFieldNumber = 15;
+    public const int MemberVisibilityPolicyFieldNumber = 16;
     private string memberVisibilityPolicy_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1364,6 +1382,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if(!azureTenantIds_.Equals(other.azureTenantIds_)) return false;
       if(!tags_.Equals(other.tags_)) return false;
       if (!object.Equals(SsoSettings, other.SsoSettings)) return false;
+      if (!object.Equals(TaxDetails, other.TaxDetails)) return false;
       if (Type != other.Type) return false;
       if (ContactEmail != other.ContactEmail) return false;
       if (ContactPhone != other.ContactPhone) return false;
@@ -1386,6 +1405,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       hash ^= azureTenantIds_.GetHashCode();
       hash ^= tags_.GetHashCode();
       if (ssoSettings_ != null) hash ^= SsoSettings.GetHashCode();
+      if (taxDetails_ != null) hash ^= TaxDetails.GetHashCode();
       if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (ContactEmail.Length != 0) hash ^= ContactEmail.GetHashCode();
       if (ContactPhone.Length != 0) hash ^= ContactPhone.GetHashCode();
@@ -1443,20 +1463,24 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(90);
         output.WriteMessage(SsoSettings);
       }
-      if (Type.Length != 0) {
+      if (taxDetails_ != null) {
         output.WriteRawTag(98);
+        output.WriteMessage(TaxDetails);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(106);
         output.WriteString(Type);
       }
       if (ContactEmail.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(ContactEmail);
       }
       if (ContactPhone.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(ContactPhone);
       }
       if (MemberVisibilityPolicy.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(MemberVisibilityPolicy);
       }
       if (_unknownFields != null) {
@@ -1504,20 +1528,24 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(90);
         output.WriteMessage(SsoSettings);
       }
-      if (Type.Length != 0) {
+      if (taxDetails_ != null) {
         output.WriteRawTag(98);
+        output.WriteMessage(TaxDetails);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(106);
         output.WriteString(Type);
       }
       if (ContactEmail.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(ContactEmail);
       }
       if (ContactPhone.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(ContactPhone);
       }
       if (MemberVisibilityPolicy.Length != 0) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteString(MemberVisibilityPolicy);
       }
       if (_unknownFields != null) {
@@ -1557,6 +1585,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (ssoSettings_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(SsoSettings);
       }
+      if (taxDetails_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(TaxDetails);
+      }
       if (Type.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
       }
@@ -1567,7 +1598,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ContactPhone);
       }
       if (MemberVisibilityPolicy.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(MemberVisibilityPolicy);
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(MemberVisibilityPolicy);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1616,6 +1647,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           SsoSettings = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings();
         }
         SsoSettings.MergeFrom(other.SsoSettings);
+      }
+      if (other.taxDetails_ != null) {
+        if (taxDetails_ == null) {
+          TaxDetails = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails();
+        }
+        TaxDetails.MergeFrom(other.TaxDetails);
       }
       if (other.Type.Length != 0) {
         Type = other.Type;
@@ -1702,18 +1739,25 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 98: {
-            Type = input.ReadString();
+            if (taxDetails_ == null) {
+              TaxDetails = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails();
+            }
+            input.ReadMessage(TaxDetails);
             break;
           }
           case 106: {
-            ContactEmail = input.ReadString();
+            Type = input.ReadString();
             break;
           }
           case 114: {
-            ContactPhone = input.ReadString();
+            ContactEmail = input.ReadString();
             break;
           }
           case 122: {
+            ContactPhone = input.ReadString();
+            break;
+          }
+          case 130: {
             MemberVisibilityPolicy = input.ReadString();
             break;
           }
@@ -1790,18 +1834,25 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 98: {
-            Type = input.ReadString();
+            if (taxDetails_ == null) {
+              TaxDetails = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails();
+            }
+            input.ReadMessage(TaxDetails);
             break;
           }
           case 106: {
-            ContactEmail = input.ReadString();
+            Type = input.ReadString();
             break;
           }
           case 114: {
-            ContactPhone = input.ReadString();
+            ContactEmail = input.ReadString();
             break;
           }
           case 122: {
+            ContactPhone = input.ReadString();
+            break;
+          }
+          case 130: {
             MemberVisibilityPolicy = input.ReadString();
             break;
           }
@@ -3821,6 +3872,278 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 40: {
             IsActive = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class OrganizationTaxDetails : pb::IMessage<OrganizationTaxDetails>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrganizationTaxDetails> _parser = new pb::MessageParser<OrganizationTaxDetails>(() => new OrganizationTaxDetails());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<OrganizationTaxDetails> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationTaxDetails() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationTaxDetails(OrganizationTaxDetails other) : this() {
+      id_ = other.id_;
+      gstNumber_ = other.gstNumber_;
+      gstPercentage_ = other.gstPercentage_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationTaxDetails Clone() {
+      return new OrganizationTaxDetails(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "gstNumber" field.</summary>
+    public const int GstNumberFieldNumber = 2;
+    private string gstNumber_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string GstNumber {
+      get { return gstNumber_; }
+      set {
+        gstNumber_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "gstPercentage" field.</summary>
+    public const int GstPercentageFieldNumber = 3;
+    private string gstPercentage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string GstPercentage {
+      get { return gstPercentage_; }
+      set {
+        gstPercentage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as OrganizationTaxDetails);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(OrganizationTaxDetails other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (GstNumber != other.GstNumber) return false;
+      if (GstPercentage != other.GstPercentage) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (GstNumber.Length != 0) hash ^= GstNumber.GetHashCode();
+      if (GstPercentage.Length != 0) hash ^= GstPercentage.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (GstNumber.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(GstNumber);
+      }
+      if (GstPercentage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(GstPercentage);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (GstNumber.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(GstNumber);
+      }
+      if (GstPercentage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(GstPercentage);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (GstNumber.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(GstNumber);
+      }
+      if (GstPercentage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(GstPercentage);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(OrganizationTaxDetails other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.GstNumber.Length != 0) {
+        GstNumber = other.GstNumber;
+      }
+      if (other.GstPercentage.Length != 0) {
+        GstPercentage = other.GstPercentage;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            GstNumber = input.ReadString();
+            break;
+          }
+          case 26: {
+            GstPercentage = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            GstNumber = input.ReadString();
+            break;
+          }
+          case 26: {
+            GstPercentage = input.ReadString();
             break;
           }
         }

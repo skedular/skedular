@@ -47,10 +47,11 @@ message Organization {
   repeated string azureTenantIds = 9;
   repeated Tag tags = 10;
   OrganizationSsoSettings ssoSettings = 11;
-  string type = 12;
-  string contactEmail = 13;
-  string contactPhone = 14;
-  string memberVisibilityPolicy = 15;
+  OrganizationTaxDetails taxDetails = 12;
+  string type = 13;
+  string contactEmail = 14;
+  string contactPhone = 15;
+  string memberVisibilityPolicy = 16;
 }
 
 enum Role {
@@ -106,4 +107,10 @@ message OrganizationSsoSettings {
   string loginUrl = 3;
   string appFederationMetadataUrl = 4;
   bool isActive = 5;
+}
+
+message OrganizationTaxDetails {
+  string id = 1;
+  string gstNumber = 2;
+  string gstPercentage = 3;
 }

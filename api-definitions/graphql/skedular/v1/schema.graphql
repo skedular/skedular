@@ -298,6 +298,7 @@ type CustomerDetails {
   defaultOrganization: Customer_OrganizationDetails
   designation: String
   email: String
+  emails: [String!]!
   familyName: String
   givenName: String
   hasAttachedPaymentMethod: Boolean!
@@ -580,14 +581,13 @@ type Mutation {
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
-  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
   setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
-  toggleOrganizationSso(input: ToggleOrganizationSsoInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
@@ -602,7 +602,7 @@ type Mutation {
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload! @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationSsoSettingsPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
@@ -880,6 +880,11 @@ type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
   entityId: String!
   loginUrl: String!
+}
+
+type OrganizationSsoSettingsPayload {
+  clientMutationId: String
+  organization: OrganizationDetails!
 }
 
 type OrganizationStripeConnectAccountDetails {
@@ -1267,11 +1272,6 @@ type Team_OrganizationDetails {
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
-}
-
-type UpdateOrganizationSsoSettingsPayload {
-  clientMutationId: String
-  organization: OrganizationDetails!
 }
 
 type VariedDateOpeningHours {
@@ -2063,12 +2063,6 @@ input TeamWhereInput {
   nameContains: String
   organizationId: String
   primaryLocationIds: [String!]
-}
-
-input ToggleOrganizationSsoInput {
-  clientMutationId: String
-  isActive: Boolean!
-  organizationId: String!
 }
 
 input UpdateBookingInput {

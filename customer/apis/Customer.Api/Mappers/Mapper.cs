@@ -131,6 +131,7 @@ public class Mapper : IMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             Email = src.Identities.ToFirstEmail(),
+            Emails = src.Identities.ToEmails(),
             Identities = MapTo(src.Identities),
             BillingDetails = MapToGraphQl(src.BillingDetails),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,

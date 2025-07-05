@@ -16,11 +16,10 @@ namespace Organization.Api.Services;
 public interface IOrganizationSsoService
 {
     Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoService(
@@ -40,6 +39,7 @@ public class OrganizationSsoService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (ssoSettings is null || !ssoSettings.IsActive)
         {
@@ -52,12 +52,11 @@ public class OrganizationSsoService(
             return true;
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         return !customer.Identities.Any(item =>
             !string.IsNullOrWhiteSpace(item.Email) && item.Email.Equals(userSsoContext.Email, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    public async Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(ssoSettings.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(ssoSettings.Organization.Id);
@@ -99,7 +98,7 @@ public class OrganizationSsoService(
         return mapper.MapTo(organization);
     }
 
-    public async Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
@@ -179,38 +178,8 @@ public class OrganizationSsoService(
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
     }
 
-    public async Task<Shared.Models.Organization> ToggleSsoSettingsAsync(string organizationId, bool isActive, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
-                           throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        if (organization.OrganizationSsoSettings is null)
-        {
-            throw new OrganizationSsoIsNotYetSetup();
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        organization.OrganizationSsoSettings.IsActive = isActive;
-        repositoryFactory.OrganizationSsoSettingsRepository.Update(organization.OrganizationSsoSettings);
-
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return mapper.MapTo(organization);
-    }
-
     public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(
-        OrganizationSsoSettings ssoSettingses,
+        OrganizationSsoSettings ssoSettings,
         CancellationToken cancellationToken)
     {
         var result = new OrganizationSsoValidationResult();
@@ -219,12 +188,12 @@ public class OrganizationSsoService(
         {
             // Test metadata
             result.IsMetadataValid = await samlAssertionConsumerService.ValidateMetadataAsync(
-                ssoSettingses.AppFederationMetadataUrl,
+                ssoSettings.AppFederationMetadataUrl,
                 cancellationToken);
 
             // Test certificate from metadata
             result.IsCertificateValid = await samlAssertionConsumerService.ValidateCertificateAsync(
-                ssoSettingses.AppFederationMetadataUrl,
+                ssoSettings.AppFederationMetadataUrl,
                 cancellationToken);
         }
         catch (Exception ex)

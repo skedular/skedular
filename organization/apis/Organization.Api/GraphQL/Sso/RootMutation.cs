@@ -9,36 +9,24 @@ namespace Organization.Api.GraphQL.Sso;
 public class RootMutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload> UpdateOrganizationSsoSettingsAsync(
+    public async Task<OrganizationSsoSettingsPayload> UpdateOrganizationSsoSettingsAsync(
         UpdateOrganizationSsoSettingsInput input,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken))!
+            Organization = mapper.MapTo(await organizationSsoService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload> RemoveOrganizationSsoSettingsAsync(
+    public async Task<OrganizationSsoSettingsPayload> RemoveOrganizationSsoSettingsAsync(
         RemoveOrganizationSsoSettingsInput input,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationSsoService.RemoveSsoSettingsAsync(input.OrganizationId, cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload> ToggleOrganizationSsoAsync(
-        ToggleOrganizationSsoInput input,
-        [Service] IOrganizationSsoService organizationSsoService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(
-                await organizationSsoService.ToggleSsoSettingsAsync(input.OrganizationId, input.IsActive, cancellationToken))!
+            Organization = mapper.MapTo(await organizationSsoService.RemoveAsync(input.OrganizationId, cancellationToken))!
         };
 }

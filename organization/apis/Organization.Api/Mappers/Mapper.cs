@@ -42,6 +42,7 @@ using OrganizationBankAccount = Organization.Shared.Database.Entities.Organizati
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
+using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
 using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;

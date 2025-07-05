@@ -10,6 +10,7 @@ using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
+using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
@@ -50,7 +51,8 @@ public class Mapper : IMapper
                 AutoRenew = organizationOffering.AutoRenew,
                 UnitPrice = organizationOffering.UnitPrice
             },
-            SsoSettings = MapTo(src.OrganizationSsoSettings)
+            SsoSettings = MapTo(src.OrganizationSsoSettings),
+            TaxDetails = MapTo(src.OrganizationTaxDetails),
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -160,6 +162,16 @@ public class Mapper : IMapper
                 LoginUrl = src.LoginUrl.ToSafeString(),
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString(),
                 IsActive = src.IsActive
+            };
+
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
+        src is null
+            ? null
+            : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails
+            {
+                Id = src.Id,
+                GstNumber = src.GstNumber.ToSafeString(),
+                GstPercentage = src.GstPercentage.ToRoundedPrice(),
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>
