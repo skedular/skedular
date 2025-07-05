@@ -1,5 +1,5 @@
 import { LocationAvatar } from '@/components/avatars';
-import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
+import { SingleChoiceBookingPaymentMethodType, SingleChoiceMarketplaceBookingType } from '@/components/booking';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -83,6 +83,7 @@ type BookingDetails = {
   quantity: number;
   resources: string[];
   type: string;
+  paymentMethod: string;
 };
 
 const bookingSchema = (numberOfResourcesToBook: number) =>
@@ -105,6 +106,7 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
         return value?.length <= numberOfResourcesToBook * quantity;
       }),
     type: string().required('Type is required'),
+    paymentMethod: string().required('Payment method is required'),
   });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -141,6 +143,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         }
         openingHoursMinutesStep
         ...singleChoiceMarketplaceBookingType_query
+        ...singleChoiceBookingPaymentMethodType_query
       }
     `,
     rootDataRelay,
@@ -244,6 +247,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
+  const [paymentMethod, setPaymentMethod] = useState<string>('CARD');
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -562,6 +566,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               resources: resourceIds,
               quantity,
               type: bookingType,
+              paymentMethod,
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
@@ -569,6 +574,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               setResourceIds(values!.resources);
               setQuantity(values!.quantity);
               setBookingType(values!.type);
+              setPaymentMethod(values!.paymentMethod);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -756,6 +762,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       )}
 
                       {filteredResources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Payment Method">
+                      <SingleChoiceBookingPaymentMethodType rootDataRelay={rootData} name="paymentMethod" required={requiredFields.paymentMethod} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Total Price">

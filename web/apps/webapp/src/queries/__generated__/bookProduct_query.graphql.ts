@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c04e9e85091229cac39878023d4ba99f>>
+ * @generated SignedSource<<b5a31a0a1ec83446a04b90604add2b67>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,7 +40,7 @@ export type bookProduct_query$data = {
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceMarketplaceBookingType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingType_query">;
   readonly " $fragmentType": "bookProduct_query";
 };
 export type bookProduct_query$key = {
@@ -223,6 +223,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceMarketplaceBookingType_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceBookingPaymentMethodType_query"
     }
   ],
   "type": "Query",
@@ -230,6 +235,6 @@ return {
 };
 })();
 
-(node as any).hash = "3c24ae4fca6ecfbef8a1d5ab1d0b0019";
+(node as any).hash = "0c54c8a8cf3aa119b36f5f999ecf8739";
 
 export default node;

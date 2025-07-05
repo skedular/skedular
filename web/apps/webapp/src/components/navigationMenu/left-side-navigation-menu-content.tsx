@@ -292,32 +292,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </Link>
           </ListItem>
 
-          {rootData.organization.canViewAnalytics && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationAnalyticsSetupBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationAnalyticsSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAnalyticsSetupBaseLink)) }}
-                >
-                  {collapsed && (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                  {!collapsed && (
-                    <BodyIconTypography
-                      label="Analytics"
-                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
-
           {rootData.organization.type.type === 'MARKETPLACE' && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationMarketplaceBaseLink}>
@@ -389,6 +363,32 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+
+          {rootData.organization.canViewAnalytics && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationAnalyticsSetupBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationAnalyticsSetupBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAnalyticsSetupBaseLink)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Analytics"
+                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>
