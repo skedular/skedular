@@ -47,7 +47,8 @@ public class OrganizationStripeConnectAccountLinkService(
             new AccountLinkCreateOptions
             {
                 Account = id,
-                RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, _refreshLinkBaseUrl.Value).SetQueryParam("code", code),
+                RefreshUrl =
+                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), _refreshLinkBaseUrl.Value).SetQueryParam("code", code),
                 ReturnUrl = redirectUrl,
                 Type = "account_onboarding"
             },

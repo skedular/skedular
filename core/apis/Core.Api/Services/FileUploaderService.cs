@@ -1,7 +1,7 @@
 using Core.Api.Mappers;
 using Core.Shared.Models;
 using Core.Shared.Repositories;
-using Enterprise.Shared.Cdn;
+using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.Random;
 
@@ -9,18 +9,20 @@ namespace Core.Api.Services;
 
 public interface IFileUploaderService
 {
-    Task<CdnFile> UploadAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken);
+    Task<CdnFile> UploadToCdnAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken);
+    Task<PrivateFile> UploadToPrivateStorageAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken);
 }
 
 public class FileUploaderService(
     ICustomerService customerService,
     ICdnService cdnService,
+    IPrivateFileService privateFileService,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IMapper mapper,
     IImageHelper imageHelper) : IFileUploaderService
 {
-    public async Task<CdnFile> UploadAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken)
+    public async Task<CdnFile> UploadToCdnAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken)
     {
         var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var id = randomHelper.Generate();
@@ -61,5 +63,53 @@ public class FileUploaderService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return mapper.MapTo(cdnFile);
+    }
+
+    public async Task<PrivateFile> UploadToPrivateStorageAsync(
+        Stream stream,
+        string contentType,
+        string? extension,
+        CancellationToken cancellationToken)
+    {
+        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var id = randomHelper.Generate();
+        var storageUrl = await privateFileService.UploadAsync(stream, contentType, id, extension, cancellationToken);
+        var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
+        var privateFile = new Shared.Database.Entities.PrivateFile
+        {
+            Id = id,
+            StorageUrl = storageUrl.ToString(),
+            ContentType = contentType,
+            Width = response.IsImage ? response.Width : null,
+            Height = response.IsImage ? response.Height : null,
+            UploadedBy = customerEntity
+        };
+
+        if (response.IsImage)
+        {
+            var thumbnailResponse = await imageHelper.CreateThumbnailAsync(stream, cancellationToken);
+
+            try
+            {
+                var thumbnailStorageUrl = await privateFileService.UploadAsync(
+                    thumbnailResponse.ThumbnailStream,
+                    contentType, $"{id}_thumbnail",
+                    ".png",
+                    cancellationToken);
+                privateFile.ThumbnailStorageUrl = thumbnailStorageUrl.ToString();
+                privateFile.ThumbnailHeight = thumbnailResponse.Height;
+                privateFile.ThumbnailWidth = thumbnailResponse.Width;
+                privateFile.ThumbnailContentType = thumbnailResponse.ContentType;
+            }
+            finally
+            {
+                await thumbnailResponse.ThumbnailStream.DisposeAsync();
+            }
+        }
+
+        repositoryFactory.PrivateFileRepository.Add(privateFile);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return mapper.MapTo(privateFile);
     }
 }

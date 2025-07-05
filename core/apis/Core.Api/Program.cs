@@ -2,8 +2,8 @@ using Core.Api.Grpc;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
@@ -24,7 +24,7 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
+            .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")

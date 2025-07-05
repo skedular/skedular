@@ -4,8 +4,8 @@ using Core.Processors.Subscribers;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cdn;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 
@@ -27,7 +27,7 @@ public class Program
 
         services
             .AddKafka(configuration)
-            .AddCdn(configuration)
+            .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,

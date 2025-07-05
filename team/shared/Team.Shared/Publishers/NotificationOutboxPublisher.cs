@@ -53,7 +53,7 @@ public class NotificationOutboxPublisher(
             Subject = $"You are invited to join team {team.Name}",
             Greetings = "Hi",
             TeamName = string.IsNullOrWhiteSpace(team.Name) ? string.Empty : team.Name,
-            TeamLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notifications"),
+            TeamLink = Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"),
             CustomerName = inviterCustomer.GetCustomerName()
         };
         var templateData = JsonSerializer.Serialize(data);
@@ -96,7 +96,7 @@ public class NotificationOutboxPublisher(
             Subject = $"You are invited to join team {team.Name}",
             Greetings = $"Hi {inviteeCustomer.GetCustomerName()}",
             TeamName = string.IsNullOrWhiteSpace(team.Name) ? string.Empty : team.Name,
-            TeamLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notifications"),
+            TeamLink = Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"),
             CustomerName = inviterCustomer.GetCustomerName()
         };
         var templateData = JsonSerializer.Serialize(data);

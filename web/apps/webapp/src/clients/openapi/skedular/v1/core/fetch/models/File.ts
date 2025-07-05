@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type cdnFile = {
+export type File = {
     url: string;
     contentType?: string | null;
     width?: number | null;

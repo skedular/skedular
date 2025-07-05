@@ -182,8 +182,8 @@ public class StripeIntegrations(
                 UiMode = "hosted",
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = booking.Id,
-                SuccessUrl = applicationConfiguration.WebAppBaseDomain,
-                CancelUrl = applicationConfiguration.WebAppBaseDomain
+                SuccessUrl = applicationConfiguration.WebAppBaseDomain.ToString(),
+                CancelUrl = applicationConfiguration.WebAppBaseDomain.ToString()
             },
             new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = args.StripeConnectAccountId },
             cancellationToken);

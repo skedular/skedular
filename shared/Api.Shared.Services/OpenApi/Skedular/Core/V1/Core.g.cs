@@ -59,6 +59,25 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/cdn/{filename}")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GetPublicCdnFile(string filename, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// Upload file with private access
+        /// </summary>
+        /// <param name="file">The file to upload</param>
+        /// <returns>the response of uploading file</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPrivateAccessFile")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPrivateAccessFile(FileParameter file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Serve static file from local private storage
+        /// </summary>
+        /// <remarks>
+        /// Returns a file stored in the local private storage by filename
+        /// </remarks>
+        /// <param name="filename">Name of the file to return</param>
+        /// <returns>File successfully returned</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/private/{filename}")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GetPrivateFile(string filename, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -143,10 +162,10 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
 
         [System.Text.Json.Serialization.JsonPropertyName("original")]
         [System.ComponentModel.DataAnnotations.Required]
-        public CdnFile Original { get; set; } = new CdnFile();
+        public File Original { get; set; } = new File();
 
         [System.Text.Json.Serialization.JsonPropertyName("thumbnail")]
-        public CdnFile? Thumbnail { get; set; } = default!;
+        public File? Thumbnail { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -160,7 +179,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CdnFile
+    public partial class File
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("url")]

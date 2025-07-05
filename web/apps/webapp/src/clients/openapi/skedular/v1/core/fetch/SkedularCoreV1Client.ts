@@ -2,20 +2,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { OpenAPIConfig } from './core/OpenAPI';
-import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { CdnService } from './services/CdnService';
-import { CoreService } from './services/CoreService';
-import { PublicService } from './services/PublicService';
-import { V1Service } from './services/V1Service';
+import type {BaseHttpRequest} from './core/BaseHttpRequest';
+import type {OpenAPIConfig} from './core/OpenAPI';
+import {FetchHttpRequest} from './core/FetchHttpRequest';
+import {CdnService} from './services/CdnService';
+import {CoreService} from './services/CoreService';
+import {PrivateService} from './services/PrivateService';
+import {PublicService} from './services/PublicService';
+import {V1Service} from './services/V1Service';
+
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
+
 export class SkedularCoreV1Client {
     public readonly cdn: CdnService;
     public readonly core: CoreService;
+    public readonly private: PrivateService;
     public readonly public: PublicService;
     public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
+
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
             BASE: config?.BASE ?? 'https://api.skedular.app',
@@ -30,6 +35,7 @@ export class SkedularCoreV1Client {
         });
         this.cdn = new CdnService(this.request);
         this.core = new CoreService(this.request);
+        this.private = new PrivateService(this.request);
         this.public = new PublicService(this.request);
         this.v1 = new V1Service(this.request);
     }

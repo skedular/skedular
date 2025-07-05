@@ -13,6 +13,7 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbCont
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<CdnFile> CdnFile { get; set; }
+    public DbSet<PrivateFile> PrivateFile { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
     public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }

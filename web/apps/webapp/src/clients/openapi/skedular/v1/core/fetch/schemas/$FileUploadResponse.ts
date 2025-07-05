@@ -9,11 +9,11 @@ export const $FileUploadResponse = {
             isRequired: true,
         },
         original: {
-            type: 'cdnFile',
+            type: 'File',
             isRequired: true,
         },
         thumbnail: {
-            type: 'cdnFile',
+            type: 'File',
             isNullable: true,
         },
     },

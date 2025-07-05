@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Cdn;
+namespace Enterprise.Shared.FileStorage;
 
 public interface ICdnService
 {

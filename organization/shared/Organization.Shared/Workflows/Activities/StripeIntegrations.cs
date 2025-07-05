@@ -25,7 +25,7 @@ public class StripeIntegrations(
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(args.OrganizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
-        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organizations", organization.Id, "admin");
+        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organization.Id, "admin");
 
         redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");
 

@@ -106,11 +106,77 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/core/uploadPrivateAccessFile:
+    post:
+      tags:
+        - v1
+        - core
+        - private
+      summary: Upload file with private access
+      operationId: uploadPrivateAccessFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload
+
+      responses:
+        "200":
+          description: the response of uploading file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadResponse"
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/core/private/{filename}:
+    get:
+      tags:
+        - v1
+        - core
+        - private
+      summary: Serve static file from local private storage
+      description: Returns a file stored in the local private storage by filename
+      operationId: getPrivateFile
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          description: Name of the file to return
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File successfully returned
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 components:
   schemas:
     ProblemDetails:
       type: object
-      additionalProperties: {}
+      additionalProperties: { }
       properties:
         type:
           type: string
@@ -158,12 +224,12 @@ components:
         id:
           type: string
         original:
-          $ref: "#/components/schemas/cdnFile"
+          $ref: "#/components/schemas/File"
         thumbnail:
-          $ref: "#/components/schemas/cdnFile"
+          $ref: "#/components/schemas/File"
           nullable: true
 
-    cdnFile:
+    File:
       type: object
       required:
         - id
