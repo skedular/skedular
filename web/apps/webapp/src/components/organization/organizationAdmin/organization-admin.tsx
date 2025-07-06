@@ -30,7 +30,7 @@ import { Zone } from '@/components/zone';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardDebounceTimeout } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
@@ -78,6 +78,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, us
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
@@ -604,6 +605,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!rootDataOrganization.organization?.taxDetails);
   const [gstNumber, setGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
   const [gstPercentage, setGstPercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstPercentage ?? '');
+  const debounceSetGstNumber = useDebounceCallback(setGstNumber, keyboardDebounceTimeout);
+  const debounceSetGstPercentage = useDebounceCallback(setGstPercentage, keyboardDebounceTimeout);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -2190,8 +2193,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               }}
               validate={validateOrganizationTaxDetails}
               render={({ handleSubmit, values }) => {
-                setGstNumber(values!.gstNumber);
-                setGstPercentage(values!.gstPercentage);
+                debounceSetGstNumber(values!.gstNumber);
+                debounceSetGstPercentage(values!.gstPercentage);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
