@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography } from '@/components/commons';
-import { getCustomerFullName, keyboardDebounceTimeout } from '@/libs/utils';
+import { getCustomerFullName, keyboardSearchDebounceTimeout } from '@/libs/utils';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
 import { Autocomplete } from 'mui-rff';
@@ -95,7 +95,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
     handleRefetch(str);
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
     return <></>;

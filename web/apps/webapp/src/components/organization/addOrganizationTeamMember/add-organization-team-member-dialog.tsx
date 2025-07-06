@@ -1,10 +1,9 @@
-import { v7 as uuid } from 'uuid';
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { getCustomerFullName, joinErrors, keyboardDebounceTimeout } from '@/libs/utils';
+import { getCustomerFullName, joinErrors, keyboardSearchDebounceTimeout } from '@/libs/utils';
 import type { addOrganizationTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addOrganizationTeamMemberDialog_addTeamMemberMutation.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_query.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
@@ -16,6 +15,7 @@ import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
+import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -178,7 +178,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
     });
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardSearchDebounceTimeout);
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>

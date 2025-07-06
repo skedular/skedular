@@ -4,7 +4,16 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
+import {
+  getCustomerFullName,
+  getOpeningHoursFromDateTime,
+  isMidnight,
+  joinErrors,
+  keyboardSearchDebounceTimeout,
+  toOpeningHoursFromTime,
+  toShortDate,
+  toShortTime,
+} from '@/libs/utils';
 import type { editMarketplaceBooking_booking_query$key } from '@/queries/__generated__/editMarketplaceBooking_booking_query.graphql';
 import type { editMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_booking_refetchableFragment.graphql';
 import type { editMarketplaceBooking_customerTeams_query$key } from '@/queries/__generated__/editMarketplaceBooking_customerTeams_query.graphql';
@@ -426,7 +435,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     handleRefetchOrganizationMembers(str);
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootDataBooking.booking) {
     return <></>;

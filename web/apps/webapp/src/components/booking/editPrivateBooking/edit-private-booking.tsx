@@ -6,7 +6,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardSearchDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
 import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';
@@ -623,7 +623,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     handleRefetchOrganizationMembers(str);
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootData.booking) {
     return <></>;

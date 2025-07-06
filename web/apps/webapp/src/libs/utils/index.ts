@@ -26,7 +26,8 @@ export type NameDetails = {
 
 export const isServer = typeof window === 'undefined';
 
-export const keyboardDebounceTimeout = 500;
+export const keyboardSearchDebounceTimeout = 500;
+export const keyboardTextFieldDebounceTimeout = 10;
 
 const convertCalendarDayToStartOfDay = (date: Dayjs) => {
   return startOfDay(dayjs().utc().set('year', date.year()).set('month', date.month()).set('date', date.date()));

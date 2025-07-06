@@ -30,7 +30,7 @@ import { Zone } from '@/components/zone';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors, keyboardDebounceTimeout } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
@@ -113,7 +113,7 @@ type OrganizationDetails = {
 const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
-  website: string().nullable(),
+  website: string().url('Website must be a valid Url').nullable(),
   type: string().required('Type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
@@ -592,21 +592,85 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
+
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
+  const [organizationName, setOrganizationName] = useState<string>(rootDataOrganization.organization?.name ?? '');
+  const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
+  const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.about);
+  const debounceSetOrganizationAbout = useDebounceCallback(setOrganizationAbout, keyboardTextFieldDebounceTimeout);
+  const [organizationWebsite, setOrganizationWebsite] = useState(rootDataOrganization.organization?.website);
+  const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
+  const [organizationType, setOrganizationType] = useState<string>(rootDataOrganization.organization?.type.type ?? '');
+  const debounceSetOrganizationType = useDebounceCallback(setOrganizationType, keyboardTextFieldDebounceTimeout);
+  const [organizationMemberVisibilityPolicy, setOrganizationMemberVisibilityPolicy] = useState<string>(rootDataOrganization.organization?.memberVisibilityPolicy.type ?? '');
+  const debounceSetOrganizationMemberVisibilityPolicy = useDebounceCallback(setOrganizationMemberVisibilityPolicy, keyboardTextFieldDebounceTimeout);
+  const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(
+    rootDataOrganization.organization?.industrySubCategories.map(({ id }) => id) ?? [],
+  );
+  const debounceSetOrganizationIndustrySubCategoryIds = useDebounceCallback(setOrganizationIndustrySubCategoryIds, keyboardTextFieldDebounceTimeout);
+  const [organizationContactEmail, setOrganizationContactEmail] = useState<string>(rootDataOrganization.organization?.contactEmail ?? '');
+  const debounceSetOrganizationContactEmail = useDebounceCallback(setOrganizationContactEmail, keyboardTextFieldDebounceTimeout);
+  const [organizationContactPhone, setOrganizationContactPhone] = useState(rootDataOrganization.organization?.contactPhone);
+  const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressAddressLine1, setOrganizationPhysicalAddressAddressLine1] = useState<string>(
+    rootDataOrganization.organization?.physicalAddress?.addressLine1 ?? '',
+  );
+  const debounceSetOrganizationPhysicalAddressAddressLine1 = useDebounceCallback(setOrganizationPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressAddressLine2, setOrganizationPhysicalAddressAddressLine2] = useState(rootDataOrganization.organization?.physicalAddress?.addressLine2);
+  const debounceSetOrganizationPhysicalAddressAddressLine2 = useDebounceCallback(setOrganizationPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressSuburb, setOrganizationPhysicalAddressSuburb] = useState<string>(rootDataOrganization.organization?.physicalAddress?.suburb ?? '');
+  const debounceSetOrganizationPhysicalAddressSuburb = useDebounceCallback(setOrganizationPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressCity, setOrganizationPhysicalAddressCity] = useState<string>(rootDataOrganization.organization?.physicalAddress?.city ?? '');
+  const debounceSetOrganizationPhysicalAddressCity = useDebounceCallback(setOrganizationPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressProvince, setOrganizationPhysicalAddressProvince] = useState(rootDataOrganization.organization?.physicalAddress?.province);
+  const debounceSetOrganizationPhysicalAddressProvince = useDebounceCallback(setOrganizationPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressZipcode, setOrganizationPhysicalAddressZipcode] = useState<string>(rootDataOrganization.organization?.physicalAddress?.zipcode ?? '');
+  const debounceSetOrganizationPhysicalAddressZipcode = useDebounceCallback(setOrganizationPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
+  const [organizationPhysicalAddressCountry, setOrganizationPhysicalAddressCountry] = useState<string>(rootDataOrganization.organization?.physicalAddress?.country ?? '');
+  const debounceSetOrganizationPhysicalAddressCountry = useDebounceCallback(setOrganizationPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
+
   const validateOrganizationBilling = makeValidate(organizationBillingSchema);
   const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
-  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
+  const [organizationBillingCompanyName, setOrganizationBillingCompanyName] = useState(rootDataOrganization.organization?.billingDetails?.companyName);
+  const debounceSetOrganizationBillingCompanyName = useDebounceCallback(setOrganizationBillingCompanyName, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingEmail, setOrganizationBillingEmail] = useState<string>(rootDataOrganization.organization?.billingDetails?.email ?? '');
+  const debounceSetOrganizationBillingEmail = useDebounceCallback(setOrganizationBillingEmail, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingAddressLine1, setOrganizationBillingAddressLine1] = useState<string>(rootDataOrganization.organization?.billingDetails?.addressLine1 ?? '');
+  const debounceSetOrganizationBillingAddressLine1 = useDebounceCallback(setOrganizationBillingAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingAddressLine2, setOrganizationBillingAddressLine2] = useState(rootDataOrganization.organization?.billingDetails?.addressLine2);
+  const debounceSetOrganizationBillingAddressLine2 = useDebounceCallback(setOrganizationBillingAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingSuburb, setOrganizationBillingSuburb] = useState<string>(rootDataOrganization.organization?.billingDetails?.suburb ?? '');
+  const debounceSetOrganizationBillingSuburb = useDebounceCallback(setOrganizationBillingSuburb, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingCity, setOrganizationBillingCity] = useState<string>(rootDataOrganization.organization?.billingDetails?.city ?? '');
+  const debounceSetOrganizationBillingCity = useDebounceCallback(setOrganizationBillingCity, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingProvince, setOrganizationBillingProvince] = useState(rootDataOrganization.organization?.billingDetails?.province);
+  const debounceSetOrganizationBillingProvince = useDebounceCallback(setOrganizationBillingProvince, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingZipcode, setOrganizationBillingZipcode] = useState<string>(rootDataOrganization.organization?.billingDetails?.zipcode ?? '');
+  const debounceSetOrganizationBillingZipcode = useDebounceCallback(setOrganizationBillingZipcode, keyboardTextFieldDebounceTimeout);
+  const [organizationBillingCountry, setOrganizationBillingCountry] = useState<string>(rootDataOrganization.organization?.billingDetails?.country ?? '');
+  const debounceSetOrganizationBillingCountry = useDebounceCallback(setOrganizationBillingCountry, keyboardTextFieldDebounceTimeout);
+
   const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
   const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
   const [ssoSettingsEnabled, setSsoSettingsEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
+  const [ssoSettingsEntityId, setSsoSettingsEntityId] = useState<string>(rootDataOrganization.organization?.ssoSettings?.entityId ?? '');
+  const debounceSetSsoSettingsEntityId = useDebounceCallback(setSsoSettingsEntityId, keyboardTextFieldDebounceTimeout);
+  const [ssoSettingsLoginUrl, setSsoSettingsLoginUrl] = useState<string>(rootDataOrganization.organization?.ssoSettings?.loginUrl ?? '');
+  const debounceSetSsoSettingsLoginUrl = useDebounceCallback(setSsoSettingsLoginUrl, keyboardTextFieldDebounceTimeout);
+  const [ssoSettingsAppFederationMetadataUrl, setSsoSettingsAppFederationMetadataUrl] = useState<string>(
+    rootDataOrganization.organization?.ssoSettings?.appFederationMetadataUrl ?? '',
+  );
+  const debounceSetSsoSettingsppFederationMetadataUrl = useDebounceCallback(setSsoSettingsAppFederationMetadataUrl, keyboardTextFieldDebounceTimeout);
+
   const validateOrganizationTaxDetails = makeValidate(organziationTaxDetailsSchema);
   const requiredOrganizationTaxDetailsFields = makeRequired(organziationTaxDetailsSchema);
   const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!rootDataOrganization.organization?.taxDetails);
-  const [gstNumber, setGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
-  const [gstPercentage, setGstPercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstPercentage ?? '');
-  const debounceSetGstNumber = useDebounceCallback(setGstNumber, keyboardDebounceTimeout);
-  const debounceSetGstPercentage = useDebounceCallback(setGstPercentage, keyboardDebounceTimeout);
+  const [taxDetailsGstNumber, setTaxDetailsGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
+  const debounceSetTaxDetailsGstNumber = useDebounceCallback(setTaxDetailsGstNumber, keyboardTextFieldDebounceTimeout);
+  const [taxDetailsGstPercentage, setTaxDetailsGstPercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstPercentage ?? '');
+  const debounceSetTaxDetailsGstPercentage = useDebounceCallback(setTaxDetailsGstPercentage, keyboardTextFieldDebounceTimeout);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -1867,22 +1931,9 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   ];
 
   const organization = rootDataOrganization.organization;
-  const billingDetails = rootDataOrganization.organization.billingDetails;
-  const companyName = billingDetails?.companyName ? billingDetails.companyName : '';
-  const email = billingDetails?.email ? billingDetails.email : '';
-  const addressLine1 = billingDetails?.addressLine1 ? billingDetails.addressLine1 : '';
-  const addressLine2 = billingDetails?.addressLine2 ? billingDetails.addressLine2 : '';
-  const suburb = billingDetails?.suburb ? billingDetails.suburb : '';
-  const city = billingDetails?.city ? billingDetails.city : '';
-  const province = billingDetails?.province ? billingDetails.province : '';
-  const zipcode = billingDetails?.zipcode ? billingDetails.zipcode : '';
-  const country = billingDetails?.country ? billingDetails.country : '';
   const paymentMethodExist = organization && organization.paymentMethods.length > 0;
   const activeOffering = organization ? organization.activeOffering : null;
   const availableOfferings = organization && organization.availableOfferings ? organization.availableOfferings : [];
-  const ssoSettingsEntityId = organization.ssoSettings ? organization.ssoSettings.entityId : '';
-  const ssoSettingsLoginUrl = organization.ssoSettings ? organization.ssoSettings.loginUrl : '';
-  const ssoSettingsappFederationMetadataUrl = organization.ssoSettings ? organization.ssoSettings.appFederationMetadataUrl : '';
 
   return (
     <>
@@ -1893,199 +1944,229 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             <Form
               onSubmit={handleOrganizationDetailUpdateClick}
               initialValues={{
-                name: organization.name,
-                about: organization.about,
-                website: organization.website,
-                type: organization.type.type,
-                memberVisibilityPolicy: organization.memberVisibilityPolicy.type,
-                industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
-                contactEmail: organization.contactEmail ?? '',
-                contactPhone: organization.contactPhone,
-                addressLine1: organization.physicalAddress.addressLine1,
-                addressLine2: organization.physicalAddress.addressLine2,
-                suburb: organization.physicalAddress.suburb,
-                city: organization.physicalAddress.city,
-                province: organization.physicalAddress.province,
-                zipcode: organization.physicalAddress.zipcode,
-                country: organization.physicalAddress.country,
+                name: organizationName,
+                about: organizationAbout,
+                website: organizationWebsite,
+                type: organizationType,
+                memberVisibilityPolicy: organizationMemberVisibilityPolicy,
+                industrySubCategoryIds: organizationIndustrySubCategoryIds,
+                contactEmail: organizationContactEmail,
+                contactPhone: organizationContactPhone,
+                addressLine1: organizationPhysicalAddressAddressLine1,
+                addressLine2: organizationPhysicalAddressAddressLine2,
+                suburb: organizationPhysicalAddressSuburb,
+                city: organizationPhysicalAddressCity,
+                province: organizationPhysicalAddressProvince,
+                zipcode: organizationPhysicalAddressZipcode,
+                country: organizationPhysicalAddressCountry,
               }}
               validate={validateOrganizationDetails}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Organization Setup" />
-                    <BodyIconTypography label="Edit your organization details" />
-                    <Divider />
-                  </StackColumn>
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationName(values!.name);
+                debounceSetOrganizationAbout(values!.about);
+                debounceSetOrganizationWebsite(values!.website);
+                debounceSetOrganizationType(values!.type);
+                debounceSetOrganizationMemberVisibilityPolicy(values!.memberVisibilityPolicy);
+                debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
+                debounceSetOrganizationContactEmail(values!.contactEmail);
+                debounceSetOrganizationContactPhone(values!.contactPhone);
+                debounceSetOrganizationPhysicalAddressAddressLine1(values!.addressLine1);
+                debounceSetOrganizationPhysicalAddressAddressLine2(values!.addressLine2);
+                debounceSetOrganizationPhysicalAddressSuburb(values!.suburb);
+                debounceSetOrganizationPhysicalAddressCity(values!.city);
+                debounceSetOrganizationPhysicalAddressProvince(values!.province);
+                debounceSetOrganizationPhysicalAddressZipcode(values!.zipcode);
+                debounceSetOrganizationPhysicalAddressCountry(values!.country);
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredOrganizationDetailsFields.name} />
-                    </FormFieldLabel>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Organization Setup" />
+                      <BodyIconTypography label="Edit your organization details" />
+                      <Divider />
+                    </StackColumn>
 
-                    <FormFieldLabel label="About">
-                      <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
-                    </FormFieldLabel>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Website">
-                      <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="About">
+                        <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Type">
-                      <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Website">
+                        <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Member Visibility Policy">
-                      <SingleChoiceOrganizationMemberVisibilityPolicy
-                        rootDataRelay={rootData}
-                        name="memberVisibilityPolicy"
-                        required={requiredOrganizationDetailsFields.memberVisibilityPolicy}
-                      />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Type">
+                        <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Industry">
-                      <OrganizationMultipleChoicesIndustries
-                        rootDataRelay={rootData}
-                        name="industrySubCategoryIds"
-                        required={requiredOrganizationDetailsFields.industrySubCategoryIds}
-                      />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Member Visibility Policy">
+                        <SingleChoiceOrganizationMemberVisibilityPolicy
+                          rootDataRelay={rootData}
+                          name="memberVisibilityPolicy"
+                          required={requiredOrganizationDetailsFields.memberVisibilityPolicy}
+                        />
+                      </FormFieldLabel>
 
-                    <SectionIconTypography label="Contact Details" />
-                    <BodyIconTypography label="Edit your organization contact details" />
-                    <Divider />
+                      <FormFieldLabel label="Industry">
+                        <OrganizationMultipleChoicesIndustries
+                          rootDataRelay={rootData}
+                          name="industrySubCategoryIds"
+                          required={requiredOrganizationDetailsFields.industrySubCategoryIds}
+                        />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Email">
-                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
-                    </FormFieldLabel>
+                      <SectionIconTypography label="Contact Details" />
+                      <BodyIconTypography label="Edit your organization contact details" />
+                      <Divider />
 
-                    <FormFieldLabel label="Phone Number">
-                      <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Email">
+                        <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
+                      </FormFieldLabel>
 
-                    <SectionIconTypography label="Address" />
-                    <BodyIconTypography label="Edit your organization address" />
-                    <Divider />
+                      <FormFieldLabel label="Phone Number">
+                        <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Address Line 1">
-                      <TextField name="addressLine1" required={requiredOrganizationDetailsFields.addressLine1} />
-                    </FormFieldLabel>
+                      <SectionIconTypography label="Address" />
+                      <BodyIconTypography label="Edit your organization address" />
+                      <Divider />
 
-                    <FormFieldLabel label="Address Line 2">
-                      <TextField name="addressLine2" required={requiredOrganizationDetailsFields.addressLine2} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Address Line 1">
+                        <TextField name="addressLine1" required={requiredOrganizationDetailsFields.addressLine1} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Suburb">
-                      <TextField name="suburb" required={requiredOrganizationDetailsFields.suburb} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Address Line 2">
+                        <TextField name="addressLine2" required={requiredOrganizationDetailsFields.addressLine2} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="City">
-                      <TextField name="city" required={requiredOrganizationDetailsFields.city} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Suburb">
+                        <TextField name="suburb" required={requiredOrganizationDetailsFields.suburb} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Province">
-                      <TextField name="province" required={requiredOrganizationDetailsFields.province} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="City">
+                        <TextField name="city" required={requiredOrganizationDetailsFields.city} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Zipcode">
-                      <TextField name="zipcode" required={requiredOrganizationDetailsFields.zipcode} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Province">
+                        <TextField name="province" required={requiredOrganizationDetailsFields.province} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredOrganizationDetailsFields.country} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                      <FormFieldLabel label="Zipcode">
+                        <TextField name="zipcode" required={requiredOrganizationDetailsFields.zipcode} />
+                      </FormFieldLabel>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
+                      <FormFieldLabel label="Country">
+                        <SingleChoiceCountry name="country" required={requiredOrganizationDetailsFields.country} />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
 
             <Form
               onSubmit={handleOrganizationBillingDetailUpdateClick}
               initialValues={{
-                companyName,
-                email,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
+                companyName: organizationBillingCompanyName,
+                email: organizationBillingEmail,
+                addressLine1: organizationBillingAddressLine1,
+                addressLine2: organizationBillingAddressLine2,
+                suburb: organizationBillingSuburb,
+                city: organizationBillingCity,
+                province: organizationBillingProvince,
+                zipcode: organizationBillingZipcode,
+                country: organizationBillingCountry,
               }}
               validate={validateOrganizationBilling}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['billing-payment-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="Billing & Payment Setup" />
-                    <BodyIconTypography label="Edit your organization billing and payment details" />
-                    <Divider />
-                  </StackColumn>
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationBillingCompanyName(values!.companyName);
+                debounceSetOrganizationBillingEmail(values!.email);
+                debounceSetOrganizationBillingAddressLine1(values!.addressLine1);
+                debounceSetOrganizationBillingAddressLine2(values!.addressLine2);
+                debounceSetOrganizationBillingSuburb(values!.suburb);
+                debounceSetOrganizationBillingCity(values!.city);
+                debounceSetOrganizationBillingProvince(values!.province);
+                debounceSetOrganizationBillingZipcode(values!.zipcode);
+                debounceSetOrganizationBillingCountry(values!.country);
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Company name">
-                      <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
-                    </FormFieldLabel>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['billing-payment-setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Billing & Payment Setup" />
+                      <BodyIconTypography label="Edit your organization billing and payment details" />
+                      <Divider />
+                    </StackColumn>
 
-                    <FormFieldLabel label="Email">
-                      <TextField name="email" required={requiredOrganizationBillingFields.email} helperText="Email to send invoice to" />
-                    </FormFieldLabel>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Company name">
+                        <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Address line 1">
-                      <TextField name="addressLine1" required={requiredOrganizationBillingFields.addressLine1} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Email">
+                        <TextField name="email" required={requiredOrganizationBillingFields.email} helperText="Email to send invoice to" />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Address line 2">
-                      <TextField name="addressLine2" required={requiredOrganizationBillingFields.addressLine2} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Address line 1">
+                        <TextField name="addressLine1" required={requiredOrganizationBillingFields.addressLine1} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Suburb">
-                      <TextField name="suburb" required={requiredOrganizationBillingFields.suburb} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Address line 2">
+                        <TextField name="addressLine2" required={requiredOrganizationBillingFields.addressLine2} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="City">
-                      <TextField name="city" required={requiredOrganizationBillingFields.city} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Suburb">
+                        <TextField name="suburb" required={requiredOrganizationBillingFields.suburb} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Province">
-                      <TextField name="province" required={requiredOrganizationBillingFields.province} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="City">
+                        <TextField name="city" required={requiredOrganizationBillingFields.city} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Zipcode">
-                      <TextField name="zipcode" required={requiredOrganizationBillingFields.zipcode} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Province">
+                        <TextField name="province" required={requiredOrganizationBillingFields.province} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredOrganizationBillingFields.country} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                      <FormFieldLabel label="Zipcode">
+                        <TextField name="zipcode" required={requiredOrganizationBillingFields.zipcode} />
+                      </FormFieldLabel>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
+                      <FormFieldLabel label="Country">
+                        <SingleChoiceCountry name="country" required={requiredOrganizationBillingFields.country} />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
 
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -2132,10 +2213,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               initialValues={{
                 entityId: ssoSettingsEntityId,
                 loginUrl: ssoSettingsLoginUrl,
-                appFederationMetadataUrl: ssoSettingsappFederationMetadataUrl,
+                appFederationMetadataUrl: ssoSettingsAppFederationMetadataUrl,
               }}
               validate={validateOrganizationSsoSettings}
-              render={({ handleSubmit }) => {
+              render={({ handleSubmit, values }) => {
+                debounceSetSsoSettingsEntityId(values!.entityId);
+                debounceSetSsoSettingsLoginUrl(values!.loginUrl);
+                debounceSetSsoSettingsppFederationMetadataUrl(values!.appFederationMetadataUrl);
+
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
@@ -2188,13 +2273,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             <Form
               onSubmit={handleEnableOrganizationTaxDetailsClick}
               initialValues={{
-                gstNumber,
-                gstPercentage,
+                gstNumber: taxDetailsGstNumber,
+                gstPercentage: taxDetailsGstPercentage,
               }}
               validate={validateOrganizationTaxDetails}
               render={({ handleSubmit, values }) => {
-                debounceSetGstNumber(values!.gstNumber);
-                debounceSetGstPercentage(values!.gstPercentage);
+                debounceSetTaxDetailsGstNumber(values!.gstNumber);
+                debounceSetTaxDetailsGstPercentage(values!.gstPercentage);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
