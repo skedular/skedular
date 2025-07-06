@@ -8,8 +8,6 @@ using Temporalio.Activities;
 
 namespace Booking.Shared.Workflows.Activities;
 
-public record ReleaseBookingResourcesInput(string BookingId);
-
 public class BookingIntegrations(
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,

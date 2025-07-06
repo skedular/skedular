@@ -13,8 +13,8 @@ namespace Marketplace.Api.GraphQL.Product;
 [QueryType]
 public class RootQuery(IMapper mapper)
 {
-    public int DefaultMaxAllowedResourcesLockTimePaidByCard => Constants.DefaultMaxAllowedResourcesLockTimePaidByCard;
-    public int DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount => Constants.DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount;
+    public int DefaultMaxAllowedResourcesLockTimePaidViaCard => Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard;
+    public int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer => Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
 
     [UseResolverScope]
     public async Task<ProductDetails?> ProductAsync(string id, [Service] IProductService productService, CancellationToken cancellationToken) =>

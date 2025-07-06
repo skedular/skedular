@@ -192,7 +192,7 @@ public class BookingInternalSubscriber(
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(mapper.MergeTo(session, stripeCheckoutSession));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await SignalBookingWorkflowAsync(stripeCheckoutSession, cancellationToken);
+        await SignalPayBookingByCardWorkflowAsync(stripeCheckoutSession, cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -211,12 +211,12 @@ public class BookingInternalSubscriber(
         stripeCheckoutSession.PaymentStatus = PaymentStatusConstants.Expired;
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Update(stripeCheckoutSession);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await SignalBookingWorkflowAsync(stripeCheckoutSession, cancellationToken);
+        await SignalPayBookingByCardWorkflowAsync(stripeCheckoutSession, cancellationToken);
     }
 
-    private async Task SignalBookingWorkflowAsync(StripeCheckoutSession stripeCheckoutSession, CancellationToken cancellationToken) =>
+    private async Task SignalPayBookingByCardWorkflowAsync(StripeCheckoutSession stripeCheckoutSession, CancellationToken cancellationToken) =>
         await temporalClient
-            .GetWorkflowHandle<PayBookingUsingStripeCheckoutSession>(stripeCheckoutSession.Booking.Id)
+            .GetWorkflowHandle<PayBookingByCard>(stripeCheckoutSession.Booking.Id)
             .SignalAsync(workflow => workflow.SetPaymentStatusAsync(new SetPaymentStatusArgs(stripeCheckoutSession.PaymentStatus.ToPaymentStatus())),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
             );

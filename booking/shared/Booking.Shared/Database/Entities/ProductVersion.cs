@@ -21,8 +21,8 @@ public class ProductVersion : EntityBase
     public bool? RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int? NumberOfResourcesToBook { get; set; }
-    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
-    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
@@ -50,10 +50,10 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
         builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
-        builder.Property(item => item.MaxAllowedResourcesLockTimePaidByCard).HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidByCard);
+        builder.Property(item => item.MaxAllowedResourcesLockTimePaidViaCard).HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard);
         builder
-            .Property(item => item.MaxAllowedResourcesLockTimePaidThroughBankAccount)
-            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount);
+            .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
+            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);

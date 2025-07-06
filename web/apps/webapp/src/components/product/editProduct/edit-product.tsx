@@ -44,8 +44,8 @@ type ProductDetails = {
   maxBookingSpreadDays: string | null;
   productTagIds: string[];
   locationTagIds: string[];
-  maxAllowedResourcesLockTimePaidByCard: string;
-  maxAllowedResourcesLockTimePaidThroughBankAccount: string;
+  maxAllowedResourcesLockTimePaidViaCard: string;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: string;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -206,39 +206,39 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
-    maxAllowedResourcesLockTimePaidByCard: string()
+    maxAllowedResourcesLockTimePaidViaCard: string()
       .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        var maxAllowedResourcesLockTimePaidByCard = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidByCard)) {
+        var maxAllowedResourcesLockTimePaidViaCard = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
           return false;
         }
 
         return true;
       })
       .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        var maxAllowedResourcesLockTimePaidByCard = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidByCard)) {
+        var maxAllowedResourcesLockTimePaidViaCard = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
           return false;
         }
 
-        return maxAllowedResourcesLockTimePaidByCard > 0;
+        return maxAllowedResourcesLockTimePaidViaCard > 0;
       }),
-    maxAllowedResourcesLockTimePaidThroughBankAccount: string()
+    maxAllowedResourcesLockTimePaidViaBankTransfer: string()
       .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        var maxAllowedResourcesLockTimePaidThroughBankAccount = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidThroughBankAccount)) {
+        var maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
           return false;
         }
 
         return true;
       })
       .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        var maxAllowedResourcesLockTimePaidThroughBankAccount = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidThroughBankAccount)) {
+        var maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
           return false;
         }
 
-        return maxAllowedResourcesLockTimePaidThroughBankAccount > 0;
+        return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
       }),
   });
 
@@ -280,8 +280,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           organization {
             uniqueId
           }
-          maxAllowedResourcesLockTimePaidByCard
-          maxAllowedResourcesLockTimePaidThroughBankAccount
+          maxAllowedResourcesLockTimePaidViaCard
+          maxAllowedResourcesLockTimePaidViaBankTransfer
           primaryFeatureImage {
             original {
               url
@@ -296,8 +296,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           }
         }
         openingHoursMinutesStep
-        defaultMaxAllowedResourcesLockTimePaidByCard
-        defaultMaxAllowedResourcesLockTimePaidThroughBankAccount
+        defaultMaxAllowedResourcesLockTimePaidViaCard
+        defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
         ...multipleChoicesProductTags_query
         ...multipleChoicesLocationTags_query
         ...singleChoicePriceUnit_query
@@ -341,8 +341,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
-          maxAllowedResourcesLockTimePaidByCard
-          maxAllowedResourcesLockTimePaidThroughBankAccount
+          maxAllowedResourcesLockTimePaidViaCard
+          maxAllowedResourcesLockTimePaidViaBankTransfer
           primaryFeatureImage {
             original {
               url
@@ -414,18 +414,18 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
 
-  const [maxAllowedResourcesLockTimePaidByCard, setMaxAllowedResourcesLockTimePaidByCard] = useState<string>(
-    rootData.product ? rootData.product.maxAllowedResourcesLockTimePaidByCard.toString() : rootData.defaultMaxAllowedResourcesLockTimePaidByCard.toString(),
+  const [maxAllowedResourcesLockTimePaidViaCard, setMaxAllowedResourcesLockTimePaidViaCard] = useState<string>(
+    rootData.product ? rootData.product.maxAllowedResourcesLockTimePaidViaCard.toString() : rootData.defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
   );
-  const debounceSetMaxAllowedResourcesLockTimePaidByCard = useDebounceCallback(setMaxAllowedResourcesLockTimePaidByCard, keyboardTextFieldDebounceTimeout);
+  const debounceSetMaxAllowedResourcesLockTimePaidViaCard = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaCard, keyboardTextFieldDebounceTimeout);
 
-  const [maxAllowedResourcesLockTimePaidThroughBankAccount, setMaxAllowedResourcesLockTimePaidThroughBankAccount] = useState<string>(
+  const [maxAllowedResourcesLockTimePaidViaBankTransfer, setMaxAllowedResourcesLockTimePaidViaBankTransfer] = useState<string>(
     (rootData.product
-      ? (rootData.product.maxAllowedResourcesLockTimePaidThroughBankAccount / (60 * 24)).toString()
-      : rootData.defaultMaxAllowedResourcesLockTimePaidThroughBankAccount / (60 * 24)
+      ? (rootData.product.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString()
+      : rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)
     ).toString(),
   );
-  const debounceSetMaxAllowedResourcesLockTimePaidThroughBankAccount = useDebounceCallback(setMaxAllowedResourcesLockTimePaidThroughBankAccount, keyboardTextFieldDebounceTimeout);
+  const debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaBankTransfer, keyboardTextFieldDebounceTimeout);
 
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.product?.primaryFeatureImage && rootData.product?.primaryFeatureImage.original
@@ -462,8 +462,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
-    maxAllowedResourcesLockTimePaidByCard: maxAllowedResourcesLockTimePaidByCardStr,
-    maxAllowedResourcesLockTimePaidThroughBankAccount: maxAllowedResourcesLockTimePaidThroughBankAccountStr,
+    maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
+    maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
   }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
@@ -486,12 +486,12 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             : null,
         }
       : null;
-    const maxAllowedResourcesLockTimePaidByCard = maxAllowedResourcesLockTimePaidByCardStr
-      ? Number(maxAllowedResourcesLockTimePaidByCardStr)
-      : rootData.defaultMaxAllowedResourcesLockTimePaidByCard;
-    const maxAllowedResourcesLockTimePaidThroughBankAccount = maxAllowedResourcesLockTimePaidThroughBankAccountStr
-      ? Number(maxAllowedResourcesLockTimePaidThroughBankAccountStr) * 60 * 24
-      : rootData.defaultMaxAllowedResourcesLockTimePaidThroughBankAccount;
+    const maxAllowedResourcesLockTimePaidViaCard = maxAllowedResourcesLockTimePaidViaCardStr
+      ? Number(maxAllowedResourcesLockTimePaidViaCardStr)
+      : rootData.defaultMaxAllowedResourcesLockTimePaidViaCard;
+    const maxAllowedResourcesLockTimePaidViaBankTransfer = maxAllowedResourcesLockTimePaidViaBankTransferStr
+      ? Number(maxAllowedResourcesLockTimePaidViaBankTransferStr) * 60 * 24
+      : rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
 
     commitUpdateProduct({
       variables: {
@@ -514,8 +514,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           locationTagIds,
           organizationId: product.organization.uniqueId,
           primaryFeatureImage: finalPrimaryFeatureImage,
-          maxAllowedResourcesLockTimePaidByCard,
-          maxAllowedResourcesLockTimePaidThroughBankAccount,
+          maxAllowedResourcesLockTimePaidViaCard,
+          maxAllowedResourcesLockTimePaidViaBankTransfer,
         },
       },
       onCompleted: (_, errors) => {
@@ -567,8 +567,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             productTags: [],
             locationTags: [],
             primaryFeatureImage: finalPrimaryFeatureImage,
-            maxAllowedResourcesLockTimePaidByCard,
-            maxAllowedResourcesLockTimePaidThroughBankAccount,
+            maxAllowedResourcesLockTimePaidViaCard,
+            maxAllowedResourcesLockTimePaidViaBankTransfer,
           },
         },
       },
@@ -608,8 +608,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               numberOfResourcesToBook,
               productTagIds,
               locationTagIds,
-              maxAllowedResourcesLockTimePaidByCard,
-              maxAllowedResourcesLockTimePaidThroughBankAccount,
+              maxAllowedResourcesLockTimePaidViaCard,
+              maxAllowedResourcesLockTimePaidViaBankTransfer,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -627,8 +627,8 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               debounceSetNumberOfResourcesToBook(values!.numberOfResourcesToBook);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetLocationTagIds(values!.locationTagIds);
-              debounceSetMaxAllowedResourcesLockTimePaidByCard(values!.maxAllowedResourcesLockTimePaidByCard);
-              debounceSetMaxAllowedResourcesLockTimePaidThroughBankAccount(values!.maxAllowedResourcesLockTimePaidThroughBankAccount);
+              debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
+              debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -734,11 +734,11 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                     )}
 
                     <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
-                      <TextField name="maxAllowedResourcesLockTimePaidByCard" required={requiredFields.maxAllowedResourcesLockTimePaidByCard} />
+                      <TextField name="maxAllowedResourcesLockTimePaidViaCard" required={requiredFields.maxAllowedResourcesLockTimePaidViaCard} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
-                      <TextField name="maxAllowedResourcesLockTimePaidThroughBankAccount" required={requiredFields.maxAllowedResourcesLockTimePaidThroughBankAccount} />
+                      <TextField name="maxAllowedResourcesLockTimePaidViaBankTransfer" required={requiredFields.maxAllowedResourcesLockTimePaidViaBankTransfer} />
                     </FormFieldLabel>
                   </StackColumn>
 

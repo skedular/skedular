@@ -3,13 +3,13 @@ namespace Api.Shared.Services.Models;
 public enum BookingPaymentMethod
 {
     Card,
-    BankAccount
+    BankTransfer
 }
 
 public static class BookingPaymentMethodConstants
 {
     public const string Card = "CARD";
-    public const string BankAccount = "BANK_ACCOUNT";
+    public const string BankTransfer = "BANK_TRANSFER";
 }
 
 public static class BookingPaymentMethodExtensions
@@ -20,7 +20,7 @@ public static class BookingPaymentMethodExtensions
             : src switch
             {
                 BookingPaymentMethodConstants.Card => BookingPaymentMethod.Card,
-                BookingPaymentMethodConstants.BankAccount => BookingPaymentMethod.BankAccount,
+                BookingPaymentMethodConstants.BankTransfer => BookingPaymentMethod.BankTransfer,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -30,7 +30,7 @@ public static class BookingPaymentMethodExtensions
             : src switch
             {
                 BookingPaymentMethod.Card => BookingPaymentMethodConstants.Card,
-                BookingPaymentMethod.BankAccount => BookingPaymentMethodConstants.BankAccount,
+                BookingPaymentMethod.BankTransfer => BookingPaymentMethodConstants.BankTransfer,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -38,7 +38,7 @@ public static class BookingPaymentMethodExtensions
         src switch
         {
             BookingPaymentMethod.Card => "Card",
-            BookingPaymentMethod.BankAccount => "Bank Account",
+            BookingPaymentMethod.BankTransfer => "Bank Transfer",
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -46,7 +46,7 @@ public static class BookingPaymentMethodExtensions
         src switch
         {
             BookingPaymentMethodConstants.Card => "Card",
-            BookingPaymentMethodConstants.BankAccount => "Bank Account",
+            BookingPaymentMethodConstants.BankTransfer => "Bank Transfer",
             _ => throw new ArgumentOutOfRangeException()
         };
 }

@@ -359,8 +359,8 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard;
-        dest.MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount;
+        dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
+        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
         dest.Product = product;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
@@ -595,8 +595,8 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays == -1 ? null : src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
-            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product

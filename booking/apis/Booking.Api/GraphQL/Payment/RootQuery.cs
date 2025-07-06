@@ -10,6 +10,6 @@ public class RootQuery
     public IEnumerable<BookingPaymentMethodTypeDetails> BookingPaymentMethodTypes() =>
     [
         new() { Type = BookingPaymentMethod.Card, Name = BookingPaymentMethodConstants.Card.ToBookingPaymentMethodName() },
-        new() { Type = BookingPaymentMethod.BankAccount, Name = BookingPaymentMethodConstants.BankAccount.ToBookingPaymentMethodName() }
+        new() { Type = BookingPaymentMethod.BankTransfer, Name = BookingPaymentMethodConstants.BankTransfer.ToBookingPaymentMethodName() }
     ];
 }

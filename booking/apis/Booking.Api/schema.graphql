@@ -303,7 +303,7 @@ enum BookingOrderField {
 
 enum BookingPaymentMethod {
   CARD
-  BANK_ACCOUNT
+  BANK_TRANSFER
 }
 
 enum BookingPaymentStatus {

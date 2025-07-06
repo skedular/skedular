@@ -6,21 +6,15 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record BookingPaidThroughStripeInput(string BookingId, DateTimeOffset ExpiryDate);
-
-public record PayBookingUsingStripeCheckoutSessionState(PaymentStatus? PaymentStatus, bool BookingDeleted);
-
-public record SetPaymentStatusArgs(PaymentStatus PaymentStatus);
-
 [Workflow]
-public class PayBookingUsingStripeCheckoutSession
+public class PayBookingByCard
 {
-    private PayBookingUsingStripeCheckoutSessionState? _state;
+    private PayBookingByCardState? _state;
 
     [WorkflowRun]
-    public async Task ExecuteAsync(BookingPaidThroughStripeInput args)
+    public async Task ExecuteAsync(PayBookingByCardInput args)
     {
-        _state = new PayBookingUsingStripeCheckoutSessionState(null, false);
+        _state = new PayBookingByCardState(null, false);
 
         try
         {
@@ -119,7 +113,7 @@ public class PayBookingUsingStripeCheckoutSession
         return Task.CompletedTask;
     }
 
-    private static TimeSpan GetDelayDuration(BookingPaidThroughStripeInput args)
+    private static TimeSpan GetDelayDuration(PayBookingByCardInput args)
     {
         var delayDuration = args.ExpiryDate - TimeProvider.System.GetUtcNow();
         if (delayDuration <= TimeSpan.Zero)

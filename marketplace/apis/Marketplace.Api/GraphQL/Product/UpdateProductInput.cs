@@ -17,11 +17,11 @@ public class UpdateProductInput
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
 
-    [GraphQLName("maxAllowedResourcesLockTimePaidByCard")]
-    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
+    [GraphQLName("maxAllowedResourcesLockTimePaidViaCard")]
+    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
 
-    [GraphQLName("maxAllowedResourcesLockTimePaidThroughBankAccount")]
-    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
+    [GraphQLName("maxAllowedResourcesLockTimePaidViaBankTransfer")]
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
 
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }

@@ -150,7 +150,7 @@ public class BookingService(
 
         if (booking.IsPaymentRequired)
         {
-            bookingOutboxPublisher.ExecuteWorkflowPayBookingUsingStripeCheckoutSession([booking], repositoryFactory.UnitOfWork);
+            bookingOutboxPublisher.ExecuteWorkflowPayBookingByCardSession([booking], repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

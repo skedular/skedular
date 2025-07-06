@@ -509,15 +509,15 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<bool>("Inactive")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidByCard")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(5);
-
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidThroughBankAccount")
+                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaBankTransfer")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(43200);
+
+                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaCard")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
 
                     b.Property<int?>("MaxBookingSpreadDays")
                         .HasColumnType("integer");
@@ -617,15 +617,15 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
 
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidByCard")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(5);
-
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidThroughBankAccount")
+                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaBankTransfer")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(43200);
+
+                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaCard")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
 
                     b.Property<int?>("MaxBookingSpreadDays")
                         .HasColumnType("integer");

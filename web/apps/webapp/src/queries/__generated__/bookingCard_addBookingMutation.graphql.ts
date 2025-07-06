@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dcf47e6a90615d4e3486f4e775df7649>>
+ * @generated SignedSource<<4969c4bc651d80e8baa0b85931d1db51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_ACCOUNT" | "CARD" | "%future added value";
+export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;

@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiKbBAoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "cm9kdWN0VmVyc2lvbiKZBAoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
             "IAEoCRIRCglwcmljZVVuaXQYBSABKAkSEAoIY3VycmVuY3kYBiABKAkSGgoS",
             "bWluRHVyYXRpb25NaW51dGVzGAcgASgFEhoKEm1heER1cmF0aW9uTWludXRl",
@@ -46,15 +46,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "ChdudW1iZXJPZlJlc291cmNlc1RvQm9vaxgNIAEoBRIVCg1wcm9kdWN0VGFn",
             "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJEjYKE3ByaW1hcnlG",
             "ZWF0dXJlSW1hZ2UYECABKAsyGS5tYXJrZXRwbGFjZS5DZG5JbWFnZUZpbGUS",
-            "LQolbWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFpZEJ5Q2FyZBgRIAEo",
-            "BRI5CjFtYXhBbGxvd2VkUmVzb3VyY2VzTG9ja1RpbWVQYWlkVGhyb3VnaEJh",
-            "bmtBY2NvdW50GBIgASgFIl8KDENkbkltYWdlRmlsZRImCghvcmlnaW5hbBgB",
-            "IAEoCzIULm1hcmtldHBsYWNlLkNkbkZpbGUSJwoJdGh1bWJuYWlsGAIgASgL",
-            "MhQubWFya2V0cGxhY2UuQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEo",
-            "CRIOCgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyABKAUqLwoEVHlwZRITCg9Q",
-            "cm9kdWN0VXBzZXJ0ZWQQABISCg5Qcm9kdWN0RGVsZXRlZBABQjqqAjdBcGku",
-            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYx",
-            "LlZhbHVlYgZwcm90bzM="));
+            "LgombWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFpZFZpYUNhcmQYESAB",
+            "KAUSNgoubWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFpZFZpYUJhbmtU",
+            "cmFuc2ZlchgSIAEoBSJfCgxDZG5JbWFnZUZpbGUSJgoIb3JpZ2luYWwYASAB",
+            "KAsyFC5tYXJrZXRwbGFjZS5DZG5GaWxlEicKCXRodW1ibmFpbBgCIAEoCzIU",
+            "Lm1hcmtldHBsYWNlLkNkbkZpbGUiNQoHQ2RuRmlsZRILCgN1cmwYASABKAkS",
+            "DgoGaGVpZ2h0GAIgASgFEg0KBXdpZHRoGAMgASgFKi8KBFR5cGUSEwoPUHJv",
+            "ZHVjdFVwc2VydGVkEAASEgoOUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBpLlNo",
+            "YXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5WMS5W",
+            "YWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -62,7 +62,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "PrimaryFeatureImage", "MaxAllowedResourcesLockTimePaidByCard", "MaxAllowedResourcesLockTimePaidThroughBankAccount" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "PrimaryFeatureImage", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null)
           }));
@@ -1380,8 +1380,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       productTagIds_ = other.productTagIds_.Clone();
       locationTagIds_ = other.locationTagIds_.Clone();
       primaryFeatureImage_ = other.primaryFeatureImage_ != null ? other.primaryFeatureImage_.Clone() : null;
-      maxAllowedResourcesLockTimePaidByCard_ = other.maxAllowedResourcesLockTimePaidByCard_;
-      maxAllowedResourcesLockTimePaidThroughBankAccount_ = other.maxAllowedResourcesLockTimePaidThroughBankAccount_;
+      maxAllowedResourcesLockTimePaidViaCard_ = other.maxAllowedResourcesLockTimePaidViaCard_;
+      maxAllowedResourcesLockTimePaidViaBankTransfer_ = other.maxAllowedResourcesLockTimePaidViaBankTransfer_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1581,27 +1581,27 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "maxAllowedResourcesLockTimePaidByCard" field.</summary>
-    public const int MaxAllowedResourcesLockTimePaidByCardFieldNumber = 17;
-    private int maxAllowedResourcesLockTimePaidByCard_;
+    /// <summary>Field number for the "maxAllowedResourcesLockTimePaidViaCard" field.</summary>
+    public const int MaxAllowedResourcesLockTimePaidViaCardFieldNumber = 17;
+    private int maxAllowedResourcesLockTimePaidViaCard_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int MaxAllowedResourcesLockTimePaidByCard {
-      get { return maxAllowedResourcesLockTimePaidByCard_; }
+    public int MaxAllowedResourcesLockTimePaidViaCard {
+      get { return maxAllowedResourcesLockTimePaidViaCard_; }
       set {
-        maxAllowedResourcesLockTimePaidByCard_ = value;
+        maxAllowedResourcesLockTimePaidViaCard_ = value;
       }
     }
 
-    /// <summary>Field number for the "maxAllowedResourcesLockTimePaidThroughBankAccount" field.</summary>
-    public const int MaxAllowedResourcesLockTimePaidThroughBankAccountFieldNumber = 18;
-    private int maxAllowedResourcesLockTimePaidThroughBankAccount_;
+    /// <summary>Field number for the "maxAllowedResourcesLockTimePaidViaBankTransfer" field.</summary>
+    public const int MaxAllowedResourcesLockTimePaidViaBankTransferFieldNumber = 18;
+    private int maxAllowedResourcesLockTimePaidViaBankTransfer_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int MaxAllowedResourcesLockTimePaidThroughBankAccount {
-      get { return maxAllowedResourcesLockTimePaidThroughBankAccount_; }
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer {
+      get { return maxAllowedResourcesLockTimePaidViaBankTransfer_; }
       set {
-        maxAllowedResourcesLockTimePaidThroughBankAccount_ = value;
+        maxAllowedResourcesLockTimePaidViaBankTransfer_ = value;
       }
     }
 
@@ -1636,8 +1636,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if(!productTagIds_.Equals(other.productTagIds_)) return false;
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
       if (!object.Equals(PrimaryFeatureImage, other.PrimaryFeatureImage)) return false;
-      if (MaxAllowedResourcesLockTimePaidByCard != other.MaxAllowedResourcesLockTimePaidByCard) return false;
-      if (MaxAllowedResourcesLockTimePaidThroughBankAccount != other.MaxAllowedResourcesLockTimePaidThroughBankAccount) return false;
+      if (MaxAllowedResourcesLockTimePaidViaCard != other.MaxAllowedResourcesLockTimePaidViaCard) return false;
+      if (MaxAllowedResourcesLockTimePaidViaBankTransfer != other.MaxAllowedResourcesLockTimePaidViaBankTransfer) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1661,8 +1661,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       hash ^= productTagIds_.GetHashCode();
       hash ^= locationTagIds_.GetHashCode();
       if (primaryFeatureImage_ != null) hash ^= PrimaryFeatureImage.GetHashCode();
-      if (MaxAllowedResourcesLockTimePaidByCard != 0) hash ^= MaxAllowedResourcesLockTimePaidByCard.GetHashCode();
-      if (MaxAllowedResourcesLockTimePaidThroughBankAccount != 0) hash ^= MaxAllowedResourcesLockTimePaidThroughBankAccount.GetHashCode();
+      if (MaxAllowedResourcesLockTimePaidViaCard != 0) hash ^= MaxAllowedResourcesLockTimePaidViaCard.GetHashCode();
+      if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) hash ^= MaxAllowedResourcesLockTimePaidViaBankTransfer.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1739,13 +1739,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(130, 1);
         output.WriteMessage(PrimaryFeatureImage);
       }
-      if (MaxAllowedResourcesLockTimePaidByCard != 0) {
+      if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
         output.WriteRawTag(136, 1);
-        output.WriteInt32(MaxAllowedResourcesLockTimePaidByCard);
+        output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
       }
-      if (MaxAllowedResourcesLockTimePaidThroughBankAccount != 0) {
+      if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
         output.WriteRawTag(144, 1);
-        output.WriteInt32(MaxAllowedResourcesLockTimePaidThroughBankAccount);
+        output.WriteInt32(MaxAllowedResourcesLockTimePaidViaBankTransfer);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1815,13 +1815,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(130, 1);
         output.WriteMessage(PrimaryFeatureImage);
       }
-      if (MaxAllowedResourcesLockTimePaidByCard != 0) {
+      if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
         output.WriteRawTag(136, 1);
-        output.WriteInt32(MaxAllowedResourcesLockTimePaidByCard);
+        output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
       }
-      if (MaxAllowedResourcesLockTimePaidThroughBankAccount != 0) {
+      if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
         output.WriteRawTag(144, 1);
-        output.WriteInt32(MaxAllowedResourcesLockTimePaidThroughBankAccount);
+        output.WriteInt32(MaxAllowedResourcesLockTimePaidViaBankTransfer);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1877,11 +1877,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (primaryFeatureImage_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(PrimaryFeatureImage);
       }
-      if (MaxAllowedResourcesLockTimePaidByCard != 0) {
-        size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxAllowedResourcesLockTimePaidByCard);
+      if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxAllowedResourcesLockTimePaidViaCard);
       }
-      if (MaxAllowedResourcesLockTimePaidThroughBankAccount != 0) {
-        size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxAllowedResourcesLockTimePaidThroughBankAccount);
+      if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxAllowedResourcesLockTimePaidViaBankTransfer);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1942,11 +1942,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         }
         PrimaryFeatureImage.MergeFrom(other.PrimaryFeatureImage);
       }
-      if (other.MaxAllowedResourcesLockTimePaidByCard != 0) {
-        MaxAllowedResourcesLockTimePaidByCard = other.MaxAllowedResourcesLockTimePaidByCard;
+      if (other.MaxAllowedResourcesLockTimePaidViaCard != 0) {
+        MaxAllowedResourcesLockTimePaidViaCard = other.MaxAllowedResourcesLockTimePaidViaCard;
       }
-      if (other.MaxAllowedResourcesLockTimePaidThroughBankAccount != 0) {
-        MaxAllowedResourcesLockTimePaidThroughBankAccount = other.MaxAllowedResourcesLockTimePaidThroughBankAccount;
+      if (other.MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
+        MaxAllowedResourcesLockTimePaidViaBankTransfer = other.MaxAllowedResourcesLockTimePaidViaBankTransfer;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2035,11 +2035,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 136: {
-            MaxAllowedResourcesLockTimePaidByCard = input.ReadInt32();
+            MaxAllowedResourcesLockTimePaidViaCard = input.ReadInt32();
             break;
           }
           case 144: {
-            MaxAllowedResourcesLockTimePaidThroughBankAccount = input.ReadInt32();
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = input.ReadInt32();
             break;
           }
         }
@@ -2129,11 +2129,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 136: {
-            MaxAllowedResourcesLockTimePaidByCard = input.ReadInt32();
+            MaxAllowedResourcesLockTimePaidViaCard = input.ReadInt32();
             break;
           }
           case 144: {
-            MaxAllowedResourcesLockTimePaidThroughBankAccount = input.ReadInt32();
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = input.ReadInt32();
             break;
           }
         }

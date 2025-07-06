@@ -343,7 +343,7 @@ public class Mapper : IMapper
             PaymentMethod = src.PaymentMethod switch
             {
                 BookingPaymentMethod.Card => PaymentMethod.Card,
-                BookingPaymentMethod.BankAccount => PaymentMethod.BankAccount,
+                BookingPaymentMethod.BankTransfer => PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
             },
             SendInvoice = src.SendInvoice ?? false,

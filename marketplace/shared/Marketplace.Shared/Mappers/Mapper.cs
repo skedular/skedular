@@ -43,8 +43,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
-            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
-            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));

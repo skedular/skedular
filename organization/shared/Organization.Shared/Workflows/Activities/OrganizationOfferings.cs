@@ -11,10 +11,6 @@ using Temporalio.Activities;
 
 namespace Organization.Shared.Workflows.Activities;
 
-public record PayForOrganizationOffering(string OrganizationOfferingId);
-
-public record RenewAutoRenewableOrganizationOfferingAsyncInput(string OrganizationId, string OrganizationOfferingId);
-
 public class OrganizationOfferings(
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,

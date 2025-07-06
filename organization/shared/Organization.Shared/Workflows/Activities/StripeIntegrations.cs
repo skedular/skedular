@@ -9,8 +9,6 @@ using Temporalio.Activities;
 
 namespace Organization.Shared.Workflows.Activities;
 
-public record SetOrganizationPaymentMethodInput(string OrganizationId, string SetupIntentId, string RedirectStatus);
-
 public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,

@@ -17,8 +17,8 @@ public class ProductVersion : ModelBase
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
-    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
-    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];

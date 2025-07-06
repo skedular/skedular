@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35aea01ec10aabdf732164415bf0b6af>>
+ * @generated SignedSource<<6696435ea0926374b7155a1dd1b99985>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_ACCOUNT" | "CARD" | "%future added value";
+export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type singleChoiceBookingPaymentMethodType_query$data = {
   readonly bookingPaymentMethodTypes: ReadonlyArray<{

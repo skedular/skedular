@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8f646588b650e84acf185d3cb46ff2a>>
+ * @generated SignedSource<<1d3429b0e1de00194e97f9a2c22f7268>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,8 +18,8 @@ export type UpdateProductInput = {
   description?: string | null | undefined;
   id: string;
   locationTagIds: ReadonlyArray<string>;
-  maxAllowedResourcesLockTimePaidByCard: number;
-  maxAllowedResourcesLockTimePaidThroughBankAccount: number;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
   maxBookingSpreadDays?: number | null | undefined;
   maxDurationMinutes?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
@@ -61,8 +61,8 @@ export type editProduct_updateProductMutation$data = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
-      readonly maxAllowedResourcesLockTimePaidByCard: number;
-      readonly maxAllowedResourcesLockTimePaidThroughBankAccount: number;
+      readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+      readonly maxAllowedResourcesLockTimePaidViaCard: number;
       readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
@@ -111,8 +111,8 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
-      readonly maxAllowedResourcesLockTimePaidByCard: number;
-      readonly maxAllowedResourcesLockTimePaidThroughBankAccount: number;
+      readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+      readonly maxAllowedResourcesLockTimePaidViaCard: number;
       readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
@@ -361,14 +361,14 @@ v5 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "maxAllowedResourcesLockTimePaidByCard",
+            "name": "maxAllowedResourcesLockTimePaidViaCard",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "maxAllowedResourcesLockTimePaidThroughBankAccount",
+            "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
             "storageKey": null
           },
           {
@@ -427,16 +427,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "eac545a97b5d137128ab0be045c958a7",
+    "cacheID": "da2b8fedefa9119d3b55fbb2719ce5cc",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      maxAllowedResourcesLockTimePaidByCard\n      maxAllowedResourcesLockTimePaidThroughBankAccount\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4505fd1d2b1ccfd380fc6d98c366c33c";
+(node as any).hash = "e7a502c3fd55c5f539faa8c30a6ea88f";
 
 export default node;

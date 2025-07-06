@@ -42,7 +42,7 @@ public class Program
 
         services
             .AddTemporalWorker(configuration)
-            .AddWorkflow<PayBookingUsingStripeCheckoutSession>()
+            .AddWorkflow<PayBookingByCard>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>();
 

@@ -19,11 +19,11 @@ public class ProductDetails : Node
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
 
-    [GraphQLName("maxAllowedResourcesLockTimePaidByCard")]
-    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
+    [GraphQLName("maxAllowedResourcesLockTimePaidViaCard")]
+    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
 
-    [GraphQLName("maxAllowedResourcesLockTimePaidThroughBankAccount")]
-    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
+    [GraphQLName("maxAllowedResourcesLockTimePaidViaBankTransfer")]
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
 
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
@@ -46,5 +46,5 @@ public class ProductDetails : Node
 
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
 }

@@ -117,6 +117,6 @@ public static class Constants
     public const int MaxOrganizationAccountNumberLength = 100;
 
     public const int MaxTaxDetailsGstNumberLength = 100;
-    public const int DefaultMaxAllowedResourcesLockTimePaidByCard = 5; // Default to 5 minutes
-    public const int DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount = 30 * 24 * 60; // Default to 30 days
+    public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
+    public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
 }

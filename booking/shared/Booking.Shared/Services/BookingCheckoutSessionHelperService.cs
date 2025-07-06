@@ -12,10 +12,10 @@ public class BookingCheckoutSessionHelperService : IBookingCheckoutSessionHelper
 {
     public DateTimeOffset GetBookingCheckoutSessionExpiry(Database.Entities.Booking booking)
     {
-        var allowedTime = Constants.DefaultMaxAllowedResourcesLockTimePaidByCard;
+        var allowedTime = Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard;
         if (booking.ProductVersions.Count != 0)
         {
-            allowedTime = booking.ProductVersions.Select(item => item.MaxAllowedResourcesLockTimePaidByCard).Min();
+            allowedTime = booking.ProductVersions.Select(item => item.MaxAllowedResourcesLockTimePaidViaCard).Min();
         }
 
         return booking.CreatedAt.TrimAllAfterSeconds().AddMinutes(allowedTime);

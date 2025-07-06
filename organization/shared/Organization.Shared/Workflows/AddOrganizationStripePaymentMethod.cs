@@ -5,14 +5,6 @@ using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows;
 
-public record AddOrganizationStripePaymentMethodInput(string OrganizationId, string ClientSecret, string SetupIntentId);
-
-public record AddOrganizationStripePaymentMethodState(
-    AddOrganizationStripePaymentMethodInput Args,
-    StripePaymentMethodEventState? StripePaymentMethodEventState);
-
-public record StripePaymentMethodEventState(string RedirectStatus);
-
 [Workflow]
 public class AddOrganizationStripePaymentMethod
 {

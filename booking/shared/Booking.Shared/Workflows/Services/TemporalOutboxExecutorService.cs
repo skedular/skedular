@@ -7,7 +7,7 @@ namespace Booking.Shared.Workflows.Services;
 
 public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITemporalOutboxExecutor
 {
-    private static readonly string s_payBookingUsingStripeCheckoutSession = typeof(PayBookingUsingStripeCheckoutSession).ToWorkflowType();
+    private static readonly string s_payBookingByCard = typeof(PayBookingByCard).ToWorkflowType();
 
     public async Task StartWorkflowAsync(
         string workflowType,
@@ -17,16 +17,16 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
     {
         await temporalClient.Connection.ConnectAsync();
 
-        if (workflowType == s_payBookingUsingStripeCheckoutSession)
+        if (workflowType == s_payBookingByCard)
         {
             try
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var input = JsonSerializer.Deserialize<BookingPaidThroughStripeInput>(executionArgs);
+                var input = JsonSerializer.Deserialize<PayBookingByCardInput>(executionArgs);
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync(
-                    (PayBookingUsingStripeCheckoutSession workflow) => workflow.ExecuteAsync(input),
+                    (PayBookingByCard workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
