@@ -28,6 +28,7 @@ export { default as CollpaseDrawerIcon } from '@mui/icons-material/ArrowBackIos'
 export { default as AscDirectionIcon } from '@mui/icons-material/ArrowDownward';
 export { default as ExpanDrawerIcon } from '@mui/icons-material/ArrowForwardIos';
 export { default as DescDirectionIcon } from '@mui/icons-material/ArrowUpward';
+export { default as TaxDetailsIcon } from '@mui/icons-material/AttachMoney';
 export { default as CancelIcon } from '@mui/icons-material/Cancel';
 export { default as CheckIcon } from '@mui/icons-material/Check';
 export { default as SelectedTickIcon } from '@mui/icons-material/CheckCircle';
@@ -76,7 +77,7 @@ export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
 export { default as MarketplaceIcon } from '@mui/icons-material/Store';
 export { default as SetupMarketplaceIcon } from '@mui/icons-material/Storefront';
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';
-export { default as SSOIcon } from '@mui/icons-material/SyncLock';
+export { default as SsoSettingsIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
 export { default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
 export { default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';

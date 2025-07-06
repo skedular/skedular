@@ -210,7 +210,8 @@ public class Mapper : IMapper
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
-            OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings)
+            OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
+            OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails)
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -1718,6 +1719,18 @@ public class Mapper : IMapper
                 EntityId = src.EntityId,
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
+
+    private static OrganizationTaxDetails? MapTo(Shared.Database.Entities.OrganizationTaxDetails? src) =>
+        src is null
+            ? null
+            : new OrganizationTaxDetails
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                GstNumber = src.GstNumber,
+                GstPercentage = src.GstPercentage,
             };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(

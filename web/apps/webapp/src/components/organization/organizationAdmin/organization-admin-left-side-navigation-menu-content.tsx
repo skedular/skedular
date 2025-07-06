@@ -1,12 +1,13 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon } from '@/components/icons';
+import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SsoSettingsIcon, SubscriptionsIcon, TaxDetailsIcon } from '@/components/icons';
 import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
   getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminSetupBaseLink,
-  getOrganizationAdminSSOBaseLink,
+  getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -70,7 +71,8 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationId);
   const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationId);
-  const ssoLink = getOrganizationAdminSSOBaseLink(integratedPlatrform, organizationId);
+  const ssoSettingsLink = getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationId);
+  const taxDetailsLink = getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationId);
   const zonesLink = getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationId);
   const customTagsLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationId);
   const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationId);
@@ -128,15 +130,36 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href={ssoLink}>
-          <ListItemButton selected={fullPath === ssoLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === ssoLink) }}>
-            {collapsed && <BodyIconTypography startElement={!hideIcons && <SSOIcon color="inherit" />} invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'} />}
+        <Link component={NextLink} href={ssoSettingsLink}>
+          <ListItemButton selected={fullPath === ssoSettingsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === ssoSettingsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <SsoSettingsIcon color="inherit" />} invertDefaultColor={fullPath === ssoSettingsLink && paletteMode === 'dark'} />
+            )}
             {!collapsed && (
               <BodyIconTypography
                 label="SSO Setup"
-                startElement={!hideIcons && <SSOIcon color="inherit" />}
+                startElement={!hideIcons && <SsoSettingsIcon color="inherit" />}
                 spacing={3}
-                invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'}
+                invertDefaultColor={fullPath === ssoSettingsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={taxDetailsLink}>
+          <ListItemButton selected={fullPath === taxDetailsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === taxDetailsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <TaxDetailsIcon color="inherit" />} invertDefaultColor={fullPath === taxDetailsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Tax Setup"
+                startElement={!hideIcons && <TaxDetailsIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === taxDetailsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

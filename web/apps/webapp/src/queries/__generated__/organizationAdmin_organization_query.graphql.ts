@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03904298ac6e5e18343a0d26a0bf8907>>
+ * @generated SignedSource<<2cd294fee8f5378a7cbffa235a42e573>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,6 +82,10 @@ export type organizationAdmin_organization_query$data = {
       readonly appFederationMetadataUrl: string;
       readonly entityId: string;
       readonly loginUrl: string;
+    } | null | undefined;
+    readonly taxDetails: {
+      readonly gstNumber: string;
+      readonly gstPercentage: string;
     } | null | undefined;
     readonly type: {
       readonly name: string;
@@ -471,6 +475,31 @@ return {
         {
           "alias": null,
           "args": null,
+          "concreteType": "OrganizationTaxDetails",
+          "kind": "LinkedField",
+          "name": "taxDetails",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "gstNumber",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "gstPercentage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "OrganizationBillingDetails",
           "kind": "LinkedField",
           "name": "billingDetails",
@@ -510,6 +539,6 @@ return {
 };
 })();
 
-(node as any).hash = "3f36661b095acd76bbbff354477e22f7";
+(node as any).hash = "22d5c2d64fae2a3e7e8c876f80f0273b";
 
 export default node;

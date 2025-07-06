@@ -65,8 +65,10 @@ export const getOrganizationLocationsAnalyticsLocationsBaseLink = (integratedPla
 export const getOrganizationAdminSetupBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=setup`;
 export const getOrganizationAdminBillingAndPaymentBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=billing-payment-setup`;
-export const getOrganizationAdminSSOBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+export const getOrganizationAdminSsoSettingsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=sso-setup`;
+export const getOrganizationAdminTaxDetailsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=tax-setup`;
 export const getOrganizationAdminZonesBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=zones-setup`;
 export const getOrganizationAdminCustomTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>

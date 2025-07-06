@@ -45,6 +45,7 @@ import type { organizationAdmin_query$key } from '@/queries/__generated__/organi
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
+import type { organizationAdmin_removeOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdmin_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingDetailsMutation.graphql';
 import type {
   organizationAdmin_updateOrganizationMutation,
@@ -53,6 +54,7 @@ import type {
 } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
+import type { organizationAdmin_updateOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from '@/queries/__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
@@ -165,6 +167,26 @@ const organziationSsoSettingsSchema = object({
   appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
 });
 
+type OrganizationTaxDetails = {
+  gstNumber: string;
+  gstPercentage: string;
+};
+
+const organziationTaxDetailsSchema = object({
+  gstNumber: string().required('Gst Number is required'),
+  gstPercentage: string()
+    .matches(/^\d+(\.\d{1,2})?$/, 'GST Percentage must be a valid decimal number.')
+    .required('GST Percentage is required.')
+    .test('is-greater-than-zero', 'Price must be greater than zero.', function (value) {
+      var gstPercentage = Number(value);
+      if (isNaN(gstPercentage)) {
+        return true;
+      }
+
+      return gstPercentage > 0;
+    }),
+});
+
 type ZoneRowType = {
   id: string;
   name: string;
@@ -271,6 +293,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             entityId
             loginUrl
             appFederationMetadataUrl
+          }
+          taxDetails {
+            gstNumber
+            gstPercentage
           }
           billingDetails {
             id
@@ -529,6 +555,34 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
   `);
 
+  const [commitUpdateOrganizationTaxDetails] = useMutation<organizationAdmin_updateOrganizationTaxDetailsMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationTaxDetailsMutation($input: UpdateOrganizationTaxDetailsInput!) @raw_response_type {
+      updateOrganizationTaxDetails(input: $input) {
+        organization {
+          id
+          taxDetails {
+            gstNumber
+            gstPercentage
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveOrganizationTaxDetails] = useMutation<organizationAdmin_removeOrganizationTaxDetailsMutation>(graphql`
+    mutation organizationAdmin_removeOrganizationTaxDetailsMutation($input: RemoveOrganizationTaxDetailsInput!) @raw_response_type {
+      removeOrganizationTaxDetails(input: $input) {
+        organization {
+          id
+          taxDetails {
+            gstNumber
+            gstPercentage
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
@@ -541,10 +595,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
   const validateOrganizationBilling = makeValidate(organizationBillingSchema);
   const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
+  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
   const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
   const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
-  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
-  const [ssoEnabled, setSsoEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
+  const [ssoSettingsEnabled, setSsoSettingsEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
+  const validateOrganizationTaxDetails = makeValidate(organziationTaxDetailsSchema);
+  const requiredOrganizationTaxDetailsFields = makeRequired(organziationTaxDetailsSchema);
+  const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!rootDataOrganization.organization?.taxDetails);
+  const [gstNumber, setGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
+  const [gstPercentage, setGstPercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstPercentage ?? '');
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -930,7 +989,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   };
 
   const handleEnableSsoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSsoEnabled(event.target.checked);
+    setSsoSettingsEnabled(event.target.checked);
 
     if (event.target.checked) {
       return;
@@ -976,6 +1035,111 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           organization: {
             id: organization.id,
             ssoSettings: null,
+          },
+        },
+      },
+    });
+  };
+
+  const handleEnableOrganizationTaxDetailsClick = ({ gstNumber, gstPercentage }: OrganizationTaxDetails) => {
+    const organization = rootDataOrganization.organization;
+    if (!organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' tax details...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationTaxDetails({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          organizationId: organization.id,
+          gstNumber,
+          gstPercentage,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' tax details. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} tax details details updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' tax details. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationTaxDetails: {
+          organization: {
+            id: organization.id,
+            taxDetails: {
+              gstNumber,
+              gstPercentage,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const handleEnableTaxDetailsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTaxDetailsEnabled(event.target.checked);
+
+    if (event.target.checked) {
+      return;
+    }
+
+    const organization = rootDataOrganization.organization;
+    if (!organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing organization '${organization.name}' tax details...`} />, infoNotificationOptions);
+
+    commitRemoveOrganizationTaxDetails({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          organizationId: organization.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' tax details. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} tax details removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove organization '${organization?.name}' tax details. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        removeOrganizationTaxDetails: {
+          organization: {
+            id: organization.id,
+            taxDetails: null,
           },
         },
       },
@@ -1746,11 +1910,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                     ref={(divElement) => {
                       sectionRefs.current['setup'] = divElement;
                     }}
@@ -1760,13 +1920,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Name">
                       <TextField name="name" required={requiredOrganizationDetailsFields.name} />
                     </FormFieldLabel>
@@ -1844,13 +1998,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1878,11 +2026,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               render={({ handleSubmit }) => (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                     ref={(divElement) => {
                       sectionRefs.current['billing-payment-setup'] = divElement;
                     }}
@@ -1892,13 +2036,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Company name">
                       <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
                     </FormFieldLabel>
@@ -1936,13 +2074,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Update
@@ -1953,13 +2085,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               )}
             />
 
-            <StackColumn
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-              }}
-            >
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
                   <SectionIconTypography label="Payment Method" />
@@ -1978,13 +2104,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             </StackColumn>
 
             {paymentMethodExist && (
-              <StackColumn
-                sx={{
-                  paddingLeft: defaultPadding,
-                  paddingRight: defaultPadding,
-                  paddingTop: defaultPadding,
-                }}
-              >
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <StackRow>
                   {organization.paymentMethods.map((item) => (
                     <StackColumn key={item.id}>
@@ -1999,13 +2119,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             )}
 
             {!paymentMethodExist && (
-              <StackColumn
-                sx={{
-                  paddingLeft: defaultPadding,
-                  paddingRight: defaultPadding,
-                  paddingTop: defaultPadding,
-                }}
-              >
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <SmallIconTypography label="No payment method setup yet" />
               </StackColumn>
             )}
@@ -2022,11 +2136,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                       ref={(divElement) => {
                         sectionRefs.current['sso-setup'] = divElement;
                       }}
@@ -2036,18 +2146,12 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       <Divider />
                     </StackColumn>
 
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <FormFieldLabel label="Enable Sign sign-on">
-                        <Switch defaultChecked={ssoEnabled} onChange={handleEnableSsoChange} />
+                        <Switch defaultChecked={ssoSettingsEnabled} onChange={handleEnableSsoChange} />
                       </FormFieldLabel>
 
-                      {ssoEnabled && (
+                      {ssoSettingsEnabled && (
                         <>
                           <FormFieldLabel label="Entity Id">
                             <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
@@ -2064,14 +2168,64 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       )}
                     </StackColumn>
 
-                    {ssoEnabled && (
-                      <StackColumn
-                        sx={{
-                          paddingLeft: defaultPadding,
-                          paddingRight: defaultPadding,
-                          paddingTop: defaultPadding,
-                        }}
-                      >
+                    {ssoSettingsEnabled && (
+                      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                        <StackRow>
+                          <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                            Update
+                          </Button>
+                        </StackRow>
+                      </StackColumn>
+                    )}
+                  </FormStackColumn>
+                );
+              }}
+            />
+
+            <Form
+              onSubmit={handleEnableOrganizationTaxDetailsClick}
+              initialValues={{
+                gstNumber,
+                gstPercentage,
+              }}
+              validate={validateOrganizationTaxDetails}
+              render={({ handleSubmit, values }) => {
+                setGstNumber(values!.gstNumber);
+                setGstPercentage(values!.gstPercentage);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['tax-setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Tax Setup" />
+                      <BodyIconTypography label="Edit your organization tax details" />
+                      <Divider />
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Is GST Registered?">
+                        <Switch defaultChecked={taxDetailsEnabled} onChange={handleEnableTaxDetailsChange} />
+                      </FormFieldLabel>
+
+                      {taxDetailsEnabled && (
+                        <>
+                          <FormFieldLabel label="GST Number">
+                            <TextField name="gstNumber" required={requiredOrganizationTaxDetailsFields.gstNumber} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="GST Percentage">
+                            <TextField name="gstPercentage" required={requiredOrganizationTaxDetailsFields.gstPercentage} />
+                          </FormFieldLabel>
+                        </>
+                      )}
+                    </StackColumn>
+
+                    {taxDetailsEnabled && (
+                      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                         <StackRow>
                           <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                             Update
@@ -2392,13 +2546,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               <Divider />
             </StackColumn>
 
-            <StackRow
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-              }}
-            >
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveOrganizationClicked} sx={{ textTransform: 'none' }}>
                 Remove Organization
               </Button>
