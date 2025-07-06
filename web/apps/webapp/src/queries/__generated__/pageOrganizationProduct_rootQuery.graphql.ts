@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed61b0b511384d31ad27da611ad0ae6f>>
+ * @generated SignedSource<<bc5b703f059ee837f7eb9d5c6b02d73c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -422,6 +422,20 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "maxAllowedResourcesLockTimePaidByCard",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "maxAllowedResourcesLockTimePaidThroughBankAccount",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
             "name": "primaryFeatureImage",
@@ -458,6 +472,20 @@ return {
         "args": null,
         "kind": "ScalarField",
         "name": "openingHoursMinutesStep",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "defaultMaxAllowedResourcesLockTimePaidByCard",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "defaultMaxAllowedResourcesLockTimePaidThroughBankAccount",
         "storageKey": null
       },
       {
@@ -521,12 +549,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "527c9b6798553aced016088df93f6e1a",
+    "cacheID": "1c8da3469cc65aeecc79d2c8edc4d5eb",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProduct_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    productTags {\n      uniqueId\n      name\n      color\n    }\n    locationTags {\n      uniqueId\n      name\n      color\n    }\n    organization {\n      uniqueId\n    }\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  openingHoursMinutesStep\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    productTags {\n      uniqueId\n      name\n      color\n    }\n    locationTags {\n      uniqueId\n      name\n      color\n    }\n    organization {\n      uniqueId\n    }\n    maxAllowedResourcesLockTimePaidByCard\n    maxAllowedResourcesLockTimePaidThroughBankAccount\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidByCard\n  defaultMaxAllowedResourcesLockTimePaidThroughBankAccount\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

@@ -238,25 +238,13 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             validate={validateTeamDetails}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <SectionIconTypography label="Team Setup" />
                   <BodyIconTypography label="Add your team name and details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Feature image">
                     <StackColumn>
                       {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
@@ -284,49 +272,25 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <SectionIconTypography label="Location Settings" />
                   <BodyIconTypography label="Assign team to locations" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Primary Location">
                     <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <SectionIconTypography label="Team Members" />
                   <BodyIconTypography label="Manage your team members" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Organization Users">
                     <OrganizationMemberSelector
                       rootDataRelay={rootData}
@@ -339,13 +303,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     {showDismiss && (
                       <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>

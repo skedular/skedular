@@ -9,7 +9,7 @@ import { RelayError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addProduct_addProductMutation, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import { Box, Button } from '@mui/material';
@@ -22,6 +22,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 
@@ -40,6 +41,8 @@ const RootQuery = graphql`
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
     openingHoursMinutesStep
+    defaultMaxAllowedResourcesLockTimePaidByCard
+    defaultMaxAllowedResourcesLockTimePaidThroughBankAccount
     ...multipleChoicesProductTags_query
     ...multipleChoicesLocationTags_query
     ...singleChoicePriceUnit_query
@@ -62,6 +65,8 @@ type ProductDetails = {
   maxBookingSpreadDays: string | null;
   productTagIds: string[];
   locationTagIds: string[];
+  maxAllowedResourcesLockTimePaidByCard: string;
+  maxAllowedResourcesLockTimePaidThroughBankAccount: string;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -222,6 +227,40 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
+    maxAllowedResourcesLockTimePaidByCard: string()
+      .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
+        var maxAllowedResourcesLockTimePaidByCard = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidByCard)) {
+          return false;
+        }
+
+        return true;
+      })
+      .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
+        var maxAllowedResourcesLockTimePaidByCard = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidByCard)) {
+          return false;
+        }
+
+        return maxAllowedResourcesLockTimePaidByCard > 0;
+      }),
+    maxAllowedResourcesLockTimePaidThroughBankAccount: string()
+      .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
+        var maxAllowedResourcesLockTimePaidThroughBankAccount = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidThroughBankAccount)) {
+          return false;
+        }
+
+        return true;
+      })
+      .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
+        var maxAllowedResourcesLockTimePaidThroughBankAccount = Number(value);
+        if (isNaN(maxAllowedResourcesLockTimePaidThroughBankAccount)) {
+          return false;
+        }
+
+        return maxAllowedResourcesLockTimePaidThroughBankAccount > 0;
+      }),
   });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
@@ -260,6 +299,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name
             color
           }
+          maxAllowedResourcesLockTimePaidByCard
+          maxAllowedResourcesLockTimePaidThroughBankAccount
           primaryFeatureImage {
             original {
               url
@@ -282,19 +323,55 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const validateProductDetails = makeValidate(productSchema(rootData.openingHoursMinutesStep));
   const requiredFields = makeRequired(productSchema(rootData.openingHoursMinutesStep));
   const [name, setName] = useState('');
+  const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
+
   const [description, setDescription] = useState<string | null>('');
+  const debounceSetDescription = useDebounceCallback(setDescription, keyboardTextFieldDebounceTimeout);
+
   const [price, setPrice] = useState('0.00');
+  const debounceSetPrice = useDebounceCallback(setPrice, keyboardTextFieldDebounceTimeout);
+
   const [priceUnit, setPriceUnit] = useState('');
+  const debounceSetPriceUnit = useDebounceCallback(setPriceUnit, keyboardTextFieldDebounceTimeout);
+
   const [currency, setCurrency] = useState('');
+  const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
+
   const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState('1');
+  const debounceSetNumberOfResourcesToBook = useDebounceCallback(setNumberOfResourcesToBook, keyboardTextFieldDebounceTimeout);
+
   const [minDurationMinutes, setMinDurationMinutes] = useState<string | null>(null);
+  const debounceSetMinDurationMinutes = useDebounceCallback(setMinDurationMinutes, keyboardTextFieldDebounceTimeout);
+
   const [maxDurationMinutes, setMaxDurationMinutes] = useState<string | null>(null);
+  const debounceSetMaxDurationMinutes = useDebounceCallback(setMaxDurationMinutes, keyboardTextFieldDebounceTimeout);
+
   const [bookAllLocationResources, setBookAllLocationResources] = useState(false);
+  const debounceSetBookAllLocationResources = useDebounceCallback(setBookAllLocationResources, keyboardTextFieldDebounceTimeout);
+
   const [recurrenceWindowDays, setRecurrenceWindowDays] = useState('1');
+  const debounceSetRecurrenceWindowDays = useDebounceCallback(setRecurrenceWindowDays, keyboardTextFieldDebounceTimeout);
+
   const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(false);
+  const debounceSetRequireConsecutiveDays = useDebounceCallback(setRequireConsecutiveDays, keyboardTextFieldDebounceTimeout);
+
   const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<string | null>('1');
+  const debounceSetMaxBookingSpreadDays = useDebounceCallback(setMaxBookingSpreadDays, keyboardTextFieldDebounceTimeout);
+
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
+  const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
+
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
+  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
+
+  const [maxAllowedResourcesLockTimePaidByCard, setMaxAllowedResourcesLockTimePaidByCard] = useState<string>(rootData.defaultMaxAllowedResourcesLockTimePaidByCard.toString());
+  const debounceSetMaxAllowedResourcesLockTimePaidByCard = useDebounceCallback(setMaxAllowedResourcesLockTimePaidByCard, keyboardTextFieldDebounceTimeout);
+
+  const [maxAllowedResourcesLockTimePaidThroughBankAccount, setMaxAllowedResourcesLockTimePaidThroughBankAccount] = useState<string>(
+    (rootData.defaultMaxAllowedResourcesLockTimePaidThroughBankAccount / (60 * 24)).toString(),
+  );
+  const debounceSetMaxAllowedResourcesLockTimePaidThroughBankAccount = useDebounceCallback(setMaxAllowedResourcesLockTimePaidThroughBankAccount, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
@@ -317,6 +394,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
+    maxAllowedResourcesLockTimePaidByCard: maxAllowedResourcesLockTimePaidByCardStr,
+    maxAllowedResourcesLockTimePaidThroughBankAccount: maxAllowedResourcesLockTimePaidThroughBankAccountStr,
   }: ProductDetails) => {
     const id = uuid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
@@ -335,6 +414,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             : null,
         }
       : null;
+    const maxAllowedResourcesLockTimePaidByCard = maxAllowedResourcesLockTimePaidByCardStr
+      ? Number(maxAllowedResourcesLockTimePaidByCardStr)
+      : rootData.defaultMaxAllowedResourcesLockTimePaidByCard;
+    const maxAllowedResourcesLockTimePaidThroughBankAccount = maxAllowedResourcesLockTimePaidThroughBankAccountStr
+      ? Number(maxAllowedResourcesLockTimePaidThroughBankAccountStr) * 60 * 24
+      : rootData.defaultMaxAllowedResourcesLockTimePaidThroughBankAccount;
 
     commitAddProduct({
       variables: {
@@ -357,6 +442,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           locationTagIds,
           organizationId,
           primaryFeatureImage: finalPrimaryFeatureImage,
+          maxAllowedResourcesLockTimePaidByCard,
+          maxAllowedResourcesLockTimePaidThroughBankAccount,
         },
       },
       onCompleted: (_, errors) => {
@@ -409,6 +496,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             productTags: [],
             locationTags: [],
             primaryFeatureImage: finalPrimaryFeatureImage,
+            maxAllowedResourcesLockTimePaidByCard,
+            maxAllowedResourcesLockTimePaidThroughBankAccount,
           },
         },
       },
@@ -440,45 +529,37 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               numberOfResourcesToBook,
               productTagIds,
               locationTagIds,
+              maxAllowedResourcesLockTimePaidByCard,
+              maxAllowedResourcesLockTimePaidThroughBankAccount,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
-              setName(values!.name);
-              setDescription(values!.description);
-              setPrice(values!.price);
-              setPriceUnit(values!.priceUnit);
-              setCurrency(values!.currency);
-              setMinDurationMinutes(values!.minDurationMinutes);
-              setMaxDurationMinutes(values!.maxDurationMinutes);
-              setBookAllLocationResources(values!.bookAllLocationResources);
-              setRequireConsecutiveDays(values!.requireConsecutiveDays);
-              setRecurrenceWindowDays(values!.recurrenceWindowDays);
-              setMaxBookingSpreadDays(values!.maxBookingSpreadDays);
-              setNumberOfResourcesToBook(values!.numberOfResourcesToBook);
-              setProductTagIds(values!.productTagIds);
-              setLocationTagIds(values!.locationTagIds);
+              debounceSetName(values!.name);
+              debounceSetDescription(values!.description);
+              debounceSetPrice(values!.price);
+              debounceSetPriceUnit(values!.priceUnit);
+              debounceSetCurrency(values!.currency);
+              debounceSetMinDurationMinutes(values!.minDurationMinutes);
+              debounceSetMaxDurationMinutes(values!.maxDurationMinutes);
+              debounceSetBookAllLocationResources(values!.bookAllLocationResources);
+              debounceSetRequireConsecutiveDays(values!.requireConsecutiveDays);
+              debounceSetRecurrenceWindowDays(values!.recurrenceWindowDays);
+              debounceSetMaxBookingSpreadDays(values!.maxBookingSpreadDays);
+              debounceSetNumberOfResourcesToBook(values!.numberOfResourcesToBook);
+              debounceSetProductTagIds(values!.productTagIds);
+              debounceSetLocationTagIds(values!.locationTagIds);
+              debounceSetMaxAllowedResourcesLockTimePaidByCard(values!.maxAllowedResourcesLockTimePaidByCard);
+              debounceSetMaxAllowedResourcesLockTimePaidThroughBankAccount(values!.maxAllowedResourcesLockTimePaidThroughBankAccount);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <SectionIconTypography label="Product Setup" />
                     <BodyIconTypography label="Edit your product name and details" />
                     <Divider />
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Feature image">
                       <StackColumn>
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
@@ -572,15 +653,17 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                         <TextField name="maxBookingSpreadDays" required={requiredFields.maxBookingSpreadDays} />
                       </FormFieldLabel>
                     )}
+
+                    <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
+                      <TextField name="maxAllowedResourcesLockTimePaidByCard" required={requiredFields.maxAllowedResourcesLockTimePaidByCard} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
+                      <TextField name="maxAllowedResourcesLockTimePaidThroughBankAccount" required={requiredFields.maxAllowedResourcesLockTimePaidThroughBankAccount} />
+                    </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />

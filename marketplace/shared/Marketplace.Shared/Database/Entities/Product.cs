@@ -25,6 +25,8 @@ public class Product : EntityBaseWithDeleted
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
+    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -52,6 +54,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
+        builder.Property(item => item.MaxAllowedResourcesLockTimePaidByCard).HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidByCard);
+        builder
+            .Property(item => item.MaxAllowedResourcesLockTimePaidThroughBankAccount)
+            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductProductTag);

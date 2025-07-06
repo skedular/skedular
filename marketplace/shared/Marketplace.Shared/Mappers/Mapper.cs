@@ -42,7 +42,9 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage)
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));

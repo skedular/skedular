@@ -67,6 +67,8 @@ type ProductDetails {
   currency: CurrencyDetails!
   minDurationMinutes: Int
   maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -98,6 +100,8 @@ type ProductsPayload {
 type Query {
   product(id: String!): ProductDetails @cost(weight: "10")
   products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ConnectionOfProductEdge! @cost(weight: "10")
+  defaultMaxAllowedResourcesLockTimePaidByCard: Int!
+  defaultMaxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   marketplaceVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   currencies: [CurrencyDetails!]!
@@ -127,6 +131,8 @@ input AddProductInput {
   currency: Currency!
   minDurationMinutes: Int
   maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -181,6 +187,8 @@ input UpdateProductInput {
   currency: Currency!
   minDurationMinutes: Int
   maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!

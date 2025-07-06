@@ -6,12 +6,16 @@ using HotChocolate.Types;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
 using Marketplace.Shared.Models;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Marketplace.Api.GraphQL.Product;
 
 [QueryType]
 public class RootQuery(IMapper mapper)
 {
+    public int DefaultMaxAllowedResourcesLockTimePaidByCard => Constants.DefaultMaxAllowedResourcesLockTimePaidByCard;
+    public int DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount => Constants.DefaultMaxAllowedResourcesLockTimePaidThroughBankAccount;
+
     [UseResolverScope]
     public async Task<ProductDetails?> ProductAsync(string id, [Service] IProductService productService, CancellationToken cancellationToken) =>
         mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));

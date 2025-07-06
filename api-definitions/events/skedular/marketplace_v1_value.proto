@@ -55,6 +55,8 @@ message ProductVersion {
   repeated string productTagIds = 14;
   repeated string locationTagIds = 15;
   CdnImageFile primaryFeatureImage = 16;
+  int32 maxAllowedResourcesLockTimePaidByCard = 17;
+  int32 maxAllowedResourcesLockTimePaidThroughBankAccount = 18;
 }
 
 message CdnImageFile {

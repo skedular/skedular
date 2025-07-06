@@ -310,25 +310,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             validate={validateLocationDetails}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <SectionIconTypography label="Location Setup" />
                   <BodyIconTypography label="Add your location name and details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Feature image">
                     <StackColumn>
                       {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
@@ -406,13 +394,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     {showDismiss && (
                       <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>

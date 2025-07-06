@@ -80,6 +80,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -102,6 +104,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -122,6 +126,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -154,6 +160,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -196,6 +204,8 @@ public class Mapper : IMapper
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard;
+        dest.MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -224,6 +234,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = organization,
@@ -285,6 +297,8 @@ public class Mapper : IMapper
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
+            MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard,
+            MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList()
         };
@@ -319,6 +333,8 @@ public class Mapper : IMapper
         dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
         dest.PrimaryFeatureImage = productVersion.PrimaryFeatureImage;
+        dest.MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard;
+        dest.MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -345,6 +361,8 @@ public class Mapper : IMapper
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.MaxAllowedResourcesLockTimePaidByCard = src.MaxAllowedResourcesLockTimePaidByCard;
+        dest.MaxAllowedResourcesLockTimePaidThroughBankAccount = src.MaxAllowedResourcesLockTimePaidThroughBankAccount;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;

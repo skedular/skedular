@@ -17,6 +17,12 @@ public class UpdateProductInput
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
 
+    [GraphQLName("maxAllowedResourcesLockTimePaidByCard")]
+    public int MaxAllowedResourcesLockTimePaidByCard { get; set; }
+
+    [GraphQLName("maxAllowedResourcesLockTimePaidThroughBankAccount")]
+    public int MaxAllowedResourcesLockTimePaidThroughBankAccount { get; set; }
+
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 

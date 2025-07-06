@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fe709f91952347302db8360ab255d950>>
+ * @generated SignedSource<<0effbec149bbddbb5cc8a7efc58a2164>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,8 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
+  readonly defaultMaxAllowedResourcesLockTimePaidByCard: number;
+  readonly defaultMaxAllowedResourcesLockTimePaidThroughBankAccount: number;
   readonly openingHoursMinutesStep: number;
   readonly product: {
     readonly bookAllLocationResources: boolean;
@@ -28,6 +30,8 @@ export type editProduct_query$data = {
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
+    readonly maxAllowedResourcesLockTimePaidByCard: number;
+    readonly maxAllowedResourcesLockTimePaidThroughBankAccount: number;
     readonly maxBookingSpreadDays: number | null | undefined;
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
@@ -286,6 +290,20 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "maxAllowedResourcesLockTimePaidByCard",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "maxAllowedResourcesLockTimePaidThroughBankAccount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
           "name": "primaryFeatureImage",
@@ -325,6 +343,20 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "defaultMaxAllowedResourcesLockTimePaidByCard",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "defaultMaxAllowedResourcesLockTimePaidThroughBankAccount",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesProductTags_query"
@@ -350,6 +382,6 @@ return {
 };
 })();
 
-(node as any).hash = "04b400dc00655074bef49884ded82df6";
+(node as any).hash = "1c13e589dc06aabaf8a946dfef3d8774";
 
 export default node;

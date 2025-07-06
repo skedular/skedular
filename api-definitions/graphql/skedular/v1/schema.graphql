@@ -998,6 +998,8 @@ type ProductDetails {
   inactive: Boolean!
   latestProductVersionId: String!
   locationTags: [Marketplace_OrganizationTagDetails!]!
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
@@ -1050,6 +1052,8 @@ type Query {
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  defaultMaxAllowedResourcesLockTimePaidByCard: Int!
+  defaultMaxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   deskResourceType: OrganizationTagType!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
@@ -1476,6 +1480,8 @@ input AddProductInput {
   description: String
   id: String
   locationTagIds: [String!]!
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
@@ -2248,6 +2254,8 @@ input UpdateProductInput {
   description: String
   id: String!
   locationTagIds: [String!]!
+  maxAllowedResourcesLockTimePaidByCard: Int!
+  maxAllowedResourcesLockTimePaidThroughBankAccount: Int!
   maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
