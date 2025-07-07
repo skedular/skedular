@@ -28,7 +28,7 @@ namespace Booking.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry);
+    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset paymentExpiry);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     BookingDetails MapTo(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddBookingInput src);
@@ -69,7 +69,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
-    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset bookingCheckoutSessionExpiry);
+    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
@@ -79,7 +79,7 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset bookingCheckoutSessionExpiry) =>
+    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset paymentExpiry) =>
         new()
         {
             Id = src.Id,
@@ -107,10 +107,12 @@ public class Mapper : IMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
-            BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry,
+            PaymentExpiry = paymentExpiry,
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             SendInvoice = src.SendInvoice,
-            InvoiceUrl = src.InvoiceUrl
+            InvoiceUrl = src.InvoiceUrl,
+            TotalAmount = src.TotalAmount,
+            Currency = src.Currency,
         };
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -170,13 +172,20 @@ public class Mapper : IMapper
                 }),
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
-            BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry,
+            PaymentExpiry = src.PaymentExpiry,
             PaymentMethod =
                 src.PaymentMethod is null
                     ? null
                     : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
             SendInvoice = src.SendInvoice,
-            InvoiceUrl = src.InvoiceUrl
+            InvoiceUrl = src.InvoiceUrl,
+            TotalAmount = src.TotalAmount?.ToRoundedPrice(),
+            TotalAmountToDisplay =
+                src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+            Currency = src.Currency,
+            CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
         };
 
     public Shared.Models.Booking MapTo(AddBookingInput src)
@@ -335,7 +344,7 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
             DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
             BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
-            BookingCheckoutSessionExpiry = src.BookingCheckoutSessionExpiry.ToTimestamp(),
+            PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace,
             PaymentMethod = src.PaymentMethod switch
             {
@@ -344,7 +353,9 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             SendInvoice = src.SendInvoice ?? false,
-            InvoiceUrl = src.InvoiceUrl.ToSafeString()
+            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
+            Currency = src.Currency.ToSafeString()
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
@@ -439,8 +450,8 @@ public class Mapper : IMapper
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
-    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset bookingCheckoutSessionExpiry) =>
-        new(MapTo(src.Node, bookingCheckoutSessionExpiry), src.Cursor);
+    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry) =>
+        new(MapTo(src.Node, paymentExpiry), src.Cursor);
 
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
 
@@ -580,7 +591,10 @@ public class Mapper : IMapper
             ? null
             : new OrganizationDetails
             {
-                UniqueId = src.Id, Name = src.Name.ToSafeString(), ContactEmail = src.ContactEmail, ContactPhone = src.ContactPhone
+                UniqueId = src.Id,
+                Name = src.Name.ToSafeString(),
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone
             };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
@@ -741,14 +755,7 @@ public class Mapper : IMapper
             : new BookingCheckoutSessionDetails
             {
                 UniqueId = src.Id,
-                CheckoutUrl = src.CheckoutUrl,
-                AmountTotal = src.AmountTotal?.ToRoundedPrice(),
-                AmountTotalToDisplay =
-                    src.AmountTotal is null || string.IsNullOrWhiteSpace(src.Currency)
-                        ? "N/A"
-                        : src.AmountTotal.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
-                Currency = src.Currency,
-                CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
+                CheckoutUrl = src.CheckoutUrl
             };
 
     private static BookingCheckoutSession? MapToGrpcResponse(Shared.Models.StripeCheckoutSession? src) =>
@@ -757,9 +764,7 @@ public class Mapper : IMapper
             : new BookingCheckoutSession
             {
                 Id = src.Id,
-                CheckoutUrl = src.CheckoutUrl,
-                AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
-                Currency = src.Currency.ToSafeString()
+                CheckoutUrl = src.CheckoutUrl
             };
 
     private static Shared.Models.StripeCheckoutSession? MapTo(StripeCheckoutSession? src) =>
@@ -771,8 +776,6 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
-                AmountTotal = src.AmountTotal,
-                Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()
             };
 

@@ -160,7 +160,7 @@ public class PaymentService(
 
                 repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
 
-                organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         newOrganizationOffering.Id,
@@ -171,7 +171,7 @@ public class PaymentService(
             {
                 repositoryFactory.OrganizationOfferingRepository.Undelete(existingFreeOffering);
 
-                organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+                organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         existingFreeOffering.Id,

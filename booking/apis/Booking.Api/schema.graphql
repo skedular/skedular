@@ -6,10 +6,6 @@ schema {
 type BookingCheckoutSessionDetails {
   uniqueId: ID!
   checkoutUrl: String!
-  amountTotal: String
-  amountTotalToDisplay: String!
-  currency: String
-  currencyToDisplay: String!
 }
 
 type BookingDetails {
@@ -30,11 +26,15 @@ type BookingDetails {
   paymentMethod: PaymentMethodTypeDetails
   sendInvoice: Boolean
   invoiceUrl: String
+  totalAmount: String
+  totalAmountToDisplay: String!
+  currency: String
+  currencyToDisplay: String!
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
-  bookingCheckoutSessionExpiry: DateTime!
+  paymentExpiry: DateTime!
   bookedOnMarketplace: Boolean!
   id: ID!
 }

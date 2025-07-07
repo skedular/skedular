@@ -84,7 +84,7 @@ public class OrganizationOfferingService(
                 Organization = organization
             };
             repositoryFactory.OrganizationOfferingRepository.Add(organizationOffering);
-            organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     organizationOffering.Id,
@@ -94,7 +94,7 @@ public class OrganizationOfferingService(
         else
         {
             repositoryFactory.OrganizationOfferingRepository.Undelete(matchingOffering);
-            organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     matchingOffering.Id,

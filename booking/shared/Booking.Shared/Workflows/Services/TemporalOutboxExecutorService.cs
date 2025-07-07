@@ -7,7 +7,8 @@ namespace Booking.Shared.Workflows.Services;
 
 public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITemporalOutboxExecutor
 {
-    private static readonly string s_payBookingByCard = typeof(PayBookingByCard).ToWorkflowType();
+    private static readonly string s_payBookingViaCard = typeof(PayBookingViaCard).ToWorkflowType();
+    private static readonly string s_payBookingViaBankTransfer = typeof(PayBookingViaBankTransfer).ToWorkflowType();
 
     public async Task StartWorkflowAsync(
         string workflowType,
@@ -17,21 +18,33 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
     {
         await temporalClient.Connection.ConnectAsync();
 
-        if (workflowType == s_payBookingByCard)
+        if (workflowType == s_payBookingViaCard)
         {
             try
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var input = JsonSerializer.Deserialize<PayBookingByCardInput>(executionArgs);
+                var input = JsonSerializer.Deserialize<PayBookingViaCardInput>(executionArgs);
                 ArgumentNullException.ThrowIfNull(input);
 
-                _ = await temporalClient.StartWorkflowAsync(
-                    (PayBookingByCard workflow) => workflow.ExecuteAsync(input),
-                    workflowOptions);
+                _ = await temporalClient.StartWorkflowAsync((PayBookingViaCard workflow) => workflow.ExecuteAsync(input), workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }else         if (workflowType == s_payBookingViaBankTransfer)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<PayBookingViaBankTransferInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync((PayBookingViaBankTransfer workflow) => workflow.ExecuteAsync(input), workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {
             }
         }
+
     }
 }

@@ -21,7 +21,7 @@ public interface IOrganizationOutboxPublisher
 {
     void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
     void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
-    void ExecuteWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
 
@@ -73,7 +73,7 @@ public class OrganizationOutboxPublisher(
         }
     }
 
-    public void ExecuteWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxRenewOrganizationOfferingExecutor.Execute(
             args,
             new WorkflowOptions

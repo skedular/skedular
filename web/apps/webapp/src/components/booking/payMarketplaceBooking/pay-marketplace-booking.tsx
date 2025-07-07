@@ -77,11 +77,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
               color
             }
           }
+          totalAmountToDisplay
           bookingCheckoutSession {
             checkoutUrl
-            amountTotalToDisplay
           }
-          bookingCheckoutSessionExpiry
+          paymentExpiry
           lineItems {
             quantity
             productVersion {
@@ -107,8 +107,8 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
   `);
 
   const shortDateFormatFrom = toShortDate(rootData.booking?.from);
-  const getTimeLeftToPayInSeconds = (bookingCheckoutSessionExpiry: string) => {
-    const expirtTime = dayjs(bookingCheckoutSessionExpiry).utc();
+  const getTimeLeftToPayInSeconds = (paymentExpiry: string) => {
+    const expirtTime = dayjs(paymentExpiry).utc();
     const currentTime = dayjs().utc();
 
     return expirtTime.isBefore(currentTime) ? null : new Date(expirtTime.diff(currentTime, 'second') * 1000).toISOString().slice(11, 19);
@@ -124,7 +124,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
-  const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() => (rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.bookingCheckoutSessionExpiry) : null));
+  const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() => (rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.paymentExpiry) : null));
 
   const handleRefetch = useCallback(() => {
     startTransition(() => {
@@ -151,7 +151,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeftToPayInSeconds(rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.bookingCheckoutSessionExpiry) : null);
+      setTimeLeftToPayInSeconds(rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.paymentExpiry) : null);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -273,11 +273,9 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
               </FormFieldLabel>
             )}
 
-            {booking.bookingCheckoutSession && (
-              <FormFieldLabel label="Total Amount">
-                <BodyIconTypography label={`${booking.bookingCheckoutSession.amountTotalToDisplay}`} />
-              </FormFieldLabel>
-            )}
+            <FormFieldLabel label="Total Amount">
+              <BodyIconTypography label={`${booking.totalAmountToDisplay}`} />
+            </FormFieldLabel>
 
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               {booking.bookingCheckoutSession && (

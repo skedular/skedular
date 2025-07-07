@@ -126,7 +126,7 @@ public class OrganizationOfferings(
         ];
 
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
-        organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 newOrganizationOffering.Id,

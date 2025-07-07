@@ -153,11 +153,13 @@ message Booking {
     Customer deletedByCustomer = 18;
     repeated LineItem lineItems = 19;
     BookingCheckoutSession bookingCheckoutSession = 20;
-    google.protobuf.Timestamp bookingCheckoutSessionExpiry = 21;
+    google.protobuf.Timestamp paymentExpiry = 21;
     bool bookedOnMarketplace = 22;
     PaymentMethod PaymentMethod = 23;
     bool SendInvoice = 24;
     string InvoiceUrl = 25;
+    string totalAmount = 26;
+    string currency = 27;
 }
 
 message Customer {
@@ -316,6 +318,4 @@ message LineItem {
 message BookingCheckoutSession {
     string id = 1;
     string checkoutUrl = 2;
-    string amountTotal = 3;
-    string currency = 4;
 }

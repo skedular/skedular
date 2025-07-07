@@ -83,7 +83,7 @@ public class AzureTenantOnboardingService(
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
         organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
-        organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,

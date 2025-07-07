@@ -21,6 +21,8 @@ public class Booking : ModelBaseWithDeleted
     public PaymentMethod? PaymentMethod { get; set; }
     public bool? SendInvoice { get; set; }
     public string? InvoiceUrl { get; set; }
+    public decimal? TotalAmount { get; set; }
+    public string? Currency { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {
@@ -56,5 +58,5 @@ public class Booking : ModelBaseWithDeleted
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
     public StripeCheckoutSession? StripeCheckoutSession { get; set; }
-    public DateTimeOffset BookingCheckoutSessionExpiry { get; set; }
+    public DateTimeOffset PaymentExpiry { get; set; }
 }

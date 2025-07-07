@@ -7,14 +7,14 @@ using Temporalio.Workflows;
 namespace Booking.Shared.Workflows;
 
 [Workflow]
-public class PayBookingByCard
+public class PayBookingViaCard
 {
-    private PayBookingByCardState? _state;
+    private PayBookingViaCardState? _state;
 
     [WorkflowRun]
-    public async Task ExecuteAsync(PayBookingByCardInput args)
+    public async Task ExecuteAsync(PayBookingViaCardInput args)
     {
-        _state = new PayBookingByCardState(null, false);
+        _state = new PayBookingViaCardState(null, false);
 
         try
         {
@@ -116,12 +116,12 @@ public class PayBookingByCard
         return Task.CompletedTask;
     }
 
-    private static TimeSpan GetDelayDuration(PayBookingByCardInput args)
+    private static TimeSpan GetDelayDuration(PayBookingViaCardInput args)
     {
         var delayDuration = args.ExpiryDate - TimeProvider.System.GetUtcNow();
         if (delayDuration <= TimeSpan.Zero)
         {
-            throw new ApplicationFailureException($"Failed to complete checkout session for booking {args.BookingId}");
+            throw new ApplicationFailureException($"Failed to complete booking {args.BookingId} paid via card");
         }
 
         return delayDuration;

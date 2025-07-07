@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a9680f94a4a72993265ff8ccda47226>>
+ * @generated SignedSource<<4c9cfa8968ee2d81c0ee074b691e0f3f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,8 @@ import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
     readonly bookingCheckoutSession: {
-      readonly amountTotalToDisplay: string;
       readonly checkoutUrl: string;
     } | null | undefined;
-    readonly bookingCheckoutSessionExpiry: any;
     readonly from: any;
     readonly id: string;
     readonly involvedCustomers: ReadonlyArray<{
@@ -49,6 +47,7 @@ export type payMarketplaceBooking_booking_query$data = {
       readonly quantity: number;
     }>;
     readonly notes: string | null | undefined;
+    readonly paymentExpiry: any;
     readonly resources: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
@@ -64,6 +63,7 @@ export type payMarketplaceBooking_booking_query$data = {
         readonly uniqueId: string;
       }>;
     }>;
+    readonly totalAmountToDisplay: string;
     readonly type: {
       readonly type: BookingType;
     };
@@ -294,6 +294,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "totalAmountToDisplay",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "BookingCheckoutSessionDetails",
           "kind": "LinkedField",
           "name": "bookingCheckoutSession",
@@ -305,13 +312,6 @@ return {
               "kind": "ScalarField",
               "name": "checkoutUrl",
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "amountTotalToDisplay",
-              "storageKey": null
             }
           ],
           "storageKey": null
@@ -320,7 +320,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "bookingCheckoutSessionExpiry",
+          "name": "paymentExpiry",
           "storageKey": null
         },
         {
@@ -370,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "6abd2ae75098defd25f2246f342f59fa";
+(node as any).hash = "6a14c12a1325b2673fa9e671ca61479f";
 
 export default node;

@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcizQYKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmci9AYKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -50,14 +50,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "bhgVIAEoCzIfLmJvb2tpbmcuQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhIbChNi",
             "b29rZWRPbk1hcmtldHBsYWNlGBYgASgIEi0KDVBheW1lbnRNZXRob2QYFyAB",
             "KA4yFi5ib29raW5nLlBheW1lbnRNZXRob2QSEwoLU2VuZEludm9pY2UYGCAB",
-            "KAgSEgoKSW52b2ljZVVybBgZIAEoCSIrCghSZXNvdXJjZRIKCgJpZBgBIAEo",
-            "CRITCgtjdXN0b21lcklkcxgCIAMoCSJmCg9Cb29raW5nU2NoZWR1bGUSKAoE",
-            "ZnJvbRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASKQoFdW50",
-            "aWwYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIjYKCExpbmVJ",
-            "dGVtEhgKEHByb2R1Y3RWZXJzaW9uSWQYASABKAkSEAoIcXVhbnRpdHkYAiAB",
-            "KAUiYAoWQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhIKCgJpZBgBIAEoCRITCgtj",
-            "aGVja291dFVybBgCIAEoCRITCgthbW91bnRUb3RhbBgEIAEoCRIQCghjdXJy",
-            "ZW5jeRgFIAEoCSo5CgRUeXBlEhgKFFR5cGVfQm9va2luZ1Vwc2VydGVkEAAS",
+            "KAgSEgoKSW52b2ljZVVybBgZIAEoCRITCgt0b3RhbEFtb3VudBgaIAEoCRIQ",
+            "CghjdXJyZW5jeRgbIAEoCSIrCghSZXNvdXJjZRIKCgJpZBgBIAEoCRITCgtj",
+            "dXN0b21lcklkcxgCIAMoCSJmCg9Cb29raW5nU2NoZWR1bGUSKAoEZnJvbRgB",
+            "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASKQoFdW50aWwYAiAB",
+            "KAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIjYKCExpbmVJdGVtEhgK",
+            "EHByb2R1Y3RWZXJzaW9uSWQYASABKAkSEAoIcXVhbnRpdHkYAiABKAUiOQoW",
+            "Qm9va2luZ0NoZWNrb3V0U2Vzc2lvbhIKCgJpZBgBIAEoCRITCgtjaGVja291",
+            "dFVybBgCIAEoCSo5CgRUeXBlEhgKFFR5cGVfQm9va2luZ1Vwc2VydGVkEAAS",
             "FwoTVHlwZV9Cb29raW5nRGVsZXRlZBABKs0CCgtCb29raW5nVHlwZRIfChtC",
             "b29raW5nVHlwZV9Xb3JraW5nRnJvbUhvbWUQABIhCh1Cb29raW5nVHlwZV9X",
             "b3JraW5nRnJvbU9mZmljZRABEikKJUJvb2tpbmdUeXBlX1dvcmtpbmdGcm9t",
@@ -80,11 +80,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "PaymentStatus", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "BookingCheckoutSession", "BookedOnMarketplace", "PaymentMethod", "SendInvoice", "InvoiceUrl" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Type", "PaymentStatus", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "BookingCheckoutSession", "BookedOnMarketplace", "PaymentMethod", "SendInvoice", "InvoiceUrl", "TotalAmount", "Currency" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser, new[]{ "ProductVersionId", "Quantity" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession.Parser, new[]{ "Id", "CheckoutUrl", "AmountTotal", "Currency" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession.Parser, new[]{ "Id", "CheckoutUrl" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1038,6 +1038,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       paymentMethod_ = other.paymentMethod_;
       sendInvoice_ = other.sendInvoice_;
       invoiceUrl_ = other.invoiceUrl_;
+      totalAmount_ = other.totalAmount_;
+      currency_ = other.currency_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1340,6 +1342,30 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "totalAmount" field.</summary>
+    public const int TotalAmountFieldNumber = 26;
+    private string totalAmount_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string TotalAmount {
+      get { return totalAmount_; }
+      set {
+        totalAmount_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "currency" field.</summary>
+    public const int CurrencyFieldNumber = 27;
+    private string currency_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Currency {
+      get { return currency_; }
+      set {
+        currency_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1380,6 +1406,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (PaymentMethod != other.PaymentMethod) return false;
       if (SendInvoice != other.SendInvoice) return false;
       if (InvoiceUrl != other.InvoiceUrl) return false;
+      if (TotalAmount != other.TotalAmount) return false;
+      if (Currency != other.Currency) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1412,6 +1440,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) hash ^= PaymentMethod.GetHashCode();
       if (SendInvoice != false) hash ^= SendInvoice.GetHashCode();
       if (InvoiceUrl.Length != 0) hash ^= InvoiceUrl.GetHashCode();
+      if (TotalAmount.Length != 0) hash ^= TotalAmount.GetHashCode();
+      if (Currency.Length != 0) hash ^= Currency.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1509,6 +1539,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(202, 1);
         output.WriteString(InvoiceUrl);
       }
+      if (TotalAmount.Length != 0) {
+        output.WriteRawTag(210, 1);
+        output.WriteString(TotalAmount);
+      }
+      if (Currency.Length != 0) {
+        output.WriteRawTag(218, 1);
+        output.WriteString(Currency);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1598,6 +1636,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(202, 1);
         output.WriteString(InvoiceUrl);
       }
+      if (TotalAmount.Length != 0) {
+        output.WriteRawTag(210, 1);
+        output.WriteString(TotalAmount);
+      }
+      if (Currency.Length != 0) {
+        output.WriteRawTag(218, 1);
+        output.WriteString(Currency);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1668,6 +1714,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (InvoiceUrl.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(InvoiceUrl);
+      }
+      if (TotalAmount.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(TotalAmount);
+      }
+      if (Currency.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(Currency);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1753,6 +1805,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (other.InvoiceUrl.Length != 0) {
         InvoiceUrl = other.InvoiceUrl;
+      }
+      if (other.TotalAmount.Length != 0) {
+        TotalAmount = other.TotalAmount;
+      }
+      if (other.Currency.Length != 0) {
+        Currency = other.Currency;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1885,6 +1943,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             InvoiceUrl = input.ReadString();
             break;
           }
+          case 210: {
+            TotalAmount = input.ReadString();
+            break;
+          }
+          case 218: {
+            Currency = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -2014,6 +2080,14 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 202: {
             InvoiceUrl = input.ReadString();
+            break;
+          }
+          case 210: {
+            TotalAmount = input.ReadString();
+            break;
+          }
+          case 218: {
+            Currency = input.ReadString();
             break;
           }
         }
@@ -2772,8 +2846,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     public BookingCheckoutSession(BookingCheckoutSession other) : this() {
       id_ = other.id_;
       checkoutUrl_ = other.checkoutUrl_;
-      amountTotal_ = other.amountTotal_;
-      currency_ = other.currency_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2807,30 +2879,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "amountTotal" field.</summary>
-    public const int AmountTotalFieldNumber = 4;
-    private string amountTotal_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string AmountTotal {
-      get { return amountTotal_; }
-      set {
-        amountTotal_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "currency" field.</summary>
-    public const int CurrencyFieldNumber = 5;
-    private string currency_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Currency {
-      get { return currency_; }
-      set {
-        currency_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2848,8 +2896,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (Id != other.Id) return false;
       if (CheckoutUrl != other.CheckoutUrl) return false;
-      if (AmountTotal != other.AmountTotal) return false;
-      if (Currency != other.Currency) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2859,8 +2905,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (CheckoutUrl.Length != 0) hash ^= CheckoutUrl.GetHashCode();
-      if (AmountTotal.Length != 0) hash ^= AmountTotal.GetHashCode();
-      if (Currency.Length != 0) hash ^= Currency.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2887,14 +2931,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(CheckoutUrl);
       }
-      if (AmountTotal.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(AmountTotal);
-      }
-      if (Currency.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Currency);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2913,14 +2949,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(CheckoutUrl);
       }
-      if (AmountTotal.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(AmountTotal);
-      }
-      if (Currency.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Currency);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2936,12 +2964,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (CheckoutUrl.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CheckoutUrl);
-      }
-      if (AmountTotal.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(AmountTotal);
-      }
-      if (Currency.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Currency);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2960,12 +2982,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (other.CheckoutUrl.Length != 0) {
         CheckoutUrl = other.CheckoutUrl;
-      }
-      if (other.AmountTotal.Length != 0) {
-        AmountTotal = other.AmountTotal;
-      }
-      if (other.Currency.Length != 0) {
-        Currency = other.Currency;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2994,14 +3010,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             CheckoutUrl = input.ReadString();
             break;
           }
-          case 34: {
-            AmountTotal = input.ReadString();
-            break;
-          }
-          case 42: {
-            Currency = input.ReadString();
-            break;
-          }
         }
       }
     #endif
@@ -3027,14 +3035,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 18: {
             CheckoutUrl = input.ReadString();
-            break;
-          }
-          case 34: {
-            AmountTotal = input.ReadString();
-            break;
-          }
-          case 42: {
-            Currency = input.ReadString();
             break;
           }
         }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e5e8bd57d4aaca6e6c02986b8514956>>
+ * @generated SignedSource<<76fe816f17f53f8a48b933cc88936454>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -249,6 +249,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "totalAmountToDisplay",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "BookingCheckoutSessionDetails",
             "kind": "LinkedField",
             "name": "bookingCheckoutSession",
@@ -260,13 +267,6 @@ return {
                 "kind": "ScalarField",
                 "name": "checkoutUrl",
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "amountTotalToDisplay",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -275,7 +275,7 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "bookingCheckoutSessionExpiry",
+            "name": "paymentExpiry",
             "storageKey": null
           },
           {
@@ -322,16 +322,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9dc9bdd50d7edddc94812058afabdd0c",
+    "cacheID": "36ad8d80d47fdda48d761d18fb4422c1",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    bookingCheckoutSession {\n      checkoutUrl\n      amountTotalToDisplay\n    }\n    bookingCheckoutSessionExpiry\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n  }\n}\n"
+    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    totalAmountToDisplay\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentExpiry\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6abd2ae75098defd25f2246f342f59fa";
+(node as any).hash = "6a14c12a1325b2673fa9e671ca61479f";
 
 export default node;

@@ -42,7 +42,8 @@ public class Program
 
         services
             .AddTemporalWorker(configuration)
-            .AddWorkflow<PayBookingByCard>()
+            .AddWorkflow<PayBookingViaCard>()
+            .AddWorkflow<PayBookingViaBankTransfer>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>();
 

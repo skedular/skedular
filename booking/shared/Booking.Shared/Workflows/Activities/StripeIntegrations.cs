@@ -184,13 +184,13 @@ public class StripeIntegrations(
             Id = randomHelper.Generate(),
             StripeCheckoutSessionId = session.Id,
             CheckoutUrl = session.Url,
-            AmountTotal = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100,
-            Currency = session.Currency,
             StripeCustomer = stripeCustomer
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
 
+        booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        booking.Currency = session.Currency;
         booking.StripeCheckoutSession = stripeCheckoutSession;
         booking.PaymentStatus = session.PaymentStatus switch
         {

@@ -199,7 +199,7 @@ public class OrganizationService(
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
-        organizationOutboxPublisher.ExecuteWorkflowScheduleRenewOrganizationOffering(
+        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,

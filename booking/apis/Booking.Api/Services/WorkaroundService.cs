@@ -26,7 +26,7 @@ public class WorkaroundService(
         }
 
         await bookingPublisher.PublishBookingsAsync(
-            [mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking))],
+            [mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking))],
             cancellationToken);
     }
 
@@ -34,7 +34,7 @@ public class WorkaroundService(
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
         await bookingPublisher.PublishBookingsAsync(
-            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(item))),
+            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item))),
             cancellationToken);
     }
 }

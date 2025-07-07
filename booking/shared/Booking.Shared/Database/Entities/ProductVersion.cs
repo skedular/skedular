@@ -23,7 +23,7 @@ public class ProductVersion : EntityBase
     public int? NumberOfResourcesToBook { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
-    public ICollection<string> AcceptedBookingPaymentMethods { get; set; } = [];
+    public ICollection<string>? AcceptedBookingPaymentMethods { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }

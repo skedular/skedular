@@ -19,14 +19,12 @@ namespace Booking.Shared.Publishers;
 public interface IBookingOutboxPublisher
 {
     void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
-    void ExecuteWorkflowPayBookingByCardSession(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
-
-    void SignalWorkflowPayBookingUsingStripeCheckoutSessionSetPaymentStatus(
-        string bookingId,
-        SetPaymentStatusArgs executionArgs,
-        IUnitOfWork unitOfWork);
-
-    void SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+    void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+    void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
 }
 
 public class BookingOutboxPublisher(
@@ -36,7 +34,8 @@ public class BookingOutboxPublisher(
     IKafkaOutboxEventPublisher<Key, Event> publisher,
     TemporalConfiguration temporalConfiguration,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<PayBookingByCard> temporalOutboxPayBookingByCardWorkflowExecutor)
+    ITemporalOutboxWorkflowExecutor<PayBookingViaCard> temporalOutboxPayBookingViaCardWorkflowExecutor,
+    ITemporalOutboxWorkflowExecutor<PayBookingViaBankTransfer> temporalOutboxPayBookingViaBankTransferWorkflowExecutor)
     : IBookingOutboxPublisher
 {
     public void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
@@ -58,40 +57,63 @@ public class BookingOutboxPublisher(
         }
     }
 
-    public void ExecuteWorkflowPayBookingByCardSession(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
-    {
-        foreach (var booking in bookings)
-        {
-            temporalOutboxPayBookingByCardWorkflowExecutor.Execute(
-                new PayBookingByCardInput(booking.Id, booking.BookingCheckoutSessionExpiry),
-                new WorkflowOptions
-                {
-                    Id = booking.Id,
-                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                    RetryPolicy = null,
-                    IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
-                },
-                unitOfWork);
-        }
-    }
+    public void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork) =>
+        temporalOutboxPayBookingViaCardWorkflowExecutor.Execute(
+            new PayBookingViaCardInput(booking.Id, booking.PaymentExpiry),
+            new WorkflowOptions
+            {
+                Id = $"{Constants.PaidViaCardPrefix}-{booking.Id}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
 
-    public void SignalWorkflowPayBookingUsingStripeCheckoutSessionSetPaymentStatus(
+    public void SignalWorkflowPayBookingViaCardSetPaymentStatus(
         string bookingId,
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            bookingId,
-            typeof(PayBookingByCard).GetMethod(nameof(PayBookingByCard.SetPaymentStatusAsync))!
-                .ToWorkflowSignalType(),
+            $"{Constants.PaidViaCardPrefix}-{bookingId}",
+            typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType(),
             executionArgs,
             new WorkflowSignalOptions(),
             unitOfWork);
 
-    public void SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
+    public void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            bookingId,
-            typeof(PayBookingByCard).GetMethod(nameof(PayBookingByCard.DeleteBookingAsync))!
-                .ToWorkflowSignalType(),
+            $"{Constants.PaidViaCardPrefix}-{bookingId}",
+            typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.DeleteBookingAsync))!.ToWorkflowSignalType(),
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork) =>
+        temporalOutboxPayBookingViaBankTransferWorkflowExecutor.Execute(
+            new PayBookingViaBankTransferInput(booking.Id, booking.PaymentExpiry),
+            new WorkflowOptions
+            {
+                Id = $"{Constants.PaidViaBankTransferPrefix}-{booking.Id}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
+        string bookingId,
+        SetPaymentStatusArgs executionArgs,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            $"{Constants.PaidViaBankTransferPrefix}-{bookingId}",
+            typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.SetPaymentStatusAsync))!.ToWorkflowSignalType(),
+            executionArgs,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            $"{Constants.PaidViaBankTransferPrefix}-{bookingId}",
+            typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
             unitOfWork);
 }

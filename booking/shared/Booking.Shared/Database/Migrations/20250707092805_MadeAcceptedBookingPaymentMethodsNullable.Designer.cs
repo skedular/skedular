@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
@@ -14,9 +15,11 @@ using Temporalio.Client;
 namespace Booking.Shared.Database.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250707092805_MadeAcceptedBookingPaymentMethodsNullable")]
+    partial class MadeAcceptedBookingPaymentMethodsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,10 +48,6 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<string>("CreatedByCustomerId")
                         .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Currency")
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -106,9 +105,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<bool?>("SendInvoice")
                         .HasColumnType("boolean");
 
-                    b.Property<decimal?>("TotalAmount")
-                        .HasColumnType("DECIMAL(18,4)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -130,8 +126,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("CreatedByCustomerId");
-
-                    b.HasIndex("Currency");
 
                     b.HasIndex("DeletedAt");
 
@@ -156,8 +150,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PaymentStatus");
 
                     b.HasIndex("SendInvoice");
-
-                    b.HasIndex("TotalAmount");
 
                     b.HasIndex("Type");
 
@@ -892,6 +884,9 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<decimal?>("AmountTotal")
+                        .HasColumnType("DECIMAL(18,4)");
+
                     b.Property<string>("BookingId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -903,6 +898,10 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");

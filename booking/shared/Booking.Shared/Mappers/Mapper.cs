@@ -66,7 +66,9 @@ public class Mapper : IMapper
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             SendInvoice = src.SendInvoice ?? false,
-            InvoiceUrl = src.InvoiceUrl.ToSafeString()
+            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
+            Currency = src.Currency.ToSafeString()
         };
 
         if (src.PaymentMethod is not null)
@@ -353,8 +355,6 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString(),
-                AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
-                Currency = src.Currency.ToSafeString()
             };
 
     private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) =>

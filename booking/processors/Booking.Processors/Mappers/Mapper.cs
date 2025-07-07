@@ -86,8 +86,6 @@ public interface IMapper
         OrganizationSsoSetting src,
         Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
-
-    StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest);
 }
 
 public class Mapper : IMapper
@@ -537,13 +535,6 @@ public class Mapper : IMapper
         dest.IsActive = src.IsActive;
         dest.Organization = organization;
 
-        return dest;
-    }
-
-    public StripeCheckoutSession MergeTo(Session src, StripeCheckoutSession dest)
-    {
-        dest.AmountTotal = src.AmountTotal is null ? null : (decimal)src.AmountTotal / 100;
-        dest.Currency = src.Currency;
         return dest;
     }
 

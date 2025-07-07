@@ -96,10 +96,10 @@ public class BookingService(
         {
             if (!booking.PaymentMethod.HasValue)
             {
-                throw new BookingPaymentMethodRequired();
+                throw new PaymentMethodRequired();
             }
 
-            if (productVersions.Any(item => !item.AcceptedBookingPaymentMethods.Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+            if (productVersions.Any(item => !(item.AcceptedBookingPaymentMethods ?? []).Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
             {
                 throw new BookingPaymentMethodNotAccepted();
             }
@@ -157,13 +157,24 @@ public class BookingService(
             null);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(bookingEntity));
+        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
         if (booking.IsPaymentRequired)
         {
-            bookingOutboxPublisher.ExecuteWorkflowPayBookingByCardSession([booking], repositoryFactory.UnitOfWork);
+            switch (booking.PaymentMethod)
+            {
+                case PaymentMethod.Card:
+                    bookingOutboxPublisher.StartWorkflowPayBookingViaCard(booking, repositoryFactory.UnitOfWork);
+                    break;
+
+                case PaymentMethod.BankTransfer:
+                    bookingOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(booking, repositoryFactory.UnitOfWork);
+                    break;
+
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -233,13 +244,29 @@ public class BookingService(
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(
             repositoryFactory.BookingRepository.Remove(existingBooking),
-            bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(existingBooking));
+            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
         if (existingBooking.IsPaymentRequired)
         {
-            bookingOutboxPublisher.SignalWorkflowPayBookingUsingStripeCheckoutSessionDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+            if (!deletedBooking.PaymentMethod.HasValue)
+            {
+                throw new PaymentMethodRequired();
+            }
+
+            switch (deletedBooking.PaymentMethod)
+            {
+                case PaymentMethod.Card:
+                    bookingOutboxPublisher.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
+
+                case PaymentMethod.BankTransfer:
+                    bookingOutboxPublisher.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
+
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -272,7 +299,7 @@ public class BookingService(
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
-        var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(booking));
+        var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
 
         if ((booking.InvolvedOrganizations.Count == 0 ||
              booking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
@@ -429,7 +456,7 @@ public class BookingService(
             cancellationToken);
 
         var result = (paginatedInfo,
-            edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(item.Node))).ToList(),
+            edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item.Node))).ToList(),
             totalCount);
         if (customer is null)
         {
@@ -675,7 +702,7 @@ public class BookingService(
             existingBooking.StripeCheckoutSession);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(bookingEntity));
+        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 

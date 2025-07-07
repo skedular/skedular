@@ -52,6 +52,8 @@ message Booking {
   PaymentMethod PaymentMethod = 23;
   bool SendInvoice = 24;
   string InvoiceUrl = 25;
+  string totalAmount = 26;
+  string currency = 27;
 }
 
 enum BookingType
@@ -96,8 +98,6 @@ message LineItem {
 message BookingCheckoutSession {
   string id = 1;
   string checkoutUrl = 2;
-  string amountTotal = 4;
-  string currency = 5;
 }
 
 enum PaymentMethod {

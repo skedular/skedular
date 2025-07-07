@@ -8,11 +8,14 @@ namespace Booking.Shared.Workflows.Services;
 public class TemporalSignalOutboxExecutorService(ITemporalClient temporalClient, ITemporalHelperService temporalHelperService)
     : ITemporalSignalOutboxExecutor
 {
-    private static readonly string s_payPayBookingByCardSetPaymentStatusAsync =
-        typeof(PayBookingByCard).GetMethod(nameof(PayBookingByCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
+    private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
+        typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
 
-    private static readonly string s_payPayBookingByCardDeleteBookingAsync =
-        typeof(PayBookingByCard).GetMethod(nameof(PayBookingByCard.DeleteBookingAsync))!.ToWorkflowSignalType();
+    private static readonly string s_payBookingViaCardDeleteBookingAsync =
+        typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.DeleteBookingAsync))!.ToWorkflowSignalType();
+
+    private static readonly string s_payBookingViaBankTransferDeleteBookingAsync =
+        typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType();
 
     public async Task SignalAsync(
         string workflowId,
@@ -23,9 +26,9 @@ public class TemporalSignalOutboxExecutorService(ITemporalClient temporalClient,
     {
         await temporalClient.Connection.ConnectAsync();
 
-        if (signalType == s_payPayBookingByCardSetPaymentStatusAsync)
+        if (signalType == s_payBookingViaCardSetPaymentStatusAsync)
         {
-            if (!await temporalHelperService.IsRunningAsync<PayBookingByCard>(workflowId, cancellationToken))
+            if (!await temporalHelperService.IsRunningAsync<PayBookingViaCard>(workflowId, cancellationToken))
             {
                 return;
             }
@@ -35,18 +38,29 @@ public class TemporalSignalOutboxExecutorService(ITemporalClient temporalClient,
             ArgumentNullException.ThrowIfNull(input);
 
             await temporalClient
-                .GetWorkflowHandle<PayBookingByCard>(workflowId)
+                .GetWorkflowHandle<PayBookingViaCard>(workflowId)
                 .SignalAsync(workflow => workflow.SetPaymentStatusAsync(input), workflowSignalOptions);
         }
-        else if (signalType == s_payPayBookingByCardDeleteBookingAsync)
+        else if (signalType == s_payBookingViaCardDeleteBookingAsync)
         {
-            if (!await temporalHelperService.IsRunningAsync<PayBookingByCard>(workflowId, cancellationToken))
+            if (!await temporalHelperService.IsRunningAsync<PayBookingViaCard>(workflowId, cancellationToken))
             {
                 return;
             }
 
             await temporalClient
-                .GetWorkflowHandle<PayBookingByCard>(workflowId)
+                .GetWorkflowHandle<PayBookingViaCard>(workflowId)
+                .SignalAsync(workflow => workflow.DeleteBookingAsync(), workflowSignalOptions);
+        }
+        else if (signalType == s_payBookingViaBankTransferDeleteBookingAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<PayBookingViaBankTransfer>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<PayBookingViaBankTransfer>(workflowId)
                 .SignalAsync(workflow => workflow.DeleteBookingAsync(), workflowSignalOptions);
         }
     }
