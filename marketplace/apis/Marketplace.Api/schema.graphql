@@ -25,11 +25,6 @@ type CurrencyDetails {
   name: String!
 }
 
-type Marketplace_BookingPaymentMethodTypeDetails {
-  type: BookingPaymentMethod!
-  name: String!
-}
-
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
@@ -39,6 +34,11 @@ type Marketplace_OrganizationTagDetails {
   name: String
   tagType: String
   color: String
+}
+
+type Marketplace_PaymentMethodTypeDetails {
+  type: PaymentMethod!
+  name: String!
 }
 
 type Mutation {
@@ -74,7 +74,7 @@ type ProductDetails {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [Marketplace_BookingPaymentMethodTypeDetails!]!
+  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -139,7 +139,7 @@ input AddProductInput {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
+  acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -196,7 +196,7 @@ input UpdateProductInput {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
+  acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -207,11 +207,6 @@ input UpdateProductInput {
   primaryFeatureImage: CdnImageFileInput
 }
 
-enum BookingPaymentMethod {
-  CARD
-  BANK_TRANSFER
-}
-
 enum Currency {
   NZD
   USD
@@ -220,6 +215,11 @@ enum Currency {
 enum OrderDirection {
   ASCENDING
   DESCENDING
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
 }
 
 enum PriceUnit {

@@ -189,9 +189,9 @@ message DismissSetupPreferredZonesInput {
 }
 
 enum FeedbackChannel {
-    Web = 0;
-    Slack = 1;
-    MsTeams = 2;
+    FeedbackChannel_Web = 0;
+    FeedbackChannel_Slack = 1;
+    FeedbackChannel_MsTeams = 2;
 }
 
 message SubmitFeedbackInput {

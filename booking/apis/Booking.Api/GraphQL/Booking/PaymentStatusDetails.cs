@@ -3,9 +3,9 @@ using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("BookingPaymentStatusDetails")]
-public class BookingPaymentStatusDetails
+[GraphQLName("PaymentStatusDetails")]
+public class PaymentStatusDetails
 {
-    [GraphQLName("type")] public BookingPaymentStatus Type { get; set; }
+    [GraphQLName("type")] public PaymentStatus Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

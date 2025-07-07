@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9aedc26a5acd197c16e55496060bd4f8>>
+ * @generated SignedSource<<b033d6b7076399458bfdd6afa4f77682>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -257,7 +257,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+            "concreteType": "Marketplace_PaymentMethodTypeDetails",
             "kind": "LinkedField",
             "name": "acceptedBookingPaymentMethods",
             "plural": true,
@@ -301,9 +301,9 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "BookingPaymentMethodTypeDetails",
+        "concreteType": "PaymentMethodTypeDetails",
         "kind": "LinkedField",
-        "name": "bookingPaymentMethodTypes",
+        "name": "paymentMethodTypes",
         "plural": true,
         "selections": (v8/*: any*/),
         "storageKey": null
@@ -384,12 +384,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2bb6198c2ff979bbdb541372a219eab6",
+    "cacheID": "7e8c02123a9bc62326f07a5d3feb9b8f",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n    acceptedBookingPaymentMethods {\n      type\n    }\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingType_query\n  ...singleChoiceBookingPaymentMethodType_query\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  bookingPaymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingType_query on Query {\n  marketplaceBookingTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n    acceptedBookingPaymentMethods {\n      type\n    }\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingType_query\n  ...singleChoiceBookingPaymentMethodType_query\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingType_query on Query {\n  marketplaceBookingTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

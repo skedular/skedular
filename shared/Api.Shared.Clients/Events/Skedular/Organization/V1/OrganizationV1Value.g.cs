@@ -64,15 +64,16 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "CghlbnRpdHlJZBgCIAEoCRIQCghsb2dpblVybBgDIAEoCRIgChhhcHBGZWRl",
             "cmF0aW9uTWV0YWRhdGFVcmwYBCABKAkSEAoIaXNBY3RpdmUYBSABKAgiTgoW",
             "T3JnYW5pemF0aW9uVGF4RGV0YWlscxIKCgJpZBgBIAEoCRIRCglnc3ROdW1i",
-            "ZXIYAiABKAkSFQoNZ3N0UGVyY2VudGFnZRgDIAEoCSqtAQoEVHlwZRIYChRP",
-            "cmdhbml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQ",
-            "ARIoCiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhIn",
-            "CiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09y",
-            "Z2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQ",
-            "ABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoK",
-            "BkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50",
-            "cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90",
-            "bzM="));
+            "ZXIYAiABKAkSFQoNZ3N0UGVyY2VudGFnZRgDIAEoCSrGAQoEVHlwZRIdChlU",
+            "eXBlX09yZ2FuaXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRp",
+            "b25EZWxldGVkEAESLQopVHlwZV9JbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0",
+            "aW9uVXBzZXJ0ZWQQAhIsCihUeXBlX0ludml0YXRpb25Ub0pvaW5Pcmdhbml6",
+            "YXRpb25EZWxldGVkEAMSJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1Vw",
+            "ZGF0ZWQQBCo/CgRSb2xlEg4KClJvbGVfT3duZXIQABIWChJSb2xlX0FkbWlu",
+            "aXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchACKjAKBlN0YXR1cxIRCg1TdGF0",
+            "dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0aXZlEAFCO6oCOEFwaS5TaGFy",
+            "ZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZh",
+            "bHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -94,22 +95,22 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("OrganizationUpserted")] OrganizationUpserted = 0,
-    [pbr::OriginalName("OrganizationDeleted")] OrganizationDeleted = 1,
-    [pbr::OriginalName("InvitationToJoinOrganizationUpserted")] InvitationToJoinOrganizationUpserted = 2,
-    [pbr::OriginalName("InvitationToJoinOrganizationDeleted")] InvitationToJoinOrganizationDeleted = 3,
-    [pbr::OriginalName("OrganizationOfferingUpdated")] OrganizationOfferingUpdated = 4,
+    [pbr::OriginalName("Type_OrganizationUpserted")] OrganizationUpserted = 0,
+    [pbr::OriginalName("Type_OrganizationDeleted")] OrganizationDeleted = 1,
+    [pbr::OriginalName("Type_InvitationToJoinOrganizationUpserted")] InvitationToJoinOrganizationUpserted = 2,
+    [pbr::OriginalName("Type_InvitationToJoinOrganizationDeleted")] InvitationToJoinOrganizationDeleted = 3,
+    [pbr::OriginalName("Type_OrganizationOfferingUpdated")] OrganizationOfferingUpdated = 4,
   }
 
   public enum Role {
-    [pbr::OriginalName("Owner")] Owner = 0,
-    [pbr::OriginalName("Administrator")] Administrator = 1,
-    [pbr::OriginalName("Member")] Member = 2,
+    [pbr::OriginalName("Role_Owner")] Owner = 0,
+    [pbr::OriginalName("Role_Administrator")] Administrator = 1,
+    [pbr::OriginalName("Role_Member")] Member = 2,
   }
 
   public enum Status {
-    [pbr::OriginalName("Active")] Active = 0,
-    [pbr::OriginalName("Inactive")] Inactive = 1,
+    [pbr::OriginalName("Status_Active")] Active = 0,
+    [pbr::OriginalName("Status_Inactive")] Inactive = 1,
   }
 
   #endregion

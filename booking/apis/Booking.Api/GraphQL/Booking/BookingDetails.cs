@@ -12,7 +12,7 @@ public class BookingDetails : Node
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingTypeDetails Type { get; set; } = new();
-    [GraphQLName("paymentStatus")] public BookingPaymentStatusDetails PaymentStatus { get; set; } = new();
+    [GraphQLName("paymentStatus")] public PaymentStatusDetails PaymentStatus { get; set; } = new();
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemDetails> LineItems { get; set; } = [];
     [GraphQLName("involvedCustomers")] public IEnumerable<CustomerDetails> InvolvedCustomers { get; set; } = [];
@@ -22,7 +22,7 @@ public class BookingDetails : Node
     [GraphQLName("paidByCustomer")] public CustomerDetails? PaidByCustomer { get; set; }
     [GraphQLName("paidByOrganization")] public OrganizationDetails? PaidByOrganization { get; set; }
     [GraphQLName("createdByCustomer")] public CustomerDetails? CreatedByCustomer { get; set; }
-    [GraphQLName("paymentMethod")] public BookingPaymentMethodTypeDetails? PaymentMethod { get; set; }
+    [GraphQLName("paymentMethod")] public PaymentMethodTypeDetails? PaymentMethod { get; set; }
     [GraphQLName("sendInvoice")] public bool? SendInvoice { get; set; }
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
 

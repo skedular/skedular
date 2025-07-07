@@ -49,7 +49,7 @@ public class Mapper : IMapper
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
         productVersion.LocationTagIds.AddRange(src.LocationTags.Select(item => item.Id));
-        productVersion.AcceptedBookingPaymentMethods.AddRange(src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()));
+        productVersion.AcceptedBookingPaymentMethods.AddRange(src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()));
 
         return productVersion;
     }

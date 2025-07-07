@@ -10,7 +10,6 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
-using BookingPaymentStatus = Api.Shared.Services.Models.BookingPaymentStatus;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
@@ -19,6 +18,7 @@ using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
+using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
 using PaymentStatus = Api.Shared.Services.Models.PaymentStatus;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -90,7 +90,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
-            PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus(),
+            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
@@ -108,7 +108,7 @@ public class Mapper : IMapper
             StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry,
-            PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod(),
+            PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };
@@ -150,7 +150,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
-            PaymentStatus = new BookingPaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToBookingPaymentStatusName() },
+            PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
             IsPaymentRequired = src.IsPaymentRequired,
             Resources = MapTo(src.Resources),
             InvolvedCustomers = MapTo(src.InvolvedCustomers),
@@ -174,10 +174,7 @@ public class Mapper : IMapper
             PaymentMethod =
                 src.PaymentMethod is null
                     ? null
-                    : new BookingPaymentMethodTypeDetails
-                    {
-                        Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToBookingPaymentMethodName()
-                    },
+                    : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };
@@ -276,7 +273,7 @@ public class Mapper : IMapper
         dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
-        dest.PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus();
+        dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
@@ -293,7 +290,7 @@ public class Mapper : IMapper
         dest.DeletedByCustomer = deletedByCustomer;
         dest.ProductVersions = productVersions;
         dest.StripeCheckoutSession = stripeCheckoutSession;
-        dest.PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod();
+        dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
         dest.SendInvoice = src.SendInvoice;
         dest.InvoiceUrl = src.InvoiceUrl;
         return dest;
@@ -323,12 +320,12 @@ public class Mapper : IMapper
             },
             PaymentStatus = src.PaymentStatus switch
             {
-                BookingPaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentPending,
-                BookingPaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentRejected,
-                BookingPaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentConfirmed,
-                BookingPaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus.PaymentExpired,
-                BookingPaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingPaymentStatus
-                    .PaymentRecordNeverCreated,
+                PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
+                PaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Rejected,
+                PaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Confirmed,
+                PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
+                PaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
@@ -342,8 +339,8 @@ public class Mapper : IMapper
             BookedOnMarketplace = src.BookedOnMarketplace,
             PaymentMethod = src.PaymentMethod switch
             {
-                BookingPaymentMethod.Card => PaymentMethod.Card,
-                BookingPaymentMethod.BankTransfer => PaymentMethod.BankAccount,
+                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
+                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
             },
             SendInvoice = src.SendInvoice ?? false,
@@ -745,7 +742,6 @@ public class Mapper : IMapper
             {
                 UniqueId = src.Id,
                 CheckoutUrl = src.CheckoutUrl,
-                PaymentStatus = src.PaymentStatus,
                 AmountTotal = src.AmountTotal?.ToRoundedPrice(),
                 AmountTotalToDisplay =
                     src.AmountTotal is null || string.IsNullOrWhiteSpace(src.Currency)
@@ -755,22 +751,12 @@ public class Mapper : IMapper
                 CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
             };
 
-    private static BookingCheckoutSession? MapToGrpcResponse(
-        Shared.Models.StripeCheckoutSession? src) =>
+    private static BookingCheckoutSession? MapToGrpcResponse(Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
             : new BookingCheckoutSession
             {
                 Id = src.Id,
-                PaymentStatus = src.PaymentStatus switch
-                {
-                    PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
-                    PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
-                    PaymentStatus.Paid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Paid,
-                    PaymentStatus.Unpaid => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Unpaid,
-                    PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
                 CheckoutUrl = src.CheckoutUrl,
                 AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
                 Currency = src.Currency.ToSafeString()
@@ -785,7 +771,6 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
-                PaymentStatus = src.PaymentStatus.ToNullablePaymentStatus() ?? PaymentStatus.Pending,
                 AmountTotal = src.AmountTotal,
                 Currency = src.Currency,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString()

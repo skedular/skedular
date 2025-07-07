@@ -59,7 +59,8 @@ public class PayBookingByCard
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
             if (createCheckoutSessionAsyncResponse is null ||
-                createCheckoutSessionAsyncResponse.PaymentStatus is PaymentStatus.Paid or PaymentStatus.NoPaymentRequired)
+                createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
+                    or PaymentStatus.NoPaymentRequired)
             {
                 return;
             }
@@ -74,7 +75,9 @@ public class PayBookingByCard
                 return;
             }
 
-            if (_state.BookingDeleted || _state.PaymentStatus is PaymentStatus.Paid or PaymentStatus.NoPaymentRequired)
+            if (_state.BookingDeleted || (!string.IsNullOrWhiteSpace(_state.PaymentStatus) &&
+                                          _state.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
+                                              or PaymentStatus.NoPaymentRequired))
             {
                 return;
             }

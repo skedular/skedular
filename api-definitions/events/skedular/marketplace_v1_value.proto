@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value";
 
 enum Type {
-  ProductUpserted = 0;
-  ProductDeleted = 1;
+  Type_ProductUpserted = 0;
+  Type_ProductDeleted = 1;
 }
 
 message Event {

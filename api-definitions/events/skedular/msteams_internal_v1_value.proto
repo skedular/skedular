@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value";
 
 enum Type {
-  RefreshAzureTenantTeamsAndChannels = 0;
+  Type_RefreshAzureTenantTeamsAndChannels = 0;
 }
 
 message Event {

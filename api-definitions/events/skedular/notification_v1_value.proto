@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Notification.V1.Value";
 
 enum Type {
-  NotificationUpserted = 0;
+  Type_NotificationUpserted = 0;
 }
 
 message Event {
@@ -27,7 +27,7 @@ message Data {
   Notification notification = 1; 
 }
 
-enum NotificationType { Email = 0; }
+enum NotificationType { NotificationType_Email = 0; }
 
 message Notification {
   string id = 1;

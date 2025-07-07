@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7ae8c875e1827a38ceed3710b516bfa3>>
+ * @generated SignedSource<<f656458505616d72614f2dd1f8980722>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
@@ -20,7 +20,7 @@ export type bookProduct_query$data = {
   readonly openingHoursMinutesStep: number;
   readonly product: {
     readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-      readonly type: BookingPaymentMethod;
+      readonly type: PaymentMethod;
     }>;
     readonly bookAllLocationResources: boolean;
     readonly currency: {
@@ -217,7 +217,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+          "concreteType": "Marketplace_PaymentMethodTypeDetails",
           "kind": "LinkedField",
           "name": "acceptedBookingPaymentMethods",
           "plural": true,

@@ -6,10 +6,10 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Team.V1.Value";
 
 enum Type {
-  TeamUpserted = 0;
-  TeamDeleted = 1;
-  InvitationToJoinTeamUpserted = 2;
-  InvitationToJoinTeamDeleted = 3;
+  Type_TeamUpserted = 0;
+  Type_TeamDeleted = 1;
+  Type_InvitationToJoinTeamUpserted = 2;
+  Type_InvitationToJoinTeamDeleted = 3;
 }
 
 message Event {
@@ -46,9 +46,9 @@ message Team {
 }
 
 enum Role {
-  Owner = 0;
-  Administrator = 1;
-  Member = 2;
+  Role_Owner = 0;
+  Rol_eAdministrator = 1;
+  Role_Member = 2;
 }
  
 message TeamMember {
@@ -60,8 +60,8 @@ message TeamMember {
 }
 
 enum Status {
-  Active = 0;
-  Inactive = 1;
+  Status_Active = 0;
+  Status_Inactive = 1;
 }
 
 message OrganizationMember {

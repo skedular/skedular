@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Customer.V1.Value";
 
 enum Type {
-  CustomerUpserted = 0;
-  CustomerDeleted = 1;
+  Type_CustomerUpserted = 0;
+  Type_CustomerDeleted = 1;
 }
 
 message Event {

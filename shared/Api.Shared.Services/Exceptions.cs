@@ -81,3 +81,7 @@ public class ResourceIsPlacedOnDifferentFloorPlan() : Exception("Resource is pla
 public class StripeCustomerNotFound() : Exception("Stripe Customer not found");
 
 public class OrganizationBankAccountNotFound() : Exception("Organization Bank Account not found");
+
+public class BookingPaymentMethodRequired() : Exception("Booking payment method required");
+
+public class BookingPaymentMethodNotAccepted() : Exception("Booking payment method not accepted");

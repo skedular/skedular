@@ -50,7 +50,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder
             .Property(item => item.PaymentStatus)
             .HasMaxLength(Constants.MaxBookingPaymentStatusLength)
-            .HasDefaultValue(BookingPaymentStatusConstants.Confirmed);
+            .HasDefaultValue(PaymentStatusConstants.Confirmed);
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
         builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);

@@ -33,11 +33,12 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
             "CE1ldGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIR",
             "CglhcHBTb3VyY2UYAyABKAkSKAoEdHlwZRgEIAEoDjIaLm9yZ2FuaXphdGlv",
             "bmludGVybmFsLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1",
-            "Zi5UaW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSpvCgRUeXBlEhoK",
-            "FlJlY29yZERhaWx5TWVtYmVyQ291bnQQABIdChlSZWZyZXNoQXp1cmVUZW5h",
-            "bnRNZW1iZXJzEAESLAooU3RyaXBlQ29ubmVjdEFjY291bnRXZWJob29rRXZl",
-            "bnRSZWNlaXZlZBACQkOqAkBBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
-            "ZWR1bGFyLk9yZ2FuaXphdGlvbkludGVybmFsLlYxLlZhbHVlYgZwcm90bzM="));
+            "Zi5UaW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSp+CgRUeXBlEh8K",
+            "G1R5cGVfUmVjb3JkRGFpbHlNZW1iZXJDb3VudBAAEiIKHlR5cGVfUmVmcmVz",
+            "aEF6dXJlVGVuYW50TWVtYmVycxABEjEKLVR5cGVfU3RyaXBlQ29ubmVjdEFj",
+            "Y291bnRXZWJob29rRXZlbnRSZWNlaXZlZBACQkOqAkBBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbkludGVybmFsLlYx",
+            "LlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -50,9 +51,9 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RecordDailyMemberCount")] RecordDailyMemberCount = 0,
-    [pbr::OriginalName("RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 1,
-    [pbr::OriginalName("StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 2,
+    [pbr::OriginalName("Type_RecordDailyMemberCount")] RecordDailyMemberCount = 0,
+    [pbr::OriginalName("Type_RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 1,
+    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 2,
   }
 
   #endregion

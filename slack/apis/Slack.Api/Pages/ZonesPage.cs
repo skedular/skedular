@@ -448,7 +448,7 @@ public class ZonesPage(
             Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }]);
+        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name }]);
 
         return await organizationServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,

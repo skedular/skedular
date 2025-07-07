@@ -80,7 +80,7 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    StripeConnectAccountOrderField.StripeConnectAccountName => OrganizationStripeConnectAccountOrderField.Name,
+                    StripeConnectAccountOrderField.Name => OrganizationStripeConnectAccountOrderField.Name,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -200,8 +200,8 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    CustomTagOrderField.CustomTagName => OrganizationTagOrderField.Name,
-                    CustomTagOrderField.CustomTagDescription => OrganizationTagOrderField.Description,
+                    CustomTagOrderField.Name => OrganizationTagOrderField.Name,
+                    CustomTagOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -267,8 +267,8 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    ZoneOrderField.ZoneName => OrganizationTagOrderField.Name,
-                    ZoneOrderField.ZoneDescription => OrganizationTagOrderField.Description,
+                    ZoneOrderField.Name => OrganizationTagOrderField.Name,
+                    ZoneOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

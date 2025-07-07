@@ -1,4 +1,3 @@
-import { v7 as uuid } from 'uuid';
 import { DefaultDialogTitle } from '@/components/commons';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { OrganizationPaymentMethodSetupForm } from '@/components/organization';
@@ -15,6 +14,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   organizationId: string;

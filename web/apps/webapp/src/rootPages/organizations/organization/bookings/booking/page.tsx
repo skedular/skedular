@@ -36,8 +36,8 @@ const RootQuery = graphql`
       from
       bookedOnMarketplace
       isPaymentRequired
-      bookingCheckoutSession {
-        paymentStatus
+      paymentStatus {
+        type
       }
     }
     ...editPrivateBooking_query
@@ -67,11 +67,11 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId 
       return false;
     }
 
-    if (rootData.booking.isPaymentRequired && !rootData.booking.bookingCheckoutSession) {
+    if (rootData.booking.isPaymentRequired && !rootData.booking.paymentStatus) {
       return true;
     }
 
-    return rootData.booking.isPaymentRequired && rootData.booking.bookingCheckoutSession && rootData.booking.bookingCheckoutSession.paymentStatus === 'PENDING';
+    return rootData.booking.isPaymentRequired && rootData.booking.paymentStatus && rootData.booking.paymentStatus.type === 'PENDING';
   }, [rootData.booking]);
 
   const handleBackClick = () => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fd8dd22d99ffd532ab35226e5a5f6d12>>
+ * @generated SignedSource<<cb730b5e69025f777efce2addddfe930>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 export type UpdateProductInput = {
-  acceptedBookingPaymentMethods: ReadonlyArray<BookingPaymentMethod>;
+  acceptedBookingPaymentMethods: ReadonlyArray<PaymentMethod>;
   bookAllLocationResources: boolean;
   clientMutationId?: string | null | undefined;
   currency: Currency;
@@ -51,7 +51,7 @@ export type editProduct_updateProductMutation$data = {
   readonly updateProduct: {
     readonly product: {
       readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-        readonly type: BookingPaymentMethod;
+        readonly type: PaymentMethod;
       }>;
       readonly bookAllLocationResources: boolean;
       readonly currency: {
@@ -104,7 +104,7 @@ export type editProduct_updateProductMutation$rawResponse = {
   readonly updateProduct: {
     readonly product: {
       readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-        readonly type: BookingPaymentMethod;
+        readonly type: PaymentMethod;
       }>;
       readonly bookAllLocationResources: boolean;
       readonly currency: {
@@ -369,7 +369,7 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+            "concreteType": "Marketplace_PaymentMethodTypeDetails",
             "kind": "LinkedField",
             "name": "acceptedBookingPaymentMethods",
             "plural": true,

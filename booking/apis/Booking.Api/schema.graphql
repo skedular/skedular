@@ -6,7 +6,6 @@ schema {
 type BookingCheckoutSessionDetails {
   uniqueId: ID!
   checkoutUrl: String!
-  paymentStatus: PaymentStatus!
   amountTotal: String
   amountTotalToDisplay: String!
   currency: String
@@ -18,7 +17,7 @@ type BookingDetails {
   until: DateTime!
   notes: String
   type: BookingTypeDetails!
-  paymentStatus: BookingPaymentStatusDetails!
+  paymentStatus: PaymentStatusDetails!
   resources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
   involvedCustomers: [Booking_CustomerDetails!]!
@@ -28,7 +27,7 @@ type BookingDetails {
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
   createdByCustomer: Booking_CustomerDetails
-  paymentMethod: BookingPaymentMethodTypeDetails
+  paymentMethod: PaymentMethodTypeDetails
   sendInvoice: Boolean
   invoiceUrl: String
   lastModifiedByCustomer: Booking_CustomerDetails
@@ -48,16 +47,6 @@ type BookingEdge {
 type BookingPayload {
   clientMutationId: String
   booking: BookingDetails!
-}
-
-type BookingPaymentMethodTypeDetails {
-  type: BookingPaymentMethod!
-  name: String!
-}
-
-type BookingPaymentStatusDetails {
-  type: BookingPaymentStatus!
-  name: String!
 }
 
 type BookingResourceDetails {
@@ -182,14 +171,24 @@ type PageInfo {
   endCursor: String
 }
 
+type PaymentMethodTypeDetails {
+  type: PaymentMethod!
+  name: String!
+}
+
+type PaymentStatusDetails {
+  type: PaymentStatus!
+  name: String!
+}
+
 type Query {
   bookingTypes: [BookingTypeDetails!]!
   marketplaceBookingTypes: [BookingTypeDetails!]!
-  bookingPaymentStatuses: [BookingPaymentStatusDetails!]!
+  bookingPaymentStatuses: [PaymentStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
-  bookingPaymentMethodTypes: [BookingPaymentMethodTypeDetails!]!
+  paymentMethodTypes: [PaymentMethodTypeDetails!]!
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
@@ -223,7 +222,7 @@ input AddBookingInput {
   type: BookingType!
   resourceIds: [String!]!
   lineItems: [LineItemInput!]!
-  paymentMethod: BookingPaymentMethod
+  paymentMethod: PaymentMethod
   sendInvoice: Boolean
 }
 
@@ -254,7 +253,7 @@ input BookingWhereInput {
   toLte: DateTime
   notesContains: String
   type: BookingType
-  status: BookingPaymentStatus
+  paymentStatus: PaymentStatus
   nameContains: String
   organizationIds: [String!]
   locationIds: [String!]
@@ -301,19 +300,6 @@ enum BookingOrderField {
   STATUS
 }
 
-enum BookingPaymentMethod {
-  CARD
-  BANK_TRANSFER
-}
-
-enum BookingPaymentStatus {
-  PENDING
-  REJECTED
-  CONFIRMED
-  EXPIRED
-  RECORD_NEVER_CREATED
-}
-
 enum BookingType {
   WORKING_FROM_HOME
   WORKING_FROM_OFFICE
@@ -337,12 +323,18 @@ enum OrderDirection {
   DESCENDING
 }
 
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+}
+
 enum PaymentStatus {
-  NO_PAYMENT_REQUIRED
   PENDING
-  PAID
-  UNPAID
+  REJECTED
+  CONFIRMED
   EXPIRED
+  RECORD_NEVER_CREATED
+  NO_PAYMENT_REQUIRED
 }
 
 enum PriceUnit {

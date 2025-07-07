@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Booking.V1.Value";
 
 enum Type {
-  BookingUpserted = 0;
-  BookingDeleted = 1;
+  Type_BookingUpserted = 0;
+  Type_BookingDeleted = 1;
 }
 
 message Event {
@@ -33,7 +33,7 @@ message Booking {
   google.protobuf.Timestamp until = 4;
   string notes = 5;
   BookingType type = 6;
-  BookingPaymentStatus paymentStatus = 7;
+  PaymentStatus paymentStatus = 7;
   bool isPaymentRequired = 8;
   repeated string involvedCustomerIds = 9;
   repeated string involvedOrganizationIds = 10;
@@ -56,16 +56,16 @@ message Booking {
 
 enum BookingType
 {
-  WorkingFromHome = 0;
-  WorkingFromOffice = 1;
-  WorkingFromCoworkingSpace = 2;
-  SickLeave = 3;
-  AnnualLeave = 4;
-  WellbeingLeave = 5;
-  ClientOffice = 6;
-  Vacation = 7;
-  TravelingForWork = 8;
-  NonWorkingDay = 9;
+  BookingType_WorkingFromHome = 0;
+  BookingType_WorkingFromOffice = 1;
+  BookingType_WorkingFromCoworkingSpace = 2;
+  BookingType_SickLeave = 3;
+  BookingType_AnnualLeave = 4;
+  BookingType_WellbeingLeave = 5;
+  BookingType_ClientOffice = 6;
+  BookingType_Vacation = 7;
+  BookingType_TravelingForWork = 8;
+  BookingType_NonWorkingDay = 9;
 }
 
 message Resource {
@@ -78,13 +78,14 @@ message BookingSchedule {
   google.protobuf.Timestamp until = 2;
 }
 
-enum BookingPaymentStatus
+enum PaymentStatus
 {
-  PaymentPending = 0;
-  PaymentRejected = 1;
-  PaymentConfirmed = 2;
-  PaymentExpired = 3;
-  PaymentRecordNeverCreated = 4;
+  PaymentStatus_Pending = 0;
+  PaymentStatus_Rejected = 1;
+  PaymentStatus_Confirmed = 2;
+  PaymentStatus_Expired = 3;
+  PaymentStatus_RecordNeverCreated = 4;
+  PaymentStatus_NoPaymentRequired = 5;
 }
 
 message LineItem {
@@ -92,23 +93,14 @@ message LineItem {
   int32 quantity = 2;
 }
 
-enum PaymentStatus {
-  PaymentStatusNoPaymentRequired = 0;
-  PaymentStatusPending = 1;
-  PaymentStatusPaid = 2;
-  PaymentStatusUnpaid = 3;
-  PaymentStatusExpired = 4;
-}
-
 message BookingCheckoutSession {
   string id = 1;
   string checkoutUrl = 2;
-  PaymentStatus paymentStatus = 3;
   string amountTotal = 4;
   string currency = 5;
 }
 
 enum PaymentMethod {
-  PaymentMethodCard = 0;
-  PaymentMethodBankAccount = 1;
+  PaymentMethod_Card = 0;
+  PaymentMethod_BankAccount = 1;
 }

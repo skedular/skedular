@@ -1,4 +1,3 @@
-import { v7 as uuid } from 'uuid';
 import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -21,6 +20,7 @@ import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'r
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   queryReference: PreloadedQuery<notifications_rootQuery, Record<string, unknown>>;

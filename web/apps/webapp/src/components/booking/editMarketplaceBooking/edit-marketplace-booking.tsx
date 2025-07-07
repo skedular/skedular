@@ -137,12 +137,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
               color
             }
           }
-          bookingCheckoutSession {
-            checkoutUrl
-            paymentStatus
-            amountTotalToDisplay
-          }
-          bookingCheckoutSessionExpiry
         }
       }
     `,
@@ -458,13 +452,25 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <SectionIconTypography label="Edit Booking" />
                   <BodyIconTypography label="Edit your booking details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <FormFieldLabel label="Date/Time">
                     <StackRow>
                       <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
@@ -541,7 +547,13 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackColumn
+                  sx={{
+                    paddingLeft: defaultPadding,
+                    paddingRight: defaultPadding,
+                    paddingTop: defaultPadding,
+                  }}
+                >
                   <StackRow>
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                       Update

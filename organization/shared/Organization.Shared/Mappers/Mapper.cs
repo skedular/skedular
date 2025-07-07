@@ -4,7 +4,6 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
-using Stripe;
 using Customer = Organization.Shared.Models.Customer;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
@@ -12,6 +11,7 @@ using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Va
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
+using PaymentMethod = Stripe.PaymentMethod;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;

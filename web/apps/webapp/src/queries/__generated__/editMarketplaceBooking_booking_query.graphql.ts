@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<500a0517c37cc5f93c9924857628d686>>
+ * @generated SignedSource<<57c6eda86dc713b7a5a0908e7b687b18>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,16 +10,9 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
-export type PaymentStatus = "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PAID" | "PENDING" | "UNPAID" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_booking_query$data = {
   readonly booking: {
-    readonly bookingCheckoutSession: {
-      readonly amountTotalToDisplay: string;
-      readonly checkoutUrl: string;
-      readonly paymentStatus: PaymentStatus;
-    } | null | undefined;
-    readonly bookingCheckoutSessionExpiry: any;
     readonly from: any;
     readonly id: string;
     readonly involvedCustomers: ReadonlyArray<{
@@ -284,45 +277,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingCheckoutSessionDetails",
-          "kind": "LinkedField",
-          "name": "bookingCheckoutSession",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "checkoutUrl",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "paymentStatus",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "amountTotalToDisplay",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "bookingCheckoutSessionExpiry",
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -333,6 +287,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ee4217b1d9c786e8a8afe810e5a7903";
+(node as any).hash = "82f07a554fcc5b2e77193cba08e12149";
 
 export default node;

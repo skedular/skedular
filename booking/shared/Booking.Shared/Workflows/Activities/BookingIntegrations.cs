@@ -27,9 +27,7 @@ public class BookingIntegrations(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        booking.PaymentStatus = booking.StripeCheckoutSession is null
-            ? BookingPaymentStatusConstants.RecordNeverCreated
-            : BookingPaymentStatusConstants.Expired;
+        booking.PaymentStatus = booking.StripeCheckoutSession is null ? PaymentStatusConstants.RecordNeverCreated : PaymentStatusConstants.Expired;
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
 

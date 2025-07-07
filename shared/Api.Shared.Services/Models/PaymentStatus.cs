@@ -2,20 +2,22 @@ namespace Api.Shared.Services.Models;
 
 public enum PaymentStatus
 {
-    NoPaymentRequired,
     Pending,
-    Paid,
-    Unpaid,
-    Expired
+    Rejected,
+    Confirmed,
+    Expired,
+    RecordNeverCreated,
+    NoPaymentRequired
 }
 
 public static class PaymentStatusConstants
 {
-    public const string NoPaymentRequired = "NO_PAYMENT_REQUIRED";
     public const string Pending = "PENDING";
-    public const string Paid = "PAID";
-    public const string Unpaid = "UNPAID";
+    public const string Rejected = "REJECTED";
+    public const string Confirmed = "CONFIRMED";
     public const string Expired = "EXPIRED";
+    public const string RecordNeverCreated = "RECORD_NEVER_CREATED";
+    public const string NoPaymentRequired = "NO_PAYMENT_REQUIRED";
 }
 
 public static class PaymentStatusExtensions
@@ -23,11 +25,12 @@ public static class PaymentStatusExtensions
     public static PaymentStatus ToPaymentStatus(this string src) =>
         src switch
         {
-            PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
             PaymentStatusConstants.Pending => PaymentStatus.Pending,
-            PaymentStatusConstants.Paid => PaymentStatus.Paid,
-            PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
+            PaymentStatusConstants.Rejected => PaymentStatus.Rejected,
+            PaymentStatusConstants.Confirmed => PaymentStatus.Confirmed,
             PaymentStatusConstants.Expired => PaymentStatus.Expired,
+            PaymentStatusConstants.RecordNeverCreated => PaymentStatus.RecordNeverCreated,
+            PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -36,22 +39,24 @@ public static class PaymentStatusExtensions
             ? null
             : src switch
             {
-                PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
                 PaymentStatusConstants.Pending => PaymentStatus.Pending,
-                PaymentStatusConstants.Paid => PaymentStatus.Paid,
-                PaymentStatusConstants.Unpaid => PaymentStatus.Unpaid,
+                PaymentStatusConstants.Rejected => PaymentStatus.Rejected,
+                PaymentStatusConstants.Confirmed => PaymentStatus.Confirmed,
                 PaymentStatusConstants.Expired => PaymentStatus.Expired,
+                PaymentStatusConstants.RecordNeverCreated => PaymentStatus.RecordNeverCreated,
+                PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
     public static string ToPaymentStatus(this PaymentStatus src) =>
         src switch
         {
-            PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
             PaymentStatus.Pending => PaymentStatusConstants.Pending,
-            PaymentStatus.Paid => PaymentStatusConstants.Paid,
-            PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
+            PaymentStatus.Rejected => PaymentStatusConstants.Rejected,
+            PaymentStatus.Confirmed => PaymentStatusConstants.Confirmed,
             PaymentStatus.Expired => PaymentStatusConstants.Expired,
+            PaymentStatus.RecordNeverCreated => PaymentStatusConstants.RecordNeverCreated,
+            PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -60,33 +65,36 @@ public static class PaymentStatusExtensions
             ? string.Empty
             : src switch
             {
-                PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
                 PaymentStatus.Pending => PaymentStatusConstants.Pending,
-                PaymentStatus.Paid => PaymentStatusConstants.Paid,
-                PaymentStatus.Unpaid => PaymentStatusConstants.Unpaid,
+                PaymentStatus.Rejected => PaymentStatusConstants.Rejected,
+                PaymentStatus.Confirmed => PaymentStatusConstants.Confirmed,
                 PaymentStatus.Expired => PaymentStatusConstants.Expired,
+                PaymentStatus.RecordNeverCreated => PaymentStatusConstants.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
     public static string ToPaymentStatusName(this PaymentStatus src) =>
         src switch
         {
+            PaymentStatus.Pending => "Pending payment",
+            PaymentStatus.Rejected => "Payment rejected",
+            PaymentStatus.Confirmed => "Payment confirmed",
+            PaymentStatus.Expired => "Payment expired",
+            PaymentStatus.RecordNeverCreated => "Payment record never created",
             PaymentStatus.NoPaymentRequired => "No payment required",
-            PaymentStatus.Pending => "Pending",
-            PaymentStatus.Paid => "Paid",
-            PaymentStatus.Unpaid => "Unpaid",
-            PaymentStatus.Expired => "Expired",
             _ => throw new ArgumentOutOfRangeException()
         };
 
     public static string ToPaymentStatusName(this string src) =>
         src switch
         {
+            PaymentStatusConstants.Pending => "Pending payment",
+            PaymentStatusConstants.Rejected => "Payment rejected",
+            PaymentStatusConstants.Confirmed => "Payment confirmed",
+            PaymentStatusConstants.Expired => "Payment expired",
+            PaymentStatusConstants.RecordNeverCreated => "Payment record never created",
             PaymentStatusConstants.NoPaymentRequired => "No payment required",
-            PaymentStatusConstants.Pending => "Pending",
-            PaymentStatusConstants.Paid => "Paid",
-            PaymentStatusConstants.Unpaid => "Unpaid",
-            PaymentStatusConstants.Expired => "Expired",
             _ => throw new ArgumentOutOfRangeException()
         };
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6696435ea0926374b7155a1dd1b99985>>
+ * @generated SignedSource<<7c37b7e4ae4e6438516ba9f34451803b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,12 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
+export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type singleChoiceBookingPaymentMethodType_query$data = {
-  readonly bookingPaymentMethodTypes: ReadonlyArray<{
+  readonly paymentMethodTypes: ReadonlyArray<{
     readonly name: string;
-    readonly type: BookingPaymentMethod;
+    readonly type: PaymentMethod;
   }>;
   readonly " $fragmentType": "singleChoiceBookingPaymentMethodType_query";
 };
@@ -32,9 +32,9 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingPaymentMethodTypeDetails",
+      "concreteType": "PaymentMethodTypeDetails",
       "kind": "LinkedField",
-      "name": "bookingPaymentMethodTypes",
+      "name": "paymentMethodTypes",
       "plural": true,
       "selections": [
         {
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3d6d7bdea9935f31cd01773e0eb7a003";
+(node as any).hash = "f552b2d533d1cde50502165c0677dc0a";
 
 export default node;

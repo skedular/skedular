@@ -21,7 +21,7 @@ public class ProductVersion : ModelBase
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
-    public ICollection<BookingPaymentMethod> AcceptedBookingPaymentMethods { get; set; } = [];
+    public ICollection<PaymentMethod> AcceptedBookingPaymentMethods { get; set; } = [];
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];

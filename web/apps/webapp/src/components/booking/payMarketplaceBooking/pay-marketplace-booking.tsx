@@ -79,7 +79,6 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
           }
           bookingCheckoutSession {
             checkoutUrl
-            paymentStatus
             amountTotalToDisplay
           }
           bookingCheckoutSessionExpiry

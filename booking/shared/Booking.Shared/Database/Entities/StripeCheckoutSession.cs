@@ -11,7 +11,6 @@ public class StripeCheckoutSession : EntityBaseWithDeleted
 {
     public string StripeCheckoutSessionId { get; set; }
     public string CheckoutUrl { get; set; }
-    public string PaymentStatus { get; set; }
     public decimal? AmountTotal { get; set; }
     public string? Currency { get; set; }
 
@@ -33,7 +32,6 @@ public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<Strip
 
         builder.Property(item => item.StripeCheckoutSessionId).HasMaxLength(Constants.MaxStripeCheckoutSessionIdLength);
         builder.Property(item => item.CheckoutUrl).HasMaxLength(Constants.MaxUrlLength);
-        builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.MaxStripeCheckoutSessionPaymentStatusLength);
         builder.Property(item => item.AmountTotal).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
 
@@ -45,6 +43,5 @@ public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<Strip
         builder.HasOne(item => item.Booking).WithOne(item => item.StripeCheckoutSession).HasForeignKey<StripeCheckoutSession>(item => item.BookingId);
 
         builder.HasIndex(item => item.StripeCheckoutSessionId);
-        builder.HasIndex(item => item.PaymentStatus);
     }
 }

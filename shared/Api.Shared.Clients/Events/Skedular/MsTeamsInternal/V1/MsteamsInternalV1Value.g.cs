@@ -31,10 +31,10 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value {
             "dGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglh",
             "cHBTb3VyY2UYAyABKAkSIwoEdHlwZRgEIAEoDjIVLm1zdGVhbXNpbnRlcm5h",
             "bC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
-            "YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqLgoEVHlwZRImCiJSZWZyZXNo",
-            "QXp1cmVUZW5hbnRUZWFtc0FuZENoYW5uZWxzEABCPqoCO0FwaS5TaGFyZWQu",
-            "Q2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTXNUZWFtc0ludGVybmFsLlYxLlZh",
-            "bHVlYgZwcm90bzM="));
+            "YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqMwoEVHlwZRIrCidUeXBlX1Jl",
+            "ZnJlc2hBenVyZVRlbmFudFRlYW1zQW5kQ2hhbm5lbHMQAEI+qgI7QXBpLlNo",
+            "YXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Nc1RlYW1zSW50ZXJuYWwu",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -47,7 +47,7 @@ namespace Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RefreshAzureTenantTeamsAndChannels")] RefreshAzureTenantTeamsAndChannels = 0,
+    [pbr::OriginalName("Type_RefreshAzureTenantTeamsAndChannels")] RefreshAzureTenantTeamsAndChannels = 0,
   }
 
   #endregion

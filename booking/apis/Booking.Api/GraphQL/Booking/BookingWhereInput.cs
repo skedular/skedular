@@ -16,7 +16,7 @@ public class BookingWhereInput
     [GraphQLName("toLte")] public DateTimeOffset? ToLte { get; set; }
     [GraphQLName("notesContains")] public string? NotesContains { get; set; }
     [GraphQLName("type")] public BookingType? Type { get; set; }
-    [GraphQLName("status")] public BookingPaymentStatus? Status { get; set; }
+    [GraphQLName("paymentStatus")] public PaymentStatus? PaymentStatus { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; }

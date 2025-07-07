@@ -361,7 +361,7 @@ public class Mapper : IMapper
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
-        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList();
+        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
         dest.Product = product;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
@@ -544,13 +544,6 @@ public class Mapper : IMapper
     {
         dest.AmountTotal = src.AmountTotal is null ? null : (decimal)src.AmountTotal / 100;
         dest.Currency = src.Currency;
-        dest.PaymentStatus = src.PaymentStatus switch
-        {
-            "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
-            "paid" => PaymentStatusConstants.Paid,
-            "unpaid" => PaymentStatusConstants.Unpaid,
-            _ => throw new ArgumentOutOfRangeException()
-        };
         return dest;
     }
 
@@ -598,7 +591,7 @@ public class Mapper : IMapper
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList(),
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product

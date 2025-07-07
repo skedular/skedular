@@ -6,13 +6,13 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value";
 
 enum Type {
-  RefreshWorkspace = 0;
-  RefreshWorkspaceMembers = 1;
-  RefreshWorkspaceChannels = 2;
-  SendWorkspaceLocationDailyUpdateMessage = 3;
-  UpdateWorkspaceMemberProfileStatus = 4;
-  DeactivateOrganizationMembersNotFoundOnSlack = 5;
-  SendWorkspaceTeamDailyUpdateMessage = 6;
+  Type_RefreshWorkspace = 0;
+  Type_RefreshWorkspaceMembers = 1;
+  Type_RefreshWorkspaceChannels = 2;
+  Type_SendWorkspaceLocationDailyUpdateMessage = 3;
+  Type_UpdateWorkspaceMemberProfileStatus = 4;
+  Type_DeactivateOrganizationMembersNotFoundOnSlack = 5;
+  Type_SendWorkspaceTeamDailyUpdateMessage = 6;
 }
 
 message Event {

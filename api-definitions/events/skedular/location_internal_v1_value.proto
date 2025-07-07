@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value";
 
 enum Type {
-  RecordDailyDeskCount = 0;
-  RecordDailyRoomCount = 1;
+  Type_RecordDailyDeskCount = 0;
+  Type_RecordDailyRoomCount = 1;
 }
 
 message Event {

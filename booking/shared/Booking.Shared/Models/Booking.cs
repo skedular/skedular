@@ -14,11 +14,11 @@ public class Booking : ModelBaseWithDeleted
     public string? Notes { get; set; }
     public BookingType Type { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; } = [];
-    public BookingPaymentStatus PaymentStatus { get; set; }
+    public PaymentStatus PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
     public bool BookedOnMarketplace { get; set; }
-    public BookingPaymentMethod? PaymentMethod { get; set; }
+    public PaymentMethod? PaymentMethod { get; set; }
     public bool? SendInvoice { get; set; }
     public string? InvoiceUrl { get; set; }
 

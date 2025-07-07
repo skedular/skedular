@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value";
 
 enum Type {
-  GenerateResourceBookingSlot = 0;
-  StripeConnectAccountWebhookEventReceived = 1;
+  Type_GenerateResourceBookingSlot = 0;
+  Type_StripeConnectAccountWebhookEventReceived = 1;
 }
 
 message Event {

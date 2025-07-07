@@ -1,4 +1,3 @@
-import { v7 as uuid } from 'uuid';
 import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
 import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
@@ -12,6 +11,7 @@ import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
 type Props = {

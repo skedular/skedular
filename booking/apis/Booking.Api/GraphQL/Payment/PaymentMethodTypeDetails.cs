@@ -3,9 +3,9 @@ using HotChocolate;
 
 namespace Booking.Api.GraphQL.Payment;
 
-[GraphQLName("BookingPaymentMethodTypeDetails")]
-public class BookingPaymentMethodTypeDetails
+[GraphQLName("PaymentMethodTypeDetails")]
+public class PaymentMethodTypeDetails
 {
-    [GraphQLName("type")] public BookingPaymentMethod Type { get; set; }
+    [GraphQLName("type")] public PaymentMethod Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

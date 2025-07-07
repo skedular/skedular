@@ -29,7 +29,6 @@ type BookingCheckoutSessionDetails {
   checkoutUrl: String!
   currency: String
   currencyToDisplay: String!
-  paymentStatus: PaymentStatus!
   uniqueId: ID!
 }
 
@@ -52,8 +51,8 @@ type BookingDetails {
   notes: String
   paidByCustomer: Booking_CustomerDetails
   paidByOrganization: Booking_OrganizationDetails
-  paymentMethod: BookingPaymentMethodTypeDetails
-  paymentStatus: BookingPaymentStatusDetails!
+  paymentMethod: PaymentMethodTypeDetails
+  paymentStatus: PaymentStatusDetails!
   resources: [BookingResourceDetails!]!
   sendInvoice: Boolean
   type: BookingTypeDetails!
@@ -68,16 +67,6 @@ type BookingEdge {
 type BookingPayload {
   booking: BookingDetails!
   clientMutationId: String
-}
-
-type BookingPaymentMethodTypeDetails {
-  name: String!
-  type: BookingPaymentMethod!
-}
-
-type BookingPaymentStatusDetails {
-  name: String!
-  type: BookingPaymentStatus!
 }
 
 type BookingResourceDetails {
@@ -495,11 +484,6 @@ type Location_OrganizationTagDetails {
   uniqueId: ID!
 }
 
-type Marketplace_BookingPaymentMethodTypeDetails {
-  name: String!
-  type: BookingPaymentMethod!
-}
-
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
@@ -509,6 +493,11 @@ type Marketplace_OrganizationTagDetails {
   name: String
   tagType: String
   uniqueId: ID!
+}
+
+type Marketplace_PaymentMethodTypeDetails {
+  name: String!
+  type: PaymentMethod!
 }
 
 type Mutation {
@@ -989,13 +978,23 @@ type PageInfo {
   startCursor: String
 }
 
+type PaymentMethodTypeDetails {
+  name: String!
+  type: PaymentMethod!
+}
+
+type PaymentStatusDetails {
+  name: String!
+  type: PaymentStatus!
+}
+
 type PriceUnitDetails {
   name: String!
   type: PriceUnit!
 }
 
 type ProductDetails {
-  acceptedBookingPaymentMethods: [Marketplace_BookingPaymentMethodTypeDetails!]!
+  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
   currencyToDisplay: String!
@@ -1044,8 +1043,7 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  bookingPaymentMethodTypes: [BookingPaymentMethodTypeDetails!]!
-  bookingPaymentStatuses: [BookingPaymentStatusDetails!]!
+  bookingPaymentStatuses: [PaymentStatusDetails!]!
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
   bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
@@ -1105,6 +1103,7 @@ type Query {
   organizationVersion: Version!
   otherResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
+  paymentMethodTypes: [PaymentMethodTypeDetails!]!
   pendingInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
@@ -1337,7 +1336,7 @@ input AddBookingInput {
   lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]!
-  paymentMethod: BookingPaymentMethod
+  paymentMethod: PaymentMethod
   resourceIds: [String!]!
   sendInvoice: Boolean
   teamIds: [String!]!
@@ -1480,7 +1479,7 @@ input AddOrganizationStripeConnectAccountInput {
 }
 
 input AddProductInput {
-  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
+  acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!
@@ -1584,7 +1583,7 @@ input BookingWhereInput {
   nameContains: String
   notesContains: String
   organizationIds: [String!]
-  status: BookingPaymentStatus
+  paymentStatus: PaymentStatus
   teamIds: [String!]
   toGt: DateTime
   toGte: DateTime
@@ -2255,7 +2254,7 @@ input UpdateOrganizationTaxDetailsInput {
 }
 
 input UpdateProductInput {
-  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
+  acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!
@@ -2365,19 +2364,6 @@ enum BookingOrderField {
   STATUS
   TO
   TYPE
-}
-
-enum BookingPaymentMethod {
-  BANK_TRANSFER
-  CARD
-}
-
-enum BookingPaymentStatus {
-  CONFIRMED
-  EXPIRED
-  PENDING
-  RECORD_NEVER_CREATED
-  REJECTED
 }
 
 enum BookingType {
@@ -2501,12 +2487,18 @@ enum OrganizationType {
   PRIVATE
 }
 
+enum PaymentMethod {
+  BANK_TRANSFER
+  CARD
+}
+
 enum PaymentStatus {
+  CONFIRMED
   EXPIRED
   NO_PAYMENT_REQUIRED
-  PAID
   PENDING
-  UNPAID
+  RECORD_NEVER_CREATED
+  REJECTED
 }
 
 enum PriceUnit {

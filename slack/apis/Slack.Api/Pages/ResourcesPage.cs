@@ -770,8 +770,7 @@ public class ResourcesPage(
         getPaginatedCustomTagsInput.OrderBy.AddRange([
             new CustomTagOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending,
-                Field = CustomTagOrderField.CustomTagName
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = CustomTagOrderField.Name
             }
         ]);
 
@@ -795,7 +794,7 @@ public class ResourcesPage(
         getPaginatedZonesInput.OrderBy.AddRange([
             new ZoneOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = ZoneOrderField.ZoneName
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = ZoneOrderField.Name
             }
         ]);
 

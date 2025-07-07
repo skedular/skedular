@@ -158,7 +158,7 @@ public class StripeIntegrations(
 
         if (booking.StripeCheckoutSession is not null)
         {
-            return new CreateCheckoutSessionAsyncResponse(booking.StripeCheckoutSession.PaymentStatus.ToPaymentStatus());
+            return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
         }
 
         var session = await sessionCreateService.CreateAsync(
@@ -184,13 +184,6 @@ public class StripeIntegrations(
             Id = randomHelper.Generate(),
             StripeCheckoutSessionId = session.Id,
             CheckoutUrl = session.Url,
-            PaymentStatus = session.PaymentStatus switch
-            {
-                "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
-                "unpaid" => PaymentStatusConstants.Pending,
-                "paid" => PaymentStatusConstants.Paid,
-                _ => throw new ArgumentOutOfRangeException()
-            },
             AmountTotal = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100,
             Currency = session.Currency,
             StripeCustomer = stripeCustomer
@@ -199,10 +192,17 @@ public class StripeIntegrations(
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
 
         booking.StripeCheckoutSession = stripeCheckoutSession;
+        booking.PaymentStatus = session.PaymentStatus switch
+        {
+            "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
+            "unpaid" => PaymentStatusConstants.Pending,
+            "paid" => PaymentStatusConstants.Confirmed,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
         _ = repositoryFactory.BookingRepository.Update(booking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new CreateCheckoutSessionAsyncResponse(stripeCheckoutSession.PaymentStatus.ToPaymentStatus());
+        return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
     }
 }

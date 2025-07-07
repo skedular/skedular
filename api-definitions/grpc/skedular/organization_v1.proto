@@ -43,8 +43,8 @@ message Version {
 }
 
 enum OrderDirection {
-    Ascending = 0;
-    Descending = 1;
+    OrderDirection_Ascending = 0;
+    OrderDirection_Descending = 1;
 }
 
 message PageInfo {
@@ -129,9 +129,9 @@ message GetInput {
 }
 
 enum Role {
-    Owner = 0;
-    Administrator = 1;
-    Member = 2;
+    Role_Owner = 0;
+    Role_Administrator = 1;
+    Role_Member = 2;
 }
 
 message OrganizationMember {
@@ -144,8 +144,8 @@ message OrganizationMember {
 
 enum OrganizationMemberStatus
 {
-    Active = 0;
-    Inactive = 1;
+    OrganizationMemberStatus_Active = 0;
+    OrganizationMemberStatus_Inactive = 1;
 }
 
 message Admin_AddMemberInput {
@@ -183,13 +183,13 @@ message MemberOrderInput {
 }
 
 enum MemberOrderField {
-    RoleType = 0;
-    Status = 1;
-    Name= 2;
-    GivenName= 3;
-    MiddleName= 4;
-    FamilyName= 5;
-    PhoneNumber= 6;
+    MemberOrderField_RoleType = 0;
+    MemberOrderField_Status = 1;
+    MemberOrderField_Name= 2;
+    MemberOrderField_GivenName= 3;
+    MemberOrderField_MiddleName= 4;
+    MemberOrderField_FamilyName= 5;
+    MemberOrderField_PhoneNumber= 6;
 }
 
 message MemberConnection {
@@ -284,8 +284,8 @@ message CustomTagOrderInput {
 }
 
 enum CustomTagOrderField {
-    CustomTagName = 0;
-    CustomTagDescription = 1;
+    CustomTagOrderField_Name = 0;
+    CustomTagOrderField_Description = 1;
 }
 
 message GetCustomTagInput {
@@ -349,8 +349,8 @@ message ZoneOrderInput {
 }
 
 enum ZoneOrderField {
-    ZoneName = 0;
-    ZoneDescription = 1;
+    ZoneOrderField_Name = 0;
+    ZoneOrderField_Description = 1;
 }
 
 message GetZoneInput {
@@ -450,7 +450,7 @@ message StripeConnectAccountOrderInput {
 }
 
 enum StripeConnectAccountOrderField {
-    StripeConnectAccountName = 0;
+    StripeConnectAccountOrderField_Name = 0;
 }
 
 message StripeConnectAccountConnection {

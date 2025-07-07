@@ -26,8 +26,8 @@ message Version {
 }
 
 enum OrderDirection {
-    Ascending = 0;
-    Descending = 1;
+    OrderDirection_Ascending = 0;
+    OrderDirection_Descending = 1;
 }
 
 message PageInfo {
@@ -91,8 +91,8 @@ message TeamOrderInput {
 }
 
 enum TeamOrderField {
-    Name = 0;
-    About = 1;
+    TeamOrderField_Name = 0;
+    TeamOrderField_About = 1;
 }
 
 message GetPermissionsInput {
@@ -143,14 +143,14 @@ message TeamMember {
 
 enum TeamMemberStatus
 {
-    Active = 0;
-    Inactive = 1;
+    TeamMemberStatus_Active = 0;
+    TeamMemberStatus_Inactive = 1;
 }
 
 enum Role {
-    Owner = 0;
-    Administrator = 1;
-    Member = 2;
+    Role_Owner = 0;
+    Role_Administrator = 1;
+    Role_Member = 2;
 }
 
 message Customer {
@@ -181,9 +181,9 @@ message OrganizationMember {
 }
 
 enum OrganizationMemberRole {
-    OrganizationMemberRoleOwner = 0;
-    OrganizationMemberRoleAdministrator = 1;
-    OrganizationMemberRoleMember = 2;
+    OrganizationMemberRole_Owner = 0;
+    OrganizationMemberRole_Administrator = 1;
+    OrganizationMemberRole_Member = 2;
 }
 
 message CdnImageFile {

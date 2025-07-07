@@ -52,10 +52,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "cxgTIAMoCSJfCgxDZG5JbWFnZUZpbGUSJgoIb3JpZ2luYWwYASABKAsyFC5t",
             "YXJrZXRwbGFjZS5DZG5GaWxlEicKCXRodW1ibmFpbBgCIAEoCzIULm1hcmtl",
             "dHBsYWNlLkNkbkZpbGUiNQoHQ2RuRmlsZRILCgN1cmwYASABKAkSDgoGaGVp",
-            "Z2h0GAIgASgFEg0KBXdpZHRoGAMgASgFKi8KBFR5cGUSEwoPUHJvZHVjdFVw",
-            "c2VydGVkEAASEgoOUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBpLlNoYXJlZC5D",
-            "bGllbnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIG",
-            "cHJvdG8z"));
+            "Z2h0GAIgASgFEg0KBXdpZHRoGAMgASgFKjkKBFR5cGUSGAoUVHlwZV9Qcm9k",
+            "dWN0VXBzZXJ0ZWQQABIXChNUeXBlX1Byb2R1Y3REZWxldGVkEAFCOqoCN0Fw",
+            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2Uu",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -73,8 +73,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("ProductUpserted")] ProductUpserted = 0,
-    [pbr::OriginalName("ProductDeleted")] ProductDeleted = 1,
+    [pbr::OriginalName("Type_ProductUpserted")] ProductUpserted = 0,
+    [pbr::OriginalName("Type_ProductDeleted")] ProductDeleted = 1,
   }
 
   #endregion

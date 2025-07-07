@@ -32,15 +32,16 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
             "CQoHcGF5bG9hZCKjAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoMZG9tYWlu",
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIhCgR0eXBlGAQgASgO",
             "MhMuc2xhY2tpbnRlcm5hbC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29nbGUu",
-            "cHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqhwIK",
-            "BFR5cGUSFAoQUmVmcmVzaFdvcmtzcGFjZRAAEhsKF1JlZnJlc2hXb3Jrc3Bh",
-            "Y2VNZW1iZXJzEAESHAoYUmVmcmVzaFdvcmtzcGFjZUNoYW5uZWxzEAISKwon",
-            "U2VuZFdvcmtzcGFjZUxvY2F0aW9uRGFpbHlVcGRhdGVNZXNzYWdlEAMSJgoi",
-            "VXBkYXRlV29ya3NwYWNlTWVtYmVyUHJvZmlsZVN0YXR1cxAEEjAKLERlYWN0",
-            "aXZhdGVPcmdhbml6YXRpb25NZW1iZXJzTm90Rm91bmRPblNsYWNrEAUSJwoj",
-            "U2VuZFdvcmtzcGFjZVRlYW1EYWlseVVwZGF0ZU1lc3NhZ2UQBkI8qgI5QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5TbGFja0ludGVybmFs",
-            "LlYxLlZhbHVlYgZwcm90bzM="));
+            "cHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqqgIK",
+            "BFR5cGUSGQoVVHlwZV9SZWZyZXNoV29ya3NwYWNlEAASIAocVHlwZV9SZWZy",
+            "ZXNoV29ya3NwYWNlTWVtYmVycxABEiEKHVR5cGVfUmVmcmVzaFdvcmtzcGFj",
+            "ZUNoYW5uZWxzEAISMAosVHlwZV9TZW5kV29ya3NwYWNlTG9jYXRpb25EYWls",
+            "eVVwZGF0ZU1lc3NhZ2UQAxIrCidUeXBlX1VwZGF0ZVdvcmtzcGFjZU1lbWJl",
+            "clByb2ZpbGVTdGF0dXMQBBI1CjFUeXBlX0RlYWN0aXZhdGVPcmdhbml6YXRp",
+            "b25NZW1iZXJzTm90Rm91bmRPblNsYWNrEAUSLAooVHlwZV9TZW5kV29ya3Nw",
+            "YWNlVGVhbURhaWx5VXBkYXRlTWVzc2FnZRAGQjyqAjlBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLlNsYWNrSW50ZXJuYWwuVjEuVmFsdWVi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -53,13 +54,13 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RefreshWorkspace")] RefreshWorkspace = 0,
-    [pbr::OriginalName("RefreshWorkspaceMembers")] RefreshWorkspaceMembers = 1,
-    [pbr::OriginalName("RefreshWorkspaceChannels")] RefreshWorkspaceChannels = 2,
-    [pbr::OriginalName("SendWorkspaceLocationDailyUpdateMessage")] SendWorkspaceLocationDailyUpdateMessage = 3,
-    [pbr::OriginalName("UpdateWorkspaceMemberProfileStatus")] UpdateWorkspaceMemberProfileStatus = 4,
-    [pbr::OriginalName("DeactivateOrganizationMembersNotFoundOnSlack")] DeactivateOrganizationMembersNotFoundOnSlack = 5,
-    [pbr::OriginalName("SendWorkspaceTeamDailyUpdateMessage")] SendWorkspaceTeamDailyUpdateMessage = 6,
+    [pbr::OriginalName("Type_RefreshWorkspace")] RefreshWorkspace = 0,
+    [pbr::OriginalName("Type_RefreshWorkspaceMembers")] RefreshWorkspaceMembers = 1,
+    [pbr::OriginalName("Type_RefreshWorkspaceChannels")] RefreshWorkspaceChannels = 2,
+    [pbr::OriginalName("Type_SendWorkspaceLocationDailyUpdateMessage")] SendWorkspaceLocationDailyUpdateMessage = 3,
+    [pbr::OriginalName("Type_UpdateWorkspaceMemberProfileStatus")] UpdateWorkspaceMemberProfileStatus = 4,
+    [pbr::OriginalName("Type_DeactivateOrganizationMembersNotFoundOnSlack")] DeactivateOrganizationMembersNotFoundOnSlack = 5,
+    [pbr::OriginalName("Type_SendWorkspaceTeamDailyUpdateMessage")] SendWorkspaceTeamDailyUpdateMessage = 6,
   }
 
   #endregion

@@ -50,12 +50,13 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             "CSJRCgxDZG5JbWFnZUZpbGUSHwoIb3JpZ2luYWwYASABKAsyDS50ZWFtLkNk",
             "bkZpbGUSIAoJdGh1bWJuYWlsGAIgASgLMg0udGVhbS5DZG5GaWxlIjUKB0Nk",
             "bkZpbGUSCwoDdXJsGAEgASgJEg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgD",
-            "IAEoBSpsCgRUeXBlEhAKDFRlYW1VcHNlcnRlZBAAEg8KC1RlYW1EZWxldGVk",
-            "EAESIAocSW52aXRhdGlvblRvSm9pblRlYW1VcHNlcnRlZBACEh8KG0ludml0",
-            "YXRpb25Ub0pvaW5UZWFtRGVsZXRlZBADKjAKBFJvbGUSCQoFT3duZXIQABIR",
-            "Cg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFj",
-            "dGl2ZRAAEgwKCEluYWN0aXZlEAFCM6oCMEFwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJvdG8z"));
+            "IAEoBSqAAQoEVHlwZRIVChFUeXBlX1RlYW1VcHNlcnRlZBAAEhQKEFR5cGVf",
+            "VGVhbURlbGV0ZWQQARIlCiFUeXBlX0ludml0YXRpb25Ub0pvaW5UZWFtVXBz",
+            "ZXJ0ZWQQAhIkCiBUeXBlX0ludml0YXRpb25Ub0pvaW5UZWFtRGVsZXRlZBAD",
+            "Kj8KBFJvbGUSDgoKUm9sZV9Pd25lchAAEhYKElJvbF9lQWRtaW5pc3RyYXRv",
+            "chABEg8KC1JvbGVfTWVtYmVyEAIqMAoGU3RhdHVzEhEKDVN0YXR1c19BY3Rp",
+            "dmUQABITCg9TdGF0dXNfSW5hY3RpdmUQAUIzqgIwQXBpLlNoYXJlZC5DbGll",
+            "bnRzLkV2ZW50cy5Ta2VkdWxhci5UZWFtLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -75,21 +76,21 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("TeamUpserted")] TeamUpserted = 0,
-    [pbr::OriginalName("TeamDeleted")] TeamDeleted = 1,
-    [pbr::OriginalName("InvitationToJoinTeamUpserted")] InvitationToJoinTeamUpserted = 2,
-    [pbr::OriginalName("InvitationToJoinTeamDeleted")] InvitationToJoinTeamDeleted = 3,
+    [pbr::OriginalName("Type_TeamUpserted")] TeamUpserted = 0,
+    [pbr::OriginalName("Type_TeamDeleted")] TeamDeleted = 1,
+    [pbr::OriginalName("Type_InvitationToJoinTeamUpserted")] InvitationToJoinTeamUpserted = 2,
+    [pbr::OriginalName("Type_InvitationToJoinTeamDeleted")] InvitationToJoinTeamDeleted = 3,
   }
 
   public enum Role {
-    [pbr::OriginalName("Owner")] Owner = 0,
-    [pbr::OriginalName("Administrator")] Administrator = 1,
-    [pbr::OriginalName("Member")] Member = 2,
+    [pbr::OriginalName("Role_Owner")] Owner = 0,
+    [pbr::OriginalName("Rol_eAdministrator")] Administrator = 1,
+    [pbr::OriginalName("Role_Member")] Member = 2,
   }
 
   public enum Status {
-    [pbr::OriginalName("Active")] Active = 0,
-    [pbr::OriginalName("Inactive")] Inactive = 1,
+    [pbr::OriginalName("Status_Active")] Active = 0,
+    [pbr::OriginalName("Status_Inactive")] Inactive = 1,
   }
 
   #endregion

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f5a932e07130eb7a5d1bcfbba51325f6>>
+ * @generated SignedSource<<7a9680f94a4a72993265ff8ccda47226>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,14 +10,12 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
-export type PaymentStatus = "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PAID" | "PENDING" | "UNPAID" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
     readonly bookingCheckoutSession: {
       readonly amountTotalToDisplay: string;
       readonly checkoutUrl: string;
-      readonly paymentStatus: PaymentStatus;
     } | null | undefined;
     readonly bookingCheckoutSessionExpiry: any;
     readonly from: any;
@@ -312,13 +310,6 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "paymentStatus",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
               "name": "amountTotalToDisplay",
               "storageKey": null
             }
@@ -379,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "f6eb3c047e0a4539b46f41867e98fb45";
+(node as any).hash = "6abd2ae75098defd25f2246f342f59fa";
 
 export default node;

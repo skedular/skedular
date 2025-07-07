@@ -54,12 +54,12 @@ public class Mapper : IMapper
             },
             PaymentStatus = src.PaymentStatus switch
             {
-                BookingPaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentPending,
-                BookingPaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentRejected,
-                BookingPaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentConfirmed,
-                BookingPaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentExpired,
-                BookingPaymentStatus.RecordNeverCreated =>
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingPaymentStatus.PaymentRecordNeverCreated,
+                PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
+                PaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Rejected,
+                PaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Confirmed,
+                PaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Expired,
+                PaymentStatus.RecordNeverCreated => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
@@ -73,8 +73,8 @@ public class Mapper : IMapper
         {
             booking.PaymentMethod = src.PaymentMethod switch
             {
-                BookingPaymentMethod.Card => PaymentMethod.Card,
-                BookingPaymentMethod.BankTransfer => PaymentMethod.BankAccount,
+                Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
+                Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -197,7 +197,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
-            PaymentStatus = src.PaymentStatus.ToBookingPaymentStatus(),
+            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
@@ -213,7 +213,7 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
-            PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod(),
+            PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };
@@ -353,15 +353,6 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 CheckoutUrl = src.CheckoutUrl.ToSafeString(),
-                PaymentStatus = src.PaymentStatus switch
-                {
-                    PaymentStatus.NoPaymentRequired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired,
-                    PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
-                    PaymentStatus.Paid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Paid,
-                    PaymentStatus.Unpaid => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Unpaid,
-                    PaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Expired,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
                 AmountTotal = src.AmountTotal is null ? string.Empty : src.AmountTotal.Value.ToRoundedPrice(),
                 Currency = src.Currency.ToSafeString()
             };

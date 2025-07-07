@@ -7,9 +7,9 @@ namespace Booking.Api.GraphQL.Payment;
 public class RootQuery
 {
     [UseResolverScope]
-    public IEnumerable<BookingPaymentMethodTypeDetails> BookingPaymentMethodTypes() =>
+    public IEnumerable<PaymentMethodTypeDetails> PaymentMethodTypes() =>
     [
-        new() { Type = BookingPaymentMethod.Card, Name = BookingPaymentMethodConstants.Card.ToBookingPaymentMethodName() },
-        new() { Type = BookingPaymentMethod.BankTransfer, Name = BookingPaymentMethodConstants.BankTransfer.ToBookingPaymentMethodName() }
+        new() { Type = PaymentMethod.Card, Name = PaymentMethodConstants.Card.ToPaymentMethodName() },
+        new() { Type = PaymentMethod.BankTransfer, Name = PaymentMethodConstants.BankTransfer.ToPaymentMethodName() }
     ];
 }

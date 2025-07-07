@@ -9,7 +9,7 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
-import type { BookingPaymentMethod, Currency, editProduct_updateProductMutation, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
+import type { Currency, editProduct_updateProductMutation, PaymentMethod, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -532,7 +532,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
-          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as BookingPaymentMethod),
+          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
         },
       },
       onCompleted: (_, errors) => {

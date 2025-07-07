@@ -31,10 +31,10 @@ namespace Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value {
             "dGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglh",
             "cHBTb3VyY2UYAyABKAkSJAoEdHlwZRgEIAEoDjIWLmxvY2F0aW9uaW50ZXJu",
             "YWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKjoKBFR5cGUSGAoUUmVjb3Jk",
-            "RGFpbHlEZXNrQ291bnQQABIYChRSZWNvcmREYWlseVJvb21Db3VudBABQj+q",
-            "AjxBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkxvY2F0aW9u",
-            "SW50ZXJuYWwuVjEuVmFsdWViBnByb3RvMw=="));
+            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKkQKBFR5cGUSHQoZVHlwZV9S",
+            "ZWNvcmREYWlseURlc2tDb3VudBAAEh0KGVR5cGVfUmVjb3JkRGFpbHlSb29t",
+            "Q291bnQQAUI/qgI8QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxh",
+            "ci5Mb2NhdGlvbkludGVybmFsLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -47,8 +47,8 @@ namespace Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RecordDailyDeskCount")] RecordDailyDeskCount = 0,
-    [pbr::OriginalName("RecordDailyRoomCount")] RecordDailyRoomCount = 1,
+    [pbr::OriginalName("Type_RecordDailyDeskCount")] RecordDailyDeskCount = 0,
+    [pbr::OriginalName("Type_RecordDailyRoomCount")] RecordDailyRoomCount = 1,
   }
 
   #endregion

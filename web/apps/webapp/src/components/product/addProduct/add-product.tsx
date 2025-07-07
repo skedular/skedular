@@ -11,7 +11,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import type { addProduct_addProductMutation, BookingPaymentMethod, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type { addProduct_addProductMutation, Currency, PaymentMethod, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -455,7 +455,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
-          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as BookingPaymentMethod),
+          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
         },
       },
       onCompleted: (_, errors) => {

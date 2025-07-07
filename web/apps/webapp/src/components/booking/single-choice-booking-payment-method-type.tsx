@@ -21,7 +21,7 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
   const rootData = useFragment<singleChoiceBookingPaymentMethodType_query$key>(
     graphql`
       fragment singleChoiceBookingPaymentMethodType_query on Query {
-        bookingPaymentMethodTypes {
+        paymentMethodTypes {
           type
           name
         }
@@ -30,9 +30,9 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
     rootDataRelay,
   );
 
-  const bookingPaymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(
-    () => rootData.bookingPaymentMethodTypes.filter((item) => !acceptedBookingPaymentMethods || acceptedBookingPaymentMethods.some((x) => item.type === x)).map((item) => item),
-    [rootData.bookingPaymentMethodTypes, acceptedBookingPaymentMethods],
+  const paymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(
+    () => rootData.paymentMethodTypes.filter((item) => !acceptedBookingPaymentMethods || acceptedBookingPaymentMethods.some((x) => item.type === x)).map((item) => item),
+    [rootData.paymentMethodTypes, acceptedBookingPaymentMethods],
   );
   const filter = createFilterOptions<BookingPaymentMethodTypeDetails>();
 
@@ -41,7 +41,7 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
       name={name}
       multiple={false}
       required={required}
-      options={bookingPaymentMethodTypes}
+      options={paymentMethodTypes}
       getOptionValue={(option) => (option as BookingPaymentMethodTypeDetails).type}
       getOptionLabel={(option: string | BookingPaymentMethodTypeDetails) => (option as BookingPaymentMethodTypeDetails).name}
       renderOption={(props, option) => {

@@ -38,13 +38,14 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public IEnumerable<BookingPaymentStatusDetails> BookingPaymentStatuses() =>
+    public IEnumerable<PaymentStatusDetails> BookingPaymentStatuses() =>
     [
-        new() { Type = BookingPaymentStatus.Pending, Name = BookingPaymentStatusConstants.Pending.ToBookingPaymentStatusName() },
-        new() { Type = BookingPaymentStatus.Rejected, Name = BookingPaymentStatusConstants.Rejected.ToBookingPaymentStatusName() },
-        new() { Type = BookingPaymentStatus.Confirmed, Name = BookingPaymentStatusConstants.Confirmed.ToBookingPaymentStatusName() },
-        new() { Type = BookingPaymentStatus.Expired, Name = BookingPaymentStatusConstants.Expired.ToBookingPaymentStatusName() },
-        new() { Type = BookingPaymentStatus.RecordNeverCreated, Name = BookingPaymentStatusConstants.RecordNeverCreated.ToBookingPaymentStatusName() }
+        new() { Type = PaymentStatus.Pending, Name = PaymentStatusConstants.Pending.ToPaymentStatusName() },
+        new() { Type = PaymentStatus.Rejected, Name = PaymentStatusConstants.Rejected.ToPaymentStatusName() },
+        new() { Type = PaymentStatus.Confirmed, Name = PaymentStatusConstants.Confirmed.ToPaymentStatusName() },
+        new() { Type = PaymentStatus.Expired, Name = PaymentStatusConstants.Expired.ToPaymentStatusName() },
+        new() { Type = PaymentStatus.RecordNeverCreated, Name = PaymentStatusConstants.RecordNeverCreated.ToPaymentStatusName() },
+        new() { Type = PaymentStatus.NoPaymentRequired, Name = PaymentStatusConstants.NoPaymentRequired.ToPaymentStatusName() }
     ];
 
     [UseResolverScope]
@@ -81,7 +82,7 @@ public class RootQuery(IMapper mapper)
                 where.NotesContains,
                 where.NameContains,
                 where.Type,
-                where.Status,
+                where.PaymentStatus,
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.OrganizationIds.ToSafeCollection(),

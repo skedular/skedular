@@ -38,12 +38,13 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
             "ZS5wcm90b2J1Zi5UaW1lc3RhbXASFgoOb3JnYW5pemF0aW9uSWQYAyABKAkS",
             "EgoKY3VzdG9tZXJJZBgEIAEoCRImCgRyb2xlGAUgASgOMhgub3JnYW5pemF0",
             "aW9ubWVtYmVyLlJvbGUSKgoGc3RhdHVzGAYgASgOMhoub3JnYW5pemF0aW9u",
-            "bWVtYmVyLlN0YXR1cypFCgRUeXBlEh4KGk9yZ2FuaXphdGlvbk1lbWJlclVw",
-            "c2VydGVkEAASHQoZT3JnYW5pemF0aW9uTWVtYmVyRGVsZXRlZBABKiIKBlN0",
-            "YXR1cxIKCgZBY3RpdmUQABIMCghJbmFjdGl2ZRABKjAKBFJvbGUSCQoFT3du",
-            "ZXIQABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAJCQaoCPkFwaS5T",
-            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uTWVt",
-            "YmVyLlYxLlZhbHVlYgZwcm90bzM="));
+            "bWVtYmVyLlN0YXR1cypPCgRUeXBlEiMKH1R5cGVfT3JnYW5pemF0aW9uTWVt",
+            "YmVyVXBzZXJ0ZWQQABIiCh5UeXBlX09yZ2FuaXphdGlvbk1lbWJlckRlbGV0",
+            "ZWQQASowCgZTdGF0dXMSEQoNU3RhdHVzX0FjdGl2ZRAAEhMKD1N0YXR1c19J",
+            "bmFjdGl2ZRABKj8KBFJvbGUSDgoKUm9sZV9Pd25lchAAEhYKElJvbF9lQWRt",
+            "aW5pc3RyYXRvchABEg8KC1JvbGVfTWVtYmVyEAJCQaoCPkFwaS5TaGFyZWQu",
+            "Q2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uTWVtYmVyLlYx",
+            "LlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -58,19 +59,19 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("OrganizationMemberUpserted")] OrganizationMemberUpserted = 0,
-    [pbr::OriginalName("OrganizationMemberDeleted")] OrganizationMemberDeleted = 1,
+    [pbr::OriginalName("Type_OrganizationMemberUpserted")] OrganizationMemberUpserted = 0,
+    [pbr::OriginalName("Type_OrganizationMemberDeleted")] OrganizationMemberDeleted = 1,
   }
 
   public enum Status {
-    [pbr::OriginalName("Active")] Active = 0,
-    [pbr::OriginalName("Inactive")] Inactive = 1,
+    [pbr::OriginalName("Status_Active")] Active = 0,
+    [pbr::OriginalName("Status_Inactive")] Inactive = 1,
   }
 
   public enum Role {
-    [pbr::OriginalName("Owner")] Owner = 0,
-    [pbr::OriginalName("Administrator")] Administrator = 1,
-    [pbr::OriginalName("Member")] Member = 2,
+    [pbr::OriginalName("Role_Owner")] Owner = 0,
+    [pbr::OriginalName("Rol_eAdministrator")] Administrator = 1,
+    [pbr::OriginalName("Role_Member")] Member = 2,
   }
 
   #endregion

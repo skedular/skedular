@@ -20,7 +20,7 @@ const MultipleChoicesBookingPaymentMethodTypes = ({ rootDataRelay, name, require
   const rootData = useFragment<multipleChoicesBookingPaymentMethodTypes_query$key>(
     graphql`
       fragment multipleChoicesBookingPaymentMethodTypes_query on Query {
-        bookingPaymentMethodTypes {
+        paymentMethodTypes {
           type
           name
         }
@@ -29,7 +29,7 @@ const MultipleChoicesBookingPaymentMethodTypes = ({ rootDataRelay, name, require
     rootDataRelay,
   );
 
-  const bookingPaymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(() => rootData.bookingPaymentMethodTypes.map((item) => item), [rootData.bookingPaymentMethodTypes]);
+  const paymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(() => rootData.paymentMethodTypes.map((item) => item), [rootData.paymentMethodTypes]);
   const filter = createFilterOptions<BookingPaymentMethodTypeDetails>();
 
   return (
@@ -37,7 +37,7 @@ const MultipleChoicesBookingPaymentMethodTypes = ({ rootDataRelay, name, require
       name={name}
       multiple={true}
       required={required}
-      options={bookingPaymentMethodTypes}
+      options={paymentMethodTypes}
       getOptionValue={(option) => (option as BookingPaymentMethodTypeDetails).type}
       getOptionLabel={(option: string | BookingPaymentMethodTypeDetails) => (option as BookingPaymentMethodTypeDetails).name}
       renderOption={(props, option) => {

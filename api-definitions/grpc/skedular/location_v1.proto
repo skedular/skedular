@@ -36,8 +36,8 @@ message Version {
 }
 
 enum OrderDirection {
-    Ascending = 0;
-    Descending = 1;
+    OrderDirection_Ascending = 0;
+    OrderDirection_Descending = 1;
 }
 
 message PageInfo {
@@ -149,9 +149,9 @@ message LocationOrderInput {
 }
 
 enum LocationOrderField {
-    Name = 0;
-    About = 1;
-    Timezone = 2;
+    LocationOrderField_Name = 0;
+    LocationOrderField_About = 1;
+    LocationOrderField_Timezone = 2;
 }
 
 message OrganizationCustomTag {
@@ -272,7 +272,7 @@ message ResourceOrderInput {
 }
 
 enum ResourceOrderField {
-    ResourceName = 0;
+    ResourceOrderField_ResourceName = 0;
 }
 
 message GetResourceInput {

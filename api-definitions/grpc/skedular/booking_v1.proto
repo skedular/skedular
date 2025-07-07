@@ -30,8 +30,8 @@ message Version {
 }
 
 enum OrderDirection {
-    Ascending = 0;
-    Descending = 1;
+    OrderDirection_Ascending = 0;
+    OrderDirection_Descending = 1;
 }
 
 message PageInfo {
@@ -86,41 +86,34 @@ message BookingOrderInput {
 }
 
 enum BookingOrderField {
-    From= 0;
-    To= 1;
-    Notes= 2;
-    Type= 3;
+    BookingOrderField_From= 0;
+    BookingOrderField_To= 1;
+    BookingOrderField_Notes= 2;
+    BookingOrderField_Type= 3;
 }
 
 enum BookingType
 {
-    WorkingFromHome = 0;
-    WorkingFromOffice = 1;
-    WorkingFromCoworkingSpace = 2;
-    SickLeave = 3;
-    AnnualLeave = 4;
-    WellbeingLeave = 5;
-    ClientOffice = 6;
-    Vacation = 7;
-    TravelingForWork = 8;
-    NonWorkingDay = 9;
+    BookingType_WorkingFromHome = 0;
+    BookingType_WorkingFromOffice = 1;
+    BookingType_WorkingFromCoworkingSpace = 2;
+    BookingType_SickLeave = 3;
+    BookingType_AnnualLeave = 4;
+    BookingType_WellbeingLeave = 5;
+    BookingType_ClientOffice = 6;
+    BookingType_Vacation = 7;
+    BookingType_TravelingForWork = 8;
+    BookingType_NonWorkingDay = 9;
 }
 
-enum BookingPaymentStatus
+enum PaymentStatus
 {
-    PaymentPending = 0;
-    PaymentRejected = 1;
-    PaymentConfirmed = 2;
-    PaymentExpired = 3;
-    PaymentRecordNeverCreated = 4;
-}
-
-enum PaymentStatus {
-    PaymentStatusNoPaymentRequired = 0;
-    PaymentStatusPending = 1;
-    PaymentStatusPaid = 2;
-    PaymentStatusUnpaid = 3;
-    PaymentStatusExpired = 4;
+    PaymentStatus_Pending = 0;
+    PaymentStatus_Rejected = 1;
+    PaymentStatus_Confirmed = 2;
+    PaymentStatus_Expired = 3;
+    PaymentStatus_RecordNeverCreated = 4;
+    PaymentStatus_NoPaymentRequired = 5;
 }
 
 enum PaymentMethod {
@@ -146,7 +139,7 @@ message Booking {
     string notes = 4;
     repeated Resource resources = 5;
     BookingType type = 6;
-    BookingPaymentStatus paymentStatus = 7;
+    PaymentStatus paymentStatus = 7;
     bool isPaymentRequired = 8;
     repeated Customer involvedCustomers = 9;
     repeated Organization involvedOrganizations = 10;
@@ -323,7 +316,6 @@ message LineItem {
 message BookingCheckoutSession {
     string id = 1;
     string checkoutUrl = 2;
-    PaymentStatus paymentStatus = 3;
-    string amountTotal = 4;
-    string currency = 5;
+    string amountTotal = 3;
+    string currency = 4;
 }

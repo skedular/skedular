@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c73d2a8f3d02801534d8b90e9f843838>>
+ * @generated SignedSource<<c4c3ec8cd866a207d7e6a9d8a9068e94>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
@@ -19,7 +19,7 @@ export type AddBookingInput = {
   lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds: ReadonlyArray<string>;
-  paymentMethod?: BookingPaymentMethod | null | undefined;
+  paymentMethod?: PaymentMethod | null | undefined;
   resourceIds: ReadonlyArray<string>;
   sendInvoice?: boolean | null | undefined;
   teamIds: ReadonlyArray<string>;
@@ -54,7 +54,7 @@ export type bookProduct_addBookingMutation$data = {
       readonly notes: string | null | undefined;
       readonly paymentMethod: {
         readonly name: string;
-        readonly type: BookingPaymentMethod;
+        readonly type: PaymentMethod;
       } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -100,7 +100,7 @@ export type bookProduct_addBookingMutation$rawResponse = {
       readonly notes: string | null | undefined;
       readonly paymentMethod: {
         readonly name: string;
-        readonly type: BookingPaymentMethod;
+        readonly type: PaymentMethod;
       } | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -325,7 +325,7 @@ v7 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingPaymentMethodTypeDetails",
+      "concreteType": "PaymentMethodTypeDetails",
       "kind": "LinkedField",
       "name": "paymentMethod",
       "plural": false,

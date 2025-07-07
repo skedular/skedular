@@ -69,9 +69,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "DENkbkltYWdlRmlsZRIjCghvcmlnaW5hbBgBIAEoCzIRLmxvY2F0aW9uLkNk",
             "bkZpbGUSJAoJdGh1bWJuYWlsGAIgASgLMhEubG9jYXRpb24uQ2RuRmlsZSI1",
             "CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQYAiABKAUSDQoFd2lk",
-            "dGgYAyABKAUqMQoEVHlwZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9j",
-            "YXRpb25EZWxldGVkEAFCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMu",
-            "U2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "dGgYAyABKAUqOwoEVHlwZRIZChVUeXBlX0xvY2F0aW9uVXBzZXJ0ZWQQABIY",
+            "ChRUeXBlX0xvY2F0aW9uRGVsZXRlZBABQjeqAjRBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -94,8 +94,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("LocationUpserted")] LocationUpserted = 0,
-    [pbr::OriginalName("LocationDeleted")] LocationDeleted = 1,
+    [pbr::OriginalName("Type_LocationUpserted")] LocationUpserted = 0,
+    [pbr::OriginalName("Type_LocationDeleted")] LocationDeleted = 1,
   }
 
   #endregion

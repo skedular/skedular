@@ -39,10 +39,11 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
             "ZmljYXRpb24uRW1haWxEZXRhaWxzIpQBCgxFbWFpbERldGFpbHMSCgoCaWQY",
             "ASABKAkSEgoKdGVtcGxhdGVJZBgCIAEoCRIUCgx0ZW1wbGF0ZURhdGEYAyAB",
             "KAkSDgoGc2VuZGVyGAQgASgJEhMKC3RvQWRkcmVzc2VzGAUgAygJEhMKC2Nj",
-            "QWRkcmVzc2VzGAYgAygJEhQKDGJjY0FkZHJlc3NlcxgHIAMoCSogCgRUeXBl",
-            "EhgKFE5vdGlmaWNhdGlvblVwc2VydGVkEAAqHQoQTm90aWZpY2F0aW9uVHlw",
-            "ZRIJCgVFbWFpbBAAQjuqAjhBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
-            "ZWR1bGFyLk5vdGlmaWNhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "QWRkcmVzc2VzGAYgAygJEhQKDGJjY0FkZHJlc3NlcxgHIAMoCSolCgRUeXBl",
+            "Eh0KGVR5cGVfTm90aWZpY2F0aW9uVXBzZXJ0ZWQQACouChBOb3RpZmljYXRp",
+            "b25UeXBlEhoKFk5vdGlmaWNhdGlvblR5cGVfRW1haWwQAEI7qgI4QXBpLlNo",
+            "YXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Ob3RpZmljYXRpb24uVjEu",
+            "VmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.NotificationType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -58,11 +59,11 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("NotificationUpserted")] NotificationUpserted = 0,
+    [pbr::OriginalName("Type_NotificationUpserted")] NotificationUpserted = 0,
   }
 
   public enum NotificationType {
-    [pbr::OriginalName("Email")] Email = 0,
+    [pbr::OriginalName("NotificationType_Email")] Email = 0,
   }
 
   #endregion

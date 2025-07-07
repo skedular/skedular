@@ -56,7 +56,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder
             .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
-        builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb").HasDefaultValue(Array.Empty<string>());
+        builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);

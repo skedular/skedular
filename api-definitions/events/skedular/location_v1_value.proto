@@ -6,8 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Location.V1.Value";
 
 enum Type {
-  LocationUpserted = 0;
-  LocationDeleted = 1;
+  Type_LocationUpserted = 0;
+  Type_LocationDeleted = 1;
 }
 
 message Event {

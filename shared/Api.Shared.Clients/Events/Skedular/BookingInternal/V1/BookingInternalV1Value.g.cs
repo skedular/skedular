@@ -32,11 +32,11 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
             "CghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3VyY2UYAiABKAkS",
             "EQoJYXBwU291cmNlGAMgASgJEiMKBHR5cGUYBCABKA4yFS5ib29raW5naW50",
             "ZXJuYWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
-            "bWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKlUKBFR5cGUSHwobR2Vu",
-            "ZXJhdGVSZXNvdXJjZUJvb2tpbmdTbG90EAASLAooU3RyaXBlQ29ubmVjdEFj",
-            "Y291bnRXZWJob29rRXZlbnRSZWNlaXZlZBABQj6qAjtBcGkuU2hhcmVkLkNs",
-            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLkJvb2tpbmdJbnRlcm5hbC5WMS5WYWx1",
-            "ZWIGcHJvdG8z"));
+            "bWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKl8KBFR5cGUSJAogVHlw",
+            "ZV9HZW5lcmF0ZVJlc291cmNlQm9va2luZ1Nsb3QQABIxCi1UeXBlX1N0cmlw",
+            "ZUNvbm5lY3RBY2NvdW50V2ViaG9va0V2ZW50UmVjZWl2ZWQQAUI+qgI7QXBp",
+            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5nSW50ZXJu",
+            "YWwuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -49,8 +49,8 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("GenerateResourceBookingSlot")] GenerateResourceBookingSlot = 0,
-    [pbr::OriginalName("StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 1,
+    [pbr::OriginalName("Type_GenerateResourceBookingSlot")] GenerateResourceBookingSlot = 0,
+    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 1,
   }
 
   #endregion

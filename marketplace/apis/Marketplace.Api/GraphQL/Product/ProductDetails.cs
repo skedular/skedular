@@ -26,7 +26,7 @@ public class ProductDetails : Node
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
 
     [GraphQLName("acceptedBookingPaymentMethods")]
-    public IEnumerable<BookingPaymentMethodTypeDetails> AcceptedBookingPaymentMethods { get; set; } = [];
+    public IEnumerable<PaymentMethodTypeDetails> AcceptedBookingPaymentMethods { get; set; } = [];
 
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }

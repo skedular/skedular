@@ -473,7 +473,7 @@ public class CustomTagsPage(
         };
 
         getPaginatedCustomTagsInput.OrderBy.AddRange([
-            new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.CustomTagName }
+            new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name }
         ]);
 
         return await organizationServiceClient.GetPaginatedCustomTagsAsync(

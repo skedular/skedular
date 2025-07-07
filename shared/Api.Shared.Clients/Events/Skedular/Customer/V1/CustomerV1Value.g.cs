@@ -64,9 +64,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "BWVtYWlsGAMgASgJEhQKDGFkZHJlc3NMaW5lMRgEIAEoCRIUCgxhZGRyZXNz",
             "TGluZTIYBSABKAkSDgoGc3VidXJiGAYgASgJEgwKBGNpdHkYByABKAkSEAoI",
             "cHJvdmluY2UYCCABKAkSDwoHemlwY29kZRgJIAEoCRIPCgdjb3VudHJ5GAog",
-            "ASgJKjEKBFR5cGUSFAoQQ3VzdG9tZXJVcHNlcnRlZBAAEhMKD0N1c3RvbWVy",
-            "RGVsZXRlZBABQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1",
-            "bGFyLkN1c3RvbWVyLlYxLlZhbHVlYgZwcm90bzM="));
+            "ASgJKjsKBFR5cGUSGQoVVHlwZV9DdXN0b21lclVwc2VydGVkEAASGAoUVHlw",
+            "ZV9DdXN0b21lckRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5DbGllbnRzLkV2",
+            "ZW50cy5Ta2VkdWxhci5DdXN0b21lci5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -88,8 +88,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("CustomerUpserted")] CustomerUpserted = 0,
-    [pbr::OriginalName("CustomerDeleted")] CustomerDeleted = 1,
+    [pbr::OriginalName("Type_CustomerUpserted")] CustomerUpserted = 0,
+    [pbr::OriginalName("Type_CustomerDeleted")] CustomerDeleted = 1,
   }
 
   #endregion

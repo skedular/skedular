@@ -61,8 +61,6 @@ public class BookingService(
             throw new ArgumentException(nameof(booking.LineItems));
         }
 
-        booking.BookedOnMarketplace = booking.LineItems.Count > 0;
-
         var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(booking.Id))
         {
@@ -86,10 +84,28 @@ public class BookingService(
             throw new CustomerNotFound();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
         var productVersions = await GetProductVersionsAsync(booking.LineItems.Select(item => item.ProductVersionId).ToList(), cancellationToken);
+
+        booking.BookedOnMarketplace = booking.LineItems.Count != 0;
+        booking.IsPaymentRequired = booking.LineItems.Count != 0;
+        booking.PaymentStatus = booking.IsPaymentRequired ? PaymentStatus.Pending : PaymentStatus.Confirmed;
+
+        if (booking.IsPaymentRequired)
+        {
+            if (!booking.PaymentMethod.HasValue)
+            {
+                throw new BookingPaymentMethodRequired();
+            }
+
+            if (productVersions.Any(item => !item.AcceptedBookingPaymentMethods.Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+            {
+                throw new BookingPaymentMethodNotAccepted();
+            }
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (booking.InvolvedCustomers.Count == 1)
         {
@@ -124,9 +140,6 @@ public class BookingService(
 
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
-
-        booking.IsPaymentRequired = booking.LineItems.Count != 0;
-        booking.PaymentStatus = booking.LineItems.Count == 0 ? BookingPaymentStatus.Confirmed : BookingPaymentStatus.Pending;
 
         var bookingEntity = mapper.MapTo(
             booking,
@@ -638,13 +651,11 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var existingLineItems = existingBooking.LineItems;
-        var existingBookedOnMarketplace = existingBooking.BookedOnMarketplace;
-
-        booking.IsPaymentRequired = existingLineItems.Count != 0;
-        booking.PaymentStatus = existingLineItems.Count == 0 ? BookingPaymentStatus.Confirmed : BookingPaymentStatus.Pending;
-        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullableBookingPaymentMethod();
-        booking.SendInvoice = existingBooking.SendInvoice;
+        booking.LineItems = existingBooking.LineItems;
+        booking.BookedOnMarketplace = existingBooking.BookedOnMarketplace;
+        booking.IsPaymentRequired = existingBooking.IsPaymentRequired;
+        booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
+        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
         booking.InvoiceUrl = existingBooking.InvoiceUrl;
 
         var bookingEntity = mapper.MergeTo(
@@ -662,9 +673,6 @@ public class BookingService(
             null,
             existingBooking.ProductVersions,
             existingBooking.StripeCheckoutSession);
-
-        bookingEntity.LineItems = existingLineItems;
-        bookingEntity.BookedOnMarketplace = existingBookedOnMarketplace;
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingCheckoutSessionExpiry(bookingEntity));
