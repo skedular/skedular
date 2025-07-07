@@ -52,7 +52,7 @@ public class Mapper : IMapper
                 UnitPrice = organizationOffering.UnitPrice
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
-            TaxDetails = MapTo(src.OrganizationTaxDetails),
+            TaxDetails = MapTo(src.OrganizationTaxDetails)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -169,9 +169,7 @@ public class Mapper : IMapper
             ? null
             : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails
             {
-                Id = src.Id,
-                GstNumber = src.GstNumber.ToSafeString(),
-                GstPercentage = src.GstPercentage.ToRoundedDecimal(),
+                Id = src.Id, GstNumber = src.GstNumber.ToSafeString(), GstPercentage = src.GstPercentage.ToRoundedDecimal()
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>

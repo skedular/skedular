@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;

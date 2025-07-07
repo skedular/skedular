@@ -278,7 +278,8 @@ public class ProductService(
     {
         if (productVersion.AcceptedBookingPaymentMethods.Count <= 0)
         {
-            throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(productVersion.AcceptedBookingPaymentMethods));
+            throw new ArgumentException("At least one accepted booking payment method must be selected",
+                nameof(productVersion.AcceptedBookingPaymentMethods));
         }
 
         if (productVersion.RecurrenceWindowDays <= 0)

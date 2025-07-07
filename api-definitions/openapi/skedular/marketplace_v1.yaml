@@ -88,7 +88,7 @@ components:
   schemas:
     ProblemDetails:
       type: object
-      additionalProperties: {}
+      additionalProperties: { }
       properties:
         type:
           type: string

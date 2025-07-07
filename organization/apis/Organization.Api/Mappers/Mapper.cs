@@ -176,8 +176,8 @@ public interface IMapper
     Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src);
     OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
     OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
-    
-    
+
+
     OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src);
     Shared.Database.Entities.OrganizationTaxDetails MapToEntity(OrganizationTaxDetails src, Shared.Database.Entities.Organization organization);
 
@@ -1144,21 +1144,22 @@ public class Mapper : IMapper
             };
 
     public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+
     public OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src) =>
         new()
         {
             GstNumber = src.GstNumber,
-             GstPercentage = src.GstPercentage.FromRoundedDecimal(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            GstPercentage = src.GstPercentage.FromRoundedDecimal(),
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
     public Shared.Database.Entities.OrganizationTaxDetails MapToEntity(
-        OrganizationTaxDetails src, 
+        OrganizationTaxDetails src,
         Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.OrganizationTaxDetails(), organization);
 
     public Shared.Database.Entities.OrganizationTaxDetails MergeToEntity(
-        OrganizationTaxDetails src, 
+        OrganizationTaxDetails src,
         Shared.Database.Entities.OrganizationTaxDetails dest,
         Shared.Database.Entities.Organization organization)
     {
@@ -1730,7 +1731,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 GstNumber = src.GstNumber,
-                GstPercentage = src.GstPercentage,
+                GstPercentage = src.GstPercentage
             };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
@@ -1808,12 +1809,9 @@ public class Mapper : IMapper
             {
                 EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
-    
+
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new GraphQL.TaxDetails.OrganizationTaxDetails
-            {
-                GstNumber = src.GstNumber, GstPercentage = src.GstPercentage.ToRoundedDecimal()
-            };
+            : new GraphQL.TaxDetails.OrganizationTaxDetails { GstNumber = src.GstNumber, GstPercentage = src.GstPercentage.ToRoundedDecimal() };
 }

@@ -6,5 +6,7 @@ namespace Organization.Api.GraphQL.BankAccount;
 public class OrganizationBankAccountsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationBankAccounts")] public IEnumerable<OrganizationBankAccountDetails> OrganizationBankAccounts { get; set; } = [];
+
+    [GraphQLName("organizationBankAccounts")]
+    public IEnumerable<OrganizationBankAccountDetails> OrganizationBankAccounts { get; set; } = [];
 }

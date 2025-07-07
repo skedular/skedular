@@ -53,7 +53,8 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
-        builder.Property(item => item.MaxAllowedResourcesLockTimePaidViaCard).HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard);
+        builder.Property(item => item.MaxAllowedResourcesLockTimePaidViaCard)
+            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard);
         builder
             .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);

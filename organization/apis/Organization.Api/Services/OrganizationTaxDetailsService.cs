@@ -1,15 +1,11 @@
 using Api.Shared.Services;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Security.Sso;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Constants = Enterprise.Shared.Security.Sso.Models.Constants;
-using OrganizationSsoValidationResult = Organization.Shared.Configurations.OrganizationSsoValidationResult;
 
 namespace Organization.Api.Services;
 

@@ -49,5 +49,5 @@ public class ProductDetails : Node
 
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
-    [GraphQLName("id")][ID] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
