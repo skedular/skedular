@@ -9,6 +9,7 @@ type Props = {
   rootDataRelay: singleChoiceBookingPaymentMethodType_query$key;
   name: string;
   required?: boolean;
+  acceptedBookingPaymentMethods?: string[];
 };
 
 type BookingPaymentMethodTypeDetails = {
@@ -16,7 +17,7 @@ type BookingPaymentMethodTypeDetails = {
   name: string;
 };
 
-const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }: Props) => {
+const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, acceptedBookingPaymentMethods }: Props) => {
   const rootData = useFragment<singleChoiceBookingPaymentMethodType_query$key>(
     graphql`
       fragment singleChoiceBookingPaymentMethodType_query on Query {
@@ -29,7 +30,10 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }:
     rootDataRelay,
   );
 
-  const bookingPaymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(() => rootData.bookingPaymentMethodTypes.map((item) => item), [rootData.bookingPaymentMethodTypes]);
+  const bookingPaymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(
+    () => rootData.bookingPaymentMethodTypes.filter((item) => !acceptedBookingPaymentMethods || acceptedBookingPaymentMethods.some((x) => item.type === x)).map((item) => item),
+    [rootData.bookingPaymentMethodTypes, acceptedBookingPaymentMethods],
+  );
   const filter = createFilterOptions<BookingPaymentMethodTypeDetails>();
 
   return (

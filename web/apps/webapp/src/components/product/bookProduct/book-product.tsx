@@ -144,6 +144,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           requireConsecutiveDays
           maxBookingSpreadDays
           latestProductVersionId
+          acceptedBookingPaymentMethods {
+            type
+          }
         }
         openingHoursMinutesStep
         ...singleChoiceMarketplaceBookingType_query
@@ -258,7 +261,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [notes, setNotes] = useState<string>('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
-  const [paymentMethod, setPaymentMethod] = useState<string>('CARD');
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [sendInvoice, setSendInvoice] = useState<boolean>(true);
 
   const resources = useMemo<ResourceDetails[]>(
@@ -794,7 +797,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Payment Method">
-                      <SingleChoiceBookingPaymentMethodType rootDataRelay={rootData} name="paymentMethod" required={requiredFields.paymentMethod} />
+                      <SingleChoiceBookingPaymentMethodType
+                        rootDataRelay={rootData}
+                        name="paymentMethod"
+                        required={requiredFields.paymentMethod}
+                        acceptedBookingPaymentMethods={rootData.product?.acceptedBookingPaymentMethods.map(({ type }) => type)}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="">

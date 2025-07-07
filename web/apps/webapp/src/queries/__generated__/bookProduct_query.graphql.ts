@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5a31a0a1ec83446a04b90604add2b67>>
+ * @generated SignedSource<<7ae8c875e1827a38ceed3710b516bfa3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -18,6 +19,9 @@ export type bookProduct_query$data = {
   };
   readonly openingHoursMinutesStep: number;
   readonly product: {
+    readonly acceptedBookingPaymentMethods: ReadonlyArray<{
+      readonly type: BookingPaymentMethod;
+    }>;
     readonly bookAllLocationResources: boolean;
     readonly currency: {
       readonly name: string;
@@ -63,14 +67,15 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v3 = [
+  (v2/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -133,7 +138,7 @@ return {
           "kind": "LinkedField",
           "name": "priceUnit",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -150,7 +155,7 @@ return {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -208,6 +213,18 @@ return {
           "kind": "ScalarField",
           "name": "latestProductVersionId",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+          "kind": "LinkedField",
+          "name": "acceptedBookingPaymentMethods",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/)
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -235,6 +252,6 @@ return {
 };
 })();
 
-(node as any).hash = "0c54c8a8cf3aa119b36f5f999ecf8739";
+(node as any).hash = "c316add6558ac9aaef30dc14d4a40049";
 
 export default node;

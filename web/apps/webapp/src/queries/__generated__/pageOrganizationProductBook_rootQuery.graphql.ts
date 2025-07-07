@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7d657a3942bd674cd479afbee4eb626>>
+ * @generated SignedSource<<9aedc26a5acd197c16e55496060bd4f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,25 +69,26 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v8 = [
+  (v7/*: any*/),
   (v5/*: any*/)
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v9 = [
-  (v8/*: any*/),
+v10 = [
+  (v9/*: any*/),
   (v5/*: any*/),
   {
     "alias": null,
@@ -177,7 +178,7 @@ return {
             "kind": "LinkedField",
             "name": "priceUnit",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -194,7 +195,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -252,6 +253,18 @@ return {
             "kind": "ScalarField",
             "name": "latestProductVersionId",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+            "kind": "LinkedField",
+            "name": "acceptedBookingPaymentMethods",
+            "plural": true,
+            "selections": [
+              (v7/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -282,7 +295,7 @@ return {
         "kind": "LinkedField",
         "name": "marketplaceBookingTypes",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       },
       {
@@ -292,7 +305,7 @@ return {
         "kind": "LinkedField",
         "name": "bookingPaymentMethodTypes",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       },
       {
@@ -330,7 +343,7 @@ return {
         "name": "availableResources",
         "plural": true,
         "selections": [
-          (v8/*: any*/),
+          (v9/*: any*/),
           (v5/*: any*/),
           {
             "alias": null,
@@ -340,7 +353,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v8/*: any*/),
+              (v9/*: any*/),
               (v5/*: any*/)
             ],
             "storageKey": null
@@ -352,7 +365,7 @@ return {
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
@@ -362,7 +375,7 @@ return {
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           }
         ],
@@ -371,12 +384,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f1b88534598089469336facb8b54ecbc",
+    "cacheID": "2bb6198c2ff979bbdb541372a219eab6",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingType_query\n  ...singleChoiceBookingPaymentMethodType_query\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  bookingPaymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingType_query on Query {\n  marketplaceBookingTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n    acceptedBookingPaymentMethods {\n      type\n    }\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingType_query\n  ...singleChoiceBookingPaymentMethodType_query\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  bookingPaymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingType_query on Query {\n  marketplaceBookingTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
