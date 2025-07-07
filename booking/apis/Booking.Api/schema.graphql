@@ -151,6 +151,9 @@ type Mutation {
   addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
   deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
+  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
 }
 
 type OrganizationAvailableResources {
@@ -159,9 +162,11 @@ type OrganizationAvailableResources {
 }
 
 type OrganizationBookingPermissions {
+  canViewBookings: Boolean!
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
   canDeleteBooking: Boolean!
+  canModifyPaymentMethod: Boolean!
 }
 
 type PageInfo {
@@ -263,6 +268,11 @@ input BookingWhereInput {
   includeFutureBookingsOnly: Boolean
 }
 
+input ConfirmBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteBookingInput {
   clientMutationId: String
   id: String!
@@ -273,10 +283,20 @@ input LineItemInput {
   quantity: Int!
 }
 
+input MakeBookingPaymentNotRequiredInput {
+  clientMutationId: String
+  id: String!
+}
+
 input OrganizationAvailableResourcesWhereInput {
   organizationId: String!
   from: DateTime!
   until: DateTime!
+}
+
+input RejectBookingPaymentInput {
+  clientMutationId: String
+  id: String!
 }
 
 input UpdateBookingInput {

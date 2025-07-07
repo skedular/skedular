@@ -542,6 +542,7 @@ type Mutation {
   completePreferredLocationOnboarding(input: CompletePreferredLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload! @cost(weight: "10")
+  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
   deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
@@ -566,6 +567,8 @@ type Mutation {
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload! @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload! @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
+  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
+  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload! @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload! @cost(weight: "10")
   removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
@@ -749,7 +752,9 @@ type OrganizationBillingDetails {
 type OrganizationBookingPermissions {
   canAddBooking: Boolean!
   canDeleteBooking: Boolean!
+  canModifyPaymentMethod: Boolean!
   canUpdateBooking: Boolean!
+  canViewBookings: Boolean!
 }
 
 type OrganizationDailyBookingsTotal {
@@ -1675,6 +1680,11 @@ input CompleteTeamOnboardingInput {
   clientMutationId: String
 }
 
+input ConfirmBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
 input CustomTagOrganizationTagWhereInput {
   nameContains: String
   organizationId: String!
@@ -1861,6 +1871,11 @@ input LocationWhereInput {
   zoneIds: [String!]
 }
 
+input MakeBookingPaymentNotRequiredInput {
+  clientMutationId: String
+  id: String!
+}
+
 input MyNotificationWhereInput {
   organizationId: String
 }
@@ -1955,6 +1970,11 @@ input ProductWhereInput {
   nameContains: String
   organizationIds: [String!]
   productIds: [String!]
+}
+
+input RejectBookingPaymentInput {
+  clientMutationId: String
+  id: String!
 }
 
 input RejectInvitationToJoinOrganizationInput {

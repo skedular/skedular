@@ -6,4 +6,5 @@ public class OrganizationPermissions
     public bool CanAddBooking { get; set; }
     public bool CanUpdateBooking { get; set; }
     public bool CanDeleteBooking { get; set; }
+    public bool CanModifyPaymentMethod { get; set; }
 }

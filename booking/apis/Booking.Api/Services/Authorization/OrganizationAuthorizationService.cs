@@ -13,6 +13,7 @@ public interface IOrganizationAuthorizationService
     bool CanUpdateBooking(Organization organization, Customer customer);
     bool CanDeleteBooking(Organization organization, Customer customer);
     bool CanViewMemberPersonalDetails(Organization organization, Customer customer);
+    bool CanModifyPaymentMethod(Organization organization, Customer customer);
     Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
@@ -62,6 +63,13 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
+    public bool CanModifyPaymentMethod(Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
     public async Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -74,7 +82,8 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             CanViewBookings = CanViewBookings(organization, customer),
             CanAddBooking = CanAddBooking(organization, customer),
             CanUpdateBooking = CanUpdateBooking(organization, customer),
-            CanDeleteBooking = CanDeleteBooking(organization, customer)
+            CanDeleteBooking = CanDeleteBooking(organization, customer),
+            CanModifyPaymentMethod = CanModifyPaymentMethod(organization, customer)
         };
     }
 }

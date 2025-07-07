@@ -85,3 +85,5 @@ public class OrganizationBankAccountNotFound() : Exception("Organization Bank Ac
 public class BookingPaymentMethodNotAccepted() : Exception("Booking payment method not accepted");
 
 public class BookingsProductsWithMultipleCurrenciesAreNotSupported() : Exception("Bookings products with multiple currencies are not supported");
+
+public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");

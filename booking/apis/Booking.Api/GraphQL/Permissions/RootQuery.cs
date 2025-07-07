@@ -21,9 +21,11 @@ public class RootQuery
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(organizationId, cancellationToken);
         return new OrganizationBookingPermissions
         {
+            CanViewBookings = permissions.CanViewBookings,
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking
+            CanDeleteBooking = permissions.CanDeleteBooking,
+            CanModifyPaymentMethod = permissions.CanModifyPaymentMethod
         };
     }
 
