@@ -28,7 +28,7 @@ export { default as CollpaseDrawerIcon } from '@mui/icons-material/ArrowBackIos'
 export { default as AscDirectionIcon } from '@mui/icons-material/ArrowDownward';
 export { default as ExpanDrawerIcon } from '@mui/icons-material/ArrowForwardIos';
 export { default as DescDirectionIcon } from '@mui/icons-material/ArrowUpward';
-export { default as TaxDetailsIcon } from '@mui/icons-material/AttachMoney';
+export { default as PaymentStatusIcon, default as TaxDetailsIcon } from '@mui/icons-material/AttachMoney';
 export { default as CancelIcon } from '@mui/icons-material/Cancel';
 export { default as CheckIcon } from '@mui/icons-material/Check';
 export { default as SelectedTickIcon } from '@mui/icons-material/CheckCircle';

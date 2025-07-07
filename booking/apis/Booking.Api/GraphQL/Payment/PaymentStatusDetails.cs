@@ -1,7 +1,7 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
 
-namespace Booking.Api.GraphQL.Booking;
+namespace Booking.Api.GraphQL.Payment;
 
 [GraphQLName("PaymentStatusDetails")]
 public class PaymentStatusDetails

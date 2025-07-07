@@ -1048,7 +1048,6 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  bookingPaymentStatuses: [PaymentStatusDetails!]!
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
   bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
@@ -1109,6 +1108,7 @@ type Query {
   otherResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
+  paymentStatuses: [PaymentStatusDetails!]!
   pendingInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")

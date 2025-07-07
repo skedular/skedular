@@ -38,17 +38,6 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public IEnumerable<PaymentStatusDetails> BookingPaymentStatuses() =>
-    [
-        new() { Type = PaymentStatus.Pending, Name = PaymentStatusConstants.Pending.ToPaymentStatusName() },
-        new() { Type = PaymentStatus.Rejected, Name = PaymentStatusConstants.Rejected.ToPaymentStatusName() },
-        new() { Type = PaymentStatus.Confirmed, Name = PaymentStatusConstants.Confirmed.ToPaymentStatusName() },
-        new() { Type = PaymentStatus.Expired, Name = PaymentStatusConstants.Expired.ToPaymentStatusName() },
-        new() { Type = PaymentStatus.RecordNeverCreated, Name = PaymentStatusConstants.RecordNeverCreated.ToPaymentStatusName() },
-        new() { Type = PaymentStatus.NoPaymentRequired, Name = PaymentStatusConstants.NoPaymentRequired.ToPaymentStatusName() }
-    ];
-
-    [UseResolverScope]
     public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
         mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 

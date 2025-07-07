@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23257037d385e1852dee0fdbb6fbe36f>>
+ * @generated SignedSource<<74fb43c7957d0fb6d3f86572fc07ae63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
   readonly from: any;
@@ -33,7 +34,12 @@ export type bookingCard_BookingDetails$data = {
     readonly name: string;
     readonly uniqueId: string;
   }>;
+  readonly isPaymentRequired: boolean;
   readonly notes: string | null | undefined;
+  readonly paymentStatus: {
+    readonly name: string;
+    readonly type: PaymentStatus;
+  };
   readonly resources: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
@@ -69,28 +75,38 @@ var v0 = {
   "name": "name",
   "storageKey": null
 },
-v1 = {
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v0/*: any*/)
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v2 = [
-  (v1/*: any*/),
+v3 = [
+  (v2/*: any*/),
   (v0/*: any*/)
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v4 = [
-  (v1/*: any*/),
+v5 = [
+  (v2/*: any*/),
   (v0/*: any*/),
-  (v3/*: any*/)
+  (v4/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -133,16 +149,7 @@ return {
       "kind": "LinkedField",
       "name": "type",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        (v0/*: any*/)
-      ],
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
@@ -153,7 +160,7 @@ return {
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v2/*: any*/),
         (v0/*: any*/),
         {
           "alias": null,
@@ -194,7 +201,7 @@ return {
       "name": "involvedOrganizations",
       "plural": true,
       "selections": [
-        (v1/*: any*/)
+        (v2/*: any*/)
       ],
       "storageKey": null
     },
@@ -205,7 +212,7 @@ return {
       "kind": "LinkedField",
       "name": "involvedLocations",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -215,7 +222,7 @@ return {
       "kind": "LinkedField",
       "name": "involvedTeams",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -226,9 +233,9 @@ return {
       "name": "resources",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v2/*: any*/),
         (v0/*: any*/),
-        (v3/*: any*/),
+        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -236,7 +243,7 @@ return {
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
@@ -246,10 +253,27 @@ return {
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isPaymentRequired",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentStatusDetails",
+      "kind": "LinkedField",
+      "name": "paymentStatus",
+      "plural": false,
+      "selections": (v1/*: any*/),
       "storageKey": null
     }
   ],
@@ -258,6 +282,6 @@ return {
 };
 })();
 
-(node as any).hash = "40f729d43c1b0e4ccdbf97fa35d7116d";
+(node as any).hash = "9fffed60ab21fb4adf69df57b5ce2734";
 
 export default node;

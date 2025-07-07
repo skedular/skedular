@@ -24,18 +24,22 @@ public class BookingPaymentService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     IMapper mapper,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService) : IBookingPaymentService
+    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingPaymentService
 {
     public async Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
-        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, cancellationToken);
+        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, false, cancellationToken);
 
     public async Task<Shared.Models.Booking> RejectPaymentAsync(string id, CancellationToken cancellationToken) =>
-        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Rejected, cancellationToken);
+        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Rejected, true, cancellationToken);
 
     public async Task<Shared.Models.Booking> MakePaymentNotRequiredAsync(string id, CancellationToken cancellationToken) =>
-        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.NoPaymentRequired, cancellationToken);
+        await UpdatePaymentStatusInternalAsync(id, PaymentStatus.NoPaymentRequired, false, cancellationToken);
 
-    private async Task<Shared.Models.Booking> UpdatePaymentStatusInternalAsync(string id, PaymentStatus paymentStatus,
+    private async Task<Shared.Models.Booking> UpdatePaymentStatusInternalAsync(
+        string id,
+        PaymentStatus paymentStatus,
+        bool releaseResources,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -55,6 +59,12 @@ public class BookingPaymentService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        if (releaseResources)
+        {
+            bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+        }
+
         existingBooking.PaymentStatus = paymentStatus.ToPaymentStatus();
 
         if (!string.IsNullOrWhiteSpace(existingBooking.PaymentMethod) &&

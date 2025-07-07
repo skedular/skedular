@@ -14,6 +14,9 @@ type Props = {
 export enum MoreActionsMenuOptionType {
   EditBooking,
   DeleteBooking,
+  ConfirmBookingPayment,
+  RejectBookingPayment,
+  MakeBookingPaymentNotRequired,
   EditTeam,
   DeleteTeam,
   SetAsPreferredLocation,
@@ -78,6 +81,18 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteBooking,
     label: 'Remove Booking',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.ConfirmBookingPayment]: {
+    id: MoreActionsMenuOptionType.ConfirmBookingPayment,
+    label: 'Confirm Payment',
+  },
+  [MoreActionsMenuOptionType.RejectBookingPayment]: {
+    id: MoreActionsMenuOptionType.RejectBookingPayment,
+    label: 'Reject Payment',
+  },
+  [MoreActionsMenuOptionType.MakeBookingPaymentNotRequired]: {
+    id: MoreActionsMenuOptionType.MakeBookingPaymentNotRequired,
+    label: 'Make Payment Not Required',
   },
   [MoreActionsMenuOptionType.EditTeam]: {
     id: MoreActionsMenuOptionType.EditTeam,

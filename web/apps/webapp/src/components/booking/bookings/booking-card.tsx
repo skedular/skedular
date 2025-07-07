@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, PaymentStatusIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -12,8 +12,11 @@ import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
+import type { bookingCard_confirmBookingPaymentMutation } from '@/queries/__generated__/bookingCard_confirmBookingPaymentMutation.graphql';
 import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
+import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/bookingCard_makeBookingPaymentNotRequiredMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
+import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -60,6 +63,13 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           middleName
           familyName
           photoUrl
+        }
+        organizationBookingPermissions(organizationId: $organizationId) {
+          canModifyPaymentMethod
+        }
+        paymentStatuses {
+          type
+          name
         }
       }
     `,
@@ -110,6 +120,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             name
             color
           }
+        }
+        isPaymentRequired
+        paymentStatus {
+          type
+          name
         }
       }
     `,
@@ -174,6 +189,48 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     }
   `);
 
+  const [commitConfirmBookingPayment] = useMutation<bookingCard_confirmBookingPaymentMutation>(graphql`
+    mutation bookingCard_confirmBookingPaymentMutation($input: ConfirmBookingPaymentInput!) @raw_response_type {
+      confirmBookingPayment(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRejectBookingPayment] = useMutation<bookingCard_rejectBookingPaymentMutation>(graphql`
+    mutation bookingCard_rejectBookingPaymentMutation($input: RejectBookingPaymentInput!) @raw_response_type {
+      rejectBookingPayment(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitMakeBookingPaymentNotRequired] = useMutation<bookingCard_makeBookingPaymentNotRequiredMutation>(graphql`
+    mutation bookingCard_makeBookingPaymentNotRequiredMutation($input: MakeBookingPaymentNotRequiredInput!) @raw_response_type {
+      makeBookingPaymentNotRequired(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -186,6 +243,20 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
   ];
+
+  if (
+    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
+    bookingDetails.isPaymentRequired &&
+    bookingDetails.paymentStatus.type !== 'REJECTED' &&
+    bookingDetails.paymentStatus.type !== 'EXPIRED' &&
+    bookingDetails.paymentStatus.type !== 'RECORD_NEVER_CREATED'
+  ) {
+    moreActionsOption.push(
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.ConfirmBookingPayment],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.RejectBookingPayment],
+      moreActionsMenuAllOptions[MoreActionsMenuOptionType.MakeBookingPaymentNotRequired],
+    );
+  }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -204,6 +275,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
 
       case MoreActionsMenuOptionType.DeleteBooking:
         handleRemoveBookingClick();
+        break;
+
+      case MoreActionsMenuOptionType.ConfirmBookingPayment:
+        handleConfirmPaymentClick();
+        break;
+
+      case MoreActionsMenuOptionType.RejectBookingPayment:
+        handleRejectPaymentClick();
+        break;
+
+      case MoreActionsMenuOptionType.MakeBookingPaymentNotRequired:
+        handleMakePaymentNotRequiredClick();
         break;
     }
   };
@@ -341,6 +424,162 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     });
   };
 
+  const handleConfirmPaymentClick = () => {
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitConfirmBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment confirmed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        confirmBookingPayment: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'CONFIRMED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const handleRejectPaymentClick = () => {
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitRejectBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment rejected.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        rejectBookingPayment: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'REJECTED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const handleMakePaymentNotRequiredClick = () => {
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
+
+    commitMakeBookingPaymentNotRequired({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment made not required.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        makeBookingPaymentNotRequired: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'NO_PAYMENT_REQUIRED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
   const customTags = bookingDetails.resources
     .flatMap(({ customTags }) => customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
@@ -395,6 +634,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           }
         />
         <CardContent>
+          {bookingDetails.isPaymentRequired && (
+            <>
+              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              <Divider />
+            </>
+          )}
           <SmallIconTypography
             startElement={<CalendarIcon />}
             label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
@@ -417,16 +662,31 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             ))}
           <Divider />
           <Resources
-            resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}
+            resources={bookingDetails.resources.map((resource) => ({
+              id: resource.uniqueId,
+              name: resource.name,
+              color: resource.color,
+            }))}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
           <CustomTags
-            customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}
+            customTags={customTags.map((customTag: CustomTagDetails) => ({
+              id: customTag.uniqueId,
+              name: customTag.name,
+              color: customTag.color,
+            }))}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Zones
+            zones={zones.map((zone: ZoneDetails) => ({
+              id: zone.uniqueId,
+              name: zone.name,
+              color: zone.color,
+            }))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <SmallIconTypography startElement={<NotesIcon />} label={bookingDetails.notes ? bookingDetails.notes : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         </CardContent>

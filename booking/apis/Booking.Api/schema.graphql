@@ -189,11 +189,11 @@ type PaymentStatusDetails {
 type Query {
   bookingTypes: [BookingTypeDetails!]!
   marketplaceBookingTypes: [BookingTypeDetails!]!
-  bookingPaymentStatuses: [PaymentStatusDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
+  paymentStatuses: [PaymentStatusDetails!]!
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
