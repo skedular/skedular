@@ -118,9 +118,9 @@ internal static class BookingExtensions
             query = query.Where(item => item.Type == searchCriteria.Type.Value.ToBookingType());
         }
 
-        if (searchCriteria.PaymentStatus is not null)
+        if (searchCriteria.PaymentStatuses.Count != 0)
         {
-            query = query.Where(item => item.Type == searchCriteria.PaymentStatus.Value.ToPaymentStatus());
+            query = query.Where(item => searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.Type));
         }
 
         if (searchCriteria.OrganizationIds.Count != 0)

@@ -82,7 +82,7 @@ public class RootQuery(IMapper mapper)
                 where.NotesContains,
                 where.NameContains,
                 where.Type,
-                where.PaymentStatus,
+                where.PaymentStatuses.ToSafeCollection(),
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.OrganizationIds.ToSafeCollection(),

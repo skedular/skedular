@@ -258,7 +258,7 @@ input BookingWhereInput {
   toLte: DateTime
   notesContains: String
   type: BookingType
-  paymentStatus: PaymentStatus
+  paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
   locationIds: [String!]

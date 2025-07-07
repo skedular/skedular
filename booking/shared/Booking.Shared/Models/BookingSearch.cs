@@ -16,7 +16,7 @@ public class BookingSearchCriteria(
     string? notesContains,
     string? nameContains,
     BookingType? type,
-    PaymentStatus? paymentStatus,
+    IEnumerable<PaymentStatus> paymentStatuses,
     bool? includeMineOnly,
     bool? includeFutureBookingsOnly,
     IEnumerable<string> organizationIds,
@@ -37,7 +37,7 @@ public class BookingSearchCriteria(
     public bool? IncludeMineOnly { get; } = includeMineOnly;
     public bool? IncludeFutureBookingsOnly { get; } = includeFutureBookingsOnly;
     public BookingType? Type { get; } = type;
-    public PaymentStatus? PaymentStatus { get; } = paymentStatus;
+    public ICollection<PaymentStatus> PaymentStatuses { get; } = paymentStatuses.ToList();
     public ICollection<string> OrganizationIds { get; set; } = organizationIds.ToList();
     public ICollection<string> LocationIds { get; set; } = locationIds.ToList();
     public ICollection<string> TeamIds { get; set; } = teamIds.ToList();
