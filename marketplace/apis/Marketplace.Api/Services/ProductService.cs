@@ -276,6 +276,11 @@ public class ProductService(
 
     private static void Validate(ProductVersion productVersion)
     {
+        if (productVersion.AcceptedBookingPaymentMethods.Count <= 0)
+        {
+            throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(productVersion.AcceptedBookingPaymentMethods));
+        }
+
         if (productVersion.RecurrenceWindowDays <= 0)
         {
             throw new ArgumentException("RecurrenceWindowDays must be greater than 0", nameof(productVersion.RecurrenceWindowDays));
@@ -283,7 +288,8 @@ public class ProductService(
 
         if (productVersion is { RequireConsecutiveDays: true, MaxBookingSpreadDays: not null })
         {
-            throw new ArgumentException("MaxBookingSpreadDays can't be set if ForceContinuousSlots is set",
+            throw new ArgumentException(
+                "MaxBookingSpreadDays can't be set if ForceContinuousSlots is set",
                 nameof(productVersion.MaxBookingSpreadDays));
         }
 

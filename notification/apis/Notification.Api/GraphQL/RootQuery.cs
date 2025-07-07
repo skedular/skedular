@@ -1,14 +1,13 @@
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
-using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Notification.Api.GraphQL;
 
 [QueryType]
-public class RootQuery(IMapper mapper, IVersionService versionService)
+public class RootQuery(IVersionService versionService)
 {
     [UseResolverScope]
     public Version NotificationVersion()

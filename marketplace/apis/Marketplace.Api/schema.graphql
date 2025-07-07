@@ -25,6 +25,11 @@ type CurrencyDetails {
   name: String!
 }
 
+type Marketplace_BookingPaymentMethodTypeDetails {
+  type: BookingPaymentMethod!
+  name: String!
+}
+
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
@@ -69,6 +74,7 @@ type ProductDetails {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  acceptedBookingPaymentMethods: [Marketplace_BookingPaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -133,6 +139,7 @@ input AddProductInput {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -189,6 +196,7 @@ input UpdateProductInput {
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
   bookAllLocationResources: Boolean!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
@@ -197,6 +205,11 @@ input UpdateProductInput {
   productTagIds: [String!]!
   locationTagIds: [String!]!
   primaryFeatureImage: CdnImageFileInput
+}
+
+enum BookingPaymentMethod {
+  CARD
+  BANK_TRANSFER
 }
 
 enum Currency {

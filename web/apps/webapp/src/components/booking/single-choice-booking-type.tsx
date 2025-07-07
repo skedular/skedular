@@ -12,8 +12,8 @@ type Props = {
 };
 
 type BookingTypeDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoiceBookingType = ({ rootDataRelay, name, required }: Props) => {

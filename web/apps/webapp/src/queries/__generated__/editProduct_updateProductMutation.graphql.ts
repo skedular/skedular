@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d3429b0e1de00194e97f9a2c22f7268>>
+ * @generated SignedSource<<fd8dd22d99ffd532ab35226e5a5f6d12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 export type UpdateProductInput = {
+  acceptedBookingPaymentMethods: ReadonlyArray<BookingPaymentMethod>;
   bookAllLocationResources: boolean;
   clientMutationId?: string | null | undefined;
   currency: Currency;
@@ -48,6 +50,9 @@ export type editProduct_updateProductMutation$variables = {
 export type editProduct_updateProductMutation$data = {
   readonly updateProduct: {
     readonly product: {
+      readonly acceptedBookingPaymentMethods: ReadonlyArray<{
+        readonly type: BookingPaymentMethod;
+      }>;
       readonly bookAllLocationResources: boolean;
       readonly currency: {
         readonly name: string;
@@ -98,6 +103,9 @@ export type editProduct_updateProductMutation$data = {
 export type editProduct_updateProductMutation$rawResponse = {
   readonly updateProduct: {
     readonly product: {
+      readonly acceptedBookingPaymentMethods: ReadonlyArray<{
+        readonly type: BookingPaymentMethod;
+      }>;
       readonly bookAllLocationResources: boolean;
       readonly currency: {
         readonly name: string;
@@ -166,17 +174,18 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v3 = [
+  (v2/*: any*/),
   (v1/*: any*/)
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -193,7 +202,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -216,7 +225,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": [
@@ -275,7 +284,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "priceUnit",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -285,7 +294,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -344,7 +353,7 @@ v5 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -354,7 +363,19 @@ v5 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+            "kind": "LinkedField",
+            "name": "acceptedBookingPaymentMethods",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -386,7 +407,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -396,7 +417,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               }
             ],
@@ -415,7 +436,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -424,19 +445,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "da2b8fedefa9119d3b55fbb2719ce5cc",
+    "cacheID": "23d20fcb5119f38b3f3aaf19828e6e58",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e7a502c3fd55c5f539faa8c30a6ea88f";
+(node as any).hash = "83779794efd70ae6a753ef790badae39";
 
 export default node;

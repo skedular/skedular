@@ -213,7 +213,7 @@ public class Mapper : IMapper
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
-            PaymentMethod = src.PaymentMethod.ToBookingPaymentMethod(),
+            PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod(),
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };

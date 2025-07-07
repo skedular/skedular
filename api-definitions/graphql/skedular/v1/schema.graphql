@@ -495,6 +495,11 @@ type Location_OrganizationTagDetails {
   uniqueId: ID!
 }
 
+type Marketplace_BookingPaymentMethodTypeDetails {
+  name: String!
+  type: BookingPaymentMethod!
+}
+
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
 }
@@ -990,6 +995,7 @@ type PriceUnitDetails {
 }
 
 type ProductDetails {
+  acceptedBookingPaymentMethods: [Marketplace_BookingPaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
   currencyToDisplay: String!
@@ -1474,6 +1480,7 @@ input AddOrganizationStripeConnectAccountInput {
 }
 
 input AddProductInput {
+  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
   bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!
@@ -2248,6 +2255,7 @@ input UpdateOrganizationTaxDetailsInput {
 }
 
 input UpdateProductInput {
+  acceptedBookingPaymentMethods: [BookingPaymentMethod!]!
   bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!

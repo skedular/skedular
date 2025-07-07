@@ -1,4 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -10,7 +11,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import type { addProduct_addProductMutation, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type { addProduct_addProductMutation, BookingPaymentMethod, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -47,6 +48,7 @@ const RootQuery = graphql`
     ...multipleChoicesLocationTags_query
     ...singleChoicePriceUnit_query
     ...singleChoiceCurrency_query
+    ...multipleChoicesBookingPaymentMethodTypes_query
   }
 `;
 
@@ -67,6 +69,7 @@ type ProductDetails = {
   locationTagIds: string[];
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
+  acceptedBookingPaymentMethods: string[];
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -261,6 +264,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
 
         return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
       }),
+    acceptedBookingPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected".').required('Booking payment methods are required.'),
   });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
@@ -298,6 +302,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             uniqueId
             name
             color
+          }
+          acceptedBookingPaymentMethods {
+            type
           }
           maxAllowedResourcesLockTimePaidViaCard
           maxAllowedResourcesLockTimePaidViaBankTransfer
@@ -372,6 +379,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   );
   const debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaBankTransfer, keyboardTextFieldDebounceTimeout);
 
+  const [acceptedBookingPaymentMethods, setAcceptedBookingPaymentMethods] = useState<string[]>([]);
+  const debounceSetAcceptedBookingPaymentMethods = useDebounceCallback(setAcceptedBookingPaymentMethods, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
@@ -396,6 +406,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     locationTagIds,
     maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
     maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
+    acceptedBookingPaymentMethods,
   }: ProductDetails) => {
     const id = uuid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
@@ -444,6 +455,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
+          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as BookingPaymentMethod),
         },
       },
       onCompleted: (_, errors) => {
@@ -498,6 +510,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             primaryFeatureImage: finalPrimaryFeatureImage,
             maxAllowedResourcesLockTimePaidViaCard,
             maxAllowedResourcesLockTimePaidViaBankTransfer,
+            acceptedBookingPaymentMethods: [],
           },
         },
       },
@@ -531,6 +544,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               locationTagIds,
               maxAllowedResourcesLockTimePaidViaCard,
               maxAllowedResourcesLockTimePaidViaBankTransfer,
+              acceptedBookingPaymentMethods,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -550,6 +564,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               debounceSetLocationTagIds(values!.locationTagIds);
               debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
               debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
+              debounceSetAcceptedBookingPaymentMethods(values!.acceptedBookingPaymentMethods);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -600,6 +615,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
                     <FormFieldLabel label="Maximum Duration (minutes)">
                       <TextField name="maxDurationMinutes" required={requiredFields.maxDurationMinutes} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Accepted Payment Methods">
+                      <MultipleChoicesBookingPaymentMethodTypes
+                        rootDataRelay={rootData}
+                        name="acceptedBookingPaymentMethods"
+                        required={requiredFields.acceptedBookingPaymentMethods}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Product Tags">

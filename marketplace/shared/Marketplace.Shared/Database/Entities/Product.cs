@@ -27,6 +27,7 @@ public class Product : EntityBaseWithDeleted
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
+    public ICollection<string> AcceptedBookingPaymentMethods { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -58,6 +59,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder
             .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
+        builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb").HasDefaultValue(Array.Empty<string>());
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductProductTag);

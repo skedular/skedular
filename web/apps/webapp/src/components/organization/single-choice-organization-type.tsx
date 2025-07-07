@@ -12,8 +12,8 @@ type Props = {
 };
 
 type OrganizationTypeDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoiceOrganizationType = ({ rootDataRelay, name, required }: Props) => {

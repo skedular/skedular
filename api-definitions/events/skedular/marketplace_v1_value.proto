@@ -57,6 +57,7 @@ message ProductVersion {
   CdnImageFile primaryFeatureImage = 16;
   int32 maxAllowedResourcesLockTimePaidViaCard = 17;
   int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 18;
+  repeated string acceptedBookingPaymentMethods = 19;
 }
 
 message CdnImageFile {

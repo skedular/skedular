@@ -12,8 +12,8 @@ type Props = {
 };
 
 type PriceUnitDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoicePriceUnit = ({ rootDataRelay, name, required }: Props) => {

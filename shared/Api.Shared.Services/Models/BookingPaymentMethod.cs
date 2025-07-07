@@ -14,7 +14,23 @@ public static class BookingPaymentMethodConstants
 
 public static class BookingPaymentMethodExtensions
 {
-    public static BookingPaymentMethod? ToBookingPaymentMethod(this string? src) =>
+    public static BookingPaymentMethod ToBookingPaymentMethod(this string src) =>
+        src switch
+        {
+            BookingPaymentMethodConstants.Card => BookingPaymentMethod.Card,
+            BookingPaymentMethodConstants.BankTransfer => BookingPaymentMethod.BankTransfer,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public static string ToBookingPaymentMethod(this BookingPaymentMethod src) =>
+        src switch
+        {
+            BookingPaymentMethod.Card => BookingPaymentMethodConstants.Card,
+            BookingPaymentMethod.BankTransfer => BookingPaymentMethodConstants.BankTransfer,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public static BookingPaymentMethod? ToNullableBookingPaymentMethod(this string? src) =>
         string.IsNullOrWhiteSpace(src)
             ? null
             : src switch
@@ -24,7 +40,7 @@ public static class BookingPaymentMethodExtensions
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-    public static string? ToBookingPaymentMethod(this BookingPaymentMethod? src) =>
+    public static string? ToNullableBookingPaymentMethod(this BookingPaymentMethod? src) =>
         src is null
             ? null
             : src switch

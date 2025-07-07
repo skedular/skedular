@@ -108,7 +108,7 @@ public class Mapper : IMapper
             StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             BookingCheckoutSessionExpiry = bookingCheckoutSessionExpiry,
-            PaymentMethod = src.PaymentMethod.ToBookingPaymentMethod(),
+            PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod(),
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl
         };
@@ -293,7 +293,7 @@ public class Mapper : IMapper
         dest.DeletedByCustomer = deletedByCustomer;
         dest.ProductVersions = productVersions;
         dest.StripeCheckoutSession = stripeCheckoutSession;
-        dest.PaymentMethod = src.PaymentMethod.ToBookingPaymentMethod();
+        dest.PaymentMethod = src.PaymentMethod.ToNullableBookingPaymentMethod();
         dest.SendInvoice = src.SendInvoice;
         dest.InvoiceUrl = src.InvoiceUrl;
         return dest;

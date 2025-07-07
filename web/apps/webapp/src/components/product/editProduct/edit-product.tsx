@@ -1,4 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
@@ -8,7 +9,7 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
-import type { Currency, editProduct_updateProductMutation, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
+import type { BookingPaymentMethod, Currency, editProduct_updateProductMutation, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -46,6 +47,7 @@ type ProductDetails = {
   locationTagIds: string[];
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
+  acceptedBookingPaymentMethods: string[];
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -240,6 +242,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
 
         return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
       }),
+    acceptedBookingPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected".').required('Booking payment methods are required.'),
   });
 
 const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
@@ -282,6 +285,9 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           }
           maxAllowedResourcesLockTimePaidViaCard
           maxAllowedResourcesLockTimePaidViaBankTransfer
+          acceptedBookingPaymentMethods {
+            type
+          }
           primaryFeatureImage {
             original {
               url
@@ -302,6 +308,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
         ...multipleChoicesLocationTags_query
         ...singleChoicePriceUnit_query
         ...singleChoiceCurrency_query
+        ...multipleChoicesBookingPaymentMethodTypes_query
       }
     `,
     rootDataRelay,
@@ -340,6 +347,9 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             uniqueId
             name
             color
+          }
+          acceptedBookingPaymentMethods {
+            type
           }
           maxAllowedResourcesLockTimePaidViaCard
           maxAllowedResourcesLockTimePaidViaBankTransfer
@@ -427,6 +437,11 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   );
   const debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaBankTransfer, keyboardTextFieldDebounceTimeout);
 
+  const [acceptedBookingPaymentMethods, setAcceptedBookingPaymentMethods] = useState<string[]>(
+    rootData.product ? rootData.product.acceptedBookingPaymentMethods.map(({ type }) => type) : [],
+  );
+  const debounceSetAcceptedBookingPaymentMethods = useDebounceCallback(setAcceptedBookingPaymentMethods, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.product?.primaryFeatureImage && rootData.product?.primaryFeatureImage.original
       ? {
@@ -464,6 +479,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     locationTagIds,
     maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
     maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
+    acceptedBookingPaymentMethods,
   }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
@@ -516,6 +532,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
+          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as BookingPaymentMethod),
         },
       },
       onCompleted: (_, errors) => {
@@ -569,6 +586,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             primaryFeatureImage: finalPrimaryFeatureImage,
             maxAllowedResourcesLockTimePaidViaCard,
             maxAllowedResourcesLockTimePaidViaBankTransfer,
+            acceptedBookingPaymentMethods: [],
           },
         },
       },
@@ -610,6 +628,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               locationTagIds,
               maxAllowedResourcesLockTimePaidViaCard,
               maxAllowedResourcesLockTimePaidViaBankTransfer,
+              acceptedBookingPaymentMethods,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -629,6 +648,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               debounceSetLocationTagIds(values!.locationTagIds);
               debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
               debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
+              debounceSetAcceptedBookingPaymentMethods(values!.acceptedBookingPaymentMethods);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -679,6 +699,14 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
                     <FormFieldLabel label="Maximum Duration (minutes)">
                       <TextField name="maxDurationMinutes" required={requiredFields.maxDurationMinutes} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Accepted Payment Methods">
+                      <MultipleChoicesBookingPaymentMethodTypes
+                        rootDataRelay={rootData}
+                        name="acceptedBookingPaymentMethods"
+                        required={requiredFields.acceptedBookingPaymentMethods}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Product Tags">

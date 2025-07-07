@@ -23,6 +23,7 @@ public class ProductVersion : EntityBase
     public int? NumberOfResourcesToBook { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
+    public ICollection<string> AcceptedBookingPaymentMethods { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
@@ -54,6 +55,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder
             .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
+        builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb").HasDefaultValue(Array.Empty<string>());
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);

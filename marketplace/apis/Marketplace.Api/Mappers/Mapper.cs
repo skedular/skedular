@@ -82,6 +82,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList(),
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -106,6 +107,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -128,6 +130,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -162,6 +165,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods
+                .Select(item => new BookingPaymentMethodTypeDetails { Type = item, Name = item.ToBookingPaymentMethodName() }),
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -206,6 +211,7 @@ public class Mapper : IMapper
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
+        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList();
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -236,6 +242,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList(),
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = organization,
@@ -299,6 +306,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList(),
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList()
         };
@@ -335,6 +343,7 @@ public class Mapper : IMapper
         dest.PrimaryFeatureImage = productVersion.PrimaryFeatureImage;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
+        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList();
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -363,6 +372,7 @@ public class Mapper : IMapper
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
+        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToBookingPaymentMethod()).ToList();
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;

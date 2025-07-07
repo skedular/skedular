@@ -1,12 +1,12 @@
 import { BodyIconTypography } from '@/components/commons';
-import type { singleChoiceBookingPaymentMethodType_query$key } from '@/queries/__generated__/singleChoiceBookingPaymentMethodType_query.graphql';
+import type { multipleChoicesBookingPaymentMethodTypes_query$key } from '@/queries/__generated__/multipleChoicesBookingPaymentMethodTypes_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: singleChoiceBookingPaymentMethodType_query$key;
+  rootDataRelay: multipleChoicesBookingPaymentMethodTypes_query$key;
   name: string;
   required?: boolean;
 };
@@ -16,10 +16,10 @@ type BookingPaymentMethodTypeDetails = {
   name: string;
 };
 
-const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }: Props) => {
-  const rootData = useFragment<singleChoiceBookingPaymentMethodType_query$key>(
+const MultipleChoicesBookingPaymentMethodTypes = ({ rootDataRelay, name, required }: Props) => {
+  const rootData = useFragment<multipleChoicesBookingPaymentMethodTypes_query$key>(
     graphql`
-      fragment singleChoiceBookingPaymentMethodType_query on Query {
+      fragment multipleChoicesBookingPaymentMethodTypes_query on Query {
         bookingPaymentMethodTypes {
           type
           name
@@ -35,7 +35,7 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }:
   return (
     <Autocomplete
       name={name}
-      multiple={false}
+      multiple={true}
       required={required}
       options={bookingPaymentMethodTypes}
       getOptionValue={(option) => (option as BookingPaymentMethodTypeDetails).type}
@@ -49,6 +49,7 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }:
           </li>
         );
       }}
+      disableCloseOnSelect
       filterOptions={(options, params) => filter(options as BookingPaymentMethodTypeDetails[], params)}
       selectOnFocus
       clearOnBlur
@@ -57,4 +58,4 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required }:
   );
 };
 
-export default memo(SingleChoiceBookingPaymentMethodType);
+export default memo(MultipleChoicesBookingPaymentMethodTypes);

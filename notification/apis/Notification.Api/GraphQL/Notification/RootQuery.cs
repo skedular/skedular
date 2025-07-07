@@ -1,7 +1,6 @@
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Notification.Api.Mappers;
@@ -11,7 +10,7 @@ using Notification.Shared.Models;
 namespace Notification.Api.GraphQL.Notification;
 
 [QueryType]
-public class RootQuery(IMapper mapper, IVersionService versionService)
+public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
     public async Task<int> PendingInvitationsCountAsync(

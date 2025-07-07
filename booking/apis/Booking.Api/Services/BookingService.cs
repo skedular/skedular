@@ -643,7 +643,7 @@ public class BookingService(
 
         booking.IsPaymentRequired = existingLineItems.Count != 0;
         booking.PaymentStatus = existingLineItems.Count == 0 ? BookingPaymentStatus.Confirmed : BookingPaymentStatus.Pending;
-        booking.PaymentMethod = existingBooking.PaymentMethod.ToBookingPaymentMethod();
+        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullableBookingPaymentMethod();
         booking.SendInvoice = existingBooking.SendInvoice;
         booking.InvoiceUrl = existingBooking.InvoiceUrl;
 

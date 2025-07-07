@@ -12,8 +12,8 @@ type Props = {
 };
 
 type OrganizationMemberVisibilityPolicyDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoiceOrganizationMemberVisibilityPolicy = ({ rootDataRelay, name, required }: Props) => {

@@ -23,6 +23,9 @@ public class UpdateProductInput
     [GraphQLName("maxAllowedResourcesLockTimePaidViaBankTransfer")]
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
 
+    [GraphQLName("acceptedBookingPaymentMethods")]
+    public IEnumerable<BookingPaymentMethod> AcceptedBookingPaymentMethods { get; set; } = [];
+
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 

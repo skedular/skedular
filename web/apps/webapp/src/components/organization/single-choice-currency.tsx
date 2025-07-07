@@ -12,8 +12,8 @@ type Props = {
 };
 
 type CurrencyDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoiceCurrency = ({ rootDataRelay, name, required }: Props) => {

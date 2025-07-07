@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b9dca6634d253c98f81844ad7796040>>
+ * @generated SignedSource<<4ec62d4570c48b6c489f97f9fd06fd46>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingPaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -17,6 +18,9 @@ export type editProduct_query$data = {
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
   readonly openingHoursMinutesStep: number;
   readonly product: {
+    readonly acceptedBookingPaymentMethods: ReadonlyArray<{
+      readonly type: BookingPaymentMethod;
+    }>;
     readonly bookAllLocationResources: boolean;
     readonly currency: {
       readonly name: string;
@@ -65,7 +69,7 @@ export type editProduct_query$data = {
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -81,25 +85,26 @@ var v0 = {
   "name": "name",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/),
   (v0/*: any*/)
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/),
+v4 = [
+  (v3/*: any*/),
   (v0/*: any*/),
   {
     "alias": null,
@@ -109,7 +114,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -193,7 +198,7 @@ return {
           "kind": "LinkedField",
           "name": "priceUnit",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -203,7 +208,7 @@ return {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -262,7 +267,7 @@ return {
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -272,7 +277,7 @@ return {
           "kind": "LinkedField",
           "name": "locationTags",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -283,7 +288,7 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v3/*: any*/)
           ],
           "storageKey": null
         },
@@ -304,6 +309,18 @@ return {
         {
           "alias": null,
           "args": null,
+          "concreteType": "Marketplace_BookingPaymentMethodTypeDetails",
+          "kind": "LinkedField",
+          "name": "acceptedBookingPaymentMethods",
+          "plural": true,
+          "selections": [
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
           "name": "primaryFeatureImage",
@@ -316,7 +333,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             },
             {
@@ -326,7 +343,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             }
           ],
@@ -375,6 +392,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceCurrency_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "multipleChoicesBookingPaymentMethodTypes_query"
     }
   ],
   "type": "Query",
@@ -382,6 +404,6 @@ return {
 };
 })();
 
-(node as any).hash = "a79106f5fd501d7e8b187afa9729f58e";
+(node as any).hash = "11557ab380b6da04f8a5ef2757d16684";
 
 export default node;

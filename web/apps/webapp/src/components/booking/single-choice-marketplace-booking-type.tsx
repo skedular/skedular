@@ -12,8 +12,8 @@ type Props = {
 };
 
 type MarketplaceBookingTypeDetails = {
-  readonly type: string;
-  readonly name: string;
+  type: string;
+  name: string;
 };
 
 const SingleChoiceMarketplaceBookingType = ({ rootDataRelay, name, required }: Props) => {
