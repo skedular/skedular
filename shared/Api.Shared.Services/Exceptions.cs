@@ -83,3 +83,5 @@ public class StripeCustomerNotFound() : Exception("Stripe Customer not found");
 public class OrganizationBankAccountNotFound() : Exception("Organization Bank Account not found");
 
 public class BookingPaymentMethodNotAccepted() : Exception("Booking payment method not accepted");
+
+public class BookingsProductsWithMultipleCurrenciesAreNotSupported() : Exception("Bookings products with multiple currencies are not supported");

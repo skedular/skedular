@@ -217,7 +217,9 @@ public class Mapper : IMapper
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             SendInvoice = src.SendInvoice,
-            InvoiceUrl = src.InvoiceUrl
+            InvoiceUrl = src.InvoiceUrl,
+            TotalAmount = src.TotalAmount,
+            Currency = src.Currency
         };
 
 

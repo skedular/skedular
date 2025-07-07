@@ -112,7 +112,7 @@ public class Mapper : IMapper
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
             TotalAmount = src.TotalAmount,
-            Currency = src.Currency,
+            Currency = src.Currency
         };
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -302,6 +302,8 @@ public class Mapper : IMapper
         dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
         dest.SendInvoice = src.SendInvoice;
         dest.InvoiceUrl = src.InvoiceUrl;
+        dest.TotalAmount = src.TotalAmount;
+        dest.Currency = src.Currency;
         return dest;
     }
 

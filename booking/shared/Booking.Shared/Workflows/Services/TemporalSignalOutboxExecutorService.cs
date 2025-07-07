@@ -14,8 +14,11 @@ public class TemporalSignalOutboxExecutorService(ITemporalClient temporalClient,
     private static readonly string s_payBookingViaCardDeleteBookingAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.DeleteBookingAsync))!.ToWorkflowSignalType();
 
+    private static readonly string s_payBookingViaBankTransferSetPaymentStatusAsync =
+        typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.SetPaymentStatusAsync))!.ToWorkflowSignalType();
+
     private static readonly string s_payBookingViaBankTransferDeleteBookingAsync =
-        typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType();
+        typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType();
 
     public async Task SignalAsync(
         string workflowId,
@@ -51,6 +54,21 @@ public class TemporalSignalOutboxExecutorService(ITemporalClient temporalClient,
             await temporalClient
                 .GetWorkflowHandle<PayBookingViaCard>(workflowId)
                 .SignalAsync(workflow => workflow.DeleteBookingAsync(), workflowSignalOptions);
+        }
+        else if (signalType == s_payBookingViaBankTransferSetPaymentStatusAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<PayBookingViaBankTransfer>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+            var input = JsonSerializer.Deserialize<SetPaymentStatusArgs>(executionArgs);
+            ArgumentNullException.ThrowIfNull(input);
+
+            await temporalClient
+                .GetWorkflowHandle<PayBookingViaBankTransfer>(workflowId)
+                .SignalAsync(workflow => workflow.SetPaymentStatusAsync(input), workflowSignalOptions);
         }
         else if (signalType == s_payBookingViaBankTransferDeleteBookingAsync)
         {

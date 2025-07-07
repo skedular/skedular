@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76fe816f17f53f8a48b933cc88936454>>
+ * @generated SignedSource<<e19fe5ab51ef94f1e4f8654ea03190ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,35 +29,44 @@ var v0 = [
     "name": "bookingId"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v5 = [
-  (v1/*: any*/),
+v6 = [
   (v2/*: any*/),
-  (v4/*: any*/)
+  (v3/*: any*/),
+  (v5/*: any*/)
 ];
 return {
   "fragment": {
@@ -130,15 +139,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              }
-            ],
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -149,8 +150,8 @@ return {
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
               (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -189,7 +190,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedOrganizations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -199,7 +200,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedLocations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -209,7 +210,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedTeams",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -220,9 +221,9 @@ return {
             "name": "resources",
             "plural": true,
             "selections": [
-              (v1/*: any*/),
               (v2/*: any*/),
-              (v4/*: any*/),
+              (v3/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -230,7 +231,7 @@ return {
                 "kind": "LinkedField",
                 "name": "customTags",
                 "plural": true,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -240,7 +241,7 @@ return {
                 "kind": "LinkedField",
                 "name": "zones",
                 "plural": true,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               }
             ],
@@ -251,6 +252,16 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "totalAmountToDisplay",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PaymentMethodTypeDetails",
+            "kind": "LinkedField",
+            "name": "paymentMethod",
+            "plural": false,
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -301,8 +312,8 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
                   (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -322,16 +333,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "36ad8d80d47fdda48d761d18fb4422c1",
+    "cacheID": "038dace5556fc23d93443bc2832d0631",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    totalAmountToDisplay\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentExpiry\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n  }\n}\n"
+    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    totalAmountToDisplay\n    paymentMethod {\n      type\n    }\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentExpiry\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6a14c12a1325b2673fa9e671ca61479f";
+(node as any).hash = "56b2bfacbbcd487bc530dd936c2b582f";
 
 export default node;

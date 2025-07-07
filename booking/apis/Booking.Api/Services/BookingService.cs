@@ -103,6 +103,37 @@ public class BookingService(
             {
                 throw new BookingPaymentMethodNotAccepted();
             }
+
+            var currencies = productVersions.Select(item => item.Currency).Distinct().ToList();
+            if (currencies.Count > 1)
+            {
+                throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
+            }
+
+            if (booking.PaymentMethod == PaymentMethod.BankTransfer)
+            {
+                booking.Currency = currencies.First();
+                booking.TotalAmount = booking.LineItems.Aggregate(0.00m, (acc, lineItem) =>
+                {
+                    var productVersion = productVersions.Single(item => item.Id == lineItem.ProductVersionId);
+                    if (!productVersion.Price.HasValue)
+                    {
+                        throw new ArgumentNullException(nameof(productVersion.Price));
+                    }
+
+                    ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.PriceUnit);
+                    var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
+                    var price = productVersion.PriceUnit.ToPriceUnit() switch
+                    {
+                        PriceUnit.PerMinute => productVersion.Price.Value * lineItem.Quantity * totalMinutes,
+                        PriceUnit.PerHour => productVersion.Price.Value / 60 * lineItem.Quantity * totalMinutes,
+                        PriceUnit.PerUse => productVersion.Price.Value * lineItem.Quantity,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    return acc + price;
+                });
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -684,6 +715,8 @@ public class BookingService(
         booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
         booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
         booking.InvoiceUrl = existingBooking.InvoiceUrl;
+        booking.TotalAmount = existingBooking.TotalAmount;
+        booking.Currency = existingBooking.Currency;
 
         var bookingEntity = mapper.MergeTo(
             booking,

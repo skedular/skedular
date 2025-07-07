@@ -78,6 +78,9 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             }
           }
           totalAmountToDisplay
+          paymentMethod {
+            type
+          }
           bookingCheckoutSession {
             checkoutUrl
           }
@@ -111,7 +114,19 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
     const expirtTime = dayjs(paymentExpiry).utc();
     const currentTime = dayjs().utc();
 
-    return expirtTime.isBefore(currentTime) ? null : new Date(expirtTime.diff(currentTime, 'second') * 1000).toISOString().slice(11, 19);
+    if (expirtTime.isBefore(currentTime)) {
+      return null;
+    }
+
+    const totalSeconds = expirtTime.diff(currentTime, 'second');
+    if (totalSeconds > 24 * 60 * 60) {
+      // More than 24 hours
+      const totalDays = expirtTime.diff(currentTime, 'day');
+
+      return `${totalDays} day(s) and ${new Date(totalSeconds * 1000).toISOString().slice(11, 19)}`;
+    } else {
+      return new Date(totalSeconds * 1000).toISOString().slice(11, 19);
+    }
   };
 
   const { integratedPlatrform } = useIntegratedPlatrform();
@@ -278,22 +293,19 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             </FormFieldLabel>
 
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              {booking.bookingCheckoutSession && (
-                <StackRow>
-                  <SmallIconTypography label={`Time left to pay: ${timeLeftToPayInSeconds ? timeLeftToPayInSeconds : 'Expired'}`} color="error.main" />
-                  {timeLeftToPayInSeconds && (
-                    <>
-                      <Button LinkComponent={Link} variant="contained" href={booking.bookingCheckoutSession?.checkoutUrl}>
-                        Pay
-                      </Button>
-                      <Button variant="contained" onClick={handleCancelBookingClick} sx={defaultButtonStyle}>
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </StackRow>
-              )}
-              {!booking.bookingCheckoutSession && (
+              <StackRow>
+                <SmallIconTypography label={`Time left to pay: ${timeLeftToPayInSeconds ? timeLeftToPayInSeconds : 'Expired'}`} color="error.main" />
+                {booking.bookingCheckoutSession?.checkoutUrl && (
+                  <Button LinkComponent={Link} variant="contained" href={booking.bookingCheckoutSession.checkoutUrl}>
+                    Pay
+                  </Button>
+                )}
+                <Button variant="contained" onClick={handleCancelBookingClick} sx={defaultButtonStyle}>
+                  Cancel
+                </Button>
+              </StackRow>
+
+              {booking.paymentMethod?.type === 'CARD' && !booking.bookingCheckoutSession && (
                 <StackRow>
                   <CircularProgress />
                 </StackRow>
