@@ -59,7 +59,11 @@ public class BookingOutboxPublisher(
 
     public void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork) =>
         temporalOutboxPayBookingViaCardWorkflowExecutor.Execute(
-            new PayBookingViaCardInput(booking.Id, booking.PaymentExpiry),
+            new PayBookingViaCardInput(
+                booking.Id,
+                booking.PaymentExpiry, 
+                booking.SendInvoice ?? false,
+                Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
             new WorkflowOptions
             {
                 Id = $"{Constants.PaidViaCardPrefix}-{booking.Id}",
@@ -89,7 +93,11 @@ public class BookingOutboxPublisher(
 
     public void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork) =>
         temporalOutboxPayBookingViaBankTransferWorkflowExecutor.Execute(
-            new PayBookingViaBankTransferInput(booking.Id, booking.PaymentExpiry),
+            new PayBookingViaBankTransferInput(
+                booking.Id,
+                booking.PaymentExpiry,
+                booking.SendInvoice ?? false,
+                Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
             new WorkflowOptions
             {
                 Id = $"{Constants.PaidViaBankTransferPrefix}-{booking.Id}",

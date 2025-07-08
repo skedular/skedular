@@ -65,10 +65,10 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
+            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
+            Currency = src.Currency.ToSafeString(),
             SendInvoice = src.SendInvoice ?? false,
             InvoiceUrl = src.InvoiceUrl.ToSafeString(),
-            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
-            Currency = src.Currency.ToSafeString()
         };
 
         if (src.PaymentMethod is not null)
@@ -113,6 +113,7 @@ public class Mapper : IMapper
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
         booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
+        booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
 
         return booking;
     }
@@ -216,12 +217,12 @@ public class Mapper : IMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
+            TotalAmount = src.TotalAmount,
+            Currency = src.Currency,
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
-            TotalAmount = src.TotalAmount,
-            Currency = src.Currency
+            InvoiceEmailList = src.InvoiceEmailList
         };
-
 
     private static IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
 

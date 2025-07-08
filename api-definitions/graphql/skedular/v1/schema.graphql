@@ -37,6 +37,7 @@ type BookingDetails {
   deletedByCustomer: Booking_CustomerDetails
   from: DateTime!
   id: ID!
+  invoiceEmailList: [String!]
   invoiceUrl: String
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
@@ -1338,6 +1339,7 @@ input AddBookingInput {
   customerIds: [String!]!
   from: DateTime!
   id: String
+  invoiceEmailList: [String!]
   lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]!

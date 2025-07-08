@@ -24,12 +24,13 @@ type BookingDetails {
   paidByOrganization: Booking_OrganizationDetails
   createdByCustomer: Booking_CustomerDetails
   paymentMethod: PaymentMethodTypeDetails
-  sendInvoice: Boolean
-  invoiceUrl: String
   totalAmount: String
   totalAmountToDisplay: String!
   currency: String
   currencyToDisplay: String!
+  sendInvoice: Boolean
+  invoiceUrl: String
+  invoiceEmailList: [String!]
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
@@ -229,6 +230,7 @@ input AddBookingInput {
   lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod
   sendInvoice: Boolean
+  invoiceEmailList: [String!]
 }
 
 input AvailableResourcesWhereInput {

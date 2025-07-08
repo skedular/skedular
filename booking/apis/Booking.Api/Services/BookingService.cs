@@ -6,6 +6,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
@@ -99,7 +100,7 @@ public class BookingService(
                 throw new PaymentMethodRequired();
             }
 
-            if (productVersions.Any(item => !(item.AcceptedBookingPaymentMethods ?? []).Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+            if (productVersions.Any(item => !(item.AcceptedBookingPaymentMethods.ToSafeCollection()).Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
             {
                 throw new BookingPaymentMethodNotAccepted();
             }

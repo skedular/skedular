@@ -50,10 +50,11 @@ message Booking {
   BookingCheckoutSession bookingCheckoutSession = 21;
   bool bookedOnMarketplace = 22;
   PaymentMethod PaymentMethod = 23;
-  bool SendInvoice = 24;
-  string InvoiceUrl = 25;
-  string totalAmount = 26;
-  string currency = 27;
+  string totalAmount = 24;
+  string currency = 25;
+  bool SendInvoice = 26;
+  string InvoiceUrl = 27;
+  repeated string InvoiceEmailList = 28;
 }
 
 enum BookingType

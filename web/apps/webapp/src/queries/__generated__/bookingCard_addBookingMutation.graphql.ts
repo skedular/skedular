@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<842034ff5e9178cae03e72c0d5c86b07>>
+ * @generated SignedSource<<8609fafb0aa955ce1273bbec9dfafaba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AddBookingInput = {
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
+  invoiceEmailList?: ReadonlyArray<string> | null | undefined;
   lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds: ReadonlyArray<string>;

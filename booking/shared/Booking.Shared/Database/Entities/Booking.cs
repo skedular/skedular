@@ -20,10 +20,11 @@ public class Booking : EntityBaseWithDeleted
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
     public bool BookedOnMarketplace { get; set; }
     public string? PaymentMethod { get; set; }
-    public bool? SendInvoice { get; set; }
-    public string? InvoiceUrl { get; set; }
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
+    public bool? SendInvoice { get; set; }
+    public string? InvoiceUrl { get; set; }
+    public ICollection<string>? InvoiceEmailList { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
@@ -56,14 +57,15 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
         builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
-        builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
+        builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.Schedules).HasColumnType("jsonb");
+        builder.Property(item => item.LineItems).HasColumnType("jsonb");
+        builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.Bookings);
-        builder.Property(item => item.Schedules).HasColumnType("jsonb");
-        builder.Property(item => item.LineItems).HasColumnType("jsonb");
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedLocations).WithMany(item => item.InvolvedBookings);
@@ -82,8 +84,8 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.IsPaymentRequired);
         builder.HasIndex(item => item.PaymentMethod);
-        builder.HasIndex(item => item.SendInvoice);
         builder.HasIndex(item => item.TotalAmount);
         builder.HasIndex(item => item.Currency);
+        builder.HasIndex(item => item.SendInvoice);
     }
 }

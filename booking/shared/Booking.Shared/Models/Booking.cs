@@ -19,10 +19,11 @@ public class Booking : ModelBaseWithDeleted
     public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
     public bool BookedOnMarketplace { get; set; }
     public PaymentMethod? PaymentMethod { get; set; }
-    public bool? SendInvoice { get; set; }
-    public string? InvoiceUrl { get; set; }
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
+    public bool? SendInvoice { get; set; }
+    public string? InvoiceUrl { get; set; }
+    public ICollection<string>? InvoiceEmailList { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {

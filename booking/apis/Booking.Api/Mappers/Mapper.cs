@@ -109,10 +109,11 @@ public class Mapper : IMapper
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             PaymentExpiry = paymentExpiry,
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
+            TotalAmount = src.TotalAmount,
+            Currency = src.Currency,
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
-            TotalAmount = src.TotalAmount,
-            Currency = src.Currency
+            InvoiceEmailList = src.InvoiceEmailList,
         };
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -179,6 +180,7 @@ public class Mapper : IMapper
                     : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
+            InvoiceEmailList = src.InvoiceEmailList,
             TotalAmount = src.TotalAmount?.ToRoundedPrice(),
             TotalAmountToDisplay =
                 src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
@@ -207,7 +209,8 @@ public class Mapper : IMapper
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
             PaymentMethod = src.PaymentMethod,
-            SendInvoice = src.SendInvoice
+            SendInvoice = src.SendInvoice,
+            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
     }
 
@@ -300,10 +303,11 @@ public class Mapper : IMapper
         dest.ProductVersions = productVersions;
         dest.StripeCheckoutSession = stripeCheckoutSession;
         dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
-        dest.SendInvoice = src.SendInvoice;
-        dest.InvoiceUrl = src.InvoiceUrl;
         dest.TotalAmount = src.TotalAmount;
         dest.Currency = src.Currency;
+        dest.SendInvoice = src.SendInvoice;
+        dest.InvoiceUrl = src.InvoiceUrl;
+        dest.InvoiceEmailList = src.InvoiceEmailList;
         return dest;
     }
 
@@ -354,10 +358,10 @@ public class Mapper : IMapper
                 PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            SendInvoice = src.SendInvoice ?? false,
-            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
-            Currency = src.Currency.ToSafeString()
+            Currency = src.Currency.ToSafeString(),
+            SendInvoice = src.SendInvoice ?? false,
+            InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
@@ -367,6 +371,7 @@ public class Mapper : IMapper
         booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
         booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
+        booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
 
         return booking;
     }
