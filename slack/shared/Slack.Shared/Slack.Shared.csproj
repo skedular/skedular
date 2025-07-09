@@ -22,7 +22,7 @@
     <ItemGroup>
         <PackageReference Include="SlackNet" Version="0.16.1"/>
         <PackageReference Include="SlackNet.AspNetCore" Version="0.16.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
