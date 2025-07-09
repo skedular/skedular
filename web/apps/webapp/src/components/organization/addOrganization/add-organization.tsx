@@ -59,8 +59,6 @@ type OrganizationDetails = {
   type: string;
   memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
-  contactEmail: string;
-  contactPhone: string | null;
   agreedToTermsOfUse: boolean;
 };
 
@@ -71,10 +69,6 @@ const organizationSchema = object({
   type: string().required('Type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
-  contactEmail: string()
-    .email(({ value }) => `${value} is not a valid email`)
-    .required('Contact email is required'),
-  contactPhone: string().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -96,8 +90,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             type
             name
           }
-          contactEmail
-          contactPhone
         }
       }
     }
@@ -116,7 +108,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -133,8 +125,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: industrySubCategoryIds ?? [],
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
-          contactEmail,
-          contactPhone,
         },
       },
       onCompleted: (_, errors) => {
@@ -198,8 +188,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               type: type as OrganizationMemberVisibilityPolicy,
               name: '',
             },
-            contactEmail,
-            contactPhone,
           },
         },
       },
@@ -218,8 +206,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               website: null,
               type: '',
               memberVisibilityPolicy: '',
-              contactEmail: '',
-              contactPhone: '',
             }}
             validate={validateOrganizationDetails}
             render={({ handleSubmit }) => (
@@ -254,22 +240,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                   <FormFieldLabel label="Industry">
                     <OrganizationMultipleChoicesIndustries rootDataRelay={rootData} name="industrySubCategoryIds" required={requiredFields.industrySubCategoryIds} />
                   </FormFieldLabel>
-
-                  <SectionIconTypography label="Contact Details" />
-                  <BodyIconTypography label="Edit your organization contact details" />
-                  <Divider />
-
-                  <FormFieldLabel label="Email">
-                    <TextField name="contactEmail" required={requiredFields.contactEmail} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Phone Number">
-                    <TextField name="contactPhone" required={requiredFields.contactPhone} />
-                  </FormFieldLabel>
-
-                  <SectionIconTypography label="Address" />
-                  <BodyIconTypography label="Edit your organization address" />
-                  <Divider />
 
                   <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
                 </StackColumn>
