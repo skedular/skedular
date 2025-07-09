@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
 using Api.Shared.Services.Models;
-using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -18,7 +17,6 @@ namespace Booking.Processors.Subscribers;
 public class BookingInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     IResourceBookingSlotHelperService resourceBookingSlotHelperService,
-    IMapper mapper,
     ITemporalClient temporalClient)
     : IEventSubscriber<Key, Event>
 {
