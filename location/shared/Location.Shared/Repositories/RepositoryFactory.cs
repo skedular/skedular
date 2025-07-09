@@ -9,7 +9,6 @@ public interface IRepositoryFactory
 {
     LocationDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
-    IAddressRepository AddressRepository { get; }
     ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
@@ -32,7 +31,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        AddressRepository = new AddressRepository(_dbContext, timeProvider);
         LocationPhysicalAddressRepository = new LocationPhysicalAddressRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
@@ -49,7 +47,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         ResourcePositionRepository = new ResourcePositionRepository(_dbContext, timeProvider);
     }
 
-    public IAddressRepository AddressRepository { get; }
     public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }

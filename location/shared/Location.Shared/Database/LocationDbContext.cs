@@ -10,7 +10,6 @@ namespace Location.Shared.Database;
 public class LocationDbContext(DbContextOptions<LocationDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<LocationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
-    public DbSet<Address> Address { get; set; }
     public DbSet<LocationPhysicalAddress> LocationPhysicalAddress { get; set; }
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }

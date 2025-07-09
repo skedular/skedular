@@ -20,10 +20,6 @@ public class Location : EntityBaseWithDeleted
     public string? ContactPhone { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
 
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? AddressId { get; set; }
-    public virtual Address? Address { get; set; }
-
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<FloorPlan> FloorPlans { get; set; } = [];
@@ -49,7 +45,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
 
-        builder.HasOne(item => item.Address).WithOne(item => item.Location).HasForeignKey<Location>(item => item.AddressId);
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
 

@@ -14,7 +14,6 @@ using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Workflows;
-using Address = Organization.Shared.Database.Entities.Address;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;

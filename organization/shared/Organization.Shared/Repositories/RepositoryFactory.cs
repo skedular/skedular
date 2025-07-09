@@ -9,7 +9,6 @@ public interface IRepositoryFactory
 {
     OrganizationDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
-    IAddressRepository AddressRepository { get; }
     IOrganizationPhysicalAddressRepository OrganizationPhysicalAddressRepository { get; }
     IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
@@ -47,7 +46,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        AddressRepository = new AddressRepository(_dbContext, timeProvider);
         OrganizationPhysicalAddressRepository = new OrganizationPhysicalAddressRepository(_dbContext, timeProvider);
         AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(_dbContext, timeProvider);
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
@@ -80,7 +78,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         OrganizationTaxDetailsRepository = new OrganizationTaxDetailsRepository(_dbContext, timeProvider);
     }
 
-    public IAddressRepository AddressRepository { get; }
     public IOrganizationPhysicalAddressRepository OrganizationPhysicalAddressRepository { get; }
     public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     public IAzureTenantRepository AzureTenantRepository { get; }

@@ -17,7 +17,6 @@ using Organization.Api.GraphQL.TaxDetails;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
-using Address = Organization.Shared.Database.Entities.Address;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
@@ -934,16 +933,16 @@ public class Mapper : IMapper
             Company = new AccountCompanyOptions
             {
                 Name = src.Name,
-                Address = src.Address is null
+                Address = src.PhysicalAddress is null
                     ? null
                     : new AddressOptions
                     {
-                        Line1 = src.Address?.AddressLine1.ToSafeString(),
-                        Line2 = src.Address?.AddressLine2.ToSafeString(),
-                        City = src.Address?.City.ToSafeString(),
-                        State = src.Address?.Province.ToSafeString(),
-                        PostalCode = src.Address?.Zipcode.ToSafeString(),
-                        Country = src.Address?.Country.ToSafeString()
+                        Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
+                        Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
+                        City = src.PhysicalAddress?.City.ToSafeString(),
+                        State = src.PhysicalAddress?.Province.ToSafeString(),
+                        PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
+                        Country = src.PhysicalAddress?.Country.ToSafeString()
                     },
                 Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
             },
