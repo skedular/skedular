@@ -110,7 +110,7 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
-        var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress!, locationEntity);
+        var physicalAddress = location.Address is null ? null : mapper.MapTo(location.Address!, locationEntity);
         if (physicalAddress is not null)
         {
             physicalAddress.Id = randomHelper.Generate();
@@ -273,13 +273,13 @@ public class LocationService(
         Address physicalAddress;
         if (existingLocation.PhysicalAddress is null)
         {
-            physicalAddress = mapper.MapTo(location.PhysicalAddress!, existingLocation);
+            physicalAddress = mapper.MapTo(location.Address!, existingLocation);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
         else
         {
-            physicalAddress = mapper.MergeToEntity(location.PhysicalAddress!, existingLocation.PhysicalAddress, existingLocation);
+            physicalAddress = mapper.MergeToEntity(location.Address!, existingLocation.PhysicalAddress, existingLocation);
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 

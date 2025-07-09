@@ -29,7 +29,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.Address)
         };
 
         location.Resources.AddRange(src.Resources.Select(item =>

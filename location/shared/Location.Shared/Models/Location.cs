@@ -15,7 +15,7 @@ public class Location : ModelBaseWithDeleted
     public string? ContactPhone { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
 
-    public Address? PhysicalAddress { get; set; }
+    public Address? Address { get; set; }
 
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];

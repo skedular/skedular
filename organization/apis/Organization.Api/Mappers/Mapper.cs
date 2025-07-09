@@ -222,7 +222,7 @@ public class Mapper : IMapper
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.Address = MapTo(src.Address, organization);
         organization.BillingDetails = MapTo(src.BillingDetails, organization);
         organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -297,7 +297,7 @@ public class Mapper : IMapper
         dest.ContactPhone = src.ContactPhone;
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.IndustrySubCategories = industrySubCategories;
-        dest.PhysicalAddress = physicalAddress;
+        dest.Address = physicalAddress;
         return dest;
     }
 
@@ -396,7 +396,7 @@ public class Mapper : IMapper
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
-            PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
+            PhysicalAddress = MapToGraphQl(src.Address),
             BillingDetails = MapToGraphQl(src.BillingDetails),
             AvailableOfferings = availableOfferings,
             ActiveOffering = MapTo(organizationOffering),
@@ -455,7 +455,7 @@ public class Mapper : IMapper
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
         };
 
-        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.Address = MapTo(src.PhysicalAddress, organization);
 
         return organization;
     }
@@ -475,7 +475,7 @@ public class Mapper : IMapper
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.Address = MapTo(src.PhysicalAddress, organization);
 
         return organization;
     }
@@ -956,16 +956,16 @@ public class Mapper : IMapper
             Company = new AccountCompanyOptions
             {
                 Name = src.Name,
-                Address = src.PhysicalAddress is null
+                Address = src.Address is null
                     ? null
                     : new AddressOptions
                     {
-                        Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
-                        Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
-                        City = src.PhysicalAddress?.City.ToSafeString(),
-                        State = src.PhysicalAddress?.Province.ToSafeString(),
-                        PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
-                        Country = src.PhysicalAddress?.Country.ToSafeString()
+                        Line1 = src.Address?.AddressLine1.ToSafeString(),
+                        Line2 = src.Address?.AddressLine2.ToSafeString(),
+                        City = src.Address?.City.ToSafeString(),
+                        State = src.Address?.Province.ToSafeString(),
+                        PostalCode = src.Address?.Zipcode.ToSafeString(),
+                        Country = src.Address?.Country.ToSafeString()
                     },
                 Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
             },

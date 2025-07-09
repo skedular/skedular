@@ -116,7 +116,7 @@ public class OrganizationService(
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
 
-        var physicalAddress = organization.PhysicalAddress is null ? null : mapper.MapTo(organization.PhysicalAddress, organizationEntity);
+        var physicalAddress = organization.Address is null ? null : mapper.MapTo(organization.Address, organizationEntity);
         if (physicalAddress is not null)
         {
             physicalAddress.Id = randomHelper.Generate();
@@ -367,15 +367,15 @@ public class OrganizationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         Address physicalAddress;
-        if (existingOrganization.PhysicalAddress is null)
+        if (existingOrganization.Address is null)
         {
-            physicalAddress = mapper.MapTo(organization.PhysicalAddress!, existingOrganization);
+            physicalAddress = mapper.MapTo(organization.Address!, existingOrganization);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
         else
         {
-            physicalAddress = mapper.MergeToEntity(organization.PhysicalAddress!, existingOrganization.PhysicalAddress, existingOrganization);
+            physicalAddress = mapper.MergeToEntity(organization.Address!, existingOrganization.Address, existingOrganization);
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 

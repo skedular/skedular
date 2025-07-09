@@ -143,7 +143,7 @@ public class Mapper : IMapper
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
-        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+        location.Address = MapTo(src.PhysicalAddress, location);
         location.FloorPlans = src.FloorPlans.Select(MapTo).ToList();
 
         return location;
@@ -236,7 +236,7 @@ public class Mapper : IMapper
                 ResourceTypes = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(MapTo),
-                PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
+                PhysicalAddress = MapToGraphQl(src.Address),
                 LocationTags = MapTo(src.Tags)
             };
 
@@ -399,7 +399,7 @@ public class Mapper : IMapper
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+        location.Address = MapTo(src.PhysicalAddress, location);
 
         return location;
     }
@@ -418,7 +418,7 @@ public class Mapper : IMapper
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+        location.Address = MapTo(src.PhysicalAddress, location);
 
         return location;
     }

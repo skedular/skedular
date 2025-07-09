@@ -23,8 +23,8 @@ public class Organization : EntityBaseWithDeleted
     public string? ContactPhone { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? PhysicalAddressId { get; set; }
-    public virtual Address? PhysicalAddress { get; set; }
+    public string? AddressId { get; set; }
+    public virtual Address? Address { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -67,7 +67,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
-        builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
+        builder.HasOne(item => item.Address).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.AddressId);
         builder.HasMany(item => item.OrganizationStripePaymentMethods).WithOne(item => item.Organization);
 
         builder.HasIndex(item => item.Name);
