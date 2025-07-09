@@ -19,7 +19,7 @@ public class RefreshAzureTenantMembersJob(IServiceProvider serviceProvider, Time
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var msTeamsInternalPublisher = scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
+                var organizationInternalPublisher = scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var tenantIds = await repositoryFactory.AzureTenantRepository.Query(
                     new Specification<AzureTenant>
@@ -28,7 +28,7 @@ public class RefreshAzureTenantMembersJob(IServiceProvider serviceProvider, Time
                     }).Select(item => item.Id).ToListAsync(cancellationToken);
                 if (tenantIds.Count != 0)
                 {
-                    await msTeamsInternalPublisher.PublishRefreshAzureTenantMembersAsync(tenantIds, cancellationToken);
+                    await organizationInternalPublisher.PublishRefreshAzureTenantMembersAsync(tenantIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);
