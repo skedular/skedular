@@ -118,7 +118,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
             {!collapsed && (
               <BodyIconTypography
                 label="Physical Address"
-                startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                startElement={!hideIcons && <AddressIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === physcialAddressLink && paletteMode === 'dark'}
                 noWrap

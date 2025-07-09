@@ -10,9 +10,9 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationPhysicalAddressRepository : IRepository<OrganizationPhysicalAddress>
 {
     Task<OrganizationPhysicalAddress?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    OrganizationPhysicalAddress Add(OrganizationPhysicalAddress stripeConnectAccount);
-    OrganizationPhysicalAddress Update(OrganizationPhysicalAddress stripeConnectAccount);
-    OrganizationPhysicalAddress Remove(OrganizationPhysicalAddress stripeConnectAccount);
+    OrganizationPhysicalAddress Add(OrganizationPhysicalAddress address);
+    OrganizationPhysicalAddress Update(OrganizationPhysicalAddress address);
+    OrganizationPhysicalAddress Remove(OrganizationPhysicalAddress address);
 }
 
 internal static class OrganizationPhysicalAddressExtensions
@@ -31,25 +31,25 @@ public class OrganizationPhysicalAddressRepository(OrganizationDbContext dbConte
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public OrganizationPhysicalAddress Add(OrganizationPhysicalAddress stripeConnectAccount)
+    public OrganizationPhysicalAddress Add(OrganizationPhysicalAddress address)
     {
         var now = TimeProvider.GetUtcNow();
-        stripeConnectAccount.CreatedAt = now;
-        return DbContext.OrganizationPhysicalAddress.Add(stripeConnectAccount).Entity;
+        address.CreatedAt = now;
+        return DbContext.OrganizationPhysicalAddress.Add(address).Entity;
     }
 
-    public OrganizationPhysicalAddress Update(OrganizationPhysicalAddress stripeConnectAccount)
+    public OrganizationPhysicalAddress Update(OrganizationPhysicalAddress address)
     {
         var now = TimeProvider.GetUtcNow();
-        stripeConnectAccount.ModifiedAt = now;
-        return DbContext.OrganizationPhysicalAddress.Update(stripeConnectAccount).Entity;
+        address.ModifiedAt = now;
+        return DbContext.OrganizationPhysicalAddress.Update(address).Entity;
     }
 
-    public OrganizationPhysicalAddress Remove(OrganizationPhysicalAddress stripeConnectAccount)
+    public OrganizationPhysicalAddress Remove(OrganizationPhysicalAddress address)
     {
         var now = TimeProvider.GetUtcNow();
-        stripeConnectAccount.DeletedAt = now;
-        return DbContext.OrganizationPhysicalAddress.Update(stripeConnectAccount).Entity;
+        address.DeletedAt = now;
+        return DbContext.OrganizationPhysicalAddress.Update(address).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationPhysicalAddress> organizationBankAccounts)

@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
 
 namespace Location.Api.GraphQL.Location;
@@ -21,7 +22,7 @@ public class LocationDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("resources")] public IEnumerable<ResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; } = new();
+    [GraphQLName("physicalAddress")] public LocationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];

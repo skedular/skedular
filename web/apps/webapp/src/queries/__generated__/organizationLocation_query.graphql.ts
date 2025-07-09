@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d31fc9c1fae91aa9f5e7d7160e328f4>>
+ * @generated SignedSource<<15ccf9f76c65a533a534b59fb6343c27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,10 +74,11 @@ export type organizationLocation_query$data = {
       readonly addressLine2: string | null | undefined;
       readonly city: string;
       readonly country: string;
+      readonly id: string;
       readonly province: string | null | undefined;
       readonly suburb: string;
       readonly zipcode: string;
-    };
+    } | null | undefined;
     readonly primaryFeatureImage: {
       readonly original: {
         readonly height: number | null | undefined;
@@ -339,11 +340,12 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationAddressDetails",
+          "concreteType": "LocationPhysicalAddressDetails",
           "kind": "LinkedField",
           "name": "physicalAddress",
           "plural": false,
           "selections": [
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -544,6 +546,6 @@ return {
 };
 })();
 
-(node as any).hash = "1d365c4bb1fa87c1df2ee5fa7125627f";
+(node as any).hash = "cbc2926fc44ee4c809750719d1d356c4";
 
 export default node;

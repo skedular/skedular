@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e1fb66f0cd6c901d197e3cddf0e3a486>>
+ * @generated SignedSource<<9a69692f143d2384d5882754710d80a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,7 +35,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
         };
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
-        };
+        } | null | undefined;
         readonly resources: ReadonlyArray<{
           readonly id: string;
         }>;
@@ -257,7 +257,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "LocationAddressDetails",
+                  "concreteType": "LocationPhysicalAddressDetails",
                   "kind": "LinkedField",
                   "name": "physicalAddress",
                   "plural": false,

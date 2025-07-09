@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36ff6d9cd1c2caceeaca0eba8b472d96>>
+ * @generated SignedSource<<06e7bb938e8ab5666ba5bd8bdbefe292>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,18 +17,8 @@ export type UpdateLocationInput = {
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
-  physicalAddress: LocationAddressDetailsInput;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
-};
-export type LocationAddressDetailsInput = {
-  addressLine1: string;
-  addressLine2?: string | null | undefined;
-  city: string;
-  country: string;
-  province?: string | null | undefined;
-  suburb: string;
-  zipcode: string;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -100,15 +90,6 @@ export type organizationLocation_updateLocationMutation$data = {
             readonly until: string | null | undefined;
           };
         };
-      };
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
       };
       readonly primaryFeatureImage: {
         readonly original: {
@@ -184,15 +165,6 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
             readonly until: string | null | undefined;
           };
         };
-      };
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
       };
       readonly primaryFeatureImage: {
         readonly original: {
@@ -377,66 +349,6 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationAddressDetails",
-            "kind": "LinkedField",
-            "name": "physicalAddress",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine1",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine2",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "suburb",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "city",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "province",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "zipcode",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "country",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Location_OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "locationTags",
@@ -577,16 +489,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "87d4384c4c903853822facca3bb3defe",
+    "cacheID": "ecffb2d6c5043585770fae1f66aecac2",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "44148967fd55f80e9697db51b467833e";
+(node as any).hash = "a942dd74139ab337adb27085f7bf3623";
 
 export default node;

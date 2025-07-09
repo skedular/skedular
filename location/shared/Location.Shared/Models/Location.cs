@@ -15,8 +15,6 @@ public class Location : ModelBaseWithDeleted
     public string? ContactPhone { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
 
-    public Address? Address { get; set; }
-
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
@@ -27,6 +25,7 @@ public class Location : ModelBaseWithDeleted
     public ICollection<OrganizationTag> Tags { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
+    public LocationPhysicalAddress? PhysicalAddress { get; set; }
 
     public bool HasFutureBooking { get; set; }
     public Permissions Permissions { get; set; } = new();

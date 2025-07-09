@@ -1,6 +1,6 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
+import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -55,13 +55,6 @@ type LocationDetails = {
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
-  addressLine1: string;
-  addressLine2: string | null;
-  suburb: string;
-  city: string;
-  province: string | null;
-  zipcode: string;
-  country: string;
 };
 
 const locationSchema = object({
@@ -73,13 +66,6 @@ const locationSchema = object({
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
   contactPhone: string().nullable(),
-  addressLine1: string().required('Address line 1 is required'),
-  addressLine2: string().nullable(),
-  suburb: string().required('Suburb is required'),
-  city: string().required('City is required'),
-  province: string().nullable(),
-  zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
 });
 
 const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
@@ -106,15 +92,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
               height
               width
             }
-          }
-          physicalAddress {
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
           }
           locationTags {
             uniqueId
@@ -158,21 +135,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     });
   };
 
-  const handleLocationAddClick = ({
-    name,
-    about,
-    timezone,
-    contactEmail,
-    contactPhone,
-    addressLine1,
-    addressLine2,
-    suburb,
-    city,
-    province,
-    zipcode,
-    country,
-    locationTagIds,
-  }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
@@ -198,15 +161,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           contactEmail,
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
-          physicalAddress: {
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-          },
           locationTagIds,
         },
       },
@@ -266,15 +220,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             contactEmail,
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
-            physicalAddress: {
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-            },
             locationTags: [],
           },
         },
@@ -299,13 +244,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
               locationTagIds: [],
               contactEmail: '',
               contactPhone: '',
-              addressLine1: '',
-              addressLine2: '',
-              suburb: '',
-              city: '',
-              province: '',
-              zipcode: '',
-              country: '',
             }}
             validate={validateLocationDetails}
             render={({ handleSubmit }) => (
@@ -359,38 +297,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
 
                   <FormFieldLabel label="Phone Number">
                     <TextField name="contactPhone" required={requiredFields.contactPhone} />
-                  </FormFieldLabel>
-
-                  <SectionIconTypography label="Address" />
-                  <BodyIconTypography label="Edit your location address" />
-                  <Divider />
-
-                  <FormFieldLabel label="Address Line 1">
-                    <TextField name="addressLine1" required={requiredFields.addressLine1} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address Line 2">
-                    <TextField name="addressLine2" required={requiredFields.addressLine2} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Suburb">
-                    <TextField name="suburb" required={requiredFields.suburb} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="City">
-                    <TextField name="city" required={requiredFields.city} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Province">
-                    <TextField name="province" required={requiredFields.province} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Zipcode">
-                    <TextField name="zipcode" required={requiredFields.zipcode} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Country">
-                    <SingleChoiceCountry name="country" required={requiredFields.country} />
                   </FormFieldLabel>
                 </StackColumn>
 

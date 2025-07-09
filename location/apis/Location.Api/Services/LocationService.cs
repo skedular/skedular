@@ -11,7 +11,6 @@ using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Address = Location.Shared.Database.Entities.Address;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
@@ -109,13 +108,6 @@ public class LocationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
-
-        var physicalAddress = location.Address is null ? null : mapper.MapTo(location.Address!, locationEntity);
-        if (physicalAddress is not null)
-        {
-            physicalAddress.Id = randomHelper.Generate();
-            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
-        }
 
         locationEntity.OpeningHours = OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
@@ -270,22 +262,9 @@ public class LocationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        Address physicalAddress;
-        if (existingLocation.PhysicalAddress is null)
-        {
-            physicalAddress = mapper.MapTo(location.Address!, existingLocation);
-            physicalAddress.Id = randomHelper.Generate();
-            repositoryFactory.AddressRepository.Add(physicalAddress);
-        }
-        else
-        {
-            physicalAddress = mapper.MergeToEntity(location.Address!, existingLocation.PhysicalAddress, existingLocation);
-            repositoryFactory.AddressRepository.Update(physicalAddress);
-        }
-
         var originalOpeningHours = existingLocation.OpeningHours;
 
-        existingLocation = mapper.MergeTo(location, existingLocation, physicalAddress, organizationTags);
+        existingLocation = mapper.MergeTo(location, existingLocation, organizationTags);
 
         // Restoring original opening hours
         existingLocation.OpeningHours = originalOpeningHours;

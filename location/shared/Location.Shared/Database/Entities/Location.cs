@@ -22,7 +22,7 @@ public class Location : EntityBaseWithDeleted
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? AddressId { get; set; }
-    public virtual Address? PhysicalAddress { get; set; }
+    public virtual Address? Address { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
@@ -31,6 +31,7 @@ public class Location : EntityBaseWithDeleted
     public virtual ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public virtual LocationPhysicalAddress? PhysicalAddress { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -48,7 +49,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
 
-        builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Location).HasForeignKey<Location>(item => item.AddressId);
+        builder.HasOne(item => item.Address).WithOne(item => item.Location).HasForeignKey<Location>(item => item.AddressId);
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
 

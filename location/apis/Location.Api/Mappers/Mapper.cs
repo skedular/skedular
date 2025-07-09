@@ -5,8 +5,8 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Location.Api.GraphQL.FloorPlan;
 using Location.Api.GraphQL.Location;
+using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
-using Location.Shared.Database.Entities;
 using Customer = Location.Shared.Models.Customer;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Resource = Location.Shared.Database.Entities.Resource;
@@ -30,6 +30,7 @@ using ResourceEdge = Location.Api.GraphQL.Resource.ResourceEdge;
 using ResourcePosition = Location.Shared.Models.ResourcePosition;
 using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
+using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
 
 namespace Location.Api.Mappers;
 
@@ -46,7 +47,6 @@ public interface IMapper
     Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        Address physicalAddress,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Resource MapTo(Resource src);
@@ -83,8 +83,6 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
-    Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
-    Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
     IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
     Shared.Models.Resource MapTo(AddResourceInput src);
     Shared.Models.Resource MapTo(UpdateResourceInput src);
@@ -117,6 +115,18 @@ public interface IMapper
         Shared.Database.Entities.ResourcePosition dest,
         Resource resource,
         Shared.Database.Entities.FloorPlan floorPlan);
+
+    LocationPhysicalAddress MapTo(Shared.Models.LocationPhysicalAddress src, Shared.Database.Entities.Location location);
+
+    LocationPhysicalAddress MergeTo(
+        Shared.Models.LocationPhysicalAddress src,
+        LocationPhysicalAddress dest,
+        Shared.Database.Entities.Location location);
+
+    Shared.Models.LocationPhysicalAddress MapTo(LocationPhysicalAddress src);
+    Shared.Models.LocationPhysicalAddress MapTo(AddLocationPhysicalAddressInput src);
+    Shared.Models.LocationPhysicalAddress MapTo(UpdateLocationPhysicalAddressInput src);
+    LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src);
 }
 
 public class Mapper : IMapper
@@ -143,7 +153,7 @@ public class Mapper : IMapper
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
-        location.Address = MapTo(src.PhysicalAddress, location);
+        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
         location.FloorPlans = src.FloorPlans.Select(MapTo).ToList();
 
         return location;
@@ -194,7 +204,6 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        Address physicalAddress,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
@@ -205,7 +214,6 @@ public class Mapper : IMapper
         dest.ContactPhone = src.ContactPhone;
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.OpeningHours = src.OpeningHours;
-        dest.PhysicalAddress = physicalAddress;
         dest.OrganizationTags = organizationTags;
         return dest;
     }
@@ -236,7 +244,7 @@ public class Mapper : IMapper
                 ResourceTypes = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(MapTo),
-                PhysicalAddress = MapToGraphQl(src.Address),
+                PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
                 LocationTags = MapTo(src.Tags)
             };
 
@@ -349,23 +357,6 @@ public class Mapper : IMapper
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
-    public Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location) => MergeToEntity(src, new Address(), location);
-
-    public Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location)
-    {
-        dest.AddressLine1 = src.AddressLine1;
-        dest.AddressLine2 = src.AddressLine2;
-        dest.Suburb = src.Suburb;
-        dest.City = src.City;
-        dest.Province = src.Province;
-        dest.Zipcode = src.Zipcode;
-        dest.Country = src.Country;
-        dest.Latitude = src.Latitude;
-        dest.Longitude = src.Longitude;
-        dest.Location = location;
-        return dest;
-    }
-
     public IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
 
     public LocationAnalytics MapTo(
@@ -384,9 +375,8 @@ public class Mapper : IMapper
                 .Select(item => new RoomsOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
         };
 
-    public Shared.Models.Location MapTo(AddLocationInput src)
-    {
-        var location = new Shared.Models.Location
+    public Shared.Models.Location MapTo(AddLocationInput src) =>
+        new()
         {
             Id = src.Id.ToSafeString(),
             Name = src.Name,
@@ -399,14 +389,8 @@ public class Mapper : IMapper
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-        location.Address = MapTo(src.PhysicalAddress, location);
-
-        return location;
-    }
-
-    public Shared.Models.Location MapTo(UpdateLocationInput src)
-    {
-        var location = new Shared.Models.Location
+    public Shared.Models.Location MapTo(UpdateLocationInput src) =>
+        new()
         {
             Id = src.Id,
             Name = src.Name,
@@ -417,11 +401,6 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
-
-        location.Address = MapTo(src.PhysicalAddress, location);
-
-        return location;
-    }
 
     public Shared.Models.Resource MapTo(AddResourceInput src) =>
         new()
@@ -679,6 +658,94 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public LocationPhysicalAddress MapTo(Shared.Models.LocationPhysicalAddress src, Shared.Database.Entities.Location location) =>
+        MergeTo(src, new LocationPhysicalAddress(), location);
+
+    public LocationPhysicalAddress MergeTo(
+        Shared.Models.LocationPhysicalAddress src,
+        LocationPhysicalAddress dest,
+        Shared.Database.Entities.Location location)
+    {
+        dest.Id = src.Id;
+        dest.Latitude = src.Latitude;
+        dest.Longitude = src.Longitude;
+        dest.AddressLine1 = src.AddressLine1;
+        dest.AddressLine2 = src.AddressLine2;
+        dest.Suburb = src.Suburb;
+        dest.City = src.City;
+        dest.Province = src.Province;
+        dest.Zipcode = src.Zipcode;
+        dest.Country = src.Country;
+        dest.Location = location;
+        return dest;
+    }
+
+    public Shared.Models.LocationPhysicalAddress MapTo(LocationPhysicalAddress src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Location = MapTo(src.Location)
+        };
+
+    public Shared.Models.LocationPhysicalAddress MapTo(AddLocationPhysicalAddressInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Location = new Shared.Models.Location { Id = src.LocationId }
+        };
+
+    public Shared.Models.LocationPhysicalAddress MapTo(UpdateLocationPhysicalAddressInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
+
+    public LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src) =>
+        new()
+        {
+            Id = src.Id,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Location = MapTo(src.Location)!
+        };
+
     private static OrganizationTagDetails MapTo(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
@@ -692,19 +759,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Type = src.Type.ToNullableOrganizationTagType(),
             Color = src.Color
-        };
-
-    private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Location location) =>
-        new()
-        {
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            Location = location
         };
 
     private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
@@ -844,49 +898,6 @@ public class Mapper : IMapper
         resource.Location = location;
         return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
-
-    private static AddressDetails MapToGraphQl(Shared.Models.Address? src) =>
-        src is null
-            ? new AddressDetails
-            {
-                FormattedAddress = string.Empty,
-                AddressLine1 = string.Empty,
-                AddressLine2 = null,
-                Suburb = string.Empty,
-                City = string.Empty,
-                Province = null,
-                Zipcode = string.Empty,
-                Country = string.Empty
-            }
-            : new AddressDetails
-            {
-                FormattedAddress = src.FormattedAddress,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country
-            };
-
-    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Location location) =>
-        src is null
-            ? null
-            : new Shared.Models.Address
-            {
-                Id = src.Id,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                Latitude = src.Latitude,
-                Longitude = src.Longitude,
-                Location = location
-            };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours MapToGrpcResponse(OpeningHours? src)
     {
@@ -1066,5 +1077,41 @@ public class Mapper : IMapper
                     IsAvailableHoursOverridden = src.Resource.IsAvailableHoursOverridden ?? false,
                     AvailableHours = src.Resource.AvailableHours
                 }
+            };
+
+    private static LocationPhysicalAddressDetails? MapToGraphQl(Shared.Models.LocationPhysicalAddress? src) =>
+        src is null
+            ? null
+            : new LocationPhysicalAddressDetails
+            {
+                Id = src.Id,
+                Latitude = src.Latitude,
+                Longitude = src.Longitude,
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    private static Shared.Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddress? src, Shared.Models.Location location) =>
+        src is null
+            ? null
+            : new Shared.Models.LocationPhysicalAddress
+            {
+                Id = src.Id,
+                Latitude = src.Latitude,
+                Longitude = src.Longitude,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                Location = location
             };
 }

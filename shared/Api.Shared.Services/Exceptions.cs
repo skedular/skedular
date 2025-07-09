@@ -89,3 +89,5 @@ public class BookingsProductsWithMultipleCurrenciesAreNotSupported() : Exception
 public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");
 
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
+
+public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");

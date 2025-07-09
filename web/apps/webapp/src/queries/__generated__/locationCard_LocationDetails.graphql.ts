@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ce3a9fd5edf737479186ec7643956e2>>
+ * @generated SignedSource<<f67080f7d08242dee39e39057da40a5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,7 @@ export type locationCard_LocationDetails$data = {
     readonly province: string | null | undefined;
     readonly suburb: string;
     readonly zipcode: string;
-  };
+  } | null | undefined;
   readonly primaryFeatureImage: {
     readonly thumbnail: {
       readonly height: number | null | undefined;
@@ -132,7 +132,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationAddressDetails",
+      "concreteType": "LocationPhysicalAddressDetails",
       "kind": "LinkedField",
       "name": "physicalAddress",
       "plural": false,

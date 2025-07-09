@@ -1,10 +1,14 @@
 using HotChocolate;
 
-namespace Location.Api.GraphQL.Location;
+namespace Location.Api.GraphQL.PhysicalAddress;
 
-[GraphQLName("LocationAddressDetailsInput")]
-public class AddressDetailsInput
+[GraphQLName("UpdateLocationPhysicalAddressInput")]
+public class UpdateLocationPhysicalAddressInput
 {
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("latitude")] public decimal? Latitude { get; set; }
+    [GraphQLName("longitude")] public decimal? Longitude { get; set; }
     [GraphQLName("addressLine1")] public string AddressLine1 { get; set; } = string.Empty;
     [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
     [GraphQLName("suburb")] public string Suburb { get; set; } = string.Empty;

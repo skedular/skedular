@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26da2a941a095d809fe6ed8c7a41f8ed>>
+ * @generated SignedSource<<fc1372b6d08dc25def166b237e712691>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,18 +18,8 @@ export type AddLocationInput = {
   locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId: string;
-  physicalAddress: LocationAddressDetailsInput;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
-};
-export type LocationAddressDetailsInput = {
-  addressLine1: string;
-  addressLine2?: string | null | undefined;
-  city: string;
-  country: string;
-  province?: string | null | undefined;
-  suburb: string;
-  zipcode: string;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -56,15 +46,6 @@ export type addLocation_addLocationMutation$data = {
         readonly uniqueId: string;
       }>;
       readonly name: string;
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
-      };
       readonly primaryFeatureImage: {
         readonly original: {
           readonly height: number | null | undefined;
@@ -94,15 +75,6 @@ export type addLocation_addLocationMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
       readonly name: string;
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
-      };
       readonly primaryFeatureImage: {
         readonly original: {
           readonly height: number | null | undefined;
@@ -256,66 +228,6 @@ v3 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationAddressDetails",
-            "kind": "LinkedField",
-            "name": "physicalAddress",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine1",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine2",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "suburb",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "city",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "province",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "zipcode",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "country",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Location_OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "locationTags",
@@ -364,16 +276,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "80771aacff7f68575853230adf951feb",
+    "cacheID": "8b81665b63568d3cbe239fd69aa625f6",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b8a324af09189ab095fdda4784e69eb9";
+(node as any).hash = "66d18db38aa062a0c17c52bb0ddd5750";
 
 export default node;

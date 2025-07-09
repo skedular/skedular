@@ -34,9 +34,10 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationLocation_activateResourcesMutation } from '@/queries/__generated__/organizationLocation_activateResourcesMutation.graphql';
 import type { organizationLocation_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredResourceMutation.graphql';
+import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
 import type { organizationLocation_deactivateResourcesMutation } from '@/queries/__generated__/organizationLocation_deactivateResourcesMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_deleteResourcesMutation } from '@/queries/__generated__/organizationLocation_deleteResourcesMutation.graphql';
@@ -48,6 +49,7 @@ import type { organizationLocation_resources_query$key } from '@/queries/__gener
 import type { organizationLocation_resources_refetchableFragment } from '@/queries/__generated__/organizationLocation_resources_refetchableFragment.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
+import type { organizationLocation_updateLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_updateLocationPhysicalAddressMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -62,6 +64,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, us
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
@@ -82,13 +85,6 @@ type LocationDetails = {
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
-  addressLine1: string;
-  addressLine2: string | null;
-  suburb: string;
-  city: string;
-  province: string | null;
-  zipcode: string;
-  country: string;
 };
 
 const locationSchema = object({
@@ -100,6 +96,19 @@ const locationSchema = object({
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
   contactPhone: string().nullable(),
+});
+
+type PhysicalAddress = {
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string;
+  city: string;
+  province: string | null;
+  zipcode: string;
+  country: string;
+};
+
+const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -186,6 +195,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             }
           }
           physicalAddress {
+            id
             addressLine1
             addressLine2
             suburb
@@ -347,15 +357,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               height
               width
             }
-          }
-          physicalAddress {
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
           }
           locationTags {
             uniqueId
@@ -604,6 +605,46 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     }
   `);
 
+  const [commitAddLocationPhysicalAddress] = useMutation<organizationLocation_addLocationPhysicalAddressMutation>(graphql`
+    mutation organizationLocation_addLocationPhysicalAddressMutation($input: AddLocationPhysicalAddressInput!) @raw_response_type {
+      addLocationPhysicalAddress(input: $input) {
+        location {
+          id
+          physicalAddress {
+            id
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitUpdateLocationPhysicalAddress] = useMutation<organizationLocation_updateLocationPhysicalAddressMutation>(graphql`
+    mutation organizationLocation_updateLocationPhysicalAddressMutation($input: UpdateLocationPhysicalAddressInput!) @raw_response_type {
+      updateLocationPhysicalAddress(input: $input) {
+        location {
+          id
+          physicalAddress {
+            id
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const router = useRouter();
@@ -656,6 +697,23 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const floorPlans = useMemo(() => rootDataFloorPlans.floorPlans.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataFloorPlans.floorPlans]);
   const floorPlansConnectionIds = useMemo(() => [rootDataFloorPlans.floorPlans.__id], [rootDataFloorPlans.floorPlans]);
 
+  const validatePhysicalAddress = makeValidate(physicalAddressSchema);
+  const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
+  const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>(rootData.location?.physicalAddress?.addressLine1 ?? '');
+  const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState(rootData.location?.physicalAddress?.addressLine2);
+  const debounceSetPhysicalAddressAddressLine2 = useDebounceCallback(setPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressSuburb, setPhysicalAddressSuburb] = useState<string>(rootData.location?.physicalAddress?.suburb ?? '');
+  const debounceSetPhysicalAddressSuburb = useDebounceCallback(setPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCity, setPhysicalAddressCity] = useState<string>(rootData.location?.physicalAddress?.city ?? '');
+  const debounceSetPhysicalAddressCity = useDebounceCallback(setPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressProvince, setPhysicalAddressProvince] = useState(rootData.location?.physicalAddress?.province);
+  const debounceSetPhysicalAddressProvince = useDebounceCallback(setPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(rootData.location?.physicalAddress?.zipcode ?? '');
+  const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootData.location?.physicalAddress?.country ?? '');
+  const debounceSetPhysicalAddressCountry = useDebounceCallback(setPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
+
   useEffect(() => {
     if (!section || section === 'setup') {
       return;
@@ -692,21 +750,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     [refetchResources],
   );
 
-  const handleLocationDetailUpdateClick = ({
-    name,
-    about,
-    timezone,
-    contactEmail,
-    contactPhone,
-    addressLine1,
-    addressLine2,
-    suburb,
-    city,
-    province,
-    zipcode,
-    country,
-    locationTagIds,
-  }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
       return;
@@ -735,15 +779,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           contactEmail,
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
-          physicalAddress: {
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-          },
           locationTagIds,
         },
       },
@@ -778,21 +813,137 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             contactEmail,
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
-            physicalAddress: {
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-            },
             locationTags: location.locationTags,
             openingHours: location.openingHours,
           },
         },
       },
     });
+  };
+
+  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: PhysicalAddress) => {
+    const location = rootData.location;
+    if (!location) {
+      return;
+    }
+
+    const physicalAddress = location.physicalAddress;
+
+    if (physicalAddress) {
+      const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}' physical address...`} />, infoNotificationOptions);
+
+      commitUpdateLocationPhysicalAddress({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: physicalAddress.id,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update location '${location?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Location '${location?.name}' physical address updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update location '${location?.name}' physical address. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateLocationPhysicalAddress: {
+            location: {
+              id: location.id,
+              physicalAddress: {
+                id: physicalAddress.id,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      const id = uuid();
+      const toastId = themedToast(<NotificationContent content={`Adding location '${location.name}' physical address...`} />, infoNotificationOptions);
+
+      commitAddLocationPhysicalAddress({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            locationId: location.id,
+            id,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to add location '${location?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Location '${location?.name}' physical address added.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add location '${location?.name}' physical address. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          addLocationPhysicalAddress: {
+            location: {
+              id: location.id,
+              physicalAddress: {
+                id,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    }
   };
 
   const handleCloseClick = () => {
@@ -1422,13 +1573,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 locationTagIds: location.locationTags.map((item) => item.uniqueId),
                 contactEmail: location.contactEmail,
                 contactPhone: location.contactPhone,
-                addressLine1: location.physicalAddress.addressLine1,
-                addressLine2: location.physicalAddress.addressLine2,
-                suburb: location.physicalAddress.suburb,
-                city: location.physicalAddress.city,
-                province: location.physicalAddress.province,
-                zipcode: location.physicalAddress.zipcode,
-                country: location.physicalAddress.country,
               }}
               validate={validateLocationDetails}
               render={({ handleSubmit }) => (
@@ -1498,38 +1642,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                     <FormFieldLabel label="Phone Number">
                       <TextField name="contactPhone" required={requiredFields.contactPhone} />
                     </FormFieldLabel>
-
-                    <SectionIconTypography label="Address" />
-                    <BodyIconTypography label="Edit your location address" />
-                    <Divider />
-
-                    <FormFieldLabel label="Address Line 1">
-                      <TextField name="addressLine1" required={requiredFields.addressLine1} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Address Line 2">
-                      <TextField name="addressLine2" required={requiredFields.addressLine2} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Suburb">
-                      <TextField name="suburb" required={requiredFields.suburb} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="City">
-                      <TextField name="city" required={requiredFields.city} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Province">
-                      <TextField name="province" required={requiredFields.province} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Zipcode">
-                      <TextField name="zipcode" required={requiredFields.zipcode} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredFields.country} />
-                    </FormFieldLabel>
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -1541,6 +1653,82 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                   </StackColumn>
                 </FormStackColumn>
               )}
+            />
+
+            <Form
+              onSubmit={handlePhysicalAddressUpdateClick}
+              initialValues={{
+                addressLine1: physicalAddressAddressLine1,
+                addressLine2: physicalAddressAddressLine2,
+                suburb: physicalAddressSuburb,
+                city: physicalAddressCity,
+                province: physicalAddressProvince,
+                zipcode: physicalAddressZipcode,
+                country: physicalAddressCountry,
+              }}
+              validate={validatePhysicalAddress}
+              render={({ handleSubmit, values }) => {
+                debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
+                debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
+                debounceSetPhysicalAddressSuburb(values!.suburb);
+                debounceSetPhysicalAddressCity(values!.city);
+                debounceSetPhysicalAddressProvince(values!.province);
+                debounceSetPhysicalAddressZipcode(values!.zipcode);
+                debounceSetPhysicalAddressCountry(values!.country);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['physical-address-setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Physical Address Setup" />
+                      <BodyIconTypography label="Edit your organization physical address" />
+                      <Divider />
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Address line 1">
+                        <TextField name="addressLine1" required={requiredPhysicalAddressFields.addressLine1} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Address line 2">
+                        <TextField name="addressLine2" required={requiredPhysicalAddressFields.addressLine2} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Suburb">
+                        <TextField name="suburb" required={requiredPhysicalAddressFields.suburb} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="City">
+                        <TextField name="city" required={requiredPhysicalAddressFields.city} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Province">
+                        <TextField name="province" required={requiredPhysicalAddressFields.province} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Zipcode">
+                        <TextField name="zipcode" required={requiredPhysicalAddressFields.zipcode} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Country">
+                        <SingleChoiceCountry name="country" required={requiredPhysicalAddressFields.country} />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
 
             <StackColumn

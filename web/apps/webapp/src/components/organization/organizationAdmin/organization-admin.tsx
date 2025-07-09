@@ -118,7 +118,7 @@ const organizationSchema = object({
   contactPhone: string().nullable(),
 });
 
-type OrganizationPhysicalAddress = {
+type PhysicalAddress = {
   addressLine1: string;
   addressLine2: string | null;
   suburb: string;
@@ -128,7 +128,7 @@ type OrganizationPhysicalAddress = {
   country: string;
 };
 
-const organizationPhysicalAddressSchema = object({
+const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -138,7 +138,7 @@ const organizationPhysicalAddressSchema = object({
   country: string().required('Country is required'),
 });
 
-type OrganizationBillingDetails = {
+type BillingDetails = {
   companyName: string | null;
   email: string;
   addressLine1: string;
@@ -150,7 +150,7 @@ type OrganizationBillingDetails = {
   country: string;
 };
 
-const organizationBillingSchema = object({
+const billingSchema = object({
   companyName: string().nullable(),
   email: string()
     .email(({ value }) => `${value} is not a valid email`)
@@ -164,24 +164,24 @@ const organizationBillingSchema = object({
   country: string().required('Country is required'),
 });
 
-type OrganizationSsoSettingsDetails = {
+type ssoSettingsDetails = {
   entityId: string;
   loginUrl: string;
   appFederationMetadataUrl: string;
 };
 
-const organziationSsoSettingsSchema = object({
+const ssoSettingsSchema = object({
   entityId: string().required('Entity ID is required'),
   loginUrl: string().url('Login Url must be a valid Url').required('Login Url is required'),
   appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
 });
 
-type OrganizationTaxDetails = {
+type TaxDetails = {
   gstNumber: string;
   gstPercentage: string;
 };
 
-const organziationTaxDetailsSchema = object({
+const taxDetailsSchema = object({
   gstNumber: string().required('Gst Number is required'),
   gstPercentage: string()
     .matches(/^\d+(\.\d{1,2})?$/, 'GST Percentage must be a valid decimal number.')
@@ -655,48 +655,46 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const [organizationContactPhone, setOrganizationContactPhone] = useState(rootDataOrganization.organization?.contactPhone);
   const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
 
-  const validateOrganizationPhysicalAddress = makeValidate(organizationPhysicalAddressSchema);
-  const requiredOrganizationPhysicalAddressFields = makeRequired(organizationPhysicalAddressSchema);
-  const [organizationPhysicalAddressAddressLine1, setOrganizationPhysicalAddressAddressLine1] = useState<string>(
-    rootDataOrganization.organization?.physicalAddress?.addressLine1 ?? '',
-  );
-  const debounceSetOrganizationPhysicalAddressAddressLine1 = useDebounceCallback(setOrganizationPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressAddressLine2, setOrganizationPhysicalAddressAddressLine2] = useState(rootDataOrganization.organization?.physicalAddress?.addressLine2);
-  const debounceSetOrganizationPhysicalAddressAddressLine2 = useDebounceCallback(setOrganizationPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressSuburb, setOrganizationPhysicalAddressSuburb] = useState<string>(rootDataOrganization.organization?.physicalAddress?.suburb ?? '');
-  const debounceSetOrganizationPhysicalAddressSuburb = useDebounceCallback(setOrganizationPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressCity, setOrganizationPhysicalAddressCity] = useState<string>(rootDataOrganization.organization?.physicalAddress?.city ?? '');
-  const debounceSetOrganizationPhysicalAddressCity = useDebounceCallback(setOrganizationPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressProvince, setOrganizationPhysicalAddressProvince] = useState(rootDataOrganization.organization?.physicalAddress?.province);
-  const debounceSetOrganizationPhysicalAddressProvince = useDebounceCallback(setOrganizationPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressZipcode, setOrganizationPhysicalAddressZipcode] = useState<string>(rootDataOrganization.organization?.physicalAddress?.zipcode ?? '');
-  const debounceSetOrganizationPhysicalAddressZipcode = useDebounceCallback(setOrganizationPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
-  const [organizationPhysicalAddressCountry, setOrganizationPhysicalAddressCountry] = useState<string>(rootDataOrganization.organization?.physicalAddress?.country ?? '');
-  const debounceSetOrganizationPhysicalAddressCountry = useDebounceCallback(setOrganizationPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
+  const validatePhysicalAddress = makeValidate(physicalAddressSchema);
+  const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
+  const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>(rootDataOrganization.organization?.physicalAddress?.addressLine1 ?? '');
+  const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState(rootDataOrganization.organization?.physicalAddress?.addressLine2);
+  const debounceSetPhysicalAddressAddressLine2 = useDebounceCallback(setPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressSuburb, setPhysicalAddressSuburb] = useState<string>(rootDataOrganization.organization?.physicalAddress?.suburb ?? '');
+  const debounceSetPhysicalAddressSuburb = useDebounceCallback(setPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCity, setPhysicalAddressCity] = useState<string>(rootDataOrganization.organization?.physicalAddress?.city ?? '');
+  const debounceSetPhysicalAddressCity = useDebounceCallback(setPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressProvince, setPhysicalAddressProvince] = useState(rootDataOrganization.organization?.physicalAddress?.province);
+  const debounceSetPhysicalAddressProvince = useDebounceCallback(setPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(rootDataOrganization.organization?.physicalAddress?.zipcode ?? '');
+  const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootDataOrganization.organization?.physicalAddress?.country ?? '');
+  const debounceSetPhysicalAddressCountry = useDebounceCallback(setPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
 
-  const validateOrganizationBilling = makeValidate(organizationBillingSchema);
-  const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
-  const [organizationBillingCompanyName, setOrganizationBillingCompanyName] = useState(rootDataOrganization.organization?.billingDetails?.companyName);
-  const debounceSetOrganizationBillingCompanyName = useDebounceCallback(setOrganizationBillingCompanyName, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingEmail, setOrganizationBillingEmail] = useState<string>(rootDataOrganization.organization?.billingDetails?.email ?? '');
-  const debounceSetOrganizationBillingEmail = useDebounceCallback(setOrganizationBillingEmail, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingAddressLine1, setOrganizationBillingAddressLine1] = useState<string>(rootDataOrganization.organization?.billingDetails?.addressLine1 ?? '');
-  const debounceSetOrganizationBillingAddressLine1 = useDebounceCallback(setOrganizationBillingAddressLine1, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingAddressLine2, setOrganizationBillingAddressLine2] = useState(rootDataOrganization.organization?.billingDetails?.addressLine2);
-  const debounceSetOrganizationBillingAddressLine2 = useDebounceCallback(setOrganizationBillingAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingSuburb, setOrganizationBillingSuburb] = useState<string>(rootDataOrganization.organization?.billingDetails?.suburb ?? '');
-  const debounceSetOrganizationBillingSuburb = useDebounceCallback(setOrganizationBillingSuburb, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingCity, setOrganizationBillingCity] = useState<string>(rootDataOrganization.organization?.billingDetails?.city ?? '');
-  const debounceSetOrganizationBillingCity = useDebounceCallback(setOrganizationBillingCity, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingProvince, setOrganizationBillingProvince] = useState(rootDataOrganization.organization?.billingDetails?.province);
-  const debounceSetOrganizationBillingProvince = useDebounceCallback(setOrganizationBillingProvince, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingZipcode, setOrganizationBillingZipcode] = useState<string>(rootDataOrganization.organization?.billingDetails?.zipcode ?? '');
-  const debounceSetOrganizationBillingZipcode = useDebounceCallback(setOrganizationBillingZipcode, keyboardTextFieldDebounceTimeout);
-  const [organizationBillingCountry, setOrganizationBillingCountry] = useState<string>(rootDataOrganization.organization?.billingDetails?.country ?? '');
-  const debounceSetOrganizationBillingCountry = useDebounceCallback(setOrganizationBillingCountry, keyboardTextFieldDebounceTimeout);
+  const validateOrganizationBilling = makeValidate(billingSchema);
+  const requiredBillingFields = makeRequired(billingSchema);
+  const [billingCompanyName, setBillingCompanyName] = useState(rootDataOrganization.organization?.billingDetails?.companyName);
+  const debounceSetBillingCompanyName = useDebounceCallback(setBillingCompanyName, keyboardTextFieldDebounceTimeout);
+  const [billingEmail, setBillingEmail] = useState<string>(rootDataOrganization.organization?.billingDetails?.email ?? '');
+  const debounceSetBillingEmail = useDebounceCallback(setBillingEmail, keyboardTextFieldDebounceTimeout);
+  const [billingAddressLine1, setBillingAddressLine1] = useState<string>(rootDataOrganization.organization?.billingDetails?.addressLine1 ?? '');
+  const debounceSetBillingAddressLine1 = useDebounceCallback(setBillingAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [billingAddressLine2, setBillingAddressLine2] = useState(rootDataOrganization.organization?.billingDetails?.addressLine2);
+  const debounceSetBillingAddressLine2 = useDebounceCallback(setBillingAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [billingSuburb, setBillingSuburb] = useState<string>(rootDataOrganization.organization?.billingDetails?.suburb ?? '');
+  const debounceSetBillingSuburb = useDebounceCallback(setBillingSuburb, keyboardTextFieldDebounceTimeout);
+  const [billingCity, setBillingCity] = useState<string>(rootDataOrganization.organization?.billingDetails?.city ?? '');
+  const debounceSetBillingCity = useDebounceCallback(setBillingCity, keyboardTextFieldDebounceTimeout);
+  const [billingProvince, setBillingProvince] = useState(rootDataOrganization.organization?.billingDetails?.province);
+  const debounceSetBillingProvince = useDebounceCallback(setBillingProvince, keyboardTextFieldDebounceTimeout);
+  const [billingZipcode, setBillingZipcode] = useState<string>(rootDataOrganization.organization?.billingDetails?.zipcode ?? '');
+  const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
+  const [billingCountry, setBillingCountry] = useState<string>(rootDataOrganization.organization?.billingDetails?.country ?? '');
+  const debounceSetBillingCountry = useDebounceCallback(setBillingCountry, keyboardTextFieldDebounceTimeout);
 
-  const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
-  const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
+  const validateSsoSettings = makeValidate(ssoSettingsSchema);
+  const requiredSsoSettingsFields = makeRequired(ssoSettingsSchema);
   const [ssoSettingsEnabled, setSsoSettingsEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
   const [ssoSettingsEntityId, setSsoSettingsEntityId] = useState<string>(rootDataOrganization.organization?.ssoSettings?.entityId ?? '');
   const debounceSetSsoSettingsEntityId = useDebounceCallback(setSsoSettingsEntityId, keyboardTextFieldDebounceTimeout);
@@ -707,8 +705,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   );
   const debounceSetSsoSettingsppFederationMetadataUrl = useDebounceCallback(setSsoSettingsAppFederationMetadataUrl, keyboardTextFieldDebounceTimeout);
 
-  const validateOrganizationTaxDetails = makeValidate(organziationTaxDetailsSchema);
-  const requiredOrganizationTaxDetailsFields = makeRequired(organziationTaxDetailsSchema);
+  const validateTaxDetails = makeValidate(taxDetailsSchema);
+  const requiredTaxDetailsFields = makeRequired(taxDetailsSchema);
   const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!rootDataOrganization.organization?.taxDetails);
   const [taxDetailsGstNumber, setTaxDetailsGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
   const debounceSetTaxDetailsGstNumber = useDebounceCallback(setTaxDetailsGstNumber, keyboardTextFieldDebounceTimeout);
@@ -805,11 +803,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   }, [refetchOrganization]);
 
   const handleOrganizationDetailUpdateClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
-    if (!rootDataOrganization.organization) {
+    const organization = rootDataOrganization.organization;
+    if (!organization) {
       return;
     }
 
-    const organization = rootDataOrganization.organization;
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
 
@@ -876,12 +874,12 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   };
 
-  const handleOrganizationBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationBillingDetails) => {
-    if (!rootDataOrganization.organization) {
+  const handleBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: BillingDetails) => {
+    const organization = rootDataOrganization.organization;
+    if (!organization) {
       return;
     }
 
-    const organization = rootDataOrganization.organization;
     const billingDetails = organization.billingDetails;
 
     if (billingDetails) {
@@ -1009,12 +1007,12 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
   };
 
-  const handleOrganizationPhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationPhysicalAddress) => {
-    if (!rootDataOrganization.organization) {
+  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: PhysicalAddress) => {
+    const organization = rootDataOrganization.organization;
+    if (!organization) {
       return;
     }
 
-    const organization = rootDataOrganization.organization;
     const physicalAddress = organization.physicalAddress;
 
     if (physicalAddress) {
@@ -1134,7 +1132,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
   };
 
-  const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganizationSsoSettingsDetails) => {
+  const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: ssoSettingsDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -1242,7 +1240,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   };
 
-  const handleEnableOrganizationTaxDetailsClick = ({ gstNumber, gstPercentage }: OrganizationTaxDetails) => {
+  const handleEnableOrganizationTaxDetailsClick = ({ gstNumber, gstPercentage }: TaxDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -2170,25 +2168,25 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             />
 
             <Form
-              onSubmit={handleOrganizationPhysicalAddressUpdateClick}
+              onSubmit={handlePhysicalAddressUpdateClick}
               initialValues={{
-                addressLine1: organizationPhysicalAddressAddressLine1,
-                addressLine2: organizationPhysicalAddressAddressLine2,
-                suburb: organizationPhysicalAddressSuburb,
-                city: organizationPhysicalAddressCity,
-                province: organizationPhysicalAddressProvince,
-                zipcode: organizationPhysicalAddressZipcode,
-                country: organizationPhysicalAddressCountry,
+                addressLine1: physicalAddressAddressLine1,
+                addressLine2: physicalAddressAddressLine2,
+                suburb: physicalAddressSuburb,
+                city: physicalAddressCity,
+                province: physicalAddressProvince,
+                zipcode: physicalAddressZipcode,
+                country: physicalAddressCountry,
               }}
-              validate={validateOrganizationPhysicalAddress}
+              validate={validatePhysicalAddress}
               render={({ handleSubmit, values }) => {
-                debounceSetOrganizationPhysicalAddressAddressLine1(values!.addressLine1);
-                debounceSetOrganizationPhysicalAddressAddressLine2(values!.addressLine2);
-                debounceSetOrganizationPhysicalAddressSuburb(values!.suburb);
-                debounceSetOrganizationPhysicalAddressCity(values!.city);
-                debounceSetOrganizationPhysicalAddressProvince(values!.province);
-                debounceSetOrganizationPhysicalAddressZipcode(values!.zipcode);
-                debounceSetOrganizationPhysicalAddressCountry(values!.country);
+                debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
+                debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
+                debounceSetPhysicalAddressSuburb(values!.suburb);
+                debounceSetPhysicalAddressCity(values!.city);
+                debounceSetPhysicalAddressProvince(values!.province);
+                debounceSetPhysicalAddressZipcode(values!.zipcode);
+                debounceSetPhysicalAddressCountry(values!.country);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2205,31 +2203,31 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <FormFieldLabel label="Address line 1">
-                        <TextField name="addressLine1" required={requiredOrganizationPhysicalAddressFields.addressLine1} />
+                        <TextField name="addressLine1" required={requiredPhysicalAddressFields.addressLine1} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Address line 2">
-                        <TextField name="addressLine2" required={requiredOrganizationPhysicalAddressFields.addressLine2} />
+                        <TextField name="addressLine2" required={requiredPhysicalAddressFields.addressLine2} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Suburb">
-                        <TextField name="suburb" required={requiredOrganizationPhysicalAddressFields.suburb} />
+                        <TextField name="suburb" required={requiredPhysicalAddressFields.suburb} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="City">
-                        <TextField name="city" required={requiredOrganizationPhysicalAddressFields.city} />
+                        <TextField name="city" required={requiredPhysicalAddressFields.city} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Province">
-                        <TextField name="province" required={requiredOrganizationPhysicalAddressFields.province} />
+                        <TextField name="province" required={requiredPhysicalAddressFields.province} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Zipcode">
-                        <TextField name="zipcode" required={requiredOrganizationPhysicalAddressFields.zipcode} />
+                        <TextField name="zipcode" required={requiredPhysicalAddressFields.zipcode} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Country">
-                        <SingleChoiceCountry name="country" required={requiredOrganizationPhysicalAddressFields.country} />
+                        <SingleChoiceCountry name="country" required={requiredPhysicalAddressFields.country} />
                       </FormFieldLabel>
                     </StackColumn>
 
@@ -2246,29 +2244,29 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             />
 
             <Form
-              onSubmit={handleOrganizationBillingDetailUpdateClick}
+              onSubmit={handleBillingDetailUpdateClick}
               initialValues={{
-                companyName: organizationBillingCompanyName,
-                email: organizationBillingEmail,
-                addressLine1: organizationBillingAddressLine1,
-                addressLine2: organizationBillingAddressLine2,
-                suburb: organizationBillingSuburb,
-                city: organizationBillingCity,
-                province: organizationBillingProvince,
-                zipcode: organizationBillingZipcode,
-                country: organizationBillingCountry,
+                companyName: billingCompanyName,
+                email: billingEmail,
+                addressLine1: billingAddressLine1,
+                addressLine2: billingAddressLine2,
+                suburb: billingSuburb,
+                city: billingCity,
+                province: billingProvince,
+                zipcode: billingZipcode,
+                country: billingCountry,
               }}
               validate={validateOrganizationBilling}
               render={({ handleSubmit, values }) => {
-                debounceSetOrganizationBillingCompanyName(values!.companyName);
-                debounceSetOrganizationBillingEmail(values!.email);
-                debounceSetOrganizationBillingAddressLine1(values!.addressLine1);
-                debounceSetOrganizationBillingAddressLine2(values!.addressLine2);
-                debounceSetOrganizationBillingSuburb(values!.suburb);
-                debounceSetOrganizationBillingCity(values!.city);
-                debounceSetOrganizationBillingProvince(values!.province);
-                debounceSetOrganizationBillingZipcode(values!.zipcode);
-                debounceSetOrganizationBillingCountry(values!.country);
+                debounceSetBillingCompanyName(values!.companyName);
+                debounceSetBillingEmail(values!.email);
+                debounceSetBillingAddressLine1(values!.addressLine1);
+                debounceSetBillingAddressLine2(values!.addressLine2);
+                debounceSetBillingSuburb(values!.suburb);
+                debounceSetBillingCity(values!.city);
+                debounceSetBillingProvince(values!.province);
+                debounceSetBillingZipcode(values!.zipcode);
+                debounceSetBillingCountry(values!.country);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2285,39 +2283,39 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <FormFieldLabel label="Company name">
-                        <TextField name="companyName" required={requiredOrganizationBillingFields.companyName} />
+                        <TextField name="companyName" required={requiredBillingFields.companyName} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Email">
-                        <TextField name="email" required={requiredOrganizationBillingFields.email} helperText="Email to send invoice to" />
+                        <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Address line 1">
-                        <TextField name="addressLine1" required={requiredOrganizationBillingFields.addressLine1} />
+                        <TextField name="addressLine1" required={requiredBillingFields.addressLine1} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Address line 2">
-                        <TextField name="addressLine2" required={requiredOrganizationBillingFields.addressLine2} />
+                        <TextField name="addressLine2" required={requiredBillingFields.addressLine2} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Suburb">
-                        <TextField name="suburb" required={requiredOrganizationBillingFields.suburb} />
+                        <TextField name="suburb" required={requiredBillingFields.suburb} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="City">
-                        <TextField name="city" required={requiredOrganizationBillingFields.city} />
+                        <TextField name="city" required={requiredBillingFields.city} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Province">
-                        <TextField name="province" required={requiredOrganizationBillingFields.province} />
+                        <TextField name="province" required={requiredBillingFields.province} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Zipcode">
-                        <TextField name="zipcode" required={requiredOrganizationBillingFields.zipcode} />
+                        <TextField name="zipcode" required={requiredBillingFields.zipcode} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Country">
-                        <SingleChoiceCountry name="country" required={requiredOrganizationBillingFields.country} />
+                        <SingleChoiceCountry name="country" required={requiredBillingFields.country} />
                       </FormFieldLabel>
                     </StackColumn>
 
@@ -2379,7 +2377,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 loginUrl: ssoSettingsLoginUrl,
                 appFederationMetadataUrl: ssoSettingsAppFederationMetadataUrl,
               }}
-              validate={validateOrganizationSsoSettings}
+              validate={validateSsoSettings}
               render={({ handleSubmit, values }) => {
                 debounceSetSsoSettingsEntityId(values!.entityId);
                 debounceSetSsoSettingsLoginUrl(values!.loginUrl);
@@ -2406,15 +2404,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       {ssoSettingsEnabled && (
                         <>
                           <FormFieldLabel label="Entity Id">
-                            <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
+                            <TextField name="entityId" required={requiredSsoSettingsFields.entityId} />
                           </FormFieldLabel>
 
                           <FormFieldLabel label="Login Url">
-                            <TextField name="loginUrl" required={requiredOrganizationSsoSettingsFields.loginUrl} />
+                            <TextField name="loginUrl" required={requiredSsoSettingsFields.loginUrl} />
                           </FormFieldLabel>
 
                           <FormFieldLabel label="App Federation Metadata Url">
-                            <TextField name="appFederationMetadataUrl" required={requiredOrganizationSsoSettingsFields.appFederationMetadataUrl} />
+                            <TextField name="appFederationMetadataUrl" required={requiredSsoSettingsFields.appFederationMetadataUrl} />
                           </FormFieldLabel>
                         </>
                       )}
@@ -2440,7 +2438,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 gstNumber: taxDetailsGstNumber,
                 gstPercentage: taxDetailsGstPercentage,
               }}
-              validate={validateOrganizationTaxDetails}
+              validate={validateTaxDetails}
               render={({ handleSubmit, values }) => {
                 debounceSetTaxDetailsGstNumber(values!.gstNumber);
                 debounceSetTaxDetailsGstPercentage(values!.gstPercentage);
@@ -2466,11 +2464,11 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       {taxDetailsEnabled && (
                         <>
                           <FormFieldLabel label="GST Number">
-                            <TextField name="gstNumber" required={requiredOrganizationTaxDetailsFields.gstNumber} />
+                            <TextField name="gstNumber" required={requiredTaxDetailsFields.gstNumber} />
                           </FormFieldLabel>
 
                           <FormFieldLabel label="GST Percentage">
-                            <TextField name="gstPercentage" required={requiredOrganizationTaxDetailsFields.gstPercentage} />
+                            <TextField name="gstPercentage" required={requiredTaxDetailsFields.gstPercentage} />
                           </FormFieldLabel>
                         </>
                       )}

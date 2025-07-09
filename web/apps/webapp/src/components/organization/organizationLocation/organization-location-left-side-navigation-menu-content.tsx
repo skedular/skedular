@@ -1,10 +1,11 @@
 import { BodyIconTypography } from '@/components/commons';
-import { EditIcon, FloorPlanIcon, OpeningHoursIcon, ResourceIcon } from '@/components/icons';
+import { AddressIcon, EditIcon, FloorPlanIcon, OpeningHoursIcon, ResourceIcon } from '@/components/icons';
 import {
   getOrganizationLocationFloorPlansBaseLink,
   getOrganizationLocationManageLocationBaseLink,
   getOrganizationLocationManageResourcesBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
+  getOrganizationLocationPhysicalAddressSetupBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -68,6 +69,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationId, locationId);
+  const physcialAddressLink = getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationId, locationId);
   const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationId, locationId);
   const floorPlansLink = getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationId, locationId);
   const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId);
@@ -95,6 +97,25 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={physcialAddressLink}>
+          <ListItemButton selected={fullPath === physcialAddressLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === physcialAddressLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <AddressIcon color="inherit" />} invertDefaultColor={fullPath === physcialAddressLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Physical Address"
+                startElement={!hideIcons && <AddressIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === physcialAddressLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

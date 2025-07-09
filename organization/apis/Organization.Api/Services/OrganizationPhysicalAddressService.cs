@@ -6,7 +6,6 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using OrganizationTaxDetails = Organization.Shared.Database.Entities.OrganizationTaxDetails;
 
 namespace Organization.Api.Services;
 
@@ -25,7 +24,8 @@ public class OrganizationPhysicalAddressService(
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationPhysicalAddressService
 {
-public async Task<Shared.Models.Organization> AddAsync(OrganizationPhysicalAddress organizationPhysicalAddress, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> AddAsync(OrganizationPhysicalAddress organizationPhysicalAddress,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(organizationPhysicalAddress.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationPhysicalAddress.Organization.Id);

@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using Location.Shared.Models;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
@@ -29,7 +30,7 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
-            PhysicalAddress = MapTo(src.Address)
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
         location.Resources.AddRange(src.Resources.Select(item =>
@@ -109,7 +110,7 @@ public class Mapper : IMapper
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>
         new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 
-    private static Address? MapTo(Models.Address? src) =>
+    private static Address? MapTo(LocationPhysicalAddress? src) =>
         src is null
             ? null
             : new Address
