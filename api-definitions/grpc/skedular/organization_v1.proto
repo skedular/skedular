@@ -6,9 +6,11 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Organization.V1";
 
 service OrganizationService {
+    rpc Admin_Get (Admin_GetInput) returns (Organization);
     rpc Admin_Add (Admin_AddInput) returns (Organization);
     rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
-    rpc Admin_GetStripeConnectAccounts (Admin_GeStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
+    rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
+    rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc GetActiveOrganizationTermsOfUse (GetActiveOrganizationTermsOfUseInput) returns (TermsOfUse);
@@ -105,6 +107,8 @@ message Organization {
     StripeCustomer stripeCustomer = 20;
     repeated StripePaymentMethod stripePaymentMethods = 21;
     repeated StripeConnectAccount stripeConnectAccounts = 22;
+    TaxDetails taxDetails = 23;
+    PhysicalAddress physicalAddress = 24;
 }
 
 message IndustrySubCategory {
@@ -122,6 +126,10 @@ message Offering {
     int32 unitPrice = 6;
     repeated string activeCustomerIds = 7;
     string organizationId = 8;
+}
+
+message Admin_GetInput {
+    string id = 1;
 }
 
 message GetInput {
@@ -151,15 +159,6 @@ enum OrganizationMemberStatus
 message Admin_AddMemberInput {
     string id = 1;
     OrganizationMember member = 2;
-}
-
-message Admin_GeStripeConnectAccountsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    StripeConnectAccountWhereInput where = 5;
-    repeated StripeConnectAccountOrderInput orderBy = 6;
 }
 
 message GetPaginatedMembersInput {
@@ -438,6 +437,15 @@ message StripePaymentMethod {
     string setupIntentId = 2;
 }
 
+message Admin_GetStripeConnectAccountsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    StripeConnectAccountWhereInput where = 5;
+    repeated StripeConnectAccountOrderInput orderBy = 6;
+}
+
 message StripeConnectAccountWhereInput {
     string organizationId = 1;
     string nameContains = 2;
@@ -468,21 +476,83 @@ message StripeConnectAccount {
     string id = 1;
     bool isDefault = 2;
     string stripeAccountId = 3;
-    string Name = 4;
-    bool ChargesEnabled = 5;
-    bool PayoutsEnabled = 6;
-    string Type = 7;
-    string Country = 8;
-    string DefaultCurrency = 9;
-    string BusinessType = 10;
-    string CompanyName = 11;
-    string Url = 12;
-    string SupportUrl = 13;
-    string ContactEmail = 14;
-    string ContactPhone = 15;
-    bool DetailsSubmitted = 16;
-    string CapabilitiesTransfers = 17;
-    string CapabilitiesCardPayments = 18;
-    string OnboardingUrl = 19;
-    bool OnboardingCompleted = 20; 
+    string name = 4;
+    bool chargesEnabled = 5;
+    bool payoutsEnabled = 6;
+    string type = 7;
+    string country = 8;
+    string defaultCurrency = 9;
+    string businessType = 10;
+    string companyName = 11;
+    string url = 12;
+    string supportUrl = 13;
+    string contactEmail = 14;
+    string contactPhone = 15;
+    bool detailsSubmitted = 16;
+    string capabilitiesTransfers = 17;
+    string capabilitiesCardPayments = 18;
+    string onboardingUrl = 19;
+    bool onboardingCompleted = 20; 
+}
+
+message Admin_GetBankAccountsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    BankAccountWhereInput where = 5;
+    repeated BankAccountOrderInput orderBy = 6;
+}
+
+message BankAccountWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+}
+
+message BankAccountOrderInput {
+    OrderDirection direction = 1;
+    BankAccountOrderField field = 2;
+}
+
+enum BankAccountOrderField {
+    BankAccountOrderField_Name = 0;
+}
+
+message BankAccountConnection {
+    PageInfo pageInfo = 1;
+    repeated BankAccountEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message BankAccountEdge {
+    BankAccount node = 1;
+    string cursor = 2;
+}
+
+message BankAccount {
+    string id = 1;
+    bool isDefault = 2;
+    string name = 3;
+    string bankName = 4;
+    string accountHolderName = 5;
+    string accountNumber = 6;
+    string country = 7;
+}
+
+message TaxDetails {
+    string id = 1;
+    string gstNumber = 2;
+    string gstPercentage = 3;
+}
+
+message PhysicalAddress {
+    string id = 1;
+    string addressLine1 = 2;
+    string addressLine2 = 3;
+    string suburb = 4;
+    string city = 5;
+    string province = 6;
+    string zipcode = 7;
+    string country = 8;
+    string formattedAddress = 9;
 }

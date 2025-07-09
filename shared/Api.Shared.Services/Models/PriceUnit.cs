@@ -60,4 +60,22 @@ public static class PriceUnitExtensions
             PriceUnit.PerUse => "One-time",
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    public static string ToInvoicePriceUnitName(this PriceUnit src) =>
+        src switch
+        {
+            PriceUnit.PerMinute => "p/m",
+            PriceUnit.PerHour => "p/h",
+            PriceUnit.PerUse => "One-time",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public static string ToInvoicePriceUnitName(this string src) =>
+        src switch
+        {
+            PriceUnitConstants.PerMinute => "p/m",
+            PriceUnitConstants.PerHour => "p/h",
+            PriceUnitConstants.PerUse => "one-time",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

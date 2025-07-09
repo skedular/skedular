@@ -45,7 +45,8 @@ public class Program
             .AddWorkflow<PayBookingViaCard>()
             .AddWorkflow<PayBookingViaBankTransfer>()
             .AddScopedActivities<StripeIntegrations>()
-            .AddScopedActivities<BookingIntegrations>();
+            .AddScopedActivities<BookingIntegrations>()
+            .AddScopedActivities<InvoiceIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

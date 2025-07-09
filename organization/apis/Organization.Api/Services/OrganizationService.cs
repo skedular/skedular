@@ -34,7 +34,7 @@ public interface IOrganizationService
 
     Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
@@ -269,7 +269,7 @@ public class OrganizationService(
         return deletedOrganization;
     }
 
-    public async Task<Shared.Models.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -279,8 +279,13 @@ public class OrganizationService(
             return null;
         }
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        return await EnrichOrganizationAsync(customer, organization, cancellationToken);
+        Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        }
+
+        return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
     }
 
     public async Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken)
@@ -299,7 +304,7 @@ public class OrganizationService(
         }
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        return await EnrichOrganizationAsync(customer, organization, cancellationToken);
+        return await EnrichOrganizationAsync(customer, organization, false, cancellationToken);
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
@@ -310,7 +315,7 @@ public class OrganizationService(
         var result = new List<Shared.Models.Organization>();
         foreach (var organization in organizations)
         {
-            result.Add(await EnrichOrganizationAsync(customer, organization, cancellationToken));
+            result.Add(await EnrichOrganizationAsync(customer, organization, false, cancellationToken));
         }
 
         return result;
@@ -336,7 +341,7 @@ public class OrganizationService(
         foreach (var edge in edges)
         {
             mappedOrganizations.Add(
-                new Edge<Shared.Models.Organization>(await EnrichOrganizationAsync(customer, edge.Node, cancellationToken), edge.Cursor));
+                new Edge<Shared.Models.Organization>(await EnrichOrganizationAsync(customer, edge.Node, false, cancellationToken), edge.Cursor));
         }
 
         return (paginatedInfo, mappedOrganizations, totalCount);
@@ -396,21 +401,30 @@ public class OrganizationService(
     }
 
     private async Task<Shared.Models.Organization> EnrichOrganizationAsync(
-        Customer customer,
+        Customer? customer,
         Shared.Database.Entities.Organization organization,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        if (!organizationAuthorizationService.CanView(organization, customer))
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            ArgumentNullException.ThrowIfNull(customer);
+        }
+
+        if (!ignoreAuthorizationCheck)
+        {
+            if (!organizationAuthorizationService.CanView(organization, customer!))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var mappedOrganization = mapper.MapTo(organization);
 
-        mappedOrganization.CanModify = organizationAuthorizationService.CanModify(organization, customer);
-        mappedOrganization.CanDelete = organizationAuthorizationService.CanDelete(organization, customer);
-        mappedOrganization.CanInvitePeople = organizationAuthorizationService.CanInvitePeople(organization, customer);
-        mappedOrganization.CanViewAnalytics = organizationAuthorizationService.CanViewAnalytics(organization, customer);
+        mappedOrganization.CanModify = ignoreAuthorizationCheck || organizationAuthorizationService.CanModify(organization, customer!);
+        mappedOrganization.CanDelete = ignoreAuthorizationCheck || organizationAuthorizationService.CanDelete(organization, customer!);
+        mappedOrganization.CanInvitePeople = ignoreAuthorizationCheck || organizationAuthorizationService.CanInvitePeople(organization, customer!);
+        mappedOrganization.CanViewAnalytics = ignoreAuthorizationCheck || organizationAuthorizationService.CanViewAnalytics(organization, customer!);
         mappedOrganization.HasLocation = organization.Locations.Count != 0;
         mappedOrganization.HasTeam = organization.Teams.Count != 0;
 
@@ -424,33 +438,40 @@ public class OrganizationService(
             .AnyAsync(cancellationToken);
 
 
-        var organizationMember = await memoryCache.GetOrCreateAsync(
-            $"organization-{organization.Id}-customer-{customer.Id}-member",
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-
-                return await repositoryFactory.OrganizationMemberRepository
-                    .Query(new Specification<OrganizationMember>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
-                                            query.CustomerId == customer.Id
-                    })
-                    .FirstOrDefaultAsync(cancellationToken);
-            });
-
-        if (organizationMember is not null)
+        if (!ignoreAuthorizationCheck)
         {
-            mappedOrganization.IsMyOnboardingDone = organizationMember.IsOrganizationOnboardingDone ?? false;
+            var organizationMember = await memoryCache.GetOrCreateAsync(
+                $"organization-{organization.Id}-customer-{customer!.Id}-member",
+                async cacheEntry =>
+                {
+                    cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
+
+                    return await repositoryFactory.OrganizationMemberRepository
+                        .Query(new Specification<OrganizationMember>
+                        {
+                            Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
+                                                query.CustomerId == customer.Id
+                        })
+                        .FirstOrDefaultAsync(cancellationToken);
+                });
+
+            if (organizationMember is not null)
+            {
+                mappedOrganization.IsMyOnboardingDone = organizationMember.IsOrganizationOnboardingDone ?? false;
+            }
+        }
+        else
+        {
+            mappedOrganization.IsMyOnboardingDone = false;
         }
 
-        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer))
+        if (ignoreAuthorizationCheck || organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer!))
         {
             return mappedOrganization;
         }
 
         var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        foreach (var member in mappedOrganization.OrganizationMembers.Where(item => item.Customer.Id != customer.Id))
+        foreach (var member in mappedOrganization.OrganizationMembers.Where(item => item.Customer.Id != customer!.Id))
         {
             member.Customer = member.Customer.Redact(memberVisibilityPolicy);
             foreach (var identity in member.Customer.Identities)

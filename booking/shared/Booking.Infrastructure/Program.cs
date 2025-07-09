@@ -30,6 +30,7 @@ public class Program
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddPublishers()
+            .AddGrpcClients(configuration)
             .AddStripe(configuration)
             .AddTemporalClient(configuration);
 

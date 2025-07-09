@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c18a1a958b3488a8c979aee51ef46e5a>>
+ * @generated SignedSource<<149eadc0a3026e73cde4480578a73441>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
   readonly from: any;
@@ -29,7 +30,12 @@ export type myBookingCard_BookingDetails$data = {
     readonly name: string;
     readonly uniqueId: string;
   }>;
+  readonly isPaymentRequired: boolean;
   readonly notes: string | null | undefined;
+  readonly paymentStatus: {
+    readonly name: string;
+    readonly type: PaymentStatus;
+  };
   readonly resources: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
@@ -212,6 +218,32 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isPaymentRequired",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentStatusDetails",
+      "kind": "LinkedField",
+      "name": "paymentStatus",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v1/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "BookingDetails",
@@ -219,6 +251,6 @@ return {
 };
 })();
 
-(node as any).hash = "1e791e0604a57462cc4c0e00da05ed7a";
+(node as any).hash = "f14b34cb09fc745f2f2dd51ee5192208";
 
 export default node;

@@ -28,6 +28,10 @@ public static class DateTimeOffsetExtensions
 
     public static string ToShortDateWithoutYear(this DateTimeOffset value) => value.ToString("dd MMMM");
 
+    public static string ToShortDate(this DateTimeOffset value) => value.ToString("dd MMMM yyyy");
+
+    public static string ToShortTime(this DateTimeOffset value) => value.ToString("HH:mm");
+
     public static TimeZoneInfo ToTimezoneInfo(this string? timezone)
     {
         try

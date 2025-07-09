@@ -20,6 +20,7 @@ using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddO
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
+using BankAccount = Api.Shared.Services.Grpc.Skedular.Organization.V1.BankAccount;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
 using Identity = Organization.Shared.Models.Identity;
@@ -174,6 +175,7 @@ public interface IMapper
     Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src);
     OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
     OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
+    BankAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationBankAccount> src);
 
     OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src);
     Shared.Database.Entities.OrganizationTaxDetails MapToEntity(OrganizationTaxDetails src, Shared.Database.Entities.Organization organization);
@@ -522,7 +524,9 @@ public class Mapper : IMapper
                 UnitPrice = organizationOffering.UnitPrice
             },
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
-            HasFutureBooking = src.HasFutureBooking
+            HasFutureBooking = src.HasFutureBooking,
+            TaxDetails = MapToGrpcResponse(src.OrganizationTaxDetails),
+            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)
         };
 
         organization.Tags.AddRange(MapToGrpcResponse(src.Tags));
@@ -1121,6 +1125,9 @@ public class Mapper : IMapper
             };
 
     public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
+
+    public BankAccountEdge MapToGrpcResponse(Edge<Shared.Models.OrganizationBankAccount> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src) =>
         new()
@@ -1858,5 +1865,38 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 Organization = organization
+            };
+
+    private static BankAccount MapToGrpcResponse(Shared.Models.OrganizationBankAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            IsDefault = src.IsDefault,
+            Name = src.Name.ToSafeString(),
+            BankName = src.BankName.ToSafeString(),
+            AccountHolderName = src.AccountHolderName.ToSafeString(),
+            AccountNumber = src.AccountNumber.ToSafeString(),
+            Country = src.Country.ToSafeString()
+        };
+
+    private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
+        src is null
+            ? null
+            : new TaxDetails { Id = src.Id, GstNumber = src.GstNumber.ToSafeString(), GstPercentage = src.GstPercentage.ToRoundedDecimal() };
+
+    private static PhysicalAddress? MapToGrpcResponse(Shared.Models.OrganizationPhysicalAddress? src) =>
+        src is null
+            ? null
+            : new PhysicalAddress
+            {
+                Id = src.Id,
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString(),
+                FormattedAddress = src.ToFormattedAddress()
             };
 }

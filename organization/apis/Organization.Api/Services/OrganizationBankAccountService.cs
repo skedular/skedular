@@ -23,6 +23,7 @@ public interface IOrganizationBankAccountService
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
         ICollection<OrganizationBankAccountOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
 
@@ -188,14 +189,19 @@ public class OrganizationBankAccountService(
         PaginationInputParam paginationInputParam,
         OrganizationBankAccountSearchCriteria searchCriteria,
         ICollection<OrganizationBankAccountOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanView(organization, customer))
+
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            if (!organizationAuthorizationService.CanView(organization, customer))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var (paginatedInfo, edges, totalCount) =

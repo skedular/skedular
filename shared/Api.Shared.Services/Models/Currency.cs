@@ -45,4 +45,12 @@ public static class CurrencyExtensions
             CurrencyConstants.Usd => "USD - $",
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    public static string ToInvoiceCurrencyName(this string src) =>
+        src switch
+        {
+            CurrencyConstants.Nzd => "NZD",
+            CurrencyConstants.Usd => "USD",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

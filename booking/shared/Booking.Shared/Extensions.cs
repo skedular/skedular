@@ -29,7 +29,8 @@ public static class Extensions
             .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
             .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>();
+            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
+            .AddScoped<IBookingInvoiceService, BookingInvoiceService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services.AddScoped<IRepositoryFactory, RepositoryFactory>();

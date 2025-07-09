@@ -29,6 +29,7 @@ public class OrganizationGrpcService(
     IOrganizationMemberService organizationMemberService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    IOrganizationBankAccountService organizationBankAccountService,
     ITagService tagService,
     IOrganizationBillingService organizationBillingService,
     IMapper mapper) : OrganizationService.OrganizationServiceBase
@@ -47,6 +48,17 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
     }
 
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_Get(
+        Admin_GetInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var organization = await organizationService.GetByIdAsync(request.Id, true, context.CancellationToken) ?? throw new OrganizationNotFound();
+
+        return mapper.MapToGrpcResponse(organization);
+    }
+
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_Add(
         Admin_AddInput request,
         ServerCallContext context)
@@ -62,7 +74,7 @@ public class OrganizationGrpcService(
     }
 
     public override async Task<StripeConnectAccountConnection> Admin_GetStripeConnectAccounts(
-        Admin_GeStripeConnectAccountsInput request,
+        Admin_GetStripeConnectAccountsInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
@@ -105,13 +117,52 @@ public class OrganizationGrpcService(
         return connection;
     }
 
+    public override async Task<BankAccountConnection> Admin_GetBankAccounts(Admin_GetBankAccountsInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await organizationBankAccountService.GetPaginatedAccountsAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new OrganizationBankAccountSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    BankAccountOrderField.Name => OrganizationBankAccountOrderField.Name,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new OrganizationBankAccountOrder(direction, field);
+            }).ToList(),
+            true,
+            context.CancellationToken);
+
+        var connection = new BankAccountConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        return connection;
+    }
+
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Get(
         GetInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdAsync(request.Id, context.CancellationToken) ?? throw new OrganizationNotFound();
+        var organization = await organizationService.GetByIdAsync(request.Id, false, context.CancellationToken) ?? throw new OrganizationNotFound();
 
         return mapper.MapToGrpcResponse(organization);
     }

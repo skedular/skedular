@@ -18,6 +18,19 @@ public class PayBookingViaBankTransfer
 
         try
         {
+            if (args.SendInvoice)
+            {
+                await Workflow.ExecuteActivityAsync(
+                    (InvoiceIntegrations activity) =>
+                        activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, false, args.InvoiceEmailList)),
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                        RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    });
+            }
+
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.BookingDeleted, GetDelayDuration(args)))
             {
                 await Workflow.ExecuteActivityAsync(

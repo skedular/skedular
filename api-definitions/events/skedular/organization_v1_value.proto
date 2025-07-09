@@ -52,6 +52,7 @@ message Organization {
   string contactEmail = 14;
   string contactPhone = 15;
   string memberVisibilityPolicy = 16;
+  PhysicalAddress physicalAddress = 17;
 }
 
 enum Role {
@@ -113,4 +114,16 @@ message OrganizationTaxDetails {
   string id = 1;
   string gstNumber = 2;
   string gstPercentage = 3;
+}
+
+message PhysicalAddress {
+  string id = 1;
+  string addressLine1 = 2;
+  string addressLine2 = 3;
+  string suburb = 4;
+  string city = 5;
+  string province = 6;
+  string zipcode = 7;
+  string country = 8;
+  string formattedAddress = 9;
 }

@@ -79,6 +79,19 @@ public class PayBookingViaCard
                                           _state.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
                                               or PaymentStatus.NoPaymentRequired))
             {
+                if (args.SendInvoice)
+                {
+                    await Workflow.ExecuteActivityAsync(
+                        (InvoiceIntegrations activity) =>
+                            activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, true, args.InvoiceEmailList)),
+                        new ActivityOptions
+                        {
+                            StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                            TaskQueue = Workflow.Info.TaskQueue,
+                            RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(5) }
+                        });
+                }
+
                 return;
             }
 

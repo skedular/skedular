@@ -1,7 +1,10 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Location.Shared.Models;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
@@ -110,10 +113,10 @@ public class Mapper : IMapper
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>
         new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 
-    private static Address? MapTo(LocationPhysicalAddress? src) =>
+    private static PhysicalAddress? MapTo(LocationPhysicalAddress? src) =>
         src is null
             ? null
-            : new Address
+            : new PhysicalAddress
             {
                 Id = src.Id,
                 AddressLine1 = src.AddressLine1.ToSafeString(),
@@ -122,7 +125,8 @@ public class Mapper : IMapper
                 City = src.City.ToSafeString(),
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
-                Country = src.Country.ToSafeString()
+                Country = src.Country.ToSafeString(),
+                FormattedAddress = src.ToFormattedAddress()
             };
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>

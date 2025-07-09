@@ -52,7 +52,7 @@ public class StripeIntegrations(
         }
 
         var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
-            new Admin_GeStripeConnectAccountsInput
+            new Admin_GetStripeConnectAccountsInput
             {
                 After = string.Empty,
                 First = -1,
@@ -181,10 +181,7 @@ public class StripeIntegrations(
             throw new StripeCustomerNotFound();
         var stripeCheckoutSession = new StripeCheckoutSession
         {
-            Id = randomHelper.Generate(),
-            StripeCheckoutSessionId = session.Id,
-            CheckoutUrl = session.Url,
-            StripeCustomer = stripeCustomer
+            Id = randomHelper.Generate(), StripeCheckoutSessionId = session.Id, CheckoutUrl = session.Url, StripeCustomer = stripeCustomer
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);

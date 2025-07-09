@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afe3c900177fd5a57ae6896351a67caf>>
+ * @generated SignedSource<<97244612f358cd0a5992ca770bfe6312>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type myBookings_query$data = {
   readonly me: {
     readonly id: string;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"myBookingCard_query">;
   readonly " $fragmentType": "myBookings_query";
 };
 export type myBookings_query$key = {
@@ -44,12 +45,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "myBookingCard_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "c664223bbd164fa6e688b2b30710dc2f";
+(node as any).hash = "292cf485a75cb941443cfb90336e4785";
 
 export default node;

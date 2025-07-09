@@ -94,6 +94,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         me {
           id
         }
+        ...myBookingCard_query
       }
     `,
     rootDataRelay,
@@ -450,7 +451,13 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
               return (
                 <Grid key={myBooking.id}>
-                  <MyBookingCard bookingDetailsRelay={myBooking} organizationId={organizationId} connectionIds={connectionIds} otherTeammates={otherTeammates} />
+                  <MyBookingCard
+                    rootDataRelay={rootData}
+                    bookingDetailsRelay={myBooking}
+                    organizationId={organizationId}
+                    connectionIds={connectionIds}
+                    otherTeammates={otherTeammates}
+                  />
                 </Grid>
               );
             })}

@@ -52,7 +52,8 @@ public class Mapper : IMapper
                 UnitPrice = organizationOffering.UnitPrice
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
-            TaxDetails = MapTo(src.OrganizationTaxDetails)
+            TaxDetails = MapTo(src.OrganizationTaxDetails),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -379,4 +380,20 @@ public class Mapper : IMapper
             Color = src.Color,
             Organization = organization
         };
+
+    private static PhysicalAddress? MapTo(OrganizationPhysicalAddress? src) =>
+        src is null
+            ? null
+            : new PhysicalAddress
+            {
+                Id = src.Id,
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString(),
+                FormattedAddress = src.ToFormattedAddress()
+            };
 }

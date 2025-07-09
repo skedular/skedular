@@ -34,6 +34,7 @@ public class RootQuery(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new OrganizationBankAccountSearchCriteria(where.OrganizationId, where.NameContains),
             orderBy.ToSafeCollection().Select(item => new OrganizationBankAccountOrder(item.Direction, item.Field)).ToList(),
+            false,
             cancellationToken);
 
         return new Connection<OrganizationBankAccountEdge>

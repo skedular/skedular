@@ -29,6 +29,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using QuestPDF;
+using QuestPDF.Infrastructure;
 using WorkOS;
 
 namespace Enterprise.Shared;
@@ -80,6 +82,7 @@ public static class Extensions
         var configuration = builder.Configuration;
         var appName = GetAppName<TProgram>(builder.Environment);
 
+        Settings.License = LicenseType.Community;
         AppDomain.CurrentDomain.UnhandledException += RecordExceptionOnActivity;
 
         configuration.AddEnvironmentVariables("ASPNETCORE");

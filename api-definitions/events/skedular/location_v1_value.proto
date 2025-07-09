@@ -40,7 +40,7 @@ message Location {
   repeated Resource resources = 7;
   repeated string tagIds = 8;
   OpeningHours openingHours = 9;
-  Address physicalAddress = 10;
+  PhysicalAddress physicalAddress = 10;
   string contactEmail = 11;
   string contactPhone = 12;
   CdnImageFile primaryFeatureImage = 13;
@@ -86,7 +86,7 @@ message OpeningHoursDetails {
   string until = 4;
 }
 
-message Address {
+message PhysicalAddress {
   string id = 1;
   string addressLine1 = 2;
   string addressLine2 = 3;
@@ -95,6 +95,7 @@ message Address {
   string province = 6;
   string zipcode = 7;
   string country = 8;
+  string formattedAddress = 9;
 }
 
 message CdnImageFile {
