@@ -32,4 +32,9 @@
         <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Database\Migrations\20250709023052_AddOrganizationPhysicalAddress.cs"/>
+        <Compile Remove="Database\Migrations\20250709023052_AddOrganizationPhysicalAddress.Designer.cs"/>
+    </ItemGroup>
+
 </Project>

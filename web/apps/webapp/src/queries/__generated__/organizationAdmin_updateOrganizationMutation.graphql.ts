@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cca414c30e01559a23efa70a0403ccdc>>
+ * @generated SignedSource<<9e8581288ae6f64b6a8461db30c020a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,18 +20,8 @@ export type UpdateOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
-  physicalAddress: OrganizationAddressDetailsInput;
   type: OrganizationType;
   website?: string | null | undefined;
-};
-export type OrganizationAddressDetailsInput = {
-  addressLine1: string;
-  addressLine2?: string | null | undefined;
-  city: string;
-  country: string;
-  province?: string | null | undefined;
-  suburb: string;
-  zipcode: string;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
@@ -52,15 +42,6 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
-      };
       readonly type: {
         readonly name: string;
         readonly type: OrganizationType;
@@ -85,15 +66,6 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
-      readonly physicalAddress: {
-        readonly addressLine1: string;
-        readonly addressLine2: string | null | undefined;
-        readonly city: string;
-        readonly country: string;
-        readonly province: string | null | undefined;
-        readonly suburb: string;
-        readonly zipcode: string;
-      };
       readonly type: {
         readonly name: string;
         readonly type: OrganizationType;
@@ -225,66 +197,6 @@ v4 = [
             "kind": "ScalarField",
             "name": "contactPhone",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationAddressDetails",
-            "kind": "LinkedField",
-            "name": "physicalAddress",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine1",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "addressLine2",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "suburb",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "city",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "province",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "zipcode",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "country",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -311,16 +223,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "7aed8d2faa8c23a7be4302f00b810d10",
+    "cacheID": "aeaf341bab5714277a8644ce62349471",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "59ef6b57c67443dec32a427137409ad5";
+(node as any).hash = "e1652b0797abde48015d2c72e73023ed";
 
 export default node;

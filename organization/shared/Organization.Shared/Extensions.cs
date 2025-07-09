@@ -41,6 +41,7 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
             .AddScoped<IAddressRepository, AddressRepository>()
+            .AddScoped<IOrganizationPhysicalAddressRepository, OrganizationPhysicalAddressRepository>()
             .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
             .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
             .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>()

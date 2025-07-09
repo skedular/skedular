@@ -40,9 +40,7 @@ public class OrganizationBillingService(
         return mapper.MapTo(existingOrganization.BillingDetails);
     }
 
-    public async Task<Shared.Models.Organization> AddAsync(
-        OrganizationBillingDetails organizationBillingDetails,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(organizationBillingDetails.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationBillingDetails.Organization.Id);

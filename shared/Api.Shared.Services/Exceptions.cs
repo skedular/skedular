@@ -87,3 +87,5 @@ public class BookingPaymentMethodNotAccepted() : Exception("Booking payment meth
 public class BookingsProductsWithMultipleCurrenciesAreNotSupported() : Exception("Bookings products with multiple currencies are not supported");
 
 public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");
+
+public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");

@@ -1,5 +1,4 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { SingleChoiceCountry } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import {
@@ -62,13 +61,6 @@ type OrganizationDetails = {
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
-  addressLine1: string;
-  addressLine2: string | null;
-  suburb: string;
-  city: string;
-  province: string | null;
-  zipcode: string;
-  country: string;
   agreedToTermsOfUse: boolean;
 };
 
@@ -83,13 +75,6 @@ const organizationSchema = object({
     .email(({ value }) => `${value} is not a valid email`)
     .required('Contact email is required'),
   contactPhone: string().nullable(),
-  addressLine1: string().required('Address line 1 is required'),
-  addressLine2: string().nullable(),
-  suburb: string().required('Suburb is required'),
-  city: string().required('City is required'),
-  province: string().nullable(),
-  zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -113,15 +98,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           }
           contactEmail
           contactPhone
-          physicalAddress {
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-          }
         }
       }
     }
@@ -140,23 +116,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({
-    name,
-    about,
-    website,
-    type,
-    memberVisibilityPolicy,
-    industrySubCategoryIds,
-    contactEmail,
-    contactPhone,
-    addressLine1,
-    addressLine2,
-    suburb,
-    city,
-    province,
-    zipcode,
-    country,
-  }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -175,15 +135,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
           contactEmail,
           contactPhone,
-          physicalAddress: {
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-          },
         },
       },
       onCompleted: (_, errors) => {
@@ -249,15 +200,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             },
             contactEmail,
             contactPhone,
-            physicalAddress: {
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-            },
           },
         },
       },
@@ -278,13 +220,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               memberVisibilityPolicy: '',
               contactEmail: '',
               contactPhone: '',
-              addressLine1: '',
-              addressLine2: '',
-              suburb: '',
-              city: '',
-              province: '',
-              zipcode: '',
-              country: '',
             }}
             validate={validateOrganizationDetails}
             render={({ handleSubmit }) => (
@@ -335,34 +270,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                   <SectionIconTypography label="Address" />
                   <BodyIconTypography label="Edit your organization address" />
                   <Divider />
-
-                  <FormFieldLabel label="Address Line 1">
-                    <TextField name="addressLine1" required={requiredFields.addressLine1} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address Line 2">
-                    <TextField name="addressLine2" required={requiredFields.addressLine2} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Suburb">
-                    <TextField name="suburb" required={requiredFields.suburb} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="City">
-                    <TextField name="city" required={requiredFields.city} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Province">
-                    <TextField name="province" required={requiredFields.province} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Zipcode">
-                    <TextField name="zipcode" required={requiredFields.zipcode} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Country">
-                    <SingleChoiceCountry name="country" required={requiredFields.country} />
-                  </FormFieldLabel>
 
                   <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
                 </StackColumn>

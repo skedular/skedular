@@ -4,6 +4,7 @@ using HotChocolate.Types.Relay;
 using Organization.Api.GraphQL.Billing;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
+using Organization.Api.GraphQL.PhysicalAddress;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Tag;
 using Organization.Api.GraphQL.TaxDetails;
@@ -31,7 +32,7 @@ public class OrganizationDetails : Node
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
-    [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; } = new();
+    [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }
 
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];

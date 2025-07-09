@@ -12,43 +12,43 @@ public class RootMutation(IMapper mapper)
     [UseResolverScope]
     public async Task<OrganizationBankAccountPayload> AddOrganizationBankAccountAsync(
         AddOrganizationBankAccountInput input,
-        [Service] IOrganizationBankAccountService resourceService,
+        [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await resourceService.AddAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.AddAsync(mapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
     public async Task<OrganizationBankAccountPayload> UpdateOrganizationBankAccountAsync(
         UpdateOrganizationBankAccountInput input,
-        [Service] IOrganizationBankAccountService resourceService,
+        [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await resourceService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
     public async Task<OrganizationBankAccountPayload> DeleteOrganizationBankAccountAsync(
         DeleteOrganizationBankAccountInput input,
-        [Service] IOrganizationBankAccountService resourceService,
+        [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationBankAccount = mapper.MapTo(await resourceService.DeleteAsync(input.Id, cancellationToken))!
+            OrganizationBankAccount = mapper.MapTo(await organizationBankAccountService.DeleteAsync(input.Id, cancellationToken))!
         };
 
     [UseResolverScope]
     public async Task<OrganizationBankAccountsPayload> DeleteOrganizationBankAccountsAsync(
         DeleteOrganizationBankAccountsInput input,
-        [Service] IOrganizationBankAccountService resourceService,
+        [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var resources = await organizationBankAccountService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationBankAccountsPayload
         {
             ClientMutationId = input.ClientMutationId, OrganizationBankAccounts = resources.Select(mapper.MapTo)!

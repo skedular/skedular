@@ -33,6 +33,7 @@ import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, d
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
+import type { organizationAdmin_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationPhysicalAddressMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_customTags_query$key } from '@/queries/__generated__/organizationAdmin_customTags_query.graphql';
 import type { organizationAdmin_customTags_refetchableFragment } from '@/queries/__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
@@ -53,6 +54,7 @@ import type {
   OrganizationType,
 } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
+import type { organizationAdmin_updateOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationPhysicalAddressMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_updateOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
@@ -101,13 +103,6 @@ type OrganizationDetails = {
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
-  addressLine1: string;
-  addressLine2: string | null;
-  suburb: string;
-  city: string;
-  province: string | null;
-  zipcode: string;
-  country: string;
 };
 
 const organizationSchema = object({
@@ -121,6 +116,19 @@ const organizationSchema = object({
     .email(({ value }) => `${value} is not a valid email`)
     .required('Contact email is required'),
   contactPhone: string().nullable(),
+});
+
+type OrganizationPhysicalAddress = {
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string;
+  city: string;
+  province: string | null;
+  zipcode: string;
+  country: string;
+};
+
+const organizationPhysicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -254,6 +262,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           contactEmail
           contactPhone
           physicalAddress {
+            id
             addressLine1
             addressLine2
             suburb
@@ -388,15 +397,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           }
           contactEmail
           contactPhone
-          physicalAddress {
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-          }
         }
       }
     }
@@ -453,6 +453,46 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitAddOrganizationPhysicalAddress] = useMutation<organizationAdmin_addOrganizationPhysicalAddressMutation>(graphql`
+    mutation organizationAdmin_addOrganizationPhysicalAddressMutation($input: AddOrganizationPhysicalAddressInput!) @raw_response_type {
+      addOrganizationPhysicalAddress(input: $input) {
+        organization {
+          id
+          physicalAddress {
+            id
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitUpdateOrganizationPhysicalAddress] = useMutation<organizationAdmin_updateOrganizationPhysicalAddressMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationPhysicalAddressMutation($input: UpdateOrganizationPhysicalAddressInput!) @raw_response_type {
+      updateOrganizationPhysicalAddress(input: $input) {
+        organization {
+          id
+          physicalAddress {
+            id
             addressLine1
             addressLine2
             suburb
@@ -614,6 +654,9 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const debounceSetOrganizationContactEmail = useDebounceCallback(setOrganizationContactEmail, keyboardTextFieldDebounceTimeout);
   const [organizationContactPhone, setOrganizationContactPhone] = useState(rootDataOrganization.organization?.contactPhone);
   const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
+
+  const validateOrganizationPhysicalAddress = makeValidate(organizationPhysicalAddressSchema);
+  const requiredOrganizationPhysicalAddressFields = makeRequired(organizationPhysicalAddressSchema);
   const [organizationPhysicalAddressAddressLine1, setOrganizationPhysicalAddressAddressLine1] = useState<string>(
     rootDataOrganization.organization?.physicalAddress?.addressLine1 ?? '',
   );
@@ -761,23 +804,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   }, [refetchOrganization]);
 
-  const handleOrganizationDetailUpdateClick = ({
-    name,
-    about,
-    website,
-    type,
-    memberVisibilityPolicy,
-    industrySubCategoryIds,
-    contactEmail,
-    contactPhone,
-    addressLine1,
-    addressLine2,
-    suburb,
-    city,
-    province,
-    zipcode,
-    country,
-  }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
     if (!rootDataOrganization.organization) {
       return;
     }
@@ -799,15 +826,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
           contactEmail,
           contactPhone,
-          physicalAddress: {
-            addressLine1,
-            addressLine2,
-            suburb,
-            city,
-            province,
-            zipcode,
-            country,
-          },
         },
       },
       onCompleted: (_, errors) => {
@@ -852,15 +870,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               .map(({ id, name }) => ({ id, name })),
             contactEmail,
             contactPhone,
-            physicalAddress: {
-              addressLine1,
-              addressLine2,
-              suburb,
-              city,
-              province,
-              zipcode,
-              country,
-            },
           },
         },
       },
@@ -985,6 +994,131 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 id,
                 companyName,
                 email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    }
+  };
+
+  const handleOrganizationPhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationPhysicalAddress) => {
+    if (!rootDataOrganization.organization) {
+      return;
+    }
+
+    const organization = rootDataOrganization.organization;
+    const physicalAddress = organization.physicalAddress;
+
+    if (physicalAddress) {
+      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' physical address...`} />, infoNotificationOptions);
+
+      commitUpdateOrganizationPhysicalAddress({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id: physicalAddress.id,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization '${organization?.name}' physical address updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' physical address. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateOrganizationPhysicalAddress: {
+            organization: {
+              id: organization.id,
+              physicalAddress: {
+                id: physicalAddress.id,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      const id = uuid();
+      const toastId = themedToast(<NotificationContent content={`Adding organization '${organization.name}' physical address...`} />, infoNotificationOptions);
+
+      commitAddOrganizationPhysicalAddress({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            organizationId: organization.id,
+            id,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to add organization '${organization?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization '${organization?.name}' physical address added.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add organization '${organization?.name}' physical address. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          addOrganizationPhysicalAddress: {
+            organization: {
+              id: organization.id,
+              physicalAddress: {
+                id,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -1952,13 +2086,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
                 contactPhone: organizationContactPhone,
-                addressLine1: organizationPhysicalAddressAddressLine1,
-                addressLine2: organizationPhysicalAddressAddressLine2,
-                suburb: organizationPhysicalAddressSuburb,
-                city: organizationPhysicalAddressCity,
-                province: organizationPhysicalAddressProvince,
-                zipcode: organizationPhysicalAddressZipcode,
-                country: organizationPhysicalAddressCountry,
               }}
               validate={validateOrganizationDetails}
               render={({ handleSubmit, values }) => {
@@ -1970,13 +2097,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
                 debounceSetOrganizationContactPhone(values!.contactPhone);
-                debounceSetOrganizationPhysicalAddressAddressLine1(values!.addressLine1);
-                debounceSetOrganizationPhysicalAddressAddressLine2(values!.addressLine2);
-                debounceSetOrganizationPhysicalAddressSuburb(values!.suburb);
-                debounceSetOrganizationPhysicalAddressCity(values!.city);
-                debounceSetOrganizationPhysicalAddressProvince(values!.province);
-                debounceSetOrganizationPhysicalAddressZipcode(values!.zipcode);
-                debounceSetOrganizationPhysicalAddressCountry(values!.country);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2035,37 +2155,81 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       <FormFieldLabel label="Phone Number">
                         <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
                       </FormFieldLabel>
+                    </StackColumn>
 
-                      <SectionIconTypography label="Address" />
-                      <BodyIconTypography label="Edit your organization address" />
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
+            />
+
+            <Form
+              onSubmit={handleOrganizationPhysicalAddressUpdateClick}
+              initialValues={{
+                addressLine1: organizationPhysicalAddressAddressLine1,
+                addressLine2: organizationPhysicalAddressAddressLine2,
+                suburb: organizationPhysicalAddressSuburb,
+                city: organizationPhysicalAddressCity,
+                province: organizationPhysicalAddressProvince,
+                zipcode: organizationPhysicalAddressZipcode,
+                country: organizationPhysicalAddressCountry,
+              }}
+              validate={validateOrganizationPhysicalAddress}
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationPhysicalAddressAddressLine1(values!.addressLine1);
+                debounceSetOrganizationPhysicalAddressAddressLine2(values!.addressLine2);
+                debounceSetOrganizationPhysicalAddressSuburb(values!.suburb);
+                debounceSetOrganizationPhysicalAddressCity(values!.city);
+                debounceSetOrganizationPhysicalAddressProvince(values!.province);
+                debounceSetOrganizationPhysicalAddressZipcode(values!.zipcode);
+                debounceSetOrganizationPhysicalAddressCountry(values!.country);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['physical-address-setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Physical Address Setup" />
+                      <BodyIconTypography label="Edit your organization physical address" />
                       <Divider />
+                    </StackColumn>
 
-                      <FormFieldLabel label="Address Line 1">
-                        <TextField name="addressLine1" required={requiredOrganizationDetailsFields.addressLine1} />
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Address line 1">
+                        <TextField name="addressLine1" required={requiredOrganizationPhysicalAddressFields.addressLine1} />
                       </FormFieldLabel>
 
-                      <FormFieldLabel label="Address Line 2">
-                        <TextField name="addressLine2" required={requiredOrganizationDetailsFields.addressLine2} />
+                      <FormFieldLabel label="Address line 2">
+                        <TextField name="addressLine2" required={requiredOrganizationPhysicalAddressFields.addressLine2} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Suburb">
-                        <TextField name="suburb" required={requiredOrganizationDetailsFields.suburb} />
+                        <TextField name="suburb" required={requiredOrganizationPhysicalAddressFields.suburb} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="City">
-                        <TextField name="city" required={requiredOrganizationDetailsFields.city} />
+                        <TextField name="city" required={requiredOrganizationPhysicalAddressFields.city} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Province">
-                        <TextField name="province" required={requiredOrganizationDetailsFields.province} />
+                        <TextField name="province" required={requiredOrganizationPhysicalAddressFields.province} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Zipcode">
-                        <TextField name="zipcode" required={requiredOrganizationDetailsFields.zipcode} />
+                        <TextField name="zipcode" required={requiredOrganizationPhysicalAddressFields.zipcode} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Country">
-                        <SingleChoiceCountry name="country" required={requiredOrganizationDetailsFields.country} />
+                        <SingleChoiceCountry name="country" required={requiredOrganizationPhysicalAddressFields.country} />
                       </FormFieldLabel>
                     </StackColumn>
 

@@ -1,9 +1,10 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SsoSettingsIcon, SubscriptionsIcon, TaxDetailsIcon } from '@/components/icons';
+import { AddressIcon, BillingAndPaymentIcon, CustomTagIcon, EditIcon, SsoSettingsIcon, SubscriptionsIcon, TaxDetailsIcon } from '@/components/icons';
 import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
   getOrganizationAdminManageOrganizationBaseLink,
+  getOrganizationAdminPhysicalAddressBaseLink,
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -70,6 +71,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationId);
+  const physcialAddressLink = getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationId);
   const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationId);
   const ssoSettingsLink = getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationId);
   const taxDetailsLink = getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationId);
@@ -100,6 +102,25 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={physcialAddressLink}>
+          <ListItemButton selected={fullPath === physcialAddressLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === physcialAddressLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <AddressIcon color="inherit" />} invertDefaultColor={fullPath === physcialAddressLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Physical Address"
+                startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === physcialAddressLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

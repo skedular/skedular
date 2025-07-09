@@ -18,7 +18,6 @@ public class Organization : ModelBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
 
-    public Address? Address { get; set; }
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }
     public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -38,6 +37,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
     public ICollection<OrganizationBankAccount> OrganizationBankAccounts { get; set; } = [];
     public OrganizationTaxDetails? OrganizationTaxDetails { get; set; }
+    public OrganizationPhysicalAddress? PhysicalAddress { get; set; }
 
     public bool HasFutureBooking { get; set; }
     public bool HasLocation { get; set; }

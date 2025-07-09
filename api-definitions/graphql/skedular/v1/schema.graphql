@@ -521,6 +521,7 @@ type Mutation {
   addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   addOrganizationBillingDetails(input: AddOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
+  addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
@@ -601,6 +602,7 @@ type Mutation {
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
+  updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
@@ -690,17 +692,6 @@ type OrganizationActiveOfferingDetails {
   unitPrice: Int!
 }
 
-type OrganizationAddressDetails {
-  addressLine1: String!
-  addressLine2: String
-  city: String!
-  country: String!
-  formattedAddress: String
-  province: String
-  suburb: String!
-  zipcode: String!
-}
-
 type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
@@ -787,7 +778,7 @@ type OrganizationDetails {
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
   paymentMethods: [OrganizationPaymentMethod!]!
-  physicalAddress: OrganizationAddressDetails!
+  physicalAddress: OrganizationPhysicalAddressDetails
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
   taxDetails: OrganizationTaxDetails
@@ -877,6 +868,21 @@ type OrganizationPaymentMethod {
   cardIssuer: String
   cardLastFourDigit: String
   id: ID!
+}
+
+type OrganizationPhysicalAddressDetails {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  country: String!
+  formattedAddress: String
+  id: ID!
+  latitude: Decimal
+  longitude: Decimal
+  organization: OrganizationDetails!
+  province: String
+  suburb: String!
+  zipcode: String!
 }
 
 type OrganizationSsoSettingsDetails {
@@ -1466,7 +1472,6 @@ input AddOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
-  physicalAddress: OrganizationAddressDetailsInput!
   termsOfUseId: String!
   type: OrganizationType!
   website: String
@@ -1475,6 +1480,21 @@ input AddOrganizationInput {
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
   organizationId: String!
+}
+
+input AddOrganizationPhysicalAddressInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  clientMutationId: String
+  country: String!
+  id: String
+  latitude: Decimal
+  longitude: Decimal
+  organizationId: String!
+  province: String
+  suburb: String!
+  zipcode: String!
 }
 
 input AddOrganizationStripeConnectAccountInput {
@@ -1894,16 +1914,6 @@ input OpeningHoursDetailsInput {
   until: String
 }
 
-input OrganizationAddressDetailsInput {
-  addressLine1: String!
-  addressLine2: String
-  city: String!
-  country: String!
-  province: String
-  suburb: String!
-  zipcode: String!
-}
-
 input OrganizationAvailableResourcesWhereInput {
   from: DateTime!
   organizationId: String!
@@ -2242,7 +2252,6 @@ input UpdateOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
-  physicalAddress: OrganizationAddressDetailsInput!
   type: OrganizationType!
   website: String
 }
@@ -2251,6 +2260,20 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+
+input UpdateOrganizationPhysicalAddressInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  clientMutationId: String
+  country: String!
+  id: String!
+  latitude: Decimal
+  longitude: Decimal
+  province: String
+  suburb: String!
+  zipcode: String!
 }
 
 input UpdateOrganizationSsoSettingsInput {
@@ -2571,3 +2594,6 @@ directive @specifiedBy("The specifiedBy URL points to a human-readable specifica
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal

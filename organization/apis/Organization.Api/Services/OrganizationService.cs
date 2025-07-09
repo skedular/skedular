@@ -116,13 +116,6 @@ public class OrganizationService(
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
 
-        var physicalAddress = organization.Address is null ? null : mapper.MapTo(organization.Address, organizationEntity);
-        if (physicalAddress is not null)
-        {
-            physicalAddress.Id = randomHelper.Generate();
-            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
-        }
-
         var organizationMembers = new List<OrganizationMember>();
         if (customerEntity is not null)
         {
@@ -366,19 +359,6 @@ public class OrganizationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        Address physicalAddress;
-        if (existingOrganization.Address is null)
-        {
-            physicalAddress = mapper.MapTo(organization.Address!, existingOrganization);
-            physicalAddress.Id = randomHelper.Generate();
-            repositoryFactory.AddressRepository.Add(physicalAddress);
-        }
-        else
-        {
-            physicalAddress = mapper.MergeToEntity(organization.Address!, existingOrganization.Address, existingOrganization);
-            repositoryFactory.AddressRepository.Update(physicalAddress);
-        }
-
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategoryEntities = industrySubCategoryIds.Count == 0
             ? []
@@ -391,8 +371,7 @@ public class OrganizationService(
                 .ToListAsync(cancellationToken);
 
         organization = mapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(
-                mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities, physicalAddress)));
+            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2cd294fee8f5378a7cbffa235a42e573>>
+ * @generated SignedSource<<90ff45feed6bc7ad4e656d88bcedc1ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,10 +74,11 @@ export type organizationAdmin_organization_query$data = {
       readonly addressLine2: string | null | undefined;
       readonly city: string;
       readonly country: string;
+      readonly id: string;
       readonly province: string | null | undefined;
       readonly suburb: string;
       readonly zipcode: string;
-    };
+    } | null | undefined;
     readonly ssoSettings: {
       readonly appFederationMetadataUrl: string;
       readonly entityId: string;
@@ -322,11 +323,12 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationAddressDetails",
+          "concreteType": "OrganizationPhysicalAddressDetails",
           "kind": "LinkedField",
           "name": "physicalAddress",
           "plural": false,
           "selections": [
+            (v0/*: any*/),
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
@@ -539,6 +541,6 @@ return {
 };
 })();
 
-(node as any).hash = "22d5c2d64fae2a3e7e8c876f80f0273b";
+(node as any).hash = "97b8d9c73ed1a6a6cbe95639e58f35b8";
 
 export default node;

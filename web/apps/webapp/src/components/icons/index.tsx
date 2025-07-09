@@ -60,6 +60,7 @@ export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as HamburgerMenuIcon } from '@mui/icons-material/MenuRounded';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
 export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
+export { default as AddressIcon } from '@mui/icons-material/NearMe';
 export { default as OtherResourceIcon } from '@mui/icons-material/NotListedLocation';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';

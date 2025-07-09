@@ -9,6 +9,7 @@ using Organization.Api.GraphQL.BankAccount;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Organization;
+using Organization.Api.GraphQL.PhysicalAddress;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
@@ -49,6 +50,7 @@ using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models
 using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;
 using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationStripePaymentMethod;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
+using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
 
 namespace Organization.Api.Mappers;
 
@@ -66,8 +68,7 @@ public interface IMapper
     Shared.Database.Entities.Organization MergeTo(
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories,
-        Address physicalAddress);
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
     Shared.Models.TermsOfUse? MapTo(TermsOfUse? src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
@@ -142,8 +143,6 @@ public interface IMapper
     Tag MapTo(UpdateProductTagInput src);
     Tag MapTo(AddLocationTagInput src);
     Tag MapTo(UpdateLocationTagInput src);
-    Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Organization organization);
-    Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Organization organization);
     OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization);
 
     OrganizationBillingDetails MergeToEntity(
@@ -177,7 +176,6 @@ public interface IMapper
     OrganizationBankAccountDetails? MapTo(Shared.Models.OrganizationBankAccount? src);
     OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src);
 
-
     OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src);
     Shared.Database.Entities.OrganizationTaxDetails MapToEntity(OrganizationTaxDetails src, Shared.Database.Entities.Organization organization);
 
@@ -185,6 +183,18 @@ public interface IMapper
         OrganizationTaxDetails src,
         Shared.Database.Entities.OrganizationTaxDetails dest,
         Shared.Database.Entities.Organization organization);
+
+    OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization);
+
+    OrganizationPhysicalAddress MergeTo(
+        Shared.Models.OrganizationPhysicalAddress src,
+        OrganizationPhysicalAddress dest,
+        Shared.Database.Entities.Organization organization);
+
+    Shared.Models.OrganizationPhysicalAddress MapTo(OrganizationPhysicalAddress src);
+    Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src);
+    Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src);
+    OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src);
 }
 
 public class Mapper : IMapper
@@ -222,7 +232,7 @@ public class Mapper : IMapper
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.Address = MapTo(src.Address, organization);
+        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
         organization.BillingDetails = MapTo(src.BillingDetails, organization);
         organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -283,8 +293,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Organization MergeTo(
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
-        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories,
-        Address physicalAddress)
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -297,7 +306,6 @@ public class Mapper : IMapper
         dest.ContactPhone = src.ContactPhone;
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.IndustrySubCategories = industrySubCategories;
-        dest.Address = physicalAddress;
         return dest;
     }
 
@@ -396,7 +404,7 @@ public class Mapper : IMapper
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
-            PhysicalAddress = MapToGraphQl(src.Address),
+            PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
             BillingDetails = MapToGraphQl(src.BillingDetails),
             AvailableOfferings = availableOfferings,
             ActiveOffering = MapTo(organizationOffering),
@@ -438,9 +446,8 @@ public class Mapper : IMapper
                 .Select(item => new GraphQL.Analytics.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
         };
 
-    public Shared.Models.Organization MapTo(AddOrganizationInput src)
-    {
-        var organization = new Shared.Models.Organization
+    public Shared.Models.Organization MapTo(AddOrganizationInput src) =>
+        new()
         {
             Id = src.Id.ToSafeString(),
             Name = src.Name,
@@ -455,14 +462,8 @@ public class Mapper : IMapper
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
         };
 
-        organization.Address = MapTo(src.PhysicalAddress, organization);
-
-        return organization;
-    }
-
-    public Shared.Models.Organization MapTo(UpdateOrganizationInput src)
-    {
-        var organization = new Shared.Models.Organization
+    public Shared.Models.Organization MapTo(UpdateOrganizationInput src) =>
+        new()
         {
             Id = src.Id,
             Name = src.Name,
@@ -474,11 +475,6 @@ public class Mapper : IMapper
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
-
-        organization.Address = MapTo(src.PhysicalAddress, organization);
-
-        return organization;
-    }
 
     public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
         MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
@@ -796,24 +792,6 @@ public class Mapper : IMapper
             Type = OrganizationTagType.Location,
             Color = src.Color
         };
-
-    public Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Address(), organization);
-
-    public Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Organization organization)
-    {
-        dest.AddressLine1 = src.AddressLine1;
-        dest.AddressLine2 = src.AddressLine2;
-        dest.Suburb = src.Suburb;
-        dest.City = src.City;
-        dest.Province = src.Province;
-        dest.Zipcode = src.Zipcode;
-        dest.Country = src.Country;
-        dest.Latitude = src.Latitude;
-        dest.Longitude = src.Longitude;
-        dest.Organization = organization;
-        return dest;
-    }
 
     public OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationBillingDetails(), organization);
@@ -1169,6 +1147,94 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
+
+    public OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationPhysicalAddress(), organization);
+
+    public OrganizationPhysicalAddress MergeTo(
+        Shared.Models.OrganizationPhysicalAddress src,
+        OrganizationPhysicalAddress dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.Latitude = src.Latitude;
+        dest.Longitude = src.Longitude;
+        dest.AddressLine1 = src.AddressLine1;
+        dest.AddressLine2 = src.AddressLine2;
+        dest.Suburb = src.Suburb;
+        dest.City = src.City;
+        dest.Province = src.Province;
+        dest.Zipcode = src.Zipcode;
+        dest.Country = src.Country;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public Shared.Models.OrganizationPhysicalAddress MapTo(OrganizationPhysicalAddress src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Organization = MapTo(src.Organization)
+        };
+
+    public Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
+
+    public OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src) =>
+        new()
+        {
+            Id = src.Id,
+            Latitude = src.Latitude,
+            Longitude = src.Longitude,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Organization = MapTo(src.Organization)!
+        };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1559,24 +1625,6 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Organization organization) =>
-        src is null
-            ? null
-            : new Shared.Models.Address
-            {
-                Id = src.Id,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                Latitude = src.Latitude,
-                Longitude = src.Longitude,
-                Organization = organization
-            };
-
     private static Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src, Shared.Models.Organization organization) =>
         src is null
             ? null
@@ -1593,44 +1641,6 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 Organization = organization
-            };
-
-    private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Organization organization) =>
-        new()
-        {
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            Organization = organization
-        };
-
-    private static AddressDetails MapToGraphQl(Shared.Models.Address? src) =>
-        src is null
-            ? new AddressDetails
-            {
-                FormattedAddress = string.Empty,
-                AddressLine1 = string.Empty,
-                AddressLine2 = null,
-                Suburb = string.Empty,
-                City = string.Empty,
-                Province = null,
-                Zipcode = string.Empty,
-                Country = string.Empty
-            }
-            : new AddressDetails
-            {
-                FormattedAddress = src.FormattedAddress,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country
             };
 
     private static GraphQL.Billing.OrganizationBillingDetails? MapToGraphQl(Shared.Models.OrganizationBillingDetails? src) =>
@@ -1814,4 +1824,40 @@ public class Mapper : IMapper
         src is null
             ? null
             : new GraphQL.TaxDetails.OrganizationTaxDetails { GstNumber = src.GstNumber, GstPercentage = src.GstPercentage.ToRoundedDecimal() };
+
+    private static OrganizationPhysicalAddressDetails? MapToGraphQl(Shared.Models.OrganizationPhysicalAddress? src) =>
+        src is null
+            ? null
+            : new OrganizationPhysicalAddressDetails
+            {
+                Id = src.Id,
+                Latitude = src.Latitude,
+                Longitude = src.Longitude,
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddress? src, Shared.Models.Organization organization) =>
+        src is null
+            ? null
+            : new Shared.Models.OrganizationPhysicalAddress
+            {
+                Id = src.Id,
+                Latitude = src.Latitude,
+                Longitude = src.Longitude,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                Organization = organization
+            };
 }
