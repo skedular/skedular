@@ -655,6 +655,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+
+  const [locationName, setLocationName] = useState<string>(rootData.location?.name ?? '');
+  const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
+  const [locationAbout, setLocationAbout] = useState(rootData.location?.about);
+  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
+  const [locationTimezone, setLocationTimezone] = useState<string>(rootData.location?.timezone ?? '');
+  const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
+  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
+  const [locationContactEmail, setLocationContactEmail] = useState(rootData.location?.contactEmail);
+  const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
+  const [locationContactPhone, setLocationContactPhone] = useState(rootData.location?.contactPhone);
+  const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.location?.primaryFeatureImage && rootData.location?.primaryFeatureImage.original
       ? {
@@ -1567,92 +1581,101 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             <Form
               onSubmit={handleLocationDetailUpdateClick}
               initialValues={{
-                name: location.name,
-                about: location.about,
-                timezone: location.timezone ?? '',
-                locationTagIds: location.locationTags.map((item) => item.uniqueId),
-                contactEmail: location.contactEmail,
-                contactPhone: location.contactPhone,
+                name: locationName,
+                about: locationAbout,
+                timezone: locationTimezone,
+                locationTagIds,
+                contactEmail: locationContactEmail,
+                contactPhone: locationContactPhone,
               }}
               validate={validateLocationDetails}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['setup'] = divElement;
-                    }}
-                  >
-                    <GridContainer sx={{ justifyContent: 'space-between' }}>
-                      <Grid>
-                        <SectionIconTypography label="Location Setup" />
-                        <BodyIconTypography label="Edit your location name and details" />
-                      </Grid>
+              render={({ handleSubmit, values }) => {
+                debounceSetLocationName(values!.name);
+                debounceSetLocationAbout(values!.about);
+                debounceSetLocationTimezone(values!.timezone);
+                debounceSetLocationTagIds(values!.locationTagIds);
+                debounceSetLocationContactEmail(values!.contactEmail);
+                debounceSetLocationContactPhone(values!.contactPhone);
 
-                      <Grid>
-                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewLocationBookingsClick}>
-                          View Location Bookings
-                        </Button>
-                      </Grid>
-                    </GridContainer>
-                    <Divider />
-                  </StackColumn>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['setup'] = divElement;
+                      }}
+                    >
+                      <GridContainer sx={{ justifyContent: 'space-between' }}>
+                        <Grid>
+                          <SectionIconTypography label="Location Setup" />
+                          <BodyIconTypography label="Edit your location name and details" />
+                        </Grid>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature Image">
-                      <StackColumn>
-                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
-                        )}
-                        <ImageFileUploaderWithCropper
-                          defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                          previewImageHeight={locationFeatureImageHeight}
-                          previewImageWidth={locationFeatureImageWidth}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
-                      </StackColumn>
-                    </FormFieldLabel>
+                        <Grid>
+                          <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewLocationBookingsClick}>
+                            View Location Bookings
+                          </Button>
+                        </Grid>
+                      </GridContainer>
+                      <Divider />
+                    </StackColumn>
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="About">
-                      <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Timezone">
-                      <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                    </FormFieldLabel>
-
-                    {rootData.organization?.type.type === 'MARKETPLACE' && (
-                      <FormFieldLabel label="Location Tags">
-                        <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Feature Image">
+                        <StackColumn>
+                          {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                            <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                          )}
+                          <ImageFileUploaderWithCropper
+                            defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                            previewImageHeight={locationFeatureImageHeight}
+                            previewImageWidth={locationFeatureImageWidth}
+                            onUploadCompleted={handleFeatureImageUploadCompleted}
+                          />
+                        </StackColumn>
                       </FormFieldLabel>
-                    )}
 
-                    <SectionIconTypography label="Contact Details" />
-                    <BodyIconTypography label="Edit your location contact details" />
-                    <Divider />
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Email">
-                      <TextField name="contactEmail" required={requiredFields.contactEmail} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="About">
+                        <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Phone Number">
-                      <TextField name="contactPhone" required={requiredFields.contactPhone} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                      <FormFieldLabel label="Timezone">
+                        <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                      </FormFieldLabel>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
+                      {rootData.organization?.type.type === 'MARKETPLACE' && (
+                        <FormFieldLabel label="Location Tags">
+                          <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                        </FormFieldLabel>
+                      )}
+
+                      <SectionIconTypography label="Contact Details" />
+                      <BodyIconTypography label="Edit your location contact details" />
+                      <Divider />
+
+                      <FormFieldLabel label="Email">
+                        <TextField name="contactEmail" required={requiredFields.contactEmail} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Phone Number">
+                        <TextField name="contactPhone" required={requiredFields.contactPhone} />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
 
             <Form
