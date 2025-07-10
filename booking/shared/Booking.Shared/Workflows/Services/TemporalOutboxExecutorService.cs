@@ -31,7 +31,8 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
             catch (WorkflowAlreadyStartedException)
             {
             }
-        }else         if (workflowType == s_payBookingViaBankTransfer)
+        }
+        else if (workflowType == s_payBookingViaBankTransfer)
         {
             try
             {
@@ -45,6 +46,5 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
             {
             }
         }
-
     }
 }

@@ -61,7 +61,7 @@ public class BookingOutboxPublisher(
         temporalOutboxPayBookingViaCardWorkflowExecutor.Execute(
             new PayBookingViaCardInput(
                 booking.Id,
-                booking.PaymentExpiry, 
+                booking.PaymentExpiry,
                 booking.SendInvoice ?? false,
                 Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
             new WorkflowOptions

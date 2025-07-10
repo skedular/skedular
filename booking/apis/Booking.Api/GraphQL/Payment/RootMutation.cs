@@ -28,7 +28,7 @@ public class RootMutation(IMapper mapper)
         var booking = await bookingPaymentService.RejectPaymentAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
-    
+
     [UseResolverScope]
     public async Task<BookingPayload> MakeBookingPaymentNotRequiredAsync(
         MakeBookingPaymentNotRequiredInput input,
@@ -38,5 +38,4 @@ public class RootMutation(IMapper mapper)
         var booking = await bookingPaymentService.MakePaymentNotRequiredAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
-
 }

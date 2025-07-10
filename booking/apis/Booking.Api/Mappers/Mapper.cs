@@ -113,7 +113,7 @@ public class Mapper : IMapper
             Currency = src.Currency,
             SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
-            InvoiceEmailList = src.InvoiceEmailList,
+            InvoiceEmailList = src.InvoiceEmailList
         };
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -598,10 +598,7 @@ public class Mapper : IMapper
             ? null
             : new OrganizationDetails
             {
-                UniqueId = src.Id,
-                Name = src.Name.ToSafeString(),
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone
+                UniqueId = src.Id, Name = src.Name.ToSafeString(), ContactEmail = src.ContactEmail, ContactPhone = src.ContactPhone
             };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
@@ -759,20 +756,12 @@ public class Mapper : IMapper
     private static BookingCheckoutSessionDetails? MapTo(Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSessionDetails
-            {
-                UniqueId = src.Id,
-                CheckoutUrl = src.CheckoutUrl
-            };
+            : new BookingCheckoutSessionDetails { UniqueId = src.Id, CheckoutUrl = src.CheckoutUrl };
 
     private static BookingCheckoutSession? MapToGrpcResponse(Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSession
-            {
-                Id = src.Id,
-                CheckoutUrl = src.CheckoutUrl
-            };
+            : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl };
 
     private static Shared.Models.StripeCheckoutSession? MapTo(StripeCheckoutSession? src) =>
         src is null

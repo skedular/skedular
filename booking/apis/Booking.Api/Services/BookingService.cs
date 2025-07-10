@@ -100,7 +100,8 @@ public class BookingService(
                 throw new PaymentMethodRequired();
             }
 
-            if (productVersions.Any(item => !(item.AcceptedBookingPaymentMethods.ToSafeCollection()).Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+            if (productVersions.Any(item =>
+                    !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
             {
                 throw new BookingPaymentMethodNotAccepted();
             }

@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
-using Stripe.Checkout;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;

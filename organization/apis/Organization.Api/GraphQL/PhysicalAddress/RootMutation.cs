@@ -17,10 +17,10 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = 
+            Organization =
                 mapper.MapTo(await organizationPhysicalAddressService.AddAsync(mapper.MapTo(input), cancellationToken))!
         };
-    
+
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationPhysicalAddressAsync(
         UpdateOrganizationPhysicalAddressInput input,
@@ -29,8 +29,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = 
+            Organization =
                 mapper.MapTo(await organizationPhysicalAddressService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
         };
-
 }

@@ -68,7 +68,7 @@ public class Mapper : IMapper
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
             SendInvoice = src.SendInvoice ?? false,
-            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
 
         if (src.PaymentMethod is not null)
@@ -354,11 +354,7 @@ public class Mapper : IMapper
     private static BookingCheckoutSession? MapTo(StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSession
-            {
-                Id = src.Id,
-                CheckoutUrl = src.CheckoutUrl.ToSafeString(),
-            };
+            : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl.ToSafeString() };
 
     private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item =>

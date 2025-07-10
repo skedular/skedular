@@ -9,5 +9,7 @@ public class OrganizationBookingPermissions
     [GraphQLName("canAddBooking")] public bool CanAddBooking { get; set; }
     [GraphQLName("canUpdateBooking")] public bool CanUpdateBooking { get; set; }
     [GraphQLName("canDeleteBooking")] public bool CanDeleteBooking { get; set; }
-    [GraphQLName("canModifyPaymentMethod")] public bool CanModifyPaymentMethod { get; set; }
+
+    [GraphQLName("canModifyPaymentMethod")]
+    public bool CanModifyPaymentMethod { get; set; }
 }
