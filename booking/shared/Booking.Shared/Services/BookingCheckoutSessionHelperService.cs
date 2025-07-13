@@ -13,6 +13,11 @@ public class BookingCheckoutSessionHelperService : IBookingCheckoutSessionHelper
 {
     public DateTimeOffset GetBookingPaymentExpiry(Database.Entities.Booking booking)
     {
+        if (string.IsNullOrWhiteSpace(booking.PaymentMethod))
+        {
+            return DateTimeOffset.MinValue;
+        }
+
         var allowedTime = booking.ProductVersions.Count != 0
             ? booking.PaymentMethod switch
             {
