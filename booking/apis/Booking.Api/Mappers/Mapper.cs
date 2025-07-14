@@ -352,17 +352,21 @@ public class Mapper : IMapper
             BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
             PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace,
-            PaymentMethod = src.PaymentMethod switch
-            {
-                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
-                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
-                _ => throw new ArgumentOutOfRangeException()
-            },
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
             SendInvoice = src.SendInvoice ?? false,
             InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
+
+        if (src.PaymentMethod is not null)
+        {
+            booking.PaymentMethod = src.PaymentMethod switch
+            {
+                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
+                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
 
         booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
         booking.InvolvedOrganizations.AddRange(MapToGrpcResponse(src.InvolvedOrganizations));
