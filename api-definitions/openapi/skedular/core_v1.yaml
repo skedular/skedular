@@ -232,7 +232,6 @@ components:
     File:
       type: object
       required:
-        - id
         - url
       properties:
         url:
