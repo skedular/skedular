@@ -312,12 +312,12 @@ public class BookingInvoiceService(
                 {
                     column.Spacing(2);
 
-                    column.Item().Text($"Due Date: ${dueDate.ToShortDate()}").Bold();
+                    column.Item().Text($"Due Date: {dueDate.ToShortDate()}").Bold();
                     column.Item().Text("Invoice to be paid into account:");
-                    column.Item().Text($"Bank Name: ${bankAccount.BankName}");
-                    column.Item().Text($"Account Holder Name: ${bankAccount.AccountHolderName}");
-                    column.Item().Text($"Account Number: ${bankAccount.AccountNumber}");
-                    column.Item().Text($"Country: ${bankAccount.Country}");
+                    column.Item().Text($"Bank Name: {bankAccount.BankName}");
+                    column.Item().Text($"Account Holder Name: {bankAccount.AccountHolderName}");
+                    column.Item().Text($"Account Number: {bankAccount.AccountNumber}");
+                    column.Item().Text($"Country: {bankAccount.Country}");
                     column.Item().Text("**Please use correct invoice number when paying**");
                 });
         }

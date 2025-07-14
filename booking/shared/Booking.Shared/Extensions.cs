@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
+using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
@@ -68,14 +69,21 @@ public static class Extensions
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {
+        var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
+        ArgumentNullException.ThrowIfNull(coreConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(coreConfiguration.GrpcUrl);
+
         var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
         ArgumentNullException.ThrowIfNull(organizationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
 
+        services.AddGrpcClient<CoreService.CoreServiceClient>(GrpcClients.ConfigureCore);
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
 
         return services
+            .AddSingleton(coreConfiguration)
             .AddSingleton(organizationConfiguration);
     }
 }

@@ -12,6 +12,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/core_v1.proto" GrpcServices="Client"/>
         <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 

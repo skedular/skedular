@@ -1,13 +1,20 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Core.Api.Mappers;
 using Core.Api.Services;
+using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Version;
 using Grpc.Core;
 using Version = Api.Shared.Services.Grpc.Skedular.Core.V1.Version;
 
 namespace Core.Api.Grpc;
 
-public class CoreGrpcService(IVersionService versionService, IFileUploaderService fileUploaderService, IMapper mapper) : CoreService.CoreServiceBase
+public class CoreGrpcService(
+    IGrpcAuthenticator grpcAuthenticator,
+    CoreConfiguration coreConfiguration,
+    IVersionService versionService,
+    IFileUploaderService fileUploaderService,
+    IMapper mapper) : CoreService.CoreServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
@@ -20,6 +27,8 @@ public class CoreGrpcService(IVersionService versionService, IFileUploaderServic
         IAsyncStreamReader<UploadFileRequest> requestStream,
         ServerCallContext context)
     {
+        grpcAuthenticator.VerifyAndEnrich(coreConfiguration.ApiKey);
+
         var contentType = string.Empty;
         string? extension = null;
 
@@ -28,12 +37,12 @@ public class CoreGrpcService(IVersionService versionService, IFileUploaderServic
         {
             if (string.IsNullOrWhiteSpace(contentType) && !string.IsNullOrWhiteSpace(message.ContentType))
             {
-                contentType ??= message.ContentType;
+                contentType = message.ContentType;
             }
 
             if (string.IsNullOrWhiteSpace(extension) && !string.IsNullOrWhiteSpace(message.Extension))
             {
-                extension ??= message.Extension;
+                extension = message.Extension;
             }
 
             if (message.Chunk is not null && message.Chunk.Length > 0)

@@ -86,9 +86,9 @@ public class PayBookingViaCard
                             activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, true, args.InvoiceEmailList)),
                         new ActivityOptions
                         {
-                            StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                            StartToCloseTimeout = TimeSpan.FromMinutes(2),
                             TaskQueue = Workflow.Info.TaskQueue,
-                            RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(5) }
+                            RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                         });
                 }
 
