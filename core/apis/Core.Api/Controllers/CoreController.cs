@@ -33,7 +33,7 @@ public class CoreController(
         await file.CopyToAsync(memoryStream, cancellationToken);
 
         return mapper.MapTo(
-            await fileUploaderService.UploadToCdnAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), cancellationToken));
+            await fileUploaderService.UploadToCdnAsync(memoryStream, file.ContentType, Path.GetExtension(file.FileName), false, cancellationToken));
     }
 
     public override async Task<IActionResult> GetPublicCdnFile(string filename, CancellationToken cancellationToken = default)
@@ -54,6 +54,7 @@ public class CoreController(
                 memoryStream,
                 file.ContentType,
                 Path.GetExtension(file.FileName),
+                false,
                 cancellationToken));
     }
 

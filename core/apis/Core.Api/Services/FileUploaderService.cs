@@ -4,13 +4,25 @@ using Core.Shared.Repositories;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.Random;
+using Customer = Core.Shared.Database.Entities.Customer;
 
 namespace Core.Api.Services;
 
 public interface IFileUploaderService
 {
-    Task<CdnFile> UploadToCdnAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken);
-    Task<PrivateFile> UploadToPrivateStorageAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken);
+    Task<CdnFile> UploadToCdnAsync(
+        Stream stream,
+        string contentType,
+        string? extension,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken);
+
+    Task<PrivateFile> UploadToPrivateStorageAsync(
+        Stream stream,
+        string contentType,
+        string? extension,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken);
 }
 
 public class FileUploaderService(
@@ -22,9 +34,19 @@ public class FileUploaderService(
     IMapper mapper,
     IImageHelper imageHelper) : IFileUploaderService
 {
-    public async Task<CdnFile> UploadToCdnAsync(Stream stream, string contentType, string? extension, CancellationToken cancellationToken)
+    public async Task<CdnFile> UploadToCdnAsync(
+        Stream stream,
+        string contentType,
+        string? extension,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken)
     {
-        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            (_, customer) = await customerService.GetCustomerAsync(cancellationToken);
+        }
+
         var id = randomHelper.Generate();
         var (storageUrl, cdnUrl) = await cdnService.UploadAsync(stream, contentType, id, extension, cancellationToken);
         var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
@@ -36,7 +58,7 @@ public class FileUploaderService(
             ContentType = contentType,
             Width = response.IsImage ? response.Width : null,
             Height = response.IsImage ? response.Height : null,
-            UploadedBy = customerEntity
+            UploadedBy = customer
         };
 
         if (response.IsImage)
@@ -69,9 +91,15 @@ public class FileUploaderService(
         Stream stream,
         string contentType,
         string? extension,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            (_, customer) = await customerService.GetCustomerAsync(cancellationToken);
+        }
+
         var id = randomHelper.Generate();
         var storageUrl = await privateFileService.UploadAsync(stream, contentType, id, extension, cancellationToken);
         var response = await imageHelper.GetImageWidthHeightAsync(stream, cancellationToken);
@@ -82,7 +110,7 @@ public class FileUploaderService(
             ContentType = contentType,
             Width = response.IsImage ? response.Width : null,
             Height = response.IsImage ? response.Height : null,
-            UploadedBy = customerEntity
+            UploadedBy = customer
         };
 
         if (response.IsImage)

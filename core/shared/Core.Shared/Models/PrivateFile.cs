@@ -12,5 +12,5 @@ public class PrivateFile : ModelBase
     public string? ThumbnailContentType { get; set; }
     public int? ThumbnailWidth { get; set; }
     public int? ThumbnailHeight { get; set; }
-    public Customer UploadedBy { get; set; } = new();
+    public Customer? UploadedBy { get; set; }
 }

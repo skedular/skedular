@@ -1,5 +1,6 @@
 using Api.Shared.Services.OpenApi.Skedular.Core.V1;
 using Core.Shared.Models;
+using Enterprise.Shared;
 using CdnFile = Core.Shared.Models.CdnFile;
 using Customer = Core.Shared.Models.Customer;
 using File = Api.Shared.Services.OpenApi.Skedular.Core.V1.File;
@@ -13,6 +14,7 @@ public interface IMapper
     FileUploadResponse MapTo(CdnFile src);
     PrivateFile MapTo(Shared.Database.Entities.PrivateFile src);
     FileUploadResponse MapTo(PrivateFile src);
+    global::Api.Shared.Services.Grpc.Skedular.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src);
 }
 
 public class Mapper : IMapper
@@ -95,6 +97,28 @@ public class Mapper : IMapper
                     ContentType = src.ThumbnailContentType,
                     Width = src.ThumbnailWidth,
                     Height = src.ThumbnailHeight
+                }
+        };
+
+    public global::Api.Shared.Services.Grpc.Skedular.Core.V1.FileUploadResponse MapToGrpcResponse(PrivateFile src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Original = new global::Api.Shared.Services.Grpc.Skedular.Core.V1.File
+            {
+                Url = src.StorageUrl.ToString().ToSafeString(),
+                ContentType = src.ContentType.ToSafeString(),
+                Width = src.Width.ToNullInt(),
+                Height = src.Height.ToNullInt()
+            },
+            Thumbnail = src.ThumbnailStorageUrl is null
+                ? null
+                : new global::Api.Shared.Services.Grpc.Skedular.Core.V1.File
+                {
+                    Url = src.ThumbnailStorageUrl.ToString().ToSafeString(),
+                    ContentType = src.ThumbnailContentType.ToSafeString(),
+                    Width = src.ThumbnailWidth.ToNullInt(),
+                    Height = src.ThumbnailHeight.ToNullInt()
                 }
         };
 }

@@ -6,16 +6,16 @@ namespace Core.Shared.Repositories;
 
 public interface IPrivateFileRepository : IRepository<PrivateFile>
 {
-    PrivateFile Add(PrivateFile cdnFile);
+    void Add(PrivateFile cdnFile);
 }
 
 public class PrivateFileRepository(CoreDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CoreDbContext, PrivateFile>(dbContext, timeProvider), IPrivateFileRepository
 {
-    public PrivateFile Add(PrivateFile cdnFile)
+    public void Add(PrivateFile cdnFile)
     {
         var now = TimeProvider.GetUtcNow();
         cdnFile.CreatedAt = now;
-        return DbContext.PrivateFile.Add(cdnFile).Entity;
+        DbContext.PrivateFile.Add(cdnFile);
     }
 }
