@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f656458505616d72614f2dd1f8980722>>
+ * @generated SignedSource<<9b416d852848f07e857a9d00a606c313>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added v
 import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
   readonly me: {
+    readonly emails: ReadonlyArray<string>;
     readonly id: string;
   };
   readonly openingHoursMinutesStep: number;
@@ -44,7 +45,7 @@ export type bookProduct_query$data = {
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingType_query">;
   readonly " $fragmentType": "bookProduct_query";
 };
 export type bookProduct_query$key = {
@@ -97,7 +98,14 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "emails",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -245,6 +253,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceBookingPaymentMethodType_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "multipleChoicesUserEmails_query"
     }
   ],
   "type": "Query",
@@ -252,6 +265,6 @@ return {
 };
 })();
 
-(node as any).hash = "c316add6558ac9aaef30dc14d4a40049";
+(node as any).hash = "9c36448580b37dbb94a3b722468e69a8";
 
 export default node;

@@ -18,6 +18,7 @@ import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DefaultSelect } from '@/components/styled';
+import { MultipleChoicesUserEmails } from '@/components/user';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -86,6 +87,7 @@ type BookingDetails = {
   type: string;
   paymentMethod: string;
   sendInvoice: boolean;
+  invoiceEmailList: string[];
 };
 
 const bookingSchema = (numberOfResourcesToBook: number) =>
@@ -111,6 +113,18 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
     type: string().required('Type is required'),
     paymentMethod: string().required('Payment method is required'),
     sendInvoice: boolean().required('Send invoice is required'),
+    invoiceEmailList: array().test('required-if-send-invoice-checked', 'You need to provide at least an email to send invoice to', function (value) {
+      const { sendInvoice } = this.parent;
+      if (!sendInvoice) {
+        return true;
+      }
+
+      if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
+        return false;
+      }
+
+      return value.length > 0;
+    }),
   });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -121,6 +135,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
       fragment bookProduct_query on Query {
         me {
           id
+          emails
         }
         product(id: $productId) {
           id
@@ -151,6 +166,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         openingHoursMinutesStep
         ...singleChoiceMarketplaceBookingType_query
         ...singleChoiceBookingPaymentMethodType_query
+        ...multipleChoicesUserEmails_query
       }
     `,
     rootDataRelay,
@@ -229,6 +245,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             name
           }
           sendInvoice
+          invoiceEmailList
         }
       }
     }
@@ -263,6 +280,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [sendInvoice, setSendInvoice] = useState<boolean>(true);
+  const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(rootData.me.emails.map((item) => item));
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -448,7 +466,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, sendInvoice }: BookingDetails) => {
+  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, sendInvoice, invoiceEmailList }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -480,6 +498,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
           paymentMethod: paymentMethod as PaymentMethod,
           sendInvoice,
+          invoiceEmailList,
         },
       },
       onCompleted: (response, errors) => {
@@ -549,6 +568,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               name: '',
             },
             sendInvoice,
+            invoiceEmailList,
           },
         },
       },
@@ -593,6 +613,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               paymentMethod,
               notes,
               sendInvoice,
+              invoiceEmailList,
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
@@ -603,6 +624,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               setPaymentMethod(values!.paymentMethod);
               setNotes(values!.notes);
               setSendInvoice(values!.sendInvoice);
+              setInvoiceEmailList(values!.invoiceEmailList);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -815,6 +837,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                         required={requiredFields.sendInvoice}
                       />
                     </FormFieldLabel>
+
+                    {sendInvoice && (
+                      <FormFieldLabel label="">
+                        <MultipleChoicesUserEmails rootDataRelay={rootData} name="invoiceEmailList" required={requiredFields.invoiceEmailList} />
+                      </FormFieldLabel>
+                    )}
 
                     <FormFieldLabel label="Total Price">
                       <BodyIconTypography label={totalPrice} />

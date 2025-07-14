@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db93d013b279c072c886de72d7fb9c59>>
+ * @generated SignedSource<<65614056a8df882ef0ac2667a7f72a7e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,7 @@ export type bookProduct_addBookingMutation$data = {
     readonly booking: {
       readonly from: any;
       readonly id: string;
+      readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
@@ -86,6 +87,7 @@ export type bookProduct_addBookingMutation$rawResponse = {
     readonly booking: {
       readonly from: any;
       readonly id: string;
+      readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
@@ -339,6 +341,13 @@ v7 = {
       "kind": "ScalarField",
       "name": "sendInvoice",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "invoiceEmailList",
+      "storageKey": null
     }
   ],
   "storageKey": null
@@ -408,16 +417,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bc5de533b8e8741d32812a7657f33a11",
+    "cacheID": "bed6fbeb022468843af5504d3bbc4d86",
     "id": null,
     "metadata": {},
     "name": "bookProduct_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      sendInvoice\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      sendInvoice\n      invoiceEmailList\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f1dc93eecc6e8d205cf14dd187aebede";
+(node as any).hash = "f84102c631b92b6da8afdde737d97a24";
 
 export default node;
