@@ -4,6 +4,7 @@ import TeamAvatar from '@/components/avatars/team-avatar';
 import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import FormFieldLabel from '@/components/commons/form-field-label';
 import StackColumn from '@/components/commons/stack-column';
+import { PdfIcon } from '@/components/icons';
 import { getOrganizationMarketplaceBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -18,6 +19,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
@@ -85,6 +87,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             checkoutUrl
           }
           paymentExpiry
+          invoiceUrl
           lineItems {
             quantity
             productVersion {
@@ -291,6 +294,14 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             <FormFieldLabel label="Total Amount">
               <BodyIconTypography label={`${booking.totalAmountToDisplay}`} />
             </FormFieldLabel>
+
+            {booking.invoiceUrl && (
+              <FormFieldLabel label="">
+                <Link component={NextLink} href={booking.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                  <BodyIconTypography label="Download Invoice" startElement={<PdfIcon />} />
+                </Link>
+              </FormFieldLabel>
+            )}
 
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <StackRow>

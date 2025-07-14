@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, PaymentStatusIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -126,6 +126,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           type
           name
         }
+        invoiceUrl
       }
     `,
     bookingDetailsRelay,
@@ -637,6 +638,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           {bookingDetails.isPaymentRequired && (
             <>
               <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              {bookingDetails.invoiceUrl && (
+                <Link component={NextLink} href={bookingDetails.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                  <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
+                </Link>
+              )}
               <Divider />
             </>
           )}

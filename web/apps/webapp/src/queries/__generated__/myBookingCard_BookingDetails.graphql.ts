@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<149eadc0a3026e73cde4480578a73441>>
+ * @generated SignedSource<<b9d7e0caabc877b4a8795ae36ac0c4ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
   readonly from: any;
   readonly id: string;
+  readonly invoiceUrl: string | null | undefined;
   readonly involvedCustomers: ReadonlyArray<{
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -244,6 +245,13 @@ return {
         (v1/*: any*/)
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "invoiceUrl",
+      "storageKey": null
     }
   ],
   "type": "BookingDetails",
@@ -251,6 +259,6 @@ return {
 };
 })();
 
-(node as any).hash = "f14b34cb09fc745f2f2dd51ee5192208";
+(node as any).hash = "da4e9324977699deb6ae7cb74cfb28e8";
 
 export default node;

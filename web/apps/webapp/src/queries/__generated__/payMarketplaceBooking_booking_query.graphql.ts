@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1db1f8213de960375caa5c2289da97df>>
+ * @generated SignedSource<<f011a42c1282074851c388ddb3ec0fa0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type payMarketplaceBooking_booking_query$data = {
     } | null | undefined;
     readonly from: any;
     readonly id: string;
+    readonly invoiceUrl: string | null | undefined;
     readonly involvedCustomers: ReadonlyArray<{
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
@@ -341,6 +342,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "invoiceUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "LineItemDetails",
           "kind": "LinkedField",
           "name": "lineItems",
@@ -385,6 +393,6 @@ return {
 };
 })();
 
-(node as any).hash = "56b2bfacbbcd487bc530dd936c2b582f";
+(node as any).hash = "354ce9072bb8c3e6759f337926f6b7c1";
 
 export default node;

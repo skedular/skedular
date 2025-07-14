@@ -67,6 +67,7 @@ export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon, default as ProfileIcon } from '@mui/icons-material/Person';
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
 export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
+export { default as PdfIcon } from '@mui/icons-material/PictureAsPdf';
 export { default as OpeningHoursIcon } from '@mui/icons-material/QueryBuilder';
 export { default as BillingIcon } from '@mui/icons-material/Receipt';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
