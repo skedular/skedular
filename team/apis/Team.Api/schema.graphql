@@ -3,14 +3,6 @@ schema {
   mutation: Mutation
 }
 
-type AcceptInvitationToJoinTeamPayload {
-  clientMutationId: String
-}
-
-type CancelInvitationToJoinTeamPayload {
-  clientMutationId: String
-}
-
 type CdnFile {
   url: String!
   height: Int
@@ -34,15 +26,31 @@ type ConnectionOfTeamMemberEdge {
   totalCount: Int
 }
 
+type InvitationToJoinTeamPayload {
+  clientMutationId: String
+  inviteCustomersToJoinTeam: InviteCustomerToJoinTeamDetails!
+}
+
+type InviteCustomerToJoinTeamDetails {
+  email: String
+  status: InvitationStatus!
+  role: TeamMemberRole!
+  team: TeamDetails!
+  createdBy: Team_CustomerDetails!
+  invitee: Team_CustomerDetails
+  id: ID!
+}
+
 type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
+  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
 type Mutation {
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
-  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload! @cost(weight: "10")
-  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload! @cost(weight: "10")
-  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): CancelInvitationToJoinTeamPayload! @cost(weight: "10")
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
   updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
   addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
@@ -71,10 +79,6 @@ type Query {
   teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
-}
-
-type RejectInvitationToJoinTeamPayload {
-  clientMutationId: String
 }
 
 type TeamDetails {
@@ -305,6 +309,13 @@ input UpdateTeamMembersInput {
   id: String!
   customerIds: [String!]!
   organizationMemberIds: [String!]!
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
 }
 
 enum OrderDirection {

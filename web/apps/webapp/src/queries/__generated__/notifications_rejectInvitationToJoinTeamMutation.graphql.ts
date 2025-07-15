@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ecb5fb7da0d5c1bdc6073e2c55800231>>
+ * @generated SignedSource<<b413ff10208d85653b97054798135641>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,7 +44,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RejectInvitationToJoinTeamPayload",
+    "concreteType": "InvitationToJoinTeamPayload",
     "kind": "LinkedField",
     "name": "rejectInvitationToJoinTeam",
     "plural": false,

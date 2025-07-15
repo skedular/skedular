@@ -8,6 +8,5 @@ namespace Organization.Api.GraphQL.Invitation;
 public class AcceptInvitationToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
 }

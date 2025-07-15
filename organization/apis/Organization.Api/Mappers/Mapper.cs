@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.BankAccount;
+using Organization.Api.GraphQL.Invitation;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.Organization;
@@ -196,6 +197,8 @@ public interface IMapper
     Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src);
     Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src);
     OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src);
+    IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src);
+    InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src);
 }
 
 public class Mapper : IMapper
@@ -433,7 +436,7 @@ public class Mapper : IMapper
             Role = src.Role,
             Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapTo(src.Customer)
+            Customer = MapTo(src.Customer)!
         };
 
     public OrganizationAnalytics MapTo(
@@ -1242,6 +1245,21 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization)!
         };
 
+    public IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src) =>
+        src.Select(MapTo);
+
+    public InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src) =>
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email,
+            Status = src.Status,
+            Role = src.Role,
+            Organization = MapTo(src.Organization)!,
+            CreatedBy = MapTo(src.CreatedBy)!,
+            Invitee = MapTo(src.Invitee)
+        };
+
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
@@ -1343,24 +1361,26 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static CustomerDetails MapTo(Customer src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Email = src.Identities.ToFirstEmail(),
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512,
-            PhoneNumber = src.PhoneNumber
-        };
+    private static CustomerDetails? MapTo(Customer? src) =>
+        src is null
+            ? null
+            : new CustomerDetails
+            {
+                UniqueId = src.Id,
+                Email = src.Identities.ToFirstEmail(),
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber
+            };
 
     private OrganizationActiveOfferingDetails MapTo(OrganizationOffering? src)
     {

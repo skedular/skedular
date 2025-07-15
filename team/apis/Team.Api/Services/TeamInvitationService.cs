@@ -5,7 +5,7 @@ using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
-using Team.Shared.Database.Entities;
+using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Customer = Team.Shared.Models.Customer;
@@ -15,10 +15,14 @@ namespace Team.Api.Services;
 
 public interface ITeamInvitationService
 {
-    Task InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken);
-    Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
-    Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
-    Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
+        string teamId,
+        ICollection<string> emails,
+        CancellationToken cancellationToken);
+
+    Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
 }
 
 public class TeamInvitationService(
@@ -31,11 +35,14 @@ public class TeamInvitationService(
     INotificationOutboxPublisher notificationOutboxPublisher,
     ITeamOutboxPublisher teamOutboxPublisher) : ITeamInvitationService
 {
-    public async Task InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken)
+    public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
+        string teamId,
+        ICollection<string> emails,
+        CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
         {
-            return;
+            return [];
         }
 
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
@@ -58,16 +65,18 @@ public class TeamInvitationService(
             .ToList();
         if (emails.Count == 0)
         {
-            return;
+            return [];
         }
 
         var pendingInvitations = await repositoryFactory.JoinInvitationRepository
-            .Query(new Specification<JoinInvitation>
+            .Query(new Specification<Shared.Database.Entities.JoinInvitation>
             {
                 Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == teamId && query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var joinInvitations = new List<JoinInvitation>();
 
         foreach (var email in emails)
         {
@@ -79,7 +88,7 @@ public class TeamInvitationService(
                                                                                     item.Invitee.Id == matchingCustomerByEmail.Id));
 
             existingJoinInvitation = existingJoinInvitation is null
-                ? repositoryFactory.JoinInvitationRepository.Add(new JoinInvitation
+                ? repositoryFactory.JoinInvitationRepository.Add(new Shared.Database.Entities.JoinInvitation
                 {
                     Id = randomHelper.Generate(),
                     Team = team,
@@ -90,6 +99,8 @@ public class TeamInvitationService(
                     Invitee = matchingCustomerByEmail
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
+
+            joinInvitations.Add(mapper.MapTo(existingJoinInvitation));
 
             if (matchingCustomerByEmail is null)
             {
@@ -109,9 +120,11 @@ public class TeamInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return joinInvitations;
     }
 
-    public async Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -145,9 +158,11 @@ public class TeamInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    public async Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -166,9 +181,11 @@ public class TeamInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    public async Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -190,9 +207,12 @@ public class TeamInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(JoinInvitation joinInvitation, Customer customer)
+    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(Shared.Database.Entities.JoinInvitation joinInvitation,
+        Customer customer)
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)
         {

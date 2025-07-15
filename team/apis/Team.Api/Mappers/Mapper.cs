@@ -2,6 +2,7 @@ using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
+using Team.Api.GraphQL.Invitation;
 using Team.Api.GraphQL.Member;
 using Team.Api.GraphQL.Team;
 using CdnFile = Api.Shared.Services.Grpc.Skedular.Team.V1.CdnFile;
@@ -50,6 +51,8 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
     IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team);
     TeamMemberEdge MapTo(Edge<TeamMember> src);
+    IEnumerable<InviteCustomerToJoinTeamDetails> MapTo(IEnumerable<JoinInvitation> src);
+    InviteCustomerToJoinTeamDetails MapTo(JoinInvitation src);
 }
 
 public class Mapper : IMapper
@@ -331,6 +334,22 @@ public class Mapper : IMapper
 
     public TeamMemberEdge MapTo(Edge<TeamMember> src) => new(MapTo(src.Node), src.Cursor);
 
+
+    public IEnumerable<InviteCustomerToJoinTeamDetails> MapTo(IEnumerable<JoinInvitation> src) =>
+        src.Select(MapTo);
+
+    public InviteCustomerToJoinTeamDetails MapTo(JoinInvitation src) =>
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email,
+            Status = src.Status,
+            Role = src.Role,
+            Team = MapTo(src.Team)!,
+            CreatedBy = MapTo(src.CreatedBy)!,
+            Invitee = MapTo(src.Invitee)
+        };
+
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
@@ -458,24 +477,26 @@ public class Mapper : IMapper
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static CustomerDetails MapTo(Customer src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Email = src.Identities.ToFirstEmail(),
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512,
-            PhoneNumber = src.PhoneNumber
-        };
+    private static CustomerDetails? MapTo(Customer? src) =>
+        src is null
+            ? null
+            : new CustomerDetails
+            {
+                UniqueId = src.Id,
+                Email = src.Identities.ToFirstEmail(),
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber
+            };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 

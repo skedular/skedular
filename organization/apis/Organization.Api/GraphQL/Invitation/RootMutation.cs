@@ -1,49 +1,59 @@
 using HotChocolate;
 using HotChocolate.Types;
+using Organization.Api.Mappers;
 using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL.Invitation;
 
 [MutationType]
-public class RootMutation
+public class RootMutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<InviteCustomersToJoinOrganizationPayload> InviteCustomersToJoinOrganizationAsync(
+    public async Task<InvitationsToJoinOrganizationPayload> InviteCustomersToJoinOrganizationAsync(
         InviteCustomersToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails.ToList(), cancellationToken);
-        return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            InvitesCustomersToJoinOrganization = mapper.MapTo(
+                    await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails.ToList(), cancellationToken))
+                .ToList()
+        };
 
     [UseResolverScope]
-    public async Task<AcceptInvitationToJoinOrganizationPayload> AcceptInvitationToJoinOrganizationAsync(
+    public async Task<InvitationToJoinOrganizationPayload> AcceptInvitationToJoinOrganizationAsync(
         AcceptInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await organizationInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
-        return new AcceptInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            InviteCustomerToJoinOrganization =
+                mapper.MapTo(await organizationInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken))
+        };
 
     [UseResolverScope]
-    public async Task<RejectInvitationToJoinOrganizationPayload> RejectInvitationToJoinOrganizationAsync(
+    public async Task<InvitationToJoinOrganizationPayload> RejectInvitationToJoinOrganizationAsync(
         RejectInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await organizationInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken);
-        return new RejectInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            InviteCustomerToJoinOrganization =
+                mapper.MapTo(await organizationInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken))
+        };
 
     [UseResolverScope]
-    public async Task<CancelInvitationToJoinOrganizationPayload> CancelInvitationToJoinOrganizationAsync(
+    public async Task<InvitationToJoinOrganizationPayload> CancelInvitationToJoinOrganizationAsync(
         CancelInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await organizationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
-        return new CancelInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            InviteCustomerToJoinOrganization =
+                mapper.MapTo(await organizationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken))
+        };
 }

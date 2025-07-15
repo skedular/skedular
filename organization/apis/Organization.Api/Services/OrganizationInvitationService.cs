@@ -5,7 +5,7 @@ using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
-using Organization.Shared.Database.Entities;
+using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Customer = Organization.Shared.Models.Customer;
@@ -15,10 +15,14 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationInvitationService
 {
-    Task InviteMembersByEmailsAsync(string organizationId, ICollection<string> emails, CancellationToken cancellationToken);
-    Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
-    Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
-    Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
+        string organizationId,
+        ICollection<string> emails,
+        CancellationToken cancellationToken);
+
+    Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
 }
 
 public class OrganizationInvitationService(
@@ -31,11 +35,14 @@ public class OrganizationInvitationService(
     INotificationOutboxPublisher notificationOutboxPublisher,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationInvitationService
 {
-    public async Task InviteMembersByEmailsAsync(string organizationId, ICollection<string> emails, CancellationToken cancellationToken)
+    public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
+        string organizationId,
+        ICollection<string> emails,
+        CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
         {
-            return;
+            return [];
         }
 
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -55,23 +62,25 @@ public class OrganizationInvitationService(
                 .Select(identity => identity.Email))
             .ToList();
 
-        emails = emails.Where(item =>
-                !existingMemberEmails.Any(existingMemberEmail =>
-                    string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
+        emails = emails
+            .Where(item => !existingMemberEmails
+                .Any(existingMemberEmail => string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();
         if (emails.Count == 0)
         {
-            return;
+            return [];
         }
 
         var pendingInvitations = await repositoryFactory.JoinInvitationRepository
-            .Query(new Specification<JoinInvitation>
+            .Query(new Specification<Shared.Database.Entities.JoinInvitation>
             {
                 Criteria = query =>
                     !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var joinInvitations = new List<JoinInvitation>();
 
         foreach (var email in emails)
         {
@@ -84,7 +93,7 @@ public class OrganizationInvitationService(
                     item.Invitee.Id == matchingCustomerByEmail.Id));
 
             existingJoinInvitation = existingJoinInvitation is null
-                ? repositoryFactory.JoinInvitationRepository.Add(new JoinInvitation
+                ? repositoryFactory.JoinInvitationRepository.Add(new Shared.Database.Entities.JoinInvitation
                 {
                     Id = randomHelper.Generate(),
                     Organization = organization,
@@ -95,6 +104,8 @@ public class OrganizationInvitationService(
                     Invitee = matchingCustomerByEmail
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
+
+            joinInvitations.Add(mapper.MapTo(existingJoinInvitation));
 
             if (matchingCustomerByEmail is null)
             {
@@ -120,9 +131,11 @@ public class OrganizationInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return joinInvitations;
     }
 
-    public async Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -158,9 +171,11 @@ public class OrganizationInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    public async Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -179,9 +194,11 @@ public class OrganizationInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    public async Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
+    public async Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -204,9 +221,12 @@ public class OrganizationInvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        return mapper.MapTo(joinInvitation);
     }
 
-    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(JoinInvitation joinInvitation, Customer customer)
+    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(Shared.Database.Entities.JoinInvitation joinInvitation,
+        Customer customer)
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)
         {
