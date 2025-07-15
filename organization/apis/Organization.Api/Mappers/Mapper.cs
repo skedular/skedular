@@ -199,6 +199,7 @@ public interface IMapper
     OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src);
     IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src);
     InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src);
+    Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
 }
 
 public class Mapper : IMapper
@@ -1259,6 +1260,8 @@ public class Mapper : IMapper
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
         };
+
+    public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);

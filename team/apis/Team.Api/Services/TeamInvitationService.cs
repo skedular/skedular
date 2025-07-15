@@ -1,7 +1,9 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
@@ -23,6 +25,13 @@ public interface ITeamInvitationService
     Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
+    Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
+
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int )> GetMyPaginatedJoinInvitationsAsync(
+        PaginationInputParam paginationInputParam,
+        JoinInvitationSearchCriteria searchCriteria,
+        ICollection<JoinTeamInvitationOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
 public class TeamInvitationService(
@@ -33,7 +42,8 @@ public class TeamInvitationService(
     IMapper mapper,
     IRandomHelper randomHelper,
     INotificationOutboxPublisher notificationOutboxPublisher,
-    ITeamOutboxPublisher teamOutboxPublisher) : ITeamInvitationService
+    ITeamOutboxPublisher teamOutboxPublisher,
+    ICachedCustomerService cachedCustomerService) : ITeamInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string teamId,
@@ -211,7 +221,34 @@ public class TeamInvitationService(
         return mapper.MapTo(joinInvitation);
     }
 
-    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(Shared.Database.Entities.JoinInvitation joinInvitation,
+    public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
+    {
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(customer.Id, cancellationToken);
+    }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
+        PaginationInputParam paginationInputParam,
+        JoinInvitationSearchCriteria searchCriteria,
+        ICollection<JoinTeamInvitationOrder> orderByFields,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
+        searchCriteria.InviteeId = customer.Id;
+
+        var (paginatedInfo, edges, totalCount) =
+            await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsAsync(
+                paginationInputParam,
+                searchCriteria,
+                orderByFields,
+                cancellationToken);
+
+        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
+    }
+
+    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(
+        Shared.Database.Entities.JoinInvitation joinInvitation,
         Customer customer)
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)

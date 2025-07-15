@@ -53,6 +53,7 @@ public interface IMapper
     TeamMemberEdge MapTo(Edge<TeamMember> src);
     IEnumerable<InviteCustomerToJoinTeamDetails> MapTo(IEnumerable<JoinInvitation> src);
     InviteCustomerToJoinTeamDetails MapTo(JoinInvitation src);
+    Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
 }
 
 public class Mapper : IMapper
@@ -349,6 +350,8 @@ public class Mapper : IMapper
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
         };
+
+    public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));

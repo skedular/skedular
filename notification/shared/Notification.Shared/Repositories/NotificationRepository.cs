@@ -19,12 +19,11 @@ public interface INotificationRepository : IRepository<Database.Entities.Notific
     Database.Entities.Notification Update(Database.Entities.Notification notification);
     Database.Entities.Notification Remove(Database.Entities.Notification notification);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Notification>>, int)>
-        GetPaginatedNotificationsAsync(
-            PaginationInputParam paginationInputParam,
-            NotificationSearchCriteria searchCriteria,
-            ICollection<NotificationOrder> orderByFields,
-            CancellationToken cancellationToken);
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Notification>>, int)> GetPaginatedNotificationsAsync(
+        PaginationInputParam paginationInputParam,
+        NotificationSearchCriteria searchCriteria,
+        ICollection<NotificationOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
 internal static class NotificationExtensions

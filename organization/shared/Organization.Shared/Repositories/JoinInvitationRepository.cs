@@ -1,26 +1,33 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
-using Organization.Shared.Database.Entities;
+using Organization.Shared.Models;
+using Customer = Organization.Shared.Database.Entities.Customer;
+using JoinInvitation = Organization.Shared.Database.Entities.JoinInvitation;
 
 namespace Organization.Shared.Repositories;
 
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
+    Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
     JoinInvitation Remove(JoinInvitation joinInvitation);
+
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+        PaginationInputParam paginationInputParam,
+        JoinInvitationSearchCriteria searchCriteria,
+        ICollection<JoinOrganizationInvitationOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
-internal static class IJoinInvitationExtensions
+internal static class JoinInvitationExtensions
 {
     internal static IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(
         this IQueryable<JoinInvitation> originalQuery) =>
@@ -28,11 +35,61 @@ internal static class IJoinInvitationExtensions
             .Include(query => query.Organization)
             .Include(query => query.CreatedBy)
             .Include(query => query.Invitee);
+
+    internal static IQueryable<JoinInvitation> AddSearchCriteria(this IQueryable<JoinInvitation> query, JoinInvitationSearchCriteria searchCriteria)
+    {
+        query = query.Where(item => !item.DeletedAt.HasValue);
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
+        {
+            query = query.Where(item =>
+                item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        {
+            query = query.Where(item => item.Organization.Id == searchCriteria.OrganizationId);
+        }
+
+        return query;
+    }
+
+    internal static IQueryable<JoinInvitation> AddSortingOrders(
+        this IQueryable<JoinInvitation> originalQuery,
+        ICollection<JoinOrganizationInvitationOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return originalQuery.OrderBy(query => query.CreatedBy).ThenBy(query => query.Id);
+        }
+
+        var orderByField = orderByFields.First();
+        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+        {
+            JoinOrganizationInvitationOrderField.CreatedAt => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.CreatedAt)
+                : originalQuery.OrderByDescending(x => x.CreatedAt),
+            _ => throw new ArgumentOutOfRangeException()
+        }, (query, orderField) =>
+            orderField.Field switch
+            {
+                JoinOrganizationInvitationOrderField.CreatedAt => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.CreatedAt)
+                    : query.ThenByDescending(x => x.CreatedAt),
+                _ => throw new ArgumentOutOfRangeException()
+            }).ThenBy(query => query.Id);
+    }
 }
 
 public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
+            .CountAsync(
+                query => query.DeletedAt == null && query.Invitee != null && query.Invitee.Id == inviteeId,
+                cancellationToken);
+
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .AddDependentObjects()
@@ -68,4 +125,16 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         joinInvitation.DeletedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+        PaginationInputParam paginationInputParam,
+        JoinInvitationSearchCriteria searchCriteria,
+        ICollection<JoinOrganizationInvitationOrder> orderByFields,
+        CancellationToken cancellationToken) =>
+        (await DbContext.JoinInvitation
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }
