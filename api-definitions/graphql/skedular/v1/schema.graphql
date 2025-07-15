@@ -206,6 +206,12 @@ type ConnectionOfOrganizationEdge {
   totalCount: Int
 }
 
+type ConnectionOfOrganizationJoinInvitationEdge {
+  edges: [OrganizationJoinInvitationEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
 type ConnectionOfOrganizationMemberEdge {
   edges: [OrganizationMemberEdge!]!
   pageInfo: PageInfo!
@@ -238,6 +244,12 @@ type ConnectionOfResourceEdge {
 
 type ConnectionOfTeamEdge {
   edges: [TeamEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ConnectionOfTeamJoinInvitationEdge {
+  edges: [TeamJoinInvitationEdge!]!
   pageInfo: PageInfo!
   totalCount: Int
 }
@@ -826,6 +838,11 @@ type OrganizationIndustrySubCategoryReferenceDetails {
   name: String!
 }
 
+type OrganizationJoinInvitationEdge {
+  cursor: String!
+  node: InviteCustomerToJoinOrganizationDetails!
+}
+
 type OrganizationMemberAttendancePercentage {
   date: DateTime!
   percentage: Float!
@@ -1110,6 +1127,8 @@ type Query {
   me: CustomerDetails! @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
+  myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
+  myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput!): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): ConnectionOfNotificationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
@@ -1139,6 +1158,8 @@ type Query {
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
   pendingInvitationsCount: Int! @cost(weight: "10")
+  pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
+  pendingTeamInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
@@ -1240,6 +1261,11 @@ type TeamDetails {
 type TeamEdge {
   cursor: String!
   node: TeamDetails!
+}
+
+type TeamJoinInvitationEdge {
+  cursor: String!
+  node: InviteCustomerToJoinTeamDetails!
 }
 
 type TeamMemberDetails {
@@ -1888,6 +1914,16 @@ input InviteCustomersToJoinTeamInput {
   teamId: String!
 }
 
+input JoinOrganizationInvitationOrderInput {
+  direction: OrderDirection!
+  field: JoinOrganizationInvitationOrderField!
+}
+
+input JoinTeamInvitationOrderInput {
+  direction: OrderDirection!
+  field: JoinTeamInvitationOrderField!
+}
+
 input LineItemInput {
   productVersionId: String!
   quantity: Int!
@@ -1914,6 +1950,15 @@ input LocationWhereInput {
 input MakeBookingPaymentNotRequiredInput {
   clientMutationId: String
   id: String!
+}
+
+input MyInvitationsToJoinOrganizationsWhereInput {
+  organizationId: String
+}
+
+input MyInvitationsToJoinTeamsWhereInput {
+  organizationId: String
+  teamId: String
 }
 
 input MyNotificationWhereInput {
@@ -2487,6 +2532,14 @@ enum InvitationStatus {
   CANCELLED
   PENDING
   REJECTED
+}
+
+enum JoinOrganizationInvitationOrderField {
+  CREATED_AT
+}
+
+enum JoinTeamInvitationOrderField {
+  CREATED_AT
 }
 
 enum LocationOrderField {

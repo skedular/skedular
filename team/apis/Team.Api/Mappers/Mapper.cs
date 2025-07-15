@@ -54,6 +54,7 @@ public interface IMapper
     IEnumerable<InviteCustomerToJoinTeamDetails> MapTo(IEnumerable<JoinInvitation> src);
     InviteCustomerToJoinTeamDetails MapTo(JoinInvitation src);
     Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
+    TeamJoinInvitationEdge MapTo(Edge<JoinInvitation> src);
 }
 
 public class Mapper : IMapper
@@ -177,7 +178,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Role = src.Role,
             Status = src.Status,
-            Customer = MapTo(src.Customer),
+            Customer = MapTo(src.Customer)!,
             OrganizationMember = MapTo(src.OrganizationMember)
         };
 
@@ -352,6 +353,7 @@ public class Mapper : IMapper
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
+    public TeamJoinInvitationEdge MapTo(Edge<JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
@@ -359,7 +361,7 @@ public class Mapper : IMapper
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
         src.Select(MapToGrpcResponse);
 
-    private global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()
         {
             Id = src.Id,
@@ -470,7 +472,7 @@ public class Mapper : IMapper
             };
 
     private static TeamOrganizationMemberDetails? MapTo(OrganizationMember? src) =>
-        src is null ? null : new TeamOrganizationMemberDetails { UniqueId = src.Id, Customer = MapTo(src.Customer) };
+        src is null ? null : new TeamOrganizationMemberDetails { UniqueId = src.Id, Customer = MapTo(src.Customer)! };
 
     private IEnumerable<TeamMemberDetails> MapTo(IEnumerable<TeamMember> src) => src.Select(MapTo);
 

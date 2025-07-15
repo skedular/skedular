@@ -2,9 +2,10 @@ using Enterprise.Shared.Pagination;
 
 namespace Team.Shared.Models;
 
-public class JoinInvitationSearchCriteria(string? teamId)
+public class JoinInvitationSearchCriteria(string? organizationId, string? teamId)
 {
     public string? InviteeId { get; set; }
+    public string? OrganizationId { get; set; } = organizationId;
     public string? TeamId { get; set; } = teamId;
 }
 

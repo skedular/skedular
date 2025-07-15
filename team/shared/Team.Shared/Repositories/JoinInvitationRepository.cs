@@ -46,6 +46,11 @@ internal static class JoinInvitationExtensions
                 item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
         }
 
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        {
+            query = query.Where(item => item.Team.Organization.Id == searchCriteria.OrganizationId);
+        }
+
         if (!string.IsNullOrWhiteSpace(searchCriteria.TeamId))
         {
             query = query.Where(item => item.Team.Id == searchCriteria.TeamId);

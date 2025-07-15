@@ -25,6 +25,12 @@ type ConnectionOfOrganizationEdge {
   totalCount: Int
 }
 
+type ConnectionOfOrganizationJoinInvitationEdge {
+  pageInfo: PageInfo!
+  edges: [OrganizationJoinInvitationEdge!]!
+  totalCount: Int
+}
+
 type ConnectionOfOrganizationMemberEdge {
   pageInfo: PageInfo!
   edges: [OrganizationMemberEdge!]!
@@ -228,6 +234,11 @@ type OrganizationIndustrySubCategoryReferenceDetails {
   id: ID!
 }
 
+type OrganizationJoinInvitationEdge {
+  node: InviteCustomerToJoinOrganizationDetails!
+  cursor: String!
+}
+
 type OrganizationMemberAttendancePercentage {
   date: DateTime!
   percentage: Float!
@@ -421,6 +432,8 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
+  pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
@@ -680,9 +693,18 @@ input InviteCustomersToJoinOrganizationInput {
   emails: [String!]!
 }
 
+input JoinOrganizationInvitationOrderInput {
+  direction: OrderDirection!
+  field: JoinOrganizationInvitationOrderField!
+}
+
 input LocationTagOrganizationTagWhereInput {
   organizationId: String!
   nameContains: String
+}
+
+input MyInvitationsToJoinOrganizationsWhereInput {
+  organizationId: String
 }
 
 input OrganizationBankAccountOrderInput {
@@ -893,6 +915,10 @@ enum InvitationStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+}
+
+enum JoinOrganizationInvitationOrderField {
+  CREATED_AT
 }
 
 enum OrderDirection {
