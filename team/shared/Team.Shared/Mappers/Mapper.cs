@@ -2,7 +2,6 @@ using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using Team.Shared.Models;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
@@ -13,7 +12,6 @@ namespace Team.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src);
-    InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
@@ -61,16 +59,6 @@ public class Mapper : IMapper
 
         return team;
     }
-
-    public InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
-        new()
-        {
-            Id = src.Id,
-            DeletedAt = src.DeletedAt?.ToTimestamp(),
-            TeamId = src.Team.Id,
-            InvitedById = src.CreatedBy.Id,
-            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
-        };
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

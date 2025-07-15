@@ -11,7 +11,7 @@ namespace Organization.Api.GraphQL.Invitation;
 public class InviteCustomerToJoinOrganizationDetails : Node
 {
     [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("status")] public InvitationStatus Status { get; set; }
+    [GraphQLName("status")] public OrganizationInvitationStatusDetails Status { get; set; } = new();
     [GraphQLName("role")] public OrganizationMemberRole Role { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("createdBy")] public CustomerDetails CreatedBy { get; set; } = new();

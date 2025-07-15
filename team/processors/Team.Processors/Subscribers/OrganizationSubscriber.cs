@@ -55,8 +55,6 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
                 }
                 break;
 
-            case Type.InvitationToJoinOrganizationUpserted:
-            case Type.InvitationToJoinOrganizationDeleted:
             case Type.OrganizationOfferingUpdated:
                 break;
         }

@@ -19,7 +19,7 @@ public static class Extensions
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<ITeamService, TeamService>()
             .AddScoped<ITeamMemberService, TeamMemberService>()
-            .AddScoped<ITeamInvitationService, TeamInvitationService>()
+            .AddScoped<IInvitationService, InvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

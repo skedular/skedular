@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<660d31ff36ab66f64b59901f4240ba88>>
+ * @generated SignedSource<<30add551e01bc32eb129f8c7f929a04d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "PENDING" | "REJECTED" | "%future added value";
 export type RejectInvitationToJoinOrganizationInput = {
   clientMutationId?: string | null | undefined;
   id: string;
@@ -18,10 +19,28 @@ export type notifications_rejectInvitationToJoinOrganizationMutation$variables =
 };
 export type notifications_rejectInvitationToJoinOrganizationMutation$data = {
   readonly rejectInvitationToJoinOrganization: {
-    readonly clientMutationId: string | null | undefined;
+    readonly inviteCustomerToJoinOrganization: {
+      readonly id: string;
+      readonly status: {
+        readonly name: string;
+        readonly type: InvitationStatus;
+      };
+    };
+  };
+};
+export type notifications_rejectInvitationToJoinOrganizationMutation$rawResponse = {
+  readonly rejectInvitationToJoinOrganization: {
+    readonly inviteCustomerToJoinOrganization: {
+      readonly id: string;
+      readonly status: {
+        readonly name: string;
+        readonly type: InvitationStatus;
+      };
+    };
   };
 };
 export type notifications_rejectInvitationToJoinOrganizationMutation = {
+  rawResponse: notifications_rejectInvitationToJoinOrganizationMutation$rawResponse;
   response: notifications_rejectInvitationToJoinOrganizationMutation$data;
   variables: notifications_rejectInvitationToJoinOrganizationMutation$variables;
 };
@@ -52,8 +71,44 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "clientMutationId",
+        "concreteType": "InviteCustomerToJoinOrganizationDetails",
+        "kind": "LinkedField",
+        "name": "inviteCustomerToJoinOrganization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationInvitationStatusDetails",
+            "kind": "LinkedField",
+            "name": "status",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -78,16 +133,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "32e0d8420ff908baf068c82641be1360",
+    "cacheID": "e8353e15a0ee6623f56813dec4c134e3",
     "id": null,
     "metadata": {},
     "name": "notifications_rejectInvitationToJoinOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation notifications_rejectInvitationToJoinOrganizationMutation(\n  $input: RejectInvitationToJoinOrganizationInput!\n) {\n  rejectInvitationToJoinOrganization(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation notifications_rejectInvitationToJoinOrganizationMutation(\n  $input: RejectInvitationToJoinOrganizationInput!\n) {\n  rejectInvitationToJoinOrganization(input: $input) {\n    inviteCustomerToJoinOrganization {\n      id\n      status {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "952f65b17c9e960d688d3290a139ffa5";
+(node as any).hash = "5e18817e63520eea34365ce284ff8a45";
 
 export default node;

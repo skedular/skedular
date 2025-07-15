@@ -58,7 +58,8 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           canModify
           canViewAnalytics
         }
-        pendingInvitationsCount
+        pendingOrganizationInvitationsCount
+        pendingTeamInvitationsCount
         ...mobileLeftSideNavigationMenu_query
         ...newFeedbackDialog_query
       }
@@ -183,6 +184,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const organizationAddLink = getOrganizationAddLink(integratedPlatrform);
   const notificationsLink = getNotificationsBaseLink(integratedPlatrform);
   const showHambugerMenu = pathName !== meLink && pathName !== organizationAddLink && pathName !== notificationsLink;
+  const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
 
   return (
     <>
@@ -264,9 +266,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
             <Link component={NextLink} href={notificationsLink}>
-              {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
-              {rootData.pendingInvitationsCount > 0 && (
-                <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
+              {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
+              {pendingInvitationsCount > 0 && (
+                <Badge badgeContent={pendingInvitationsCount} color="primary">
                   <NotificationsIcon excludeTooltip />
                 </Badge>
               )}

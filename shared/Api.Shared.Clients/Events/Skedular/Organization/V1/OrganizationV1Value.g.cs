@@ -31,65 +31,57 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "GAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglhcHBTb3VyY2UYAyAB",
             "KAkSIAoEdHlwZRgEIAEoDjISLm9yZ2FuaXphdGlvbi5UeXBlEigKBHRpbWUY",
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
-            "aW9uSWQYBiABKAkixQEKBERhdGESMgoMb3JnYW5pemF0aW9uGAEgASgLMhou",
-            "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
-            "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
-            "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCKmBAoMT3JnYW5pemF0",
-            "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
-            "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
-            "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
-            "cxgHIAMoCzIgLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRpb25NZW1iZXISKAoI",
-            "T2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRpb24uT2ZmZXJpbmcSFgoOYXp1",
-            "cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlv",
-            "bi5UYWcSOgoLc3NvU2V0dGluZ3MYCyABKAsyJS5vcmdhbml6YXRpb24uT3Jn",
-            "YW5pemF0aW9uU3NvU2V0dGluZ3MSOAoKdGF4RGV0YWlscxgMIAEoCzIkLm9y",
-            "Z2FuaXphdGlvbi5Pcmdhbml6YXRpb25UYXhEZXRhaWxzEgwKBHR5cGUYDSAB",
-            "KAkSFAoMY29udGFjdEVtYWlsGA4gASgJEhQKDGNvbnRhY3RQaG9uZRgPIAEo",
-            "CRIeChZtZW1iZXJWaXNpYmlsaXR5UG9saWN5GBAgASgJEjYKD3BoeXNpY2Fs",
-            "QWRkcmVzcxgRIAEoCzIdLm9yZ2FuaXphdGlvbi5QaHlzaWNhbEFkZHJlc3Mi",
-            "fAoST3JnYW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhIKCmN1c3RvbWVy",
-            "SWQYAiABKAkSIAoEcm9sZRgDIAEoDjISLm9yZ2FuaXphdGlvbi5Sb2xlEiQK",
-            "BnN0YXR1cxgEIAEoDjIULm9yZ2FuaXphdGlvbi5TdGF0dXMi0QEKCE9mZmVy",
-            "aW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQYAyABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdv",
-            "b2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEK",
-            "CXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIW",
-            "Cg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEo",
-            "CSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEo",
-            "CRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
-            "YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQg",
-            "ASgJEhEKCWludml0ZWVJZBgFIAEoCSJRCgNUYWcSCgoCaWQYASABKAkSDAoE",
-            "bmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJ",
-            "Eg0KBWNvbG9yGAUgASgJIn0KF09yZ2FuaXphdGlvblNzb1NldHRpbmdzEgoK",
-            "AmlkGAEgASgJEhAKCGVudGl0eUlkGAIgASgJEhAKCGxvZ2luVXJsGAMgASgJ",
-            "EiAKGGFwcEZlZGVyYXRpb25NZXRhZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2",
-            "ZRgFIAEoCCJOChZPcmdhbml6YXRpb25UYXhEZXRhaWxzEgoKAmlkGAEgASgJ",
-            "EhEKCWdzdE51bWJlchgCIAEoCRIVCg1nc3RQZXJjZW50YWdlGAMgASgJIrUB",
-            "Cg9QaHlzaWNhbEFkZHJlc3MSCgoCaWQYASABKAkSFAoMYWRkcmVzc0xpbmUx",
-            "GAIgASgJEhQKDGFkZHJlc3NMaW5lMhgDIAEoCRIOCgZzdWJ1cmIYBCABKAkS",
-            "DAoEY2l0eRgFIAEoCRIQCghwcm92aW5jZRgGIAEoCRIPCgd6aXBjb2RlGAcg",
-            "ASgJEg8KB2NvdW50cnkYCCABKAkSGAoQZm9ybWF0dGVkQWRkcmVzcxgJIAEo",
-            "CSrGAQoEVHlwZRIdChlUeXBlX09yZ2FuaXphdGlvblVwc2VydGVkEAASHAoY",
-            "VHlwZV9Pcmdhbml6YXRpb25EZWxldGVkEAESLQopVHlwZV9JbnZpdGF0aW9u",
-            "VG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhIsCihUeXBlX0ludml0YXRp",
-            "b25Ub0pvaW5Pcmdhbml6YXRpb25EZWxldGVkEAMSJAogVHlwZV9Pcmdhbml6",
-            "YXRpb25PZmZlcmluZ1VwZGF0ZWQQBCo/CgRSb2xlEg4KClJvbGVfT3duZXIQ",
-            "ABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchACKjAK",
-            "BlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0aXZl",
-            "EAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3Jn",
-            "YW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "aW9uSWQYBiABKAkicQoERGF0YRIyCgxvcmdhbml6YXRpb24YASABKAsyGi5v",
+            "cmdhbml6YXRpb24uT3JnYW5pemF0aW9uSAASKgoIb2ZmZXJpbmcYAiABKAsy",
+            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIqYECgxPcmdh",
+            "bml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
+            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRuYW1lGAMgASgJEg0KBWFib3V0",
+            "GAQgASgJEg8KB2xvZ29VcmwYBSABKAkSDwoHd2Vic2l0ZRgGIAEoCRIxCgdt",
+            "ZW1iZXJzGAcgAygLMiAub3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbk1lbWJl",
+            "chIoCghPZmZlcmluZxgIIAEoCzIWLm9yZ2FuaXphdGlvbi5PZmZlcmluZxIW",
+            "Cg5henVyZVRlbmFudElkcxgJIAMoCRIfCgR0YWdzGAogAygLMhEub3JnYW5p",
+            "emF0aW9uLlRhZxI6Cgtzc29TZXR0aW5ncxgLIAEoCzIlLm9yZ2FuaXphdGlv",
+            "bi5Pcmdhbml6YXRpb25Tc29TZXR0aW5ncxI4Cgp0YXhEZXRhaWxzGAwgASgL",
+            "MiQub3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvblRheERldGFpbHMSDAoEdHlw",
+            "ZRgNIAEoCRIUCgxjb250YWN0RW1haWwYDiABKAkSFAoMY29udGFjdFBob25l",
+            "GA8gASgJEh4KFm1lbWJlclZpc2liaWxpdHlQb2xpY3kYECABKAkSNgoPcGh5",
+            "c2ljYWxBZGRyZXNzGBEgASgLMh0ub3JnYW5pemF0aW9uLlBoeXNpY2FsQWRk",
+            "cmVzcyJ8ChJPcmdhbml6YXRpb25NZW1iZXISCgoCaWQYASABKAkSEgoKY3Vz",
+            "dG9tZXJJZBgCIAEoCRIgCgRyb2xlGAMgASgOMhIub3JnYW5pemF0aW9uLlJv",
+            "bGUSJAoGc3RhdHVzGAQgASgOMhQub3JnYW5pemF0aW9uLlN0YXR1cyLRAQoI",
+            "T2ZmZXJpbmcSCgoCaWQYASABKAkSDAoEY29kZRgCIAEoCRIpCgVzdGFydBgD",
+            "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAQgASgL",
+            "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIRCglhdXRvUmVuZXcYBSAB",
+            "KAgSEQoJdW5pdFByaWNlGAYgASgFEhkKEWFjdGl2ZUN1c3RvbWVySWRzGAcg",
+            "AygJEhYKDm9yZ2FuaXphdGlvbklkGAggASgJIhYKCExvY2F0aW9uEgoKAmlk",
+            "GAEgASgJIlEKA1RhZxIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rl",
+            "c2NyaXB0aW9uGAMgASgJEgwKBHR5cGUYBCABKAkSDQoFY29sb3IYBSABKAki",
+            "fQoXT3JnYW5pemF0aW9uU3NvU2V0dGluZ3MSCgoCaWQYASABKAkSEAoIZW50",
+            "aXR5SWQYAiABKAkSEAoIbG9naW5VcmwYAyABKAkSIAoYYXBwRmVkZXJhdGlv",
+            "bk1ldGFkYXRhVXJsGAQgASgJEhAKCGlzQWN0aXZlGAUgASgIIk4KFk9yZ2Fu",
+            "aXphdGlvblRheERldGFpbHMSCgoCaWQYASABKAkSEQoJZ3N0TnVtYmVyGAIg",
+            "ASgJEhUKDWdzdFBlcmNlbnRhZ2UYAyABKAkitQEKD1BoeXNpY2FsQWRkcmVz",
+            "cxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkSFAoMYWRkcmVz",
+            "c0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5GAUgASgJEhAK",
+            "CHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoHY291bnRyeRgI",
+            "IAEoCRIYChBmb3JtYXR0ZWRBZGRyZXNzGAkgASgJKmkKBFR5cGUSHQoZVHlw",
+            "ZV9Pcmdhbml6YXRpb25VcHNlcnRlZBAAEhwKGFR5cGVfT3JnYW5pemF0aW9u",
+            "RGVsZXRlZBABEiQKIFR5cGVfT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVk",
+            "EAIqPwoEUm9sZRIOCgpSb2xlX093bmVyEAASFgoSUm9sZV9BZG1pbmlzdHJh",
+            "dG9yEAESDwoLUm9sZV9NZW1iZXIQAiowCgZTdGF0dXMSEQoNU3RhdHVzX0Fj",
+            "dGl2ZRAAEhMKD1N0YXR1c19JbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "Offering" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "MemberVisibilityPolicy", "PhysicalAddress" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails.Parser, new[]{ "Id", "GstNumber", "GstPercentage" }, null, null, null, null),
@@ -103,9 +95,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
   public enum Type {
     [pbr::OriginalName("Type_OrganizationUpserted")] OrganizationUpserted = 0,
     [pbr::OriginalName("Type_OrganizationDeleted")] OrganizationDeleted = 1,
-    [pbr::OriginalName("Type_InvitationToJoinOrganizationUpserted")] InvitationToJoinOrganizationUpserted = 2,
-    [pbr::OriginalName("Type_InvitationToJoinOrganizationDeleted")] InvitationToJoinOrganizationDeleted = 3,
-    [pbr::OriginalName("Type_OrganizationOfferingUpdated")] OrganizationOfferingUpdated = 4,
+    [pbr::OriginalName("Type_OrganizationOfferingUpdated")] OrganizationOfferingUpdated = 2,
   }
 
   public enum Role {
@@ -806,9 +796,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         case PayloadOneofCase.Organization:
           Organization = other.Organization.Clone();
           break;
-        case PayloadOneofCase.InvitationToJoinOrganization:
-          InvitationToJoinOrganization = other.InvitationToJoinOrganization.Clone();
-          break;
         case PayloadOneofCase.Offering:
           Offering = other.Offering.Clone();
           break;
@@ -835,20 +822,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "invitationToJoinOrganization" field.</summary>
-    public const int InvitationToJoinOrganizationFieldNumber = 2;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization InvitationToJoinOrganization {
-      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization) payload_ : null; }
-      set {
-        payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinOrganization;
-      }
-    }
-
     /// <summary>Field number for the "offering" field.</summary>
-    public const int OfferingFieldNumber = 3;
+    public const int OfferingFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering Offering {
@@ -864,8 +839,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     public enum PayloadOneofCase {
       None = 0,
       Organization = 1,
-      InvitationToJoinOrganization = 2,
-      Offering = 3,
+      Offering = 2,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -897,7 +871,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         return true;
       }
       if (!object.Equals(Organization, other.Organization)) return false;
-      if (!object.Equals(InvitationToJoinOrganization, other.InvitationToJoinOrganization)) return false;
       if (!object.Equals(Offering, other.Offering)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -908,7 +881,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (payloadCase_ == PayloadOneofCase.Organization) hash ^= Organization.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) hash ^= InvitationToJoinOrganization.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.Offering) hash ^= Offering.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
@@ -933,12 +905,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Organization);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
-        output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinOrganization);
-      }
       if (payloadCase_ == PayloadOneofCase.Offering) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteMessage(Offering);
       }
       if (_unknownFields != null) {
@@ -955,12 +923,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Organization);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
-        output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinOrganization);
-      }
       if (payloadCase_ == PayloadOneofCase.Offering) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteMessage(Offering);
       }
       if (_unknownFields != null) {
@@ -975,9 +939,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       int size = 0;
       if (payloadCase_ == PayloadOneofCase.Organization) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Organization);
-      }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinOrganization);
       }
       if (payloadCase_ == PayloadOneofCase.Offering) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Offering);
@@ -1000,12 +961,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             Organization = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization();
           }
           Organization.MergeFrom(other.Organization);
-          break;
-        case PayloadOneofCase.InvitationToJoinOrganization:
-          if (InvitationToJoinOrganization == null) {
-            InvitationToJoinOrganization = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
-          }
-          InvitationToJoinOrganization.MergeFrom(other.InvitationToJoinOrganization);
           break;
         case PayloadOneofCase.Offering:
           if (Offering == null) {
@@ -1044,15 +999,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
-              subBuilder.MergeFrom(InvitationToJoinOrganization);
-            }
-            input.ReadMessage(subBuilder);
-            InvitationToJoinOrganization = subBuilder;
-            break;
-          }
-          case 26: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
             if (payloadCase_ == PayloadOneofCase.Offering) {
               subBuilder.MergeFrom(Offering);
@@ -1090,15 +1036,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
-              subBuilder.MergeFrom(InvitationToJoinOrganization);
-            }
-            input.ReadMessage(subBuilder);
-            InvitationToJoinOrganization = subBuilder;
-            break;
-          }
-          case 26: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
             if (payloadCase_ == PayloadOneofCase.Offering) {
               subBuilder.MergeFrom(Offering);
@@ -2888,361 +2825,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class InvitationToJoinOrganization : pb::IMessage<InvitationToJoinOrganization>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<InvitationToJoinOrganization> _parser = new pb::MessageParser<InvitationToJoinOrganization>(() => new InvitationToJoinOrganization());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<InvitationToJoinOrganization> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[7]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinOrganization() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinOrganization(InvitationToJoinOrganization other) : this() {
-      id_ = other.id_;
-      deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
-      organizationId_ = other.organizationId_;
-      invitedById_ = other.invitedById_;
-      inviteeId_ = other.inviteeId_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinOrganization Clone() {
-      return new InvitationToJoinOrganization(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "deletedAt" field.</summary>
-    public const int DeletedAtFieldNumber = 2;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp deletedAt_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp DeletedAt {
-      get { return deletedAt_; }
-      set {
-        deletedAt_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "organizationId" field.</summary>
-    public const int OrganizationIdFieldNumber = 3;
-    private string organizationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationId {
-      get { return organizationId_; }
-      set {
-        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "invitedById" field.</summary>
-    public const int InvitedByIdFieldNumber = 4;
-    private string invitedById_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string InvitedById {
-      get { return invitedById_; }
-      set {
-        invitedById_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "inviteeId" field.</summary>
-    public const int InviteeIdFieldNumber = 5;
-    private string inviteeId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string InviteeId {
-      get { return inviteeId_; }
-      set {
-        inviteeId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as InvitationToJoinOrganization);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(InvitationToJoinOrganization other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
-      if (OrganizationId != other.OrganizationId) return false;
-      if (InvitedById != other.InvitedById) return false;
-      if (InviteeId != other.InviteeId) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
-      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
-      if (InvitedById.Length != 0) hash ^= InvitedById.GetHashCode();
-      if (InviteeId.Length != 0) hash ^= InviteeId.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(OrganizationId);
-      }
-      if (InvitedById.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(InvitedById);
-      }
-      if (InviteeId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(InviteeId);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(OrganizationId);
-      }
-      if (InvitedById.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(InvitedById);
-      }
-      if (InviteeId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(InviteeId);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (deletedAt_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
-      }
-      if (OrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
-      }
-      if (InvitedById.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(InvitedById);
-      }
-      if (InviteeId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(InviteeId);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(InvitationToJoinOrganization other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.deletedAt_ != null) {
-        if (deletedAt_ == null) {
-          DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        DeletedAt.MergeFrom(other.DeletedAt);
-      }
-      if (other.OrganizationId.Length != 0) {
-        OrganizationId = other.OrganizationId;
-      }
-      if (other.InvitedById.Length != 0) {
-        InvitedById = other.InvitedById;
-      }
-      if (other.InviteeId.Length != 0) {
-        InviteeId = other.InviteeId;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 26: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 34: {
-            InvitedById = input.ReadString();
-            break;
-          }
-          case 42: {
-            InviteeId = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 26: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 34: {
-            InvitedById = input.ReadString();
-            break;
-          }
-          case 42: {
-            InviteeId = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Tag : pb::IMessage<Tag>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3257,7 +2839,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3603,7 +3185,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3949,7 +3531,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4221,7 +3803,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

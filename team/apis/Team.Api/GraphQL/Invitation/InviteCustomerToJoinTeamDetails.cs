@@ -10,7 +10,7 @@ namespace Team.Api.GraphQL.Invitation;
 public class InviteCustomerToJoinTeamDetails : Node
 {
     [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("status")] public InvitationStatus Status { get; set; }
+    [GraphQLName("status")] public TeamInvitationStatusDetails Status { get; set; } = new();
     [GraphQLName("role")] public TeamMemberRole Role { get; set; }
     [GraphQLName("team")] public TeamDetails Team { get; set; } = new();
     [GraphQLName("createdBy")] public CustomerDetails CreatedBy { get; set; } = new();

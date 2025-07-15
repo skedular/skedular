@@ -34,12 +34,12 @@ type ConnectionOfTeamMemberEdge {
 
 type InvitationToJoinTeamPayload {
   clientMutationId: String
-  inviteCustomersToJoinTeam: InviteCustomerToJoinTeamDetails!
+  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
 }
 
 type InviteCustomerToJoinTeamDetails {
   email: String
-  status: InvitationStatus!
+  status: TeamInvitationStatusDetails!
   role: TeamMemberRole!
   team: TeamDetails!
   createdBy: Team_CustomerDetails!
@@ -77,6 +77,7 @@ type PageInfo {
 }
 
 type Query {
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput! orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   teamMemberRoles: [TeamMemberRole!]!
@@ -107,6 +108,11 @@ type TeamDetails {
 type TeamEdge {
   node: TeamDetails!
   cursor: String!
+}
+
+type TeamInvitationStatusDetails {
+  type: InvitationStatus!
+  name: String!
 }
 
 type TeamJoinInvitationEdge {
@@ -266,6 +272,7 @@ input JoinTeamInvitationOrderInput {
 input MyInvitationsToJoinTeamsWhereInput {
   organizationId: String
   teamId: String
+  status: InvitationStatus
 }
 
 input RejectInvitationToJoinTeamInput {
@@ -343,6 +350,7 @@ enum InvitationStatus {
 
 enum JoinTeamInvitationOrderField {
   CREATED_AT
+  STATUS
 }
 
 enum OrderDirection {

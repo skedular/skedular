@@ -56,6 +56,11 @@ internal static class JoinInvitationExtensions
             query = query.Where(item => item.Team.Id == searchCriteria.TeamId);
         }
 
+        if (searchCriteria.Status is not null)
+        {
+            query = query.Where(item => item.Status == searchCriteria.Status.Value.ToInvitationStatus());
+        }
+
         return query;
     }
 
@@ -74,6 +79,9 @@ internal static class JoinInvitationExtensions
             JoinTeamInvitationOrderField.CreatedAt => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.CreatedAt)
                 : originalQuery.OrderByDescending(x => x.CreatedAt),
+            JoinTeamInvitationOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Status)
+                : originalQuery.OrderByDescending(x => x.Status),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -81,6 +89,9 @@ internal static class JoinInvitationExtensions
                 JoinTeamInvitationOrderField.CreatedAt => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.CreatedAt)
                     : query.ThenByDescending(x => x.CreatedAt),
+                JoinTeamInvitationOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Status)
+                    : query.ThenByDescending(x => x.Status),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

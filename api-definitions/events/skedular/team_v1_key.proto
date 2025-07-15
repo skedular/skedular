@@ -5,5 +5,4 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Team.V1.Key";
 
 message Key {
   string teamId = 1;
-  string teamJoinInvitationId = 2;
 }

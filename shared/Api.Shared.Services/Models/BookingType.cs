@@ -80,24 +80,6 @@ public static class BookingTypeExtensions
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public static string ToNullableBookingType(this BookingType? src) =>
-        src is null
-            ? string.Empty
-            : src switch
-            {
-                BookingType.WorkingFromHome => BookingTypeConstants.WorkingFromHome,
-                BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
-                BookingType.WorkingFromCoworkingSpace => BookingTypeConstants.WorkingFromCoworkingSpace,
-                BookingType.SickLeave => BookingTypeConstants.SickLeave,
-                BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
-                BookingType.WellbeingLeave => BookingTypeConstants.WellbeingLeave,
-                BookingType.ClientOffice => BookingTypeConstants.ClientOffice,
-                BookingType.Vacation => BookingTypeConstants.Vacation,
-                BookingType.TravelingForWork => BookingTypeConstants.TravelingForWork,
-                BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
     public static string ToBookingTypeName(this BookingType src) =>
         src switch
         {

@@ -65,8 +65,6 @@ public class OrganizationSubscriber(
                 }
                 break;
 
-            case Type.InvitationToJoinOrganizationUpserted:
-            case Type.InvitationToJoinOrganizationDeleted:
             case Type.OrganizationOfferingUpdated:
                 break;
         }

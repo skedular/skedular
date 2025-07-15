@@ -12,7 +12,6 @@ public interface IRepositoryFactory
     IIdentityRepository IdentityRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
     ILocationRepository LocationRepository { get; }
-    INotificationRepository NotificationRepository { get; }
     ITeamRepository TeamRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
@@ -27,7 +26,6 @@ public class RepositoryFactory : RepositoryFactoryBase<NotificationDbContext>, I
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        NotificationRepository = new NotificationRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
@@ -36,7 +34,6 @@ public class RepositoryFactory : RepositoryFactoryBase<NotificationDbContext>, I
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
     public ILocationRepository LocationRepository { get; }
-    public INotificationRepository NotificationRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }

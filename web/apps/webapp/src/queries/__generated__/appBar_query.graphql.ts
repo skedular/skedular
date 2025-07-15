@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<725d0eea808e10632fa5825cd6f5c36d>>
+ * @generated SignedSource<<85650fdd35f5347d30b837c155842586>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,8 @@ export type appBar_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   }>;
-  readonly pendingInvitationsCount: number;
+  readonly pendingOrganizationInvitationsCount: number;
+  readonly pendingTeamInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";
 };
@@ -140,7 +141,14 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "pendingInvitationsCount",
+      "name": "pendingOrganizationInvitationsCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "pendingTeamInvitationsCount",
       "storageKey": null
     },
     {
@@ -159,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "89c704526a6e5592183dd4060d2c2ef8";
+(node as any).hash = "136591c28d3b19681fbe4409d0fc218d";
 
 export default node;

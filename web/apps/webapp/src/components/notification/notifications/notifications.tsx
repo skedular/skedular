@@ -28,16 +28,22 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]) {
-    myNotifications(where: {}, orderBy: $myNotificationsSortingValues) {
+  query notifications_rootQuery {
+    organizationInvitationStatuses {
+      type
+      name
+    }
+    myInvitationsToJoinOrganizations(where: { status: PENDING }, orderBy: [{ field: CREATED_AT, direction: ASCENDING }]) {
       __id
       totalCount
       edges {
         node {
           id
-          sourceId
-          notificationType
-          invitedBy {
+          status {
+            type
+            name
+          }
+          createdBy {
             name
             givenName
             middleName
@@ -46,6 +52,30 @@ const RootQuery = graphql`
           }
           organization {
             name
+          }
+        }
+      }
+    }
+    teamInvitationStatuses {
+      type
+      name
+    }
+    myInvitationsToJoinTeams(where: { status: PENDING }, orderBy: [{ field: CREATED_AT, direction: ASCENDING }]) {
+      __id
+      totalCount
+      edges {
+        node {
+          id
+          status {
+            type
+            name
+          }
+          createdBy {
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
           }
           team {
             name
@@ -56,42 +86,70 @@ const RootQuery = graphql`
   }
 `;
 
-type RowType = {
+type InvitationToJoinOrganizationRowType = {
   id: string;
   changeTriggerId?: string;
+};
+
+type InvitationToJoinTeamRowType = {
+  id: string;
 };
 
 const Notifications = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<notifications_rootQuery>(RootQuery, queryReference);
 
   const [commitAcceptInvitationToJoinOrganization] = useMutation<notifications_acceptInvitationToJoinOrganizationMutation>(graphql`
-    mutation notifications_acceptInvitationToJoinOrganizationMutation($input: AcceptInvitationToJoinOrganizationInput!) {
+    mutation notifications_acceptInvitationToJoinOrganizationMutation($input: AcceptInvitationToJoinOrganizationInput!) @raw_response_type {
       acceptInvitationToJoinOrganization(input: $input) {
-        clientMutationId
+        inviteCustomerToJoinOrganization {
+          id
+          status {
+            type
+            name
+          }
+        }
       }
     }
   `);
 
   const [commitRejectInvitationToJoinOrganization] = useMutation<notifications_rejectInvitationToJoinOrganizationMutation>(graphql`
-    mutation notifications_rejectInvitationToJoinOrganizationMutation($input: RejectInvitationToJoinOrganizationInput!) {
+    mutation notifications_rejectInvitationToJoinOrganizationMutation($input: RejectInvitationToJoinOrganizationInput!) @raw_response_type {
       rejectInvitationToJoinOrganization(input: $input) {
-        clientMutationId
+        inviteCustomerToJoinOrganization {
+          id
+          status {
+            type
+            name
+          }
+        }
       }
     }
   `);
 
   const [commitAcceptInvitationToJoinTeam] = useMutation<notifications_acceptInvitationToJoinTeamMutation>(graphql`
-    mutation notifications_acceptInvitationToJoinTeamMutation($input: AcceptInvitationToJoinTeamInput!) {
+    mutation notifications_acceptInvitationToJoinTeamMutation($input: AcceptInvitationToJoinTeamInput!) @raw_response_type {
       acceptInvitationToJoinTeam(input: $input) {
-        clientMutationId
+        inviteCustomerToJoinTeam {
+          id
+          status {
+            type
+            name
+          }
+        }
       }
     }
   `);
 
   const [commitRejectInvitationToJoinTeam] = useMutation<notifications_rejectInvitationToJoinTeamMutation>(graphql`
-    mutation notifications_rejectInvitationToJoinTeamMutation($input: RejectInvitationToJoinTeamInput!) {
+    mutation notifications_rejectInvitationToJoinTeamMutation($input: RejectInvitationToJoinTeamInput!) @raw_response_type {
       rejectInvitationToJoinTeam(input: $input) {
-        clientMutationId
+        inviteCustomerToJoinTeam {
+          id
+          status {
+            type
+            name
+          }
+        }
       }
     }
   `);
@@ -99,34 +157,39 @@ const Notifications = ({ queryReference }: Props) => {
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [rejectedIds, setRejectedIds] = useState<string[]>([]);
-  const [acceptedIds, setAcceptedIds] = useState<string[]>([]);
-  const myNotifications = useMemo(() => (rootData.myNotifications ? rootData.myNotifications.edges.map((edge) => edge.node) : []), [rootData.myNotifications]);
+  const myInvitationsToJoinOrganizations = useMemo(
+    () => (rootData.myInvitationsToJoinOrganizations ? rootData.myInvitationsToJoinOrganizations.edges.map((edge) => edge.node) : []),
+    [rootData.myInvitationsToJoinOrganizations],
+  );
+  const myInvitationsToJoinTeams = useMemo(
+    () => (rootData.myInvitationsToJoinTeams ? rootData.myInvitationsToJoinTeams.edges.map((edge) => edge.node) : []),
+    [rootData.myInvitationsToJoinTeams],
+  );
 
   const handleCloseClick = () => {
     router.back();
   };
 
   const handleRejectInvitationToJoinOrganizationClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
+    const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
+    if (!invitation) {
+      return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join organization '${notification.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinOrganization({
       variables: {
         input: {
           clientMutationId: uuid(),
-          id: notification.sourceId,
+          id: invitation.id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -134,40 +197,49 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join organization '${notification.organization?.name} rejected.`} />,
+          render: <NotificationContent content={`Invitation to join organization '${invitation.organization?.name} rejected.`} />,
         });
-
-        setRejectedIds(rejectedIds.concat(id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        rejectInvitationToJoinOrganization: {
+          inviteCustomerToJoinOrganization: {
+            id,
+            status: {
+              type: 'REJECTED',
+              name: rootData.organizationInvitationStatuses.find((item) => item.type === 'REJECTED')!.name,
+            },
+          },
+        },
       },
     });
   };
 
   const handleAcceptInvitationToJoinOrganizationClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
+    const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
+    if (!invitation) {
+      return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join organization '${notification.organization?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join organization '${invitation.organization?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinOrganization({
       variables: {
         input: {
           clientMutationId: uuid(),
-          id: notification.sourceId,
+          id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -175,40 +247,49 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join organization '${notification.organization?.name} accepted.`} />,
+          render: <NotificationContent content={`Invitation to join organization '${invitation.organization?.name} accepted.`} />,
         });
-
-        setAcceptedIds(acceptedIds.concat(id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        acceptInvitationToJoinOrganization: {
+          inviteCustomerToJoinOrganization: {
+            id,
+            status: {
+              type: 'ACCEPTED',
+              name: rootData.organizationInvitationStatuses.find((item) => item.type === 'ACCEPTED')!.name,
+            },
+          },
+        },
       },
     });
   };
 
   const handleRejectInvitationToJoinTeamClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
+    const invitation = myInvitationsToJoinTeams.find((item) => item.id === id);
+    if (!invitation) {
+      return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join team '${notification.team?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join team '${invitation.team?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinTeam({
       variables: {
         input: {
           clientMutationId: uuid(),
-          id: notification.sourceId,
+          id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -216,40 +297,49 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join team '${notification.team?.name} rejected.`} />,
+          render: <NotificationContent content={`Invitation to join team '${invitation.team?.name} rejected.`} />,
         });
-
-        setRejectedIds(rejectedIds.concat(id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject invitation to join team '${notification.team?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        rejectInvitationToJoinTeam: {
+          inviteCustomerToJoinTeam: {
+            id,
+            status: {
+              type: 'REJECTED',
+              name: rootData.teamInvitationStatuses.find((item) => item.type === 'REJECTED')!.name,
+            },
+          },
+        },
       },
     });
   };
 
   const handleAcceptInvitationToJoinTeamClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
+    const invitation = myInvitationsToJoinTeams.find((item) => item.id === id);
+    if (!invitation) {
+      return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join team '${notification.team?.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join team '${invitation.team?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinTeam({
       variables: {
         input: {
           clientMutationId: uuid(),
-          id: notification.sourceId,
+          id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -257,55 +347,47 @@ const Notifications = ({ queryReference }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join team '${notification.team?.name} accepted.`} />,
+          render: <NotificationContent content={`Invitation to join team '${invitation.team?.name} accepted.`} />,
         });
-
-        setAcceptedIds(acceptedIds.concat(id));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to accept invitation to join team '${notification.team?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${error.message}.`} />,
         });
+      },
+      optimisticResponse: {
+        acceptInvitationToJoinTeam: {
+          inviteCustomerToJoinTeam: {
+            id,
+            status: {
+              type: 'ACCEPTED',
+              name: rootData.teamInvitationStatuses.find((item) => item.type === 'ACCEPTED')!.name,
+            },
+          },
+        },
       },
     });
   };
 
-  const rows: RowType[] = useMemo(
-    () =>
-      myNotifications.map((notification) => {
-        const rejectedOrAccepted = rejectedIds.includes(notification.id) || acceptedIds.includes(notification.id);
-
-        return {
-          id: notification.id,
-          changeTriggerId: rejectedOrAccepted ? uuid() : undefined,
-        };
-      }),
-    [myNotifications, rejectedIds, acceptedIds],
+  const invitationsToJoinOrganizationsRows: InvitationToJoinOrganizationRowType[] = useMemo(
+    () => myInvitationsToJoinOrganizations.map((invitation) => ({ id: invitation.id })),
+    [myInvitationsToJoinOrganizations],
   );
 
-  const columns: GridColDef<(typeof rows)[number]>[] = [
+  const invitationsToJoinOrganizationsColumns: GridColDef<(typeof invitationsToJoinOrganizationsRows)[number]>[] = [
     {
       field: 'message',
       headerName: '',
       editable: false,
       renderCell: (params) => {
         const id = params.id as string;
-        const notification = myNotifications.find((item) => item.id === id);
-        if (!notification) {
+        const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
+        if (!invitation) {
           return <></>;
         }
 
-        switch (notification.notificationType) {
-          case 'INVITATION_TO_JOIN_ORGANIZATION':
-            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join organization "${notification.organization?.name}"`} />;
-
-          case 'INVITATION_TO_JOIN_TEAM':
-            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join team "${notification.team?.name}"`} />;
-
-          default:
-            return <></>;
-        }
+        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organization "${invitation.organization.name}"`} />;
       },
       display: 'flex',
       minWidth: 500,
@@ -316,47 +398,78 @@ const Notifications = ({ queryReference }: Props) => {
       editable: false,
       renderCell: (params) => {
         const id = params.id as string;
-        const notification = myNotifications.find((item) => item.id === (params.id as string));
-        if (!notification) {
+        const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === (params.id as string));
+        if (!invitation) {
           return <></>;
         }
 
-        if (rejectedIds.includes(id)) {
-          return <SmallIconTypography label="Rejected" />;
+        if (invitation.status.type === 'PENDING') {
+          return (
+            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
+              <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
+                <SmallIconTypography label="Reject" />
+              </Button>
+              <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
+                <SmallIconTypography label="Approve" />
+              </Button>
+            </StackRow>
+          );
         }
 
-        if (acceptedIds.includes(id)) {
-          return <SmallIconTypography label="Accepted" />;
+        return <SmallIconTypography label={invitation.status.name} />;
+      },
+      display: 'flex',
+      minWidth: 300,
+    },
+  ];
+
+  const invitationsToJoinTeamsRows: InvitationToJoinTeamRowType[] = useMemo(
+    () => myInvitationsToJoinTeams.map((invitation) => ({ id: invitation.id })),
+    [myInvitationsToJoinTeams],
+  );
+
+  const invitationsToJoinTeamsColumns: GridColDef<(typeof invitationsToJoinTeamsRows)[number]>[] = [
+    {
+      field: 'message',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        const invitation = myInvitationsToJoinTeams.find((item) => item.id === id);
+        if (!invitation) {
+          return <></>;
         }
 
-        switch (notification.notificationType) {
-          case 'INVITATION_TO_JOIN_ORGANIZATION':
-            return (
-              <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Reject" />
-                </Button>
-                <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Approve" />
-                </Button>
-              </StackRow>
-            );
-
-          case 'INVITATION_TO_JOIN_TEAM':
-            return (
-              <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Reject" />
-                </Button>
-                <Button variant="contained" onClick={() => handleAcceptInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Approve" />
-                </Button>
-              </StackRow>
-            );
-
-          default:
-            return <></>;
+        return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join team "${invitation.team.name}"`} />;
+      },
+      display: 'flex',
+      minWidth: 500,
+    },
+    {
+      field: 'rejectOrApprove',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        const invitation = myInvitationsToJoinTeams.find((item) => item.id === (params.id as string));
+        if (!invitation) {
+          return <></>;
         }
+
+        if (invitation.status.type === 'PENDING') {
+          return (
+            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
+              <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
+                <SmallIconTypography label="Reject" />
+              </Button>
+              <Button variant="contained" onClick={() => handleAcceptInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
+                <SmallIconTypography label="Approve" />
+              </Button>
+            </StackRow>
+          );
+        }
+
+        return <SmallIconTypography label={invitation.status.name} />;
       },
       display: 'flex',
       minWidth: 300,
@@ -368,20 +481,38 @@ const Notifications = ({ queryReference }: Props) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Notifications" />
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              hideFooter
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No notification found' }}
-            />
-          </StackRow>
+          {invitationsToJoinOrganizationsRows.length > 0 && (
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                rows={invitationsToJoinOrganizationsRows}
+                columns={invitationsToJoinOrganizationsColumns}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                hideFooter
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No organization invitation found' }}
+              />
+            </StackRow>
+          )}
+          {invitationsToJoinTeamsRows.length > 0 && (
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                rows={invitationsToJoinTeamsRows}
+                columns={invitationsToJoinTeamsColumns}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                hideFooter
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No team invitation found' }}
+              />
+            </StackRow>
+          )}
         </StackColumn>
       </Box>
     </Box>
@@ -397,14 +528,7 @@ const NotificationsWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-        myNotificationsSortingValues: [
-          {
-            direction: 'DESCENDING',
-            field: 'DATE',
-          },
-        ],
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },

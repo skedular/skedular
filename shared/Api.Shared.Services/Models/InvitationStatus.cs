@@ -27,4 +27,24 @@ public static class InvitationStatusExtensions
             InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    public static string ToInvitationStatus(this InvitationStatus src) =>
+        src switch
+        {
+            InvitationStatus.Pending => InvitationStatusConstants.Pending,
+            InvitationStatus.Accepted => InvitationStatusConstants.Accepted,
+            InvitationStatus.Rejected => InvitationStatusConstants.Rejected,
+            InvitationStatus.Cancelled => InvitationStatusConstants.Cancelled,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    public static string ToInvitationStatusName(this InvitationStatus src) =>
+        src switch
+        {
+            InvitationStatus.Pending => "Pending",
+            InvitationStatus.Accepted => "Accepted",
+            InvitationStatus.Rejected => "Rejected",
+            InvitationStatus.Cancelled => "Cancelled",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

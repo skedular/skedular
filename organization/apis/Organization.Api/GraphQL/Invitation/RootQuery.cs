@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -13,9 +14,18 @@ namespace Organization.Api.GraphQL.Invitation;
 public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
+    public IEnumerable<OrganizationInvitationStatusDetails> OrganizationInvitationStatuses() =>
+    [
+        new() { Type = InvitationStatus.Pending, Name = InvitationStatus.Pending.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Accepted, Name = InvitationStatus.Accepted.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Rejected, Name = InvitationStatus.Rejected.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Cancelled, Name = InvitationStatus.Cancelled.ToInvitationStatusName() }
+    ];
+
+    [UseResolverScope]
     public async Task<int> PendingOrganizationInvitationsCountAsync(
         [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IOrganizationInvitationService teamInvitationService,
+        [Service] IInvitationService teamInvitationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? await teamInvitationService.PendingInvitationsCountAsync(cancellationToken)
@@ -29,12 +39,12 @@ public class RootQuery(IMapper mapper)
         int? last,
         MyInvitationsToJoinOrganizationsWhereInput where,
         IEnumerable<JoinOrganizationInvitationOrder>? orderBy,
-        [Service] IOrganizationInvitationService teamInvitationService,
+        [Service] IInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamInvitationService.GetMyPaginatedJoinInvitationsAsync(
             new PaginationInputParam(after, first, before, last),
-            new JoinInvitationSearchCriteria(where.OrganizationId),
+            new JoinInvitationSearchCriteria(where.OrganizationId, where.Status),
             orderBy.ToSafeCollection().Select(item => new JoinOrganizationInvitationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

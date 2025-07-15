@@ -13,7 +13,6 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
-    public DbSet<Entities.Notification> Notification { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Team> Team { get; set; }

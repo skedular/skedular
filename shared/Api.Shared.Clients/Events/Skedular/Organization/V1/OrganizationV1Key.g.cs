@@ -24,14 +24,14 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
     static OrganizationV1KeyReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Chlvcmdhbml6YXRpb25fdjFfa2V5LnByb3RvEgxvcmdhbml6YXRpb24iQwoD",
-            "S2V5EhYKDm9yZ2FuaXphdGlvbklkGAEgASgJEiQKHG9yZ2FuaXphdGlvbkpv",
-            "aW5JbnZpdGF0aW9uSWQYAiABKAlCOaoCNkFwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLktleWIGcHJvdG8z"));
+            "Chlvcmdhbml6YXRpb25fdjFfa2V5LnByb3RvEgxvcmdhbml6YXRpb24iHQoD",
+            "S2V5EhYKDm9yZ2FuaXphdGlvbklkGAEgASgJQjmqAjZBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5LZXliBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key.Parser, new[]{ "OrganizationId", "OrganizationJoinInvitationId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key.Parser, new[]{ "OrganizationId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,7 +74,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
       organizationId_ = other.organizationId_;
-      organizationJoinInvitationId_ = other.organizationJoinInvitationId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -96,18 +95,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
       }
     }
 
-    /// <summary>Field number for the "organizationJoinInvitationId" field.</summary>
-    public const int OrganizationJoinInvitationIdFieldNumber = 2;
-    private string organizationJoinInvitationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationJoinInvitationId {
-      get { return organizationJoinInvitationId_; }
-      set {
-        organizationJoinInvitationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -124,7 +111,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
         return true;
       }
       if (OrganizationId != other.OrganizationId) return false;
-      if (OrganizationJoinInvitationId != other.OrganizationJoinInvitationId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -133,7 +119,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
     public override int GetHashCode() {
       int hash = 1;
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
-      if (OrganizationJoinInvitationId.Length != 0) hash ^= OrganizationJoinInvitationId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -156,10 +141,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(OrganizationId);
       }
-      if (OrganizationJoinInvitationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(OrganizationJoinInvitationId);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -174,10 +155,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(OrganizationId);
       }
-      if (OrganizationJoinInvitationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(OrganizationJoinInvitationId);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -190,9 +167,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
       int size = 0;
       if (OrganizationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
-      }
-      if (OrganizationJoinInvitationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationJoinInvitationId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -208,9 +182,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
       }
       if (other.OrganizationId.Length != 0) {
         OrganizationId = other.OrganizationId;
-      }
-      if (other.OrganizationJoinInvitationId.Length != 0) {
-        OrganizationJoinInvitationId = other.OrganizationJoinInvitationId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -235,10 +206,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
             OrganizationId = input.ReadString();
             break;
           }
-          case 18: {
-            OrganizationJoinInvitationId = input.ReadString();
-            break;
-          }
         }
       }
     #endif
@@ -260,10 +227,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Key {
             break;
           case 10: {
             OrganizationId = input.ReadString();
-            break;
-          }
-          case 18: {
-            OrganizationJoinInvitationId = input.ReadString();
             break;
           }
         }

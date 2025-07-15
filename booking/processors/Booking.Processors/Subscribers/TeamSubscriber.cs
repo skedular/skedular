@@ -56,10 +56,6 @@ public class TeamSubscriber(
                     await HandleTeamDeletedEventAsync(existingTeam, cancellationToken);
                 }
                 break;
-
-            case Type.InvitationToJoinTeamUpserted:
-            case Type.InvitationToJoinTeamDeleted:
-                break;
         }
 
         return EventSubscriberResults.Success;

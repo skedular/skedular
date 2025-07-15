@@ -24,7 +24,7 @@ public static class Extensions
             .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
             .AddScoped<IOrganizationAnalyticsService, OrganizationAnalyticsService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
+            .AddScoped<IInvitationService, InvitationService>()
             .AddScoped<ITagService, TagService>()
             .AddScoped<IOrganizationSsoService, OrganizationSsoService>()
             .AddScoped<IPaymentService, PaymentService>()

@@ -12,8 +12,7 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<INotificationService, NotificationService>();
+            .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

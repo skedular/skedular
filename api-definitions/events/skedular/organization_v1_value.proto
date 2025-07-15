@@ -8,9 +8,7 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1.Va
 enum Type {
   Type_OrganizationUpserted = 0;
   Type_OrganizationDeleted = 1;
-  Type_InvitationToJoinOrganizationUpserted = 2;
-  Type_InvitationToJoinOrganizationDeleted = 3;
-  Type_OrganizationOfferingUpdated = 4;
+  Type_OrganizationOfferingUpdated = 2;
 }
 
 message Event {
@@ -30,8 +28,7 @@ message Metadata {
 message Data {
   oneof payload {
     Organization organization = 1;
-    InvitationToJoinOrganization invitationToJoinOrganization = 2;
-    Offering offering = 3;
+    Offering offering = 2;
   }
 }
 
@@ -85,14 +82,6 @@ message Offering {
 }
 
 message Location { string id = 1; }
-
-message InvitationToJoinOrganization {
-  string id = 1;
-  google.protobuf.Timestamp deletedAt = 2;
-  string organizationId = 3;
-  string invitedById = 4;
-  string inviteeId = 5;
-}
 
 message Tag {
   string id = 1;

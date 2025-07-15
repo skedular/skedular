@@ -23,7 +23,7 @@ import { useParams, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
@@ -49,18 +49,15 @@ const RootQuery = graphql`
     locationCustomerRecordSynced
     marketplaceCustomerRecordSynced
     msTeamsCustomerRecordSynced
-    notificationCustomerRecordSynced
     organizationCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     coreCustomerRecordSynced
-    pendingInvitationsCount
-
+    pendingOrganizationInvitationsCount
     isAzureTenantInstalled
     azureTenantOrganization {
       id
     }
-
     isOrganizationSsoTokenValid(id: $organizationId) @include(if: $organizationExists)
     organization(id: $organizationId) @include(if: $organizationExists) {
       logoUrl
@@ -100,7 +97,6 @@ const RootShell = ({
       rootData?.locationCustomerRecordSynced &&
       rootData?.marketplaceCustomerRecordSynced &&
       rootData?.msTeamsCustomerRecordSynced &&
-      rootData?.notificationCustomerRecordSynced &&
       rootData?.organizationCustomerRecordSynced &&
       rootData?.slackCustomerRecordSynced &&
       rootData?.teamCustomerRecordSynced &&
@@ -110,7 +106,6 @@ const RootShell = ({
       rootData?.locationCustomerRecordSynced,
       rootData?.marketplaceCustomerRecordSynced,
       rootData?.msTeamsCustomerRecordSynced,
-      rootData?.notificationCustomerRecordSynced,
       rootData?.organizationCustomerRecordSynced,
       rootData?.slackCustomerRecordSynced,
       rootData?.teamCustomerRecordSynced,
@@ -194,8 +189,10 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
-          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding />}
-          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
+          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingOrganizationInvitationsCount === 0 && (
+            <OrganizationOnboarding />
+          )}
+          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingOrganizationInvitationsCount > 0 && <Notifications />}
           {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
       </Box>

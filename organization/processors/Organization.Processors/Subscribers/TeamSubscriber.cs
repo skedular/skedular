@@ -45,10 +45,6 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
                     await HandleTeamDeletedEventAsync(team, cancellationToken);
                 }
                 break;
-
-            case Type.InvitationToJoinTeamUpserted:
-            case Type.InvitationToJoinTeamDeleted:
-                break;
         }
 
         return EventSubscriberResults.Success;

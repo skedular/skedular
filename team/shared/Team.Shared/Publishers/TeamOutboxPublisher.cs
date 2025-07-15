@@ -6,7 +6,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
 using Team.Shared.Mappers;
-using Team.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
@@ -15,7 +14,6 @@ namespace Team.Shared.Publishers;
 public interface ITeamOutboxPublisher
 {
     void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork);
-    void PublishInvitesToJoinTeamNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
 }
 
 public class TeamOutboxPublisher(
@@ -38,25 +36,6 @@ public class TeamOutboxPublisher(
                         team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { Team = mapper.MapTo(team) }
-                },
-                unitOfWork);
-        }
-    }
-
-    public void PublishInvitesToJoinTeamNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork)
-    {
-        foreach (var joinInvitation in joinInvitations)
-        {
-            publisher.Publish(
-                new Key { TeamId = joinInvitation.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        joinInvitation.IsDeleted() ? Type.InvitationToJoinTeamDeleted : Type.InvitationToJoinTeamUpserted,
-                        context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork);
         }

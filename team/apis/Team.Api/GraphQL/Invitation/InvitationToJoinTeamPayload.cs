@@ -7,6 +7,6 @@ public class InvitationToJoinTeamPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("inviteCustomersToJoinTeam")]
+    [GraphQLName("inviteCustomerToJoinTeam")]
     public InviteCustomerToJoinTeamDetails InviteCustomerToJoinTeam { get; set; } = new();
 }

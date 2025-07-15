@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b413ff10208d85653b97054798135641>>
+ * @generated SignedSource<<f6c2cb84574c26e1cbc89557358efdf3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "PENDING" | "REJECTED" | "%future added value";
 export type RejectInvitationToJoinTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;
@@ -18,10 +19,28 @@ export type notifications_rejectInvitationToJoinTeamMutation$variables = {
 };
 export type notifications_rejectInvitationToJoinTeamMutation$data = {
   readonly rejectInvitationToJoinTeam: {
-    readonly clientMutationId: string | null | undefined;
+    readonly inviteCustomerToJoinTeam: {
+      readonly id: string;
+      readonly status: {
+        readonly name: string;
+        readonly type: InvitationStatus;
+      };
+    };
+  };
+};
+export type notifications_rejectInvitationToJoinTeamMutation$rawResponse = {
+  readonly rejectInvitationToJoinTeam: {
+    readonly inviteCustomerToJoinTeam: {
+      readonly id: string;
+      readonly status: {
+        readonly name: string;
+        readonly type: InvitationStatus;
+      };
+    };
   };
 };
 export type notifications_rejectInvitationToJoinTeamMutation = {
+  rawResponse: notifications_rejectInvitationToJoinTeamMutation$rawResponse;
   response: notifications_rejectInvitationToJoinTeamMutation$data;
   variables: notifications_rejectInvitationToJoinTeamMutation$variables;
 };
@@ -52,8 +71,44 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "clientMutationId",
+        "concreteType": "InviteCustomerToJoinTeamDetails",
+        "kind": "LinkedField",
+        "name": "inviteCustomerToJoinTeam",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "TeamInvitationStatusDetails",
+            "kind": "LinkedField",
+            "name": "status",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -78,16 +133,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "420c25a6d62344ddf7246584d43e81a8",
+    "cacheID": "6ae926d5e6f78495626826099e00225c",
     "id": null,
     "metadata": {},
     "name": "notifications_rejectInvitationToJoinTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation notifications_rejectInvitationToJoinTeamMutation(\n  $input: RejectInvitationToJoinTeamInput!\n) {\n  rejectInvitationToJoinTeam(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation notifications_rejectInvitationToJoinTeamMutation(\n  $input: RejectInvitationToJoinTeamInput!\n) {\n  rejectInvitationToJoinTeam(input: $input) {\n    inviteCustomerToJoinTeam {\n      id\n      status {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2262794790f5a881bfccbeccf6193da1";
+(node as any).hash = "699bb812eed636f619bda87d1ad81b6e";
 
 export default node;

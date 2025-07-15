@@ -24,14 +24,13 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
     static TeamV1KeyReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChF0ZWFtX3YxX2tleS5wcm90bxIEdGVhbSIzCgNLZXkSDgoGdGVhbUlkGAEg",
-            "ASgJEhwKFHRlYW1Kb2luSW52aXRhdGlvbklkGAIgASgJQjGqAi5BcGkuU2hh",
-            "cmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLlRlYW0uVjEuS2V5YgZwcm90",
-            "bzM="));
+            "ChF0ZWFtX3YxX2tleS5wcm90bxIEdGVhbSIVCgNLZXkSDgoGdGVhbUlkGAEg",
+            "ASgJQjGqAi5BcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLlRl",
+            "YW0uVjEuS2V5YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key.Parser, new[]{ "TeamId", "TeamJoinInvitationId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key.Parser, new[]{ "TeamId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,7 +73,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
       teamId_ = other.teamId_;
-      teamJoinInvitationId_ = other.teamJoinInvitationId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -96,18 +94,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
       }
     }
 
-    /// <summary>Field number for the "teamJoinInvitationId" field.</summary>
-    public const int TeamJoinInvitationIdFieldNumber = 2;
-    private string teamJoinInvitationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string TeamJoinInvitationId {
-      get { return teamJoinInvitationId_; }
-      set {
-        teamJoinInvitationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -124,7 +110,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
         return true;
       }
       if (TeamId != other.TeamId) return false;
-      if (TeamJoinInvitationId != other.TeamJoinInvitationId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -133,7 +118,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
     public override int GetHashCode() {
       int hash = 1;
       if (TeamId.Length != 0) hash ^= TeamId.GetHashCode();
-      if (TeamJoinInvitationId.Length != 0) hash ^= TeamJoinInvitationId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -156,10 +140,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(TeamId);
       }
-      if (TeamJoinInvitationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(TeamJoinInvitationId);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -174,10 +154,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(TeamId);
       }
-      if (TeamJoinInvitationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(TeamJoinInvitationId);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -190,9 +166,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
       int size = 0;
       if (TeamId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(TeamId);
-      }
-      if (TeamJoinInvitationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(TeamJoinInvitationId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -208,9 +181,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
       }
       if (other.TeamId.Length != 0) {
         TeamId = other.TeamId;
-      }
-      if (other.TeamJoinInvitationId.Length != 0) {
-        TeamJoinInvitationId = other.TeamJoinInvitationId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -235,10 +205,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
             TeamId = input.ReadString();
             break;
           }
-          case 18: {
-            TeamJoinInvitationId = input.ReadString();
-            break;
-          }
         }
       }
     #endif
@@ -260,10 +226,6 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key {
             break;
           case 10: {
             TeamId = input.ReadString();
-            break;
-          }
-          case 18: {
-            TeamJoinInvitationId = input.ReadString();
             break;
           }
         }

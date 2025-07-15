@@ -2,18 +2,13 @@ using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Organization.Processors.Mappers;
-using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Customer = Organization.Shared.Models.Customer;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 
-public class CustomerSubscriber(
-    ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    IOrganizationPublisher organizationPublisher)
+public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -65,25 +60,9 @@ public class CustomerSubscriber(
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        existingCustomer =
-            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
+        _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        var emails = existingCustomer.Identities
-            .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-            .Select(item => item.Email!)
-            .ToList();
-        var joinInvitations = await repositoryFactory.JoinInvitationRepository.GetPendingByEmailAsync(emails, cancellationToken);
-        if (joinInvitations.Count == 0)
-        {
-            return;
-        }
-
-        await organizationPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
-            mapper.MapTo(joinInvitations),
-            existingCustomer.Id,
-            cancellationToken);
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)

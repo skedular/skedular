@@ -19,7 +19,6 @@ namespace Organization.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
-    InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
     OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
     Models.Organization MapTo(Database.Entities.Organization src);
 }
@@ -91,16 +90,6 @@ public class Mapper : IMapper
 
         return organization;
     }
-
-    public InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
-        new()
-        {
-            Id = src.Id,
-            DeletedAt = src.DeletedAt?.ToTimestamp(),
-            OrganizationId = src.Organization.Id,
-            InvitedById = src.CreatedBy.Id,
-            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
-        };
 
     public OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization) =>
         new()

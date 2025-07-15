@@ -188,12 +188,6 @@ type ConnectionOfLocationEdge {
   totalCount: Int
 }
 
-type ConnectionOfNotificationEdge {
-  edges: [NotificationEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
 type ConnectionOfOrganizationBankAccountEdge {
   edges: [OrganizationBankAccountEdge!]!
   pageInfo: PageInfo!
@@ -400,12 +394,12 @@ type FloorPlanPayload {
 
 type InvitationToJoinOrganizationPayload {
   clientMutationId: String
-  inviteCustomersToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
+  inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
 }
 
 type InvitationToJoinTeamPayload {
   clientMutationId: String
-  inviteCustomersToJoinTeam: InviteCustomerToJoinTeamDetails!
+  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
 }
 
 type InvitationsToJoinOrganizationPayload {
@@ -420,7 +414,7 @@ type InviteCustomerToJoinOrganizationDetails {
   invitee: Organization_CustomerDetails
   organization: OrganizationDetails!
   role: OrganizationMemberRole!
-  status: InvitationStatus!
+  status: OrganizationInvitationStatusDetails!
 }
 
 type InviteCustomerToJoinTeamDetails {
@@ -429,7 +423,7 @@ type InviteCustomerToJoinTeamDetails {
   id: ID!
   invitee: Team_CustomerDetails
   role: TeamMemberRole!
-  status: InvitationStatus!
+  status: TeamInvitationStatusDetails!
   team: TeamDetails!
 }
 
@@ -650,55 +644,6 @@ type Mutation {
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
 }
 
-type NotificationDetails {
-  eventRaisedAt: DateTime!
-  id: ID!
-  invitedBy: Notification_CustomerDetails
-  invitee: Notification_CustomerDetails
-  location: Notification_LocationDetails
-  notificationType: NotificationType!
-  organization: Notification_OrganizationDetails
-  sourceId: ID!
-  team: Notification_TeamDetails
-}
-
-type NotificationEdge {
-  cursor: String!
-  node: NotificationDetails!
-}
-
-type Notification_CustomerDetails {
-  emails: [String!]!
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
-type Notification_LocationDetails {
-  name: String!
-  uniqueId: ID!
-}
-
-type Notification_OrganizationDetails {
-  logoUrl: String
-  name: String!
-  uniqueId: ID!
-}
-
-type Notification_TeamDetails {
-  name: String!
-  uniqueId: ID!
-}
-
 type OpeningHours {
   closedDates: [DateTime!]!
   datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
@@ -836,6 +781,11 @@ type OrganizationIndustrySubCategoryReferenceDetails {
   id: ID!
   mainCategoryName: String!
   name: String!
+}
+
+type OrganizationInvitationStatusDetails {
+  name: String!
+  type: InvitationStatus!
 }
 
 type OrganizationJoinInvitationEdge {
@@ -1130,10 +1080,8 @@ type Query {
   myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput!): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
-  myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): ConnectionOfNotificationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
-  notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   notificationVersion: Version!
   openingHoursMinutesStep: Int!
   organization(id: String!): OrganizationDetails @cost(weight: "10")
@@ -1143,6 +1091,7 @@ type Query {
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
+  organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
@@ -1157,7 +1106,6 @@ type Query {
   parkingResourceType: OrganizationTagType!
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
-  pendingInvitationsCount: Int! @cost(weight: "10")
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
@@ -1174,6 +1122,7 @@ type Query {
   team(id: String!): TeamDetails @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
   teamMemberRoles: [TeamMemberRole!]!
   teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): ConnectionOfTeamEdge! @cost(weight: "10")
@@ -1261,6 +1210,11 @@ type TeamDetails {
 type TeamEdge {
   cursor: String!
   node: TeamDetails!
+}
+
+type TeamInvitationStatusDetails {
+  name: String!
+  type: InvitationStatus!
 }
 
 type TeamJoinInvitationEdge {
@@ -1954,20 +1908,13 @@ input MakeBookingPaymentNotRequiredInput {
 
 input MyInvitationsToJoinOrganizationsWhereInput {
   organizationId: String
+  status: InvitationStatus
 }
 
 input MyInvitationsToJoinTeamsWhereInput {
   organizationId: String
+  status: InvitationStatus
   teamId: String
-}
-
-input MyNotificationWhereInput {
-  organizationId: String
-}
-
-input NotificationOrderInput {
-  direction: OrderDirection!
-  field: NotificationOrderField!
 }
 
 input OpeningHoursDetailsInput {
@@ -2536,26 +2483,18 @@ enum InvitationStatus {
 
 enum JoinOrganizationInvitationOrderField {
   CREATED_AT
+  STATUS
 }
 
 enum JoinTeamInvitationOrderField {
   CREATED_AT
+  STATUS
 }
 
 enum LocationOrderField {
   ABOUT
   NAME
   TIMEZONE
-}
-
-enum NotificationOrderField {
-  DATE
-  TYPE
-}
-
-enum NotificationType {
-  INVITATION_TO_JOIN_ORGANIZATION
-  INVITATION_TO_JOIN_TEAM
 }
 
 enum OrderDirection {

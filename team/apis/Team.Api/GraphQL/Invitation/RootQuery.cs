@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -13,12 +14,21 @@ namespace Team.Api.GraphQL.Invitation;
 public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
+    public IEnumerable<TeamInvitationStatusDetails> TeamInvitationStatuses() =>
+    [
+        new() { Type = InvitationStatus.Pending, Name = InvitationStatus.Pending.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Accepted, Name = InvitationStatus.Accepted.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Rejected, Name = InvitationStatus.Rejected.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Cancelled, Name = InvitationStatus.Cancelled.ToInvitationStatusName() }
+    ];
+
+    [UseResolverScope]
     public async Task<int> PendingTeamInvitationsCountAsync(
         [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ITeamInvitationService teamInvitationService,
+        [Service] IInvitationService invitationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? await teamInvitationService.PendingInvitationsCountAsync(cancellationToken)
+            ? await invitationService.PendingInvitationsCountAsync(cancellationToken)
             : 0;
 
     [UseResolverScope]
@@ -29,12 +39,12 @@ public class RootQuery(IMapper mapper)
         int? last,
         MyInvitationsToJoinTeamsWhereInput where,
         IEnumerable<JoinTeamInvitationOrder>? orderBy,
-        [Service] ITeamInvitationService teamInvitationService,
+        [Service] IInvitationService invitationService,
         CancellationToken cancellationToken)
     {
-        var (paginatedInfo, edges, totalCount) = await teamInvitationService.GetMyPaginatedJoinInvitationsAsync(
+        var (paginatedInfo, edges, totalCount) = await invitationService.GetMyPaginatedJoinInvitationsAsync(
             new PaginationInputParam(after, first, before, last),
-            new JoinInvitationSearchCriteria(where.OrganizationId, where.TeamId),
+            new JoinInvitationSearchCriteria(where.OrganizationId, where.TeamId, where.Status),
             orderBy.ToSafeCollection().Select(item => new JoinTeamInvitationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

@@ -5,7 +5,6 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Team.Shared.Mappers;
-using Team.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
@@ -14,11 +13,6 @@ namespace Team.Shared.Publishers;
 public interface ITeamPublisher
 {
     Task PublishTeamsAsync(IEnumerable<Models.Team> teams, CancellationToken cancellationToken);
-
-    Task PublishInvitesToJoinTeamNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        string? inviteeIdToOverride,
-        CancellationToken cancellationToken);
 }
 
 public class TeamPublisher(
@@ -40,23 +34,6 @@ public class TeamPublisher(
                     team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                     context.GetCorrelationId()),
                 Data = new Data { Team = mapper.MapTo(team) }
-            },
-            cancellationToken)));
-
-    public async Task PublishInvitesToJoinTeamNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        string? inviteeIdToOverride,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(joinInvitation => publisher.PublishAsync(
-            new Key { TeamId = joinInvitation.Id },
-            new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    joinInvitation.IsDeleted() ? Type.InvitationToJoinTeamDeleted : Type.InvitationToJoinTeamUpserted,
-                    context.GetCorrelationId()),
-                Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
             },
             cancellationToken)));
 }

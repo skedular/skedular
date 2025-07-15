@@ -2,73 +2,8 @@ schema {
   query: Query
 }
 
-type ConnectionOfNotificationEdge {
-  pageInfo: PageInfo!
-  edges: [NotificationEdge!]!
-  totalCount: Int
-}
-
-type NotificationDetails {
-  sourceId: ID!
-  eventRaisedAt: DateTime!
-  notificationType: NotificationType!
-  invitedBy: Notification_CustomerDetails
-  invitee: Notification_CustomerDetails
-  organization: Notification_OrganizationDetails
-  location: Notification_LocationDetails
-  team: Notification_TeamDetails
-  id: ID!
-}
-
-type NotificationEdge {
-  node: NotificationDetails!
-  cursor: String!
-}
-
-type Notification_CustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  emails: [String!]!
-}
-
-type Notification_LocationDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type Notification_OrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
-}
-
-type Notification_TeamDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
-}
-
 type Query {
-  pendingInvitationsCount: Int! @cost(weight: "10")
-  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): ConnectionOfNotificationEdge! @cost(weight: "10")
   notificationVersion: Version!
-  notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Version {
@@ -77,36 +12,3 @@ type Version {
   build: Int!
   revision: Int!
 }
-
-input MyNotificationWhereInput {
-  organizationId: String
-}
-
-input NotificationOrderInput {
-  direction: OrderDirection!
-  field: NotificationOrderField!
-}
-
-enum NotificationOrderField {
-  DATE
-  TYPE
-}
-
-enum NotificationType {
-  INVITATION_TO_JOIN_ORGANIZATION
-  INVITATION_TO_JOIN_TEAM
-}
-
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
-}
-
-"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
-directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
-
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

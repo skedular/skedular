@@ -8,7 +8,6 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Mappers;
-using Organization.Shared.Models;
 using Organization.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -20,7 +19,6 @@ namespace Organization.Shared.Publishers;
 public interface IOrganizationOutboxPublisher
 {
     void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
-    void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
@@ -49,25 +47,6 @@ public class OrganizationOutboxPublisher(
                         organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                         context.GetCorrelationId()),
                     Data = new Data { Organization = mapper.MapTo(organization) }
-                },
-                unitOfWork);
-        }
-    }
-
-    public void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork)
-    {
-        foreach (var joinInvitation in joinInvitations)
-        {
-            publisher.Publish(
-                new Key { OrganizationId = joinInvitation.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        joinInvitation.IsDeleted() ? Type.InvitationToJoinOrganizationDeleted : Type.InvitationToJoinOrganizationUpserted,
-                        context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork);
         }

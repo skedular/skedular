@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Organization.Api.GraphQL.Invitation;
@@ -6,4 +7,5 @@ namespace Organization.Api.GraphQL.Invitation;
 public class MyInvitationsToJoinOrganizationsWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("status")] public InvitationStatus? Status { get; set; }
 }

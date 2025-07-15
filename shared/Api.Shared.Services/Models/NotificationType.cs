@@ -29,20 +29,4 @@ public static class NotificationTypeExtensions
             NotificationType.InvitationToJoinTeam => NotificationTypeConstants.InvitationToJoinTeam,
             _ => throw new ArgumentOutOfRangeException()
         };
-
-    public static string ToNotificationTypeName(this NotificationType src) =>
-        src switch
-        {
-            NotificationType.InvitationToJoinOrganization => "InvitationToJoinOrganization",
-            NotificationType.InvitationToJoinTeam => "InvitationToJoinTeam",
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public static string ToNotificationTypeName(this string src) =>
-        src switch
-        {
-            NotificationTypeConstants.InvitationToJoinOrganization => "InvitationToJoinOrganization",
-            NotificationTypeConstants.InvitationToJoinTeam => "InvitationToJoinTeam",
-            _ => throw new ArgumentOutOfRangeException()
-        };
 }

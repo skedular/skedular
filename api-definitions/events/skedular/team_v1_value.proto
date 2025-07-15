@@ -8,8 +8,6 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Team.V1.Value";
 enum Type {
   Type_TeamUpserted = 0;
   Type_TeamDeleted = 1;
-  Type_InvitationToJoinTeamUpserted = 2;
-  Type_InvitationToJoinTeamDeleted = 3;
 }
 
 message Event {
@@ -29,7 +27,6 @@ message Metadata {
 message Data { 
   oneof payload {
     Team team = 1;
-    InvitationToJoinTeam invitationToJoinTeam = 2;
   }
 }
 
@@ -68,14 +65,6 @@ message OrganizationMember {
   string customerId = 1;
   string organizationMemberId = 2;
   string organizationId = 3;
-}
-
-message InvitationToJoinTeam {
-  string id = 1;
-  google.protobuf.Timestamp deletedAt = 2;
-  string teamId = 3;
-  string invitedById = 4;
-  string inviteeId = 5;
 }
 
 message CdnImageFile {

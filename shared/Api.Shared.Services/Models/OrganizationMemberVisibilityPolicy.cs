@@ -37,12 +37,4 @@ public static class OrganizationMemberVisibilityPolicyExtensions
             OrganizationMemberVisibilityPolicy.LimitedAccess => "Limited Access",
             _ => throw new ArgumentOutOfRangeException()
         };
-
-    public static string ToOrganizationMemberVisibilityPolicyName(this string src) =>
-        src switch
-        {
-            OrganizationMemberVisibilityPolicyConstants.FullAccess => "Full Access",
-            OrganizationMemberVisibilityPolicyConstants.LimitedAccess => "Limited Access",
-            _ => throw new ArgumentOutOfRangeException()
-        };
 }

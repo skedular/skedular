@@ -1,6 +1,5 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Random;
 using Customer = Notification.Shared.Database.Entities.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Notification.Shared.Database.Entities.Identity;
@@ -24,26 +23,6 @@ public interface IMapper
     Customer MergeToEntity(Shared.Models.Customer src, Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
-    Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Shared.Models.Notification MapInvitationToJoinTeamToNotification(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
-
-    Shared.Database.Entities.Notification MapToEntity(
-        Shared.Models.Notification src,
-        Customer? invitedBy,
-        Customer? invitee,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        Shared.Database.Entities.Team? team);
-
-    Shared.Database.Entities.Notification MergeToEntity(
-        Shared.Models.Notification src,
-        Shared.Database.Entities.Notification dest,
-        Customer? invitedBy,
-        Customer? invitee,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        Shared.Database.Entities.Team? team);
-
     OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
 
     OrganizationSsoSetting MergeTo(
@@ -52,7 +31,7 @@ public interface IMapper
         Shared.Database.Entities.Organization organization);
 }
 
-public class Mapper(IRandomHelper randomHelper) : IMapper
+public class Mapper : IMapper
 {
     public Shared.Models.Customer MapTo(Event src)
     {
@@ -195,82 +174,6 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             dest.Customer = customer;
         }
 
-        return dest;
-    }
-
-    public Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(
-        Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
-    {
-        var notification = src.Data.InvitationToJoinOrganization;
-        var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Shared.Models.Notification
-        {
-            Id = randomHelper.Generate(),
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            SourceId = notification.Id,
-            Type = NotificationType.InvitationToJoinOrganization,
-            InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
-            Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
-            Organization = new Organization { Id = notification.OrganizationId }
-        };
-    }
-
-    public Shared.Models.Notification MapInvitationToJoinTeamToNotification(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
-    {
-        var notification = src.Data.InvitationToJoinTeam;
-        var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Shared.Models.Notification
-        {
-            Id = randomHelper.Generate(),
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            SourceId = notification.Id,
-            Type = NotificationType.InvitationToJoinTeam,
-            InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
-            Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
-            Team = new Team { Id = notification.TeamId }
-        };
-    }
-
-    public Shared.Database.Entities.Notification MapToEntity(
-        Shared.Models.Notification src,
-        Customer? invitedBy,
-        Customer? invitee,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        Shared.Database.Entities.Team? team) =>
-        MergeToEntity(
-            src,
-            new Shared.Database.Entities.Notification(),
-            invitedBy,
-            invitee,
-            organization,
-            location,
-            team);
-
-    public Shared.Database.Entities.Notification MergeToEntity(
-        Shared.Models.Notification src,
-        Shared.Database.Entities.Notification dest,
-        Customer? invitedBy,
-        Customer? invitee,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        Shared.Database.Entities.Team? team)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.SourceId = src.SourceId;
-        dest.Type = src.Type.ToNotificationType();
-        dest.InvitedBy = invitedBy;
-        dest.Invitee = invitee;
-        dest.Organization = organization;
-        dest.Location = location;
-        dest.Team = team;
         return dest;
     }
 

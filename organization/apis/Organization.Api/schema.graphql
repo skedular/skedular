@@ -51,7 +51,7 @@ type ConnectionOfOrganizationTagEdge {
 
 type InvitationToJoinOrganizationPayload {
   clientMutationId: String
-  inviteCustomersToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
+  inviteCustomerToJoinOrganization: InviteCustomerToJoinOrganizationDetails!
 }
 
 type InvitationsToJoinOrganizationPayload {
@@ -61,7 +61,7 @@ type InvitationsToJoinOrganizationPayload {
 
 type InviteCustomerToJoinOrganizationDetails {
   email: String
-  status: InvitationStatus!
+  status: OrganizationInvitationStatusDetails!
   role: OrganizationMemberRole!
   organization: OrganizationDetails!
   createdBy: Organization_CustomerDetails!
@@ -232,6 +232,11 @@ type OrganizationIndustrySubCategoryReferenceDetails {
   name: String!
   mainCategoryName: String!
   id: ID!
+}
+
+type OrganizationInvitationStatusDetails {
+  type: InvitationStatus!
+  name: String!
 }
 
 type OrganizationJoinInvitationEdge {
@@ -432,6 +437,7 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
+  organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
@@ -705,6 +711,7 @@ input LocationTagOrganizationTagWhereInput {
 
 input MyInvitationsToJoinOrganizationsWhereInput {
   organizationId: String
+  status: InvitationStatus
 }
 
 input OrganizationBankAccountOrderInput {
@@ -919,6 +926,7 @@ enum InvitationStatus {
 
 enum JoinOrganizationInvitationOrderField {
   CREATED_AT
+  STATUS
 }
 
 enum OrderDirection {

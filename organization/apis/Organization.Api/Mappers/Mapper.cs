@@ -1255,7 +1255,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Email = src.Email,
-            Status = src.Status,
+            Status = new OrganizationInvitationStatusDetails { Type = src.Status, Name = src.Status.ToInvitationStatusName() },
             Role = src.Role,
             Organization = MapTo(src.Organization)!,
             CreatedBy = MapTo(src.CreatedBy)!,
