@@ -13,7 +13,8 @@ data "aws_iam_policy_document" "contabo_user_policy_document" {
     effect = "Allow"
     actions = [
       "ses:SendEmail",
-      "ses:SendTemplatedEmail"
+      "ses:SendTemplatedEmail",
+      "ses:SendRawEmail",
     ]
     resources = [
       data.aws_ses_domain_identity.default.arn,
