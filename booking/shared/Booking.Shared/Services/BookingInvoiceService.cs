@@ -106,9 +106,12 @@ public class BookingInvoiceService(
                     column.Item().Text("Invoice Date").SemiBold().FontSize(13);
                     column.Item().Text(booking.CreatedAt.ToShortDate()).FontSize(10);
 
-                    column.Item().Text(string.Empty);
-                    column.Item().Text("Invoice Number").SemiBold().FontSize(13);
-                    column.Item().Text("INV-XXX").FontSize(10);
+                    if (!string.IsNullOrWhiteSpace(booking.InvoiceNumber))
+                    {
+                        column.Item().Text(string.Empty);
+                        column.Item().Text("Invoice Number").SemiBold().FontSize(13);
+                        column.Item().Text(booking.InvoiceNumber).FontSize(10);
+                    }
 
                     var taxDetails = organization.TaxDetails;
                     if (taxDetails is not null)

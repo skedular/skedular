@@ -53,7 +53,8 @@ message Booking {
   string totalAmount = 24;
   string currency = 25;
   string InvoiceUrl = 26;
-  repeated string InvoiceEmailList = 27;
+  string InvoiceNumber = 27;
+  repeated string InvoiceEmailList = 28;
 }
 
 enum BookingType

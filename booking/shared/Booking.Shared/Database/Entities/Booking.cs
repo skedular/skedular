@@ -23,6 +23,7 @@ public class Booking : EntityBaseWithDeleted
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
+    public string? InvoiceNumber { get; set; }
     public ICollection<string>? InvoiceEmailList { get; set; }
 
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
@@ -59,6 +60,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.Schedules).HasColumnType("jsonb");
         builder.Property(item => item.LineItems).HasColumnType("jsonb");
         builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");

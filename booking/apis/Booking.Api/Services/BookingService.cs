@@ -717,6 +717,7 @@ public class BookingService(
         booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
         booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
         booking.InvoiceUrl = existingBooking.InvoiceUrl;
+        booking.InvoiceNumber = existingBooking.InvoiceNumber;
         booking.TotalAmount = existingBooking.TotalAmount;
         booking.Currency = existingBooking.Currency;
 

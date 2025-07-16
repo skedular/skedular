@@ -6,12 +6,12 @@ namespace Booking.Shared.Services;
 
 public interface IOrganizationInvoiceCounterService
 {
-    Task<int> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<string> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFactory) : IOrganizationInvoiceCounterService
 {
-    public async Task<int> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<string> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
                            throw new OrganizationNotFound();
@@ -33,6 +33,6 @@ public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFact
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return organizationInvoiceCounter.InvoiceNumber;
+        return $"SKD-{organizationInvoiceCounter.InvoiceNumber:D6}";
     }
 }

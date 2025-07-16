@@ -28,6 +28,7 @@ public class BookingDetails : Node
     [GraphQLName("currency")] public string? Currency { get; set; }
     [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
+    [GraphQLName("invoiceNumber")] public string? InvoiceNumber { get; set; }
     [GraphQLName("invoiceEmailList")] public IEnumerable<string>? InvoiceEmailList { get; set; }
 
     [GraphQLName("lastModifiedByCustomer")]

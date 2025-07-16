@@ -112,6 +112,7 @@ public class Mapper : IMapper
             TotalAmount = src.TotalAmount,
             Currency = src.Currency,
             InvoiceUrl = src.InvoiceUrl,
+            InvoiceNumber = src.InvoiceNumber,
             InvoiceEmailList = src.InvoiceEmailList
         };
 
@@ -178,6 +179,7 @@ public class Mapper : IMapper
                     ? null
                     : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
             InvoiceUrl = src.InvoiceUrl,
+            InvoiceNumber = src.InvoiceNumber,
             InvoiceEmailList = src.InvoiceEmailList,
             TotalAmount = src.TotalAmount?.ToRoundedPrice(),
             TotalAmountToDisplay =
@@ -303,6 +305,7 @@ public class Mapper : IMapper
         dest.TotalAmount = src.TotalAmount;
         dest.Currency = src.Currency;
         dest.InvoiceUrl = src.InvoiceUrl;
+        dest.InvoiceNumber = src.InvoiceNumber;
         dest.InvoiceEmailList = src.InvoiceEmailList;
         return dest;
     }
@@ -350,7 +353,8 @@ public class Mapper : IMapper
             BookedOnMarketplace = src.BookedOnMarketplace,
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
-            InvoiceUrl = src.InvoiceUrl.ToSafeString()
+            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            InvoiceNumber = src.InvoiceNumber.ToSafeString()
         };
 
         if (src.PaymentMethod is not null)

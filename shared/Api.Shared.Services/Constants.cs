@@ -116,6 +116,8 @@ public static class Constants
     public const int MaxOrganizationAccountHolderNameLength = 200;
     public const int MaxOrganizationAccountNumberLength = 100;
 
+    public const int MaxInvoiceNumberLength = 100;
+
     public const int MaxTaxDetailsGstNumberLength = 100;
     public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days

@@ -1,4 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -17,6 +18,8 @@ public class InvoiceIntegrations(
     CoreService.CoreServiceClient coreServiceClient,
     IRepositoryFactory repositoryFactory,
     IBookingInvoiceService bookingInvoiceService,
+    IDbTransactionBuilder transactionBuilder,
+    IOrganizationInvoiceCounterService organizationInvoiceCounterService,
     IHostEnvironment hostEnvironment)
 {
     [Activity]
@@ -27,6 +30,28 @@ public class InvoiceIntegrations(
         if (booking is null || booking.IsDeleted())
         {
             return;
+        }
+
+        if (string.IsNullOrWhiteSpace(booking.InvoiceNumber))
+        {
+            var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+            var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+            if (productVersions.Count != productVersionIds.Count)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+            if (organizationIds.Count > 1)
+            {
+                throw new CrossOrganizationProductBookingNotAllowed();
+            }
+
+            var organizationId = productVersions.First().Product.Organization.Id;
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+            booking.InvoiceNumber = await organizationInvoiceCounterService.GetNextInvoiceNumberIdAsync(organizationId, cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
         }
 
         var invoiceDocument = await bookingInvoiceService.GenerateInvoiceAsync(args.BookingId, args.FullyPaid, cancellationToken);

@@ -22,6 +22,7 @@ public class Booking : ModelBaseWithDeleted
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
+    public string? InvoiceNumber { get; set; }
     public ICollection<string>? InvoiceEmailList { get; set; }
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
