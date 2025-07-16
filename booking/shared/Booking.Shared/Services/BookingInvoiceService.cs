@@ -158,7 +158,10 @@ public class BookingInvoiceService(
                 column.Item().Element(ComposeTable);
                 column.Item().Component(new TotalExcludeGstComponent(totalPrice, organization));
                 column.Item().Component(new TotalAmountComponent(totalPrice, organization, productVersions, fullyPaid));
-                column.Item().Component(new DueDateSection(dueDate, bankAccount));
+                if (booking.PaymentMethod == PaymentMethodConstants.BankTransfer)
+                {
+                    column.Item().Component(new DueDateSection(dueDate, bankAccount));
+                }
             });
         }
 
