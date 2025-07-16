@@ -18,6 +18,16 @@ public class PayBookingViaCard
 
         try
         {
+            await Workflow.ExecuteActivityAsync(
+                (InvoiceIntegrations activity) =>
+                    activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, false, args.InvoiceEmailList)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(2),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                });
+
             var upsertProductAndPricingResponse = await Workflow.ExecuteActivityAsync(
                 (StripeIntegrations activity) => activity.UpsertProductAndPricingAsync(
                     new UpsertProductAndPricingInput(args.BookingId)),
@@ -75,30 +85,17 @@ public class PayBookingViaCard
                 return;
             }
 
-            if (_state.BookingDeleted || (!string.IsNullOrWhiteSpace(_state.PaymentStatus) &&
-                                          _state.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
-                                              or PaymentStatus.NoPaymentRequired))
+            if (!_state.BookingDeleted && (string.IsNullOrWhiteSpace(_state.PaymentStatus) ||
+                                           _state.PaymentStatus.ToPaymentStatus() is not (PaymentStatus.Confirmed
+                                               or PaymentStatus.NoPaymentRequired)))
             {
-                if (args.SendInvoice)
-                {
-                    await Workflow.ExecuteActivityAsync(
-                        (InvoiceIntegrations activity) =>
-                            activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, true, args.InvoiceEmailList)),
-                        new ActivityOptions
-                        {
-                            StartToCloseTimeout = TimeSpan.FromMinutes(2),
-                            TaskQueue = Workflow.Info.TaskQueue,
-                            RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                        });
-                }
+                await Workflow.ExecuteActivityAsync(
+                    (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
+                        new ReleaseBookingResourcesInput(args.BookingId)),
+                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
                 return;
             }
-
-            await Workflow.ExecuteActivityAsync(
-                (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                    new ReleaseBookingResourcesInput(args.BookingId)),
-                new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
         }
         catch (Exception)
         {
@@ -107,6 +104,16 @@ public class PayBookingViaCard
                     new ReleaseBookingResourcesInput(args.BookingId)),
                 new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
         }
+
+        await Workflow.ExecuteActivityAsync(
+            (InvoiceIntegrations activity) =>
+                activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, true, args.InvoiceEmailList)),
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromMinutes(2),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            });
     }
 
     [WorkflowSignal]

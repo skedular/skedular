@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8609fafb0aa955ce1273bbec9dfafaba>>
+ * @generated SignedSource<<ffb92d83bda4b572ac2160ba677a2eff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type AddBookingInput = {
   organizationIds: ReadonlyArray<string>;
   paymentMethod?: PaymentMethod | null | undefined;
   resourceIds: ReadonlyArray<string>;
-  sendInvoice?: boolean | null | undefined;
   teamIds: ReadonlyArray<string>;
   type: BookingType;
   until: any;

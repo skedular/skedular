@@ -67,7 +67,6 @@ public class Mapper : IMapper
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
-            SendInvoice = src.SendInvoice ?? false,
             InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
 
@@ -219,7 +218,6 @@ public class Mapper : IMapper
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             TotalAmount = src.TotalAmount,
             Currency = src.Currency,
-            SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
             InvoiceEmailList = src.InvoiceEmailList
         };

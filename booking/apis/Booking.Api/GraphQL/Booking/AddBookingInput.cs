@@ -18,6 +18,5 @@ public class AddBookingInput
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
     [GraphQLName("paymentMethod")] public PaymentMethod? PaymentMethod { get; set; }
-    [GraphQLName("sendInvoice")] public bool? SendInvoice { get; set; }
     [GraphQLName("invoiceEmailList")] public IEnumerable<string>? InvoiceEmailList { get; set; }
 }

@@ -45,7 +45,6 @@ type BookingDetails {
   paymentMethod: PaymentMethodTypeDetails
   paymentStatus: PaymentStatusDetails!
   resources: [BookingResourceDetails!]!
-  sendInvoice: Boolean
   totalAmount: String
   totalAmountToDisplay: String!
   type: BookingTypeDetails!
@@ -1345,7 +1344,6 @@ input AddBookingInput {
   organizationIds: [String!]!
   paymentMethod: PaymentMethod
   resourceIds: [String!]!
-  sendInvoice: Boolean
   teamIds: [String!]!
   type: BookingType!
   until: DateTime!

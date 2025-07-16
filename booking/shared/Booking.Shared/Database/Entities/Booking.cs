@@ -22,7 +22,6 @@ public class Booking : EntityBaseWithDeleted
     public string? PaymentMethod { get; set; }
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
-    public bool? SendInvoice { get; set; }
     public string? InvoiceUrl { get; set; }
     public ICollection<string>? InvoiceEmailList { get; set; }
 
@@ -86,6 +85,5 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.PaymentMethod);
         builder.HasIndex(item => item.TotalAmount);
         builder.HasIndex(item => item.Currency);
-        builder.HasIndex(item => item.SendInvoice);
     }
 }

@@ -28,7 +28,6 @@ type BookingDetails {
   totalAmountToDisplay: String!
   currency: String
   currencyToDisplay: String!
-  sendInvoice: Boolean
   invoiceUrl: String
   invoiceEmailList: [String!]
   lastModifiedByCustomer: Booking_CustomerDetails
@@ -229,7 +228,6 @@ input AddBookingInput {
   resourceIds: [String!]!
   lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod
-  sendInvoice: Boolean
   invoiceEmailList: [String!]
 }
 

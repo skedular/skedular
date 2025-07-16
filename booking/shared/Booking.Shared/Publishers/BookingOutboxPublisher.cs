@@ -65,7 +65,6 @@ public class BookingOutboxPublisher(
             new PayBookingViaCardInput(
                 booking.Id,
                 booking.PaymentExpiry,
-                booking.SendInvoice ?? false,
                 Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
             new WorkflowOptions
             {
@@ -99,7 +98,6 @@ public class BookingOutboxPublisher(
             new PayBookingViaBankTransferInput(
                 booking.Id,
                 booking.PaymentExpiry,
-                booking.SendInvoice ?? false,
                 Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
             new WorkflowOptions
             {

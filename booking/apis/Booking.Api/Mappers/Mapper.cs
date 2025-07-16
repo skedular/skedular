@@ -111,7 +111,6 @@ public class Mapper : IMapper
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
             TotalAmount = src.TotalAmount,
             Currency = src.Currency,
-            SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
             InvoiceEmailList = src.InvoiceEmailList
         };
@@ -178,7 +177,6 @@ public class Mapper : IMapper
                 src.PaymentMethod is null
                     ? null
                     : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
-            SendInvoice = src.SendInvoice,
             InvoiceUrl = src.InvoiceUrl,
             InvoiceEmailList = src.InvoiceEmailList,
             TotalAmount = src.TotalAmount?.ToRoundedPrice(),
@@ -209,7 +207,6 @@ public class Mapper : IMapper
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
             PaymentMethod = src.PaymentMethod,
-            SendInvoice = src.SendInvoice,
             InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
     }
@@ -305,7 +302,6 @@ public class Mapper : IMapper
         dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
         dest.TotalAmount = src.TotalAmount;
         dest.Currency = src.Currency;
-        dest.SendInvoice = src.SendInvoice;
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceEmailList = src.InvoiceEmailList;
         return dest;
@@ -354,7 +350,6 @@ public class Mapper : IMapper
             BookedOnMarketplace = src.BookedOnMarketplace,
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
-            SendInvoice = src.SendInvoice ?? false,
             InvoiceUrl = src.InvoiceUrl.ToSafeString()
         };
 

@@ -36,14 +36,14 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, Checkboxes, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, mixed, number, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: bookProduct_query$key;
@@ -86,7 +86,6 @@ type BookingDetails = {
   resources: string[];
   type: string;
   paymentMethod: string;
-  sendInvoice: boolean;
   invoiceEmailList: string[];
 };
 
@@ -112,7 +111,6 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
     notes: string().notRequired(),
     type: string().required('Type is required'),
     paymentMethod: string().required('Payment method is required'),
-    sendInvoice: boolean().required('Send invoice is required'),
     invoiceEmailList: array().notRequired(),
   });
 
@@ -233,7 +231,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             type
             name
           }
-          sendInvoice
           invoiceEmailList
         }
       }
@@ -268,7 +265,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [notes, setNotes] = useState<string>('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const [sendInvoice, setSendInvoice] = useState<boolean>(true);
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
 
   const resources = useMemo<ResourceDetails[]>(
@@ -455,7 +451,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, sendInvoice, invoiceEmailList }: BookingDetails) => {
+  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, invoiceEmailList }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -486,7 +482,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           type: type as BookingType,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
           paymentMethod: paymentMethod as PaymentMethod,
-          sendInvoice,
           invoiceEmailList,
         },
       },
@@ -556,7 +551,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               type: paymentMethod as PaymentMethod,
               name: '',
             },
-            sendInvoice,
             invoiceEmailList,
           },
         },
@@ -601,7 +595,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               type: bookingType,
               paymentMethod,
               notes,
-              sendInvoice,
               invoiceEmailList,
             }}
             validate={validate}
@@ -612,7 +605,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               setBookingType(values!.type);
               setPaymentMethod(values!.paymentMethod);
               setNotes(values!.notes);
-              setSendInvoice(values!.sendInvoice);
               setInvoiceEmailList(values!.invoiceEmailList);
 
               return (
@@ -828,35 +820,16 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="">
-                      <Checkboxes
-                        name="sendInvoice"
-                        data={{
-                          label: 'Send Invoice',
-                          value: true,
-                        }}
-                        required={requiredFields.sendInvoice}
-                      />
+                    <FormFieldLabel label="Email Invoice To">
+                      <MultipleChoicesUserEmails rootDataRelay={rootData} name="invoiceEmailList" required={requiredFields.invoiceEmailList} />
                     </FormFieldLabel>
-
-                    {sendInvoice && (
-                      <FormFieldLabel label="">
-                        <MultipleChoicesUserEmails rootDataRelay={rootData} name="invoiceEmailList" required={requiredFields.invoiceEmailList} />
-                      </FormFieldLabel>
-                    )}
 
                     <FormFieldLabel label="Total Price">
                       <BodyIconTypography label={totalPrice} />
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
                         Book & Pay
