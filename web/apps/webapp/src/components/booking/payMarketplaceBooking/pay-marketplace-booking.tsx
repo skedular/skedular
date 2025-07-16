@@ -12,7 +12,10 @@ import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/payMarketplaceBooking_booking_refetchableFragment.graphql';
+import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
 import type { payMarketplaceBooking_deleteBookingMutation } from '@/queries/__generated__/payMarketplaceBooking_deleteBookingMutation.graphql';
+import type { payMarketplaceBooking_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/payMarketplaceBooking_makeBookingPaymentNotRequiredMutation.graphql';
+import type { payMarketplaceBooking_rejectBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_rejectBookingPaymentMutation.graphql';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
@@ -96,6 +99,18 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
               priceToDisplay
             }
           }
+          isPaymentRequired
+          paymentStatus {
+            type
+            name
+          }
+        }
+        organizationBookingPermissions(organizationId: $organizationId) {
+          canModifyPaymentMethod
+        }
+        paymentStatuses {
+          type
+          name
         }
       }
     `,
@@ -107,6 +122,48 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
       deleteBooking(input: $input) {
         booking {
           id
+        }
+      }
+    }
+  `);
+
+  const [commitConfirmBookingPayment] = useMutation<payMarketplaceBooking_confirmBookingPaymentMutation>(graphql`
+    mutation payMarketplaceBooking_confirmBookingPaymentMutation($input: ConfirmBookingPaymentInput!) @raw_response_type {
+      confirmBookingPayment(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRejectBookingPayment] = useMutation<payMarketplaceBooking_rejectBookingPaymentMutation>(graphql`
+    mutation payMarketplaceBooking_rejectBookingPaymentMutation($input: RejectBookingPaymentInput!) @raw_response_type {
+      rejectBookingPayment(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitMakeBookingPaymentNotRequired] = useMutation<payMarketplaceBooking_makeBookingPaymentNotRequiredMutation>(graphql`
+    mutation payMarketplaceBooking_makeBookingPaymentNotRequiredMutation($input: MakeBookingPaymentNotRequiredInput!) @raw_response_type {
+      makeBookingPaymentNotRequired(input: $input) {
+        booking {
+          id
+          paymentStatus {
+            type
+            name
+          }
         }
       }
     }
@@ -227,6 +284,177 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
     });
   };
 
+  const handleConfirmPaymentClick = () => {
+    const bookingDetails = rootData.booking;
+    if (!bookingDetails) {
+      return;
+    }
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(booking.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Confirming payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitConfirmBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment confirmed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        confirmBookingPayment: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'CONFIRMED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const handleRejectPaymentClick = () => {
+    const bookingDetails = rootData.booking;
+    if (!bookingDetails) {
+      return;
+    }
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Rejecting payment for booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitRejectBookingPayment({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment rejected.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        rejectBookingPayment: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'REJECTED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const handleMakePaymentNotRequiredClick = () => {
+    const bookingDetails = rootData.booking;
+    if (!bookingDetails) {
+      return;
+    }
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
+    if (bookingDetails.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Making payment for booking '${bookingDetailsInfo}' not required...`} />, infoNotificationOptions);
+
+    commitMakeBookingPaymentNotRequired({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} payment made not required.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        makeBookingPaymentNotRequired: {
+          booking: {
+            id: bookingDetails.id,
+            paymentStatus: {
+              type: 'NO_PAYMENT_REQUIRED',
+              name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+            },
+          },
+        },
+      },
+    });
+  };
+
   if (!rootData.booking) {
     return <></>;
   }
@@ -306,21 +534,36 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <StackRow>
                 <SmallIconTypography label={`Time left to pay: ${timeLeftToPayInSeconds ? timeLeftToPayInSeconds : 'Expired'}`} color="error.main" />
+              </StackRow>
+
+              <StackRow>
                 {booking.bookingCheckoutSession?.checkoutUrl && (
                   <Button LinkComponent={Link} variant="contained" href={booking.bookingCheckoutSession.checkoutUrl}>
                     Pay
                   </Button>
                 )}
-                <Button variant="contained" onClick={handleCancelBookingClick} sx={defaultButtonStyle}>
+                <Button variant="contained" onClick={handleCancelBookingClick} sx={defaultButtonStyle} endIcon={<CircularProgress size={20} />}>
                   Cancel
                 </Button>
               </StackRow>
 
-              {booking.paymentMethod?.type === 'CARD' && !booking.bookingCheckoutSession && (
-                <StackRow>
-                  <CircularProgress />
-                </StackRow>
-              )}
+              {rootData.organizationBookingPermissions.canModifyPaymentMethod &&
+                booking.isPaymentRequired &&
+                booking.paymentStatus.type !== 'REJECTED' &&
+                booking.paymentStatus.type !== 'EXPIRED' &&
+                booking.paymentStatus.type !== 'RECORD_NEVER_CREATED' && (
+                  <StackRow>
+                    <Button variant="contained" onClick={handleConfirmPaymentClick}>
+                      Confirm Payment
+                    </Button>
+                    <Button variant="contained" onClick={handleRejectPaymentClick} sx={defaultButtonStyle}>
+                      Reject Payment
+                    </Button>
+                    <Button variant="contained" onClick={handleMakePaymentNotRequiredClick} sx={defaultButtonStyle}>
+                      Make Payment Not Required
+                    </Button>
+                  </StackRow>
+                )}
             </StackColumn>
           </StackColumn>
         </AppBarWithStackColumn>

@@ -1,0 +1,148 @@
+/**
+ * @generated SignedSource<<ff5bde8511ff5b89dfe6834a6d85a6c6>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ConcreteRequest } from 'relay-runtime';
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type RejectBookingPaymentInput = {
+  clientMutationId?: string | null | undefined;
+  id: string;
+};
+export type payMarketplaceBooking_rejectBookingPaymentMutation$variables = {
+  input: RejectBookingPaymentInput;
+};
+export type payMarketplaceBooking_rejectBookingPaymentMutation$data = {
+  readonly rejectBookingPayment: {
+    readonly booking: {
+      readonly id: string;
+      readonly paymentStatus: {
+        readonly name: string;
+        readonly type: PaymentStatus;
+      };
+    };
+  };
+};
+export type payMarketplaceBooking_rejectBookingPaymentMutation$rawResponse = {
+  readonly rejectBookingPayment: {
+    readonly booking: {
+      readonly id: string;
+      readonly paymentStatus: {
+        readonly name: string;
+        readonly type: PaymentStatus;
+      };
+    };
+  };
+};
+export type payMarketplaceBooking_rejectBookingPaymentMutation = {
+  rawResponse: payMarketplaceBooking_rejectBookingPaymentMutation$rawResponse;
+  response: payMarketplaceBooking_rejectBookingPaymentMutation$data;
+  variables: payMarketplaceBooking_rejectBookingPaymentMutation$variables;
+};
+
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "BookingPayload",
+    "kind": "LinkedField",
+    "name": "rejectBookingPayment",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "BookingDetails",
+        "kind": "LinkedField",
+        "name": "booking",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PaymentStatusDetails",
+            "kind": "LinkedField",
+            "name": "paymentStatus",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "payMarketplaceBooking_rejectBookingPaymentMutation",
+    "selections": (v1/*: any*/),
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "payMarketplaceBooking_rejectBookingPaymentMutation",
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "cacheID": "4e5cd65cd744c97d5c822133b73cff06",
+    "id": null,
+    "metadata": {},
+    "name": "payMarketplaceBooking_rejectBookingPaymentMutation",
+    "operationKind": "mutation",
+    "text": "mutation payMarketplaceBooking_rejectBookingPaymentMutation(\n  $input: RejectBookingPaymentInput!\n) {\n  rejectBookingPayment(input: $input) {\n    booking {\n      id\n      paymentStatus {\n        type\n        name\n      }\n    }\n  }\n}\n"
+  }
+};
+})();
+
+(node as any).hash = "b1e92ef86b7611a40db32b57a932976c";
+
+export default node;

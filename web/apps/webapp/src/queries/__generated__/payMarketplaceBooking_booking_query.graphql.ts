@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f011a42c1282074851c388ddb3ec0fa0>>
+ * @generated SignedSource<<0f4f1a0d963fc2c829432abd2e57b557>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
@@ -40,6 +41,7 @@ export type payMarketplaceBooking_booking_query$data = {
       readonly name: string;
       readonly uniqueId: string;
     }>;
+    readonly isPaymentRequired: boolean;
     readonly lineItems: ReadonlyArray<{
       readonly productVersion: {
         readonly name: string;
@@ -53,6 +55,10 @@ export type payMarketplaceBooking_booking_query$data = {
     readonly paymentMethod: {
       readonly type: PaymentMethod;
     } | null | undefined;
+    readonly paymentStatus: {
+      readonly name: string;
+      readonly type: PaymentStatus;
+    };
     readonly resources: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
@@ -74,6 +80,13 @@ export type payMarketplaceBooking_booking_query$data = {
     };
     readonly until: any;
   } | null | undefined;
+  readonly organizationBookingPermissions: {
+    readonly canModifyPaymentMethod: boolean;
+  };
+  readonly paymentStatuses: ReadonlyArray<{
+    readonly name: string;
+    readonly type: PaymentStatus;
+  }>;
   readonly " $fragmentType": "payMarketplaceBooking_booking_query";
 };
 export type payMarketplaceBooking_booking_query$key = {
@@ -84,50 +97,59 @@ export type payMarketplaceBooking_booking_query$key = {
 import payMarketplaceBooking_booking_refetchableFragment_graphql from './payMarketplaceBooking_booking_refetchableFragment.graphql';
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  }
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v1 = [
+  (v0/*: any*/)
 ],
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v5 = [
-  (v1/*: any*/),
+v6 = [
   (v2/*: any*/),
-  (v4/*: any*/)
+  (v3/*: any*/),
+  (v5/*: any*/)
+],
+v7 = [
+  (v0/*: any*/),
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
       "name": "bookingId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
@@ -189,7 +211,7 @@ return {
           "kind": "LinkedField",
           "name": "type",
           "plural": false,
-          "selections": (v0/*: any*/),
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -200,8 +222,8 @@ return {
           "name": "involvedCustomers",
           "plural": true,
           "selections": [
-            (v1/*: any*/),
             (v2/*: any*/),
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -240,7 +262,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedOrganizations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -250,7 +272,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -260,7 +282,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedTeams",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -271,9 +293,9 @@ return {
           "name": "resources",
           "plural": true,
           "selections": [
-            (v1/*: any*/),
             (v2/*: any*/),
-            (v4/*: any*/),
+            (v3/*: any*/),
+            (v5/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -281,7 +303,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v6/*: any*/),
               "storageKey": null
             },
             {
@@ -291,7 +313,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v6/*: any*/),
               "storageKey": null
             }
           ],
@@ -311,7 +333,7 @@ return {
           "kind": "LinkedField",
           "name": "paymentMethod",
           "plural": false,
-          "selections": (v0/*: any*/),
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -369,8 +391,8 @@ return {
               "name": "productVersion",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
                 (v2/*: any*/),
+                (v3/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -383,8 +405,59 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isPaymentRequired",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PaymentStatusDetails",
+          "kind": "LinkedField",
+          "name": "paymentStatus",
+          "plural": false,
+          "selections": (v7/*: any*/),
+          "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "organizationId",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationBookingPermissions",
+      "kind": "LinkedField",
+      "name": "organizationBookingPermissions",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canModifyPaymentMethod",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentStatusDetails",
+      "kind": "LinkedField",
+      "name": "paymentStatuses",
+      "plural": true,
+      "selections": (v7/*: any*/),
       "storageKey": null
     }
   ],
@@ -393,6 +466,6 @@ return {
 };
 })();
 
-(node as any).hash = "354ce9072bb8c3e6759f337926f6b7c1";
+(node as any).hash = "cf78a9eb6436203b2b2e53f5fbca64dd";
 
 export default node;

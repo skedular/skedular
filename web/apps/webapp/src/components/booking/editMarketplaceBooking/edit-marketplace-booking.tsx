@@ -1,6 +1,16 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@/components/commons';
+import { PdfIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -25,10 +35,12 @@ import type { BookingType, editMarketplaceBooking_updateBookingMutation } from '
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { Dayjs } from 'dayjs';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -137,6 +149,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
               color
             }
           }
+          isPaymentRequired
+          paymentStatus {
+            type
+            name
+          }
+          invoiceUrl
         }
       }
     `,
@@ -452,31 +470,31 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <SectionIconTypography label="Edit Booking" />
                   <BodyIconTypography label="Edit your booking details" />
                   <Divider />
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Payment Status">
+                    <SmallIconTypography label={booking.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+                  </FormFieldLabel>
+
                   <FormFieldLabel label="Date/Time">
                     <StackRow>
                       <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
                       {allDay && <BodyIconTypography label="All day" />}
                       {!allDay && <BodyIconTypography label={`${toShortTime(timeRange[0])} - ${toShortTime(timeRange[1])}`} />}
                     </StackRow>
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Invoice">
+                    {booking.invoiceUrl && (
+                      <Link component={NextLink} href={booking.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                        <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
+                      </Link>
+                    )}
                   </FormFieldLabel>
 
                   <FormFieldLabel label="User">
@@ -547,19 +565,15 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
-                  <StackRow>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      Update
-                    </Button>
-                  </StackRow>
-                </StackColumn>
+                {(booking.paymentStatus.type === 'NO_PAYMENT_REQUIRED' || booking.paymentStatus.type === 'CONFIRMED') && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                )}
               </FormStackColumn>
             )}
           />
