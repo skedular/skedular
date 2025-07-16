@@ -1,7 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Notification.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Notification.V1.Value;
+using Enterprise.Shared.Email;
 using Enterprise.Shared.Kafka.Consume;
-using Notification.Processors.Services;
 using Type = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type;
 
 namespace Notification.Processors.Subscribers;

@@ -5,6 +5,7 @@ using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Email;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.IO;
@@ -167,6 +168,7 @@ public static class Extensions
             .AddSingleton(new System.Random())
             .AddSingleton<IRandomHelper, RandomHelper>()
             .AddSingleton<IDirectoryService, DirectoryService>()
+            .AddSingleton<IEmailService, EmailService>()
             .TryAddSingleton(TimeProvider.System);
 
         services

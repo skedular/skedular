@@ -5,10 +5,13 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 using Organization.Shared;
+using Organization.Shared.Activities;
 using Organization.Shared.Configurations;
 using Organization.Shared.Database;
-using Organization.Shared.Workflows;
-using Organization.Shared.Workflows.Activities;
+using Organization.Shared.Workflows.AddPayment;
+using Organization.Shared.Workflows.Invitation.ExistingCustomer;
+using Organization.Shared.Workflows.Invitation.NonExistingCustomer;
+using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Temporalio.Extensions.Hosting;
 
 namespace Organization.Jobs;
@@ -49,6 +52,8 @@ public class Program
             .AddTemporalWorker(configuration)
             .AddWorkflow<ScheduleRenewOrganizationOffering>()
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
+            .AddWorkflow<InviteNonExistingCustomerToJoinOrganization>()
+            .AddWorkflow<InviteExistingCustomerToJoinOrganization>()
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>();
 

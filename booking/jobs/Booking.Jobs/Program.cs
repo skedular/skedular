@@ -1,7 +1,8 @@
 using Booking.Shared;
+using Booking.Shared.Activities;
 using Booking.Shared.Database;
-using Booking.Shared.Workflows;
-using Booking.Shared.Workflows.Activities;
+using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
+using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;

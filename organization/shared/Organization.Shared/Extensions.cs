@@ -10,7 +10,6 @@ using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.Services;
 
 namespace Organization.Shared;
 

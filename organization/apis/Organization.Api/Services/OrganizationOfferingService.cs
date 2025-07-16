@@ -8,7 +8,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 
 namespace Organization.Api.Services;
 

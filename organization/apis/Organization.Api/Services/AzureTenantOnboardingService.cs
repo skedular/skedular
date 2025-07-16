@@ -8,7 +8,7 @@ using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Location = Organization.Shared.Database.Entities.Location;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 

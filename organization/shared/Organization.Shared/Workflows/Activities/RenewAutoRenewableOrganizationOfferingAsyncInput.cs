@@ -1,3 +1,0 @@
-namespace Organization.Shared.Workflows.Activities;
-
-public record RenewAutoRenewableOrganizationOfferingAsyncInput(string OrganizationId, string OrganizationOfferingId);

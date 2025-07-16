@@ -1,0 +1,39 @@
+using Api.Shared.Services.Models;
+using Booking.Shared.Mappers;
+using Booking.Shared.Publishers;
+using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using Enterprise.Shared.Database;
+using Temporalio.Activities;
+
+namespace Booking.Shared.Activities;
+
+public class BookingIntegrations(
+    IRepositoryFactory repositoryFactory,
+    IDbTransactionBuilder transactionBuilder,
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    IMapper mapper,
+    IBookingOutboxPublisher bookingOutboxPublisher)
+{
+    [Activity]
+    public async Task ReleaseBookingResourcesAsync(ReleaseBookingResourcesInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
+        if (booking is null || booking.IsDeleted())
+        {
+            return;
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        booking.PaymentStatus = booking.StripeCheckoutSession is null ? PaymentStatusConstants.RecordNeverCreated : PaymentStatusConstants.Expired;
+
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
+
+        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+    }
+}

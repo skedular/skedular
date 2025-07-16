@@ -13,7 +13,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;

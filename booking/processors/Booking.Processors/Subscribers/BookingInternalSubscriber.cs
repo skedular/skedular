@@ -4,6 +4,8 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
+using Booking.Shared.Workflows.Payment;
+using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Time;
 using Stripe;

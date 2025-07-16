@@ -6,7 +6,6 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows.Services;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

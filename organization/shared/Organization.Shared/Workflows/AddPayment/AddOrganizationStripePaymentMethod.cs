@@ -1,0 +1,47 @@
+using Organization.Shared.Activities;
+using Temporalio.Common;
+using Temporalio.Exceptions;
+using Temporalio.Workflows;
+
+namespace Organization.Shared.Workflows.AddPayment;
+
+[Workflow]
+public class AddOrganizationStripePaymentMethod
+{
+    private AddOrganizationStripePaymentMethodState? _state;
+
+    [WorkflowRun]
+    public async Task<string> ExecuteAsync(AddOrganizationStripePaymentMethodInput args)
+    {
+        _state = new AddOrganizationStripePaymentMethodState(args, null);
+
+        if (!await Workflow.WaitConditionAsync(() => _state.StripePaymentMethodEventState is not null, TimeSpan.FromMinutes(30)))
+        {
+            throw new ApplicationFailureException($"Failed to receive Stripe payment method event for organization {_state.Args.OrganizationId}");
+        }
+
+        ArgumentNullException.ThrowIfNull(_state.StripePaymentMethodEventState);
+
+        var redirectUrl = await Workflow.ExecuteActivityAsync(
+            (StripeIntegrations activity) => activity.SetOrganizationPaymentMethodAsync(
+                new SetOrganizationPaymentMethodInput(args.OrganizationId, args.SetupIntentId, _state.StripePaymentMethodEventState.RedirectStatus)),
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                TaskQueue = Workflow.Info.TaskQueue,
+                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            });
+
+        return redirectUrl;
+    }
+
+    [WorkflowSignal]
+    public Task StripePaymentMethodEventReceivedAsync(StripePaymentMethodEventState state)
+    {
+        ArgumentNullException.ThrowIfNull(_state);
+
+        _state = _state with { StripePaymentMethodEventState = state };
+
+        return Task.CompletedTask;
+    }
+}

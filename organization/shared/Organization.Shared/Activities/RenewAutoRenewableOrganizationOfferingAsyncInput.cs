@@ -1,0 +1,3 @@
+namespace Organization.Shared.Activities;
+
+public record RenewAutoRenewableOrganizationOfferingAsyncInput(string OrganizationId, string OrganizationOfferingId);

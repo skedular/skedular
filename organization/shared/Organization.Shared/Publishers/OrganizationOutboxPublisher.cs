@@ -8,7 +8,7 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Mappers;
-using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;

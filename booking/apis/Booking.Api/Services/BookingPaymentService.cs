@@ -5,7 +5,7 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows;
+using Booking.Shared.Workflows.Payment;
 using Enterprise.Shared.Database;
 
 namespace Booking.Api.Services;
