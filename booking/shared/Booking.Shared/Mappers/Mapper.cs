@@ -21,9 +21,7 @@ public interface IMapper
     PriceCreateOptions MapTo(ProductVersion src, Product product, string organizationId, string stripeProductId);
     ProductVersion MapTo(Database.Entities.ProductVersion src);
     CustomerCreateOptions MapToCustomerCreateOption(Organization src);
-    CustomerUpdateOptions MergeToCustomerUpdateOption(Organization src);
     CustomerCreateOptions MapToCustomerCreateOption(Customer src);
-    CustomerUpdateOptions MergeToCustomerUpdateOption(Customer src);
     Models.Booking MapTo(Database.Entities.Booking src);
 }
 
@@ -68,7 +66,7 @@ public class Mapper : IMapper
             TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
             Currency = src.Currency.ToSafeString(),
             InvoiceUrl = src.InvoiceUrl.ToSafeString(),
-            InvoiceNumber = src.InvoiceNumber.ToSafeString(),
+            InvoiceNumber = src.InvoiceNumber.ToSafeString()
         };
 
         if (src.PaymentMethod is not null)
@@ -123,6 +121,7 @@ public class Mapper : IMapper
         {
             Name = src.Name.ToSafeString(),
             UnitLabel = src.PriceUnit.ToStripePriceUnitName(),
+            TaxCode = "txcd_10103001",
             Metadata = new Dictionary<string, string>
             {
                 { "productId", product.Id }, { "productVersionId", src.Id }, { "organizationId", organizationId }
@@ -160,26 +159,7 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
         };
 
-    public CustomerUpdateOptions MergeToCustomerUpdateOption(Organization src) =>
-        new()
-        {
-            Name = src.Name,
-            Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
-            Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
-            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
-        };
-
     public CustomerCreateOptions MapToCustomerCreateOption(Customer src) =>
-        new()
-        {
-            Name = src.ToDisplayableName(),
-            Email = src.Identities.ToSingleEmail(),
-            Phone = src.PhoneNumber.ToSafeString(),
-            PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
-            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
-        };
-
-    public CustomerUpdateOptions MergeToCustomerUpdateOption(Customer src) =>
         new()
         {
             Name = src.ToDisplayableName(),

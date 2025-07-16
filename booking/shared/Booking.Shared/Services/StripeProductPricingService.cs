@@ -55,11 +55,7 @@ public class StripeProductPricingService(
         if (productVersionEntity.StripePrice is null)
         {
             var stripePrice = await priceCreateService.CreateAsync(
-                mapper.MapTo(
-                    productVersion,
-                    productVersion.Product,
-                    productVersion.Product.Organization.Id,
-                    stripeProductEntity.StripeProductId),
+                mapper.MapTo(productVersion, productVersion.Product, productVersion.Product.Organization.Id, stripeProductEntity.StripeProductId),
                 new RequestOptions { IdempotencyKey = $"{productVersion.Id}-price", StripeAccount = stripeAccountId },
                 cancellationToken);
 
