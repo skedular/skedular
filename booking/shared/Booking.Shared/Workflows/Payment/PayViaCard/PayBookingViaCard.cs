@@ -33,7 +33,7 @@ public class PayBookingViaCard
                     new UpsertProductAndPricingInput(args.BookingId)),
                 new ActivityOptions
                 {
-                    StartToCloseTimeout = GetDelayDuration(args),
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
@@ -47,7 +47,7 @@ public class PayBookingViaCard
                     new UpsertBookingRelatedStripeCustomerInput(args.BookingId, upsertProductAndPricingResponse.StripeConnectAccountId)),
                 new ActivityOptions
                 {
-                    StartToCloseTimeout = GetDelayDuration(args),
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
@@ -64,7 +64,7 @@ public class PayBookingViaCard
                         upsertBookingRelatedStripeCustomerResponse.StripeCustomerId)),
                 new ActivityOptions
                 {
-                    StartToCloseTimeout = GetDelayDuration(args),
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
