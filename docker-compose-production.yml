@@ -161,6 +161,8 @@ services:
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
       Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
+      AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
     networks:
       - skedular_network
 
@@ -278,6 +280,8 @@ services:
       Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__RemoveStripeConnectAccountFromStripe: true
+      AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
     healthcheck:
       test:
         [
@@ -526,6 +530,8 @@ services:
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
       Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
+      AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
     networks:
       - skedular_network
 
@@ -644,6 +650,8 @@ services:
       Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__RemoveStripeConnectAccountFromStripe: false
+      AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
     healthcheck:
       test:
         [
