@@ -1,3 +1,4 @@
+using Customer.Shared.Configurations;
 using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
@@ -10,8 +11,14 @@ namespace Customer.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+        ArgumentNullException.ThrowIfNull(emailConfiguration);
+        services.AddSingleton(emailConfiguration);
+
+        return services;
+    }
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services

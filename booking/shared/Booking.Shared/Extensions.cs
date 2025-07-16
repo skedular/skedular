@@ -2,6 +2,7 @@ using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Booking.Shared.Configurations;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -14,8 +15,14 @@ namespace Booking.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+        ArgumentNullException.ThrowIfNull(emailConfiguration);
+        services.AddSingleton(emailConfiguration);
+
+        return services;
+    }
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();

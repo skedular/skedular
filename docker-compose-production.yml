@@ -151,6 +151,16 @@ services:
       Cloudflare__CdnR2BucketName: skedular-cdn-staging
       Cloudflare__PrivateFileR2BucketName: skedular-private-staging
       Cloudflare__CdnBaseUrl: "https://cloudflarecdnstaging.skedular.app"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
     networks:
       - skedular_network
 
@@ -248,6 +258,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -347,6 +358,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -446,6 +458,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -503,6 +516,16 @@ services:
       Cloudflare__CdnR2BucketName: skedular-cdn-prod
       Cloudflare__PrivateFileR2BucketName: skedular-private-prod
       Cloudflare__CdnBaseUrl: "https://cloudflarecdn.skedular.app"
+      Email__NewCustomerFeedbackSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewCustomerJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedEmail: true
+      Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
     networks:
       - skedular_network
 
@@ -601,6 +624,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -700,6 +724,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -799,6 +824,7 @@ services:
       Email__NewSlackWorkspaceJoinedSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
+      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""

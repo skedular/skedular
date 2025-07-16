@@ -1,0 +1,11 @@
+Invoice #{{INVOICE_NUMBER}} from {{COMPANY_NAME}}
+
+Hi {{RECIPIENT_NAME}},
+
+Please find your invoice #{{INVOICE_NUMBER}} attached to this email.
+If you have any questions, please contact us.
+
+Thanks,
+{{COMPANY_NAME}}
+
+Powered by Your Skedular

@@ -32,4 +32,9 @@
         <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.txt"/>
+    </ItemGroup>
+
 </Project>

@@ -1,6 +1,5 @@
 using Customer.Api.Grpc;
 using Customer.Shared;
-using Customer.Shared.Configurations;
 using Customer.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -23,10 +22,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
 
         services
             .AddKafka(configuration)

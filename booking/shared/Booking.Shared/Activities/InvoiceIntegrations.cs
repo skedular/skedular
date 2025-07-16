@@ -1,9 +1,12 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Core.V1;
+using Api.Shared.Services.Models;
+using Booking.Shared.Configurations;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Email;
 using Enterprise.Shared.Grpc;
 using Google.Protobuf;
 using Microsoft.Extensions.Hosting;
@@ -14,12 +17,14 @@ using Temporalio.Activities;
 namespace Booking.Shared.Activities;
 
 public class InvoiceIntegrations(
+    EmailConfiguration emailConfiguration,
     CoreConfiguration coreConfiguration,
     CoreService.CoreServiceClient coreServiceClient,
     IRepositoryFactory repositoryFactory,
     IBookingInvoiceService bookingInvoiceService,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationInvoiceCounterService organizationInvoiceCounterService,
+    IEmailService emailService,
     IHostEnvironment hostEnvironment)
 {
     [Activity]
@@ -32,22 +37,23 @@ public class InvoiceIntegrations(
             return;
         }
 
+        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+        if (productVersions.Count != productVersionIds.Count)
+        {
+            throw new InvalidOperationException();
+        }
+
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+        if (organizationIds.Count > 1)
+        {
+            throw new CrossOrganizationProductBookingNotAllowed();
+        }
+
+        var organizationId = productVersions.First().Product.Organization.Id;
+
         if (string.IsNullOrWhiteSpace(booking.InvoiceNumber))
         {
-            var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-            var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-            if (productVersions.Count != productVersionIds.Count)
-            {
-                throw new InvalidOperationException();
-            }
-
-            var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-            if (organizationIds.Count > 1)
-            {
-                throw new CrossOrganizationProductBookingNotAllowed();
-            }
-
-            var organizationId = productVersions.First().Product.Organization.Id;
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
             booking.InvoiceNumber = await organizationInvoiceCounterService.GetNextInvoiceNumberIdAsync(organizationId, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -96,5 +102,62 @@ public class InvoiceIntegrations(
             invoiceDocument.ShowInCompanionAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
+
+        await SendInvoiceEmailAsync(args, booking, organizationId, pdfStream, cancellationToken);
+    }
+
+    private async Task SendInvoiceEmailAsync(
+        GenerateAndSendInvoiceInput args,
+        Database.Entities.Booking booking,
+        string organizationId,
+        MemoryStream pdfStream,
+        CancellationToken cancellationToken)
+    {
+        if (args.InvoiceEmailList.Count == 0)
+        {
+            return;
+        }
+
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        await using var htmlTemplateStream = typeof(InvoiceIntegrations).Assembly.GetManifestResourceStream(
+            "Booking.Shared.EmailTemplates.BookingInvoice.template.html");
+        ArgumentNullException.ThrowIfNull(htmlTemplateStream);
+        using var htmlReader = new StreamReader(htmlTemplateStream);
+        var html = await htmlReader.ReadToEndAsync(cancellationToken);
+
+        await using var textTemplateStream = typeof(InvoiceIntegrations).Assembly.GetManifestResourceStream(
+            "Booking.Shared.EmailTemplates.BookingInvoice.template.txt");
+        ArgumentNullException.ThrowIfNull(textTemplateStream);
+        using var textReader = new StreamReader(textTemplateStream);
+        var text = await textReader.ReadToEndAsync(cancellationToken);
+
+        html = html
+            .Replace("{{COMPANY_NAME}}", organization.Name)
+            .Replace("{{INVOICE_NUMBER}}", booking.InvoiceNumber)
+            .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
+
+        text = text
+            .Replace("{{COMPANY_NAME}}", organization.Name)
+            .Replace("{{INVOICE_NUMBER}}", booking.InvoiceNumber)
+            .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
+
+        var attachments = new List<EmailAttachment> { new(pdfStream, $"{booking.InvoiceNumber}.pdf", "application/pdf") };
+
+        var subject = args.FullyPaid
+            ? $"Invoice #{booking.InvoiceNumber} from {organization.Name}"
+            : $"Invoice #{booking.InvoiceNumber} from {organization.Name} is due";
+
+        await emailService.SendRawEmailAsync(
+            subject,
+            text,
+            html,
+            $"{organization.Name} {emailConfiguration.BookingInvoiceEmailSender}",
+            args.InvoiceEmailList,
+            [],
+            [],
+            attachments,
+            cancellationToken);
     }
 }
