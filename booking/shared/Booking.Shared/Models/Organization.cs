@@ -22,4 +22,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<Booking> PaidBookings { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public ICollection<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
 }

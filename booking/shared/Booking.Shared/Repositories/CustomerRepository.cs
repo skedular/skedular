@@ -49,8 +49,10 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
     public async Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
         await DbContext.Customer.AddDependentObjects(includeActiveItemsOnly).FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Customer?>
-        GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+    public async Task<Customer?> GetByVerifiableTokenAsync(
+        string verifiableToken,
+        bool includeActiveItemsOnly,
+        CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(includeActiveItemsOnly)
             .FirstOrDefaultAsync(query =>
@@ -58,10 +60,8 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<ICollection<Customer>> GetByIdsAsync(
-        ICollection<string> ids,
-        bool includeActiveItemsOnly,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Customer>>
+        GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
             .AddDependentObjects(includeActiveItemsOnly)

@@ -52,6 +52,11 @@ public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
 
     private static void ManipulateCommand(IDbCommand command)
     {
+        if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdate, StringComparison.Ordinal))
+        {
+            command.CommandText += " FOR UPDATE";
+        }
+
         if (command.CommandText.StartsWith("-- " + EntityFrameworkInterceptorTags.ForUpdateSkipLocked, StringComparison.Ordinal))
         {
             command.CommandText += " FOR UPDATE SKIP LOCKED";

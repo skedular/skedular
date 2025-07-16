@@ -5,5 +5,6 @@
 /// </summary>
 public static class EntityFrameworkInterceptorTags
 {
+    public const string ForUpdate = "ForUpdate";
     public const string ForUpdateSkipLocked = "ForUpdateSkipLocked";
 }

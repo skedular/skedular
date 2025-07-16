@@ -30,7 +30,8 @@ public static class Extensions
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
             .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
-            .AddScoped<IBookingInvoiceService, BookingInvoiceService>();
+            .AddScoped<IBookingInvoiceService, BookingInvoiceService>()
+            .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services.AddScoped<IRepositoryFactory, RepositoryFactory>();
@@ -54,7 +55,8 @@ public static class Extensions
             .AddScoped<IStripeProductRepository, StripeProductRepository>()
             .AddScoped<IStripePriceRepository, StripePriceRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
-            .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>();
+            .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>()
+            .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

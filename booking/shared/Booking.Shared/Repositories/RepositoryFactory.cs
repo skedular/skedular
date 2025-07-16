@@ -26,6 +26,7 @@ public interface IRepositoryFactory
     IStripePriceRepository StripePriceRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
     IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
+    IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
@@ -52,6 +53,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         StripePriceRepository = new StripePriceRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
         StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
+        OrganizationInvoiceCounterRepository = new OrganizationInvoiceCounterRepository(_dbContext, timeProvider);
     }
 
     public IBookingRepository BookingRepository { get; }
@@ -72,4 +74,5 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IStripePriceRepository StripePriceRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }
     public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
+    public IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
 }
