@@ -1283,6 +1283,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           organization: {
             id: organization.id,
             taxDetails: {
+              id: '',
               taxId,
               taxRatePercentage,
             },
