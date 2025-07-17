@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<587862c377739d604143dcd67fe37640>>
+ * @generated SignedSource<<81d3b55ca42d8be8df4f5013ae55e8ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,9 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationTaxDetailsInput = {
   clientMutationId?: string | null | undefined;
-  gstNumber: string;
-  gstPercentage: string;
   organizationId: string;
+  taxId: string;
+  taxRatePercentage: string;
 };
 export type organizationAdmin_updateOrganizationTaxDetailsMutation$variables = {
   input: UpdateOrganizationTaxDetailsInput;
@@ -23,8 +23,8 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$data = {
     readonly organization: {
       readonly id: string;
       readonly taxDetails: {
-        readonly gstNumber: string;
-        readonly gstPercentage: string;
+        readonly taxId: string;
+        readonly taxRatePercentage: string;
       } | null | undefined;
     };
   };
@@ -34,8 +34,9 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$rawResponse =
     readonly organization: {
       readonly id: string;
       readonly taxDetails: {
-        readonly gstNumber: string;
-        readonly gstPercentage: string;
+        readonly id: string;
+        readonly taxId: string;
+        readonly taxRatePercentage: string;
       } | null | undefined;
     };
   };
@@ -56,54 +57,67 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "OrganizationPayload",
-    "kind": "LinkedField",
-    "name": "updateOrganizationTaxDetails",
-    "plural": false,
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxId",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxRatePercentage",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "OrganizationDetails",
+        "args": (v1/*: any*/),
+        "concreteType": "OrganizationPayload",
         "kind": "LinkedField",
-        "name": "organization",
+        "name": "updateOrganizationTaxDetails",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTaxDetails",
+            "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
-            "name": "taxDetails",
+            "name": "organization",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "gstNumber",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "gstPercentage",
+                "concreteType": "OrganizationTaxDetails",
+                "kind": "LinkedField",
+                "name": "taxDetails",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v4/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -113,16 +127,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -131,19 +135,57 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "OrganizationPayload",
+        "kind": "LinkedField",
+        "name": "updateOrganizationTaxDetails",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTaxDetails",
+                "kind": "LinkedField",
+                "name": "taxDetails",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v4/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "d2794cdbed26baffb6420621c6a9c22c",
+    "cacheID": "ef01f072b46d17f2876576e3b30910c6",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationTaxDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        gstNumber\n        gstPercentage\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationTaxDetailsMutation(\n  $input: UpdateOrganizationTaxDetailsInput!\n) {\n  updateOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "18883ef4b0e7677729ec4014e67b24ff";
+(node as any).hash = "c73545bd47f18d53fa4934db1763617e";
 
 export default node;

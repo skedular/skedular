@@ -177,22 +177,22 @@ const ssoSettingsSchema = object({
 });
 
 type TaxDetails = {
-  gstNumber: string;
-  gstPercentage: string;
+  taxId: string;
+  taxRatePercentage: string;
 };
 
 const taxDetailsSchema = object({
-  gstNumber: string().required('Gst Number is required'),
-  gstPercentage: string()
-    .matches(/^\d+(\.\d{1,2})?$/, 'GST Percentage must be a valid decimal number.')
-    .required('GST Percentage is required.')
-    .test('is-greater-than-zero', 'Price must be greater than zero.', function (value) {
-      var gstPercentage = Number(value);
-      if (isNaN(gstPercentage)) {
+  taxId: string().required('Tax ID / VAT / GST Number'),
+  taxRatePercentage: string()
+    .matches(/^\d+(\.\d{1,2})?$/, 'Tax rate must be a valid decimal number.')
+    .required('Tax rate is required.')
+    .test('is-greater-than-zero', 'Tax rate must be greater than zero.', function (value) {
+      var taxRatePercentage = Number(value);
+      if (isNaN(taxRatePercentage)) {
         return true;
       }
 
-      return gstPercentage > 0;
+      return taxRatePercentage > 0;
     }),
 });
 
@@ -305,8 +305,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             appFederationMetadataUrl
           }
           taxDetails {
-            gstNumber
-            gstPercentage
+            taxId
+            taxRatePercentage
           }
           billingDetails {
             id
@@ -602,8 +602,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         organization {
           id
           taxDetails {
-            gstNumber
-            gstPercentage
+            taxId
+            taxRatePercentage
           }
         }
       }
@@ -616,8 +616,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         organization {
           id
           taxDetails {
-            gstNumber
-            gstPercentage
+            taxId
+            taxRatePercentage
           }
         }
       }
@@ -708,10 +708,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const validateTaxDetails = makeValidate(taxDetailsSchema);
   const requiredTaxDetailsFields = makeRequired(taxDetailsSchema);
   const [taxDetailsEnabled, setTaxDetailsEnabled] = useState(!!rootDataOrganization.organization?.taxDetails);
-  const [taxDetailsGstNumber, setTaxDetailsGstNumber] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstNumber ?? '');
-  const debounceSetTaxDetailsGstNumber = useDebounceCallback(setTaxDetailsGstNumber, keyboardTextFieldDebounceTimeout);
-  const [taxDetailsGstPercentage, setTaxDetailsGstPercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.gstPercentage ?? '');
-  const debounceSetTaxDetailsGstPercentage = useDebounceCallback(setTaxDetailsGstPercentage, keyboardTextFieldDebounceTimeout);
+  const [taxDetailsTaxId, setTaxDetailsTaxId] = useState<string>(rootDataOrganization.organization?.taxDetails?.taxId ?? '');
+  const debounceSetTaxDetailsTaxId = useDebounceCallback(setTaxDetailsTaxId, keyboardTextFieldDebounceTimeout);
+  const [taxDetailsTaxRatePercentage, setTaxDetailsTaxRatePercentage] = useState<string>(rootDataOrganization.organization?.taxDetails?.taxRatePercentage ?? '');
+  const debounceSetTaxDetailsTaxRatePercentage = useDebounceCallback(setTaxDetailsTaxRatePercentage, keyboardTextFieldDebounceTimeout);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -1240,7 +1240,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   };
 
-  const handleEnableOrganizationTaxDetailsClick = ({ gstNumber, gstPercentage }: TaxDetails) => {
+  const handleEnableOrganizationTaxDetailsClick = ({ taxId, taxRatePercentage }: TaxDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -1253,8 +1253,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         input: {
           clientMutationId: uuid(),
           organizationId: organization.id,
-          gstNumber,
-          gstPercentage,
+          taxId,
+          taxRatePercentage,
         },
       },
       onCompleted: (_, errors) => {
@@ -1283,8 +1283,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           organization: {
             id: organization.id,
             taxDetails: {
-              gstNumber,
-              gstPercentage,
+              taxId,
+              taxRatePercentage,
             },
           },
         },
@@ -2435,40 +2435,40 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             <Form
               onSubmit={handleEnableOrganizationTaxDetailsClick}
               initialValues={{
-                gstNumber: taxDetailsGstNumber,
-                gstPercentage: taxDetailsGstPercentage,
+                taxId: taxDetailsTaxId,
+                taxRatePercentage: taxDetailsTaxRatePercentage,
               }}
               validate={validateTaxDetails}
               render={({ handleSubmit, values }) => {
-                debounceSetTaxDetailsGstNumber(values!.gstNumber);
-                debounceSetTaxDetailsGstPercentage(values!.gstPercentage);
+                debounceSetTaxDetailsTaxId(values!.taxId);
+                debounceSetTaxDetailsTaxRatePercentage(values!.taxRatePercentage);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
                       sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                       ref={(divElement) => {
-                        sectionRefs.current['tax-setup'] = divElement;
+                        sectionRefs.current['tax-details-setup'] = divElement;
                       }}
                     >
-                      <SectionIconTypography label="Tax Setup" />
+                      <SectionIconTypography label="Tax Details Setup" />
                       <BodyIconTypography label="Edit your organization tax details" />
                       <Divider />
                     </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Is GST Registered?">
+                      <FormFieldLabel label="Is this business registered for tax (GST/VAT)?">
                         <Switch defaultChecked={taxDetailsEnabled} onChange={handleEnableTaxDetailsChange} />
                       </FormFieldLabel>
 
                       {taxDetailsEnabled && (
                         <>
-                          <FormFieldLabel label="GST Number">
-                            <TextField name="gstNumber" required={requiredTaxDetailsFields.gstNumber} />
+                          <FormFieldLabel label="Tax ID / VAT / GST Number">
+                            <TextField name="taxId" required={requiredTaxDetailsFields.taxId} />
                           </FormFieldLabel>
 
-                          <FormFieldLabel label="GST Percentage">
-                            <TextField name="gstPercentage" required={requiredTaxDetailsFields.gstPercentage} />
+                          <FormFieldLabel label="Tax Rate (%)">
+                            <TextField name="taxRatePercentage" required={requiredTaxDetailsFields.taxRatePercentage} />
                           </FormFieldLabel>
                         </>
                       )}

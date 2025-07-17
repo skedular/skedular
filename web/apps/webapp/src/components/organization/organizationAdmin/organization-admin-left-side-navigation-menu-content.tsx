@@ -177,7 +177,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Tax Setup"
+                label="Tax Details Setup"
                 startElement={!hideIcons && <TaxDetailsIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === taxDetailsLink && paletteMode === 'dark'}

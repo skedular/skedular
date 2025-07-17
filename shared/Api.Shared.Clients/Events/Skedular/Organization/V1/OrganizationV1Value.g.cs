@@ -59,8 +59,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "fQoXT3JnYW5pemF0aW9uU3NvU2V0dGluZ3MSCgoCaWQYASABKAkSEAoIZW50",
             "aXR5SWQYAiABKAkSEAoIbG9naW5VcmwYAyABKAkSIAoYYXBwRmVkZXJhdGlv",
             "bk1ldGFkYXRhVXJsGAQgASgJEhAKCGlzQWN0aXZlGAUgASgIIk4KFk9yZ2Fu",
-            "aXphdGlvblRheERldGFpbHMSCgoCaWQYASABKAkSEQoJZ3N0TnVtYmVyGAIg",
-            "ASgJEhUKDWdzdFBlcmNlbnRhZ2UYAyABKAkitQEKD1BoeXNpY2FsQWRkcmVz",
+            "aXphdGlvblRheERldGFpbHMSCgoCaWQYASABKAkSDQoFdGF4SWQYAiABKAkS",
+            "GQoRdGF4UmF0ZVBlcmNlbnRhZ2UYAyABKAkitQEKD1BoeXNpY2FsQWRkcmVz",
             "cxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkSFAoMYWRkcmVz",
             "c0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5GAUgASgJEhAK",
             "CHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoHY291bnRyeRgI",
@@ -84,7 +84,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails.Parser, new[]{ "Id", "GstNumber", "GstPercentage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails.Parser, new[]{ "Id", "TaxId", "TaxRatePercentage" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country", "FormattedAddress" }, null, null, null, null)
           }));
     }
@@ -3552,8 +3552,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OrganizationTaxDetails(OrganizationTaxDetails other) : this() {
       id_ = other.id_;
-      gstNumber_ = other.gstNumber_;
-      gstPercentage_ = other.gstPercentage_;
+      taxId_ = other.taxId_;
+      taxRatePercentage_ = other.taxRatePercentage_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3575,27 +3575,27 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "gstNumber" field.</summary>
-    public const int GstNumberFieldNumber = 2;
-    private string gstNumber_ = "";
+    /// <summary>Field number for the "taxId" field.</summary>
+    public const int TaxIdFieldNumber = 2;
+    private string taxId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string GstNumber {
-      get { return gstNumber_; }
+    public string TaxId {
+      get { return taxId_; }
       set {
-        gstNumber_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        taxId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
-    /// <summary>Field number for the "gstPercentage" field.</summary>
-    public const int GstPercentageFieldNumber = 3;
-    private string gstPercentage_ = "";
+    /// <summary>Field number for the "taxRatePercentage" field.</summary>
+    public const int TaxRatePercentageFieldNumber = 3;
+    private string taxRatePercentage_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string GstPercentage {
-      get { return gstPercentage_; }
+    public string TaxRatePercentage {
+      get { return taxRatePercentage_; }
       set {
-        gstPercentage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        taxRatePercentage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -3615,8 +3615,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (GstNumber != other.GstNumber) return false;
-      if (GstPercentage != other.GstPercentage) return false;
+      if (TaxId != other.TaxId) return false;
+      if (TaxRatePercentage != other.TaxRatePercentage) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3625,8 +3625,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (GstNumber.Length != 0) hash ^= GstNumber.GetHashCode();
-      if (GstPercentage.Length != 0) hash ^= GstPercentage.GetHashCode();
+      if (TaxId.Length != 0) hash ^= TaxId.GetHashCode();
+      if (TaxRatePercentage.Length != 0) hash ^= TaxRatePercentage.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3649,13 +3649,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (GstNumber.Length != 0) {
+      if (TaxId.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(GstNumber);
+        output.WriteString(TaxId);
       }
-      if (GstPercentage.Length != 0) {
+      if (TaxRatePercentage.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(GstPercentage);
+        output.WriteString(TaxRatePercentage);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -3671,13 +3671,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (GstNumber.Length != 0) {
+      if (TaxId.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(GstNumber);
+        output.WriteString(TaxId);
       }
-      if (GstPercentage.Length != 0) {
+      if (TaxRatePercentage.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(GstPercentage);
+        output.WriteString(TaxRatePercentage);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -3692,11 +3692,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
-      if (GstNumber.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(GstNumber);
+      if (TaxId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TaxId);
       }
-      if (GstPercentage.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(GstPercentage);
+      if (TaxRatePercentage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TaxRatePercentage);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3713,11 +3713,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.Id.Length != 0) {
         Id = other.Id;
       }
-      if (other.GstNumber.Length != 0) {
-        GstNumber = other.GstNumber;
+      if (other.TaxId.Length != 0) {
+        TaxId = other.TaxId;
       }
-      if (other.GstPercentage.Length != 0) {
-        GstPercentage = other.GstPercentage;
+      if (other.TaxRatePercentage.Length != 0) {
+        TaxRatePercentage = other.TaxRatePercentage;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3743,11 +3743,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            GstNumber = input.ReadString();
+            TaxId = input.ReadString();
             break;
           }
           case 26: {
-            GstPercentage = input.ReadString();
+            TaxRatePercentage = input.ReadString();
             break;
           }
         }
@@ -3774,11 +3774,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            GstNumber = input.ReadString();
+            TaxId = input.ReadString();
             break;
           }
           case 26: {
-            GstPercentage = input.ReadString();
+            TaxRatePercentage = input.ReadString();
             break;
           }
         }

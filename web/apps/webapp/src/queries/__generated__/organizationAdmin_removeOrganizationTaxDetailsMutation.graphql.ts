@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36a2fb751f3932d076f2afec1fc04556>>
+ * @generated SignedSource<<980a65b04c5643948f4886b901be3a83>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,8 +21,8 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$data = {
     readonly organization: {
       readonly id: string;
       readonly taxDetails: {
-        readonly gstNumber: string;
-        readonly gstPercentage: string;
+        readonly taxId: string;
+        readonly taxRatePercentage: string;
       } | null | undefined;
     };
   };
@@ -32,8 +32,9 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$rawResponse =
     readonly organization: {
       readonly id: string;
       readonly taxDetails: {
-        readonly gstNumber: string;
-        readonly gstPercentage: string;
+        readonly id: string;
+        readonly taxId: string;
+        readonly taxRatePercentage: string;
       } | null | undefined;
     };
   };
@@ -54,54 +55,67 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "OrganizationPayload",
-    "kind": "LinkedField",
-    "name": "removeOrganizationTaxDetails",
-    "plural": false,
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxId",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "taxRatePercentage",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "OrganizationDetails",
+        "args": (v1/*: any*/),
+        "concreteType": "OrganizationPayload",
         "kind": "LinkedField",
-        "name": "organization",
+        "name": "removeOrganizationTaxDetails",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTaxDetails",
+            "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
-            "name": "taxDetails",
+            "name": "organization",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "gstNumber",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "gstPercentage",
+                "concreteType": "OrganizationTaxDetails",
+                "kind": "LinkedField",
+                "name": "taxDetails",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v4/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -111,16 +125,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -129,19 +133,57 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "OrganizationPayload",
+        "kind": "LinkedField",
+        "name": "removeOrganizationTaxDetails",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTaxDetails",
+                "kind": "LinkedField",
+                "name": "taxDetails",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v4/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "b62bc1577b4be43fc4b6fcc73f2b64a6",
+    "cacheID": "b743fbaa19325c7c77dd9bb30042826f",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_removeOrganizationTaxDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeOrganizationTaxDetailsMutation(\n  $input: RemoveOrganizationTaxDetailsInput!\n) {\n  removeOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        gstNumber\n        gstPercentage\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_removeOrganizationTaxDetailsMutation(\n  $input: RemoveOrganizationTaxDetailsInput!\n) {\n  removeOrganizationTaxDetails(input: $input) {\n    organization {\n      id\n      taxDetails {\n        taxId\n        taxRatePercentage\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5fe2897370114298e7bf8ce7a9b739ef";
+(node as any).hash = "79f55e78de3a77303dab298eed1471cd";
 
 export default node;

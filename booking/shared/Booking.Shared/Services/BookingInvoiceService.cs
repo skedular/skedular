@@ -118,7 +118,7 @@ public class BookingInvoiceService(
                     {
                         column.Item().Text(string.Empty);
                         column.Item().Text("GST Number").SemiBold().FontSize(13);
-                        column.Item().Text(taxDetails.GstNumber).FontSize(10);
+                        column.Item().Text(taxDetails.TaxId).FontSize(10);
                     }
                 });
 
@@ -247,9 +247,9 @@ public class BookingInvoiceService(
 
                     if (organization.TaxDetails is not null)
                     {
-                        var gstPercentage = organization.TaxDetails.GstPercentage.FromRoundedDecimal();
-                        table.Cell().AlignRight().Text($"TOTAL GST {gstPercentage}%");
-                        table.Cell().PaddingBottom(5).AlignRight().Text((totalPrice * gstPercentage / 100).ToRoundedPrice());
+                        var taxRatePercentage = organization.TaxDetails.TaxRatePercentage.FromRoundedDecimal();
+                        table.Cell().AlignRight().Text($"TOTAL GST {taxRatePercentage}%");
+                        table.Cell().PaddingBottom(5).AlignRight().Text((totalPrice * taxRatePercentage / 100).ToRoundedPrice());
                     }
 
                     table.Cell().PaddingLeft(300).LineHorizontal(1);
@@ -276,8 +276,8 @@ public class BookingInvoiceService(
                     var finalPrice = totalPrice;
                     if (organization.TaxDetails is not null)
                     {
-                        var gstPercentage = organization.TaxDetails.GstPercentage.FromRoundedDecimal();
-                        finalPrice += totalPrice * gstPercentage / 100;
+                        var taxRatePercentage = organization.TaxDetails.TaxRatePercentage.FromRoundedDecimal();
+                        finalPrice += totalPrice * taxRatePercentage / 100;
                     }
 
                     table.Cell().AlignRight().Text($"TOTAL {currency.ToInvoiceCurrencyName()}").Bold();

@@ -159,7 +159,7 @@ public class Mapper : IMapper
             ? null
             : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails
             {
-                Id = src.Id, GstNumber = src.GstNumber.ToSafeString(), GstPercentage = src.GstPercentage.ToRoundedDecimal()
+                Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = src.TaxRatePercentage.ToRoundedDecimal()
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>

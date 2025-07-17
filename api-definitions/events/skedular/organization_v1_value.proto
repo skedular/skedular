@@ -101,8 +101,8 @@ message OrganizationSsoSettings {
 
 message OrganizationTaxDetails {
   string id = 1;
-  string gstNumber = 2;
-  string gstPercentage = 3;
+  string taxId = 2;
+  string taxRatePercentage = 3;
 }
 
 message PhysicalAddress {

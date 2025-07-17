@@ -394,8 +394,9 @@ type OrganizationTagsPayload {
 }
 
 type OrganizationTaxDetails {
-  gstNumber: String!
-  gstPercentage: String!
+  taxId: String!
+  taxRatePercentage: String!
+  id: ID!
 }
 
 type OrganizationTermsOfUse {
@@ -894,8 +895,8 @@ input UpdateOrganizationStripeConnectAccountInput {
 input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
   organizationId: String!
-  gstNumber: String!
-  gstPercentage: String!
+  taxId: String!
+  taxRatePercentage: String!
 }
 
 input UpdateProductTagInput {

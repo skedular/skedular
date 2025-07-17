@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<90ff45feed6bc7ad4e656d88bcedc1ab>>
+ * @generated SignedSource<<db0e66c204e42b0f5ba20ebc9265a843>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -85,8 +85,8 @@ export type organizationAdmin_organization_query$data = {
       readonly loginUrl: string;
     } | null | undefined;
     readonly taxDetails: {
-      readonly gstNumber: string;
-      readonly gstPercentage: string;
+      readonly taxId: string;
+      readonly taxRatePercentage: string;
     } | null | undefined;
     readonly type: {
       readonly name: string;
@@ -486,14 +486,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "gstNumber",
+              "name": "taxId",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "gstPercentage",
+              "name": "taxRatePercentage",
               "storageKey": null
             }
           ],
@@ -541,6 +541,6 @@ return {
 };
 })();
 
-(node as any).hash = "97b8d9c73ed1a6a6cbe95639e58f35b8";
+(node as any).hash = "c6f08e86cc999d44968225298536e9b1";
 
 export default node;

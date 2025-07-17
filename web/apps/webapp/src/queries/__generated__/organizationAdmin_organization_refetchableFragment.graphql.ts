@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd854405e3b17ff3679311feddaa0fb1>>
+ * @generated SignedSource<<082e15b109eeadaf36851725d42431b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -416,16 +416,17 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "gstNumber",
+                "name": "taxId",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "gstPercentage",
+                "name": "taxRatePercentage",
                 "storageKey": null
-              }
+              },
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -468,16 +469,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fa76f5e9bdaa9100c0689c4c8df301f2",
+    "cacheID": "4b9a628f2df0c280570bc4becab4f462",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_organization_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      gstNumber\n      gstPercentage\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "97b8d9c73ed1a6a6cbe95639e58f35b8";
+(node as any).hash = "c6f08e86cc999d44968225298536e9b1";
 
 export default node;

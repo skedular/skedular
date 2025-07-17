@@ -41,7 +41,7 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.7"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.7.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.85.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.86.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.10.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>

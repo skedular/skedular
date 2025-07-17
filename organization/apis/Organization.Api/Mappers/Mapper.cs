@@ -1141,8 +1141,8 @@ public class Mapper : IMapper
     public OrganizationTaxDetails MapTo(UpdateOrganizationTaxDetailsInput src) =>
         new()
         {
-            GstNumber = src.GstNumber,
-            GstPercentage = src.GstPercentage.FromRoundedDecimal(),
+            TaxId = src.TaxId,
+            TaxRatePercentage = src.TaxRatePercentage.FromRoundedDecimal(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1157,8 +1157,8 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
-        dest.GstNumber = src.GstNumber;
-        dest.GstPercentage = src.GstPercentage;
+        dest.TaxId = src.TaxId;
+        dest.TaxRatePercentage = src.TaxRatePercentage;
         dest.Organization = organization;
         return dest;
     }
@@ -1796,8 +1796,8 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
-                GstNumber = src.GstNumber,
-                GstPercentage = src.GstPercentage
+                TaxId = src.TaxId,
+                TaxRatePercentage = src.TaxRatePercentage
             };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
@@ -1879,7 +1879,10 @@ public class Mapper : IMapper
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new GraphQL.TaxDetails.OrganizationTaxDetails { GstNumber = src.GstNumber, GstPercentage = src.GstPercentage.ToRoundedDecimal() };
+            : new GraphQL.TaxDetails.OrganizationTaxDetails
+            {
+                Id = src.Id, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage.ToRoundedDecimal()
+            };
 
     private static OrganizationPhysicalAddressDetails? MapToGraphQl(Shared.Models.OrganizationPhysicalAddress? src) =>
         src is null
@@ -1932,7 +1935,7 @@ public class Mapper : IMapper
     private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new TaxDetails { Id = src.Id, GstNumber = src.GstNumber.ToSafeString(), GstPercentage = src.GstPercentage.ToRoundedDecimal() };
+            : new TaxDetails { Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = src.TaxRatePercentage.ToRoundedDecimal() };
 
     private static PhysicalAddress? MapToGrpcResponse(Shared.Models.OrganizationPhysicalAddress? src) =>
         src is null
