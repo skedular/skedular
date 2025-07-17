@@ -783,13 +783,39 @@ public class Mapper : IMapper
 
     private static Shared.Models.ProductVersion MapTo(ProductVersion src)
     {
-        ArgumentNullException.ThrowIfNull(src.PriceUnit);
-        ArgumentNullException.ThrowIfNull(src.PricePerMinute);
-        ArgumentNullException.ThrowIfNull(src.Currency);
-        ArgumentNullException.ThrowIfNull(src.BookAllLocationResources);
-        ArgumentNullException.ThrowIfNull(src.RecurrenceWindowDays);
-        ArgumentNullException.ThrowIfNull(src.RequireConsecutiveDays);
-        ArgumentNullException.ThrowIfNull(src.NumberOfResourcesToBook);
+        ArgumentException.ThrowIfNullOrWhiteSpace(src.PriceUnit);
+
+        if (!src.PricePerMinute.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.PricePerMinute));
+        }
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(src.Currency);
+
+        if (!src.BookAllLocationResources.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.BookAllLocationResources));
+        }
+
+        if (!src.RecurrenceWindowDays.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.RecurrenceWindowDays));
+        }
+
+        if (!src.RequireConsecutiveDays.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.RequireConsecutiveDays));
+        }
+
+        if (!src.NumberOfResourcesToBook.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.NumberOfResourcesToBook));
+        }
+
+        if (!src.IsPriceTaxInclusive.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.IsPriceTaxInclusive));
+        }
 
         return new Shared.Models.ProductVersion
         {
@@ -799,6 +825,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Price = src.Price ?? 0,
             PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive.Value,
             PricePerMinute = src.PricePerMinute.Value,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes,

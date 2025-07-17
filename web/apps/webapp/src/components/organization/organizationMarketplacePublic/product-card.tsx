@@ -45,6 +45,7 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
             width
           }
         }
+        isPriceTaxInclusive
       }
     `,
     rootDataRelay,
@@ -85,7 +86,9 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
 
           <StackRow>
             <BodyIconTypography label="Price:" />
-            <SmallIconTypography label={`${productDetails.priceToDisplay} - ${productDetails.priceUnit.name}`} />
+            <SmallIconTypography
+              label={`${productDetails.priceToDisplay} - ${productDetails.priceUnit.name}, ${productDetails.isPriceTaxInclusive ? 'Tax Included' : 'Tax Excluded'}`}
+            />
           </StackRow>
 
           {productDetails.minDurationMinutes && (

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6fe3744ab859b2f47eba5104c9ab4a3>>
+ * @generated SignedSource<<0df4e55df83749b40ce0162ee22759cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly description: string | null | undefined;
   readonly id: string;
+  readonly isPriceTaxInclusive: boolean;
   readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
   readonly minDurationMinutes: number | null | undefined;
@@ -183,6 +184,13 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isPriceTaxInclusive",
+      "storageKey": null
     }
   ],
   "type": "ProductDetails",
@@ -190,6 +198,6 @@ return {
 };
 })();
 
-(node as any).hash = "29965db4c6bf8c0e0081af96e4cdbe3c";
+(node as any).hash = "9c8447058ccc9d2234dd8cc2e4a7a8d2";
 
 export default node;

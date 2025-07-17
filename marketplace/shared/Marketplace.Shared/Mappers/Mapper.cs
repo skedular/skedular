@@ -34,6 +34,7 @@ public class Mapper : IMapper
             Description = src.Name.ToSafeString(),
             Price = src.Price.ToRoundedPrice(),
             PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes ?? -1,
             MaxDurationMinutes = src.MaxDurationMinutes ?? -1,

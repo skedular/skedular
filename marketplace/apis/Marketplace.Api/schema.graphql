@@ -69,6 +69,7 @@ type ProductDetails {
   priceToDisplay: String!
   currencyToDisplay: String!
   priceUnit: PriceUnitDetails!
+  isPriceTaxInclusive: Boolean!
   currency: CurrencyDetails!
   minDurationMinutes: Int
   maxDurationMinutes: Int
@@ -134,6 +135,7 @@ input AddProductInput {
   description: String
   price: String!
   priceUnit: PriceUnit!
+  isPriceTaxInclusive: Boolean!
   currency: Currency!
   minDurationMinutes: Int
   maxDurationMinutes: Int
@@ -191,6 +193,7 @@ input UpdateProductInput {
   description: String
   price: String!
   priceUnit: PriceUnit!
+  isPriceTaxInclusive: Boolean!
   currency: Currency!
   minDurationMinutes: Int
   maxDurationMinutes: Int

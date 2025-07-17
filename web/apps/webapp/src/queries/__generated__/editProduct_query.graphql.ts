@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23d9571f496ac829f1386095a2785009>>
+ * @generated SignedSource<<6e24ca9091f5b8622c07c2ea3af7ac98>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,7 @@ export type editProduct_query$data = {
     readonly description: string | null | undefined;
     readonly id: string;
     readonly inactive: boolean;
+    readonly isPriceTaxInclusive: boolean;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
@@ -348,6 +349,13 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isPriceTaxInclusive",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -404,6 +412,6 @@ return {
 };
 })();
 
-(node as any).hash = "11557ab380b6da04f8a5ef2757d16684";
+(node as any).hash = "72ee6fdc0edfbeef52ade953b59dbc1f";
 
 export default node;

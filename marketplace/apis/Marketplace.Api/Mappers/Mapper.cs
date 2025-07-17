@@ -71,6 +71,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = src.Price,
             PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -96,6 +97,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = decimal.Parse(src.Price),
             PriceUnit = src.PriceUnit,
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency,
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -119,6 +121,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = decimal.Parse(src.Price),
             PriceUnit = src.PriceUnit,
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency,
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -154,6 +157,7 @@ public class Mapper : IMapper
             PriceToDisplay = roundedPrice.ToPriceToDisplay(src.Currency),
             CurrencyToDisplay = src.Currency.ToCurrencyToDisplay(),
             PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -200,6 +204,7 @@ public class Mapper : IMapper
         dest.Description = src.Description;
         dest.Price = src.Price;
         dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.IsPriceTaxInclusive = src.IsPriceTaxInclusive;
         dest.Currency = src.Currency.ToCurrency();
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
@@ -231,6 +236,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = src.Price,
             PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -295,6 +301,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = src.Price,
             PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
@@ -332,6 +339,7 @@ public class Mapper : IMapper
         dest.Description = productVersion.Description;
         dest.Price = productVersion.Price;
         dest.PriceUnit = productVersion.PriceUnit.ToPriceUnit();
+        dest.IsPriceTaxInclusive = productVersion.IsPriceTaxInclusive;
         dest.Currency = productVersion.Currency.ToCurrency();
         dest.MinDurationMinutes = productVersion.MinDurationMinutes;
         dest.MaxDurationMinutes = productVersion.MaxDurationMinutes;
@@ -341,9 +349,9 @@ public class Mapper : IMapper
         dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
         dest.PrimaryFeatureImage = productVersion.PrimaryFeatureImage;
-        dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
-        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
-        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
+        dest.MaxAllowedResourcesLockTimePaidViaCard = productVersion.MaxAllowedResourcesLockTimePaidViaCard;
+        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = productVersion.MaxAllowedResourcesLockTimePaidViaBankTransfer;
+        dest.AcceptedBookingPaymentMethods = productVersion.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         return dest;
@@ -361,6 +369,7 @@ public class Mapper : IMapper
         dest.Description = src.Description;
         dest.Price = src.Price;
         dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.IsPriceTaxInclusive = src.IsPriceTaxInclusive;
         dest.Currency = src.Currency.ToCurrency();
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;

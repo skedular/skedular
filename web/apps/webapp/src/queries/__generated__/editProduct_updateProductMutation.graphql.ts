@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb730b5e69025f777efce2addddfe930>>
+ * @generated SignedSource<<0c59fbcc43e0a4a43a73f2f0784fe674>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type UpdateProductInput = {
   currency: Currency;
   description?: string | null | undefined;
   id: string;
+  isPriceTaxInclusive: boolean;
   locationTagIds: ReadonlyArray<string>;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
   maxAllowedResourcesLockTimePaidViaCard: number;
@@ -61,6 +62,7 @@ export type editProduct_updateProductMutation$data = {
       readonly description: string | null | undefined;
       readonly id: string;
       readonly inactive: boolean;
+      readonly isPriceTaxInclusive: boolean;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -114,6 +116,7 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly description: string | null | undefined;
       readonly id: string;
       readonly inactive: boolean;
+      readonly isPriceTaxInclusive: boolean;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -422,6 +425,13 @@ v6 = [
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isPriceTaxInclusive",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -448,16 +458,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "23d20fcb5119f38b3f3aaf19828e6e58",
+    "cacheID": "403cfa138df0d19d7ea5909b806317b3",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "83779794efd70ae6a753ef790badae39";
+(node as any).hash = "a1905a53c6810461e2e3a8f75ef4832f";
 
 export default node;

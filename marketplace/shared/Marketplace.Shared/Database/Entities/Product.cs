@@ -15,6 +15,7 @@ public class Product : EntityBaseWithDeleted
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public string PriceUnit { get; set; }
+    public bool IsPriceTaxInclusive { get; set; }
     public decimal PricePerMinute { get; set; }
     public string Currency { get; set; }
     public int? MinDurationMinutes { get; set; }
@@ -48,6 +49,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxProductNameLength);
         builder.Property(item => item.Description).HasMaxLength(Constants.MaxProductDescriptionLength);
         builder.Property(item => item.PriceUnit).HasMaxLength(Constants.MaxProductPriceUnitLength);
+        builder.Property(item => item.IsPriceTaxInclusive).HasDefaultValue(true);
         builder.Property(item => item.Price).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.PricePerMinute).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
@@ -70,5 +72,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);
         builder.HasIndex(item => item.Currency);
+        builder.HasIndex(item => item.IsPriceTaxInclusive);
     }
 }

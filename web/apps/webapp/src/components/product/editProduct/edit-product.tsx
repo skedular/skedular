@@ -48,6 +48,7 @@ type ProductDetails = {
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
   acceptedBookingPaymentMethods: string[];
+  isPriceTaxInclusive: boolean;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -243,6 +244,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
         return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
       }),
     acceptedBookingPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected".').required('Booking payment methods are required.'),
+    isPriceTaxInclusive: boolean().required(),
   });
 
 const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
@@ -300,6 +302,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               width
             }
           }
+          isPriceTaxInclusive
         }
         openingHoursMinutesStep
         defaultMaxAllowedResourcesLockTimePaidViaCard
@@ -365,6 +368,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               width
             }
           }
+          isPriceTaxInclusive
         }
       }
     }
@@ -442,6 +446,9 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
   );
   const debounceSetAcceptedBookingPaymentMethods = useDebounceCallback(setAcceptedBookingPaymentMethods, keyboardTextFieldDebounceTimeout);
 
+  const [isPriceTaxInclusive, setIsPriceTaxInclusive] = useState(rootData.product ? rootData.product.isPriceTaxInclusive : true);
+  const debounceSetIsPriceTaxInclusive = useDebounceCallback(setIsPriceTaxInclusive, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.product?.primaryFeatureImage && rootData.product?.primaryFeatureImage.original
       ? {
@@ -480,6 +487,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
     maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
     maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
     acceptedBookingPaymentMethods,
+    isPriceTaxInclusive,
   }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
@@ -517,6 +525,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           name,
           description,
           price,
+          isPriceTaxInclusive,
           priceUnit: priceUnit as PriceUnit,
           currency: currency as Currency,
           numberOfResourcesToBook,
@@ -566,6 +575,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
             name,
             description,
             price,
+            isPriceTaxInclusive,
             priceUnit: {
               type: priceUnit as PriceUnit,
               name: '',
@@ -629,6 +639,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               maxAllowedResourcesLockTimePaidViaCard,
               maxAllowedResourcesLockTimePaidViaBankTransfer,
               acceptedBookingPaymentMethods,
+              isPriceTaxInclusive,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -649,6 +660,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
               debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
               debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
               debounceSetAcceptedBookingPaymentMethods(values!.acceptedBookingPaymentMethods);
+              debounceSetIsPriceTaxInclusive(values!.isPriceTaxInclusive);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -691,6 +703,14 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel>
+                      <Switches
+                        name="isPriceTaxInclusive"
+                        required={requiredFields.isPriceTaxInclusive}
+                        data={{ label: 'Is price tax inclusive?', value: 'isPriceTaxInclusive' }}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Minimum Duration (minutes)">
@@ -746,10 +766,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                         <Switches
                           name="requireConsecutiveDays"
                           required={requiredFields.requireConsecutiveDays}
-                          data={{
-                            label: 'Must book consecutive days',
-                            value: 'requireConsecutiveDays',
-                          }}
+                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
                           helperText="If checked, only consecutive days booking allowed for this product."
                         />
                       </FormFieldLabel>

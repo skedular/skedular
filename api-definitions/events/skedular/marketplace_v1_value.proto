@@ -44,20 +44,21 @@ message ProductVersion {
   string description = 3;
   string price = 4;
   string priceUnit = 5;
-  string currency = 6;
-  int32 minDurationMinutes = 7;
-  int32 maxDurationMinutes = 8;
-  bool bookAllLocationResources = 9;
-  int32 recurrenceWindowDays = 10;
-  bool requireConsecutiveDays = 11;
-  int32 maxBookingSpreadDays = 12;
-  int32 numberOfResourcesToBook = 13;
-  repeated string productTagIds = 14;
-  repeated string locationTagIds = 15;
-  CdnImageFile primaryFeatureImage = 16;
-  int32 maxAllowedResourcesLockTimePaidViaCard = 17;
-  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 18;
-  repeated string acceptedBookingPaymentMethods = 19;
+  bool isPriceTaxInclusive = 6;
+  string currency = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  bool bookAllLocationResources = 10;
+  int32 recurrenceWindowDays = 11;
+  bool requireConsecutiveDays = 12;
+  int32 maxBookingSpreadDays = 13;
+  int32 numberOfResourcesToBook = 14;
+  repeated string productTagIds = 15;
+  repeated string locationTagIds = 16;
+  CdnImageFile primaryFeatureImage = 17;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 18;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 19;
+  repeated string acceptedBookingPaymentMethods = 20;
 }
 
 message CdnImageFile {

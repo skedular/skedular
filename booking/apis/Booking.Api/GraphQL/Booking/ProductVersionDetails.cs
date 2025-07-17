@@ -11,6 +11,7 @@ public class ProductVersionDetails
     [GraphQLName("price")] public string Price { get; set; } = string.Empty;
     [GraphQLName("priceToDisplay")] public string PriceToDisplay { get; set; } = string.Empty;
     [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; } = new();
+    [GraphQLName("isPriceTaxInclusive")] public bool IsPriceTaxInclusive { get; set; }
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
 }

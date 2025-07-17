@@ -12,6 +12,7 @@ public class ProductVersion : EntityBase
     public string? Name { get; set; }
     public decimal? Price { get; set; }
     public string? PriceUnit { get; set; }
+    public bool? IsPriceTaxInclusive { get; set; }
     public decimal? PricePerMinute { get; set; }
     public string? Currency { get; set; }
     public int? MinDurationMinutes { get; set; }

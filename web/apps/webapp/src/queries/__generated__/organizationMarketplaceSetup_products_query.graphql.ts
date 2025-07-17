@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9452e4c44915e07c1b912f93892e079d>>
+ * @generated SignedSource<<d2b54016b9e1c4dc8b7e0373050be0d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly description: string | null | undefined;
         readonly id: string;
         readonly inactive: boolean;
+        readonly isPriceTaxInclusive: boolean;
         readonly maxBookingSpreadDays: number | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
@@ -284,6 +285,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "isPriceTaxInclusive",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -346,6 +354,6 @@ return {
 };
 })();
 
-(node as any).hash = "47bd42bd53c7c7e85e02198ec2761b68";
+(node as any).hash = "381183dc22a2515279ae2ac433835a6e";
 
 export default node;

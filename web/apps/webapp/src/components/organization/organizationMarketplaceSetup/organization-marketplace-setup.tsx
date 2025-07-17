@@ -75,6 +75,7 @@ type ProductRowType = {
   requireConsecutiveDays: boolean;
   maxBookingSpreadDays: number | null | undefined;
   status: boolean;
+  isPriceTaxInclusive: boolean;
 };
 
 type ProductTagRowType = {
@@ -160,6 +161,7 @@ const OrganizationMarketplaceSetup = ({
               organization {
                 uniqueId
               }
+              isPriceTaxInclusive
             }
           }
         }
@@ -1451,6 +1453,7 @@ const OrganizationMarketplaceSetup = ({
     requireConsecutiveDays: product.requireConsecutiveDays,
     maxBookingSpreadDays: product.maxBookingSpreadDays,
     status: !product.inactive,
+    isPriceTaxInclusive: product.isPriceTaxInclusive,
   }));
 
   const productColumns: GridColDef<(typeof productRows)[number]>[] = [
@@ -1473,6 +1476,16 @@ const OrganizationMarketplaceSetup = ({
       },
       display: 'flex',
       minWidth: 200,
+    },
+    {
+      field: 'isPriceTaxInclusive',
+      headerName: 'Tax Inclusive?',
+      editable: false,
+      renderCell: (params) => {
+        return <SmallIconTypography label={`${params.value ? 'Yes' : 'No'}`} />;
+      },
+      display: 'flex',
+      minWidth: 120,
     },
     {
       field: 'numberOfResourcesToBook',

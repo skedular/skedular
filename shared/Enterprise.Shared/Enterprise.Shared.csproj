@@ -14,7 +14,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.5"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.6"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.14"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.11.0"/>
@@ -94,7 +94,7 @@
         <PackageReference Include="Scrutor" Version="6.1.0"/>
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.8.41"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.8.47"/>
         <PackageReference Include="Stripe.net" Version="48.3.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1"/>

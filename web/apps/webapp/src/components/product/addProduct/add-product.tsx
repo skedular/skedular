@@ -70,6 +70,7 @@ type ProductDetails = {
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
   acceptedBookingPaymentMethods: string[];
+  isPriceTaxInclusive: boolean;
 };
 
 const productSchema = (openingHoursMinutesStep: number) =>
@@ -265,6 +266,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
         return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
       }),
     acceptedBookingPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected".').required('Booking payment methods are required.'),
+    isPriceTaxInclusive: boolean().required(),
   });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
@@ -320,6 +322,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               width
             }
           }
+          isPriceTaxInclusive
         }
       }
     }
@@ -382,6 +385,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const [acceptedBookingPaymentMethods, setAcceptedBookingPaymentMethods] = useState<string[]>([]);
   const debounceSetAcceptedBookingPaymentMethods = useDebounceCallback(setAcceptedBookingPaymentMethods, keyboardTextFieldDebounceTimeout);
 
+  const [isPriceTaxInclusive, setIsPriceTaxInclusive] = useState(true);
+  const debounceSetIsPriceTaxInclusive = useDebounceCallback(setIsPriceTaxInclusive, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
@@ -407,6 +413,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
     maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
     acceptedBookingPaymentMethods,
+    isPriceTaxInclusive,
   }: ProductDetails) => {
     const id = uuid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
@@ -440,6 +447,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           name,
           description,
           price,
+          isPriceTaxInclusive,
           priceUnit: priceUnit as PriceUnit,
           currency: currency as Currency,
           numberOfResourcesToBook,
@@ -490,6 +498,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name,
             description,
             price,
+            isPriceTaxInclusive,
             priceUnit: {
               type: priceUnit as PriceUnit,
               name: '',
@@ -545,6 +554,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               maxAllowedResourcesLockTimePaidViaCard,
               maxAllowedResourcesLockTimePaidViaBankTransfer,
               acceptedBookingPaymentMethods,
+              isPriceTaxInclusive,
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values }) => {
@@ -565,6 +575,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
               debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
               debounceSetAcceptedBookingPaymentMethods(values!.acceptedBookingPaymentMethods);
+              debounceSetIsPriceTaxInclusive(values!.isPriceTaxInclusive);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -609,6 +620,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
                     </FormFieldLabel>
 
+                    <FormFieldLabel>
+                      <Switches
+                        name="isPriceTaxInclusive"
+                        required={requiredFields.isPriceTaxInclusive}
+                        data={{ label: 'Is price tax inclusive?', value: 'isPriceTaxInclusive' }}
+                      />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Minimum Duration (minutes)">
                       <TextField name="minDurationMinutes" required={requiredFields.minDurationMinutes} />
                     </FormFieldLabel>
@@ -637,10 +656,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       <Switches
                         name="bookAllLocationResources"
                         required={requiredFields.bookAllLocationResources}
-                        data={{
-                          label: 'Book all location resources',
-                          value: 'bookAllLocationResources',
-                        }}
+                        data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
                         helperText="If checked, all location resources will be booked for this product."
                       />
                     </FormFieldLabel>
@@ -662,10 +678,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                         <Switches
                           name="requireConsecutiveDays"
                           required={requiredFields.requireConsecutiveDays}
-                          data={{
-                            label: 'Must book consecutive days',
-                            value: 'requireConsecutiveDays',
-                          }}
+                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
                           helperText="If checked, only consecutive days booking allowed for this product."
                         />
                       </FormFieldLabel>

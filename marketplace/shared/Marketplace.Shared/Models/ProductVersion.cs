@@ -9,6 +9,7 @@ public class ProductVersion : ModelBase
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public PriceUnit PriceUnit { get; set; }
+    public bool IsPriceTaxInclusive { get; set; }
     public decimal PricePerMinute { get; set; }
     public Currency Currency { get; set; }
     public int? MinDurationMinutes { get; set; }

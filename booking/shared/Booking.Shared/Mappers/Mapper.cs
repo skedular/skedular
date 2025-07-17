@@ -138,17 +138,62 @@ public class Mapper : IMapper
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
 
-    public ProductVersion MapTo(Database.Entities.ProductVersion src) =>
-        new()
+    public ProductVersion MapTo(Database.Entities.ProductVersion src)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(src.PriceUnit);
+
+        if (!src.PricePerMinute.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.PricePerMinute));
+        }
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(src.Currency);
+
+        if (!src.BookAllLocationResources.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.BookAllLocationResources));
+        }
+
+        if (!src.RecurrenceWindowDays.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.RecurrenceWindowDays));
+        }
+
+        if (!src.RequireConsecutiveDays.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.RequireConsecutiveDays));
+        }
+
+        if (!src.NumberOfResourcesToBook.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.NumberOfResourcesToBook));
+        }
+
+        if (!src.IsPriceTaxInclusive.HasValue)
+        {
+            throw new ArgumentNullException(nameof(src.IsPriceTaxInclusive));
+        }
+
+        return new ProductVersion
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name.ToSafeString(),
             Price = src.Price ?? 0,
-            PriceUnit = src.PriceUnit!.ToPriceUnit(),
-            Currency = src.Currency!.ToCurrency()
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive.Value,
+            PricePerMinute = src.PricePerMinute.Value,
+            Currency = src.Currency.ToCurrency(),
+            MinDurationMinutes = src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources.Value,
+            RecurrenceWindowDays = src.RecurrenceWindowDays.Value,
+            RequireConsecutiveDays = src.RequireConsecutiveDays.Value,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook.Value
         };
+    }
 
     public CustomerCreateOptions MapToCustomerCreateOption(Organization src) =>
         new()

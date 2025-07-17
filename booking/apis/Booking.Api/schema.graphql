@@ -128,6 +128,7 @@ type Booking_ProductVersionDetails {
   price: String!
   priceToDisplay: String!
   priceUnit: Booking_PriceUnitDetails!
+  isPriceTaxInclusive: Boolean!
   currency: Booking_CurrencyDetails!
   organization: Booking_OrganizationDetails!
 }

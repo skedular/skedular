@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c4f7d2082226a195da2a04a4ca284148>>
+ * @generated SignedSource<<7320535effce1090879b34de48e4d166>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -325,6 +325,13 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isPriceTaxInclusive",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -339,12 +346,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "94b3a2dcb9173a5d7faebad65a6d2d67",
+    "cacheID": "9d20952b55bcbc96be8ad7ac54560b00",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplacePublic_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n"
   }
 };
 })();

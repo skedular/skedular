@@ -347,6 +347,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Price = src.Price;
         dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.IsPriceTaxInclusive = src.IsPriceTaxInclusive;
         dest.PricePerMinute = src.Price;
         dest.Currency = src.Currency.ToCurrency();
         dest.MinDurationMinutes = src.MinDurationMinutes;

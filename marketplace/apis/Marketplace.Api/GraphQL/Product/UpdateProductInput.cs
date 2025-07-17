@@ -13,6 +13,7 @@ public class UpdateProductInput
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public string Price { get; set; } = string.Empty;
     [GraphQLName("priceUnit")] public PriceUnit PriceUnit { get; set; }
+    [GraphQLName("isPriceTaxInclusive")] public bool IsPriceTaxInclusive { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
