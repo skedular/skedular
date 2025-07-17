@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3312972ac5f6c5f07cae64b1e79d23df>>
+ * @generated SignedSource<<a07732c1c6ac35a317199ae681a7e161>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,15 +13,19 @@ import { FragmentRefs } from "relay-runtime";
 export type editStripeConnectAccount_query$data = {
   readonly organizationStripeConnectAccount: {
     readonly businessType: string | null | undefined;
+    readonly chargesEnabled: boolean;
     readonly companyName: string | null | undefined;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
     readonly country: string | null | undefined;
     readonly defaultCurrency: string | null | undefined;
+    readonly detailsSubmitted: boolean;
     readonly id: string;
+    readonly isAuthorized: boolean;
+    readonly isOnboardingCompleted: boolean;
     readonly name: string;
-    readonly onboardingCompleted: boolean;
     readonly onboardingUrl: string;
+    readonly payoutsEnabled: boolean;
     readonly supportUrl: string | null | undefined;
     readonly url: string | null | undefined;
   } | null | undefined;
@@ -138,7 +142,35 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "onboardingCompleted",
+          "name": "chargesEnabled",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "payoutsEnabled",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "detailsSubmitted",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isAuthorized",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isOnboardingCompleted",
           "storageKey": null
         }
       ],
@@ -149,6 +181,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6c923cb8157d12b69fc86cf40274c99a";
+(node as any).hash = "47973911c2df5a033e25e8ba2d95fbf8";
 
 export default node;

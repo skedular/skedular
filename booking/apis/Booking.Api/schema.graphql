@@ -29,6 +29,7 @@ type BookingDetails {
   currency: String
   currencyToDisplay: String!
   invoiceUrl: String
+  invoiceNumber: String
   invoiceEmailList: [String!]
   lastModifiedByCustomer: Booking_CustomerDetails
   deletedByCustomer: Booking_CustomerDetails

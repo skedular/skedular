@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e1791b53bd6e46e6a66eb9d50786888>>
+ * @generated SignedSource<<6bb4cf6ba914fd16886970bc329fdc80>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -163,7 +163,35 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "onboardingCompleted",
+            "name": "chargesEnabled",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "payoutsEnabled",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "detailsSubmitted",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isAuthorized",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isOnboardingCompleted",
             "storageKey": null
           }
         ],
@@ -172,12 +200,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1f2d3b276f55e853e9d9237b8f09b28e",
+    "cacheID": "41d32e0177b876d8db50c9af6382fd6e",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationStripeConnectAccount_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationStripeConnectAccount_rootQuery(\n  $organizationStripeConnectAccountId: String!\n) {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    name\n    id\n  }\n  ...editStripeConnectAccount_query\n}\n\nfragment editStripeConnectAccount_query on Query {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    id\n    name\n    country\n    defaultCurrency\n    businessType\n    companyName\n    url\n    supportUrl\n    contactEmail\n    contactPhone\n    onboardingUrl\n    onboardingCompleted\n  }\n}\n"
+    "text": "query pageOrganizationStripeConnectAccount_rootQuery(\n  $organizationStripeConnectAccountId: String!\n) {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    name\n    id\n  }\n  ...editStripeConnectAccount_query\n}\n\nfragment editStripeConnectAccount_query on Query {\n  organizationStripeConnectAccount(id: $organizationStripeConnectAccountId) {\n    id\n    name\n    country\n    defaultCurrency\n    businessType\n    companyName\n    url\n    supportUrl\n    contactEmail\n    contactPhone\n    onboardingUrl\n    chargesEnabled\n    payoutsEnabled\n    detailsSubmitted\n    isAuthorized\n    isOnboardingCompleted\n  }\n}\n"
   }
 };
 })();

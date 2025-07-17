@@ -30,6 +30,7 @@ type BookingDetails {
   from: DateTime!
   id: ID!
   invoiceEmailList: [String!]
+  invoiceNumber: String
   invoiceUrl: String
   involvedCustomers: [Booking_CustomerDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
@@ -889,10 +890,12 @@ type OrganizationStripeConnectAccountDetails {
   contactPhone: String
   country: String
   defaultCurrency: String
+  detailsSubmitted: Boolean!
   id: ID!
+  isAuthorized: Boolean!
   isDefault: Boolean!
+  isOnboardingCompleted: Boolean!
   name: String!
-  onboardingCompleted: Boolean!
   onboardingUrl: String!
   organization: OrganizationDetails!
   payoutsEnabled: Boolean!

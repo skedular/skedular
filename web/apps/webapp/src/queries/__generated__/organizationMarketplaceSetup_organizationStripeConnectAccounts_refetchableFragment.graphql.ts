@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<44a00ab352a437146c1644786aabe7f5>>
+ * @generated SignedSource<<c84fe5c4e9c3f97ae27cafe3adf89002>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -238,7 +238,35 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "onboardingCompleted",
+                    "name": "chargesEnabled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "payoutsEnabled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "detailsSubmitted",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isAuthorized",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isOnboardingCompleted",
                     "storageKey": null
                   },
                   {
@@ -328,16 +356,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bb06f5ec7cb39ff909ee9e9cef460487",
+    "cacheID": "958113c378e5ec0f206a672048db35bc",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        onboardingCompleted\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ded6679598419cb145bb09aaf1db4cb8";
+(node as any).hash = "dc9c1b6e80a8f95edd10ae69585fdda4";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d700b464083f375216fdad85c384691f>>
+ * @generated SignedSource<<727f60dc6060de827ea0fe671e4b7289>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -670,7 +670,35 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "onboardingCompleted",
+                    "name": "chargesEnabled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "payoutsEnabled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "detailsSubmitted",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isAuthorized",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isOnboardingCompleted",
                     "storageKey": null
                   },
                   (v26/*: any*/),
@@ -772,12 +800,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "92b5cb696e03231a491bb4074dd5e6a3",
+    "cacheID": "642706c4de3b6e4641c4a007ec129c93",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationId: String!\n  $productNameSearchText: String\n  $productTagNameSearchText: String\n  $locationTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_products_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_locationTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment organizationMarketplaceSetup_locationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationId: $organizationId, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        onboardingCompleted\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  productTags(where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_products_query on Query {\n  products(where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationId: String!\n  $productNameSearchText: String\n  $productTagNameSearchText: String\n  $locationTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_products_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_locationTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment organizationMarketplaceSetup_locationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationId: $organizationId, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  productTags(where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_products_query on Query {\n  products(where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

@@ -101,6 +101,10 @@ type OrganizationStripeConnectAccountRowType = {
   supportLink: string | null | undefined;
   contactEmail: string | null | undefined;
   contactPhone: string | null | undefined;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  isAuthorized: boolean;
   requiresOnboarding: boolean;
 };
 
@@ -254,7 +258,11 @@ const OrganizationMarketplaceSetup = ({
               contactEmail
               contactPhone
               onboardingUrl
-              onboardingCompleted
+              chargesEnabled
+              payoutsEnabled
+              detailsSubmitted
+              isAuthorized
+              isOnboardingCompleted
               organization {
                 id
               }
@@ -1682,7 +1690,11 @@ const OrganizationMarketplaceSetup = ({
     supportLink: account.supportUrl,
     contactEmail: account.contactEmail,
     contactPhone: account.contactPhone,
-    requiresOnboarding: !account.onboardingCompleted,
+    chargesEnabled: account.chargesEnabled,
+    payoutsEnabled: account.payoutsEnabled,
+    detailsSubmitted: account.detailsSubmitted,
+    isAuthorized: account.isAuthorized,
+    requiresOnboarding: !account.isOnboardingCompleted,
   }));
 
   const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
@@ -1693,6 +1705,47 @@ const OrganizationMarketplaceSetup = ({
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
       minWidth: 100,
+    },
+    {
+      field: 'requiresOnboarding',
+      headerName: 'Onboarding Required',
+      editable: false,
+      renderCell: (params) => {
+        if (!params.value) {
+          return <></>;
+        }
+
+        const account = organizationStripeConnectAccounts.find((account) => account.id === (params.id as string));
+        if (!account) {
+          return <></>;
+        }
+
+        return <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="small" sx={{ marginTop: 1, marginBottom: 1 }} />;
+      },
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'isDefault',
+      headerName: 'Default',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Yes" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="No" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
     },
     {
       field: 'companyName',
@@ -1759,45 +1812,36 @@ const OrganizationMarketplaceSetup = ({
       minWidth: 150,
     },
     {
-      field: 'requiresOnboarding',
-      headerName: 'Onboarding Required',
+      field: 'chargesEnabled',
+      headerName: 'Charges?',
       editable: false,
-      renderCell: (params) => {
-        if (!params.value) {
-          return <></>;
-        }
-
-        const account = organizationStripeConnectAccounts.find((account) => account.id === (params.id as string));
-        if (!account) {
-          return <></>;
-        }
-
-        return <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="small" sx={{ marginTop: 1, marginBottom: 1 }} />;
-      },
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Enabled' : 'Disabled'} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 50,
     },
     {
-      field: 'isDefault',
-      headerName: 'Default',
+      field: 'payoutsEnabled',
+      headerName: 'Payouts',
       editable: false,
-      renderCell: (params) => (
-        <StackRow>
-          {params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="Yes" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
-            </StackRow>
-          )}
-          {!params.value && (
-            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
-              <SmallIconTypography label="No" />
-              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
-            </StackRow>
-          )}
-        </StackRow>
-      ),
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Enabled' : 'Disabled'} />,
       display: 'flex',
+      minWidth: 50,
+    },
+    {
+      field: 'detailsSubmitted',
+      headerName: 'Details',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Submitted' : 'N/A'} />,
+      display: 'flex',
+      minWidth: 50,
+    },
+    {
+      field: 'isAuthorized',
+      headerName: 'Authorized',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
+      display: 'flex',
+      minWidth: 50,
     },
     {
       field: 'More Actions',

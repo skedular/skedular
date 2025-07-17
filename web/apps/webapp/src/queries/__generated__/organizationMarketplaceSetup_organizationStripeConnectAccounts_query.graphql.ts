@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b1471a44f744b5bc2d3b4514442dfba>>
+ * @generated SignedSource<<0dc34fee54198384d39ba1d8e7bbdf01>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,23 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly businessType: string | null | undefined;
+        readonly chargesEnabled: boolean;
         readonly companyName: string | null | undefined;
         readonly contactEmail: string | null | undefined;
         readonly contactPhone: string | null | undefined;
         readonly country: string | null | undefined;
         readonly defaultCurrency: string | null | undefined;
+        readonly detailsSubmitted: boolean;
         readonly id: string;
+        readonly isAuthorized: boolean;
         readonly isDefault: boolean;
+        readonly isOnboardingCompleted: boolean;
         readonly name: string;
-        readonly onboardingCompleted: boolean;
         readonly onboardingUrl: string;
         readonly organization: {
           readonly id: string;
         };
+        readonly payoutsEnabled: boolean;
         readonly supportUrl: string | null | undefined;
         readonly url: string | null | undefined;
       };
@@ -241,7 +245,35 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "onboardingCompleted",
+                  "name": "chargesEnabled",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "payoutsEnabled",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "detailsSubmitted",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "isAuthorized",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "isOnboardingCompleted",
                   "storageKey": null
                 },
                 {
@@ -322,6 +354,6 @@ return {
 };
 })();
 
-(node as any).hash = "ded6679598419cb145bb09aaf1db4cb8";
+(node as any).hash = "dc9c1b6e80a8f95edd10ae69585fdda4";
 
 export default node;

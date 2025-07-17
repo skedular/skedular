@@ -60,7 +60,11 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
           contactEmail
           contactPhone
           onboardingUrl
-          onboardingCompleted
+          chargesEnabled
+          payoutsEnabled
+          detailsSubmitted
+          isAuthorized
+          isOnboardingCompleted
         }
       }
     `,
@@ -167,7 +171,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
                       </Grid>
 
                       <Grid>
-                        {!account.onboardingCompleted && <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="medium" />}
+                        {!account.isOnboardingCompleted && <CompleteOnboardStripeConnectAccountButton onboardingUrl={account.onboardingUrl} variant="contained" size="medium" />}
                       </Grid>
                     </GridContainer>
                     <Divider />
@@ -208,6 +212,22 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
 
                     <FormFieldLabel label="Contact Phone">
                       <SmallIconTypography label={account.contactPhone} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Charges">
+                      <SmallIconTypography label={account.chargesEnabled ? 'Enabled' : 'Disabled'} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Payouts">
+                      <SmallIconTypography label={account.payoutsEnabled ? 'Enabled' : 'Disabled'} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Details">
+                      <SmallIconTypography label={account.detailsSubmitted ? 'Submitted' : 'N/A'} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Authorized">
+                      <SmallIconTypography label={account.isAuthorized ? 'Yes' : 'No'} />
                     </FormFieldLabel>
                   </StackColumn>
 

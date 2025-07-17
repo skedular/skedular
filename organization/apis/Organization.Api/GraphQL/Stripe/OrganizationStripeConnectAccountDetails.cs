@@ -21,13 +21,15 @@ public class OrganizationStripeConnectAccountDetails : Node
     [GraphQLName("supportUrl")] public string? SupportUrl { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+    [GraphQLName("detailsSubmitted")] public bool DetailsSubmitted { get; set; }
     [GraphQLName("capabilitiesTransfers")] public string CapabilitiesTransfers { get; set; } = string.Empty;
 
     [GraphQLName("capabilitiesCardPayments")]
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
 
     [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; } = string.Empty;
-    [GraphQLName("onboardingCompleted")] public bool OnboardingCompleted { get; set; }
+    [GraphQLName("isOnboardingCompleted")] public bool IsOnboardingCompleted { get; set; }
+    [GraphQLName("isAuthorized")] public bool IsAuthorized { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

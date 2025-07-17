@@ -1046,10 +1046,12 @@ public class Mapper : IMapper
                 SupportUrl = src.SupportUrl,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
+                DetailsSubmitted = src.DetailsSubmitted,
                 CapabilitiesCardPayments = src.CapabilitiesCardPayments,
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
                 OnboardingUrl = src.OnboardingUrl,
-                OnboardingCompleted = src.IsOnboardingCompleted(),
+                IsOnboardingCompleted = src.IsOnboardingCompleted(),
+                IsAuthorized = src.IsAuthorized(),
                 Organization = MapTo(src.Organization)!
             };
 

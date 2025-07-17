@@ -345,10 +345,12 @@ type OrganizationStripeConnectAccountDetails {
   supportUrl: String
   contactEmail: String
   contactPhone: String
+  detailsSubmitted: Boolean!
   capabilitiesTransfers: String!
   capabilitiesCardPayments: String!
   onboardingUrl: String!
-  onboardingCompleted: Boolean!
+  isOnboardingCompleted: Boolean!
+  isAuthorized: Boolean!
   organization: OrganizationDetails!
   id: ID!
 }
