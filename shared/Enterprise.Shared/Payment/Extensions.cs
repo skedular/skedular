@@ -32,6 +32,7 @@ public static class Extensions
             .AddSingleton<ICreatable<Account, AccountCreateOptions>, AccountService>()
             .AddSingleton<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
             .AddSingleton<IDeletable<Account, AccountDeleteOptions>, AccountService>()
+            .AddSingleton<IRetrievable<Account, AccountGetOptions>, AccountService>()
             .AddSingleton<ICreatable<AccountLink, AccountLinkCreateOptions>, AccountLinkService>()
             .AddSingleton<ICreatable<PaymentIntent, PaymentIntentCreateOptions>, PaymentIntentService>()
             .AddSingleton<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()

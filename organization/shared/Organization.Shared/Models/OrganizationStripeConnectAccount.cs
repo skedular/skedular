@@ -23,9 +23,6 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
     public string OnboardingUrl { get; set; } = string.Empty;
 
-    public bool OnboardingCompleted => DetailsSubmitted && OrganizationStripeConnectAccountAuthorization is not null &&
-                                       OrganizationStripeConnectAccountAuthorization.IsAuthorized && ChargesEnabled && PayoutsEnabled;
-
     public Organization Organization { get; set; } = new();
     public ICollection<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCodes { get; set; } = [];
     public OrganizationStripeConnectAccountAuthorization? OrganizationStripeConnectAccountAuthorization { get; set; }

@@ -1,3 +1,4 @@
+using System.Net;
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -11,6 +12,7 @@ using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Stripe;
 using Customer = Organization.Shared.Models.Customer;
+using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization;
 using StripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
 
 namespace Organization.Api.Services;
@@ -31,7 +33,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> SetAsDefaultAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedAccountsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
@@ -47,6 +49,7 @@ public class OrganizationStripeConnectAccountService(
     ICustomerService customerService,
     ICreatable<Account, AccountCreateOptions> accountCreateService,
     IDeletable<Account, AccountDeleteOptions> accountDeleteService,
+    IRetrievable<Account, AccountGetOptions> accountGetOption,
     ICachedCustomerService cachedCustomerService,
     IMapper mapper,
     IRandomHelper randomHelper,
@@ -217,6 +220,8 @@ public class OrganizationStripeConnectAccountService(
             throw new UnauthorizedAccessException();
         }
 
+        account = await ReSyncOnboardingCompletedStateAsync(account, existingOrganizations, cancellationToken);
+
         return mapper.MapTo(account);
     }
 
@@ -306,6 +311,11 @@ public class OrganizationStripeConnectAccountService(
             orderByFields,
             cancellationToken);
 
+        foreach (var account in edges.Select(item => item.Node))
+        {
+            await ReSyncOnboardingCompletedStateAsync(account, organization, cancellationToken);
+        }
+
         var mappedAccounts = edges.Select(edge => new Edge<OrganizationStripeConnectAccount>(mapper.MapTo(edge.Node), edge.Cursor)).ToList();
 
         return (paginatedInfo, mappedAccounts, totalCount);
@@ -336,5 +346,75 @@ public class OrganizationStripeConnectAccountService(
         await transaction.CommitAsync(cancellationToken);
 
         return mappedAccount;
+    }
+
+    private async Task<Shared.Database.Entities.OrganizationStripeConnectAccount> ReSyncOnboardingCompletedStateAsync(
+        Shared.Database.Entities.OrganizationStripeConnectAccount account,
+        Shared.Database.Entities.Organization organization,
+        CancellationToken cancellationToken)
+    {
+        if (account.IsOnboardingCompleted())
+        {
+            return account;
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        try
+        {
+            var stripeConnectAccount = await accountGetOption.GetAsync(
+                account.StripeAccountId,
+                new AccountGetOptions(),
+                new RequestOptions { StripeAccount = account.StripeAccountId },
+                cancellationToken);
+
+            account = mapper.MergeTo(stripeConnectAccount, account);
+
+            if (account.OrganizationStripeConnectAccountAuthorization is null)
+            {
+                account.OrganizationStripeConnectAccountAuthorization =
+                    repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
+                        new OrganizationStripeConnectAccountAuthorization
+                        {
+                            Id = randomHelper.Generate(), IsAuthorized = true, OrganizationStripeConnectAccount = account
+                        });
+            }
+            else
+            {
+                account.OrganizationStripeConnectAccountAuthorization.IsAuthorized = true;
+            }
+        }
+        catch (StripeException ex)
+        {
+            // Check for a specific unauthorized error
+            if (ex.HttpStatusCode != HttpStatusCode.Forbidden && ex.StripeError?.Code != "account_permission_error")
+            {
+                throw;
+            }
+
+            if (account.OrganizationStripeConnectAccountAuthorization is null)
+            {
+                account.OrganizationStripeConnectAccountAuthorization =
+                    repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
+                        new OrganizationStripeConnectAccountAuthorization
+                        {
+                            Id = randomHelper.Generate(), IsAuthorized = false, OrganizationStripeConnectAccount = account
+                        });
+            }
+            else
+            {
+                account.OrganizationStripeConnectAccountAuthorization.IsAuthorized = false;
+            }
+
+            return account;
+        }
+
+        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
+
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return account;
     }
 }

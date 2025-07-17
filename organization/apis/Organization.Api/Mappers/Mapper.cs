@@ -15,6 +15,7 @@ using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
 using Organization.Api.GraphQL.TaxDetails;
+using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
@@ -201,6 +202,7 @@ public interface IMapper
     InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src);
     Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
     OrganizationJoinInvitationEdge MapTo(Edge<JoinInvitation> src);
+    OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
 }
 
 public class Mapper : IMapper
@@ -1047,7 +1049,7 @@ public class Mapper : IMapper
                 CapabilitiesCardPayments = src.CapabilitiesCardPayments,
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
                 OnboardingUrl = src.OnboardingUrl,
-                OnboardingCompleted = src.OnboardingCompleted,
+                OnboardingCompleted = src.IsOnboardingCompleted(),
                 Organization = MapTo(src.Organization)!
             };
 
@@ -1263,7 +1265,28 @@ public class Mapper : IMapper
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
+    
     public OrganizationJoinInvitationEdge MapTo(Edge<JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
+
+    public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
+    {
+        dest.StripeAccountId = src.Id;
+        dest.ChargesEnabled = src.ChargesEnabled;
+        dest.PayoutsEnabled = src.PayoutsEnabled;
+        dest.Type = src.Type.ToSafeString();
+        dest.Country = src.Country;
+        dest.DefaultCurrency = src.DefaultCurrency;
+        dest.BusinessType = src.BusinessType;
+        dest.CompanyName = src.BusinessProfile?.Name;
+        dest.Url = src.BusinessProfile?.Url;
+        dest.SupportUrl = src.BusinessProfile?.SupportUrl;
+        dest.ContactEmail = src.Email;
+        dest.ContactPhone = src.BusinessProfile?.SupportPhone;
+        dest.DetailsSubmitted = src.DetailsSubmitted;
+        dest.CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString();
+        dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
+        return dest;
+    }
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
@@ -1840,7 +1863,7 @@ public class Mapper : IMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
             CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
             OnboardingUrl = src.OnboardingUrl.ToSafeString(),
-            OnboardingCompleted = src.OnboardingCompleted
+            OnboardingCompleted = src.IsOnboardingCompleted()
         };
 
     private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSettings? src) =>
