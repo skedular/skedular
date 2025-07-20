@@ -182,17 +182,6 @@ public class StripeIntegrations(
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
-
-        booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
-        booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
-        booking.TaxAmount = booking.TotalAmountExcludeTax is not null && booking.TotalAmount is not null
-            ? booking.TotalAmount - booking.TotalAmountExcludeTax
-            : null;
-        booking.TaxRatePercentage = booking.TaxAmount is not null && booking.TotalAmountExcludeTax is not null
-            ? (booking.TaxAmount.Value * 100 / booking.TotalAmountExcludeTax.Value).RoundedDecimal()
-            : null;
-
-        booking.Currency = session.Currency;
         booking.StripeCheckoutSession = stripeCheckoutSession;
         booking.PaymentStatus = session.PaymentStatus switch
         {

@@ -42,7 +42,7 @@
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.7.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1"/>
         <PackageReference Include="Microsoft.Graph" Version="5.86.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.10.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.11.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
         <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3"/>
@@ -94,10 +94,10 @@
         <PackageReference Include="Scrutor" Version="6.1.0"/>
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.8.47"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.8.58"/>
         <PackageReference Include="Stripe.net" Version="48.3.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0"/>
         <PackageReference Include="System.Reactive" Version="6.0.1"/>
         <PackageReference Include="WorkOS.net" Version="2.9.0"/>
         <PackageReference Include="YamlDotNet" Version="16.3.0"/>
