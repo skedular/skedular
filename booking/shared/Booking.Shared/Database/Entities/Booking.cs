@@ -20,6 +20,9 @@ public class Booking : EntityBaseWithDeleted
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
     public bool BookedOnMarketplace { get; set; }
     public string? PaymentMethod { get; set; }
+    public decimal? TotalAmountExcludeTax { get; set; }
+    public decimal? TaxAmount { get; set; }
+    public decimal? TaxRatePercentage { get; set; }
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
@@ -57,6 +60,9 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
         builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
+        builder.Property(item => item.TotalAmountExcludeTax).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.TaxAmount).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.TaxRatePercentage).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -85,6 +91,9 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.IsPaymentRequired);
         builder.HasIndex(item => item.PaymentMethod);
+        builder.HasIndex(item => item.TotalAmountExcludeTax);
+        builder.HasIndex(item => item.TaxAmount);
+        builder.HasIndex(item => item.TaxRatePercentage);
         builder.HasIndex(item => item.TotalAmount);
         builder.HasIndex(item => item.Currency);
     }

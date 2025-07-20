@@ -395,7 +395,7 @@ type OrganizationTagsPayload {
 
 type OrganizationTaxDetails {
   taxId: String!
-  taxRatePercentage: String!
+  taxRatePercentage: Decimal!
   id: ID!
 }
 
@@ -896,7 +896,7 @@ input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
   organizationId: String!
   taxId: String!
-  taxRatePercentage: String!
+  taxRatePercentage: Decimal!
 }
 
 input UpdateProductTagInput {

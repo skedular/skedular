@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81d3b55ca42d8be8df4f5013ae55e8ca>>
+ * @generated SignedSource<<7b461560016d4899c58341073f058750>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ export type UpdateOrganizationTaxDetailsInput = {
   clientMutationId?: string | null | undefined;
   organizationId: string;
   taxId: string;
-  taxRatePercentage: string;
+  taxRatePercentage: any;
 };
 export type organizationAdmin_updateOrganizationTaxDetailsMutation$variables = {
   input: UpdateOrganizationTaxDetailsInput;
@@ -24,7 +24,7 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$data = {
       readonly id: string;
       readonly taxDetails: {
         readonly taxId: string;
-        readonly taxRatePercentage: string;
+        readonly taxRatePercentage: any;
       } | null | undefined;
     };
   };
@@ -36,7 +36,7 @@ export type organizationAdmin_updateOrganizationTaxDetailsMutation$rawResponse =
       readonly taxDetails: {
         readonly id: string;
         readonly taxId: string;
-        readonly taxRatePercentage: string;
+        readonly taxRatePercentage: any;
       } | null | undefined;
     };
   };

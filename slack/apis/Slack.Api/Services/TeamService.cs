@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
@@ -85,7 +86,12 @@ public class TeamService(
         {
             await _cachedTeamsLock.WaitAsync(cancellationToken);
             var teamConnection = await teamServiceClient.GetPaginatedTeamsAsync(
-                new GetPaginatedTeamsInput { First = -1, Last = -1, Where = new TeamWhereInput { OrganizationId = workspace.Organization.Id } },
+                new GetPaginatedTeamsInput
+                {
+                    First = ((int?)null).ToNullInt(),
+                    Last = ((int?)null).ToNullInt(),
+                    Where = new TeamWhereInput { OrganizationId = workspace.Organization.Id }
+                },
                 teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
                 cancellationToken: cancellationToken);
             _cachedTeams = teamConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();

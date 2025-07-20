@@ -156,11 +156,14 @@ message Booking {
     google.protobuf.Timestamp paymentExpiry = 21;
     bool bookedOnMarketplace = 22;
     PaymentMethod PaymentMethod = 23;
-    string totalAmount = 24;
-    string currency = 25;
-    string InvoiceUrl = 26;
-    string InvoiceNumber = 27;
-    repeated string InvoiceEmailList = 28;
+    double totalAmountExcludeTax = 24;
+    double taxAmount = 25;
+    double taxRatePercentage = 26;
+    double totalAmount = 27;
+    string currency = 28;
+    string InvoiceUrl = 29;
+    string InvoiceNumber = 30;
+    repeated string InvoiceEmailList = 31;
 }
 
 message Customer {

@@ -46,7 +46,13 @@ type BookingDetails {
   paymentMethod: PaymentMethodTypeDetails
   paymentStatus: PaymentStatusDetails!
   resources: [BookingResourceDetails!]!
-  totalAmount: String
+  taxAmount: Decimal
+  taxAmountToDisplay: String!
+  taxRatePercentage: Decimal
+  taxRatePercentageToDisplay: String!
+  totalAmount: Decimal
+  totalAmountExcludeTax: Decimal
+  totalAmountExcludeTaxToDisplay: String!
   totalAmountToDisplay: String!
   type: BookingTypeDetails!
   until: DateTime!
@@ -946,7 +952,7 @@ type OrganizationTagsPayload {
 type OrganizationTaxDetails {
   id: ID!
   taxId: String!
-  taxRatePercentage: String!
+  taxRatePercentage: Decimal!
 }
 
 type OrganizationTermsOfUse {
@@ -2323,7 +2329,7 @@ input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
   organizationId: String!
   taxId: String!
-  taxRatePercentage: String!
+  taxRatePercentage: Decimal!
 }
 
 input UpdateProductInput {

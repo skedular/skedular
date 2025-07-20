@@ -23,7 +23,19 @@ public class BookingDetails : Node
     [GraphQLName("paidByOrganization")] public OrganizationDetails? PaidByOrganization { get; set; }
     [GraphQLName("createdByCustomer")] public CustomerDetails? CreatedByCustomer { get; set; }
     [GraphQLName("paymentMethod")] public PaymentMethodTypeDetails? PaymentMethod { get; set; }
-    [GraphQLName("totalAmount")] public string? TotalAmount { get; set; }
+    [GraphQLName("totalAmountExcludeTax")] public decimal? TotalAmountExcludeTax { get; set; }
+
+    [GraphQLName("totalAmountExcludeTaxToDisplay")]
+    public string TotalAmountExcludeTaxToDisplay { get; set; } = string.Empty;
+
+    [GraphQLName("taxAmount")] public decimal? TaxAmount { get; set; }
+    [GraphQLName("taxAmountToDisplay")] public string TaxAmountToDisplay { get; set; } = string.Empty;
+    [GraphQLName("taxRatePercentage")] public decimal? TaxRatePercentage { get; set; }
+
+    [GraphQLName("taxRatePercentageToDisplay")]
+    public string TaxRatePercentageToDisplay { get; set; } = string.Empty;
+
+    [GraphQLName("totalAmount")] public decimal? TotalAmount { get; set; }
     [GraphQLName("totalAmountToDisplay")] public string TotalAmountToDisplay { get; set; } = string.Empty;
     [GraphQLName("currency")] public string? Currency { get; set; }
     [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;

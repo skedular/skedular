@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db0e66c204e42b0f5ba20ebc9265a843>>
+ * @generated SignedSource<<67d3cdf2e23fa8c12c2b92de68119930>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -86,7 +86,7 @@ export type organizationAdmin_organization_query$data = {
     } | null | undefined;
     readonly taxDetails: {
       readonly taxId: string;
-      readonly taxRatePercentage: string;
+      readonly taxRatePercentage: any;
     } | null | undefined;
     readonly type: {
       readonly name: string;

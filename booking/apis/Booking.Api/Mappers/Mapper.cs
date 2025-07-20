@@ -109,6 +109,9 @@ public class Mapper : IMapper
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             PaymentExpiry = paymentExpiry,
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
+            TaxAmount = src.TaxAmount,
+            TaxRatePercentage = src.TaxRatePercentage,
             TotalAmount = src.TotalAmount,
             Currency = src.Currency,
             InvoiceUrl = src.InvoiceUrl,
@@ -181,7 +184,19 @@ public class Mapper : IMapper
             InvoiceUrl = src.InvoiceUrl,
             InvoiceNumber = src.InvoiceNumber,
             InvoiceEmailList = src.InvoiceEmailList,
-            TotalAmount = src.TotalAmount?.ToRoundedPrice(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
+            TotalAmountExcludeTaxToDisplay =
+                src.TotalAmountExcludeTax is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TotalAmountExcludeTax.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+            TaxAmount = src.TaxAmount,
+            TaxAmountToDisplay =
+                src.TaxAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TaxAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+            TaxRatePercentage = src.TaxRatePercentage,
+            TaxRatePercentageToDisplay = src.TaxRatePercentage is null ? "N/A" : src.TaxRatePercentage.Value.ToRoundedDecimal(),
+            TotalAmount = src.TotalAmount,
             TotalAmountToDisplay =
                 src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
                     ? "N/A"
@@ -302,6 +317,9 @@ public class Mapper : IMapper
         dest.ProductVersions = productVersions;
         dest.StripeCheckoutSession = stripeCheckoutSession;
         dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
+        dest.TotalAmountExcludeTax = src.TotalAmountExcludeTax;
+        dest.TaxAmount = src.TaxAmount;
+        dest.TaxRatePercentage = src.TaxRatePercentage;
         dest.TotalAmount = src.TotalAmount;
         dest.Currency = src.Currency;
         dest.InvoiceUrl = src.InvoiceUrl;
@@ -351,7 +369,10 @@ public class Mapper : IMapper
             BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
             PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace,
-            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
+            TaxAmount = src.TaxAmount.ToNullDouble(),
+            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
+            TotalAmount = src.TotalAmount.ToNullDouble(),
             Currency = src.Currency.ToSafeString(),
             InvoiceUrl = src.InvoiceUrl.ToSafeString(),
             InvoiceNumber = src.InvoiceNumber.ToSafeString()

@@ -42,7 +42,7 @@ message ProductVersion {
   string id = 1;
   string name = 2;
   string description = 3;
-  string price = 4;
+  double price = 4;
   string priceUnit = 5;
   bool isPriceTaxInclusive = 6;
   string currency = 7;

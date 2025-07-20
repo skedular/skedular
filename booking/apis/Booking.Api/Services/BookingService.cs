@@ -89,6 +89,18 @@ public class BookingService(
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
         var productVersions = await GetProductVersionsAsync(booking.LineItems.Select(item => item.ProductVersionId).ToList(), cancellationToken);
 
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+        if (organizationIds.Count > 1)
+        {
+            throw new CrossOrganizationProductBookingNotAllowed();
+        }
+
+        if (!productVersions.All(item => item.IsPriceTaxInclusive is null) && !productVersions.All(item => item.IsPriceTaxInclusive!.Value) &&
+            productVersions.Any(item => item.IsPriceTaxInclusive!.Value))
+        {
+            throw new BookingProductWithMixedTaxSetupNotAllowed();
+        }
+
         booking.BookedOnMarketplace = booking.LineItems.Count != 0;
         booking.IsPaymentRequired = booking.LineItems.Count != 0;
         booking.PaymentStatus = booking.IsPaymentRequired ? PaymentStatus.Pending : PaymentStatus.Confirmed;
@@ -110,31 +122,6 @@ public class BookingService(
             if (currencies.Count > 1)
             {
                 throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
-            }
-
-            if (booking.PaymentMethod == PaymentMethod.BankTransfer)
-            {
-                booking.Currency = currencies.First();
-                booking.TotalAmount = booking.LineItems.Aggregate(0.00m, (acc, lineItem) =>
-                {
-                    var productVersion = productVersions.Single(item => item.Id == lineItem.ProductVersionId);
-                    if (!productVersion.Price.HasValue)
-                    {
-                        throw new ArgumentNullException(nameof(productVersion.Price));
-                    }
-
-                    ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.PriceUnit);
-                    var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
-                    var price = productVersion.PriceUnit.ToPriceUnit() switch
-                    {
-                        PriceUnit.PerMinute => productVersion.Price.Value * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerHour => productVersion.Price.Value / 60 * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerUse => productVersion.Price.Value * lineItem.Quantity,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-
-                    return acc + price;
-                });
             }
         }
 
@@ -718,6 +705,9 @@ public class BookingService(
         booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
         booking.InvoiceUrl = existingBooking.InvoiceUrl;
         booking.InvoiceNumber = existingBooking.InvoiceNumber;
+        booking.TotalAmountExcludeTax = existingBooking.TotalAmountExcludeTax;
+        booking.TaxAmount = existingBooking.TaxAmount;
+        booking.TaxRatePercentage = existingBooking.TaxRatePercentage;
         booking.TotalAmount = existingBooking.TotalAmount;
         booking.Currency = existingBooking.Currency;
 

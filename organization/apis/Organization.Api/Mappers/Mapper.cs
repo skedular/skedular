@@ -1142,7 +1142,7 @@ public class Mapper : IMapper
         new()
         {
             TaxId = src.TaxId,
-            TaxRatePercentage = src.TaxRatePercentage.FromRoundedDecimal(),
+            TaxRatePercentage = src.TaxRatePercentage,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1879,10 +1879,7 @@ public class Mapper : IMapper
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new GraphQL.TaxDetails.OrganizationTaxDetails
-            {
-                Id = src.Id, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage.ToRoundedDecimal()
-            };
+            : new GraphQL.TaxDetails.OrganizationTaxDetails { Id = src.Id, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage };
 
     private static OrganizationPhysicalAddressDetails? MapToGraphQl(Shared.Models.OrganizationPhysicalAddress? src) =>
         src is null
@@ -1935,7 +1932,7 @@ public class Mapper : IMapper
     private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
         src is null
             ? null
-            : new TaxDetails { Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = src.TaxRatePercentage.ToRoundedDecimal() };
+            : new TaxDetails { Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage) };
 
     private static PhysicalAddress? MapToGrpcResponse(Shared.Models.OrganizationPhysicalAddress? src) =>
         src is null

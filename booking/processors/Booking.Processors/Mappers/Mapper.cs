@@ -564,14 +564,18 @@ public class Mapper : IMapper
             string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
             string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
 
-    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
-        new()
+    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product)
+    {
+        var price = Convert.ToDecimal(src.Price);
+
+        return new ProductVersion
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            Price = src.Price.FromRoundedPrice(),
+            Price = price,
+            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             PriceUnit = src.PriceUnit.ToPriceUnit(),
-            PricePerMinute = src.Price.FromRoundedPrice(),
+            PricePerMinute = price,
             Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes == -1 ? null : src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes == -1 ? null : src.MaxDurationMinutes,
@@ -587,4 +591,5 @@ public class Mapper : IMapper
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product
         };
+    }
 }

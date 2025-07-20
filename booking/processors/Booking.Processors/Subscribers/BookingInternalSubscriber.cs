@@ -3,14 +3,15 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows;
 using Booking.Shared.Workflows.Payment;
 using Booking.Shared.Workflows.Payment.PayViaCard;
+using Enterprise.Shared;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Time;
 using Stripe;
 using Stripe.Checkout;
 using Temporalio.Client;
+using Constants = Booking.Shared.Workflows.Constants;
 using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
 
@@ -197,7 +198,18 @@ public class BookingInternalSubscriber(
             "unpaid" => PaymentStatusConstants.Rejected,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+
+        stripeCheckoutSession.Booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
         stripeCheckoutSession.Booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        stripeCheckoutSession.Booking.TaxAmount =
+            stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null && stripeCheckoutSession.Booking.TotalAmount is not null
+                ? stripeCheckoutSession.Booking.TotalAmount - stripeCheckoutSession.Booking.TotalAmountExcludeTax
+                : null;
+        stripeCheckoutSession.Booking.TaxRatePercentage =
+            stripeCheckoutSession.Booking.TaxAmount is not null && stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null
+                ? (stripeCheckoutSession.Booking.TaxAmount.Value * 100 / stripeCheckoutSession.Booking.TotalAmountExcludeTax.Value).RoundedDecimal()
+                : null;
         stripeCheckoutSession.Booking.Currency = session.Currency;
         _ = repositoryFactory.BookingRepository.Update(stripeCheckoutSession.Booking);
 
@@ -218,7 +230,17 @@ public class BookingInternalSubscriber(
         }
 
         stripeCheckoutSession.Booking.PaymentStatus = PaymentStatusConstants.Expired;
+        stripeCheckoutSession.Booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
         stripeCheckoutSession.Booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        stripeCheckoutSession.Booking.TaxAmount =
+            stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null && stripeCheckoutSession.Booking.TotalAmount is not null
+                ? stripeCheckoutSession.Booking.TotalAmount - stripeCheckoutSession.Booking.TotalAmountExcludeTax
+                : null;
+        stripeCheckoutSession.Booking.TaxRatePercentage =
+            stripeCheckoutSession.Booking.TaxAmount is not null && stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null
+                ? (stripeCheckoutSession.Booking.TaxAmount.Value * 100 / stripeCheckoutSession.Booking.TotalAmountExcludeTax.Value).RoundedDecimal()
+                : null;
+
         stripeCheckoutSession.Booking.Currency = session.Currency;
         _ = repositoryFactory.BookingRepository.Update(stripeCheckoutSession.Booking);
 

@@ -62,8 +62,6 @@ public class ProductNotFound() : Exception("Product not found");
 
 public class OrganizationStripeConnectAccountNotFound() : Exception("Organization Stripe Connect Account not found");
 
-public class NoStripeConnectAccountFoundForOrganization() : Exception("No Stripe Connect Account found for Organization");
-
 public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("Organization Stripe Connect Account refresh code not found");
 
 public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
@@ -91,3 +89,5 @@ public class BookingIsNotMarketplaceType() : Exception("Booking is not marketpla
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");
+
+public class BookingProductWithMixedTaxSetupNotAllowed() : Exception("Booking product with different tax setup not allowed");

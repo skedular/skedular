@@ -1,3 +1,3 @@
 namespace Booking.Shared.Activities;
 
-public record ReleaseBookingResourcesInput(string BookingId);
+public record CalculateBookingDifferentAmountsInput(string BookingId);

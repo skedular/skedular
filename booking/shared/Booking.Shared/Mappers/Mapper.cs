@@ -63,7 +63,10 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
-            TotalAmount = src.TotalAmount is null ? string.Empty : src.TotalAmount.Value.ToRoundedPrice(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
+            TaxAmount = src.TaxAmount.ToNullDouble(),
+            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
+            TotalAmount = src.TotalAmount.ToNullDouble(),
             Currency = src.Currency.ToSafeString(),
             InvoiceUrl = src.InvoiceUrl.ToSafeString(),
             InvoiceNumber = src.InvoiceNumber.ToSafeString()
@@ -135,6 +138,7 @@ public class Mapper : IMapper
             BillingScheme = "per_unit",
             UnitAmountDecimal = src.Price * 100,
             Product = stripeProductId,
+            TaxBehavior = src.IsPriceTaxInclusive ? "inclusive" : "exclusive",
             Metadata = new Dictionary<string, string> { { "productId", product.Id }, { "organizationId", organizationId } }
         };
 
@@ -242,6 +246,9 @@ public class Mapper : IMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             ProductVersions = MapTo(src.ProductVersions).ToList(),
             PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
+            TaxAmount = src.TaxAmount,
+            TaxRatePercentage = src.TaxRatePercentage,
             TotalAmount = src.TotalAmount,
             Currency = src.Currency,
             InvoiceUrl = src.InvoiceUrl,

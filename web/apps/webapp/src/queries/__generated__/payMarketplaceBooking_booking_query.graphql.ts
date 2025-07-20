@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f4f1a0d963fc2c829432abd2e57b557>>
+ * @generated SignedSource<<c1db73dd4a3fde01f190eac3aac18037>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,6 +74,8 @@ export type payMarketplaceBooking_booking_query$data = {
         readonly uniqueId: string;
       }>;
     }>;
+    readonly taxAmountToDisplay: string;
+    readonly totalAmountExcludeTaxToDisplay: string;
     readonly totalAmountToDisplay: string;
     readonly type: {
       readonly type: BookingType;
@@ -323,6 +325,20 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "totalAmountExcludeTaxToDisplay",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "taxAmountToDisplay",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "totalAmountToDisplay",
           "storageKey": null
         },
@@ -466,6 +482,6 @@ return {
 };
 })();
 
-(node as any).hash = "cf78a9eb6436203b2b2e53f5fbca64dd";
+(node as any).hash = "0215b04870047384b0a4d207f77ef855";
 
 export default node;

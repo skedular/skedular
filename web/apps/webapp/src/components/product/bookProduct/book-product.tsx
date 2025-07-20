@@ -124,6 +124,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           emails
         }
+        organization(id: $organizationId) {
+          taxDetails {
+            taxId
+            taxRatePercentage
+          }
+        }
         product(id: $productId) {
           id
           name
@@ -149,6 +155,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           acceptedBookingPaymentMethods {
             type
           }
+          isPriceTaxInclusive
         }
         openingHoursMinutesStep
         ...singleChoiceMarketplaceBookingType_query
@@ -415,37 +422,71 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     }
   }, [handleRefetchAvailableResources, date, timeRange, getDateRange]);
 
-  const totalPrice = useMemo(() => {
+  const { totalAmountExcludeTax, totalAmount, taxAmount } = useMemo(() => {
     const product = rootData.product;
     if (!product || quantity < 1) {
-      return 'N/A';
+      return {
+        totalAmountExcludeTax: '',
+        totalAmount: 'N/A',
+        taxAmount: '',
+      };
     }
 
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
-      return 'N/A';
+      return {
+        totalAmountExcludeTax: '',
+        totalAmount: 'N/A',
+        taxAmount: '',
+      };
     }
 
     const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
-    let price = 0.0;
+    let totalPrice = 0.0;
     switch (product.priceUnit.type) {
       case 'PER_MINUTE':
-        price = parseFloat(product.price) * quantity * totalMinutes;
+        totalPrice = parseFloat(product.price) * quantity * totalMinutes;
         break;
 
       case 'PER_HOUR':
-        price = (parseFloat(product.price) / 60) * quantity * totalMinutes;
+        totalPrice = (parseFloat(product.price) / 60) * quantity * totalMinutes;
         break;
 
       case 'PER_USE':
-        price = parseFloat(product.price) * quantity;
+        totalPrice = parseFloat(product.price) * quantity;
         break;
     }
 
-    return `${product.currencyToDisplay}${price.toFixed(2)}`;
-  }, [getDateRange, rootData.product, quantity, date, timeRange]);
+    const taxRatePercentageStr = rootData.organization?.taxDetails?.taxRatePercentage;
+    if (!taxRatePercentageStr) {
+      return {
+        totalAmountExcludeTax: '',
+        totalAmount: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
+        taxAmount: '',
+      };
+    }
+
+    const taxRatePercentage = parseFloat(taxRatePercentageStr);
+    const taxToPay = (totalPrice * taxRatePercentage) / 100;
+
+    if (product.isPriceTaxInclusive) {
+      const totalAmountExcludeTax = (totalPrice * 100) / (100 + taxRatePercentage);
+
+      return {
+        totalAmount: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
+        totalAmountExcludeTax: `${product.currencyToDisplay}${totalAmountExcludeTax.toFixed(2)}`,
+        taxAmount: `${product.currencyToDisplay}${(totalPrice - totalAmountExcludeTax).toFixed(2)}`,
+      };
+    } else {
+      return {
+        totalAmountExcludeTax: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
+        taxAmount: `${product.currencyToDisplay}${((totalPrice * taxRatePercentage) / 100).toFixed(2)}`,
+        totalAmount: `${product.currencyToDisplay}${(totalPrice + taxToPay).toFixed(2)}`,
+      };
+    }
+  }, [getDateRange, rootData.product, quantity, date, timeRange, rootData.organization?.taxDetails?.taxRatePercentage]);
 
   const handleCloseClick = () => {
     router.back();
@@ -824,8 +865,20 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       <MultipleChoicesUserEmails rootDataRelay={rootData} name="invoiceEmailList" required={requiredFields.invoiceEmailList} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Total Price">
-                      <BodyIconTypography label={totalPrice} />
+                    {taxAmount && (
+                      <>
+                        <FormFieldLabel label={`Total Exclude GST/VAT`}>
+                          <BodyIconTypography label={totalAmountExcludeTax} />
+                        </FormFieldLabel>
+
+                        <FormFieldLabel label={`Total GST/VAT ${rootData.organization?.taxDetails?.taxRatePercentage}%`}>
+                          <BodyIconTypography label={taxAmount} />
+                        </FormFieldLabel>
+                      </>
+                    )}
+
+                    <FormFieldLabel label="Total Amount">
+                      <BodyIconTypography label={totalAmount} />
                     </FormFieldLabel>
                   </StackColumn>
 

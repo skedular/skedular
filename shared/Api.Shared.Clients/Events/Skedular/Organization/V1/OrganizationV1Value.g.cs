@@ -60,7 +60,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "aXR5SWQYAiABKAkSEAoIbG9naW5VcmwYAyABKAkSIAoYYXBwRmVkZXJhdGlv",
             "bk1ldGFkYXRhVXJsGAQgASgJEhAKCGlzQWN0aXZlGAUgASgIIk4KFk9yZ2Fu",
             "aXphdGlvblRheERldGFpbHMSCgoCaWQYASABKAkSDQoFdGF4SWQYAiABKAkS",
-            "GQoRdGF4UmF0ZVBlcmNlbnRhZ2UYAyABKAkitQEKD1BoeXNpY2FsQWRkcmVz",
+            "GQoRdGF4UmF0ZVBlcmNlbnRhZ2UYAyABKAEitQEKD1BoeXNpY2FsQWRkcmVz",
             "cxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkSFAoMYWRkcmVz",
             "c0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5GAUgASgJEhAK",
             "CHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoHY291bnRyeRgI",
@@ -3589,13 +3589,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
 
     /// <summary>Field number for the "taxRatePercentage" field.</summary>
     public const int TaxRatePercentageFieldNumber = 3;
-    private string taxRatePercentage_ = "";
+    private double taxRatePercentage_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string TaxRatePercentage {
+    public double TaxRatePercentage {
       get { return taxRatePercentage_; }
       set {
-        taxRatePercentage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        taxRatePercentage_ = value;
       }
     }
 
@@ -3616,7 +3616,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (Id != other.Id) return false;
       if (TaxId != other.TaxId) return false;
-      if (TaxRatePercentage != other.TaxRatePercentage) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TaxRatePercentage, other.TaxRatePercentage)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3626,7 +3626,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (TaxId.Length != 0) hash ^= TaxId.GetHashCode();
-      if (TaxRatePercentage.Length != 0) hash ^= TaxRatePercentage.GetHashCode();
+      if (TaxRatePercentage != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TaxRatePercentage);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3653,9 +3653,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(TaxId);
       }
-      if (TaxRatePercentage.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(TaxRatePercentage);
+      if (TaxRatePercentage != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(TaxRatePercentage);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -3675,9 +3675,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(TaxId);
       }
-      if (TaxRatePercentage.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(TaxRatePercentage);
+      if (TaxRatePercentage != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(TaxRatePercentage);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -3695,8 +3695,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (TaxId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(TaxId);
       }
-      if (TaxRatePercentage.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(TaxRatePercentage);
+      if (TaxRatePercentage != 0D) {
+        size += 1 + 8;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3716,7 +3716,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.TaxId.Length != 0) {
         TaxId = other.TaxId;
       }
-      if (other.TaxRatePercentage.Length != 0) {
+      if (other.TaxRatePercentage != 0D) {
         TaxRatePercentage = other.TaxRatePercentage;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -3746,8 +3746,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             TaxId = input.ReadString();
             break;
           }
-          case 26: {
-            TaxRatePercentage = input.ReadString();
+          case 25: {
+            TaxRatePercentage = input.ReadDouble();
             break;
           }
         }
@@ -3777,8 +3777,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             TaxId = input.ReadString();
             break;
           }
-          case 26: {
-            TaxRatePercentage = input.ReadString();
+          case 25: {
+            TaxRatePercentage = input.ReadDouble();
             break;
           }
         }

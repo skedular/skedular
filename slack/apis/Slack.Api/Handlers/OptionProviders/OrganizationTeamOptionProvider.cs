@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Constants;
@@ -27,7 +28,7 @@ public class OrganizationTeamOptionProvider(
         {
             First = 100,
             After = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Before = string.Empty,
             Where = new TeamWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
         };

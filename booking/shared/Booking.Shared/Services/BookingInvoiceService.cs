@@ -1,4 +1,3 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
@@ -41,20 +40,14 @@ public class BookingInvoiceService(
             throw new InvalidOperationException();
         }
 
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-        if (organizationIds.Count > 1)
-        {
-            throw new CrossOrganizationProductBookingNotAllowed();
-        }
-
         var organizationId = productVersions.First().Product.Organization.Id;
         var bankAccountConnection = await organizationServiceClient.Admin_GetBankAccountsAsync(
             new Admin_GetBankAccountsInput
             {
                 After = string.Empty,
-                First = -1,
+                First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
-                Last = -1,
+                Last = ((int?)null).ToNullInt(),
                 Where = new BankAccountWhereInput { OrganizationId = organizationId }
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
@@ -133,40 +126,19 @@ public class BookingInvoiceService(
                 });
             });
 
-        private void ComposeContent(IContainer container)
-        {
-            var totalPrice = 0.00m;
-            foreach (var lineItem in booking.LineItems)
-            {
-                var productVersion = productVersions.First(item => item.Id == lineItem.ProductVersionId);
-                ArgumentNullException.ThrowIfNull(productVersion.Price);
-                ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.PriceUnit);
-
-                var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
-                var price = productVersion.PriceUnit.ToPriceUnit() switch
-                {
-                    PriceUnit.PerMinute => productVersion.Price.Value * lineItem.Quantity * totalMinutes,
-                    PriceUnit.PerHour => productVersion.Price.Value / 60 * lineItem.Quantity * totalMinutes,
-                    PriceUnit.PerUse => productVersion.Price.Value * lineItem.Quantity,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                totalPrice += price;
-            }
-
+        private void ComposeContent(IContainer container) =>
             container.PaddingVertical(40).Column(column =>
             {
                 column.Spacing(20);
 
                 column.Item().Element(ComposeTable);
-                column.Item().Component(new TotalExcludeGstComponent(totalPrice, organization));
-                column.Item().Component(new TotalAmountComponent(totalPrice, organization, productVersions, fullyPaid));
+                column.Item().Component(new TotalExcludeGstComponent(booking));
+                column.Item().Component(new TotalAmountComponent(booking, productVersions, fullyPaid));
                 if (booking.PaymentMethod == PaymentMethodConstants.BankTransfer)
                 {
                     column.Item().Component(new DueDateSection(dueDate, bankAccount));
                 }
             });
-        }
 
         private void ComposeTable(IContainer container) =>
             container.Table(table =>
@@ -211,18 +183,25 @@ public class BookingInvoiceService(
                     };
 
                     table.Cell().Element(CellStyle).AlignRight().Text(quantity.ToString());
-                    table.Cell().Element(CellStyle).AlignRight()
-                        .Text($"{productVersion.Price.Value.ToRoundedPrice()} {productVersion.PriceUnit.ToInvoicePriceUnitName()}");
 
-                    var price = productVersion.PriceUnit.ToPriceUnit() switch
+                    var price = organization.TaxDetails is null
+                        ? productVersion.Price.Value
+                        : productVersion.IsPriceTaxInclusive!.Value
+                            ? productVersion.Price.Value * 100 / (Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage) + 100)
+                            : productVersion.Price.Value;
+
+                    table.Cell().Element(CellStyle).AlignRight()
+                        .Text($"{price.ToRoundedPrice()} {productVersion.PriceUnit.ToInvoicePriceUnitName()}");
+
+                    var totalPrice = productVersion.PriceUnit.ToPriceUnit() switch
                     {
-                        PriceUnit.PerMinute => productVersion.Price.Value * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerHour => productVersion.Price.Value / 60 * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerUse => productVersion.Price.Value * lineItem.Quantity,
+                        PriceUnit.PerMinute => price * lineItem.Quantity * totalMinutes,
+                        PriceUnit.PerHour => price / 60 * lineItem.Quantity * totalMinutes,
+                        PriceUnit.PerUse => price * lineItem.Quantity,
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
-                    table.Cell().Element(CellStyle).AlignRight().Text(price.ToRoundedPrice());
+                    table.Cell().Element(CellStyle).AlignRight().Text(totalPrice.ToRoundedPrice());
                 }
 
                 static IContainer CellStyle(IContainer container)
@@ -231,7 +210,7 @@ public class BookingInvoiceService(
                 }
             });
 
-        private class TotalExcludeGstComponent(decimal totalPrice, Organization organization) : IComponent
+        private class TotalExcludeGstComponent(Database.Entities.Booking booking) : IComponent
         {
             public void Compose(IContainer container) =>
                 container.Table(table =>
@@ -243,21 +222,17 @@ public class BookingInvoiceService(
                     });
 
                     table.Cell().AlignRight().Text("Subtotal");
-                    table.Cell().PaddingBottom(5).AlignRight().Text(totalPrice.ToRoundedPrice());
+                    table.Cell().PaddingBottom(5).AlignRight().Text(booking.TotalAmountExcludeTax!.Value.ToRoundedPrice());
 
-                    if (organization.TaxDetails is not null)
-                    {
-                        var taxRatePercentage = organization.TaxDetails.TaxRatePercentage.FromRoundedDecimal();
-                        table.Cell().AlignRight().Text($"TOTAL GST {taxRatePercentage}%");
-                        table.Cell().PaddingBottom(5).AlignRight().Text((totalPrice * taxRatePercentage / 100).ToRoundedPrice());
-                    }
+                    table.Cell().AlignRight().Text($"TOTAL GST {booking.TaxRatePercentage!.Value.RoundedDecimal()}%");
+                    table.Cell().PaddingBottom(5).AlignRight().Text(booking.TaxAmount!.Value.ToRoundedPrice());
 
                     table.Cell().PaddingLeft(300).LineHorizontal(1);
                     table.Cell().LineHorizontal(1);
                 });
         }
 
-        private class TotalAmountComponent(decimal totalPrice, Organization organization, ICollection<ProductVersion> productVersions, bool fullyPaid)
+        private class TotalAmountComponent(Database.Entities.Booking booking, ICollection<ProductVersion> productVersions, bool fullyPaid)
             : IComponent
         {
             public void Compose(IContainer container)
@@ -273,20 +248,14 @@ public class BookingInvoiceService(
                         columns.RelativeColumn();
                     });
 
-                    var finalPrice = totalPrice;
-                    if (organization.TaxDetails is not null)
-                    {
-                        var taxRatePercentage = organization.TaxDetails.TaxRatePercentage.FromRoundedDecimal();
-                        finalPrice += totalPrice * taxRatePercentage / 100;
-                    }
-
+                    var totalAmount = booking.TotalAmount!.Value.ToRoundedPrice();
                     table.Cell().AlignRight().Text($"TOTAL {currency.ToInvoiceCurrencyName()}").Bold();
-                    table.Cell().PaddingBottom(5).AlignRight().Text(finalPrice.ToRoundedPrice());
+                    table.Cell().PaddingBottom(5).AlignRight().Text(totalAmount);
 
                     if (fullyPaid)
                     {
                         table.Cell().AlignRight().Text("Amount Paid");
-                        table.Cell().PaddingBottom(5).AlignRight().Text(finalPrice.ToRoundedPrice());
+                        table.Cell().PaddingBottom(5).AlignRight().Text(totalAmount);
                     }
                     else
                     {
@@ -302,7 +271,7 @@ public class BookingInvoiceService(
                     else
                     {
                         table.Cell().AlignRight().Text("Amount Due");
-                        table.Cell().PaddingBottom(5).AlignRight().Text(finalPrice.ToRoundedPrice());
+                        table.Cell().PaddingBottom(5).AlignRight().Text(totalAmount);
                     }
 
                     table.Cell().PaddingLeft(300).LineHorizontal(1);

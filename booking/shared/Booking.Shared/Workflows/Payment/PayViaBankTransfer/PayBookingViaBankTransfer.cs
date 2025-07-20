@@ -19,6 +19,16 @@ public class PayBookingViaBankTransfer
         try
         {
             await Workflow.ExecuteActivityAsync(
+                (BookingIntegrations activity) => activity.CalculateBookingDifferentAmountsAsync(
+                    new CalculateBookingDifferentAmountsInput(args.BookingId)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                });
+
+            await Workflow.ExecuteActivityAsync(
                 (InvoiceIntegrations activity) =>
                     activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, false, args.InvoiceEmailList)),
                 new ActivityOptions

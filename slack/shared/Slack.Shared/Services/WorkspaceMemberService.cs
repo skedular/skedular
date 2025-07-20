@@ -137,9 +137,9 @@ public class WorkspaceMemberService(
         var getPaginatedBookingsInput = new GetPaginatedBookingsInput
         {
             After = string.Empty,
-            First = -1,
+            First = ((int?)null).ToNullInt(),
             Before = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
@@ -185,7 +185,9 @@ public class WorkspaceMemberService(
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+            First = ((int?)null).ToNullInt(),
+            Last = ((int?)null).ToNullInt(),
+            Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }

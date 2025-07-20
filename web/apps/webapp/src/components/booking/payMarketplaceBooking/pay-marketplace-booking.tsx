@@ -82,6 +82,8 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
               color
             }
           }
+          totalAmountExcludeTaxToDisplay
+          taxAmountToDisplay
           totalAmountToDisplay
           paymentMethod {
             type
@@ -518,6 +520,14 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
                 />
               </FormFieldLabel>
             )}
+
+            <FormFieldLabel label="Total Exclude GST/VAT">
+              <BodyIconTypography label={`${booking.totalAmountExcludeTaxToDisplay}`} />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="Total GST/VAT">
+              <BodyIconTypography label={`${booking.taxAmountToDisplay}`} />
+            </FormFieldLabel>
 
             <FormFieldLabel label="Total Amount">
               <BodyIconTypography label={`${booking.totalAmountToDisplay}`} />

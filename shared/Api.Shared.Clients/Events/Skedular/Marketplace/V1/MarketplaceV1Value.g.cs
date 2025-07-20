@@ -38,7 +38,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
             "cm9kdWN0VmVyc2lvbiLdBAoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
-            "IAEoCRIRCglwcmljZVVuaXQYBSABKAkSGwoTaXNQcmljZVRheEluY2x1c2l2",
+            "IAEoARIRCglwcmljZVVuaXQYBSABKAkSGwoTaXNQcmljZVRheEluY2x1c2l2",
             "ZRgGIAEoCBIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5EdXJhdGlvbk1pbnV0",
             "ZXMYCCABKAUSGgoSbWF4RHVyYXRpb25NaW51dGVzGAkgASgFEiAKGGJvb2tB",
             "bGxMb2NhdGlvblJlc291cmNlcxgKIAEoCBIcChRyZWN1cnJlbmNlV2luZG93",
@@ -1432,13 +1432,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
 
     /// <summary>Field number for the "price" field.</summary>
     public const int PriceFieldNumber = 4;
-    private string price_ = "";
+    private double price_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Price {
+    public double Price {
       get { return price_; }
       set {
-        price_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        price_ = value;
       }
     }
 
@@ -1649,7 +1649,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Id != other.Id) return false;
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
-      if (Price != other.Price) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Price, other.Price)) return false;
       if (PriceUnit != other.PriceUnit) return false;
       if (IsPriceTaxInclusive != other.IsPriceTaxInclusive) return false;
       if (Currency != other.Currency) return false;
@@ -1676,7 +1676,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
-      if (Price.Length != 0) hash ^= Price.GetHashCode();
+      if (Price != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Price);
       if (PriceUnit.Length != 0) hash ^= PriceUnit.GetHashCode();
       if (IsPriceTaxInclusive != false) hash ^= IsPriceTaxInclusive.GetHashCode();
       if (Currency.Length != 0) hash ^= Currency.GetHashCode();
@@ -1723,9 +1723,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Description);
       }
-      if (Price.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Price);
+      if (Price != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(Price);
       }
       if (PriceUnit.Length != 0) {
         output.WriteRawTag(42);
@@ -1804,9 +1804,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Description);
       }
-      if (Price.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Price);
+      if (Price != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(Price);
       }
       if (PriceUnit.Length != 0) {
         output.WriteRawTag(42);
@@ -1882,8 +1882,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Description.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
       }
-      if (Price.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Price);
+      if (Price != 0D) {
+        size += 1 + 8;
       }
       if (PriceUnit.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PriceUnit);
@@ -1948,7 +1948,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.Description.Length != 0) {
         Description = other.Description;
       }
-      if (other.Price.Length != 0) {
+      if (other.Price != 0D) {
         Price = other.Price;
       }
       if (other.PriceUnit.Length != 0) {
@@ -2027,8 +2027,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             Description = input.ReadString();
             break;
           }
-          case 34: {
-            Price = input.ReadString();
+          case 33: {
+            Price = input.ReadDouble();
             break;
           }
           case 42: {
@@ -2129,8 +2129,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             Description = input.ReadString();
             break;
           }
-          case 34: {
-            Price = input.ReadString();
+          case 33: {
+            Price = input.ReadDouble();
             break;
           }
           case 42: {

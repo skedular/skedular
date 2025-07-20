@@ -663,8 +663,8 @@ public class HomePage(
     {
         var getPaginatedBookingsInput = new GetPaginatedBookingsInput
         {
-            First = -1,
-            Last = -1,
+            First = ((int?)null).ToNullInt(),
+            Last = ((int?)null).ToNullInt(),
             Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);

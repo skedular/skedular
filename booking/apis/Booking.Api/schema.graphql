@@ -24,7 +24,13 @@ type BookingDetails {
   paidByOrganization: Booking_OrganizationDetails
   createdByCustomer: Booking_CustomerDetails
   paymentMethod: PaymentMethodTypeDetails
-  totalAmount: String
+  totalAmountExcludeTax: Decimal
+  totalAmountExcludeTaxToDisplay: String!
+  taxAmount: Decimal
+  taxAmountToDisplay: String!
+  taxRatePercentage: Decimal
+  taxRatePercentageToDisplay: String!
+  totalAmount: Decimal
   totalAmountToDisplay: String!
   currency: String
   currencyToDisplay: String!
@@ -373,3 +379,6 @@ directive @specifiedBy("The specifiedBy URL points to a human-readable specifica
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal

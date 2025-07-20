@@ -2,6 +2,7 @@ using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Constants;
@@ -27,7 +28,7 @@ public class OrganizationMemberAndCustomerPairOptionProvider(
         {
             First = 100,
             After = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Before = string.Empty,
             Where = new MemberWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
         };

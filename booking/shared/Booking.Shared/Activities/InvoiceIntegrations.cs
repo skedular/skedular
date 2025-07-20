@@ -39,17 +39,6 @@ public class InvoiceIntegrations(
 
         var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        if (productVersions.Count != productVersionIds.Count)
-        {
-            throw new InvalidOperationException();
-        }
-
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-        if (organizationIds.Count > 1)
-        {
-            throw new CrossOrganizationProductBookingNotAllowed();
-        }
-
         var organizationId = productVersions.First().Product.Organization.Id;
 
         if (string.IsNullOrWhiteSpace(booking.InvoiceNumber))

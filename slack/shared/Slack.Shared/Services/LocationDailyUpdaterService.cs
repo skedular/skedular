@@ -74,7 +74,7 @@ public class LocationDailyUpdaterService(
             After = string.Empty,
             First = LocationBookingsPageSize,
             Before = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp() }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);

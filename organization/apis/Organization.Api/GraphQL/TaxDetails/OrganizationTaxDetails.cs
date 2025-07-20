@@ -8,6 +8,6 @@ namespace Organization.Api.GraphQL.TaxDetails;
 public class OrganizationTaxDetails : Node
 {
     [GraphQLName("taxId")] public string TaxId { get; set; } = string.Empty;
-    [GraphQLName("taxRatePercentage")] public string TaxRatePercentage { get; set; } = string.Empty;
+    [GraphQLName("taxRatePercentage")] public decimal TaxRatePercentage { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }

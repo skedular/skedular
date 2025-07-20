@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<980a65b04c5643948f4886b901be3a83>>
+ * @generated SignedSource<<a893476c798e7ff25b4eda2292a0097e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$data = {
       readonly id: string;
       readonly taxDetails: {
         readonly taxId: string;
-        readonly taxRatePercentage: string;
+        readonly taxRatePercentage: any;
       } | null | undefined;
     };
   };
@@ -34,7 +34,7 @@ export type organizationAdmin_removeOrganizationTaxDetailsMutation$rawResponse =
       readonly taxDetails: {
         readonly id: string;
         readonly taxId: string;
-        readonly taxRatePercentage: string;
+        readonly taxRatePercentage: any;
       } | null | undefined;
     };
   };

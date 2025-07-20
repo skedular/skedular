@@ -10,5 +10,5 @@ public class UpdateOrganizationTaxDetailsInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("taxId")] public string TaxId { get; set; } = string.Empty;
-    [GraphQLName("taxRatePercentage")] public string TaxRatePercentage { get; set; } = string.Empty;
+    [GraphQLName("taxRatePercentage")] public decimal TaxRatePercentage { get; set; }
 }

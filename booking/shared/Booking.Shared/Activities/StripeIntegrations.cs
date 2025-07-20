@@ -5,6 +5,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -45,19 +46,13 @@ public class StripeIntegrations(
             throw new InvalidOperationException();
         }
 
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-        if (organizationIds.Count > 1)
-        {
-            throw new CrossOrganizationProductBookingNotAllowed();
-        }
-
         var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
             new Admin_GetStripeConnectAccountsInput
             {
                 After = string.Empty,
-                First = -1,
+                First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
-                Last = -1,
+                Last = ((int?)null).ToNullInt(),
                 Where = new StripeConnectAccountWhereInput
                 {
                     OrganizationId = productVersions.First().Product.Organization.Id, OnboardingCompleted = true
@@ -171,7 +166,9 @@ public class StripeIntegrations(
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = booking.Id,
                 SuccessUrl = applicationConfiguration.WebAppBaseDomain.ToString(),
-                CancelUrl = applicationConfiguration.WebAppBaseDomain.ToString()
+                CancelUrl = applicationConfiguration.WebAppBaseDomain.ToString(),
+                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
+                CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
             },
             new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = args.StripeConnectAccountId },
             cancellationToken);
@@ -186,7 +183,15 @@ public class StripeIntegrations(
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
 
+        booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
         booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        booking.TaxAmount = booking.TotalAmountExcludeTax is not null && booking.TotalAmount is not null
+            ? booking.TotalAmount - booking.TotalAmountExcludeTax
+            : null;
+        booking.TaxRatePercentage = booking.TaxAmount is not null && booking.TotalAmountExcludeTax is not null
+            ? (booking.TaxAmount.Value * 100 / booking.TotalAmountExcludeTax.Value).RoundedDecimal()
+            : null;
+
         booking.Currency = session.Currency;
         booking.StripeCheckoutSession = stripeCheckoutSession;
         booking.PaymentStatus = session.PaymentStatus switch

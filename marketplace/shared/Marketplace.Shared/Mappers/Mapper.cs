@@ -25,14 +25,14 @@ public class Mapper : IMapper
             LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
         };
 
-    private ProductVersion MapTo(Models.ProductVersion src)
+    private static ProductVersion MapTo(Models.ProductVersion src)
     {
         var productVersion = new ProductVersion
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Description = src.Name.ToSafeString(),
-            Price = src.Price.ToRoundedPrice(),
+            Price = Convert.ToDouble(src.Price),
             PriceUnit = src.PriceUnit.ToPriceUnit(),
             IsPriceTaxInclusive = src.IsPriceTaxInclusive,
             Currency = src.Currency.ToCurrency(),

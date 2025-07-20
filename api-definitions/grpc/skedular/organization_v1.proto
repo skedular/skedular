@@ -542,7 +542,7 @@ message BankAccount {
 message TaxDetails {
     string id = 1;
     string taxId = 2;
-    string taxRatePercentage = 3;
+    double taxRatePercentage = 3;
 }
 
 message PhysicalAddress {

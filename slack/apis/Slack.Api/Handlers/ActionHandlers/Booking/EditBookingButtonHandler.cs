@@ -202,7 +202,9 @@ public class EditBookingButtonHandler(
                 {
                     var getPaginatedLocationsInput = new GetPaginatedLocationsInput
                     {
-                        First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+                        First = ((int?)null).ToNullInt(),
+                        Last = ((int?)null).ToNullInt(),
+                        Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
                     };
                     getPaginatedLocationsInput.OrderBy.AddRange([
                         new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }

@@ -761,9 +761,9 @@ public class ResourcesPage(
         var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
         {
             After = string.Empty,
-            First = -1,
+            First = ((int?)null).ToNullInt(),
             Before = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
@@ -785,9 +785,9 @@ public class ResourcesPage(
         var getPaginatedZonesInput = new GetPaginatedZonesInput
         {
             After = string.Empty,
-            First = -1,
+            First = ((int?)null).ToNullInt(),
             Before = string.Empty,
-            Last = -1,
+            Last = ((int?)null).ToNullInt(),
             Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 

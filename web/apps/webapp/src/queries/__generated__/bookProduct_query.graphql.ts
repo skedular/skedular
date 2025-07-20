@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b416d852848f07e857a9d00a606c313>>
+ * @generated SignedSource<<f4408b79f642f11f5dd4887a39f459e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,12 @@ export type bookProduct_query$data = {
     readonly id: string;
   };
   readonly openingHoursMinutesStep: number;
+  readonly organization: {
+    readonly taxDetails: {
+      readonly taxId: string;
+      readonly taxRatePercentage: any;
+    } | null | undefined;
+  } | null | undefined;
   readonly product: {
     readonly acceptedBookingPaymentMethods: ReadonlyArray<{
       readonly type: PaymentMethod;
@@ -31,6 +37,7 @@ export type bookProduct_query$data = {
     readonly currencyToDisplay: string;
     readonly description: string | null | undefined;
     readonly id: string;
+    readonly isPriceTaxInclusive: boolean;
     readonly latestProductVersionId: string;
     readonly maxBookingSpreadDays: number | null | undefined;
     readonly maxDurationMinutes: number | null | undefined;
@@ -83,6 +90,10 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
       "name": "productId"
     }
   ],
@@ -104,6 +115,48 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "emails",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTaxDetails",
+          "kind": "LinkedField",
+          "name": "taxDetails",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "taxId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "taxRatePercentage",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -233,6 +286,13 @@ return {
             (v2/*: any*/)
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isPriceTaxInclusive",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -265,6 +325,6 @@ return {
 };
 })();
 
-(node as any).hash = "9c36448580b37dbb94a3b722468e69a8";
+(node as any).hash = "181afaf3f26ed3d9f036212b985b7386";
 
 export default node;

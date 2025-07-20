@@ -19,6 +19,9 @@ public class Booking : ModelBaseWithDeleted
     public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
     public bool BookedOnMarketplace { get; set; }
     public PaymentMethod? PaymentMethod { get; set; }
+    public decimal? TotalAmountExcludeTax { get; set; }
+    public decimal? TaxAmount { get; set; }
+    public decimal? TaxRatePercentage { get; set; }
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
