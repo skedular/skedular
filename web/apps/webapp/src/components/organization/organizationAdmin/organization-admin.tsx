@@ -172,8 +172,8 @@ type ssoSettingsDetails = {
 
 const ssoSettingsSchema = object({
   entityId: string().required('Entity ID is required'),
-  loginUrl: string().url('Login Url must be a valid Url').required('Login Url is required'),
-  appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
+  loginUrl: string().required('Login Url is required'),
+  appFederationMetadataUrl: string().required('App Federation Metadata Url is required'),
 });
 
 type TaxDetails = {
