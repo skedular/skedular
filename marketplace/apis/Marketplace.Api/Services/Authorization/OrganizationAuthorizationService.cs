@@ -9,7 +9,8 @@ public interface IOrganizationAuthorizationService
     bool CanModifyProduct(Organization organization, Customer customer);
 }
 
-public class OrganizationAuthorizationService : IOrganizationAuthorizationService
+public class OrganizationAuthorizationService(IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+    : IOrganizationAuthorizationService
 {
     public bool CanModifyProduct(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
@@ -17,5 +18,5 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 }

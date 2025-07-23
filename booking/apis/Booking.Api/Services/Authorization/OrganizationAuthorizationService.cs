@@ -17,7 +17,10 @@ public interface IOrganizationAuthorizationService
     Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, ICachedOrganizationService cachedOrganizationService)
+public class OrganizationAuthorizationService(
+    ICachedCustomerService cachedCustomerService,
+    ICachedOrganizationService cachedOrganizationService,
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
     : IOrganizationAuthorizationService
 {
     public bool CanViewOrganizationDetails(Organization organization, Customer customer) =>
@@ -25,50 +28,50 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewBookings(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanAddBooking(Organization organization, Customer customer) =>
         organization.Type == OrganizationTypeConstants.Marketplace ||
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        (organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer));
 
     public bool CanUpdateBooking(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanDeleteBooking(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewMemberPersonalDetails(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanModifyPaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public async Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {

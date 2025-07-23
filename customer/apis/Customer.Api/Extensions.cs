@@ -12,6 +12,8 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddSingleton<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<ICustomerHelper, CustomerHelper>()
             .AddScoped<ICustomerHelperService, CustomerHelperService>()
@@ -24,7 +26,6 @@ public static class Extensions
             .AddScoped<ICustomerResourceSettingsService, CustomerResourceSettingsService>()
             .AddScoped<ICustomerFeedbackService, CustomerFeedbackService>()
             .AddScoped<ICustomerDetailsService, CustomerDetailsService>()
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<ICustomerOrganizationTagSettingsService, CustomerOrganizationTagSettingsService>()

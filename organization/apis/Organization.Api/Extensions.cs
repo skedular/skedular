@@ -12,6 +12,8 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
             .AddScoped<IAzureTenantService, AzureTenantService>()
@@ -23,7 +25,6 @@ public static class Extensions
             .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
             .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
             .AddScoped<IOrganizationAnalyticsService, OrganizationAnalyticsService>()
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IInvitationService, InvitationService>()
             .AddScoped<ITagService, TagService>()
             .AddScoped<IOrganizationSsoService, OrganizationSsoService>()

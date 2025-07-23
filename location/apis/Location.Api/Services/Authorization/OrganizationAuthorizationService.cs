@@ -16,7 +16,10 @@ public interface IOrganizationAuthorizationService
     Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(
+    ICachedCustomerService cachedCustomerService,
+    IRepositoryFactory repositoryFactory,
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
     : IOrganizationAuthorizationService
 {
     public bool CanView(Organization organization, Customer customer) =>
@@ -26,7 +29,7 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator
             or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
@@ -34,14 +37,14 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewAnalytics(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
@@ -49,7 +52,7 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {

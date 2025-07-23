@@ -12,11 +12,12 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddSingleton<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IProductService, ProductService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
+            .AddScoped<IWorkaroundService, WorkaroundService>()
+            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

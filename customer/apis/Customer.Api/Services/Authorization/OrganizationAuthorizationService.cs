@@ -10,7 +10,8 @@ public interface IOrganizationAuthorizationService
     bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer);
 }
 
-public class OrganizationAuthorizationService : IOrganizationAuthorizationService
+public class OrganizationAuthorizationService(IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+    : IOrganizationAuthorizationService
 {
     public bool CanAddOrganizationAsDefault(Organization organization, Shared.Database.Entities.Customer customer) =>
         IsOrganizationMember(organization, customer);
@@ -24,5 +25,5 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 }

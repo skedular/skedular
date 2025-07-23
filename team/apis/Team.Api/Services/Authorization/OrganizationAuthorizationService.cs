@@ -14,47 +14,48 @@ public interface IOrganizationAuthorizationService
     bool CanViewMemberPersonalDetails(Organization organization, Customer customer);
 }
 
-public class OrganizationAuthorizationService : IOrganizationAuthorizationService
+public class OrganizationAuthorizationService(IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+    : IOrganizationAuthorizationService
 {
     public bool CanView(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanInvitePeople(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanCancelPeopleExistingInvitations(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewMemberPersonalDetails(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 }

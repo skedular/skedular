@@ -14,14 +14,16 @@ public interface IOrganizationAuthorizationService
     bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanViewPaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(
+    ICachedCustomerService cachedCustomerService,
+    IRepositoryFactory repositoryFactory,
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
     : IOrganizationAuthorizationService
 {
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
@@ -29,28 +31,28 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanModify(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanCancelPeopleExistingInvitations(
         Shared.Database.Entities.Organization organization,
@@ -59,49 +61,42 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
-
-    public bool CanViewPaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        };
+        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
