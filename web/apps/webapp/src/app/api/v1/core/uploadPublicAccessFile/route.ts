@@ -15,7 +15,7 @@ const handler = async (request: NextRequest) => {
 
   const headers = {
     Authorization: authorization ? authorization : `Bearer ${session.accessToken}`,
-    'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('skedular-sso'))), 'binary').toString('base64'),
+    'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('organization-sso'))), 'binary').toString('base64'),
   };
 
   const client = new SkedularCoreV1Client({ BASE: process.env.GATEWAY_ENDPOINT, HEADERS: headers });

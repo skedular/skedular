@@ -13,7 +13,7 @@ const handler = async (request: NextRequest) => {
     'Content-Type': request.headers.get('Content-Type') ?? 'application/json',
     'X-Correlation-Id': request.headers.get('X-Correlation-Id') ?? uuid(),
     Authorization: authorization ? authorization : `Bearer ${session.accessToken}`,
-    'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('skedular-sso'))), 'binary').toString('base64'),
+    'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('organization-sso'))), 'binary').toString('base64'),
   };
 
   const response = await fetch(federatedGraphQLEndpoint, {
