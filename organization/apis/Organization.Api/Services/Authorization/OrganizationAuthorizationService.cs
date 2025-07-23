@@ -7,6 +7,7 @@ namespace Organization.Api.Services.Authorization;
 
 public interface IOrganizationAuthorizationService
 {
+    bool CanViewMinimum(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanView(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanModify(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer);
@@ -26,6 +27,13 @@ public class OrganizationAuthorizationService(
     IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
     : IOrganizationAuthorizationService
 {
+    public bool CanViewMinimum(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+        };
+
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {

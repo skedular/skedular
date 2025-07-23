@@ -328,7 +328,7 @@ public class OrganizationService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        // Ensure we do not return other customer organization by forcing CustomerId as search criteria
+        // Ensure we do not return another customer organization by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsAsync(
@@ -415,7 +415,38 @@ public class OrganizationService(
         {
             if (!organizationAuthorizationService.CanView(organization, customer!))
             {
-                throw new UnauthorizedAccessException();
+                if (!organizationAuthorizationService.CanViewMinimum(organization, customer!))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                organization.About = null;
+                organization.Website = null;
+                organization.PaymentMethodEventRaisedAt = null;
+                organization.DailyMemberCountLastRecordedAt = null;
+                organization.ContactEmail = null;
+                organization.ContactPhone = null;
+                organization.OrganizationMembers = [];
+                organization.TermsOfUse = null;
+                organization.OrganizationOfferings = [];
+                organization.DailyMemberCountRecordings = [];
+                organization.IndustrySubCategories = [];
+                organization.Locations = [];
+                organization.Teams = [];
+                organization.JoinInvitations = [];
+                organization.AzureTenants = [];
+                organization.OrganizationSsoSettings = null;
+                organization.Tags = [];
+                organization.InvolvedBookings = [];
+                organization.OrganizationStripePaymentMethods = [];
+                organization.OrganizationStripeCustomer = null;
+                organization.BillingDetails = null;
+                organization.OrganizationStripeConnectAccounts = [];
+                organization.OrganizationBankAccounts = [];
+                organization.OrganizationTaxDetails = null;
+                organization.PhysicalAddress = null;
+
+                return mapper.MapTo(organization);
             }
         }
 
