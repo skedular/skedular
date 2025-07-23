@@ -326,9 +326,11 @@ type OrganizationPhysicalAddressDetails {
 }
 
 type OrganizationSsoSettingsDetails {
+  isActive: Boolean!
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
+  id: ID!
 }
 
 type OrganizationStripeConnectAccountDetails {

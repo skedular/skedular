@@ -148,10 +148,10 @@ public class Mapper : IMapper
             : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings
             {
                 Id = src.Id,
+                IsActive = src.IsActive,
                 EntityId = src.EntityId.ToSafeString(),
                 LoginUrl = src.LoginUrl.ToSafeString(),
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString(),
-                IsActive = src.IsActive
             };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>

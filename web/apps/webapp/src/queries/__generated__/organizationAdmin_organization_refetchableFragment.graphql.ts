@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<082e15b109eeadaf36851725d42431b6>>
+ * @generated SignedSource<<764165113ceca506887adb5776d538f5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -380,6 +380,14 @@ return {
             "name": "ssoSettings",
             "plural": false,
             "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isActive",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -469,16 +477,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4b9a628f2df0c280570bc4becab4f462",
+    "cacheID": "7e8b18670cbd81ed1dafdf67f4d8e4eb",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_organization_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c6f08e86cc999d44968225298536e9b1";
+(node as any).hash = "fbbf496b4e171a8b1974469e83c6ad37";
 
 export default node;

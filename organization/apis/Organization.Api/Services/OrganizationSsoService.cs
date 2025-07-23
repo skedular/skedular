@@ -81,13 +81,16 @@ public class OrganizationSsoService(
         if (organization.OrganizationSsoSettings is null)
         {
             ssoSettings.Id = randomHelper.Generate();
-            repositoryFactory.OrganizationSsoSettingsRepository.Add(mapper.MapToEntity(ssoSettings, organization));
+            var organizationSsoSettingsEntity = mapper.MapToEntity(ssoSettings, organization);
+            organizationSsoSettingsEntity.IsActive = true;
+            repositoryFactory.OrganizationSsoSettingsRepository.Add(organizationSsoSettingsEntity);
         }
         else
         {
             ssoSettings.Id = organization.OrganizationSsoSettings.Id;
-            repositoryFactory.OrganizationSsoSettingsRepository.Update(
-                mapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization));
+            var organizationSsoSettingsEntity = mapper.MergeToEntity(ssoSettings, organization.OrganizationSsoSettings, organization);
+            organizationSsoSettingsEntity.IsActive = true;
+            repositoryFactory.OrganizationSsoSettingsRepository.Update(organizationSsoSettingsEntity);
         }
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
@@ -117,8 +120,8 @@ public class OrganizationSsoService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        _ = repositoryFactory.OrganizationSsoSettingsRepository.Remove(organization.OrganizationSsoSettings);
-        organization.OrganizationSsoSettings = null;
+        organization.OrganizationSsoSettings.IsActive = false;
+        repositoryFactory.OrganizationSsoSettingsRepository.Update(organization.OrganizationSsoSettings);
 
         organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 

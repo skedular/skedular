@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67d3cdf2e23fa8c12c2b92de68119930>>
+ * @generated SignedSource<<9d0c4b04b8ccfd0e879f657ffcf55d5b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,6 +82,8 @@ export type organizationAdmin_organization_query$data = {
     readonly ssoSettings: {
       readonly appFederationMetadataUrl: string;
       readonly entityId: string;
+      readonly id: string;
+      readonly isActive: boolean;
       readonly loginUrl: string;
     } | null | undefined;
     readonly taxDetails: {
@@ -450,6 +452,14 @@ return {
           "name": "ssoSettings",
           "plural": false,
           "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isActive",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -541,6 +551,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6f08e86cc999d44968225298536e9b1";
+(node as any).hash = "fbbf496b4e171a8b1974469e83c6ad37";
 
 export default node;

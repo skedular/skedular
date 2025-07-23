@@ -884,6 +884,8 @@ type OrganizationPhysicalAddressDetails {
 type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
   entityId: String!
+  id: ID!
+  isActive: Boolean!
   loginUrl: String!
 }
 

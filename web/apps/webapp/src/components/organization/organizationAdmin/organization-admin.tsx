@@ -300,6 +300,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             free
           }
           ssoSettings {
+            id
+            isActive
             entityId
             loginUrl
             appFederationMetadataUrl
@@ -572,6 +574,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         organization {
           id
           ssoSettings {
+            id
+            isActive
             entityId
             loginUrl
             appFederationMetadataUrl
@@ -587,6 +591,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         organization {
           id
           ssoSettings {
+            id
+            isActive
             entityId
             loginUrl
             appFederationMetadataUrl
@@ -695,7 +701,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
   const validateSsoSettings = makeValidate(ssoSettingsSchema);
   const requiredSsoSettingsFields = makeRequired(ssoSettingsSchema);
-  const [ssoSettingsEnabled, setSsoSettingsEnabled] = useState(!!rootDataOrganization.organization?.ssoSettings);
+  const [ssoSettingsEnabled, setSsoSettingsEnabled] = useState(rootDataOrganization.organization?.ssoSettings?.isActive);
   const [ssoSettingsEntityId, setSsoSettingsEntityId] = useState<string>(rootDataOrganization.organization?.ssoSettings?.entityId ?? '');
   const debounceSetSsoSettingsEntityId = useDebounceCallback(setSsoSettingsEntityId, keyboardTextFieldDebounceTimeout);
   const [ssoSettingsLoginUrl, setSsoSettingsLoginUrl] = useState<string>(rootDataOrganization.organization?.ssoSettings?.loginUrl ?? '');
@@ -1148,7 +1154,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           entityId,
           loginUrl,
           appFederationMetadataUrl,
-          isActive: false,
+          isActive: true,
         },
       },
       onCompleted: (_, errors) => {
@@ -1177,6 +1183,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           organization: {
             id: organization.id,
             ssoSettings: {
+              id: organization.ssoSettings?.id ?? '',
+              isActive: true,
               entityId,
               loginUrl,
               appFederationMetadataUrl,
@@ -1233,7 +1241,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         removeOrganizationSsoSettings: {
           organization: {
             id: organization.id,
-            ssoSettings: null,
+            ssoSettings: organization.ssoSettings
+              ? {
+                  id: organization.ssoSettings.id,
+                  isActive: false,
+                  entityId: organization.ssoSettings.entityId,
+                  loginUrl: organization.ssoSettings.loginUrl,
+                  appFederationMetadataUrl: organization.ssoSettings.appFederationMetadataUrl,
+                }
+              : null,
           },
         },
       },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e3f387ed8a870a24d19df6b42955cdc>>
+ * @generated SignedSource<<0c3d3e0613de677970289593979ed90c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,8 @@ export type organizationAdmin_updateOrganizationSsoSettingsMutation$data = {
       readonly ssoSettings: {
         readonly appFederationMetadataUrl: string;
         readonly entityId: string;
+        readonly id: string;
+        readonly isActive: boolean;
         readonly loginUrl: string;
       } | null | undefined;
     };
@@ -39,6 +41,8 @@ export type organizationAdmin_updateOrganizationSsoSettingsMutation$rawResponse 
       readonly ssoSettings: {
         readonly appFederationMetadataUrl: string;
         readonly entityId: string;
+        readonly id: string;
+        readonly isActive: boolean;
         readonly loginUrl: string;
       } | null | undefined;
     };
@@ -58,7 +62,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -81,13 +92,7 @@ v1 = [
         "name": "organization",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -96,6 +101,14 @@ v1 = [
             "name": "ssoSettings",
             "plural": false,
             "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isActive",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -133,7 +146,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -142,19 +155,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "4d57f07925e2287057b8ad7109b717a5",
+    "cacheID": "5b7165fe673176cb2cb86dbfdd44d547",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationSsoSettingsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationSsoSettingsMutation(\n  $input: UpdateOrganizationSsoSettingsInput!\n) {\n  updateOrganizationSsoSettings(input: $input) {\n    organization {\n      id\n      ssoSettings {\n        entityId\n        loginUrl\n        appFederationMetadataUrl\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationSsoSettingsMutation(\n  $input: UpdateOrganizationSsoSettingsInput!\n) {\n  updateOrganizationSsoSettings(input: $input) {\n    organization {\n      id\n      ssoSettings {\n        id\n        isActive\n        entityId\n        loginUrl\n        appFederationMetadataUrl\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b02e3bced1592481e76c82ec74c21332";
+(node as any).hash = "d8eb46d644b6df200499868688c8c58d";
 
 export default node;

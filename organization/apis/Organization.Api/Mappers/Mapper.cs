@@ -736,11 +736,11 @@ public class Mapper : IMapper
     public OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src) =>
         new()
         {
+            IsActive = src.IsActive,
             EntityId = src.EntityId,
             LoginUrl = src.LoginUrl,
             AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            IsActive = src.IsActive
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
     public Shared.Database.Entities.OrganizationSsoSettings MapToEntity(
@@ -754,6 +754,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
+        dest.IsActive = src.IsActive;
         dest.EntityId = src.EntityId;
         dest.LoginUrl = src.LoginUrl;
         dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
@@ -1783,6 +1784,7 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
+                IsActive = src.IsActive,
                 EntityId = src.EntityId,
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl
@@ -1873,7 +1875,11 @@ public class Mapper : IMapper
             ? null
             : new OrganizationSsoSettingsDetails
             {
-                EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
+                Id = src.Id,
+                IsActive = src.IsActive,
+                EntityId = src.EntityId,
+                LoginUrl = src.LoginUrl,
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
 
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
