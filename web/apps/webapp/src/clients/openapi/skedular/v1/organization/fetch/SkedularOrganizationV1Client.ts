@@ -12,6 +12,7 @@ import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentMethodService } from './services/PaymentMethodService';
 import { PlatformService } from './services/PlatformService';
+import { SamlService } from './services/SamlService';
 import { SsoService } from './services/SsoService';
 import { StripeService } from './services/StripeService';
 import { TenantService } from './services/TenantService';
@@ -26,6 +27,7 @@ export class SkedularOrganizationV1Client {
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly paymentMethod: PaymentMethodService;
     public readonly platform: PlatformService;
+    public readonly saml: SamlService;
     public readonly sso: SsoService;
     public readonly stripe: StripeService;
     public readonly tenant: TenantService;
@@ -51,6 +53,7 @@ export class SkedularOrganizationV1Client {
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);
         this.platform = new PlatformService(this.request);
+        this.saml = new SamlService(this.request);
         this.sso = new SsoService(this.request);
         this.stripe = new StripeService(this.request);
         this.tenant = new TenantService(this.request);

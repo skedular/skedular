@@ -95,14 +95,14 @@ export class OrganizationService {
     }
     /**
      * sso acs
-     * @returns any sso acs
+     * @returns any Sso Saml Acs
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public ssoAcs(): CancelablePromise<any | ProblemDetails> {
+    public ssoSamlAcs(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/v1/organization/acs',
+            url: '/v1/organization/sso/saml/acs',
         });
     }
     /**

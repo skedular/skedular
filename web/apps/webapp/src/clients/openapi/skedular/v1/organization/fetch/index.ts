@@ -23,6 +23,7 @@ export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentMethodService } from './services/PaymentMethodService';
 export { PlatformService } from './services/PlatformService';
+export { SamlService } from './services/SamlService';
 export { SsoService } from './services/SsoService';
 export { StripeService } from './services/StripeService';
 export { TenantService } from './services/TenantService';

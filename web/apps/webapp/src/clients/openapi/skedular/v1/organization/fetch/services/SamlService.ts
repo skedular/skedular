@@ -5,7 +5,7 @@
 import type { ProblemDetails } from '../models/ProblemDetails';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
-export class SsoService {
+export class SamlService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * sso acs

@@ -72,7 +72,7 @@ public class OrganizationController(
         return Redirect(redirectUri.AbsoluteUri);
     }
 
-    public override async Task<IActionResult> SsoAcs(CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> SsoSamlAcs(CancellationToken cancellationToken = default)
     {
         if (!Request.Form.ContainsKey("SAMLResponse"))
         {

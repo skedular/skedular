@@ -132,18 +132,19 @@ paths:
         "200":
           description: onboarding response
 
-  /v1/organization/acs:
+  /v1/organization/sso/saml/acs:
     post:
       tags:
         - v1
         - organization
         - sso
+        - saml
       summary: sso acs
-      operationId: SsoAcs
+      operationId: SsoSamlAcs
 
       responses:
         "200":
-          description: sso acs
+          description: Sso Saml Acs
 
         default:
           description: unexpected error

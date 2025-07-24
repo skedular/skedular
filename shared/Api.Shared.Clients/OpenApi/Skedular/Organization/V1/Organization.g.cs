@@ -73,9 +73,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
         /// <summary>
         /// sso acs
         /// </summary>
-        /// <returns>sso acs</returns>
+        /// <returns>Sso Saml Acs</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task SsoAcsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task SsoSamlAcsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -543,9 +543,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
         /// <summary>
         /// sso acs
         /// </summary>
-        /// <returns>sso acs</returns>
+        /// <returns>Sso Saml Acs</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task SsoAcsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task SsoSamlAcsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -558,8 +558,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/organization/acs"
-                    urlBuilder_.Append("v1/organization/acs");
+                    // Operation Path: "v1/organization/sso/saml/acs"
+                    urlBuilder_.Append("v1/organization/sso/saml/acs");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
