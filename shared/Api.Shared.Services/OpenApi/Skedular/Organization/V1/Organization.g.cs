@@ -55,6 +55,14 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// change organization offering
+        /// </summary>
+        /// <param name="x_API_Key">Bearer access token</param>
+        /// <returns>the status of changing organization offering</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/offering/{offeringCode}")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOffering(string organizationId, string offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// generate an admin consent Url for the given tenant
         /// </summary>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant-admin-consent-url")]

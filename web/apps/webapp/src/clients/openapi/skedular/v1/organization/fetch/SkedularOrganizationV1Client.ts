@@ -7,6 +7,7 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { AzureService } from './services/AzureService';
 import { ConnectService } from './services/ConnectService';
+import { OfferingService } from './services/OfferingService';
 import { OnboardingService } from './services/OnboardingService';
 import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
@@ -22,6 +23,7 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
     public readonly azure: AzureService;
     public readonly connect: ConnectService;
+    public readonly offering: OfferingService;
     public readonly onboarding: OnboardingService;
     public readonly organization: OrganizationService;
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
@@ -48,6 +50,7 @@ export class SkedularOrganizationV1Client {
         });
         this.azure = new AzureService(this.request);
         this.connect = new ConnectService(this.request);
+        this.offering = new OfferingService(this.request);
         this.onboarding = new OnboardingService(this.request);
         this.organization = new OrganizationService(this.request);
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);

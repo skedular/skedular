@@ -18,6 +18,7 @@ export { $Version } from './schemas/$Version';
 
 export { AzureService } from './services/AzureService';
 export { ConnectService } from './services/ConnectService';
+export { OfferingService } from './services/OfferingService';
 export { OnboardingService } from './services/OnboardingService';
 export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';

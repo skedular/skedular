@@ -51,6 +51,32 @@ export class V1Service {
         });
     }
     /**
+     * change organization offering
+     * @param organizationId
+     * @param offeringCode
+     * @param xApiKey Bearer access token
+     * @returns any the status of changing organization offering
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public changeOrganizationOffering(
+        organizationId: string,
+        offeringCode: string,
+        xApiKey: string,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/organization/{organizationId}/offering/{offeringCode}',
+            path: {
+                'organizationId': organizationId,
+                'offeringCode': offeringCode,
+            },
+            headers: {
+                'X-API-Key': xApiKey,
+            },
+        });
+    }
+    /**
      * generate an admin consent Url for the given tenant
      * @returns void
      * @throws ApiError

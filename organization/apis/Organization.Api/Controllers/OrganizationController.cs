@@ -1,4 +1,6 @@
 using System.Globalization;
+using Api.Shared.Services.Configurations.Grpc;
+using Api.Shared.Services.Offering;
 using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ namespace Organization.Api.Controllers;
 [ApiController]
 public class OrganizationController(
     IVersionService versionService,
+    OrganizationConfiguration organizationConfiguration,
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
     IAzureTenantService azureTenantService,
@@ -20,6 +23,7 @@ public class OrganizationController(
     IPaymentService paymentService,
     IOrganizationInternalPublisher organizationInternalPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    IOrganizationOfferingService organizationOfferingService,
     TimeProvider timeProvider,
     ILogger<OrganizationController> logger) : OrganizationControllerBase
 {
@@ -45,6 +49,23 @@ public class OrganizationController(
     public override async Task<IActionResult> RepublishAll(CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishAllOrganizationsAsync(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> ChangeOrganizationOffering(
+        string organizationId,
+        string offeringCode,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != organizationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await organizationOfferingService.UpdateOfferingAsync(organizationId, offeringCode.ToOfferingCode(), true, true, cancellationToken);
 
         return Ok();
     }

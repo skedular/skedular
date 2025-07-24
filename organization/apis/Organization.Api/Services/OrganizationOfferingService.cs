@@ -14,7 +14,13 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationOfferingService
 {
-    Task UpdateOfferingAsync(string organizationId, OfferingCode offeringCode, CancellationToken cancellationToken);
+    Task UpdateOfferingAsync(
+        string organizationId,
+        OfferingCode offeringCode,
+        bool ignoreAuthorizationCheck,
+        bool ignorePaymentMethod,
+        CancellationToken cancellationToken);
+
     Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken);
 }
 
@@ -28,20 +34,28 @@ public class OrganizationOfferingService(
     IMapper mapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
 {
-    public async Task UpdateOfferingAsync(string organizationId, OfferingCode offeringCode, CancellationToken cancellationToken)
+    public async Task UpdateOfferingAsync(
+        string organizationId,
+        OfferingCode offeringCode,
+        bool ignoreAuthorizationCheck,
+        bool ignorePaymentMethod,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var offering = offeringCode.GetOffering();
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            if (!organizationAuthorizationService.CanModify(organization, customer))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
-        if (offering.UnitPrice != 0 && organization.OrganizationStripePaymentMethods.Count == 0)
+        if (!ignoreAuthorizationCheck && offering.UnitPrice != 0 && organization.OrganizationStripePaymentMethods.Count == 0)
         {
             throw new PaymentMethodRequired();
         }
@@ -110,5 +124,5 @@ public class OrganizationOfferingService(
     }
 
     public async Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken) =>
-        await UpdateOfferingAsync(organizationId, OfferingCode.FreeTierV1, cancellationToken);
+        await UpdateOfferingAsync(organizationId, OfferingCode.FreeTierV1, false, false, cancellationToken);
 }
