@@ -13,4 +13,5 @@ public class StripeConfiguration
     public bool RemoveStripeConnectAccountFromStripe { get; set; }
     public bool LogStripPlatformAccountWebhookMessages { get; set; }
     public bool LogStripeConnectAccountWebhookMessages { get; set; }
+    public string OAuthClientId { get; set; } = string.Empty;
 }
