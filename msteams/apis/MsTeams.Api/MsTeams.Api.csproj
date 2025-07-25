@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.1.7">
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.1.8">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
         <ProjectReference Include="..\..\shared\MsTeams.Shared\MsTeams.Shared.csproj"/>
     </ItemGroup>
 
