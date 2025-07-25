@@ -112,6 +112,16 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// Stripe Connect Account OAuth Callback
+        /// </summary>
+        /// <param name="code">An authorization code you can use in the next call to get an access token for your user. This can only be used once and expires in 5 minutes.</param>
+        /// <param name="scope">read_write or read_only, depending what you passed on the initial GET request.</param>
+        /// <param name="state">The value of the state parameter you provided on the initial GET request.</param>
+        /// <returns>the status of processing the Stripe Connect Account event</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/oauth/callback")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> StripeConnectAccountOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string scope, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]

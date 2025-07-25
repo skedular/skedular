@@ -31,6 +31,7 @@ public class OrganizationOfferingService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
 {
@@ -117,7 +118,9 @@ public class OrganizationOfferingService(
         }
 
         organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization!)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishOrganizations(
+            [mapper.MapTo(organization!, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id))],
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

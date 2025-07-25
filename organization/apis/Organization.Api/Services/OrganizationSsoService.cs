@@ -28,6 +28,7 @@ public class OrganizationSsoService(
     ISamlAssertionConsumerService samlAssertionConsumerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
@@ -93,12 +94,15 @@ public class OrganizationSsoService(
             repositoryFactory.OrganizationSsoSettingsRepository.Update(organizationSsoSettingsEntity);
         }
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+        var mappedOrganization = mapper.MapTo(
+            organization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(organization);
+        return mappedOrganization;
     }
 
     public async Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken)
@@ -115,7 +119,7 @@ public class OrganizationSsoService(
 
         if (organization.OrganizationSsoSettings is null)
         {
-            return mapper.MapTo(organization);
+            return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -123,12 +127,15 @@ public class OrganizationSsoService(
         organization.OrganizationSsoSettings.IsActive = false;
         repositoryFactory.OrganizationSsoSettingsRepository.Update(organization.OrganizationSsoSettings);
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+        var mappedOrganization = mapper.MapTo(
+            organization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(organization);
+        return mappedOrganization;
     }
 
     public async Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken)

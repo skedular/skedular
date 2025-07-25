@@ -2,33 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
-export class ConnectService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
-    /**
-     * Stripe Connect Account Webhook
-     * @param stripeSignature Stripe webhook signature
-     * @returns any the status of processing the Stripe Connect Account event
-     * @returns ProblemDetails unexpected error
-     * @throws ApiError
-     */
-    public processStripeConnectAccountEvent(
-        stripeSignature?: string,
-    ): CancelablePromise<any | ProblemDetails> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/v1/organization/stripe/connect/account/webhook',
-            headers: {
-                'Stripe-Signature': stripeSignature,
-            },
-        });
-    }
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+export class OauthService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Stripe Connect Account OAuth Callback
      * @param code An authorization code you can use in the next call to get an access token for your user. This can only be used once and expires in 5 minutes.

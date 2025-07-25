@@ -250,4 +250,11 @@ public class OrganizationController(
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
+
+    public override async Task<IActionResult> StripeConnectAccountOAuthCallback(
+        string code,
+        string scope,
+        string state,
+        CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
 }

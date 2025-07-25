@@ -32,6 +32,7 @@ public class AzureTenantOnboardingService(
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
     LocationService.LocationServiceClient locationServiceClient,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     TimeProvider timeProvider) : IAzureTenantOnboardingService
 {
     public async Task OnboardAsync(
@@ -81,7 +82,9 @@ public class AzureTenantOnboardingService(
 
         repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishOrganizations(
+            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            repositoryFactory.UnitOfWork);
         organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
         organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(

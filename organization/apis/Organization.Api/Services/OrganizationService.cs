@@ -53,6 +53,7 @@ public class OrganizationService(
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IMapper mapper,
@@ -187,7 +188,9 @@ public class OrganizationService(
             });
 
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
-        organization = mapper.MapTo(organizationEntity);
+        organization = mapper.MapTo(
+            organizationEntity,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organizationEntity.Id));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
@@ -244,7 +247,9 @@ public class OrganizationService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-        var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
+        var deletedOrganization = mapper.MapTo(
+            repositoryFactory.OrganizationRepository.Remove(organization),
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
         organizationOutboxPublisher.PublishOrganizations([deletedOrganization], repositoryFactory.UnitOfWork);
 
@@ -375,7 +380,8 @@ public class OrganizationService(
                 .ToListAsync(cancellationToken);
 
         organization = mapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
+            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)),
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
@@ -446,11 +452,15 @@ public class OrganizationService(
                 organization.OrganizationTaxDetails = null;
                 organization.PhysicalAddress = null;
 
-                return mapper.MapTo(organization);
+                return mapper.MapTo(
+                    organization,
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
             }
         }
 
-        var mappedOrganization = mapper.MapTo(organization);
+        var mappedOrganization = mapper.MapTo(
+            organization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
         mappedOrganization.CanModify = ignoreAuthorizationCheck || organizationAuthorizationService.CanModify(organization, customer!);
         mappedOrganization.CanDelete = ignoreAuthorizationCheck || organizationAuthorizationService.CanDelete(organization, customer!);

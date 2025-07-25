@@ -767,6 +767,7 @@ type OrganizationDetails {
   physicalAddress: OrganizationPhysicalAddressDetails
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
+  stripeAuthorizeExistingConnectAccountUrl: String!
   taxDetails: OrganizationTaxDetails
   termsOfUse: OrganizationTermsOfUse
   type: OrganizationTypeDetails!

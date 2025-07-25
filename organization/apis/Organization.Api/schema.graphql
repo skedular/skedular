@@ -196,6 +196,7 @@ type OrganizationDetails {
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   contactEmail: String
   contactPhone: String
+  stripeAuthorizeExistingConnectAccountUrl: String!
   physicalAddress: OrganizationPhysicalAddressDetails
   billingDetails: OrganizationBillingDetails
   availableOfferings: [OrganizationOfferingDetails!]!

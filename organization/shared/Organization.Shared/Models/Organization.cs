@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
@@ -17,6 +18,7 @@ public class Organization : ModelBaseWithDeleted
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }

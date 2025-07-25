@@ -43,6 +43,7 @@ public class InvitationService(
     IRandomHelper randomHelper,
     INotificationOutboxPublisher notificationOutboxPublisher,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     ICachedCustomerService cachedCustomerService) : IInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
@@ -120,7 +121,7 @@ public class InvitationService(
             if (matchingCustomerByEmail is null)
             {
                 notificationOutboxPublisher.PublishInviteToJoinOrganizationNewCustomer(
-                    mapper.MapTo(organization),
+                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
                     customer,
                     email,
                     repositoryFactory.UnitOfWork);
@@ -128,7 +129,7 @@ public class InvitationService(
             else
             {
                 notificationOutboxPublisher.PublishInviteToJoinOrganizationExistingCustomer(
-                    mapper.MapTo(organization),
+                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
                     customer,
                     mapper.MapTo(matchingCustomerByEmail)!,
                     repositoryFactory.UnitOfWork);
@@ -167,7 +168,9 @@ public class InvitationService(
                 Customer = customerEntity
             });
 
-            organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
+            organizationOutboxPublisher.PublishOrganizations(
+                [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+                repositoryFactory.UnitOfWork);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;

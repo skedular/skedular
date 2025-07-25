@@ -2,27 +2,31 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { OpenAPIConfig } from './core/OpenAPI';
-import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { AzureService } from './services/AzureService';
-import { ConnectService } from './services/ConnectService';
-import { OfferingService } from './services/OfferingService';
-import { OnboardingService } from './services/OnboardingService';
-import { OrganizationService } from './services/OrganizationService';
-import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
-import { PaymentMethodService } from './services/PaymentMethodService';
-import { PlatformService } from './services/PlatformService';
-import { SamlService } from './services/SamlService';
-import { SsoService } from './services/SsoService';
-import { StripeService } from './services/StripeService';
-import { TenantService } from './services/TenantService';
-import { V1Service } from './services/V1Service';
-import { WebhookService } from './services/WebhookService';
+import type {BaseHttpRequest} from './core/BaseHttpRequest';
+import type {OpenAPIConfig} from './core/OpenAPI';
+import {FetchHttpRequest} from './core/FetchHttpRequest';
+import {AzureService} from './services/AzureService';
+import {ConnectService} from './services/ConnectService';
+import {OauthService} from './services/OauthService';
+import {OfferingService} from './services/OfferingService';
+import {OnboardingService} from './services/OnboardingService';
+import {OrganizationService} from './services/OrganizationService';
+import {OrganizationStripeConnectAccountsService} from './services/OrganizationStripeConnectAccountsService';
+import {PaymentMethodService} from './services/PaymentMethodService';
+import {PlatformService} from './services/PlatformService';
+import {SamlService} from './services/SamlService';
+import {SsoService} from './services/SsoService';
+import {StripeService} from './services/StripeService';
+import {TenantService} from './services/TenantService';
+import {V1Service} from './services/V1Service';
+import {WebhookService} from './services/WebhookService';
+
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
+
 export class SkedularOrganizationV1Client {
     public readonly azure: AzureService;
     public readonly connect: ConnectService;
+    public readonly oauth: OauthService;
     public readonly offering: OfferingService;
     public readonly onboarding: OnboardingService;
     public readonly organization: OrganizationService;
@@ -36,6 +40,7 @@ export class SkedularOrganizationV1Client {
     public readonly v1: V1Service;
     public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
+
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
             BASE: config?.BASE ?? 'https://api.skedular.app',
@@ -50,6 +55,7 @@ export class SkedularOrganizationV1Client {
         });
         this.azure = new AzureService(this.request);
         this.connect = new ConnectService(this.request);
+        this.oauth = new OauthService(this.request);
         this.offering = new OfferingService(this.request);
         this.onboarding = new OnboardingService(this.request);
         this.organization = new OrganizationService(this.request);

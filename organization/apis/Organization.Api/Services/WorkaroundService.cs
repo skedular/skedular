@@ -10,7 +10,11 @@ public interface IWorkaroundService
     Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, IOrganizationPublisher organizationPublisher)
+public class WorkaroundService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IOrganizationPublisher organizationPublisher,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService)
     : IWorkaroundService
 {
     public async Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken)
@@ -21,12 +25,16 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
             return;
         }
 
-        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync(
+            [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+            cancellationToken);
     }
 
     public async Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
-        await organizationPublisher.PublishOrganizationsAsync(organizations.Select(mapper.MapTo), cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync(
+            organizations.Select(item =>
+                mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))), cancellationToken);
     }
 }

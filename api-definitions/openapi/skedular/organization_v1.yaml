@@ -90,8 +90,6 @@ paths:
         - offering
       summary: change organization offering
       operationId: changeOrganizationOffering
-      #      security:
-      #        - ApiKeyAuth: []
       parameters:
         - in: path
           name: organizationId
@@ -263,8 +261,8 @@ paths:
         - v1
         - organization
         - stripe
-        - webhook
         - platform
+        - webhook
       summary: Stripe Platform Account Webhook
       operationId: processStripePlatformAccountEvent
       parameters:
@@ -292,8 +290,8 @@ paths:
         - v1
         - organization
         - stripe
-        - webhook
         - connect
+        - webhook
       summary: Stripe Connect Account Webhook
       operationId: processStripeConnectAccountEvent
       parameters:
@@ -303,6 +301,47 @@ paths:
             type: string
           required: false
           description: Stripe webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Stripe Connect Account event
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/stripe/connect/account/oauth/callback:
+    get:
+      tags:
+        - v1
+        - organization
+        - stripe
+        - connect
+        - oauth
+      summary: Stripe Connect Account OAuth Callback
+      operationId: StripeConnectAccountOAuthCallback
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+          description: An authorization code you can use in the next call to get an access token for your user. This can only be used once and expires in 5 minutes.
+        - in: query
+          name: scope
+          schema:
+            type: string
+          required: true
+          description: read_write or read_only, depending what you passed on the initial GET request.
+        - in: query
+          name: state
+          schema:
+            type: string
+          required: true
+          description: The value of the state parameter you provided on the initial GET request.
 
       responses:
         "200":

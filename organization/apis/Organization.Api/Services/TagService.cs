@@ -35,6 +35,7 @@ public class TagService(
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : ITagService
 {
@@ -114,7 +115,12 @@ public class TagService(
         var tagEntity = mapper.MapTo(tag, existingOrganization);
         _ = repositoryFactory.TagRepository.Add(tagEntity);
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishOrganizations(
+        [
+            mapper.MapTo(
+                existingOrganization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+        ], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -148,7 +154,9 @@ public class TagService(
 
         var deletedTag = mapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
 
-        var mappedOrganization = mapper.MapTo(existingOrganization);
+        var mappedOrganization = mapper.MapTo(
+            existingOrganization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
         mappedOrganization.Tags = mappedOrganization.Tags.Where(item => item.Id != tagId).ToList();
 
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
@@ -180,7 +188,8 @@ public class TagService(
         repositoryFactory.TagRepository.RemoveRange(tags);
         var deletedTags = tags.Select(mapper.MapTo).ToList();
 
-        var mappedOrganizations = existingOrganizations.Select(mapper.MapTo).ToList();
+        var mappedOrganizations = existingOrganizations.Select(item =>
+            mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList();
         foreach (var mappedOrganization in mappedOrganizations)
         {
             mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
@@ -212,7 +221,12 @@ public class TagService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(organization)).ToList(), totalCount);
+        return (paginatedInfo,
+            mapper.MapTo(
+                    edges,
+                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
+                .ToList(),
+            totalCount);
     }
 
     private async Task<Tag> UpdateInternalAsync(
@@ -258,7 +272,12 @@ public class TagService(
 
         tag = mapper.MapTo(repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishOrganizations(
+        [
+            mapper.MapTo(
+                existingOrganization,
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+        ], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

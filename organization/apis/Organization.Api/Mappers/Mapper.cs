@@ -58,7 +58,7 @@ namespace Organization.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
+    Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl);
     OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
 
@@ -207,7 +207,7 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src)
+    public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl)
     {
         var organization = new Shared.Models.Organization
         {
@@ -223,6 +223,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
@@ -273,7 +274,7 @@ public class Mapper : IMapper
             Email = src.Email,
             Status = src.Status.ToInvitationStatus(),
             Role = src.Role.ToOrganizationMemberRole(),
-            Organization = MapTo(src.Organization),
+            Organization = MapTo(src.Organization, Constants.EmptyUri),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
         };
@@ -403,6 +404,7 @@ public class Mapper : IMapper
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
             MemberVisibilityPolicy =
                 new OrganizationMemberVisibilityPolicyDetails
                 {
@@ -1024,7 +1026,7 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            Organization = MapTo(src.Organization),
+            Organization = MapTo(src.Organization, Constants.EmptyUri),
             OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
         };
 
@@ -1093,7 +1095,7 @@ public class Mapper : IMapper
             AccountHolderName = src.AccountHolderName,
             AccountNumber = src.AccountNumber,
             Country = src.Country,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization, Constants.EmptyUri)
         };
 
     public Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src) =>
@@ -1202,7 +1204,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization, Constants.EmptyUri)
         };
 
     public Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src) =>
@@ -1268,7 +1270,7 @@ public class Mapper : IMapper
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
-    
+
     public OrganizationJoinInvitationEdge MapTo(Edge<JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
 
     public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)

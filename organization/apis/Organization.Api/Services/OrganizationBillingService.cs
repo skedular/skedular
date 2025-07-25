@@ -21,6 +21,7 @@ public class OrganizationBillingService(
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IRandomHelper randomHelper,
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationBillingService
@@ -85,9 +86,11 @@ public class OrganizationBillingService(
         repositoryFactory.OrganizationBillingDetailsRepository.Add(organizationBillingDetailsEntity);
 
         existingOrganization.BillingDetails = organizationBillingDetailsEntity;
-        var mappedOrganization = mapper.MapTo(existingOrganization);
+        var mappedOrganization = mapper.MapTo(
+            existingOrganization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
-        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
+        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -132,7 +135,9 @@ public class OrganizationBillingService(
 
         existingOrganization.BillingDetails = existingOrganizationBillingDetails;
 
-        var mappedOrganization = mapper.MapTo(existingOrganization);
+        var mappedOrganization = mapper.MapTo(
+            existingOrganization,
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
