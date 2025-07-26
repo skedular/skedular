@@ -12,7 +12,6 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { addLocation_addLocationMutation } from '@/queries/__generated__/addLocation_addLocationMutation.graphql';
-import type { addLocation_completeLocationOnboardingMutation } from '@/queries/__generated__/addLocation_completeLocationOnboardingMutation.graphql';
 import type { addLocation_rootQuery } from '@/queries/__generated__/addLocation_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -103,14 +102,6 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     }
   `);
 
-  const [commitCompleteLocationOnboarding] = useMutation<addLocation_completeLocationOnboardingMutation>(graphql`
-    mutation addLocation_completeLocationOnboardingMutation($input: CompleteLocationOnboardingInput!) {
-      completeLocationOnboarding(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
@@ -118,21 +109,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
-    commitCompleteLocationOnboarding({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-        },
-      },
-      onCompleted: () => {
-        onCancel();
-        onReloadRequired();
-      },
-      onError: (_) => {
-        onCancel();
-        onReloadRequired();
-      },
-    });
+    onCancel();
+    onReloadRequired();
   };
 
   const handleLocationAddClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
@@ -174,35 +152,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           return;
         }
 
-        commitCompleteLocationOnboarding({
-          variables: {
-            input: {
-              clientMutationId: uuid(),
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to complete location onboarding. Error: ${joinErrors(errors)}.`} />,
-              });
-            } else {
-              toast.update(toastId, {
-                ...successNotificationOptions,
-                render: <NotificationContent content={`Location ${name} added.`} />,
-              });
-
-              onAdded(id);
-              onReloadRequired();
-            }
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to complete location onboarding. Error: ${error.message}.`} />,
-            });
-          },
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location ${name} added.`} />,
         });
+
+        onAdded(id);
+        onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {

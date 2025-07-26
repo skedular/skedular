@@ -16,8 +16,6 @@ service CustomerService {
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc Get (GetInput) returns (Customer);
-    rpc DismissPreferredLocationOnboardingSetup (DismissPreferredLocationOnboardingSetupInput) returns (Customer);
-    rpc DismissSetupPreferredZones (DismissSetupPreferredZonesInput) returns (Customer);
     rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
     rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
     rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
@@ -84,18 +82,13 @@ message Admin_AddInput {
     string photoUrl512 = 15;
     string timezone = 16;
     string locale = 17;
-    bool isOrganizationOnboardingDone = 18;
-    bool isLocationOnboardingDone = 19;
-    bool isTeamOnboardingDone = 20;
-    bool isDefaultOrganizationOnboardingDone = 21;
-    bool isPreferredLocationOnboardingDone = 22;
-    bool isPreferredZoneOnboardingDone = 23;
-    Organization defaultOrganization = 24;
-    repeated Location preferredLocations = 25;
-    repeated Resource preferredResources = 26;
-    repeated Team preferredTeams = 27;
-    repeated OrganizationTag preferredOrganizationTags = 28;
-    string phoneNumber = 29;
+    Organization defaultOrganization = 18;
+    repeated Location preferredLocations = 19;
+    repeated Resource preferredResources = 20;
+    repeated Team preferredTeams = 21;
+    repeated OrganizationTag preferredOrganizationTags = 22;
+    string phoneNumber = 23;
+    bool isOnboardingDone = 24;
 }
 
 message Customer {
@@ -116,18 +109,13 @@ message Customer {
     string photoUrl512 = 15;
     string timezone = 16;
     string locale = 17;
-    bool isOrganizationOnboardingDone = 18;
-    bool isLocationOnboardingDone = 19;
-    bool isTeamOnboardingDone = 20;
-    bool isDefaultOrganizationOnboardingDone = 21;
-    bool isPreferredLocationOnboardingDone = 22;
-    bool isPreferredZoneOnboardingDone = 23;
-    Organization defaultOrganization = 24;
-    repeated Location preferredLocations = 25;
-    repeated Resource preferredResources = 26;
-    repeated Team preferredTeams = 27;
-    repeated OrganizationTag preferredOrganizationTags = 28;
-    string phoneNumber = 29;
+    Organization defaultOrganization = 18;
+    repeated Location preferredLocations = 19;
+    repeated Resource preferredResources = 20;
+    repeated Team preferredTeams = 21;
+    repeated OrganizationTag preferredOrganizationTags = 22;
+    string phoneNumber = 23;
+    bool isOnboardingDone = 24;
 }
 
 message Identity {
@@ -180,12 +168,6 @@ message Admin_AddPreferredLocationInput {
 message Admin_AddPreferredTeamInput {
     string customerId = 1;
     string teamId = 2;
-}
-
-message DismissPreferredLocationOnboardingSetupInput {
-}
-
-message DismissSetupPreferredZonesInput {
 }
 
 enum FeedbackChannel {

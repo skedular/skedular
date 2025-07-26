@@ -54,7 +54,6 @@ public class HomePage(
     ISettingsPage settingsPage,
     IMapper mapper,
     ICommonComponents commonComponents,
-    ISettingsComponents settingsComponents,
     IBookingComponents bookingComponents,
     ICustomerService customerService,
     IBookingService bookingService,
@@ -590,8 +589,6 @@ public class HomePage(
         var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
         var asyncBlocks = await Task.WhenAll(
-            settingsComponents.GetPreferredLocationOnboardingDoneAsync(workspaceMember, commonPageContext.PageContext, cancellationToken),
-            settingsComponents.GetPreferredZoneOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             GetBookingCalendarSettingBlocksAsync(workspaceMember, myBookings, commonPageContext.PageContext, cancellationToken),
             bookingComponents.GetBookingCardsAsync(
                 workspace,

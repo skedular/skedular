@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {Version} from '../models/Version';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { Version } from '../models/Version';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class V1Service {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * return API version
      * @returns Version the version of the API
@@ -23,7 +20,6 @@ export class V1Service {
             url: '/v1/organization/version',
         });
     }
-
     /**
      * republish organization
      * @param organizationId
@@ -42,7 +38,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * republish all organizations
      * @returns any the status of organization republishing
@@ -55,7 +50,6 @@ export class V1Service {
             url: '/v1/organization/republish-all',
         });
     }
-
     /**
      * change organization offering
      * @param organizationId
@@ -82,7 +76,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * generate an admin consent Url for the given tenant
      * @returns void
@@ -97,7 +90,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * OnBoard a tenant
      * @param tenant
@@ -127,7 +119,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * sso acs
      * @returns any Sso Saml Acs
@@ -140,7 +131,6 @@ export class V1Service {
             url: '/v1/organization/sso/saml/acs',
         });
     }
-
     /**
      * add payment method
      * @param setupIntent
@@ -165,7 +155,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * return OrganizationStripeConnectAccount onboarding refresh URL
      * @param code
@@ -187,7 +176,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * Stripe Platform Account Webhook
      * @param stripeSignature Stripe webhook signature
@@ -206,7 +194,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * Stripe Connect Account Webhook
      * @param stripeSignature Stripe webhook signature
@@ -225,7 +212,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * Stripe Connect Account OAuth Callback
      * @param code An authorization code you can use in the next call to get an access token for your user. This can only be used once and expires in 5 minutes.

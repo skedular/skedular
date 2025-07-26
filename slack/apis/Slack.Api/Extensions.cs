@@ -46,7 +46,6 @@ public static class Extensions
             .AddScoped<IZoneComponents, ZoneComponents>()
             .AddScoped<IResourceComponents, ResourceComponents>()
             .AddScoped<ITeamComponents, TeamComponents>()
-            .AddScoped<ISettingsComponents, SettingsComponents>()
             .AddScoped<IHomePage, HomePage>()
             .AddScoped<IBookingsPage, BookingsPage>()
             .AddScoped<ILocationsPage, LocationsPage>()

@@ -5,12 +5,7 @@ namespace Slack.Shared.Models;
 
 public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
 {
-    public bool? IsOrganizationOnboardingDone { get; set; }
-    public bool? IsLocationOnboardingDone { get; set; }
-    public bool? IsDefaultOrganizationOnboardingDone { get; set; }
-    public bool? IsPreferredLocationOnboardingDone { get; set; }
-    public bool? IsPreferredZoneOnboardingDone { get; set; }
-
+    public bool? IsOnboardingDone { get; set; }
     public ICollection<Identity> Identities { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> PreferredLocations { get; set; } = [];

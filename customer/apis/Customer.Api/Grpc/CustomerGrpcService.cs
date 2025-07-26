@@ -20,7 +20,6 @@ public class CustomerGrpcService(
     ICustomerOrganizationSettingsService customerOrganizationSettingsService,
     ICustomerLocationSettingsService customerLocationSettingsService,
     ICustomerTeamSettingsService customerTeamSettingsService,
-    ICustomerSettingsService customerSettingsService,
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerResourceSettingsService customerResourceSettingsService,
@@ -138,24 +137,6 @@ public class CustomerGrpcService(
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await customerService.GetMeAsync(false, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> DismissPreferredLocationOnboardingSetup(
-        DismissPreferredLocationOnboardingSetupInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredLocationOnboardingAsync(context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> DismissSetupPreferredZones(
-        DismissSetupPreferredZonesInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredZoneOnboardingAsync(context.CancellationToken));
     }
 
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)

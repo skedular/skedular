@@ -13,7 +13,6 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
-import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -100,14 +99,6 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
     }
   `);
 
-  const [commitCompleteTeamOnboarding] = useMutation<addTeam_completeTeamOnboardingMutation>(graphql`
-    mutation addTeam_completeTeamOnboardingMutation($input: CompleteTeamOnboardingInput!) {
-      completeTeamOnboarding(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateTeamDetails = makeValidate(teamSchema);
@@ -115,21 +106,8 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
-    commitCompleteTeamOnboarding({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-        },
-      },
-      onCompleted: () => {
-        onCancel();
-        onReloadRequired();
-      },
-      onError: (_) => {
-        onCancel();
-        onReloadRequired();
-      },
-    });
+    onCancel();
+    onReloadRequired();
   };
 
   const handleTeamAddClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
@@ -172,35 +150,13 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           return;
         }
 
-        commitCompleteTeamOnboarding({
-          variables: {
-            input: {
-              clientMutationId: uuid(),
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to complete team onboarding. Error: ${joinErrors(errors)}.`} />,
-              });
-            } else {
-              toast.update(toastId, {
-                ...successNotificationOptions,
-                render: <NotificationContent content={`Team ${name} added.`} />,
-              });
-
-              onAdded(id);
-              onReloadRequired();
-            }
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to complete team onboarding. Error: ${error.message}.`} />,
-            });
-          },
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team ${name} added.`} />,
         });
+
+        onAdded(id);
+        onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {

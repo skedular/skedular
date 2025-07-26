@@ -2,14 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class StripeService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Stripe Platform Account Webhook
      * @param stripeSignature Stripe webhook signature
@@ -28,7 +25,6 @@ export class StripeService {
             },
         });
     }
-
     /**
      * Stripe Connect Account Webhook
      * @param stripeSignature Stripe webhook signature
@@ -47,7 +43,6 @@ export class StripeService {
             },
         });
     }
-
     /**
      * Stripe Connect Account OAuth Callback
      * @param code An authorization code you can use in the next call to get an access token for your user. This can only be used once and expires in 5 minutes.

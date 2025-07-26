@@ -292,11 +292,7 @@ public class Mapper : IMapper
             Designation = src.Designation.ToSafeString(),
             GivenName = src.GivenName.ToSafeString(),
             FamilyName = src.FamilyName.ToSafeString(),
-            IsOrganizationOnboardingDone = true,
-            IsLocationOnboardingDone = true,
-            IsDefaultOrganizationOnboardingDone = true,
-            IsPreferredLocationOnboardingDone = true,
-            IsPreferredZoneOnboardingDone = false,
+            IsOnboardingDone = true,
             DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 

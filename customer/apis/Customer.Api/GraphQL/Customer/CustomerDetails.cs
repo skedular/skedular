@@ -29,24 +29,7 @@ public class CustomerDetails : Node
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("locale")] public string? Locale { get; set; }
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
-
-    [GraphQLName("isOrganizationOnboardingDone")]
-    public bool IsOrganizationOnboardingDone { get; set; }
-
-    [GraphQLName("isLocationOnboardingDone")]
-    public bool IsLocationOnboardingDone { get; set; }
-
-    [GraphQLName("isTeamOnboardingDone")] public bool IsTeamOnboardingDone { get; set; }
-
-    [GraphQLName("isDefaultOrganizationOnboardingDone")]
-    public bool IsDefaultOrganizationOnboardingDone { get; set; }
-
-    [GraphQLName("isPreferredLocationOnboardingDone")]
-    public bool IsPreferredLocationOnboardingDone { get; set; }
-
-    [GraphQLName("isPreferredZoneOnboardingDone")]
-    public bool IsPreferredZoneOnboardingDone { get; set; }
-
+    [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
     [GraphQLName("defaultOrganization")] public OrganizationDetails? DefaultOrganization { get; set; }
     [GraphQLName("preferredLocations")] public IEnumerable<LocationDetails> PreferredLocations { get; set; } = [];
     [GraphQLName("preferredTeams")] public IEnumerable<CustomerTeamDetails> PreferredTeams { get; set; } = [];

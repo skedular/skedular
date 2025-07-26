@@ -65,12 +65,7 @@ message Identity {
 
 message Settings {
   string id = 1;
-  bool isOrganizationOnboardingDone = 2;
-  bool isLocationOnboardingDone = 3;
-  bool isTeamOnboardingDone = 4;
-  bool isDefaultOrganizationOnboardingDone = 5;
-  bool isPreferredLocationOnboardingDone = 6;
-  bool isPreferredZoneOnboardingDone = 7;
+  bool isOnboardingDone = 2;
 }
 
 message Location {

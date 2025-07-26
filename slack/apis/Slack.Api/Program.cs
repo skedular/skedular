@@ -7,7 +7,6 @@ using Enterprise.Shared.Security.Sso;
 using Slack.Api.Grpc;
 using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;
-using Slack.Api.Handlers.ActionHandlers.Commons;
 using Slack.Api.Handlers.ActionHandlers.CustomTag;
 using Slack.Api.Handlers.ActionHandlers.Feedback;
 using Slack.Api.Handlers.ActionHandlers.Location;
@@ -79,12 +78,6 @@ public class Program
                         .RegisterBlockOptionProvider<OrganizationLocationOptionProvider>(OptionLoaderKeys.OrganizationLocationKey)
                         .RegisterBlockOptionProvider<OrganizationTeamOptionProvider>(OptionLoaderKeys.OrganizationTeamKey)
                         .RegisterBlockOptionProvider<OrganizationResourceTypeOptionProvider>(OptionLoaderKeys.OrganizationResourceTypeKey);
-
-                    options
-                        .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredLocationButtonHandler>(
-                            LocationActionTypes.DismissSetupPreferredLocation)
-                        .RegisterBlockActionHandler<ButtonAction,
-                            DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
 
                     options
                         .RegisterBlockActionHandler<ButtonAction, InstantAddBookingButtonHandler>(BookingActionTypes.InstantAddBooking)

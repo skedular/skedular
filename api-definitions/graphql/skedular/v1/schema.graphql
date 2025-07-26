@@ -291,12 +291,7 @@ type CustomerDetails {
   hasAttachedPaymentMethod: Boolean!
   id: ID!
   identities: [CustomerIdentity!]!
-  isDefaultOrganizationOnboardingDone: Boolean!
-  isLocationOnboardingDone: Boolean!
-  isOrganizationOnboardingDone: Boolean!
-  isPreferredLocationOnboardingDone: Boolean!
-  isPreferredZoneOnboardingDone: Boolean!
-  isTeamOnboardingDone: Boolean!
+  isOnboardingDone: Boolean!
   locale: String
   middleName: String
   name: String
@@ -571,13 +566,8 @@ type Mutation {
   changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
   changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
-  completeDefaultOrganizationOnboarding(input: CompleteDefaultOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
+  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
-  completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completePreferredLocationOnboarding(input: CompletePreferredLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
@@ -1695,32 +1685,12 @@ input ClearCustomerDefaultOrganizationInput {
   clientMutationId: String
 }
 
-input CompleteDefaultOrganizationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompleteLocationOnboardingInput {
-  clientMutationId: String
-}
-
 input CompleteOrganizationMemberOnboardingInput {
   clientMutationId: String
   organizationId: String!
 }
 
 input CompleteOrganizationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompletePreferredLocationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompletePreferredZoneOnboardingInput {
-  clientMutationId: String
-}
-
-input CompleteTeamOnboardingInput {
   clientMutationId: String
 }
 

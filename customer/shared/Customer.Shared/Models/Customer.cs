@@ -5,12 +5,7 @@ namespace Customer.Shared.Models;
 
 public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
 {
-    public bool? IsOrganizationOnboardingDone { get; set; }
-    public bool? IsLocationOnboardingDone { get; set; }
-    public bool? IsTeamOnboardingDone { get; set; }
-    public bool? IsDefaultOrganizationOnboardingDone { get; set; }
-    public bool? IsPreferredLocationOnboardingDone { get; set; }
-    public bool? IsPreferredZoneOnboardingDone { get; set; }
+    public bool IsOnboardingDone { get; set; }
     public bool HasAttachedPaymentMethod => StripePaymentMethods.Count != 0;
 
     public ICollection<Identity> Identities { get; set; } = [];

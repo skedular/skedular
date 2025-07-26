@@ -10,62 +10,12 @@ namespace Customer.Api.GraphQL.Settings;
 public class RootMutation(IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<CustomerPayload> CompleteOrganizationOnboardingAsync(
+    public async Task<CustomerPayload> CompleteOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerSettingsService.CompleteOrganizationOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> CompleteLocationOnboardingAsync(
-        CompleteLocationOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompleteLocationOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> CompleteTeamOnboardingAsync(
-        CompleteTeamOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompleteTeamOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> CompleteDefaultOrganizationOnboardingAsync(
-        CompleteDefaultOrganizationOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompleteDefaultOrganizationOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> CompletePreferredLocationOnboardingAsync(
-        CompletePreferredLocationOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompletePreferredLocationOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> CompletePreferredZoneOnboardingAsync(
-        CompletePreferredZoneOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompletePreferredZoneOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 

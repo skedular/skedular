@@ -189,11 +189,7 @@ public class Mapper : IMapper
             PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            IsOrganizationOnboardingDone = true,
-            IsLocationOnboardingDone = true,
-            IsDefaultOrganizationOnboardingDone = true,
-            IsPreferredLocationOnboardingDone = true,
-            IsPreferredZoneOnboardingDone = false,
+            IsOnboardingDone = true,
             DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 

@@ -49,12 +49,7 @@ type CustomerDetails {
   timezone: String
   locale: String
   phoneNumber: String
-  isOrganizationOnboardingDone: Boolean!
-  isLocationOnboardingDone: Boolean!
-  isTeamOnboardingDone: Boolean!
-  isDefaultOrganizationOnboardingDone: Boolean!
-  isPreferredLocationOnboardingDone: Boolean!
-  isPreferredZoneOnboardingDone: Boolean!
+  isOnboardingDone: Boolean!
   defaultOrganization: Customer_OrganizationDetails
   preferredLocations: [Customer_LocationDetails!]!
   preferredTeams: [CustomerTeamDetails!]!
@@ -131,12 +126,7 @@ type Mutation {
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
   addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
-  completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completeDefaultOrganizationOnboarding(input: CompleteDefaultOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completePreferredLocationOnboarding(input: CompletePreferredLocationOnboardingInput!): CustomerPayload! @cost(weight: "10")
-  completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload! @cost(weight: "10")
+  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredTeam(input: AddCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
@@ -223,27 +213,7 @@ input ClearCustomerDefaultOrganizationInput {
   clientMutationId: String
 }
 
-input CompleteDefaultOrganizationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompleteLocationOnboardingInput {
-  clientMutationId: String
-}
-
 input CompleteOrganizationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompletePreferredLocationOnboardingInput {
-  clientMutationId: String
-}
-
-input CompletePreferredZoneOnboardingInput {
-  clientMutationId: String
-}
-
-input CompleteTeamOnboardingInput {
   clientMutationId: String
 }
 

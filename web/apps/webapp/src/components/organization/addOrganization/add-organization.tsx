@@ -17,7 +17,6 @@ import type {
   OrganizationMemberVisibilityPolicy,
   OrganizationType,
 } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
-import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -95,14 +94,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
     }
   `);
 
-  const [commitCompleteOrganizationOnboarding] = useMutation<addOrganization_completeOrganizationOnboardingMutation>(graphql`
-    mutation addOrganization_completeOrganizationOnboardingMutation($input: CompleteOrganizationOnboardingInput!) {
-      completeOrganizationOnboarding(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateOrganizationDetails = makeValidate(organizationSchema);
@@ -137,35 +128,13 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           return;
         }
 
-        commitCompleteOrganizationOnboarding({
-          variables: {
-            input: {
-              clientMutationId: uuid(),
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${joinErrors(errors)}.`} />,
-              });
-            } else {
-              toast.update(toastId, {
-                ...successNotificationOptions,
-                render: <NotificationContent content={`Organization ${name} added.`} />,
-              });
-
-              onAdded(id);
-              onReloadRequired();
-            }
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${error.message}.`} />,
-            });
-          },
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} added.`} />,
         });
+
+        onAdded(id);
+        onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {

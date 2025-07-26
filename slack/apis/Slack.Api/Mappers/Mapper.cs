@@ -125,11 +125,7 @@ public class Mapper : IMapper
             PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            IsOrganizationOnboardingDone = false,
-            IsLocationOnboardingDone = false,
-            IsDefaultOrganizationOnboardingDone = false,
-            IsPreferredLocationOnboardingDone = false,
-            IsPreferredZoneOnboardingDone = false,
+            IsOnboardingDone = true,
             DefaultOrganization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
@@ -166,11 +162,7 @@ public class Mapper : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone
+            IsOnboardingDone = src.IsOnboardingDone
         };
 
         customer.Identities = src.Identities.Select(item => new Shared.Models.Identity

@@ -93,12 +93,7 @@ public class Mapper : IMapper
                         EmailVerified = context.GetEmailVerified()
                     }
                 },
-            IsOrganizationOnboardingDone = false,
-            IsLocationOnboardingDone = false,
-            IsTeamOnboardingDone = false,
-            IsDefaultOrganizationOnboardingDone = false,
-            IsPreferredLocationOnboardingDone = false,
-            IsPreferredZoneOnboardingDone = false,
+            IsOnboardingDone = false,
             DefaultOrganization = null,
             PreferredLocations = [],
             PreferredTeams = [],
@@ -134,12 +129,7 @@ public class Mapper : IMapper
             Emails = src.Identities.ToEmails(),
             Identities = MapTo(src.Identities),
             BillingDetails = MapToGraphQl(src.BillingDetails),
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
+            IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization = src.DefaultOrganization is null
                 ? null
                 : new OrganizationDetails
@@ -207,12 +197,7 @@ public class Mapper : IMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             BillingDetails = MapTo(src.BillingDetails),
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
+            IsOnboardingDone = src.IsOnboardingDone,
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
@@ -280,12 +265,7 @@ public class Mapper : IMapper
             Identities = src.Identities
                 .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList(),
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
+            IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
             PreferredLocations = src.PreferredLocations.Select(item =>
@@ -323,12 +303,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
+            IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
@@ -511,12 +486,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone,
-            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
+            IsOnboardingDone = src.IsOnboardingDone,
             Identities = identities,
             DefaultOrganization = defaultOrganization,
             PreferredLocations = preferredLocations,

@@ -43,15 +43,7 @@ public class Mapper : IMapper
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
             BillingDetails = MapTo(src.BillingDetails),
-            Settings = new Settings
-            {
-                IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-                IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
-                IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
-                IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-                IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
-                IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false
-            },
+            Settings = new Settings { IsOnboardingDone = src.IsOnboardingDone },
             PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
         };
 

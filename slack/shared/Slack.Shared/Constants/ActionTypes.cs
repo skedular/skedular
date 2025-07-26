@@ -20,7 +20,6 @@ public static class LocationActionTypes
 {
     public const string Locations = "Locations";
     public const string AddLocation = "AddLocation";
-    public const string DismissSetupPreferredLocation = "DismissSetupPreferredLocation";
     public const string AddAsPreferredLocation = "AddAsPreferredLocation";
     public const string RemovePreferredLocation = "RemovePreferredLocation";
     public const string EditLocation = "EditLocation";
@@ -49,7 +48,6 @@ public static class TeamActionTypes
 public static class ZoneActionTypes
 {
     public const string Zones = "Zones";
-    public const string DismissSetupPreferredZones = "DismissSetupPreferredZones";
     public const string AddZone = "AddZone";
     public const string SetPreferredZone = "SetPreferredZone";
     public const string RemovePreferredZone = "RemovePreferredZone";

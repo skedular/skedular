@@ -10,12 +10,7 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
 {
-    public bool? IsOrganizationOnboardingDone { get; set; }
-    public bool? IsLocationOnboardingDone { get; set; }
-    public bool? IsTeamOnboardingDone { get; set; }
-    public bool? IsDefaultOrganizationOnboardingDone { get; set; }
-    public bool? IsPreferredLocationOnboardingDone { get; set; }
-    public bool? IsPreferredZoneOnboardingDone { get; set; }
+    public bool IsOnboardingDone { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
@@ -54,6 +49,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
+        builder.Property(item => item.IsOnboardingDone).HasDefaultValue(true);
+
         builder.Property(item => item.Designation).HasMaxLength(Constants.MaxPersonDesignationLength);
         builder.Property(item => item.Title).HasMaxLength(Constants.MaxPersonTitleLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);
@@ -78,6 +75,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);
 
+        builder.HasIndex(item => item.IsOnboardingDone);
         builder.HasIndex(item => item.Designation);
         builder.HasIndex(item => item.Title);
         builder.HasIndex(item => item.Name);

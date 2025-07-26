@@ -10,7 +10,6 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { addFloorPlan_addFloorPlanMutation } from '@/queries/__generated__/addFloorPlan_addFloorPlanMutation.graphql';
-import type { addFloorPlan_completeLocationOnboardingMutation } from '@/queries/__generated__/addFloorPlan_completeLocationOnboardingMutation.graphql';
 import type { addFloorPlan_resources_query$key } from '@/queries/__generated__/addFloorPlan_resources_query.graphql';
 import type { addFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/addFloorPlan_resources_refetchableFragment.graphql';
 import type { addFloorPlan_rootQuery } from '@/queries/__generated__/addFloorPlan_rootQuery.graphql';
@@ -135,14 +134,6 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
     }
   `);
 
-  const [commitCompleteLocationOnboarding] = useMutation<addFloorPlan_completeLocationOnboardingMutation>(graphql`
-    mutation addFloorPlan_completeLocationOnboardingMutation($input: CompleteLocationOnboardingInput!) {
-      completeLocationOnboarding(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateFloorPlanDetails = makeValidate(floorPlanSchema);
@@ -154,21 +145,8 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const handleCloseClick = () => {
-    commitCompleteLocationOnboarding({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-        },
-      },
-      onCompleted: () => {
-        onCancel();
-        onReloadRequired();
-      },
-      onError: (_) => {
-        onCancel();
-        onReloadRequired();
-      },
-    });
+    onCancel();
+    onReloadRequired();
   };
 
   const handleFloorPlanAddClick = ({ name }: FloorPlanDetails) => {
@@ -223,35 +201,13 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
           return;
         }
 
-        commitCompleteLocationOnboarding({
-          variables: {
-            input: {
-              clientMutationId: uuid(),
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to complete location onboarding. Error: ${joinErrors(errors)}.`} />,
-              });
-            } else {
-              toast.update(toastId, {
-                ...successNotificationOptions,
-                render: <NotificationContent content={`Location ${name} added.`} />,
-              });
-
-              onAdded(id);
-              onReloadRequired();
-            }
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to complete location onboarding. Error: ${error.message}.`} />,
-            });
-          },
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location ${name} added.`} />,
         });
+
+        onAdded(id);
+        onReloadRequired();
       },
       onError: (error) => {
         toast.update(toastId, {
