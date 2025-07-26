@@ -5,6 +5,11 @@ export const getNotificationsBaseLink = (integratedPlatrform: string | undefined
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/organizations/${id}` : `/organizations/${id}`;
 export const getOrganizationAddLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations/add` : '/organizations/add');
+export const getOrganizationAddPrivateLink = (integratedPlatrform: string | undefined) =>
+  integratedPlatrform ? `${integratedPlatrform}/organizations/add-private` : '/organizations/add-private';
+export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) =>
+  integratedPlatrform ? `${integratedPlatrform}/organizations/add-marketplace` : '/organizations/add-marketplace';
+
 export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
   let params = '';
 
