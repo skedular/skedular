@@ -255,6 +255,10 @@ public class OrganizationController(
         string code,
         string scope,
         string state,
-        CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
+        CancellationToken cancellationToken = default)
+    {
+        var redirectUrl = await organizationStripeConnectAccountService.ConnectExistingAccountAsync(code, scope, state, cancellationToken);
+
+        return Redirect(redirectUrl.ToString());
+    }
 }

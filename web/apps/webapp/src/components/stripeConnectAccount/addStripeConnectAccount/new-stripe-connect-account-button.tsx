@@ -19,9 +19,11 @@ const NewStripeConnectAccountButton = ({ organizationId, fullWidth, label, hideI
 
   return (
     <Button href={getOrganizationStripeConnectAccountAddLink(integratedPlatrform, organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
-      {size === 'small' && <SmallIconTypography label={label ?? 'Add Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
-      {size === 'medium' && <BodyIconTypography label={label ?? 'Add Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
-      {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
+      {size === 'small' && <SmallIconTypography label={label ?? 'Add New Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+      {size === 'medium' && <BodyIconTypography label={label ?? 'Add New Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+      {(size === 'large' || !size) && (
+        <LeadIconTypography label={label ?? 'Add New Stripe Connect Account'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+      )}
     </Button>
   );
 };

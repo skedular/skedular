@@ -44,6 +44,7 @@ public interface IOrganizationStripeConnectAccountService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
+    Task<Uri> ConnectExistingAccountAsync(string code, string scope, string state, CancellationToken cancellationToken);
     Uri GetStripeAuthorizeExistingConnectAccountUrl(string organizationId);
 }
 
@@ -55,13 +56,13 @@ public class OrganizationStripeConnectAccountService(
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     ICreatable<Account, AccountCreateOptions> accountCreateService,
-    IDeletable<Account, AccountDeleteOptions> accountDeleteService,
     IRetrievable<Account, AccountGetOptions> accountGetOption,
     ICachedCustomerService cachedCustomerService,
     IMapper mapper,
     IRandomHelper randomHelper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    IOrganizationStripeConnectAccountLinkService organizationStripeConnectAccountLinkService) : IOrganizationStripeConnectAccountService
+    IOrganizationStripeConnectAccountLinkService organizationStripeConnectAccountLinkService,
+    ICreatable<OAuthToken, OAuthTokenCreateOptions> oauthTokenCreateService) : IOrganizationStripeConnectAccountService
 {
     private readonly Lazy<string> _stripeConnectAccountOAuthCallbackBaseUrl = new(() =>
     {
@@ -165,15 +166,6 @@ public class OrganizationStripeConnectAccountService(
             throw new UnauthorizedAccessException();
         }
 
-        if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
-        {
-            await accountDeleteService.DeleteAsync(
-                account.StripeAccountId,
-                new AccountDeleteOptions(),
-                new RequestOptions { IdempotencyKey = account.Id },
-                cancellationToken);
-        }
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
@@ -204,16 +196,6 @@ public class OrganizationStripeConnectAccountService(
                 !organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer)))
         {
             throw new UnauthorizedAccessException();
-        }
-
-        if (stripeConfiguration.RemoveStripeConnectAccountFromStripe)
-        {
-            await Task.WhenAll(
-                accounts.Select(item => accountDeleteService.DeleteAsync(
-                    item.StripeAccountId,
-                    new AccountDeleteOptions(),
-                    new RequestOptions { IdempotencyKey = item.Id },
-                    cancellationToken)));
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -345,6 +327,65 @@ public class OrganizationStripeConnectAccountService(
         return (paginatedInfo, mappedAccounts, totalCount);
     }
 
+    public async Task<Uri> ConnectExistingAccountAsync(string code, string scope, string state, CancellationToken cancellationToken)
+    {
+        if (scope != "read_write")
+        {
+            throw new InvalidOperationException($"scope {scope} is not acceptable, must be read_write");
+        }
+
+        var organizationId = state;
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        var oauthToken = await oauthTokenCreateService.CreateAsync(
+            new OAuthTokenCreateOptions
+            {
+                GrantType = "authorization_code", Code = code, Scope = scope, ClientSecret = stripeConfiguration.SecretKey
+            },
+            new RequestOptions(),
+            cancellationToken);
+        ArgumentNullException.ThrowIfNull(oauthToken);
+
+        var stripeAccountId = oauthToken.StripeUserId;
+
+        var stripeConnectAccount = await accountGetOption.GetAsync(
+            stripeAccountId,
+            new AccountGetOptions(),
+            new RequestOptions { StripeAccount = stripeAccountId },
+            cancellationToken);
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var accountEntity = organization.OrganizationStripeConnectAccounts.FirstOrDefault(item => item.StripeAccountId == stripeAccountId);
+        if (accountEntity is null)
+        {
+            accountEntity = mapper.MergeTo(stripeConnectAccount,
+                new Shared.Database.Entities.OrganizationStripeConnectAccount
+                {
+                    Id = randomHelper.Generate(),
+                    IsDefault = organization.OrganizationStripeConnectAccounts.All(item => !item.IsDefault),
+                    Name = "no name set yet!!!",
+                    Organization = organization,
+                    OnboardingUrl = string.Empty
+                });
+            _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
+        }
+        else
+        {
+            accountEntity = mapper.MergeTo(stripeConnectAccount, accountEntity);
+            _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(accountEntity);
+        }
+
+        organizationOutboxPublisher.PublishOrganizations(
+            [mapper.MapTo(organization, GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return new Uri(Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organizationId, "setup-marketplace"));
+    }
+
     public Uri GetStripeAuthorizeExistingConnectAccountUrl(string organizationId) =>
         new(
             Url.Combine("https://connect.stripe.com", "oauth", "authorize")
@@ -354,7 +395,7 @@ public class OrganizationStripeConnectAccountService(
                 .SetQueryParam("state", organizationId)
                 .SetQueryParam(
                     "redirect_uri",
-                    Url.Encode(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), _stripeConnectAccountOAuthCallbackBaseUrl.Value))));
+                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), _stripeConnectAccountOAuthCallbackBaseUrl.Value)));
 
     private async Task<OrganizationStripeConnectAccount> UpdateInternalAsync(
         string nickname,

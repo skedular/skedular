@@ -279,7 +279,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
@@ -382,7 +381,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test:
@@ -483,7 +481,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${STAGING_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: true
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test:
@@ -652,7 +649,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
@@ -755,7 +751,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test:
@@ -856,7 +851,6 @@ services:
       Stripe__OrganizationConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_ORGANIZATION_CONNECT_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingPlatformAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_PLATFORM_ACCOUNT_WEBHOOK_KEY}
       Stripe__BookingConnectAccountWebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_BOOKING_CONNECT_ACCOUNT_WEBHOOK_KEY}
-      Stripe__RemoveStripeConnectAccountFromStripe: false
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test:

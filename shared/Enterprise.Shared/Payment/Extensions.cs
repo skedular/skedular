@@ -50,6 +50,7 @@ public static class Extensions
             .AddSingleton<IListable<Session, SessionListOptions>, SessionService>()
             .AddSingleton<IRetrievable<Session, SessionGetOptions>, SessionService>()
             .AddSingleton<IUpdatable<Session, SessionUpdateOptions>, SessionService>()
+            .AddSingleton<ICreatable<OAuthToken, OAuthTokenCreateOptions>, OAuthTokenService>()
             .AddSingleton<PaymentMethodService>();
     }
 }
