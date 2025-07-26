@@ -1,7 +1,7 @@
 using Customer.Shared;
+using Customer.Shared.Activities;
 using Customer.Shared.Database;
-using Customer.Shared.Workflows;
-using Customer.Shared.Workflows.Activities;
+using Customer.Shared.Workflows.AddPayment;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;

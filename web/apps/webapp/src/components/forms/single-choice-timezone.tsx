@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography, HelperText } from '@/components/commons';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
@@ -6,6 +6,7 @@ import { memo, useMemo } from 'react';
 type Props = {
   name: string;
   required?: boolean;
+  helperText?: string;
 };
 
 interface TimezoneDetails {
@@ -13,7 +14,7 @@ interface TimezoneDetails {
   label: string;
 }
 
-const SingleChoinceTimezone = ({ name, required }: Props) => {
+const SingleChoinceTimezone = ({ name, required, helperText }: Props) => {
   const timezones = useMemo<TimezoneDetails[]>(
     () =>
       Intl.supportedValuesOf('timeZone').map((item) => ({
@@ -46,6 +47,7 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
+      helperText={<HelperText text={helperText} />}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { BodyIconTypography } from '@/components/commons';
+import { BodyIconTypography, HelperText } from '@/components/commons';
 import type { singleChoiceOrganizationMemberVisibilityPolicyquery$key } from '@/queries/__generated__/singleChoiceOrganizationMemberVisibilityPolicyquery.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
@@ -56,6 +56,7 @@ const SingleChoiceOrganizationMemberVisibilityPolicy = ({ rootDataRelay, name, r
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
+      helperText={<HelperText text="Choose whether all members can see each other (Full Access) or only admins and owners can view member names (Limited Access)." />}
     />
   );
 };

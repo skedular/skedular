@@ -101,7 +101,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var (_, customer) = await cachedCustomerService.GetNullableAsync(cancellationToken);
+        var (_, customer) = await GetNullableAsync(cancellationToken);
         if (customer is not null)
         {
             return mapper.MapTo(customer);
@@ -312,4 +312,26 @@ public class CustomerService(
 
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
+
+    private async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
+        {
+            return (null, null);
+        }
+
+        try
+        {
+            var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
+                           throw new CustomerNotFound();
+
+            return (mapper.MapTo(customer), customer);
+        }
+        catch (CustomerNotFound)
+        {
+            return (null, null);
+        }
+    }
+
 }

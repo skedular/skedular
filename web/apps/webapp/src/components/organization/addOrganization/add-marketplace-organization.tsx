@@ -1,0 +1,248 @@
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackRow } from '@/components/commons';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { OrganizationTermsOfUse, SingleChoiceOrganizationMemberVisibilityPolicy } from '@/components/organization';
+import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
+import { PaletteModeContext } from '@/libs/providers';
+import { defaultButtonStyle } from '@/libs/theme';
+import { joinErrors } from '@/libs/utils';
+import type {
+  addMarketplaceOrganization_addOrganizationMutation,
+  OrganizationMemberVisibilityPolicy,
+} from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
+import type { addMarketplaceOrganization_query$key } from '@/queries/__generated__/addMarketplaceOrganization_query.graphql';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ForumIcon from '@mui/icons-material/Forum';
+import PublicIcon from '@mui/icons-material/Public';
+import TodayIcon from '@mui/icons-material/Today';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { memo, useContext } from 'react';
+import { Form } from 'react-final-form';
+import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
+import { boolean, object, string } from 'yup';
+
+type Props = {
+  rootDataRelay: addMarketplaceOrganization_query$key;
+  onReloadRequired: () => void;
+  onAdded: (id: string) => void;
+  onCancel?: () => void;
+  cancelLabel?: string;
+  createLabel?: string;
+};
+
+type OrganizationDetails = {
+  name: string;
+  about: string | null;
+  website: string | null;
+  memberVisibilityPolicy: string;
+  agreedToTermsOfUse: boolean;
+};
+
+const organizationSchema = object({
+  name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
+  about: string().nullable(),
+  website: string().nullable(),
+  memberVisibilityPolicy: string().required('Member visibility policy is required'),
+  agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
+});
+
+const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
+  const rootData = useFragment<addMarketplaceOrganization_query$key>(
+    graphql`
+      fragment addMarketplaceOrganization_query on Query {
+        activeOrganizationTermsOfUse {
+          id
+        }
+        ...organizationTermsOfUse_query
+        ...singleChoiceOrganizationMemberVisibilityPolicyquery
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [commitAddOrganization] = useMutation<addMarketplaceOrganization_addOrganizationMutation>(graphql`
+    mutation addMarketplaceOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
+      addOrganization(input: $input) {
+        organization {
+          id
+          name
+          about
+          website
+          memberVisibilityPolicy {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const validateOrganizationDetails = makeValidate(organizationSchema);
+  const requiredFields = makeRequired(organizationSchema);
+
+  const handleOrganizationAddClick = ({ name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
+    const id = uuid();
+    const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
+
+    commitAddOrganization({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id,
+          name,
+          about,
+          website,
+          type: 'MARKETPLACE',
+          agreedToTermsOfUse: true,
+          termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
+          industrySubCategoryIds: [],
+          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} added.`} />,
+        });
+
+        onAdded(id);
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        addOrganization: {
+          organization: {
+            id,
+            name,
+            about,
+            website,
+            memberVisibilityPolicy: {
+              type: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
+              name: '',
+            },
+          },
+        },
+      },
+    });
+  };
+
+  return (
+    <TwoSideVerticalWizard>
+      <LeftSidePanel
+        title="Set up your co-working space"
+        description="List your space, manage availability, and connect with individuals or teams looking for flexible work environments. We'll guide you through the basics to get started."
+      >
+        <FeatureBox
+          icon={<ViewQuiltIcon sx={{ color: '#4CAF50', fontSize: 40 }} />}
+          title="Space Customization"
+          subtitle="Easily set up rooms, desks, and shared areas the way your space is structured."
+        />
+        <FeatureBox
+          icon={<TodayIcon sx={{ color: '#2196F3', fontSize: 40 }} />}
+          title="Real-Time Availability"
+          subtitle="Keep availability up to date and let users book in real time."
+        />
+        <FeatureBox
+          icon={<PublicIcon sx={{ color: '#FF9800', fontSize: 40 }} />}
+          title="Marketplace Visibility"
+          subtitle="Showcase your space to individuals and teams looking for flexible workspaces."
+        />
+        <FeatureBox icon={<ForumIcon sx={{ color: '#9C27B0', fontSize: 40 }} />} title="User Communication" subtitle="Message and manage members directly through the platform." />
+        <FeatureBox
+          icon={<BarChartIcon sx={{ color: '#3F51B5', fontSize: 40 }} />}
+          title="Booking Insights"
+          subtitle="Track utilization, revenue, and occupancy trends with smart analytics."
+        />
+        <FeatureBox
+          icon={<AdminPanelSettingsIcon sx={{ color: '#F44336', fontSize: 40 }} />}
+          title="Admin Controls"
+          subtitle="Manage access, edit listings, and approve bookings with ease."
+        />
+      </LeftSidePanel>
+
+      <RightSidePanel
+        title="Let's Get Your Space Listed"
+        description="We'll start with a few details about your organization. This helps represent your co-working space and makes onboarding seamless later on."
+      >
+        <Form
+          onSubmit={handleOrganizationAddClick}
+          initialValues={{
+            name: '',
+            about: null,
+            website: null,
+            memberVisibilityPolicy: 'LIMITED_ACCESS',
+          }}
+          validate={validateOrganizationDetails}
+          render={({ handleSubmit }) => (
+            <FormStackColumn onSubmit={handleSubmit}>
+              <Divider />
+
+              <FormFieldLabel label="Name" required={requiredFields.name}>
+                <TextField
+                  name="name"
+                  required={requiredFields.name}
+                  helperText={<HelperText text="Enter the official name of your co-working space as you want it to appear to members and visitors." />}
+                />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="About" required={requiredFields.about}>
+                <TextField
+                  name="about"
+                  required={requiredFields.about}
+                  multiline
+                  rows={3}
+                  helperText={<HelperText text="Briefly describe your co-working space, its mission, community vibe, and what makes it unique." />}
+                />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Website" required={requiredFields.website}>
+                <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space's website to share with members." />} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Member Visibility Policy" required={requiredFields.memberVisibilityPolicy}>
+                <SingleChoiceOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>
+                <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" />
+              </FormFieldLabel>
+
+              <StackRow>
+                <Button variant="contained" sx={defaultButtonStyle} onClick={onCancel}>
+                  <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                </Button>
+                <PushToRight />
+                <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                  <BodyIconTypography label={createLabel ?? 'Create'} invertDefaultColor={paletteMode === 'dark'} />
+                </Button>
+              </StackRow>
+            </FormStackColumn>
+          )}
+        />
+      </RightSidePanel>
+    </TwoSideVerticalWizard>
+  );
+};
+
+export default memo(AddMarketplaceOrganization);

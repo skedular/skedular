@@ -1,14 +1,18 @@
 export const getRootLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}` : '/');
-export const getMeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/me` : '/me');
-export const getNotificationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
+export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
+export const getMyBookingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/bookings` : '/bookings');
+export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
+export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/billing-and-payment` : '/billing-and-payment');
+export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
 
-export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  integratedPlatrform ? `/${integratedPlatrform}/organizations/${id}` : `/organizations/${id}`;
-export const getOrganizationAddLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations/add` : '/organizations/add');
-export const getOrganizationAddPrivateLink = (integratedPlatrform: string | undefined) =>
-  integratedPlatrform ? `${integratedPlatrform}/organizations/add-private` : '/organizations/add-private';
-export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) =>
-  integratedPlatrform ? `${integratedPlatrform}/organizations/add-marketplace` : '/organizations/add-marketplace';
+export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
+
+export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');
+
+export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/setup`;
+export const getOrganizationAddPrivateLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-private`;
+export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-marketplace`;
+export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationsBaseLink(integratedPlatrform)}/${id}`;
 
 export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
   let params = '';
@@ -37,6 +41,7 @@ export const getOrganizationUserBillingAndPaymentBaseLink = (integratedPlatrform
 export const getOrganizationUserManageBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=manage-user`;
 
+export const getOrganizationTeamAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/add`;
 export const getOrganizationTeamsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/teams`;
 export const getOrganizationTeamSetupBaseLink = (integratedPlatrform: string | undefined, id: string, teamId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=setup`;
@@ -48,6 +53,30 @@ export const getOrganizationTeamManageTeamBaseLink = (integratedPlatrform: strin
   `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/${teamId}?section=manage-team`;
 export const getOrganizationBookingBaseLink = (integratedPlatrform: string | undefined, id: string, bookingId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings/${bookingId}`;
+
+export const getOrganizationLocationAddPrivateLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
+  let params = '';
+
+  if (options?.redirectUrl) {
+    params += `redirectUrl=${options.redirectUrl}`;
+  }
+
+  return params
+    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-private?${params}`
+    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-private`;
+};
+
+export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
+  let params = '';
+
+  if (options?.redirectUrl) {
+    params += `redirectUrl=${options.redirectUrl}`;
+  }
+
+  return params
+    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace?${params}`
+    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace`;
+};
 
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;
 export const getOrganizationLocationSetupBaseLink = (integratedPlatrform: string | undefined, id: string, locationId: string) =>
@@ -86,9 +115,6 @@ export const getOrganizationAdminSubscriptionsBaseLink = (integratedPlatrform: s
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/admin?section=manage-organization`;
-
-export const getOrganizationTeamAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/teams/add`;
-export const getOrganizationLocationAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add`;
 
 export const getOrganizationMarketplaceSetupBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace`;

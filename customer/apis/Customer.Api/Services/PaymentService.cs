@@ -1,6 +1,6 @@
 using Api.Shared.Services;
 using Customer.Shared.Repositories;
-using Customer.Shared.Workflows;
+using Customer.Shared.Workflows.AddPayment;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Temporal.Configurations;
 using Stripe;

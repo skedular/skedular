@@ -1,6 +1,11 @@
 import { GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
-import { getOrganizationLocationAddLink, getOrganizationLocationManageResourcesBaseLink, getOrganizationTeamAddLink, getOrganizationUsersBaseLink } from '@/components/links';
+import {
+  getOrganizationLocationAddPrivateLink,
+  getOrganizationLocationManageResourcesBaseLink,
+  getOrganizationTeamAddLink,
+  getOrganizationUsersBaseLink,
+} from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import { AddResourceDialog } from '@/components/resource/addResource';
@@ -132,7 +137,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getOrganizationLocationAddLink(integratedPlatrform, organizationId)}>
+                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationId)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Location"

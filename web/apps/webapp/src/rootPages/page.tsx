@@ -1,6 +1,6 @@
-import { RootShell } from '@/components/rootShell';
+import { NoOrganizationRootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
-const RootPage = () => <RootShell />;
+const RootPage = () => <NoOrganizationRootShell />;
 
 export default memo(RootPage);

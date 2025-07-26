@@ -11,7 +11,6 @@ import {
   PaletteModeContext,
   PaletteModeProvider,
   RelayProvider,
-  SelectedOrganizationProvider,
   ThemeProvider,
 } from '@/libs/providers';
 import { TeamsUserCredential } from '@microsoft/teamsfx';
@@ -76,16 +75,14 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   }, [inMsTeams]);
 
   return (
-    <SelectedOrganizationProvider>
-      <ThemeProvider mode={paletteMode}>
-        <CssBaseline />
-        <DatePickerLocalizationProvider>
-          <AuthKitProvider>
-            <RelayProvider token={token}>{children}</RelayProvider>
-          </AuthKitProvider>
-        </DatePickerLocalizationProvider>
-      </ThemeProvider>
-    </SelectedOrganizationProvider>
+    <ThemeProvider mode={paletteMode}>
+      <CssBaseline />
+      <DatePickerLocalizationProvider>
+        <AuthKitProvider>
+          <RelayProvider token={token}>{children}</RelayProvider>
+        </AuthKitProvider>
+      </DatePickerLocalizationProvider>
+    </ThemeProvider>
   );
 };
 

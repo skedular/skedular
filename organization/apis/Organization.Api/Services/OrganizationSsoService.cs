@@ -15,7 +15,7 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
-    Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken);
+    Task<bool> IsOrganizationSsoTokenValidAsync(string organizationId, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
@@ -36,24 +36,24 @@ public class OrganizationSsoService(
     TimeProvider timeProvider,
     IContext context) : IOrganizationSsoService
 {
-    public async Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> IsOrganizationSsoTokenValidAsync(string organizationId, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(id, cancellationToken);
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);
         if (ssoSettings is null || !ssoSettings.IsActive)
-        {
-            return false;
-        }
-
-        var userSsoContext = context.GetUserSsoContext(id);
-        if (userSsoContext is null)
         {
             return true;
         }
 
-        return !customer.Identities.Any(item =>
+        var userSsoContext = context.GetUserSsoContext(organizationId);
+        if (userSsoContext is null)
+        {
+            return false;
+        }
+
+        return customer.Identities.Any(item =>
             !string.IsNullOrWhiteSpace(item.Email) && item.Email.Equals(userSsoContext.Email, StringComparison.InvariantCultureIgnoreCase));
     }
 

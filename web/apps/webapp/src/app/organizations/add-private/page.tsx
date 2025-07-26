@@ -1,6 +1,6 @@
 'use client';
 
-import Page from '@/rootPages/organizations/add/page';
+import Page from '@/rootPages/organizations/addPrivate/page';
 import { memo } from 'react';
 
 const RootPage = () => <Page />;

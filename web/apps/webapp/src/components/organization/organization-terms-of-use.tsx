@@ -29,10 +29,8 @@ const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
       <Checkboxes
         name={name}
         required={required}
-        data={{
-          label: rootData.activeOrganizationTermsOfUse.terms,
-          value: true,
-        }}
+        data={{ label: rootData.activeOrganizationTermsOfUse.terms, value: true }}
+        formControlLabelProps={{ sx: { alignItems: 'flex-start' } }}
       />
       <Link component={NextLink} href="https://getskedular.com/terms-of-service" target="_blank" rel="noopener noreferrer">
         Skedular Terms of Use.

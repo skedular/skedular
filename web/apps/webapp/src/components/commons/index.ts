@@ -9,6 +9,7 @@ export { default as ExtraLargeHeadingIconTypography } from './extra-large-headin
 export { default as FormFieldLabel } from './form-field-label';
 export { default as FormStackColumn } from './form-stack-column';
 export { default as GridContainer } from './grid-container';
+export { default as HelperText } from './helper-text';
 export { default as LargeHeadingIconTypography } from './large-heading-icon-typography';
 export { default as LeadIconTypography } from './lead-icon-typography';
 export { default as MediumHeadingIconTypography } from './medium-heading-icon-typography';

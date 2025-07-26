@@ -11,13 +11,12 @@ type Props = {
   label?: string;
   useWiderSpace?: boolean;
   fontWeight?: CSSProperties['fontWeight'];
+  required?: boolean;
 };
 
-const FormFieldLabel = ({ children, sx, label, useWiderSpace, fontWeight }: PropsWithChildren<Props>) => (
+const FormFieldLabel = ({ children, sx, label, useWiderSpace, fontWeight, required }: PropsWithChildren<Props>) => (
   <Grid container sx={{ alignItems: 'center', ...sx }}>
-    <Grid size={{ xs: useWiderSpace ? 3 : 1 }}>
-      <BodyIconTypography label={label} fontWeight={fontWeight} />
-    </Grid>
+    <Grid size={{ xs: useWiderSpace ? 3 : 1 }}>{label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}</Grid>
     <Grid size={{ xs: useWiderSpace ? 9 : 11 }}>{children}</Grid>
   </Grid>
 );

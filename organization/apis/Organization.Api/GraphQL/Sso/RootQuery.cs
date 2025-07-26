@@ -12,7 +12,7 @@ public class RootQuery
         string id,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.IsSsoLoginRequiredAsync(id, cancellationToken);
+        await organizationSsoService.IsOrganizationSsoTokenValidAsync(id, cancellationToken);
 
 
     [UseResolverScope]

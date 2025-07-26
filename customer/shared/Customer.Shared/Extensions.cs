@@ -2,7 +2,7 @@ using Customer.Shared.Configurations;
 using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
-using Customer.Shared.Workflows.Services;
+using Customer.Shared.Services;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

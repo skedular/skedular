@@ -2,9 +2,9 @@ import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
-import { getMeLink, getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink, getRootLink } from '@/components/links';
+import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, SelectedOrganizationContext, UpdatePaletteModeContext, UpdateSelectedOrganizationContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -25,7 +25,7 @@ import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import type { JSX } from 'react';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -73,8 +73,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const router = useRouter();
   const { organizationId } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());
-  const selectedOrganization = useContext(SelectedOrganizationContext);
-  const updateSelectedOrganization = useContext(UpdateSelectedOrganizationContext);
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
@@ -95,41 +93,18 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
       return finalOrganizationId;
     }
 
-    if (selectedOrganization && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
-      return selectedOrganization;
-    }
-
-    return rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
+    return undefined;
   });
 
   useInterval(() => setCurrentTime(localNow()), 1000);
-
-  useEffect(() => {
-    if (pathName === getMeLink(integratedPlatrform) || pathName === getOrganizationAddLink(integratedPlatrform) || pathName === getNotificationsBaseLink(integratedPlatrform)) {
-      return;
-    }
-
-    if (!selectedOrganizationId) {
-      router.push(getRootLink(integratedPlatrform));
-
-      return;
-    }
-
-    if (selectedOrganizationId === finalOrganizationId) {
-      return;
-    }
-
-    router.push(getOrganizationBaseLink(integratedPlatrform, selectedOrganizationId));
-  }, [router, finalOrganizationId, selectedOrganizationId, pathName, integratedPlatrform]);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
-      router.push(getOrganizationAddLink(integratedPlatrform));
+      router.push(getOrganizationSetupLink(integratedPlatrform));
     } else {
       setSelectedOrganizationId(id);
-      updateSelectedOrganization(id);
 
       router.push(getOrganizationBaseLink(integratedPlatrform, id));
     }
@@ -180,10 +155,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     familyName: rootData.me?.familyName,
   });
 
-  const meLink = getMeLink(integratedPlatrform);
-  const organizationAddLink = getOrganizationAddLink(integratedPlatrform);
-  const notificationsLink = getNotificationsBaseLink(integratedPlatrform);
-  const showHambugerMenu = pathName !== meLink && pathName !== organizationAddLink && pathName !== notificationsLink;
+  const settingsLink = getSettingsLink(integratedPlatrform);
+  const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
+  const notificationsLink = getNotificationsLink(integratedPlatrform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
 
   return (
@@ -200,6 +174,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
             <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
               <Select
                 value={selectedOrganizationId}
+                displayEmpty
                 onChange={handleSelectedOrganizationChange}
                 sx={{
                   '& fieldset': {
@@ -210,12 +185,12 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 }}
                 renderValue={(selectedId) => {
                   if (!rootData.myOrganizations) {
-                    return <></>;
+                    return <BodyIconTypography label="Please select an organization" />;
                   }
 
                   const selectedItem = rootData.myOrganizations.find((item) => item.id === selectedId);
                   if (!selectedItem) {
-                    return <></>;
+                    return <BodyIconTypography label="Please select an organization" />;
                   }
 
                   return (
@@ -289,11 +264,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
             />
           </IconButton>
 
-          {showHambugerMenu && (
-            <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-              <HamburgerMenuIcon />
-            </IconButton>
-          )}
+          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <HamburgerMenuIcon />
+          </IconButton>
 
           <Menu
             sx={{ marginTop: 4 }}
@@ -322,7 +295,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             {selectedOrganizationId && (
               <MenuItem>
-                <Link component={NextLink} href={getMeLink(integratedPlatrform)}>
+                <Link component={NextLink} href={settingsLink}>
                   <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
                 </Link>
               </MenuItem>
@@ -330,7 +303,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             {selectedOrganizationId && (
               <MenuItem>
-                <Link component={NextLink} href={getMeLink(integratedPlatrform)}>
+                <Link component={NextLink} href={billingAndPaymentLink}>
                   <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
                 </Link>
               </MenuItem>

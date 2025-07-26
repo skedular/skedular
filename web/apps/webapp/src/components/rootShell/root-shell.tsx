@@ -2,12 +2,10 @@ import { AppBar } from '@/components/appBar';
 import { getSignInUrlAction } from '@/components/authActions';
 import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
 import { LogoutIcon, SsoSigninIcon } from '@/components/icons';
-import { getOrganizationSsoSignInBaseLink, getRootLink } from '@/components/links';
+import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
-import { Notifications } from '@/components/notification/notifications';
 import { Observability } from '@/components/observability';
-import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -19,7 +17,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -41,6 +39,7 @@ const RootQuery = graphql`
   query rootShell_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
     me {
       id
+      isOnboardingDone
     }
     myOrganizations {
       id
@@ -63,7 +62,6 @@ const RootQuery = graphql`
       logoUrl
       name
     }
-
     ...appBar_query
     ...leftSideNavigationMenu_query
     ...observability_query
@@ -88,9 +86,12 @@ const RootShell = ({
   const paletteMode = useContext(PaletteModeContext);
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
-
+  const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
+  const rootLink = getRootLink(integratedPlatrform);
+  const welcomeLink = getWelcomeLink(integratedPlatrform);
+  const installMsTeamsLink = getInstallMsTeamsLink();
   const areCustomerRecordsSync = useCallback(
     () =>
       rootData?.bookingCustomerRecordSynced &&
@@ -134,13 +135,19 @@ const RootShell = ({
     }
 
     if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
-      router.push('/msteams/install-msteams');
+      router.push(installMsTeamsLink);
     }
-  }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, router]);
+  }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, installMsTeamsLink, router]);
+
+  useEffect(() => {
+    if (pathName === rootLink && !rootData.me.isOnboardingDone) {
+      router.push(welcomeLink);
+    }
+  }, [rootData.me.isOnboardingDone, welcomeLink, pathName, rootLink, router]);
 
   const handleSignOutClick = async () => {
     await signOut();
-    router.push(getRootLink(integratedPlatrform));
+    router.push(rootLink);
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
@@ -163,7 +170,7 @@ const RootShell = ({
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        {rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
+        <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
@@ -172,7 +179,7 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {rootData.isOrganizationSsoTokenValid && (
+          {rootData.me.isOnboardingDone && !rootData.isOrganizationSsoTokenValid && (
             <Card sx={{ textAlign: 'center', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
               <CardContent>
                 <StackRow>
@@ -189,11 +196,7 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
-          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingOrganizationInvitationsCount === 0 && (
-            <OrganizationOnboarding />
-          )}
-          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingOrganizationInvitationsCount > 0 && <Notifications />}
-          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length > 0 && <>{children}</>}
+          {rootData.me.isOnboardingDone && rootData.isOrganizationSsoTokenValid && <>{children}</>}
         </Box>
       </Box>
     </>
@@ -227,6 +230,8 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
     if (typeof organizationId[0] !== 'undefined') {
       finalOrganizationId = organizationId[0];
     }
+  } else {
+    throw new Error('organizationId is required');
   }
 
   useEffect(() => {

@@ -4,6 +4,8 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { PaletteModeContext } from '@/libs/providers';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
 import React, { memo, useContext, useRef, useState } from 'react';
@@ -16,6 +18,7 @@ type Props = {
   previewImageHeight: number;
   previewImageWidth: number;
   onUploadCompleted: (cdnFile: FileUploadResponse) => void;
+  helperText?: string;
 };
 
 const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) =>
@@ -33,7 +36,7 @@ const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: numbe
     mediaHeight,
   );
 
-const ImageFileUploaderWithCropper = ({ defaultAspectRatio, previewImageHeight, previewImageWidth, onUploadCompleted }: Props) => {
+const ImageFileUploaderWithCropper = ({ defaultAspectRatio, previewImageHeight, previewImageWidth, onUploadCompleted, helperText }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [imageSource, setImgSrc] = useState<string>('');
@@ -141,8 +144,10 @@ const ImageFileUploaderWithCropper = ({ defaultAspectRatio, previewImageHeight, 
 
   return (
     <>
-      <Input inputRef={inputRef} type="file" inputProps={{ accept: 'image/*' }} onChange={onSelectFile} />
-
+      <FormControl>
+        <Input inputRef={inputRef} type="file" inputProps={{ accept: 'image/*' }} onChange={onSelectFile} />
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      </FormControl>
       <Dialog open={isDialogOpen} fullWidth>
         <DialogContent>
           <StackColumn>

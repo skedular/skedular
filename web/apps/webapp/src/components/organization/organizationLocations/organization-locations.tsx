@@ -86,6 +86,7 @@ const RootQuery = graphql`
     organization(id: $organizationId) {
       canModify
     }
+    ...newLocationButton_query
     ...locationCard_query
     ...customTagSelector_allCustomTags_query
     ...zoneSelector_allZones_query
@@ -588,7 +589,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
-          {rootData.organization?.canModify && <NewLocationButton organizationId={organizationId} />}
+          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationId={organizationId} />}
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Locations" />

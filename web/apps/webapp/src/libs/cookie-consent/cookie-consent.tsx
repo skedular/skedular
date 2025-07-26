@@ -28,7 +28,7 @@ const CookieConsent = () => {
     <>
       <Container>
         <Grid>
-          <SmallIconTypography label="This site uses cookies to improve and customise your browsing experience and for analytics and metrics about our visitors. By continuing to use this site, you consent to the use of cookies. To find out more, see our privacy policy at https://getskedular.com/privacy-policy. If you decline, your information won’t be tracked when you visit this website. A single cookie will be used in your browser to remember your preference not to be tracked." />
+          <SmallIconTypography label="This site uses cookies to improve and customise your browsing experience and for analytics and metrics about our visitors. By continuing to use this site, you consent to the use of cookies. To find out more, see our privacy policy at https://getskedular.com/privacy-policy. If you decline, your information won't be tracked when you visit this website. A single cookie will be used in your browser to remember your preference not to be tracked." />
         </Grid>
         <Grid>
           <StackRow>
