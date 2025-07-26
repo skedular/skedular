@@ -12,9 +12,10 @@ type Props = {
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
   invertDefaultColor?: boolean;
+  fontWeight?: CSSProperties['fontWeight'];
 };
 
-const SubtitleIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color, invertDefaultColor }: Props) => (
+const SubtitleIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color, invertDefaultColor, fontWeight }: Props) => (
   <IconTypography
     startElement={startElement}
     endElement={endElement}
@@ -25,6 +26,7 @@ const SubtitleIconTypography = ({ startElement, endElement, stackMode, label, sx
     spacing={spacing}
     color={color}
     invertDefaultColor={invertDefaultColor}
+    fontWeight={fontWeight}
   />
 );
 

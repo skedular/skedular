@@ -2,6 +2,7 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import type { CSSProperties } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/system';
 import { useContext } from 'react';
 import BodyIconTypography from './body-icon-typography';
@@ -15,16 +16,27 @@ type Props = {
   hideSecondary?: boolean;
   primaryDisabled?: boolean;
   secondaryDisabled?: boolean;
+  fontWeight?: CSSProperties['fontWeight'];
 };
 
-const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, primaryLabel, secondaryLabel, hideSecondary, primaryDisabled, secondaryDisabled }: Props) => {
+const TwoButtonsDialogActions = ({
+  sx,
+  onPrimaryClicked,
+  onSecondaryClicked,
+  primaryLabel,
+  secondaryLabel,
+  hideSecondary,
+  primaryDisabled,
+  secondaryDisabled,
+  fontWeight,
+}: Props) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
     <DialogActions sx={sx}>
       {!hideSecondary && (
         <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={secondaryDisabled} sx={defaultButtonStyle}>
-          <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} />
+          <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} fontWeight={fontWeight} />
         </Button>
       )}
 

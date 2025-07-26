@@ -13,9 +13,10 @@ type Props = {
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
   invertDefaultColor?: boolean;
+  fontWeight?: CSSProperties['fontWeight'];
 };
 
-const BodyIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color, invertDefaultColor }: Props) => (
+const BodyIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color, invertDefaultColor, fontWeight }: Props) => (
   <IconTypography
     startElement={startElement}
     endElement={endElement}
@@ -27,6 +28,7 @@ const BodyIconTypography = ({ startElement, endElement, stackMode, label, noWrap
     spacing={spacing}
     color={color}
     invertDefaultColor={invertDefaultColor}
+    fontWeight={fontWeight}
   />
 );
 

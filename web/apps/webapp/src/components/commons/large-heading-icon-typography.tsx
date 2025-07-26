@@ -13,10 +13,22 @@ type Props = {
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
   invertDefaultColor?: boolean;
+  fontWeight?: CSSProperties['fontWeight'];
 };
 
-const LargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color }: Props) => (
-  <IconTypography startElement={startElement} endElement={endElement} stackMode={stackMode} label={label} noWrap={noWrap} variant="h2" sx={sx} spacing={spacing} color={color} />
+const LargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color, fontWeight }: Props) => (
+  <IconTypography
+    startElement={startElement}
+    endElement={endElement}
+    stackMode={stackMode}
+    label={label}
+    noWrap={noWrap}
+    variant="h2"
+    sx={sx}
+    spacing={spacing}
+    color={color}
+    fontWeight={fontWeight}
+  />
 );
 
 export default LargeHeadingIconTypography;

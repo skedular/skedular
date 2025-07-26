@@ -19,9 +19,10 @@ type Props = {
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
   invertDefaultColor?: boolean;
+  fontWeight?: CSSProperties['fontWeight'];
 };
 
-const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, variant, sx, spacing, color, invertDefaultColor }: Props) => {
+const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, variant, sx, spacing, color, invertDefaultColor, fontWeight }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const finalColor = invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : color;
 
@@ -31,7 +32,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
 
   if (!startElement && !endElement) {
     return (
-      <Typography variant={variant} sx={sx} color={finalColor} noWrap={noWrap}>
+      <Typography variant={variant} sx={sx} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
         {label}
       </Typography>
     );
@@ -42,7 +43,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
       <StackColumn sx={sx} spacing={spacing}>
         {startElement}
         {label && (
-          <Typography variant={variant} color={finalColor} noWrap={noWrap}>
+          <Typography variant={variant} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
             {label}
           </Typography>
         )}
@@ -55,7 +56,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
     <StackRow sx={sx} spacing={spacing} color={finalColor}>
       {startElement}
       {label && (
-        <Typography variant={variant} color={finalColor} noWrap={noWrap}>
+        <Typography variant={variant} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
           {label}
         </Typography>
       )}
