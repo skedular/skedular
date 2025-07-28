@@ -600,13 +600,11 @@ public class HomePage(
 
         asyncBlocks =
         [
-            asyncBlocks[0],
-            asyncBlocks[1],
             GetTitle(),
             GetToolbar(commonPageContext.PageContext),
-            asyncBlocks[2],
+            asyncBlocks[0],
             GetBookingsSearchCriteriaAndPaginationBlocks(bookingConnection, commonPageContext.PageContext),
-            asyncBlocks[3]
+            asyncBlocks[1]
         ];
 
         var slackApiClient = workspace.GetApiClient();
