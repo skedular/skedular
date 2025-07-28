@@ -151,7 +151,7 @@ public class Mapper : IMapper
                 IsActive = src.IsActive,
                 EntityId = src.EntityId.ToSafeString(),
                 LoginUrl = src.LoginUrl.ToSafeString(),
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString(),
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
             };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
