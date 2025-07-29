@@ -1270,7 +1270,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           clientMutationId: uuid(),
           organizationId: organization.id,
           taxId,
-          taxRatePercentage,
+          taxRatePercentage: parseFloat(taxRatePercentage),
         },
       },
       onCompleted: (_, errors) => {
