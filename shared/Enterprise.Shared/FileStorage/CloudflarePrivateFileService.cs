@@ -1,11 +1,16 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Enterprise.Shared.Configurations;
 using Flurl;
 
 namespace Enterprise.Shared.FileStorage;
 
-public class CloudflarePrivateFileService(CloudflareConfiguration cloudflareConfiguration) : IPrivateFileService
+public class CloudflarePrivateFileService(
+    ApplicationConfiguration applicationConfiguration,
+    FileStorageConfiguration fileStorageConfiguration,
+    CloudflareConfiguration cloudflareConfiguration)
+    : IPrivateFileService
 {
     public async Task<Uri> UploadAsync(Stream stream, string contentType, string fileName, string? extension, CancellationToken cancellationToken)
     {
@@ -35,7 +40,7 @@ public class CloudflarePrivateFileService(CloudflareConfiguration cloudflareConf
 
         _ = await client.PutObjectAsync(request, cancellationToken);
 
-        return new Uri(Url.Combine(uri.ToString(), cloudflareConfiguration.PrivateFileR2BucketName, fileName));
+        return new Uri(Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), fileStorageConfiguration.PrivateFileEndpoint, fileName));
     }
 
     public async Task<(bool, string, byte[])> GetAsync(string fileName, CancellationToken cancellationToken)
