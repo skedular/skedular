@@ -55,6 +55,7 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(cloudflare);
 
         return services
+            .AddSingleton(fileStorageConfiguration)
             .AddSingleton(cloudflare)
             .AddSingleton<ICdnService, CloudflareCdnService>()
             .AddSingleton<IPrivateFileService, CloudflarePrivateFileService>();
