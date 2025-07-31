@@ -33,9 +33,9 @@ public class CustomerGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        Admin_Get(Admin_GetInput request,
-            ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Get(
+        Admin_GetInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
