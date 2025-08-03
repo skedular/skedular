@@ -2,6 +2,7 @@
 using Customer.Shared;
 using Customer.Shared.Database;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
@@ -21,6 +22,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddRepositoryFactory()
             .AddServices()

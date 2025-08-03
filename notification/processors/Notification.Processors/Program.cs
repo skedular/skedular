@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
@@ -26,6 +27,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<NotificationDbContext>(configuration, environment, "notificationdb")
             .AddKafkaReliableEventConsumers<
                 NotificationSubscriber,

@@ -51,7 +51,7 @@ public class PaymentService(
         var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetBySetupIntentIdAsync(setupIntentId, cancellationToken);
         if (stripePaymentMethod is not null)
         {
-            cachedCustomerService.CleanCache(stripePaymentMethod.Customer);
+            await cachedCustomerService.CleanCacheAsync(stripePaymentMethod.Customer, cancellationToken);
         }
 
         return redirectUrl;
@@ -106,6 +106,6 @@ public class PaymentService(
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        cachedCustomerService.CleanCache(customerEntity);
+        await cachedCustomerService.CleanCacheAsync(customerEntity, cancellationToken);
     }
 }

@@ -53,7 +53,7 @@ public class CustomerHelperService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        cachedCustomerService.CleanCache(existingCustomer);
+        await cachedCustomerService.CleanCacheAsync(existingCustomer, cancellationToken);
 
         return customer;
     }

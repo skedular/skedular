@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace Enterprise.Shared.Cache;
 
@@ -9,13 +8,9 @@ public static class Extensions
     public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, string connectionName)
     {
         var connectionString = configuration.GetConnectionString(connectionName);
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            return services;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         return services
-            .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
-            .AddScoped<IDistributedCache, DistributedCache>();
+            .AddStackExchangeRedisCache(options => options.Configuration = connectionString);
     }
 }

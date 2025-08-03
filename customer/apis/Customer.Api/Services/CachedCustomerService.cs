@@ -1,8 +1,8 @@
 using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Repositories;
-using Enterprise.Shared;
 using Enterprise.Shared.Context;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Customer.Api.Services;
@@ -12,7 +12,7 @@ public interface ICachedCustomerService
     Task<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
     Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
-    void CleanCache(Shared.Database.Entities.Customer customer);
+    Task CleanCacheAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
@@ -55,10 +55,15 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         }
     }
 
-    public void CleanCache(Shared.Database.Entities.Customer customer)
+    public Task CleanCacheAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken)
     {
         memoryCache.Remove($"customer-id-{customer.Id}");
-        customer.Identities.ForEach(identity => { memoryCache.Remove($"customer-verifiabletoken-{identity.Id}"); });
+        foreach (var identity in customer.Identities)
+        {
+            memoryCache.Remove($"customer-verifiabletoken-{identity.Id}");
+        }
+        
+        return Task.CompletedTask;
     }
 
     private async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(

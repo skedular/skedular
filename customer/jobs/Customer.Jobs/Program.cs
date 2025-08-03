@@ -3,6 +3,7 @@ using Customer.Shared.Activities;
 using Customer.Shared.Database;
 using Customer.Shared.Workflows.AddPayment;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
@@ -25,6 +26,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddKafkaOutboxBackgroundService<CustomerDbContext>()
             .AddTemporalOutboxBackgroundService<CustomerDbContext>()

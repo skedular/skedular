@@ -8,7 +8,7 @@ namespace Booking.Api.Services;
 public interface ICachedLocationService
 {
     Task<Location> GetByIdAsync(string id, CancellationToken cancellationToken);
-    void CleanCache(string id);
+    Task CleanCacheAsync(string id, CancellationToken cancellationToken);
 }
 
 public class CachedLocationService(IRepositoryFactory repositoryFactory, IMemoryCache memoryCache)
@@ -33,10 +33,12 @@ public class CachedLocationService(IRepositoryFactory repositoryFactory, IMemory
         return location;
     }
 
-    public void CleanCache(string id)
+    public Task CleanCacheAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         memoryCache.Remove($"location-id-{id}");
+
+        return Task.CompletedTask;
     }
 }

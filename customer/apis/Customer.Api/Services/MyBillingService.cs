@@ -64,7 +64,7 @@ public class MyBillingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        cachedCustomerService.CleanCache(customerEntity);
+        await cachedCustomerService.CleanCacheAsync(customerEntity, cancellationToken);
 
         return mappedCustomer;
     }
@@ -105,7 +105,7 @@ public class MyBillingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        cachedCustomerService.CleanCache(existingCustomer);
+        await cachedCustomerService.CleanCacheAsync(existingCustomer, cancellationToken);
 
         return mappedCustomer;
     }

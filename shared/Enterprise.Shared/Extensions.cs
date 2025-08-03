@@ -162,15 +162,15 @@ public static class Extensions
                 .AddSingleton<ICookieHelper, CookieHelper>();
         }
 
+        services.AddHybridCache();
+
         services
             .AddCors()
             .AddProblemDetails()
             .AddHttpContextAccessor()
-            .AddMemoryCache()
             .AddSingleton<IVersionService, VersionService<TProgram>>()
             .AddSingleton<IImageHelper, ImageHelper>()
             .AddSingleton<IContext, Context.Context>()
-            .AddSingleton(new System.Random())
             .AddSingleton<IRandomHelper, RandomHelper>()
             .AddSingleton<IDirectoryService, DirectoryService>()
             .AddSingleton<IEmailService, EmailService>()

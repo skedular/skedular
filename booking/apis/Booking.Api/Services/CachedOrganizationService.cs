@@ -8,7 +8,7 @@ namespace Booking.Api.Services;
 public interface ICachedOrganizationService
 {
     Task<Organization> GetByIdAsync(string id, CancellationToken cancellationToken);
-    void CleanCache(string id);
+    Task CleanCacheAsync(string id, CancellationToken cancellationToken);
 }
 
 public class CachedOrganizationService(IRepositoryFactory repositoryFactory, IMemoryCache memoryCache)
@@ -34,10 +34,12 @@ public class CachedOrganizationService(IRepositoryFactory repositoryFactory, IMe
         return organization;
     }
 
-    public void CleanCache(string id)
+    public Task CleanCacheAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         memoryCache.Remove($"organization-id-{id}");
+
+        return Task.CompletedTask;
     }
 }

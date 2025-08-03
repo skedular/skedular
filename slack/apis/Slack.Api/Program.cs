@@ -1,4 +1,5 @@
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
@@ -41,6 +42,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")

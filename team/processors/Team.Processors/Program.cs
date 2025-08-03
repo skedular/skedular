@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
@@ -31,6 +32,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,

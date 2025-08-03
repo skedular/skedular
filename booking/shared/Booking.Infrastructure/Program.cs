@@ -2,6 +2,7 @@
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Payment;
@@ -22,6 +23,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddRepositoryFactory()
             .AddServices()

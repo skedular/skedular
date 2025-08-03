@@ -2,6 +2,7 @@
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
@@ -22,6 +23,7 @@ public class Program
 
         services
             .AddKafka(configuration)
+            .AddRedis(configuration, "redis")
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
             .AddRepositoryFactory()
