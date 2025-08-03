@@ -144,13 +144,15 @@ public static class Extensions
 
         services
             .AddServiceDiscovery()
-            .ConfigureHttpClientDefaults(http =>
+            .ConfigureHttpClientDefaults(httpClientBuilder =>
             {
+                httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(30));
+
                 // Turn on resilience by default
-                http.AddStandardResilienceHandler();
+                httpClientBuilder.AddStandardResilienceHandler();
 
                 // Turn on service discovery by default
-                http.AddServiceDiscovery();
+                httpClientBuilder.AddServiceDiscovery();
             });
 
         services.AddAuthentication();
