@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Customer.Api.Grpc;
 using Customer.Shared;
 using Customer.Shared.Database;
@@ -32,6 +33,7 @@ public class Program
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

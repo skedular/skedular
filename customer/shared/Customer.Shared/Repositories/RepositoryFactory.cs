@@ -1,4 +1,5 @@
-﻿using Customer.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Customer.Shared.Database;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,12 +28,15 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<CustomerDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<CustomerDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
         CustomerFeedbackRepository = new CustomerFeedbackRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
@@ -44,8 +48,8 @@ public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepo
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
         StripePaymentIntentRepository = new StripePaymentIntentRepository(_dbContext, timeProvider);
-        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider);
-        CustomerBillingDetailsRepository = new CustomerBillingDetailsRepository(_dbContext, timeProvider);
+        StripePaymentMethodRepository = new StripePaymentMethodRepository(_dbContext, timeProvider, genericCustomerCacheService);
+        CustomerBillingDetailsRepository = new CustomerBillingDetailsRepository(_dbContext, timeProvider, genericCustomerCacheService);
     }
 
     public ICustomerFeedbackRepository CustomerFeedbackRepository { get; }

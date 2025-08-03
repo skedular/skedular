@@ -19,8 +19,7 @@ public class CustomerHelperService(
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
     IMapper mapper,
-    IContext context,
-    ICachedCustomerService cachedCustomerService) : ICustomerHelperService
+    IContext context) : ICustomerHelperService
 {
     public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -47,13 +46,11 @@ public class CustomerHelperService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
+        var customer = mapper.MapTo(await repositoryFactory.CustomerRepository.UpdateAsync(existingCustomer, cancellationToken));
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-
-        await cachedCustomerService.CleanCacheAsync(existingCustomer, cancellationToken);
 
         return customer;
     }

@@ -181,7 +181,7 @@ public class OrganizationSubscriber(
                 .ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
 
-            customer = repositoryFactory.CustomerRepository.Update(customer);
+            customer = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
 
             if (existingOrganizationId != newOrganizationId ||
                 newLocationIds.Count != existingLocationIds.Count ||
@@ -203,7 +203,7 @@ public class OrganizationSubscriber(
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.DefaultOrganization = null;
-            _ = repositoryFactory.CustomerRepository.Update(customer);
+            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
         }
     }
 

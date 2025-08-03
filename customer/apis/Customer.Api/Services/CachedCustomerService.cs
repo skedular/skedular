@@ -1,24 +1,26 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Cache;
 using Customer.Api.Mappers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Context;
-using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Customer.Api.Services;
 
 public interface ICachedCustomerService
 {
-    Task<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
-    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
-    Task CleanCacheAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
+    ValueTask<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken);
+    ValueTask<Shared.Models.Customer> GetAsync(CancellationToken cancellationToken);
+    ValueTask<Shared.Models.Customer?> GetNullableAsync(CancellationToken cancellationToken);
 }
 
-public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
+public class CachedCustomerService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IContext context,
+    IGenericCustomerCacheService genericCustomerCacheService)
     : ICachedCustomerService
 {
-    public async Task<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken)
+    public async ValueTask<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         try
         {
@@ -31,18 +33,18 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         }
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken)
+    public async ValueTask<Shared.Models.Customer> GetAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
-    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
+    public async ValueTask<Shared.Models.Customer?> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
-            return (null, null);
+            return null;
         }
 
         try
@@ -51,37 +53,25 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         }
         catch (CustomerNotFound)
         {
-            return (null, null);
+            return null;
         }
     }
 
-    public Task CleanCacheAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken)
-    {
-        memoryCache.Remove($"customer-id-{customer.Id}");
-        foreach (var identity in customer.Identities)
-        {
-            memoryCache.Remove($"customer-verifiabletoken-{identity.Id}");
-        }
-        
-        return Task.CompletedTask;
-    }
-
-    private async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
+    private async ValueTask<Shared.Models.Customer> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
-        return await memoryCache.GetOrCreateAsync(
-            $"customer-verifiabletoken-{context.GetVerifiableToken()}",
-            async cacheEntry =>
+        return await genericCustomerCacheService.GetByVerifiableTokenAsync(
+            verifiableToken,
+            async ct =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
+                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, ct) ??
                                throw new CustomerNotFound();
 
-                return (mapper.MapTo(customer), customer);
-            });
+                return mapper.MapTo(customer);
+            },
+            cancellationToken);
     }
 }

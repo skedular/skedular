@@ -40,7 +40,7 @@ public class StripeIntegrations(
 
             var stripePaymentMethod = mapper.MapTo(paymentMethod, args.SetupIntentId, customer);
             stripePaymentMethod.Id = randomHelper.Generate();
-            repositoryFactory.StripePaymentMethodRepository.Add(stripePaymentMethod);
+            await repositoryFactory.StripePaymentMethodRepository.AddAsync(stripePaymentMethod, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         else

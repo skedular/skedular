@@ -190,7 +190,7 @@ public class TeamSubscriber(
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != existingTeam.Id).ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-            customer = repositoryFactory.CustomerRepository.Update(customer);
+            customer = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
 
             if (newTeamIds.Count != existingTeamIds.Count || newTeamIds.Except(existingTeamIds).Any())
             {
@@ -206,7 +206,7 @@ public class TeamSubscriber(
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
-            _ = repositoryFactory.CustomerRepository.Update(customer);
+            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
         }
     }
 }

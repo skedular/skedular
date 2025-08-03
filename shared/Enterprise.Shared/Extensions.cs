@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
@@ -25,6 +26,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -163,6 +165,11 @@ public static class Extensions
         }
 
         services.AddHybridCache();
+
+        services
+            .AddKeyedSingleton<JsonSerializerOptions>(
+                typeof(IHybridCacheSerializer<>),
+                new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles });
 
         services
             .AddCors()

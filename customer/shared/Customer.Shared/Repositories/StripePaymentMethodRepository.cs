@@ -1,4 +1,5 @@
-﻿using Customer.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Customer.Shared.Database;
 using Customer.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +11,23 @@ public interface IStripePaymentMethodRepository : IRepository<StripePaymentMetho
 {
     Task<StripePaymentMethod?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<StripePaymentMethod?> GetBySetupIntentIdAsync(string setupIntentId, CancellationToken cancellationToken);
-    void Add(StripePaymentMethod stripePaymentMethod);
-    void Remove(StripePaymentMethod stripePaymentMethod);
+    ValueTask AddAsync(StripePaymentMethod stripePaymentMethod, CancellationToken cancellationToken);
+    ValueTask RemoveAsync(StripePaymentMethod stripePaymentMethod, CancellationToken cancellationToken);
 }
 
 internal static class StripePaymentMethodExtensions
 {
-    internal static IIncludableQueryable<StripePaymentMethod, Database.Entities.Customer> AddDependentObjects(
+    internal static IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects(
         this IQueryable<StripePaymentMethod> originalQuery) =>
         originalQuery
-            .Include(query => query.Customer);
+            .Include(query => query.Customer)
+            .ThenInclude(query => query.Identities);
 }
 
-public class StripePaymentMethodRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
+public class StripePaymentMethodRepository(
+    CustomerDbContext dbContext,
+    TimeProvider timeProvider,
+    IGenericCustomerCacheService genericCustomerCacheService)
     : RepositoryBase<CustomerDbContext, StripePaymentMethod>(dbContext, timeProvider), IStripePaymentMethodRepository
 {
     public async Task<StripePaymentMethod?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -35,17 +40,25 @@ public class StripePaymentMethodRepository(CustomerDbContext dbContext, TimeProv
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.SetupIntentId == setupIntentId, cancellationToken);
 
-    public void Add(StripePaymentMethod stripePaymentMethod)
+    public async ValueTask AddAsync(StripePaymentMethod stripePaymentMethod, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         stripePaymentMethod.CreatedAt = now;
         DbContext.StripePaymentMethod.Add(stripePaymentMethod);
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(
+            stripePaymentMethod.Customer.Identities.Select(identity => identity.Id),
+            cancellationToken);
     }
 
-    public void Remove(StripePaymentMethod stripePaymentMethod)
+    public async ValueTask RemoveAsync(StripePaymentMethod stripePaymentMethod, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         stripePaymentMethod.DeletedAt = now;
         DbContext.StripePaymentMethod.Update(stripePaymentMethod);
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(
+            stripePaymentMethod.Customer.Identities.Select(identity => identity.Id),
+            cancellationToken);
     }
 }

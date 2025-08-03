@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Services;
 using Customer.Processors.Subscribers;
 using Customer.Shared;
 using Customer.Shared.Database;
@@ -45,6 +46,7 @@ public class Program
 
         services
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

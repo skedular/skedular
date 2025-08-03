@@ -20,7 +20,6 @@ public class MyBillingService(
     ICustomerService customerService,
     IRandomHelper randomHelper,
     IMapper mapper,
-    ICachedCustomerService cachedCustomerService,
     ICustomerOutboxPublisher organizationOutboxPublisher) : IMyBillingService
 {
     public async Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
@@ -54,7 +53,7 @@ public class MyBillingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationBillingDetailsEntity = mapper.MapTo(customerBillingDetails, customerEntity);
-        repositoryFactory.CustomerBillingDetailsRepository.Add(organizationBillingDetailsEntity);
+        await repositoryFactory.CustomerBillingDetailsRepository.AddAsync(organizationBillingDetailsEntity, cancellationToken);
 
         customerEntity.BillingDetails = organizationBillingDetailsEntity;
         var mappedCustomer = mapper.MapTo(customerEntity);
@@ -63,8 +62,6 @@ public class MyBillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-
-        await cachedCustomerService.CleanCacheAsync(customerEntity, cancellationToken);
 
         return mappedCustomer;
     }
@@ -82,7 +79,9 @@ public class MyBillingService(
             throw new UnauthorizedAccessException();
         }
 
-        return await UpdateInternalAsync(customerBillingDetails, existingCustomerBillingDetails, customerEntity, cancellationToken);
+        customer = await UpdateInternalAsync(customerBillingDetails, existingCustomerBillingDetails, customerEntity, cancellationToken);
+
+        return customer;
     }
 
     private async Task<Shared.Models.Customer> UpdateInternalAsync(
@@ -95,7 +94,7 @@ public class MyBillingService(
 
         var organizationBillingDetailsEntity =
             mapper.MergeToEntity(organizationBillingDetails, existingCustomerBillingDetails, existingCustomer);
-        repositoryFactory.CustomerBillingDetailsRepository.Update(organizationBillingDetailsEntity);
+        await repositoryFactory.CustomerBillingDetailsRepository.UpdateAsync(organizationBillingDetailsEntity, cancellationToken);
 
         existingCustomer.BillingDetails = organizationBillingDetailsEntity;
 
@@ -104,8 +103,6 @@ public class MyBillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-
-        await cachedCustomerService.CleanCacheAsync(existingCustomer, cancellationToken);
 
         return mappedCustomer;
     }

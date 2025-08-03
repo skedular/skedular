@@ -115,7 +115,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredResources =
                 customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
-            _ = repositoryFactory.CustomerRepository.Update(customer);
+            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
         }
     }
 }

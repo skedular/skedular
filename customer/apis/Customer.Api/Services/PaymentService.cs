@@ -25,7 +25,6 @@ public class PaymentService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
-    ICachedCustomerService cachedCustomerService,
     ICreatable<SetupIntent, SetupIntentCreateOptions> setupIntentCreateService,
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
     PaymentMethodService paymentMethodService,
@@ -46,15 +45,7 @@ public class PaymentService(
             new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
         );
 
-        var redirectUrl = await handle.GetResultAsync<string>(rpcOptions: new RpcOptions { CancellationToken = cancellationToken });
-
-        var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetBySetupIntentIdAsync(setupIntentId, cancellationToken);
-        if (stripePaymentMethod is not null)
-        {
-            await cachedCustomerService.CleanCacheAsync(stripePaymentMethod.Customer, cancellationToken);
-        }
-
-        return redirectUrl;
+        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions { CancellationToken = cancellationToken });
     }
 
     public async Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken)
@@ -90,8 +81,8 @@ public class PaymentService(
                                   throw new OrganizationPaymentMethodNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        repositoryFactory.StripePaymentMethodRepository.Remove(stripePaymentMethod);
-        repositoryFactory.CustomerRepository.Update(customerEntity);
+        await repositoryFactory.StripePaymentMethodRepository.RemoveAsync(stripePaymentMethod, cancellationToken);
+        await repositoryFactory.CustomerRepository.UpdateAsync(customerEntity, cancellationToken);
 
         var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
         if (paymentMethod is not null)
@@ -105,7 +96,5 @@ public class PaymentService(
 
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-
-        await cachedCustomerService.CleanCacheAsync(customerEntity, cancellationToken);
     }
 }

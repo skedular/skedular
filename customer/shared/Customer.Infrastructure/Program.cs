@@ -1,4 +1,5 @@
-﻿using Customer.Infrastructure.Services;
+﻿using Api.Shared.Services;
+using Customer.Infrastructure.Services;
 using Customer.Shared;
 using Customer.Shared.Database;
 using Enterprise.Shared;
@@ -25,6 +26,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
             .AddRepositoryFactory()
+            .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
             .AddTemporalClient(configuration)
