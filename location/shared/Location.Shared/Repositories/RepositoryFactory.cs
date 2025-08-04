@@ -1,3 +1,4 @@
+using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -27,13 +28,16 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<LocationDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<LocationDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
         LocationPhysicalAddressRepository = new LocationPhysicalAddressRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         DailyDeskCountRecordingRepository = new DailyDeskCountRecordingRepository(_dbContext, timeProvider);
         DailyRoomCountRecordingRepository = new DailyRoomCountRecordingRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);

@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared;
+﻿using Api.Shared.Services;
+using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -25,6 +26,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddRepositoryFactory()
+            .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
             .AddTemporalClient(configuration);

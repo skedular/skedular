@@ -1,4 +1,5 @@
-﻿using Core.Infrastructure.Services;
+﻿using Api.Shared.Services;
+using Core.Infrastructure.Services;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
@@ -27,6 +28,7 @@ public class Program
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
             .AddRepositoryFactory()
+            .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
             .AddTemporalClient(configuration);

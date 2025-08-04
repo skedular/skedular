@@ -77,7 +77,7 @@ public class OrganizationAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
 
         return new OrganizationPermissions

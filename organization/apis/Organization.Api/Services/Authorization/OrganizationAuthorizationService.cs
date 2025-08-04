@@ -108,7 +108,7 @@ public class OrganizationAuthorizationService(
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
 

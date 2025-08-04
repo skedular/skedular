@@ -45,7 +45,7 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
@@ -96,7 +96,7 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))

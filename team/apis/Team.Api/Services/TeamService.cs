@@ -237,7 +237,7 @@ public class TeamService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken);
@@ -255,7 +255,7 @@ public class TeamService(
         ICollection<TeamOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
@@ -312,7 +312,7 @@ public class TeamService(
 
     public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken) ??

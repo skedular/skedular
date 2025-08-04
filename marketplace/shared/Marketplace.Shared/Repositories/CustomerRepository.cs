@@ -1,3 +1,4 @@
+using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Marketplace.Shared.Database;
 using Marketplace.Shared.Database.Entities;
@@ -11,8 +12,8 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    void Update(Customer customer);
-    Customer Remove(Customer customer);
+    ValueTask UpdateAsync(Customer customer, CancellationToken cancellationToken);
+    ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken);
 }
 
 internal static class CustomerExtensions
@@ -23,7 +24,7 @@ internal static class CustomerExtensions
             .Include(query => query.Identities);
 }
 
-public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)
+public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider, IGenericCustomerCacheService genericCustomerCacheService)
     : RepositoryBase<MarketplaceDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<MarketplaceDbContext, string, CancellationToken, Task<Customer?>>
@@ -48,20 +49,6 @@ public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider tim
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
-    private static readonly Func<MarketplaceDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<MarketplaceDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    email,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Any(identity =>
-                            identity.Email != null &&
-                            EF.Functions.ILike(identity.Email, email))));
-
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -76,17 +63,23 @@ public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider tim
         GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public void Update(Customer customer)
+    public async ValueTask UpdateAsync(Customer customer, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
         DbContext.Customer.Update(customer);
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
     }
 
-    public Customer Remove(Customer customer)
+    public async ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
-        return DbContext.Customer.Update(customer).Entity;
+        customer = DbContext.Customer.Update(customer).Entity;
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
+
+        return customer;
     }
 }

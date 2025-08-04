@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using MsTeams.Shared.Database;
 
@@ -22,14 +23,17 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<MsTeamsDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<MsTeamsDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<MsTeamsDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
         AzureTenantTeamChannelRepository = new AzureTenantTeamChannelRepository(_dbContext, timeProvider);
         AzureTenantTeamRepository = new AzureTenantTeamRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);

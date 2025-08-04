@@ -287,7 +287,7 @@ public class OrganizationService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
@@ -308,13 +308,13 @@ public class OrganizationService(
             return null;
         }
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         return await EnrichOrganizationAsync(customer, organization, false, cancellationToken);
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
 
         var result = new List<Shared.Models.Organization>();
@@ -332,7 +332,7 @@ public class OrganizationService(
         ICollection<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return another customer organization by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 

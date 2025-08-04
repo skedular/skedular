@@ -98,7 +98,7 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         }
 
         _ = RebuildIdentities(customer, existingCustomer);
-        repositoryFactory.CustomerRepository.Update(
+        await repositoryFactory.CustomerRepository.UpdateAsync(
             mapper.MergeToEntity(
                 customer,
                 existingCustomer,
@@ -107,15 +107,15 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
                 preferredLocations,
                 preferredTeams,
                 preferredResources,
-                preferredOrganizationTags)
-        );
+                preferredOrganizationTags),
+            cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
+        _ = await repositoryFactory.CustomerRepository.RemoveAsync(existingCustomer, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

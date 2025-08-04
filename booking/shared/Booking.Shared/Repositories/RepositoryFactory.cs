@@ -1,4 +1,5 @@
-﻿using Booking.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Booking.Shared.Database;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,12 +32,15 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<BookingDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<BookingDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);

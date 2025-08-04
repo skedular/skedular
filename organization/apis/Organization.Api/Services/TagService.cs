@@ -43,7 +43,7 @@ public class TagService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
                                    throw new OrganizationNotFound();
@@ -207,7 +207,7 @@ public class TagService(
         ICollection<TagOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanView(organization, customer))

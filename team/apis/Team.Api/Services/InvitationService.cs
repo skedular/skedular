@@ -215,7 +215,7 @@ public class InvitationService(
 
     public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(customer.Id, cancellationToken);
     }
 
@@ -225,7 +225,7 @@ public class InvitationService(
         ICollection<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
         searchCriteria.InviteeId = customer.Id;
 

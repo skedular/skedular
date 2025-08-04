@@ -35,7 +35,7 @@ public class TeamAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
 
         return new TeamPermissions

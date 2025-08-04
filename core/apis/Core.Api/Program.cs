@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Core.Api.Grpc;
 using Core.Shared;
 using Core.Shared.Database;
@@ -32,6 +33,7 @@ public class Program
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

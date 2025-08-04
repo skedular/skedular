@@ -25,7 +25,7 @@ public class GenericCustomerCacheService(ApplicationConfiguration applicationCon
         return await hybridCache.GetOrCreateAsync(
             CreateKeyByVerifiableToken(verifiableToken),
             factory,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMilliseconds(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMilliseconds(1) },
             cancellationToken: cancellationToken);
     }
 

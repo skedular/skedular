@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database;
 
@@ -22,11 +23,14 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<SlackDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<SlackDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<SlackDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);

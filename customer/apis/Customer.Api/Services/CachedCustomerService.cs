@@ -57,9 +57,7 @@ public class CachedCustomerService(
         }
     }
 
-    private async ValueTask<Shared.Models.Customer> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken)
+    private async ValueTask<Shared.Models.Customer> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
@@ -42,7 +43,10 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<OrganizationDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<OrganizationDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
@@ -51,7 +55,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
         AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext, timeProvider);

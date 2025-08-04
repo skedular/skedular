@@ -29,7 +29,6 @@ public class Program
             .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
-            .AddTemporalClient(configuration)
             .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();

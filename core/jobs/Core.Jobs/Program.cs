@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
@@ -32,6 +33,7 @@ public class Program
             .AddKafkaOutboxBackgroundService<CoreDbContext>()
             .AddTemporalOutboxBackgroundService<CoreDbContext>()
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

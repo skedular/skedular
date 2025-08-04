@@ -60,14 +60,16 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
+        _ = await repositoryFactory.CustomerRepository.UpdateAsync(
+            mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities),
+            cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
+        _ = await repositoryFactory.CustomerRepository.RemoveAsync(existingCustomer, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
@@ -35,6 +36,7 @@ public class Program
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

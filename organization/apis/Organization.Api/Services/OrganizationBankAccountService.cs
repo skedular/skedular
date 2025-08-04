@@ -173,7 +173,7 @@ public class OrganizationBankAccountService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resource = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resource.Organization.Id, cancellationToken) ??
                                    throw new OrganizationNotFound();
@@ -197,7 +197,7 @@ public class OrganizationBankAccountService(
 
         if (!ignoreAuthorizationCheck)
         {
-            var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            var customer = await cachedCustomerService.GetAsync(cancellationToken);
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();

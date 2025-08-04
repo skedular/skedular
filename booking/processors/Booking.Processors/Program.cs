@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Api.Shared.Services;
 using Booking.Processors.Subscribers;
 using Booking.Shared;
 using Booking.Shared.Database;
@@ -58,6 +59,7 @@ public class Program
 
         services
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

@@ -1,22 +1,26 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Location.Api.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Location.Api.Services;
 
 public interface ICachedCustomerService
 {
-    Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
-    Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
+    ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
 }
 
-public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
+public class CachedCustomerService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IContext context,
+    IGenericCustomerCacheService genericCustomerCacheService)
     : ICachedCustomerService
 {
-    public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
+    public async ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
@@ -31,28 +35,26 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         }
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken)
+    public async ValueTask<Customer> GetAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
-    private async Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken)
+    private async ValueTask<Customer> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
-        return await memoryCache.GetOrCreateAsync(
-            $"customer-verifiabletoken-{context.GetVerifiableToken()}",
-            async cacheEntry =>
+        return await genericCustomerCacheService.GetByVerifiableTokenAsync(
+            verifiableToken,
+            async ct =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
+                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, ct) ??
                                throw new CustomerNotFound();
-                return (mapper.MapTo(customer)!, customer);
-            });
+
+                return mapper.MapTo(customer)!;
+            },
+            cancellationToken);
     }
 }

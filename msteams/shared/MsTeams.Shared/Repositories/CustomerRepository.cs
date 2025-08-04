@@ -1,3 +1,4 @@
+using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -11,11 +12,9 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken);
-    Customer Add(Customer customer);
-    Customer Update(Customer customer);
-    Customer Remove(Customer customer);
+    ValueTask<Customer> AddAsync(Customer customer, CancellationToken cancellationToken);
+    ValueTask<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken);
+    ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken);
 }
 
 internal static class CustomerExtensions
@@ -26,7 +25,7 @@ internal static class CustomerExtensions
             .Include(query => query.Identities);
 }
 
-public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
+public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider, IGenericCustomerCacheService genericCustomerCacheService)
     : RepositoryBase<MsTeamsDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<MsTeamsDbContext, string, CancellationToken, Task<Customer?>>
@@ -51,20 +50,6 @@ public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timePro
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
-    private static readonly Func<MsTeamsDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<MsTeamsDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    email,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Any(identity =>
-                            identity.Email != null &&
-                            EF.Functions.ILike(identity.Email, email))));
-
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -79,34 +64,36 @@ public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timePro
         GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
-
-    public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects()
-            .Where(query => !query.DeletedAt.HasValue)
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
-
-    public Customer Add(Customer customer)
+    public async ValueTask<Customer> AddAsync(Customer customer, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         customer.CreatedAt = now;
-        return DbContext.Customer.Add(customer).Entity;
+        customer = DbContext.Customer.Add(customer).Entity;
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
+
+        return customer;
     }
 
-    public Customer Update(Customer customer)
+    public async ValueTask<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        return DbContext.Customer.Update(customer).Entity;
+        customer = DbContext.Customer.Update(customer).Entity;
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
+
+        return customer;
     }
 
-    public Customer Remove(Customer customer)
+    public async ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken)
     {
         var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
-        return DbContext.Customer.Update(customer).Entity;
+        customer = DbContext.Customer.Update(customer).Entity;
+
+        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
+
+        return customer;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Booking.Infrastructure.Services;
+﻿using Api.Shared.Services;
+using Booking.Infrastructure.Services;
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
@@ -26,9 +27,11 @@ public class Program
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddRepositoryFactory()
+            .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddPublishers()

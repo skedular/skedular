@@ -48,7 +48,7 @@ public class OrganizationMemberService(
         ICollection<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken);
         if (organization is null)
         {
@@ -356,7 +356,7 @@ public class OrganizationMemberService(
 
     public async Task CompleteOrganizationMemberOnboardingAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

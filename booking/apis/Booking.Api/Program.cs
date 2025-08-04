@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Booking.Api.Grpc;
 using Booking.Shared;
 using Booking.Shared.Database;
@@ -32,6 +33,7 @@ public class Program
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

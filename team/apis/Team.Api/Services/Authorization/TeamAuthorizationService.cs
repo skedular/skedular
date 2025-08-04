@@ -40,7 +40,7 @@ public class TeamAuthorizationService(
 
     public async Task<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
 
         return new Permissions

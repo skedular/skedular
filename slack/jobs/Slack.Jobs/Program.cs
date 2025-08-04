@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
@@ -31,6 +32,7 @@ public class Program
             .AddKafkaOutboxBackgroundService<SlackDbContext>()
             .AddTemporalOutboxBackgroundService<SlackDbContext>()
             .AddDomainSharedConfigurations(configuration)
+            .AddRootLevelSharedServices()
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

@@ -56,7 +56,7 @@ public class TeamMemberService(
         ICollection<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
         if (!teamAuthorizationService.CanView(team, customer))
         {

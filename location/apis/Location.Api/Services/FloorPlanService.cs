@@ -187,7 +187,7 @@ public class FloorPlanService(
         ICollection<ResourcePosition> resourcePositions,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlanId, cancellationToken) ??
                                 throw new FloorPlanNotFound();
         var existingLocation =

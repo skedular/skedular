@@ -33,7 +33,7 @@ public class OrganizationAnalyticsService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanViewAnalytics(organization, customer))

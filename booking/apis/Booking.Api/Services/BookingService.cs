@@ -316,7 +316,7 @@ public class BookingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
         var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
@@ -351,7 +351,7 @@ public class BookingService(
         Shared.Models.Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         if (customer is not null && searchCriteria.IncludeMineOnly.HasValue && searchCriteria.IncludeMineOnly.Value)

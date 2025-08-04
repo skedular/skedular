@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Database;
+﻿using Api.Shared.Services.Cache;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Notification.Shared.Database;
 
@@ -18,11 +19,14 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<NotificationDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<NotificationDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(
+        IDbContextFactory<NotificationDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        IGenericCustomerCacheService genericCustomerCacheService)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);

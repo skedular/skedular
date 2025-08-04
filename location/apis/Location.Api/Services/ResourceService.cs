@@ -321,7 +321,7 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
@@ -344,7 +344,7 @@ public class ResourceService(
         ICollection<ResourceOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ??
                        throw new LocationNotFound();
         if (!organizationAuthorizationService.CanView(location.Organization, customer))
