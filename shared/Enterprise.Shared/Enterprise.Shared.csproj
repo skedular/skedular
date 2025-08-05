@@ -14,8 +14,8 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.6.2"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.15"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.6.3"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.0.16"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.11.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.11.0"/>
@@ -31,16 +31,16 @@
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.8"/>
         <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.8"/>
 
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.8"/>
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.7.0"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.7"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.8"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.7.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.0"/>
         <PackageReference Include="Microsoft.Graph" Version="5.88.0"/>
@@ -62,12 +62,12 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.2"/>
 
-        <PackageReference Include="Quartz" Version="3.14.0"/>
-        <PackageReference Include="Quartz.AspNetCore" Version="3.14.0"/>
-        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.14.0"/>
-        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0"/>
-        <PackageReference Include="Quartz.OpenTelemetry.Instrumentation" Version="3.14.0"/>
-        <PackageReference Include="Quartz.Serialization.Json" Version="3.14.0"/>
+        <PackageReference Include="Quartz" Version="3.15.0"/>
+        <PackageReference Include="Quartz.AspNetCore" Version="3.15.0"/>
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.15.0"/>
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.15.0"/>
+        <PackageReference Include="Quartz.OpenTelemetry.Instrumentation" Version="3.15.0"/>
+        <PackageReference Include="Quartz.Serialization.Json" Version="3.15.0"/>
 
         <PackageReference Include="Serilog" Version="4.3.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
@@ -108,7 +108,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
