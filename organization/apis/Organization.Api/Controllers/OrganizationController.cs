@@ -53,6 +53,20 @@ public class OrganizationController(
         return Ok();
     }
 
+    public override async Task<IActionResult> RegenerateAllOfferings(CancellationToken cancellationToken = default)
+    {
+        await organizationOfferingService.RegenrateAllOfferingsAsync(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> RerunAllOfferingsWorkflows(CancellationToken cancellationToken = default)
+    {
+        await organizationOfferingService.RerunAllOfferingsWorkflowsAsync(cancellationToken);
+
+        return Ok();
+    }
+
     public override async Task<IActionResult> ChangeOrganizationOffering(
         string organizationId,
         string offeringCode,
@@ -65,7 +79,7 @@ public class OrganizationController(
             return Unauthorized();
         }
 
-        await organizationOfferingService.UpdateOfferingAsync(organizationId, offeringCode.ToOfferingCode(), true, true, cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(organizationId, offeringCode.ToOfferingCode(), true, cancellationToken);
 
         return Ok();
     }

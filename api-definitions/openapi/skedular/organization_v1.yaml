@@ -82,6 +82,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/organization/regenerate-all-offerings:
+    put:
+      tags:
+        - v1
+        - organization
+        - offering
+      summary: regenerate all offerings
+      operationId: regenerateAllOfferings
+
+      responses:
+        "200":
+          description: the status of regenrating all offerings
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/rerun-all-offerings-workflows:
+    put:
+      tags:
+        - v1
+        - organization
+        - offering
+      summary: rerun all offerings workflows
+      operationId: rerunAllOfferingsWorkflows
+
+      responses:
+        "200":
+          description: the status of running all offerings workflows
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
   /v1/organization/{organizationId}/offering/{offeringCode}:
     put:
       tags:

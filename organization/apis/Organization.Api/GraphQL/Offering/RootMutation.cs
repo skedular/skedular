@@ -14,7 +14,7 @@ public class RootMutation
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await organizationOfferingService.UpdateOfferingAsync(input.Id, input.OfferingCode.ToOfferingCode(), false, false, cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(input.Id, input.OfferingCode.ToOfferingCode(), false, cancellationToken);
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 

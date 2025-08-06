@@ -12,11 +12,11 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
     void Add(OrganizationOffering organizationOffering);
     void Remove(OrganizationOffering organizationOffering);
     void Undelete(OrganizationOffering organizationOffering);
+    void Update(OrganizationOffering organizationOffering);
 }
 
 public class OrganizationOfferingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider),
-        IOrganizationOfferingRepository
+    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider), IOrganizationOfferingRepository
 {
     public async Task<OrganizationOffering?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationOffering
@@ -51,6 +51,13 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
     public void Undelete(OrganizationOffering organizationOffering)
     {
         organizationOffering.DeletedAt = null;
+        DbContext.OrganizationOffering.Update(organizationOffering);
+    }
+
+    public void Update(OrganizationOffering organizationOffering)
+    {
+        var now = TimeProvider.GetUtcNow();
+        organizationOffering.ModifiedAt = now;
         DbContext.OrganizationOffering.Update(organizationOffering);
     }
 }

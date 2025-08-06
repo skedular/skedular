@@ -55,6 +55,20 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// regenerate all offerings
+        /// </summary>
+        /// <returns>the status of regenrating all offerings</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/regenerate-all-offerings")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllOfferings(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// rerun all offerings workflows
+        /// </summary>
+        /// <returns>the status of running all offerings workflows</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/rerun-all-offerings-workflows")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RerunAllOfferingsWorkflows(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// change organization offering
         /// </summary>
         /// <param name="x_API_Key">Bearer access token</param>

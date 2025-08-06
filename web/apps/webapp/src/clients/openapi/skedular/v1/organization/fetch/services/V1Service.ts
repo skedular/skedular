@@ -51,6 +51,30 @@ export class V1Service {
         });
     }
     /**
+     * regenerate all offerings
+     * @returns any the status of regenrating all offerings
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public regenerateAllOfferings(): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/organization/regenerate-all-offerings',
+        });
+    }
+    /**
+     * rerun all offerings workflows
+     * @returns any the status of running all offerings workflows
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public rerunAllOfferingsWorkflows(): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/organization/rerun-all-offerings-workflows',
+        });
+    }
+    /**
      * change organization offering
      * @param organizationId
      * @param offeringCode

@@ -129,6 +129,6 @@ public static class Offerings
         };
 
     public static DateTimeOffset GetOfferingPeriodStart(this DateTimeOffset date) => new(date.Year, date.Month, 1, 0, 0, 0, date.Offset);
-    public static DateTimeOffset GetOfferingPeriodEnd(this DateTimeOffset date) => date.AddMonths(1).AddTicks(-1);
-    public static DateTimeOffset GetNextOfferingPeriodStart(this DateTimeOffset end) => end.AddTicks(1);
+    public static DateTimeOffset GetOfferingPeriodEnd(this DateTimeOffset date) => date.AddMonths(1);
+    public static DateTimeOffset GetNextOfferingPeriodStart(this DateTimeOffset end) => end;
 }

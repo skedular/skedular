@@ -14,14 +14,10 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationOfferingService
 {
-    Task UpdateOfferingAsync(
-        string organizationId,
-        OfferingCode offeringCode,
-        bool ignoreAuthorizationCheck,
-        bool ignorePaymentMethod,
-        CancellationToken cancellationToken);
-
+    Task UpdateOfferingAsync(string organizationId, OfferingCode offeringCode, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken);
+    Task RegenrateAllOfferingsAsync(CancellationToken cancellationToken);
+    Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
 }
 
 public class OrganizationOfferingService(
@@ -39,7 +35,6 @@ public class OrganizationOfferingService(
         string organizationId,
         OfferingCode offeringCode,
         bool ignoreAuthorizationCheck,
-        bool ignorePaymentMethod,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -127,5 +122,45 @@ public class OrganizationOfferingService(
     }
 
     public async Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken) =>
-        await UpdateOfferingAsync(organizationId, OfferingCode.FreeTierV1, false, false, cancellationToken);
+        await UpdateOfferingAsync(organizationId, OfferingCode.FreeTierV1, false, cancellationToken);
+
+    public async Task RegenrateAllOfferingsAsync(CancellationToken cancellationToken)
+    {
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var now = timeProvider.GetUtcNow();
+        var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
+        foreach(var organization in organizations)
+        {
+            var offering = organization.OrganizationOfferings.First();
+            offering.Start = now.GetOfferingPeriodStart();
+            offering.End = offering.Start.GetOfferingPeriodStart().GetOfferingPeriodEnd();
+
+            repositoryFactory.OrganizationOfferingRepository.Update(offering);
+
+            organizationOutboxPublisher.PublishOrganizations(
+                [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
+                repositoryFactory.UnitOfWork);
+        }
+        
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+    }
+
+    public async Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken)
+    {
+        var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
+        foreach(var organization in organizations)
+        {
+            var offering = organization.OrganizationOfferings.First();
+            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+                new ScheduleRenewOrganizationOfferingInput(
+                    organization.Id,
+                    offering.Id,
+                    offering.End.GetNextOfferingPeriodStart()),
+                repositoryFactory.UnitOfWork);
+        }
+        
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
 }
