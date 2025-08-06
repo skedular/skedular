@@ -10,7 +10,6 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
 {
     void AddRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
     void UpdateRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
-    void RemoveRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
     Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken);
 }
 
@@ -23,8 +22,6 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
         resourceBookingSlots.ForEach(identity => identity.CreatedAt = now);
         DbContext.ResourceBookingSlot.AddRange(resourceBookingSlots);
     }
-
-    public void RemoveRange(ICollection<ResourceBookingSlot> resourceBookingSlots) => DbContext.ResourceBookingSlot.RemoveRange(resourceBookingSlots);
 
     public void UpdateRange(ICollection<ResourceBookingSlot> resourceBookingSlots)
     {
