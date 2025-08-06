@@ -17,7 +17,7 @@ public class BookingController(
     IVersionService versionService,
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
-    IResourceBookingSlotsHelperService resourceBookingSlotsHelperService,
+    ILocationResourceBookingSlotsHelperService locationResourceBookingSlotsHelperService,
     IBookingInternalPublisher bookingInternalPublisher,
     TimeProvider timeProvider,
     ILogger<BookingController> logger)
@@ -49,16 +49,16 @@ public class BookingController(
         return Ok();
     }
 
-    public override async Task<IActionResult> RepublishAllResourcesSlots(CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> RepublishAllLocationsResourcesSlots(CancellationToken cancellationToken = default)
     {
-        await resourceBookingSlotsHelperService.GenerateAllAsync(cancellationToken);
+        await locationResourceBookingSlotsHelperService.GenerateAllAsync(cancellationToken);
 
         return Ok();
     }
 
-    public override async Task<IActionResult> RepublishResourcesSlots(string resourceId, CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> RepublishLocationResourcesSlots(string locationId, CancellationToken cancellationToken = default)
     {
-        await resourceBookingSlotsHelperService.GenerateAsync(resourceId, cancellationToken);
+        await locationResourceBookingSlotsHelperService.GenerateAsync(locationId, cancellationToken);
 
         return Ok();
     }

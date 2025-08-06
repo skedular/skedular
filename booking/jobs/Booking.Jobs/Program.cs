@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Booking.Shared;
 using Booking.Shared.Activities;
 using Booking.Shared.Database;
+using Booking.Shared.Workflows.LocationResource;
 using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
 using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
@@ -47,8 +48,11 @@ public class Program
 
         services
             .AddTemporalWorker(configuration)
+            .AddWorkflow<LocationResourceSlotGeneration>()
+            .AddWorkflow<ResourceSlotGeneration>()
             .AddWorkflow<PayBookingViaCard>()
             .AddWorkflow<PayBookingViaBankTransfer>()
+            .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>()
             .AddScopedActivities<InvoiceIntegrations>();

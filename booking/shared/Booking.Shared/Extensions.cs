@@ -29,9 +29,8 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
-            .AddSingleton<IResourceBookingSlotHelperService, ResourceBookingSlotHelperService>()
             .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
-            .AddScoped<IResourceBookingSlotsHelperService, ResourceBookingSlotsHelperService>()
+            .AddScoped<ILocationResourceBookingSlotsHelperService, LocationResourceBookingSlotsHelperService>()
             .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
             .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
@@ -72,7 +71,6 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IBookingInternalOutboxPublisher, BookingInternalOutboxPublisher>()
             .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)

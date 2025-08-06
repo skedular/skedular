@@ -39,4 +39,9 @@ public static class EntityBaseWithDeletedExtensions
 {
     public static bool IsNotDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => !entity.IsDeleted();
     public static bool IsDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => entity.DeletedAt.HasValue;
+
+    public static bool IsReplicatedNotDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedEntityBaseWithDeleted =>
+        !entity.IsReplicatedDeleted();
+
+    public static bool IsReplicatedDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedEntityBaseWithDeleted => entity.DeletedAt.HasValue;
 }

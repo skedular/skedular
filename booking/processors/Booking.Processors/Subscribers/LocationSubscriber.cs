@@ -2,10 +2,14 @@
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
-using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Workflows.LocationResource;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Random;
+using Enterprise.Shared.Temporal.Configurations;
+using Temporalio.Api.Enums.V1;
+using Temporalio.Client;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
@@ -13,11 +17,13 @@ using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 namespace Booking.Processors.Subscribers;
 
 public class LocationSubscriber(
+    TemporalConfiguration temporalConfiguration,
     ILogger<LocationSubscriber> logger,
     IMapper mapper,
+    IRandomHelper randomHelper,
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
-    IBookingInternalOutboxPublisher bookingInternalOutboxPublisher) : IEventSubscriber<Key, Event>
+    ITemporalClient temporalClient) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -84,19 +90,38 @@ public class LocationSubscriber(
         existingLocation =
             repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization, organizationTags));
 
-        (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
+        (existingLocation, var resourceIdsToRegenerateBookingSlots) =
+            await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
 
         if (locationOpeningHoursChanged)
         {
             // Regenerate all
-            bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlot(
-                existingLocation.Resources.Where(item => item.DeletedAt is null).Select(item => item.Id),
-                repositoryFactory.UnitOfWork);
+            await temporalClient.StartWorkflowAsync(
+                (LocationResourceSlotGeneration workflow) =>
+                    workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(existingLocation.Id, null)),
+                new WorkflowOptions
+                {
+                    Id = randomHelper.Generate(),
+                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                    RetryPolicy = null,
+                    IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
+                    Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                });
         }
         else
         {
             // Regenerate those changed
-            bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlot(resourceIds, repositoryFactory.UnitOfWork);
+            await temporalClient.StartWorkflowAsync(
+                (ResourceSlotGeneration workflow) =>
+                    workflow.ExecuteAsync(new ResourceSlotGenerationInput(resourceIdsToRegenerateBookingSlots)),
+                new WorkflowOptions
+                {
+                    Id = randomHelper.Generate(),
+                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                    RetryPolicy = null,
+                    IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
+                    Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                });
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

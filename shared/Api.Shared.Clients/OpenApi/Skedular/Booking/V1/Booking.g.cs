@@ -56,19 +56,19 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// republish all resource slots
+        /// republish all locations resources slots
         /// </summary>
-        /// <returns>the status of republishing all resources slots</returns>
+        /// <returns>the status of republishing all location resources slots</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RepublishAllResourcesSlotsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RepublishAllLocationsResourcesSlotsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// republish resource slots
+        /// republish location's resources slots
         /// </summary>
-        /// <returns>the status of republishing resources slots</returns>
+        /// <returns>the status of republishing locations resources slots</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RepublishResourcesSlotsAsync(string resourceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RepublishLocationResourcesSlotsAsync(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -353,11 +353,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// republish all resource slots
+        /// republish all locations resources slots
         /// </summary>
-        /// <returns>the status of republishing all resources slots</returns>
+        /// <returns>the status of republishing all location resources slots</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RepublishAllResourcesSlotsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RepublishAllLocationsResourcesSlotsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -426,14 +426,14 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// republish resource slots
+        /// republish location's resources slots
         /// </summary>
-        /// <returns>the status of republishing resources slots</returns>
+        /// <returns>the status of republishing locations resources slots</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RepublishResourcesSlotsAsync(string resourceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RepublishLocationResourcesSlotsAsync(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (resourceId == null)
-                throw new System.ArgumentNullException("resourceId");
+            if (locationId == null)
+                throw new System.ArgumentNullException("locationId");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -446,9 +446,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/booking/resources-slots/{resourceId}/republish"
+                    // Operation Path: "v1/booking/resources-slots/{locationId}/republish"
                     urlBuilder_.Append("v1/booking/resources-slots/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(resourceId, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locationId, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
                     PrepareRequest(client_, request_, urlBuilder_);

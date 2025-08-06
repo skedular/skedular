@@ -9,7 +9,6 @@ namespace Booking.Shared.Publishers;
 
 public interface IBookingInternalPublisher
 {
-    Task PublishGenerateResourceBookingSlotAsync(IEnumerable<string> resourceIds, CancellationToken cancellationToken);
     Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
@@ -19,23 +18,6 @@ public class BookingInternalPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IBookingInternalPublisher
 {
-    public async Task PublishGenerateResourceBookingSlotAsync(IEnumerable<string> resourceIds, CancellationToken cancellationToken) =>
-        await Task.WhenAll(resourceIds.Select(async resourceId =>
-        {
-            var key = new Key { ResourceId = resourceId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.GenerateResourceBookingSlot,
-                    context.GetCorrelationId()),
-                ResourceId = resourceId
-            };
-
-            await publisher.PublishAsync(key, @event, cancellationToken);
-        }));
-
     public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
     {
         var key = new Key { StripeConnectAccountWebhookKey = id };

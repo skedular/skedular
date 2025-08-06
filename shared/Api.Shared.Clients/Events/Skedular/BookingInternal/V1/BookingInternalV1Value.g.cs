@@ -25,22 +25,21 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch9ib29raW5nX2ludGVybmFsX3YxX3ZhbHVlLnByb3RvEg9ib29raW5naW50",
-            "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8iiAEKBUV2",
-            "ZW50EisKCG1ldGFkYXRhGAEgASgLMhkuYm9va2luZ2ludGVybmFsLk1ldGFk",
-            "YXRhEhQKCnJlc291cmNlSWQYAiABKAlIABIxCidzdHJpcGVDb25uZWN0QWNj",
-            "b3VudFdlYmhvb2tFdmVudFBheWxvYWQYAyABKAlIAEIJCgdwYXlsb2FkIqUB",
-            "CghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3VyY2UYAiABKAkS",
-            "EQoJYXBwU291cmNlGAMgASgJEiMKBHR5cGUYBCABKA4yFS5ib29raW5naW50",
-            "ZXJuYWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
-            "bWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKl8KBFR5cGUSJAogVHlw",
-            "ZV9HZW5lcmF0ZVJlc291cmNlQm9va2luZ1Nsb3QQABIxCi1UeXBlX1N0cmlw",
-            "ZUNvbm5lY3RBY2NvdW50V2ViaG9va0V2ZW50UmVjZWl2ZWQQAUI+qgI7QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5nSW50ZXJu",
-            "YWwuVjEuVmFsdWViBnByb3RvMw=="));
+            "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8icgoFRXZl",
+            "bnQSKwoIbWV0YWRhdGEYASABKAsyGS5ib29raW5naW50ZXJuYWwuTWV0YWRh",
+            "dGESMQonc3RyaXBlQ29ubmVjdEFjY291bnRXZWJob29rRXZlbnRQYXlsb2Fk",
+            "GAMgASgJSABCCQoHcGF5bG9hZCKlAQoITWV0YWRhdGESCgoCaWQYASABKAkS",
+            "FAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIjCgR0",
+            "eXBlGAQgASgOMhUuYm9va2luZ2ludGVybmFsLlR5cGUSKAoEdGltZRgFIAEo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNY29ycmVsYXRpb25J",
+            "ZBgGIAEoCSo5CgRUeXBlEjEKLVR5cGVfU3RyaXBlQ29ubmVjdEFjY291bnRX",
+            "ZWJob29rRXZlbnRSZWNlaXZlZBAAQj6qAjtBcGkuU2hhcmVkLkNsaWVudHMu",
+            "RXZlbnRzLlNrZWR1bGFyLkJvb2tpbmdJbnRlcm5hbC5WMS5WYWx1ZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event.Parser, new[]{ "Metadata", "ResourceId", "StripeConnectAccountWebhookEventPayload" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event.Parser, new[]{ "Metadata", "StripeConnectAccountWebhookEventPayload" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null)
           }));
     }
@@ -49,8 +48,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("Type_GenerateResourceBookingSlot")] GenerateResourceBookingSlot = 0,
-    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 1,
+    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 0,
   }
 
   #endregion
@@ -93,9 +91,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
     public Event(Event other) : this() {
       metadata_ = other.metadata_ != null ? other.metadata_.Clone() : null;
       switch (other.PayloadCase) {
-        case PayloadOneofCase.ResourceId:
-          ResourceId = other.ResourceId;
-          break;
         case PayloadOneofCase.StripeConnectAccountWebhookEventPayload:
           StripeConnectAccountWebhookEventPayload = other.StripeConnectAccountWebhookEventPayload;
           break;
@@ -119,32 +114,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       get { return metadata_; }
       set {
         metadata_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "resourceId" field.</summary>
-    public const int ResourceIdFieldNumber = 2;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string ResourceId {
-      get { return HasResourceId ? (string) payload_ : ""; }
-      set {
-        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-        payloadCase_ = PayloadOneofCase.ResourceId;
-      }
-    }
-    /// <summary>Gets whether the "resourceId" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasResourceId {
-      get { return payloadCase_ == PayloadOneofCase.ResourceId; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "resourceId" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearResourceId() {
-      if (HasResourceId) {
-        ClearPayload();
       }
     }
 
@@ -178,7 +147,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
       None = 0,
-      ResourceId = 2,
       StripeConnectAccountWebhookEventPayload = 3,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
@@ -211,7 +179,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         return true;
       }
       if (!object.Equals(Metadata, other.Metadata)) return false;
-      if (ResourceId != other.ResourceId) return false;
       if (StripeConnectAccountWebhookEventPayload != other.StripeConnectAccountWebhookEventPayload) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -222,7 +189,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (metadata_ != null) hash ^= Metadata.GetHashCode();
-      if (HasResourceId) hash ^= ResourceId.GetHashCode();
       if (HasStripeConnectAccountWebhookEventPayload) hash ^= StripeConnectAccountWebhookEventPayload.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
@@ -247,10 +213,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Metadata);
       }
-      if (HasResourceId) {
-        output.WriteRawTag(18);
-        output.WriteString(ResourceId);
-      }
       if (HasStripeConnectAccountWebhookEventPayload) {
         output.WriteRawTag(26);
         output.WriteString(StripeConnectAccountWebhookEventPayload);
@@ -269,10 +231,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(Metadata);
       }
-      if (HasResourceId) {
-        output.WriteRawTag(18);
-        output.WriteString(ResourceId);
-      }
       if (HasStripeConnectAccountWebhookEventPayload) {
         output.WriteRawTag(26);
         output.WriteString(StripeConnectAccountWebhookEventPayload);
@@ -289,9 +247,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       int size = 0;
       if (metadata_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Metadata);
-      }
-      if (HasResourceId) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ResourceId);
       }
       if (HasStripeConnectAccountWebhookEventPayload) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookEventPayload);
@@ -315,9 +270,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         Metadata.MergeFrom(other.Metadata);
       }
       switch (other.PayloadCase) {
-        case PayloadOneofCase.ResourceId:
-          ResourceId = other.ResourceId;
-          break;
         case PayloadOneofCase.StripeConnectAccountWebhookEventPayload:
           StripeConnectAccountWebhookEventPayload = other.StripeConnectAccountWebhookEventPayload;
           break;
@@ -349,10 +301,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
             input.ReadMessage(Metadata);
             break;
           }
-          case 18: {
-            ResourceId = input.ReadString();
-            break;
-          }
           case 26: {
             StripeConnectAccountWebhookEventPayload = input.ReadString();
             break;
@@ -381,10 +329,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
               Metadata = new global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Metadata();
             }
             input.ReadMessage(Metadata);
-            break;
-          }
-          case 18: {
-            ResourceId = input.ReadString();
             break;
           }
           case 26: {
@@ -486,7 +430,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot;
+    private global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type Type {
@@ -551,7 +495,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (DomainSource.Length != 0) hash ^= DomainSource.GetHashCode();
       if (AppSource.Length != 0) hash ^= AppSource.GetHashCode();
-      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot) hash ^= Type.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived) hash ^= Type.GetHashCode();
       if (time_ != null) hash ^= Time.GetHashCode();
       if (CorrelationId.Length != 0) hash ^= CorrelationId.GetHashCode();
       if (_unknownFields != null) {
@@ -584,7 +528,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -618,7 +562,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -649,7 +593,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       if (AppSource.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (time_ != null) {
@@ -679,7 +623,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value {
       if (other.AppSource.Length != 0) {
         AppSource = other.AppSource;
       }
-      if (other.Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.GenerateResourceBookingSlot) {
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type.StripeConnectAccountWebhookEventReceived) {
         Type = other.Type;
       }
       if (other.time_ != null) {

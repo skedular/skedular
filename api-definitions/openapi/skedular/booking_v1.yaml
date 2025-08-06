@@ -87,12 +87,12 @@ paths:
       tags:
         - v1
         - booking
-      summary: republish all resource slots
-      operationId: republishAllResourcesSlots
+      summary: republish all locations resources slots
+      operationId: republishAllLocationsResourcesSlots
 
       responses:
         "200":
-          description: the status of republishing all resources slots
+          description: the status of republishing all location resources slots
 
         default:
           description: unexpected error
@@ -101,23 +101,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/booking/resources-slots/{resourceId}/republish:
+  /v1/booking/resources-slots/{locationId}/republish:
     put:
       tags:
         - v1
         - booking
-      summary: republish resource slots
-      operationId: republishResourcesSlots
+      summary: republish location's resources slots
+      operationId: republishLocationResourcesSlots
       parameters:
         - in: path
-          name: resourceId
+          name: locationId
           schema:
             type: string
           required: true
 
       responses:
         "200":
-          description: the status of republishing resources slots
+          description: the status of republishing locations resources slots
 
         default:
           description: unexpected error

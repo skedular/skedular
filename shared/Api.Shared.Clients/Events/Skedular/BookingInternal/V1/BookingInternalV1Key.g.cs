@@ -25,14 +25,13 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch1ib29raW5nX2ludGVybmFsX3YxX2tleS5wcm90bxIPYm9va2luZ2ludGVy",
-            "bmFsIkEKA0tleRISCgpyZXNvdXJjZUlkGAEgASgJEiYKHnN0cmlwZUNvbm5l",
-            "Y3RBY2NvdW50V2ViaG9va0tleRgCIAEoCUI8qgI5QXBpLlNoYXJlZC5DbGll",
-            "bnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5nSW50ZXJuYWwuVjEuS2V5YgZw",
-            "cm90bzM="));
+            "bmFsIi0KA0tleRImCh5zdHJpcGVDb25uZWN0QWNjb3VudFdlYmhvb2tLZXkY",
+            "ASABKAlCPKoCOUFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
+            "Qm9va2luZ0ludGVybmFsLlYxLktleWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key.Parser, new[]{ "ResourceId", "StripeConnectAccountWebhookKey" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key.Parser, new[]{ "StripeConnectAccountWebhookKey" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,7 +73,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
-      resourceId_ = other.resourceId_;
       stripeConnectAccountWebhookKey_ = other.stripeConnectAccountWebhookKey_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -85,20 +83,8 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       return new Key(this);
     }
 
-    /// <summary>Field number for the "resourceId" field.</summary>
-    public const int ResourceIdFieldNumber = 1;
-    private string resourceId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string ResourceId {
-      get { return resourceId_; }
-      set {
-        resourceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "stripeConnectAccountWebhookKey" field.</summary>
-    public const int StripeConnectAccountWebhookKeyFieldNumber = 2;
+    public const int StripeConnectAccountWebhookKeyFieldNumber = 1;
     private string stripeConnectAccountWebhookKey_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -124,7 +110,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ResourceId != other.ResourceId) return false;
       if (StripeConnectAccountWebhookKey != other.StripeConnectAccountWebhookKey) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -133,7 +118,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (ResourceId.Length != 0) hash ^= ResourceId.GetHashCode();
       if (StripeConnectAccountWebhookKey.Length != 0) hash ^= StripeConnectAccountWebhookKey.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -153,12 +137,8 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (ResourceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ResourceId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
@@ -171,12 +151,8 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ResourceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ResourceId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
@@ -189,9 +165,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (ResourceId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ResourceId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookKey);
       }
@@ -206,9 +179,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     public void MergeFrom(Key other) {
       if (other == null) {
         return;
-      }
-      if (other.ResourceId.Length != 0) {
-        ResourceId = other.ResourceId;
       }
       if (other.StripeConnectAccountWebhookKey.Length != 0) {
         StripeConnectAccountWebhookKey = other.StripeConnectAccountWebhookKey;
@@ -233,10 +203,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            ResourceId = input.ReadString();
-            break;
-          }
-          case 18: {
             StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
@@ -260,10 +226,6 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            ResourceId = input.ReadString();
-            break;
-          }
-          case 18: {
             StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
