@@ -14,8 +14,8 @@ public static class IdentityDetailsExtensions
             .Distinct()
             .ToList();
 
-    public static string? ToFirstEmail<T>(this ICollection<T> src) where T : IIdentityDetails =>
-        src.ToEmails().FirstOrDefault();
+    public static string ToStringEmails<T>(this ICollection<T> src) where T : IIdentityDetails => string.Join(',', src.ToEmails());
+    public static string? ToFirstEmail<T>(this ICollection<T> src) where T : IIdentityDetails => src.ToEmails().FirstOrDefault();
 
     public static string? ToSingleEmail<T>(this ICollection<T> src) where T : IIdentityDetails
     {

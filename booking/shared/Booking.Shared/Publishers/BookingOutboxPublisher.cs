@@ -23,7 +23,6 @@ public interface IBookingOutboxPublisher
 {
     void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
     void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork);
-    void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
     void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
@@ -32,10 +31,10 @@ public interface IBookingOutboxPublisher
 
 public class BookingOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
+    TemporalConfiguration temporalConfiguration,
     IMapper mapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
-    TemporalConfiguration temporalConfiguration,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<PayBookingViaCard> temporalOutboxPayBookingViaCardWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<PayBookingViaBankTransfer> temporalOutboxPayBookingViaBankTransferWorkflowExecutor)
@@ -73,17 +72,6 @@ public class BookingOutboxPublisher(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
-            unitOfWork);
-
-    public void SignalWorkflowPayBookingViaCardSetPaymentStatus(
-        string bookingId,
-        SetPaymentStatusArgs executionArgs,
-        IUnitOfWork unitOfWork) =>
-        temporalSignalOutboxWorkflowExecutor.Signal(
-            $"{Constants.PaidViaCardPrefix}-{bookingId}",
-            typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType(),
-            executionArgs,
-            new WorkflowSignalOptions(),
             unitOfWork);
 
     public void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>

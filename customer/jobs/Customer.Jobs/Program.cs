@@ -3,6 +3,7 @@ using Customer.Shared;
 using Customer.Shared.Activities;
 using Customer.Shared.Database;
 using Customer.Shared.Workflows.AddPayment;
+using Customer.Shared.Workflows.Feedback;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
@@ -45,7 +46,9 @@ public class Program
 
         services
             .AddTemporalWorker(configuration)
+            .AddWorkflow<SubmitCustomerFeedback>()
             .AddWorkflow<AddCustomerStripePaymentMethod>()
+            .AddScopedActivities<EmailIntegrations>()
             .AddScopedActivities<StripeIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();

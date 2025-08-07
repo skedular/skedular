@@ -1,10 +1,3 @@
-resource "aws_ses_template" "new_customer_feedback_email_template" {
-  name    = module.common.new_customer_feedback_email_template_name
-  subject = "{{subject}}"
-  html    = file("${path.module}/../../../email-templates/new-customer-feedback/content.html")
-  text    = file("${path.module}/../../../email-templates/new-customer-feedback/content.txt")
-}
-
 resource "aws_ses_template" "new_customer_joined_email_template" {
   name    = module.common.new_customer_joined_email_template_name
   subject = "{{subject}}"

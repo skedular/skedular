@@ -1,7 +1,3 @@
-output "new_customer_feedback_email_template_name" {
-  value = "NewCustomerFeedback"
-}
-
 output "new_customer_joined_email_template_name" {
   value = "NewCustomerJoined"
 }

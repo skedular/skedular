@@ -18,7 +18,7 @@ public class CustomerFeedbackService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IRandomHelper randomHelper,
-    INotificationOutboxPublisher notificationOutboxPublisher) : ICustomerFeedbackService
+    ICustomerOutboxPublisher customerOutboxPublisher) : ICustomerFeedbackService
 {
     public async Task<CustomerFeedback> SubmitFeedbackAsync(CustomerFeedback feedback, CancellationToken cancellationToken)
     {
@@ -31,7 +31,7 @@ public class CustomerFeedbackService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var customerFeedback = mapper.MapTo(repositoryFactory.CustomerFeedbackRepository.Add(mapper.MapTo(feedback, customer)));
-        notificationOutboxPublisher.PublishNewCustomerFeedbackSubmitted(customerFeedback, repositoryFactory.UnitOfWork);
+        customerOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(customerFeedback.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

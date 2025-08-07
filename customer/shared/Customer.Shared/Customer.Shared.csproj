@@ -23,4 +23,9 @@
         <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="EmailTemplates\CustomerFeedbackReceived\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\CustomerFeedbackReceived\template.txt"/>
+    </ItemGroup>
+
 </Project>

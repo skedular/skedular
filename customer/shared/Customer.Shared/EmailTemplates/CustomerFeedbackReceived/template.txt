@@ -1,0 +1,15 @@
+Hi,
+
+You received new feedback.
+
+Channel:
+{{CHANNEL}}
+
+Customer Name:
+{{CUSTOMER_NAME}}
+
+Emails:
+{{EMAILS}}
+
+Feedback:
+{{FEEDBACK_CONTENT}}

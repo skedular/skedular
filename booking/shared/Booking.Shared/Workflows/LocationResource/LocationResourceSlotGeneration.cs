@@ -4,6 +4,8 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows.LocationResource;
 
+public record LocationResourceSlotGenerationInput(string LocationId, DateTimeOffset? RegenerateTime);
+
 [Workflow]
 public class LocationResourceSlotGeneration
 {
