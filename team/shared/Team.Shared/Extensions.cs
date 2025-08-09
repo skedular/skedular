@@ -40,6 +40,6 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ITeamOutboxPublisher, TeamOutboxPublisher>()
-            .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddSingleton<ITeamOutboxPublisher, TeamOutboxPublisher>()
+            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 }

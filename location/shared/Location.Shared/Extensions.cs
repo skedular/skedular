@@ -44,5 +44,5 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>();
+            .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>();
 }

@@ -91,8 +91,8 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ISlackInternalOutboxPublisher, SlackInternalOutboxPublisher>()
-            .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddSingleton<ISlackInternalOutboxPublisher, SlackInternalOutboxPublisher>()
+            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
     public static IServiceCollection AddSlack(
         this IServiceCollection services,

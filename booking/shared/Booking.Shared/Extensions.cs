@@ -71,7 +71,7 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
+            .AddSingleton<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {

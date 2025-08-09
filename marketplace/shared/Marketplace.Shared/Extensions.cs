@@ -38,5 +38,5 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
+            .AddSingleton<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
 }

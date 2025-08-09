@@ -74,9 +74,9 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
-            .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
-            .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
+            .AddSingleton<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
+            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {
