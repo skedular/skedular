@@ -9,15 +9,10 @@ namespace MsTeams.Shared.Publishers;
 
 public interface IMsTeamsInternalPublisher
 {
-    Task PublishRefreshAzureTenantTeamsAndChannelsAsync(
-        IEnumerable<string> azureTenantIds,
-        CancellationToken cancellationToken);
+    Task PublishRefreshAzureTenantTeamsAndChannelsAsync(IEnumerable<string> azureTenantIds, CancellationToken cancellationToken);
 }
 
-public class MsTeamsInternalPublisher(
-    ApplicationConfiguration applicationConfiguration,
-    IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+public class MsTeamsInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : IMsTeamsInternalPublisher
 {
     public async Task PublishRefreshAzureTenantTeamsAndChannelsAsync(

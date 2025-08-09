@@ -12,10 +12,7 @@ public interface IBookingInternalPublisher
     Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
-public class BookingInternalPublisher(
-    ApplicationConfiguration applicationConfiguration,
-    IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+public class BookingInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : IBookingInternalPublisher
 {
     public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)

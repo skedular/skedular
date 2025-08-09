@@ -13,10 +13,7 @@ public interface ILocationInternalPublisher
     Task PublishRecordLocationDailyRoomCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken);
 }
 
-public class LocationInternalPublisher(
-    ApplicationConfiguration applicationConfiguration,
-    IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+public class LocationInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : ILocationInternalPublisher
 {
     public async Task PublishRecordLocationDailyDeskCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken) =>
