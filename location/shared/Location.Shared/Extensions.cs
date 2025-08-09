@@ -39,8 +39,8 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ILocationInternalPublisher, LocationInternalPublisher>()
-            .AddScoped<ILocationPublisher, LocationPublisher>();
+            .AddSingleton<ILocationInternalPublisher, LocationInternalPublisher>()
+            .AddSingleton<ILocationPublisher, LocationPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

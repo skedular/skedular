@@ -36,7 +36,7 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ITeamPublisher, TeamPublisher>();
+            .AddSingleton<ITeamPublisher, TeamPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

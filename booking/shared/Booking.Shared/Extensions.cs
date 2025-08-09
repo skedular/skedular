@@ -66,8 +66,8 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IBookingInternalPublisher, BookingInternalPublisher>()
-            .AddScoped<IBookingPublisher, BookingPublisher>();
+            .AddSingleton<IBookingInternalPublisher, BookingInternalPublisher>()
+            .AddSingleton<IBookingPublisher, BookingPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
