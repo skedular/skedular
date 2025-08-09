@@ -3,7 +3,7 @@ using Customer.Shared;
 using Customer.Shared.Activities;
 using Customer.Shared.Database;
 using Customer.Shared.Workflows.AddPayment;
-using Customer.Shared.Workflows.Feedback;
+using Customer.Shared.Workflows.CustomerFeedback;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;

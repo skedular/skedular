@@ -44,7 +44,6 @@ public class CustomerService(
     IMapper mapper,
     IContext context,
     IRandomHelper randomHelper,
-    INotificationOutboxPublisher notificationOutboxPublisher,
     ICachedCustomerService cachedCustomerService,
     TimeProvider timeProvider) : ICustomerService
 {
@@ -55,7 +54,7 @@ public class CustomerService(
         var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken) ??
                        throw new CustomerNotFound();
 
-        return (mapper.MapTo(customer)!, customer);
+        return (mapper.MapTo(customer), customer);
     }
 
     public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
@@ -250,7 +249,7 @@ public class CustomerService(
 
         if (sendNewCustomerJoinedEmail)
         {
-            notificationOutboxPublisher.PublishNewCustomerJoinedSubmitted(customer, repositoryFactory.UnitOfWork);
+            customerOutboxPublisher.StartWorkflowNewCustomerJoined(customer.Id, repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

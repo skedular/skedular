@@ -7,7 +7,6 @@ public class EmailConfiguration
     public ICollection<string> NewCustomerFeedbackSubmittedEmailReceivers { get; set; } = [];
     public string NewCustomerFeedbackSubmittedEmailSender { get; set; } = string.Empty;
     public ICollection<string> NewCustomerJoinedEmailReceivers { get; set; } = [];
-    public string NewCustomerJoinedEmailTemplateName { get; set; } = string.Empty;
     public string NewCustomerJoinedEmailSender { get; set; } = string.Empty;
     public bool EnableNewCustomerJoinedEmail { get; set; }
 }

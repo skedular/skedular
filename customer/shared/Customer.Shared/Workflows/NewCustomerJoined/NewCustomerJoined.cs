@@ -2,17 +2,17 @@ using Customer.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Customer.Shared.Workflows.Feedback;
+namespace Customer.Shared.Workflows.NewCustomerJoined;
 
-public record SubmitCustomerFeedbackInput(string CustomerFeedbackId);
+public record NewCustomerJoinedInput(string CustomerId);
 
 [Workflow]
-public class SubmitCustomerFeedback
+public class NewCustomerJoined
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(SubmitCustomerFeedbackInput args) =>
+    public async Task ExecuteAsync(NewCustomerJoinedInput args) =>
         await Workflow.ExecuteActivityAsync(
-            (EmailIntegrations activity) => activity.SendCustomerFeedbackReceivedEmailAsync(args.CustomerFeedbackId),
+            (EmailIntegrations activity) => activity.SendNewCustomerJoinedEmailAsync(args.CustomerId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

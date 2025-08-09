@@ -26,6 +26,8 @@
     <ItemGroup>
         <EmbeddedResource Include="EmailTemplates\CustomerFeedbackReceived\template.html"/>
         <EmbeddedResource Include="EmailTemplates\CustomerFeedbackReceived\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates\NewCustomerJoined\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\NewCustomerJoined\template.txt"/>
     </ItemGroup>
 
 </Project>

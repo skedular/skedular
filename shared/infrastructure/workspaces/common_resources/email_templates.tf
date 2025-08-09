@@ -1,10 +1,3 @@
-resource "aws_ses_template" "new_customer_joined_email_template" {
-  name    = module.common.new_customer_joined_email_template_name
-  subject = "{{subject}}"
-  html    = file("${path.module}/../../../email-templates/new-customer-joined/content.html")
-  text    = file("${path.module}/../../../email-templates/new-customer-joined/content.txt")
-}
-
 resource "aws_ses_template" "invitation_to_join_organization_new_customer_email_template" {
   name    = module.common.invitation_to_join_organization_new_customer_email_template_name
   subject = "{{subject}}"

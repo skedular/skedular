@@ -1,7 +1,9 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Customer.Shared.Mappers;
-using Customer.Shared.Workflows.Feedback;
+using Customer.Shared.Workflows;
+using Customer.Shared.Workflows.CustomerFeedback;
+using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
@@ -18,7 +20,8 @@ namespace Customer.Shared.Publishers;
 public interface ICustomerOutboxPublisher
 {
     void PublishCustomers(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork);
-    void StartWorkflowPayBookingViaBankTransfer(string customerFeedbackId, IUnitOfWork unitOfWork);
+    void StartWorkflowSubmitCustomerFeedback(string customerFeedbackId, IUnitOfWork unitOfWork);
+    void StartWorkflowNewCustomerJoined(string customerId, IUnitOfWork unitOfWork);
 }
 
 public class CustomerOutboxPublisher(
@@ -27,7 +30,8 @@ public class CustomerOutboxPublisher(
     IMapper mapper,
     IContext context,
     IKafkaOutboxEventPublisher<Key, Event> publisher,
-    ITemporalOutboxWorkflowExecutor<SubmitCustomerFeedback> temporalOutboxSubmitCustomerFeedbackWorkflowExecutor) : ICustomerOutboxPublisher
+    ITemporalOutboxWorkflowExecutor<SubmitCustomerFeedback> temporalOutboxSubmitCustomerFeedbackWorkflowExecutor,
+    ITemporalOutboxWorkflowExecutor<NewCustomerJoined> temporalOutboxNewCustomerJoinedWorkflowExecutor) : ICustomerOutboxPublisher
 {
     public void PublishCustomers(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork)
     {
@@ -48,12 +52,24 @@ public class CustomerOutboxPublisher(
         }
     }
 
-    public void StartWorkflowPayBookingViaBankTransfer(string customerFeedbackId, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowSubmitCustomerFeedback(string customerFeedbackId, IUnitOfWork unitOfWork) =>
         temporalOutboxSubmitCustomerFeedbackWorkflowExecutor.Execute(
             new SubmitCustomerFeedbackInput(customerFeedbackId),
             new WorkflowOptions
             {
                 Id = customerFeedbackId,
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowNewCustomerJoined(string customerId, IUnitOfWork unitOfWork) =>
+        temporalOutboxNewCustomerJoinedWorkflowExecutor.Execute(
+            new NewCustomerJoinedInput(customerId),
+            new WorkflowOptions
+            {
+                Id = $"{Constants.NewCustomerJoinedPrefix}-{customerId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

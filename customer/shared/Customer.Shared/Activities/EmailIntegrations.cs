@@ -19,14 +19,14 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
             return;
         }
 
-        await using var htmlTemplateStream = typeof(EmailIntegrations).Assembly.GetManifestResourceStream(
-            "Customer.Shared.EmailTemplates.CustomerFeedbackReceived.template.html");
+        await using var htmlTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Customer.Shared.EmailTemplates.CustomerFeedbackReceived.template.html");
         ArgumentNullException.ThrowIfNull(htmlTemplateStream);
         using var htmlReader = new StreamReader(htmlTemplateStream);
         var html = await htmlReader.ReadToEndAsync(cancellationToken);
 
-        await using var textTemplateStream = typeof(EmailIntegrations).Assembly.GetManifestResourceStream(
-            "Customer.Shared.EmailTemplates.CustomerFeedbackReceived.template.txt");
+        await using var textTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Customer.Shared.EmailTemplates.CustomerFeedbackReceived.template.txt");
         ArgumentNullException.ThrowIfNull(textTemplateStream);
         using var textReader = new StreamReader(textTemplateStream);
         var text = await textReader.ReadToEndAsync(cancellationToken);
@@ -42,23 +42,65 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
         html = html
             .Replace("{{CHANNEL}}", channel)
             .Replace("{{CUSTOMER_NAME}}", customerFeedback.Customer.ToDisplayableName())
-            .Replace("{{EMAILS}}", string.Join(',', customerFeedback.Customer.Identities.ToStringEmails()))
+            .Replace("{{EMAILS}}", customerFeedback.Customer.Identities.ToStringEmails())
             .Replace("{{FEEDBACK_CONTENT}}", string.IsNullOrWhiteSpace(customerFeedback.Content) ? string.Empty : customerFeedback.Content);
 
         text = text
             .Replace("{{CHANNEL}}", channel)
             .Replace("{{CUSTOMER_NAME}}", customerFeedback.Customer.ToDisplayableName())
-            .Replace("{{EMAILS}}", string.Join(',', customerFeedback.Customer.Identities.ToStringEmails()))
+            .Replace("{{EMAILS}}", customerFeedback.Customer.Identities.ToStringEmails())
             .Replace("{{FEEDBACK_CONTENT}}", string.IsNullOrWhiteSpace(customerFeedback.Content) ? string.Empty : customerFeedback.Content);
 
-        var subject = $"New Customer Feedback Received through {channel}";
-
         await emailService.SendRawEmailAsync(
-            subject,
+            $"New Customer Feedback Received through {channel}",
             text,
             html,
             $"Skedular {emailConfiguration.NewCustomerFeedbackSubmittedEmailSender}",
             emailConfiguration.NewCustomerFeedbackSubmittedEmailReceivers,
+            [],
+            [],
+            [],
+            cancellationToken);
+    }
+
+    [Activity]
+    public async Task SendNewCustomerJoinedEmailAsync(string customerId)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
+        if (customer is null)
+        {
+            return;
+        }
+
+        await using var htmlTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Customer.Shared.EmailTemplates.NewCustomerJoined.template.html");
+        ArgumentNullException.ThrowIfNull(htmlTemplateStream);
+        using var htmlReader = new StreamReader(htmlTemplateStream);
+        var html = await htmlReader.ReadToEndAsync(cancellationToken);
+
+        await using var textTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Customer.Shared.EmailTemplates.NewCustomerJoined.template.txt");
+        ArgumentNullException.ThrowIfNull(textTemplateStream);
+        using var textReader = new StreamReader(textTemplateStream);
+        var text = await textReader.ReadToEndAsync(cancellationToken);
+
+        html = html
+            .Replace("{{CUSTOMER_ID}}", customer.Id)
+            .Replace("{{CUSTOMER_NAME}}", customer.ToDisplayableName())
+            .Replace("{{EMAILS}}", customer.Identities.ToStringEmails());
+
+        text = text
+            .Replace("{{CUSTOMER_ID}}", customer.Id)
+            .Replace("{{CUSTOMER_NAME}}", customer.ToDisplayableName())
+            .Replace("{{EMAILS}}", customer.Identities.ToStringEmails());
+
+        await emailService.SendRawEmailAsync(
+            "New customer has joined Skedular",
+            text,
+            html,
+            $"Skedular {emailConfiguration.NewCustomerJoinedEmailSender}",
+            emailConfiguration.NewCustomerJoinedEmailReceivers,
             [],
             [],
             [],
