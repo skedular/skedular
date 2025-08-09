@@ -39,7 +39,7 @@ public class PaymentService(
     IStripeCustomerService stripeCustomerService,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
-    IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient) : IPaymentService
 {
@@ -161,7 +161,7 @@ public class PaymentService(
 
                 repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
 
-                organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+                temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         newOrganizationOffering.Id,
@@ -172,7 +172,7 @@ public class PaymentService(
             {
                 repositoryFactory.OrganizationOfferingRepository.Undelete(existingFreeOffering);
 
-                organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+                temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         existingFreeOffering.Id,

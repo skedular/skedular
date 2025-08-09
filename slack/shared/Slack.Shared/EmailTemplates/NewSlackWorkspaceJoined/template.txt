@@ -1,0 +1,9 @@
+Hi,
+
+New Slack Workspace has joined Skedular.
+
+Customer ID:
+{{WORKSPACE_ID}}
+
+Customer Name:
+{{WORKSPACE_NAME}}

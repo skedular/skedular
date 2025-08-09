@@ -29,6 +29,7 @@ public class AzureTenantOnboardingService(
     IRandomHelper randomHelper,
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
     LocationService.LocationServiceClient locationServiceClient,
@@ -86,7 +87,7 @@ public class AzureTenantOnboardingService(
             [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
         organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
-        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,

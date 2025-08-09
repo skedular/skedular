@@ -20,7 +20,7 @@ public class WorkspaceService(
     IWorkspaceOnboardingService workspaceOnboardingService,
     IMapper mapper,
     ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
-    INotificationOutboxPublisher notificationOutboxPublisher)
+    ITemporalOutboxPublisher temporalOutboxPublisher)
     : IWorkspaceService
 {
     public async Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken)
@@ -51,7 +51,7 @@ public class WorkspaceService(
             slackInternalOutboxPublisher.PublishRefreshWorkspace([workspace.Id], repositoryFactory.UnitOfWork);
             slackInternalOutboxPublisher.PublishRefreshWorkspaceMembers([workspace.Id], repositoryFactory.UnitOfWork);
             slackInternalOutboxPublisher.PublishRefreshWorkspaceChannels([workspace.Id], repositoryFactory.UnitOfWork);
-            notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmitted(mapper.MapTo(workspace), repositoryFactory.UnitOfWork);
+            temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(workspace.Id, repositoryFactory.UnitOfWork);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

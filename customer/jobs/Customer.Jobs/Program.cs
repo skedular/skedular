@@ -4,6 +4,7 @@ using Customer.Shared.Activities;
 using Customer.Shared.Database;
 using Customer.Shared.Workflows.AddPayment;
 using Customer.Shared.Workflows.CustomerFeedback;
+using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
@@ -48,6 +49,7 @@ public class Program
             .AddTemporalWorker(configuration)
             .AddWorkflow<SubmitCustomerFeedback>()
             .AddWorkflow<AddCustomerStripePaymentMethod>()
+            .AddWorkflow<NewCustomerJoined>()
             .AddScopedActivities<EmailIntegrations>()
             .AddScopedActivities<StripeIntegrations>();
 

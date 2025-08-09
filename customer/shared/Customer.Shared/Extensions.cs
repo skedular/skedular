@@ -55,5 +55,6 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddSingleton<ICustomerOutboxPublisher, CustomerOutboxPublisher>();
+            .AddSingleton<ICustomerOutboxPublisher, CustomerOutboxPublisher>()
+            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 }

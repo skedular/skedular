@@ -23,6 +23,7 @@ public class BookingPaymentService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IBookingOutboxPublisher bookingOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingPaymentService
@@ -70,7 +71,7 @@ public class BookingPaymentService(
         if (!string.IsNullOrWhiteSpace(existingBooking.PaymentMethod) &&
             existingBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer)
         {
-            bookingOutboxPublisher.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
+            temporalOutboxPublisher.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
                 existingBooking.Id,
                 new SetPaymentStatusArgs(existingBooking.PaymentStatus),
                 repositoryFactory.UnitOfWork);

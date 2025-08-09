@@ -28,7 +28,7 @@ public class WorkspaceOnboardingService(
     IRandomHelper randomHelper,
     IMapper mapper,
     ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
-    INotificationOutboxPublisher notificationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
         organizationServiceClient,
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient)
@@ -50,7 +50,7 @@ public class WorkspaceOnboardingService(
 
         slackInternalOutboxPublisher.PublishRefreshWorkspaceMembers([workspace.Id], repositoryFactory.UnitOfWork);
         slackInternalOutboxPublisher.PublishRefreshWorkspaceChannels([workspace.Id], repositoryFactory.UnitOfWork);
-        notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmitted(mapper.MapTo(workspace), repositoryFactory.UnitOfWork);
+        temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(workspace.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

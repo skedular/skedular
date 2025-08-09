@@ -6,6 +6,7 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Temporal;
 using Slack.Api.Grpc;
 using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;
@@ -138,7 +139,8 @@ public class Program
                 })
             .AddGrpcServices(configuration)
             .AddGrpcClients(configuration)
-            .AddPages();
+            .AddPages()
+            .AddTemporalClient(configuration);
 
         services.AddGrpc();
 

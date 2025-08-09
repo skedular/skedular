@@ -56,6 +56,7 @@ public class OrganizationService(
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     TimeProvider timeProvider,
     IContext context,
@@ -194,7 +195,7 @@ public class OrganizationService(
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
-        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,

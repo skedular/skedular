@@ -25,10 +25,3 @@ resource "aws_ses_template" "invitation_to_join_team_existing_customer_email_tem
   html    = file("${path.module}/../../../email-templates/invitation-to-join-team-existing-customer/content.html")
   text    = file("${path.module}/../../../email-templates/invitation-to-join-team-existing-customer/content.txt")
 }
-
-resource "aws_ses_template" "new_slackworkspace_joined_email_template" {
-  name    = module.common.new_slackworkspace_joined_email_template_name
-  subject = "{{subject}}"
-  html    = file("${path.module}/../../../email-templates/new-slackworkspace-joined/content.html")
-  text    = file("${path.module}/../../../email-templates/new-slackworkspace-joined/content.txt")
-}

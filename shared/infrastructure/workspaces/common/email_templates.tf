@@ -13,7 +13,3 @@ output "invitation_to_join_team_new_customer_email_template_name" {
 output "invitation_to_join_team_existing_customer_email_template_name" {
   value = "InvitationToJoinTeamExistingCustomer"
 }
-
-output "new_slackworkspace_joined_email_template_name" {
-  value = "NewSlackWorkspaceJoined"
-}

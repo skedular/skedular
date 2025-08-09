@@ -46,6 +46,7 @@ public class BookingService(
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingService
@@ -186,11 +187,11 @@ public class BookingService(
             switch (booking.PaymentMethod)
             {
                 case PaymentMethod.Card:
-                    bookingOutboxPublisher.StartWorkflowPayBookingViaCard(booking, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.StartWorkflowPayBookingViaCard(booking, repositoryFactory.UnitOfWork);
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    bookingOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(booking, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(booking, repositoryFactory.UnitOfWork);
                     break;
 
                 default: throw new ArgumentOutOfRangeException();
@@ -278,11 +279,11 @@ public class BookingService(
             switch (deletedBooking.PaymentMethod)
             {
                 case PaymentMethod.Card:
-                    bookingOutboxPublisher.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    bookingOutboxPublisher.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
                     break;
 
                 default: throw new ArgumentOutOfRangeException();

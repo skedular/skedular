@@ -6,6 +6,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 using Slack.Processors.Subscribers;
 using Slack.Shared;
 using Slack.Shared.Database;
@@ -62,7 +63,8 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddSlack(configuration, _ => { })
-            .AddGrpcClients(configuration);
+            .AddGrpcClients(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

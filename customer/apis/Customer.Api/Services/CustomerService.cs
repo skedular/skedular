@@ -41,6 +41,7 @@ public class CustomerService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     IContext context,
     IRandomHelper randomHelper,
@@ -249,7 +250,7 @@ public class CustomerService(
 
         if (sendNewCustomerJoinedEmail)
         {
-            customerOutboxPublisher.StartWorkflowNewCustomerJoined(customer.Id, repositoryFactory.UnitOfWork);
+            temporalOutboxPublisher.StartWorkflowNewCustomerJoined(customer.Id, repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

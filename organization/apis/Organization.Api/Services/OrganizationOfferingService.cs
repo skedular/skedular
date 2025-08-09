@@ -27,6 +27,7 @@ public class OrganizationOfferingService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
@@ -74,7 +75,7 @@ public class OrganizationOfferingService(
 
         if (activeOffering is not null && activeOffering.Code != offeringCode)
         {
-            organizationOutboxPublisher.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(
+            temporalOutboxPublisher.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(
                 activeOffering.Id,
                 repositoryFactory.UnitOfWork);
 
@@ -94,7 +95,7 @@ public class OrganizationOfferingService(
                 Organization = organization
             };
             repositoryFactory.OrganizationOfferingRepository.Add(organizationOffering);
-            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     organizationOffering.Id,
@@ -104,7 +105,7 @@ public class OrganizationOfferingService(
         else
         {
             repositoryFactory.OrganizationOfferingRepository.Undelete(matchingOffering);
-            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     matchingOffering.Id,
@@ -130,7 +131,7 @@ public class OrganizationOfferingService(
 
         var now = timeProvider.GetUtcNow();
         var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
-        foreach(var organization in organizations)
+        foreach (var organization in organizations)
         {
             var offering = organization.OrganizationOfferings.First();
             offering.Start = now.GetOfferingPeriodStart();
@@ -142,7 +143,7 @@ public class OrganizationOfferingService(
                 [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
                 repositoryFactory.UnitOfWork);
         }
-        
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
@@ -150,17 +151,17 @@ public class OrganizationOfferingService(
     public async Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
-        foreach(var organization in organizations)
+        foreach (var organization in organizations)
         {
             var offering = organization.OrganizationOfferings.First();
-            organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     offering.Id,
                     offering.End.GetNextOfferingPeriodStart()),
                 repositoryFactory.UnitOfWork);
         }
-        
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

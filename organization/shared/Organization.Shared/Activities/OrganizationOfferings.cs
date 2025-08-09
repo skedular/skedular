@@ -19,6 +19,7 @@ public class OrganizationOfferings(
     IMapper mapper,
     TimeProvider timeProvider,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     ICreatable<PaymentIntent, PaymentIntentCreateOptions> paymentIntentCreateService)
 {
     [Activity]
@@ -127,7 +128,7 @@ public class OrganizationOfferings(
         ];
 
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
-        organizationOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 newOrganizationOffering.Id,

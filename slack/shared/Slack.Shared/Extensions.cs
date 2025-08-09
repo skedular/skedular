@@ -5,6 +5,7 @@ using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Slack.Shared.Components;
@@ -58,7 +59,9 @@ public static class Extensions
     }
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+        services
+            .AddSingleton<IMapper, Mapper>()
+            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
@@ -92,7 +95,7 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddSingleton<ISlackInternalOutboxPublisher, SlackInternalOutboxPublisher>()
-            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 
     public static IServiceCollection AddSlack(
         this IServiceCollection services,

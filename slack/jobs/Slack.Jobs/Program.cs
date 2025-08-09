@@ -4,9 +4,13 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Temporal;
 using Slack.Shared;
+using Slack.Shared.Activities;
 using Slack.Shared.Configurations;
 using Slack.Shared.Database;
+using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
+using Temporalio.Extensions.Hosting;
 
 namespace Slack.Jobs;
 
@@ -43,6 +47,11 @@ public class Program
             .AddServices()
             .AddSlack(configuration, _ => { })
             .AddGrpcClients(configuration);
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<NewSlackWorkspaceJoined>()
+            .AddScopedActivities<EmailIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }
