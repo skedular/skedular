@@ -28,7 +28,7 @@ public class LocationResourceSlot(
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, false, cancellationToken);
 
-        return location is null || location.IsReplicatedDeleted()
+        return location is null || location.IsReplicatedDeleted() || (location.Organization != null && location.Organization.IsReplicatedDeleted())
             ? new ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(false, [])
             : new ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(true, location.Resources.Select(item => item.Id).ToList());
     }

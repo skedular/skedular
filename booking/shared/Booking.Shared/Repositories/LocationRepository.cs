@@ -10,7 +10,7 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken);
+    Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Location Update(Location location);
     Location Remove(Location location);
     Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, bool includeDeletedResources, CancellationToken cancellationToken);
@@ -58,9 +58,9 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .AddDependentObjects(includeDeletedResources, true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue)
+            .Where(query => !query.DeletedAt.HasValue && (query.Organization == null || !query.Organization.DeletedAt.HasValue))
             .AddDependentObjects(includeDeletedResources, true)
             .ToListAsync(cancellationToken);
 

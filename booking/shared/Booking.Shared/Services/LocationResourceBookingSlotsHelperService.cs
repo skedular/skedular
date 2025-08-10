@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows.LocationResource;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
 using Enterprise.Shared.Time;
@@ -41,10 +42,17 @@ public class LocationResourceBookingSlotsHelperService(
             .ToList();
     }
 
-    public async Task GenerateAsync(string locationId, CancellationToken cancellationToken) =>
+    public async Task GenerateAsync(string locationId, CancellationToken cancellationToken)
+    {
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, false, cancellationToken);
+        if (location is null || location.IsReplicatedDeleted() || (location.Organization != null && location.Organization.IsReplicatedDeleted()))
+        {
+            return;
+        }
+
         await temporalClient.StartWorkflowAsync(
             (LocationResourceSlotGeneration workflow) =>
-                workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(locationId, null)),
+                workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(location.Id, null)),
             new WorkflowOptions
             {
                 Id = randomHelper.Generate(),
@@ -53,16 +61,17 @@ public class LocationResourceBookingSlotsHelperService(
                 IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
+    }
 
     public async Task GenerateAllAsync(CancellationToken cancellationToken)
     {
-        var locations = await repositoryFactory.LocationRepository.GetAllAsync(false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken);
 
-        foreach (var locationId in locations.Select(item => item.Id))
+        foreach (var location in locations.Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted()))
         {
             await temporalClient.StartWorkflowAsync(
                 (LocationResourceSlotGeneration workflow) =>
-                    workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(locationId, null)),
+                    workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(location.Id, null)),
                 new WorkflowOptions
                 {
                     Id = randomHelper.Generate(),
