@@ -137,7 +137,6 @@ services:
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -180,7 +179,6 @@ services:
       - 40000:10000
       - 40200:10200
       - 40300:10300
-      - 40400:10400
       - 40500:10500
       - 40600:10600
       - 40700:10700
@@ -209,7 +207,6 @@ services:
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -222,7 +219,6 @@ services:
       Subgraphs__Location__Url: http://localhost:10600/v1/graphql
       Subgraphs__Marketplace__Url: http://localhost:11000/v1/graphql
       Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
-      Subgraphs__Notification__Url: http://localhost:10400/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
@@ -233,8 +229,6 @@ services:
       Customer__GrpcUrl: http://staging-apis-01:10002
       Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
@@ -288,7 +282,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -319,7 +313,6 @@ services:
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -333,8 +326,6 @@ services:
       Customer__GrpcUrl: http://staging-apis-01:10002
       Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
@@ -389,7 +380,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -420,7 +411,6 @@ services:
       ConnectionStrings__locationdb: ${STAGING_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${STAGING_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${STAGING_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${STAGING_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${STAGING_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${STAGING_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -434,8 +424,6 @@ services:
       Customer__GrpcUrl: http://staging-apis-01:10002
       Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
       Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
@@ -490,7 +478,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -510,7 +498,6 @@ services:
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -555,7 +542,6 @@ services:
       - 10000:10000
       - 10200:10200
       - 10300:10300
-      - 10400:10400
       - 10500:10500
       - 10600:10600
       - 10700:10700
@@ -584,7 +570,6 @@ services:
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -597,7 +582,6 @@ services:
       Subgraphs__Location__Url: http://localhost:10600/v1/graphql
       Subgraphs__Marketplace__Url: http://localhost:11000/v1/graphql
       Subgraphs__MsTeams__Url: http://localhost:10900/v1/graphql
-      Subgraphs__Notification__Url: http://localhost:10400/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/v1/graphql
       Subgraphs__Core__Url: http://localhost:11100/v1/graphql
@@ -607,8 +591,6 @@ services:
       Customer__GrpcUrl: http://prod-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://prod-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://prod-apis-01:10202
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
@@ -662,7 +644,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1  && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1  && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -693,7 +675,6 @@ services:
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -707,8 +688,6 @@ services:
       Customer__GrpcUrl: http://prod-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://prod-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://prod-apis-01:10202
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
@@ -763,7 +742,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10430/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl -f http://localhost:10230/health/readiness || exit 1 && curl -f http://localhost:10330/health/readiness || exit 1 && curl -f http://localhost:10530/health/readiness || exit 1 && curl -f http://localhost:10630/health/readiness || exit 1 && curl -f http://localhost:10730/health/readiness || exit 1 && curl -f http://localhost:10930/health/readiness || exit 1 && curl -f http://localhost:11030/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -794,7 +773,6 @@ services:
       ConnectionStrings__locationdb: ${PRODUCTION_POSTGRES_LOCATION_CONNECTIONSTRING}
       ConnectionStrings__marketplacedb: ${PRODUCTION_POSTGRES_MARKETPLACE_CONNECTIONSTRING}
       ConnectionStrings__msteamsdb: ${PRODUCTION_POSTGRES_MSTEAMS_CONNECTIONSTRING}
-      ConnectionStrings__notificationdb: ${PRODUCTION_POSTGRES_NOTIFICATION_CONNECTIONSTRING}
       ConnectionStrings__organizationdb: ${PRODUCTION_POSTGRES_ORGANIZATION_CONNECTIONSTRING}
       ConnectionStrings__slackdb: ${PRODUCTION_POSTGRES_SLACK_CONNECTIONSTRING}
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
@@ -808,8 +786,6 @@ services:
       Customer__GrpcUrl: http://prod-apis-01:10002
       Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
-      Notification__GrpcUrl: http://prod-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://prod-apis-01:10202
       Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
@@ -864,7 +840,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10420/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl -f http://localhost:10220/health/readiness || exit 1 && curl -f http://localhost:10320/health/readiness || exit 1 && curl -f http://localhost:10520/health/readiness || exit 1 && curl -f http://localhost:10620/health/readiness || exit 1 && curl -f http://localhost:10720/health/readiness || exit 1 && curl -f http://localhost:10920/health/readiness || exit 1 && curl -f http://localhost:11020/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s

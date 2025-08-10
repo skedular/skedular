@@ -34,9 +34,6 @@
         <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
         <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
-        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj"/>
-
         <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
         <ProjectReference Include="..\..\organization\jobs\Organization.Jobs\Organization.Jobs.csproj"/>
 

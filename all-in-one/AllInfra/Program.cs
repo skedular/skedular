@@ -25,7 +25,6 @@ public class Program
             Location.Infrastructure.Program.MigrateAsync(Location.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Marketplace.Infrastructure.Program.MigrateAsync(Marketplace.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             MsTeams.Infrastructure.Program.MigrateAsync(MsTeams.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
-            Notification.Infrastructure.Program.MigrateAsync(Notification.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Organization.Infrastructure.Program.MigrateAsync(Organization.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Slack.Infrastructure.Program.MigrateAsync(Slack.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),
             Team.Infrastructure.Program.MigrateAsync(Team.Infrastructure.Program.CreateHostBuilder(args), cancellationToken),

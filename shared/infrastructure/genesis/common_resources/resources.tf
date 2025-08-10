@@ -101,17 +101,6 @@ module "location" {
   environment       = var.environment
 }
 
-module "notification" {
-  source = "../modules/notification"
-
-  providers = {
-    aws = aws
-  }
-
-  organization_name = module.common.organization_name
-  environment       = var.environment
-}
-
 module "slack" {
   source = "../modules/slack"
 

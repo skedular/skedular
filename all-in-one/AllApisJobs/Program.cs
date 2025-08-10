@@ -30,8 +30,6 @@ public class Program
             Marketplace.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             MsTeams.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             MsTeams.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Notification.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
-            Notification.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Organization.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Organization.Jobs.Program.CreateHostBuilder(args).RunAsync(cancellationToken),
             Slack.Api.Program.CreateHostBuilder(args).RunAsync(cancellationToken),

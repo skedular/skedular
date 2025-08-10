@@ -161,29 +161,6 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/marketplace_v1_value.proto \
     --output-file-path /output/Skedular/Marketplace/V1/MarketplaceValueMetadata.g.cs
 
-RUN mkdir -p /output/Skedular/Notification/V1
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Notification/V1 --csharp_opt=file_extension=.g.cs notification_v1_key.proto
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Notification/V1 --csharp_opt=file_extension=.g.cs notification_v1_value.proto
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Key \
-    --event-type Key \
-    --topic-name notification.v1.event \
-    --retry-topic-name-prefix notification.v1.event.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name notification.v1.event.deadletter \
-    --generate-metadata-function-helper False \
-    --protobuf-schema-file-path /events/skedular/notification_v1_key.proto \
-    --output-file-path /output/Skedular/Notification/V1/NotificationKeyMetadata.g.cs
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value \
-    --event-type Event \
-    --topic-name notification.v1.event \
-    --retry-topic-name-prefix notification.v1.event.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name notification.v1.event.deadletter \
-    --protobuf-schema-file-path /events/skedular/notification_v1_value.proto \
-    --output-file-path /output/Skedular/Notification/V1/NotificationValueMetadata.g.cs
-
 RUN mkdir -p /output/Skedular/OrganizationInternal/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/OrganizationInternal/V1 --csharp_opt=file_extension=.g.cs organization_internal_v1_value.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/OrganizationInternal/V1 --csharp_opt=file_extension=.g.cs organization_internal_v1_key.proto

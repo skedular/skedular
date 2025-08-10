@@ -44,11 +44,6 @@
         <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj"/>
         <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>
 
-        <ProjectReference Include="..\..\notification\shared\Notification.Infrastructure\Notification.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
-        <ProjectReference Include="..\..\notification\processors\Notification.Processors\Notification.Processors.csproj"/>
-        <ProjectReference Include="..\..\notification\jobs\Notification.Jobs\Notification.Jobs.csproj"/>
-
         <ProjectReference Include="..\..\organization\shared\Organization.Infrastructure\Organization.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
         <ProjectReference Include="..\..\organization\processors\Organization.Processors\Organization.Processors.csproj"/>

@@ -9,7 +9,6 @@ public class SubgraphsConfigurations
     public UrlConfig Location { get; set; } = new();
     public UrlConfig Marketplace { get; set; } = new();
     public UrlConfig MsTeams { get; set; } = new();
-    public UrlConfig Notification { get; set; } = new();
     public UrlConfig Organization { get; set; } = new();
     public UrlConfig Payment { get; set; } = new();
     public UrlConfig Slack { get; set; } = new();

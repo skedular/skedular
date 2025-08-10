@@ -100,11 +100,9 @@ Skedular Mono Repository
 - **Dozzle (logs)**: http://localhost:5001
 - **Organization API**: http://localhost:10200
 - **Booking API**: http://localhost:10300
-- **Customer API**: http://localhost:10400
+- **Customer API**: http://localhost:10000
 - **Location API**: http://localhost:10600
-- **Notification API**: http://localhost:10700
-- **Team API**: http://localhost:10800
-- **Payment API**: http://localhost:10900
+- **Team API**: http://localhost:10500
 - **Marketplace API**: http://localhost:11000
 - **Core API**: http://localhost:11100
 

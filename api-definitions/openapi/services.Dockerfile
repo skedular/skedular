@@ -134,26 +134,6 @@ RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /outpu
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/skedular/notification_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.Skedular.Notification.V1 \
-  /Classname:Notification \
-  /Output:/output/Skedular/Notification/V1/Notification.g.cs \
-  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
-  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
-  /ControllerStyle:abstract \
-  /HandleReferences:true \
-  /ArrayType:System.Collections.Generic.IList \
-  /DictionaryType:System.Collections.Generic.IDictionary \
-  /UseActionResultType:true \
-  /UseCancellationToken:true \
-  /GenerateNullableReferenceTypes:true \
-  /JsonLibrary:SystemTextJson \
-  /ExcludedTypeNames:FileParameter
-
-RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Notification/V1/Notification.g.cs
-
-RUN nswag \
-  openapi2cscontroller \
   /Input:/openapi/skedular/organization_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.V1 \
   /Classname:Organization \

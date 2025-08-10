@@ -1091,7 +1091,6 @@ type Query {
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
-  notificationVersion: Version!
   openingHoursMinutesStep: Int!
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizationAnalytics(from: DateTime! organizationId: String! until: DateTime!): OrganizationAnalytics @cost(weight: "10")

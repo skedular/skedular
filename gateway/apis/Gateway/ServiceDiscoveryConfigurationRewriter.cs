@@ -28,10 +28,6 @@ public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgra
             {
                 EndpointUri = subgraphsConfigurations.MsTeams.Uri ?? new Uri("https+http://msteamsapi/v1/graphql")
             },
-            nameof(subgraphsConfigurations.Notification) => configuration with
-            {
-                EndpointUri = subgraphsConfigurations.Notification.Uri ?? new Uri("https+http://notificationapi/v1/graphql")
-            },
             nameof(subgraphsConfigurations.Organization) => configuration with
             {
                 EndpointUri = subgraphsConfigurations.Organization.Uri ?? new Uri("https+http://organizationapi/v1/graphql")
