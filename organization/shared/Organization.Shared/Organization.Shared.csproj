@@ -37,4 +37,11 @@
         <Compile Remove="Database\Migrations\20250709023052_AddOrganizationPhysicalAddress.Designer.cs"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationExistingCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationExistingCustomer\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.txt"/>
+    </ItemGroup>
+
 </Project>

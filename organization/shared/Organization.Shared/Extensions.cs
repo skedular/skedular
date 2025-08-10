@@ -76,7 +76,6 @@ public static class Extensions
         services
             .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
             .AddSingleton<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
-            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>()
             .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)

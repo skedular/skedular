@@ -41,7 +41,7 @@ public class InvitationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    INotificationOutboxPublisher notificationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     ICachedCustomerService cachedCustomerService) : IInvitationService
@@ -120,18 +120,18 @@ public class InvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                notificationOutboxPublisher.PublishInviteToJoinOrganizationNewCustomer(
-                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
-                    customer,
+                temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationNewCustomer(
+                    organization.Id,
+                    customer.Id,
                     email,
                     repositoryFactory.UnitOfWork);
             }
             else
             {
-                notificationOutboxPublisher.PublishInviteToJoinOrganizationExistingCustomer(
-                    mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
-                    customer,
-                    mapper.MapTo(matchingCustomerByEmail)!,
+                temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationExistingCustomer(
+                    organization.Id,
+                    customer.Id,
+                    matchingCustomerByEmail.Id,
                     repositoryFactory.UnitOfWork);
             }
         }

@@ -1,0 +1,13 @@
+Hi,
+
+{{INVITER_NAME}} has invited you to join the organization {{ORGANIZATION_NAME}} on Skedular.
+
+Since you already have a Skedular account, you can simply log in and accept the invitation to start collaborating with your organization.
+
+Click the link below to review and accept your invitation:
+{{INVITATION_LINK}}
+
+If you weren’t expecting this invitation, you can safely ignore this email.
+
+—
+Powered by Skedular

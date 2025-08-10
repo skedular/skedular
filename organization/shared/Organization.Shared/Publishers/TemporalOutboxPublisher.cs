@@ -2,6 +2,10 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal.Configurations;
+using Organization.Shared.Activities;
+using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
+using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -12,12 +16,26 @@ public interface ITemporalOutboxPublisher
 {
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
+
+    void StartWorkflowInviteToJoinOrganizationExistingCustomer(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerId,
+        IUnitOfWork unitOfWork);
+
+    void StartWorkflowInviteToJoinOrganizationNewCustomer(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerEmail,
+        IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor)
+    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor,
+    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationExistingCustomer> temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor,
+    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
@@ -38,5 +56,37 @@ public class TemporalOutboxPublisher(
             typeof(ScheduleRenewOrganizationOffering).GetMethod(nameof(ScheduleRenewOrganizationOffering.CancelOfferingAsync))!
                 .ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerId,
+        IUnitOfWork unitOfWork) =>
+        temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor.Execute(
+            new SendInviteCustomerToJoinOrganizationExistingCustomerInput(organizationId, inviterCustomerId, inviteeCustomerId),
+            new WorkflowOptions
+            {
+                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerId}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowInviteToJoinOrganizationNewCustomer(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerEmail,
+        IUnitOfWork unitOfWork) =>
+        temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor.Execute(
+            new InviteToJoinOrganizationNewCustomerInput(organizationId, inviterCustomerId, inviteeCustomerEmail),
+            new WorkflowOptions
+            {
+                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerEmail}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
             unitOfWork);
 }

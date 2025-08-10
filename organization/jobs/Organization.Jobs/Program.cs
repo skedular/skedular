@@ -13,6 +13,8 @@ using Organization.Shared.Database;
 using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.Invitation.ExistingCustomer;
 using Organization.Shared.Workflows.Invitation.NonExistingCustomer;
+using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
+using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Temporalio.Extensions.Hosting;
 
@@ -58,8 +60,11 @@ public class Program
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
             .AddWorkflow<InviteNonExistingCustomerToJoinOrganization>()
             .AddWorkflow<InviteExistingCustomerToJoinOrganization>()
+            .AddWorkflow<InviteToJoinOrganizationExistingCustomer>()
+            .AddWorkflow<InviteToJoinOrganizationNewCustomer>()
             .AddScopedActivities<OrganizationOfferings>()
-            .AddScopedActivities<StripeIntegrations>();
+            .AddScopedActivities<StripeIntegrations>()
+            .AddScopedActivities<EmailIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

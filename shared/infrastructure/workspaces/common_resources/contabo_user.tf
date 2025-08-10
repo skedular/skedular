@@ -17,11 +17,7 @@ data "aws_iam_policy_document" "contabo_user_policy_document" {
       "ses:SendRawEmail",
     ]
     resources = [
-      data.aws_ses_domain_identity.default.arn,
-      aws_ses_template.invitation_to_join_organization_new_customer_email_template.arn,
-      aws_ses_template.invitation_to_join_organization_existing_customer_email_template.arn,
-      aws_ses_template.invitation_to_join_team_new_customer_email_template.arn,
-      aws_ses_template.invitation_to_join_team_existing_customer_email_template.arn
+      data.aws_ses_domain_identity.default.arn
     ]
   }
 }
