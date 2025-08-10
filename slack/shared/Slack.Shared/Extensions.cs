@@ -60,11 +60,11 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services
-            .AddSingleton<IMapper, Mapper>()
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()
             .AddScoped<ITeamDailyUpdaterService, TeamDailyUpdaterService>()
             .AddScoped<IWorkspaceService, WorkspaceService>()

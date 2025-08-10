@@ -1,8 +1,13 @@
+using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Clients.Grpc;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Services;
 
 namespace Team.Shared;
 
@@ -12,10 +17,12 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+        services
+            .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -41,5 +48,18 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddSingleton<ITeamOutboxPublisher, TeamOutboxPublisher>()
-            .AddSingleton<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+    
+     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        ArgumentNullException.ThrowIfNull(customerConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+
+        services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+
+        return services
+            .AddSingleton(customerConfiguration);
+    }
 }

@@ -13,7 +13,7 @@ public static class GrpcExtensions
     public static Metadata CreateMetadata(this string apiKey, string verifiableToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(apiKey);
-        return new Metadata { { Constants.ApiKey, apiKey } }.AddVerifiableToken(verifiableToken);
+        return CreateMetadata(apiKey).AddVerifiableToken(verifiableToken);
     }
 
     public static Metadata AddVerifiableToken(this Metadata metadata, string verifiableToken)

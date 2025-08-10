@@ -25,17 +25,18 @@ public static class Extensions
     }
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+        services
+            .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
             .AddScoped<ILocationResourceBookingSlotsHelperService, LocationResourceBookingSlotsHelperService>()
             .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
             .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
             .AddScoped<IBookingInvoiceService, BookingInvoiceService>()
             .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>();
 

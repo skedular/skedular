@@ -327,7 +327,8 @@ public class Mapper : IMapper
                         Id = src.DefaultOrganization.Id,
                         UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName.ToSafeString(),
                         Name = src.DefaultOrganization.Name.ToSafeString()
-                    }
+                    },
+            DisplayableName = src.DisplayableName.ToSafeString()
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>

@@ -116,6 +116,7 @@ message Customer {
     repeated OrganizationTag preferredOrganizationTags = 22;
     string phoneNumber = 23;
     bool isOnboardingDone = 24;
+    string displayableName = 25;
 }
 
 message Identity {

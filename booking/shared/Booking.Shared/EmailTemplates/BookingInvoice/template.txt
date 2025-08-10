@@ -8,4 +8,5 @@ If you have any questions, please contact us.
 Thanks,
 {{COMPANY_NAME}}
 
-Powered by Your Skedular
+—
+Powered by Skedular

@@ -25,12 +25,12 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services
-            .AddSingleton<IMapper, Mapper>()
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>();
+            .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
             .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>

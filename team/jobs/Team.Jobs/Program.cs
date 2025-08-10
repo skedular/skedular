@@ -4,9 +4,14 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Temporal;
 using Team.Shared;
+using Team.Shared.Activities;
 using Team.Shared.Configurations;
 using Team.Shared.Database;
+using Team.Shared.Workflows.InviteToJoinTeamExistingCustomer;
+using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
+using Temporalio.Extensions.Hosting;
 
 namespace Team.Jobs;
 
@@ -40,7 +45,14 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
-            .AddServices();
+            .AddServices()
+            .AddGrpcClients(configuration);
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<InviteToJoinTeamExistingCustomer>()
+            .AddWorkflow<InviteToJoinTeamNewCustomer>()
+            .AddScopedActivities<EmailIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

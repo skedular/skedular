@@ -6,6 +6,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;
 using Team.Shared.Configurations;
@@ -60,7 +61,9 @@ public class Program
             .AddMappers()
             .AddRepositoryFactory()
             .AddPublishers()
-            .AddMappers();
+            .AddMappers()
+            .AddGrpcClients(configuration)
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -20,6 +20,7 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public StripeCustomer? StripeCustomer { get; set; }
     public CustomerBillingDetails? BillingDetails { get; set; }
+    public string DisplayableName => this.ToDisplayableName();
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

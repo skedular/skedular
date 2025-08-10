@@ -8,6 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Grpc.Tools" Version="2.72.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +29,13 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
         <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.html" />
+      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.txt" />
+      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.html" />
+      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.txt" />
     </ItemGroup>
 
 </Project>

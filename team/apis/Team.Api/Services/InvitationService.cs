@@ -41,7 +41,7 @@ public class InvitationService(
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    INotificationOutboxPublisher notificationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     ITeamOutboxPublisher teamOutboxPublisher,
     ICachedCustomerService cachedCustomerService) : IInvitationService
 {
@@ -114,14 +114,14 @@ public class InvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                notificationOutboxPublisher.PublishInviteToJoinTeamNewCustomer(mapper.MapTo(team), customer, email, repositoryFactory.UnitOfWork);
+                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamNewCustomer(team.Id, customer.Id, email, repositoryFactory.UnitOfWork);
             }
             else
             {
-                notificationOutboxPublisher.PublishInviteToJoinTeamExistingCustomer(
-                    mapper.MapTo(team),
-                    customer,
-                    mapper.MapTo(matchingCustomerByEmail)!,
+                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamExistingCustomer(
+                    team.Id,
+                    customer.Id,
+                    matchingCustomerByEmail.Id,
                     repositoryFactory.UnitOfWork);
             }
         }

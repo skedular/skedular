@@ -22,11 +22,11 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services
-            .AddSingleton<IMapper, Mapper>()
-            .AddScoped<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

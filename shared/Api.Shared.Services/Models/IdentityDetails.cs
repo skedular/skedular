@@ -8,16 +8,20 @@ public interface IIdentityDetails
 
 public static class IdentityDetailsExtensions
 {
-    public static ICollection<string> ToEmails<T>(this ICollection<T> src) where T : IIdentityDetails =>
-        src.Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
-            .Select(item => item.Email!.ToLowerInvariant())
+    public static ICollection<string> ToEmails(this IEnumerable<string?> src) =>
+        src
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!.ToLowerInvariant())
             .Distinct()
             .ToList();
 
-    public static string ToStringEmails<T>(this ICollection<T> src) where T : IIdentityDetails => string.Join(',', src.ToEmails());
-    public static string? ToFirstEmail<T>(this ICollection<T> src) where T : IIdentityDetails => src.ToEmails().FirstOrDefault();
+    public static ICollection<string> ToEmails<T>(this IEnumerable<T> src) where T : IIdentityDetails =>
+        src.Select(item => item.Email).ToEmails();
 
-    public static string? ToSingleEmail<T>(this ICollection<T> src) where T : IIdentityDetails
+    public static string ToStringEmails<T>(this IEnumerable<T> src) where T : IIdentityDetails => string.Join(',', src.ToEmails());
+    public static string? ToFirstEmail<T>(this IEnumerable<T> src) where T : IIdentityDetails => src.ToEmails().FirstOrDefault();
+
+    public static string? ToSingleEmail<T>(this IEnumerable<T> src) where T : IIdentityDetails
     {
         var emails = src.ToEmails();
         return emails.Count == 1 ? emails.First() : null;

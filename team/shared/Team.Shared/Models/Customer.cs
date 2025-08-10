@@ -10,6 +10,7 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
+    public string DisplayableName => this.ToDisplayableName();
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

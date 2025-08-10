@@ -13,3 +13,6 @@ Emails:
 
 Feedback:
 {{FEEDBACK_CONTENT}}
+
+—
+Powered by Skedular
