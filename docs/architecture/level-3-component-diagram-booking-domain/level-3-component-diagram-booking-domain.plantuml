@@ -1,0 +1,47 @@
+@startuml component_diagram_booking_domain
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <tupadr3/common>
+!include <tupadr3/devicons/postgresql>
+!include <tupadr3/devicons/redis>
+!include <tupadr3/devicons/aws>
+
+Person(client, "Client", "Customer or internal system interacting with the booking service")
+Person(stripeNotification, "Stripe Webhook", "Payment gateway sending updates on booking transactions")
+Person(slack, "Slack", "Messaging platform receiving booking notifications and alerts")
+
+System_Boundary(booking, "Booking Domain") {
+    Container(bookingApi, "Booking API", "Microservice", "Exposes REST and gRPC endpoints to create, update, and retrieve bookings. Handles payment callbacks, booking validations, and orchestration of booking workflows.")
+    Container(bookingProcessor, "Booking Processors", "Processes booking events, applies business rules, and updates booking status asynchronously in response to domain events.")
+    Container(bookingJobs, "Booking Jobs", "Microservice", "Executes scheduled and background tasks such as sending booking reminders, releasing unpaid reservations, and performing periodic maintenance.")
+    DEV_POSTGRESQL(bookingDb, "Booking Database")
+}
+
+System_Boundary(core, "Core Domain") {
+    Container(coreApi, "Core API", "Microservice", "Upload generated invoice")
+}
+
+System_Ext(kafka, "Kafka", "Event Streaming Platform")
+System_Ext(temporal, "Temporal", "Workflow Orchestration", "Temporal for managing workflows and long-running processes")
+System_Ext(stripe, "Stripe", "Payment processing")
+DEV_REDIS(redis, "redis")
+DEV_AWS(aws, "Email delivery")
+
+Rel(booking, kafka, "Publishes booking-related events and consumes events from other domains")
+Rel(booking, stripe, "Create checkout session and handle payment processing")
+Rel(booking, temporal, "Request running workflows such as invoice generation, payment processing, analytics, resource slot generation")
+Rel(booking, redis, "Caches frequently accessed booking data")
+Rel(booking, aws, "Email invoice to customer")
+
+Rel(client, bookingApi, "Creates and manages bookings via GraphQL, REST or gRPC")
+Rel(stripeNotification, bookingApi, "Sends payment status updates via webhook")
+Rel(slack, bookingApi, "Get or make bookings")
+
+Rel(bookingApi, bookingDb, "Reads and writes booking data")
+
+Rel(bookingProcessor, bookingDb, "Reads and writes booking data")
+
+Rel(bookingJobs, bookingDb, "Reads and writes booking data")
+Rel(bookingJobs, coreApi, "Executes workflow steps")
+
+@enduml

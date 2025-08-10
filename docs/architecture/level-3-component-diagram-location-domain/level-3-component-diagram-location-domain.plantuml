@@ -1,0 +1,33 @@
+@startuml component_diagram_location_domain
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <tupadr3/common>
+!include <tupadr3/devicons/postgresql>
+!include <tupadr3/devicons/redis>
+
+Person(client, "Client", "Customer or internal system creating, updating, or querying locations")
+Person(slack, "Slack", "Slack creating, updating, or querying locations")
+
+System_Boundary(location, "Location Domain") {
+    Container(locationApi, "Location API", "Microservice", "Provides REST and gRPC endpoints to create, update, and retrieve location details; handles metadata, access control, and notifications")
+    Container(locationProcessor, "Location Processor", "Microservice", "Processes location events, applies business rules, and updates location data asynchronously")
+    Container(locationJobs, "Location Jobs", "Microservice", "Runs scheduled and background jobs such as refreshing location data or generating reports")
+    DEV_POSTGRESQL(locationDb, "Location Database")
+}
+
+System_Ext(kafka, "Kafka", "Event Streaming Platform", "Backbone for asynchronous communication between domains")
+DEV_REDIS(redis, "redis")
+
+Rel(location, kafka, "Publishes location-related events and consumes events from other domains")
+Rel(location, redis, "Caches frequently accessed location data")
+
+Rel(client, locationApi, "Creates and manages locations via GraphQL, REST or gRPC")
+Rel(slack, locationApi, "Receives location-related notifications")
+
+Rel(locationApi, locationDb, "Reads and writes location data")
+
+Rel(locationProcessor, locationDb, "Reads and writes location data")
+
+Rel(locationJobs, locationDb, "Reads and writes location data")
+
+@enduml

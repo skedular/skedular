@@ -1,0 +1,32 @@
+@startuml component_diagram_core_domain
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <tupadr3/common>
+!include <tupadr3/devicons/postgresql>
+!include <tupadr3/devicons/redis>
+
+Person(client, "Client", "User or system uploading/downloading files")
+Person(bookingInvoiceGeneration, "Booking Invoice Generation", "Generate Invoice")
+
+System_Boundary(core, "Core Domain") {
+    Container(coreApi, "Core API", "Microservice", "Handles file uploads, metadata, thumbnails, and access control")
+    Container(coreProcessor, "Core Processors", "Microservice", "Handles file uploads, metadata, thumbnails, and access control")
+    DEV_POSTGRESQL(coreDb, "Core Database")
+}
+
+System_Ext(cloudflare, "Cloudflare R2 & CDN", "Object Storage and CDN")
+System_Ext(kafka, "Kafka", "Event Streaming Platform")
+DEV_REDIS(redis, "redis")
+
+Rel(core, kafka, "Publishes location-related events and consumes events from other domains")
+Rel(core, redis, "Caches frequently accessed location data")
+Rel(core, cloudflare, "Caches frequently accessed location data")
+
+Rel(client, coreApi, "Upoload and retrieve files either via REST")
+Rel(bookingInvoiceGeneration, coreApi, "Upoload and retrieve files via gRPC")
+
+Rel(coreApi, coreDb, "Reads and writes file metadata data")
+
+Rel(coreProcessor, coreDb, "Reads and writes location data")
+
+@enduml

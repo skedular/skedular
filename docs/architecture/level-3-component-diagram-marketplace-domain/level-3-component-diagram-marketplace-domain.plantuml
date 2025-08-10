@@ -1,0 +1,28 @@
+@startuml component_diagram_marketplace_domain
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <tupadr3/common>
+!include <tupadr3/devicons/postgresql>
+!include <tupadr3/devicons/redis>
+
+Person(client, "Client", "Customer or internal system creating, updating, or querying marketplace products")
+
+System_Boundary(marketplace, "Marketplace Domain") {
+    Container(marketplaceApi, "Marketplace API", "Microservice", "Handles creation, update, and retrieval of marketplace details via REST and gRPC endpoints")
+    Container(marketplaceProcessor, "Marketplace Processor", "Microservice", "Processes marketplace events asynchronously, applies business rules, and updates marketplace data")
+    DEV_POSTGRESQL(marketplaceDb, "Marketplace Database")
+}
+
+System_Ext(kafka, "Kafka", "Event Streaming Platform", "Backbone for asynchronous communication between domains")
+DEV_REDIS(redis, "redis")
+
+Rel(marketplace, kafka, "Publishes marketplace-related events and consumes events from other domains")
+Rel(marketplace, redis, "Caches frequently accessed marketplace data")
+
+Rel(client, marketplaceApi, "Creates and manages marketplaces via GraphQL, REST or gRPC")
+
+Rel(marketplaceApi, marketplaceDb, "Reads and writes marketplace data")
+
+Rel(marketplaceProcessor, marketplaceDb, "Reads and writes marketplace data")
+
+@enduml

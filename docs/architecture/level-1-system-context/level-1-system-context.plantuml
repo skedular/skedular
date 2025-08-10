@@ -1,5 +1,6 @@
 @startuml system_context
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 Person(individualUser, "Individual User", "Books resources from marketplace or organizations")
 Person(coworkingOwner, "Co-working Space Owner", "Manages co-working spaces")

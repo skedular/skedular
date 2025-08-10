@@ -1,0 +1,42 @@
+@startuml component_diagram_organization_domain
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <tupadr3/common>
+!include <tupadr3/devicons/postgresql>
+!include <tupadr3/devicons/redis>
+!include <tupadr3/devicons/aws>
+
+Person(client, "Client", "Customer or internal system interacting with the organization service")
+Person(stripeNotification, "Stripe Webhook", "Payment gateway sending updates on organization transactions")
+Person(slack, "Slack", "Messaging platform receiving organization notifications and alerts")
+
+System_Boundary(organization, "Organization Domain") {
+    Container(organizationApi, "Organization API", "Microservice", "Exposes REST and gRPC endpoints to create, update, and retrieve organizations. Handles payment callbacks, organization validations, and orchestration of organization workflows.")
+    Container(organizationProcessor, "Organization Processors", "Processes organization events, applies business rules, and updates organization status asynchronously in response to domain events.")
+    Container(organizationJobs, "Organization Jobs", "Microservice", "Executes scheduled and background tasks such as sending organization reminders, releasing unpaid reservations, and performing periodic maintenance.")
+    DEV_POSTGRESQL(organizationDb, "Organization Database")
+}
+
+System_Ext(kafka, "Kafka", "Event Streaming Platform")
+System_Ext(temporal, "Temporal", "Workflow Orchestration", "Temporal for managing workflows and long-running processes")
+System_Ext(stripe, "Stripe", "Payment Method setup")
+DEV_REDIS(redis, "redis")
+DEV_AWS(aws, "Email delivery")
+
+Rel(organization, kafka, "Publishes organization-related events and consumes events from other domains")
+Rel(organization, stripe, "Create checkout session and handle payment processing")
+Rel(organization, temporal, "Request running workflows such as organization offering renewal")
+Rel(organization, redis, "Caches frequently accessed organization data")
+Rel(organization, aws, "Email invitation to join customer to organization")
+
+Rel(client, organizationApi, "Creates and manages organizations via GraphQL, REST or gRPC")
+Rel(stripeNotification, organizationApi, "Sends payment method setup updates via webhook")
+Rel(slack, organizationApi, "Get or make organizations")
+
+Rel(organizationApi, organizationDb, "Reads and writes organization data")
+
+Rel(organizationProcessor, organizationDb, "Reads and writes organization data")
+
+Rel(organizationJobs, organizationDb, "Reads and writes organization data")
+
+@enduml
