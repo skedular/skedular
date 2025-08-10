@@ -9,6 +9,7 @@ namespace Slack.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
+    public string? UniqueAlphanumericName { get; set; }
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
@@ -26,7 +27,10 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationTypeLength)
+        builder.Property(item => item.UniqueAlphanumericName).HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationUniqueAlphanumericNameLength);
+        builder
+            .Property(item => item.Type)
+            .HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationTypeLength)
             .HasDefaultValue(OrganizationTypeConstants.Private);
         builder
             .Property(item => item.MemberVisibilityPolicy)
@@ -35,6 +39,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.OrganizationDailyUpdateChannels);
 
+        builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
         builder.HasIndex(item => item.SlackChannelDailyUpdateLastSentAt);
     }
 }

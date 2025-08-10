@@ -185,6 +185,7 @@ type OrganizationDailyBookingsTotal {
 }
 
 type OrganizationDetails {
+  uniqueAlphanumericName: String
   name: String!
   about: String
   website: String
@@ -544,6 +545,7 @@ input AddOrganizationBillingDetailsInput {
 input AddOrganizationInput {
   clientMutationId: String
   id: String
+  uniqueAlphanumericName: String
   name: String!
   about: String
   website: String
@@ -850,6 +852,7 @@ input UpdateOrganizationBillingDetailsInput {
 input UpdateOrganizationInput {
   clientMutationId: String
   id: String!
+  uniqueAlphanumericName: String
   name: String!
   about: String
   website: String

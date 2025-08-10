@@ -12,6 +12,7 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public string? Timezone { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
+    public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<CdnFile> CdnFiles { get; set; } = [];
     public virtual ICollection<PrivateFile> PrivateFiles { get; set; } = [];
 }

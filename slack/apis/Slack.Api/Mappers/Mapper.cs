@@ -172,7 +172,12 @@ public class Mapper : IMapper
 
         customer.DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
             ? null
-            : new Shared.Models.Organization { Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString() };
+            : new Shared.Models.Organization
+            {
+                Id = src.DefaultOrganization.Id,
+                UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName.ToSafeString(),
+                Name = src.DefaultOrganization.Name.ToSafeString()
+            };
 
         customer.PreferredLocations = src.PreferredLocations.Select(item => new Shared.Models.Location
         {
@@ -211,6 +216,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
@@ -544,7 +550,7 @@ public class Mapper : IMapper
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
     private static Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(), Name = src.Name.ToSafeString() };
 
     private static Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
@@ -628,6 +634,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Type = src.Type.ToOrganizationType(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt

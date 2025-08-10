@@ -30,6 +30,7 @@ public static class Constants
 
     public const int MaxDescriptionLength = 1000;
 
+    public const int MaxOrganizationUniqueAlphanumericNameLength = 63;
     public const int MaxOrganizationNameLength = 200;
     public const int MaxOrganizationIndustryMainCategoryNameLength = 100;
     public const int MaxOrganizationIndustrySubCategoryNameLength = 100;

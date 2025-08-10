@@ -570,6 +570,7 @@ public class Mapper : IMapper
             : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization
             {
                 Id = src.Id,
+                UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
                 Name = src.Name.ToSafeString(),
                 ContactEmail = src.ContactEmail.ToSafeString(),
                 ContactPhone = src.ContactPhone.ToSafeString()
@@ -653,6 +654,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,

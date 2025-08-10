@@ -5,7 +5,7 @@ namespace Enterprise.Shared.Database;
 public class EntityBase
 {
     public string Id { get; set; } = string.Empty;
-    public uint Version { get; set; }
+    public uint EntityFrameworkVersion { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? ModifiedAt { get; set; }
 }
@@ -22,7 +22,7 @@ public static class EntityBaseExtension
     {
         builder.HasKey(item => item.Id);
 
-        builder.Property(item => item.Version).IsRowVersion();
+        builder.Property(item => item.EntityFrameworkVersion).IsRowVersion();
         builder.Property(item => item.Id).HasMaxLength(maxUniqueIdLength);
 
         builder.HasIndex(item => item.CreatedAt);

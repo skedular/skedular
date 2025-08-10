@@ -5,6 +5,7 @@ namespace Customer.Shared.Models;
 
 public class Organization : ReplicatedModelBaseWithDeleted
 {
+    public string? UniqueAlphanumericName { get; set; }
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
     public OrganizationType Type { get; set; }

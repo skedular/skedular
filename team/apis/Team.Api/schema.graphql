@@ -182,6 +182,7 @@ type Team_LocationDetails {
 
 type Team_OrganizationDetails {
   uniqueId: ID!
+  uniqueAlphanumericName: String
   name: String!
   logoUrl: String
 }

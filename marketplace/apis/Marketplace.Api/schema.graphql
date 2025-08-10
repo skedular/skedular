@@ -27,6 +27,7 @@ type CurrencyDetails {
 
 type Marketplace_OrganizationDetails {
   uniqueId: ID!
+  uniqueAlphanumericName: String
 }
 
 type Marketplace_OrganizationTagDetails {

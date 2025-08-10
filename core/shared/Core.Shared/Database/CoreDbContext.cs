@@ -12,6 +12,9 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbCont
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
+    public DbSet<Organization> Organization { get; set; }
+    public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<CdnFile> CdnFile { get; set; }
     public DbSet<PrivateFile> PrivateFile { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }

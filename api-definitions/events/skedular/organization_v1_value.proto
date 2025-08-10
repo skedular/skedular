@@ -35,21 +35,22 @@ message Data {
 message Organization {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  string name = 3;
-  string about = 4;
-  string logoUrl = 5;
-  string website = 6;
-  repeated OrganizationMember members = 7;
-  Offering Offering = 8;
-  repeated string azureTenantIds = 9;
-  repeated Tag tags = 10;
-  OrganizationSsoSettings ssoSettings = 11;
-  OrganizationTaxDetails taxDetails = 12;
-  string type = 13;
-  string contactEmail = 14;
-  string contactPhone = 15;
-  string memberVisibilityPolicy = 16;
-  PhysicalAddress physicalAddress = 17;
+  string uniqueAlphanumericName = 3;
+  string name = 4;
+  string about = 5;
+  string logoUrl = 6;
+  string website = 7;
+  repeated OrganizationMember members = 8;
+  Offering Offering = 9;
+  repeated string azureTenantIds = 10;
+  repeated Tag tags = 11;
+  OrganizationSsoSettings ssoSettings = 12;
+  OrganizationTaxDetails taxDetails = 13;
+  string type = 14;
+  string contactEmail = 15;
+  string contactPhone = 16;
+  string memberVisibilityPolicy = 17;
+  PhysicalAddress physicalAddress = 18;
 }
 
 enum Role {

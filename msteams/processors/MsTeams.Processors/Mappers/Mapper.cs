@@ -123,6 +123,8 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            UniqueAlphanumericName =
+                string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
             Type = organizationAfterState.Type.ToOrganizationType(),
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
@@ -171,6 +173,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Type = src.Type.ToOrganizationType();
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;

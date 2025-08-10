@@ -10,6 +10,10 @@ public class AddOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
+
+    [GraphQLName("uniqueAlphanumericName")]
+    public string? UniqueAlphanumericName { get; set; }
+
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }

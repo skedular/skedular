@@ -126,6 +126,7 @@ type Booking_OrganizationDetails {
   contactEmail: String
   contactPhone: String
   name: String!
+  uniqueAlphanumericName: String
   uniqueId: ID!
 }
 
@@ -362,6 +363,7 @@ type Customer_LocationDetails {
 type Customer_OrganizationDetails {
   logoUrl: String
   name: String
+  uniqueAlphanumericName: String
   uniqueId: ID!
 }
 
@@ -503,6 +505,7 @@ type LocationPhysicalAddressDetails {
 type Location_OrganizationDetails {
   logoUrl: String
   name: String!
+  uniqueAlphanumericName: String
   uniqueId: ID!
 }
 
@@ -514,6 +517,7 @@ type Location_OrganizationTagDetails {
 }
 
 type Marketplace_OrganizationDetails {
+  uniqueAlphanumericName: String
   uniqueId: ID!
 }
 
@@ -761,6 +765,7 @@ type OrganizationDetails {
   taxDetails: OrganizationTaxDetails
   termsOfUse: OrganizationTermsOfUse
   type: OrganizationTypeDetails!
+  uniqueAlphanumericName: String
   website: String
 }
 
@@ -1289,6 +1294,7 @@ type Team_LocationDetails {
 type Team_OrganizationDetails {
   logoUrl: String
   name: String!
+  uniqueAlphanumericName: String
   uniqueId: ID!
 }
 
@@ -1485,6 +1491,7 @@ input AddOrganizationInput {
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
+  uniqueAlphanumericName: String
   website: String
 }
 
@@ -2260,6 +2267,7 @@ input UpdateOrganizationInput {
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   type: OrganizationType!
+  uniqueAlphanumericName: String
   website: String
 }
 

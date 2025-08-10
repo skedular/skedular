@@ -32,6 +32,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
@@ -116,6 +117,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,

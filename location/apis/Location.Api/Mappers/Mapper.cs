@@ -799,7 +799,7 @@ public class Mapper : IMapper
         src.Select(MapToGrpcResponse);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new() { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
+        new() { UniqueId = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
@@ -816,6 +816,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,

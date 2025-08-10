@@ -45,7 +45,9 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 
     public async Task<ICollection<Organization>> GetByCustomerIdAsync(
         string customerId,

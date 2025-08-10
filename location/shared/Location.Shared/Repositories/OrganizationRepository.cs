@@ -43,7 +43,9 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
             .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 
     public Organization Add(Organization location)
     {

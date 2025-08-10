@@ -243,6 +243,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c957f2169a8cb83595189c436815ab7>>
+ * @generated SignedSource<<d2824b7fd9d7f8162282392bcbf352f7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type AddOrganizationInput = {
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
+  uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type addMarketplaceOrganization_addOrganizationMutation$variables = {

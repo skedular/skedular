@@ -7,4 +7,7 @@ namespace Marketplace.Api.GraphQL.Product;
 public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
+
+    [GraphQLName("uniqueAlphanumericName")]
+    public string? UniqueAlphanumericName { get; set; }
 }

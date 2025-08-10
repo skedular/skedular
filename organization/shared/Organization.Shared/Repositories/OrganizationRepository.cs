@@ -199,12 +199,14 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         bool includeAllOfferings,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => ids.Contains(query.Id))
+            .Where(query => ids.Contains(query.Id) || (query.UniqueAlphanumericName != null && ids.Contains(query.UniqueAlphanumericName)))
             .AddDependentObjects(includeAllOfferings)
             .ToListAsync(cancellationToken);
 
     private async Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddDependentObjects(includeAllOfferings)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 }

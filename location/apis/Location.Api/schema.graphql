@@ -118,6 +118,7 @@ type LocationPhysicalAddressDetails {
 
 type Location_OrganizationDetails {
   uniqueId: ID!
+  uniqueAlphanumericName: String
   name: String!
   logoUrl: String
 }

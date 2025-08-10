@@ -96,6 +96,7 @@ public class OrganizationService(
         else
         {
             organization.Id = randomHelper.Generate();
+            organization.UniqueAlphanumericName = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
         }
 
         var termsOfUse = await repositoryFactory.TermsOfUseRepository
@@ -248,6 +249,7 @@ public class OrganizationService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+        organization.UniqueAlphanumericName = null;
         var deletedOrganization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Remove(organization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
@@ -380,6 +382,11 @@ public class OrganizationService(
                     .AddInclude(query => query.IndustryMainCategory))
                 .ToListAsync(cancellationToken);
 
+        // Don't change UniqueAlphanumericName if no unique name provided
+        organization.UniqueAlphanumericName = string.IsNullOrWhiteSpace(organization.UniqueAlphanumericName)
+            ? existingOrganization.UniqueAlphanumericName
+            : organization.UniqueAlphanumericName.ToLowerInvariant();
+        
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));

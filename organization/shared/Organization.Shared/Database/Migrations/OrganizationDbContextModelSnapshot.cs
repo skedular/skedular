@@ -19,7 +19,7 @@ namespace Organization.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -199,6 +199,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("InstalledByUserId")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -206,12 +212,6 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -234,6 +234,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("InstalledByUserId")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -252,12 +258,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -301,6 +301,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<string>("FamilyName")
                         .HasMaxLength(100)
@@ -361,12 +367,6 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AzureTenantId");
@@ -392,6 +392,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -407,12 +413,6 @@ namespace Organization.Shared.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -440,6 +440,12 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
@@ -495,12 +501,6 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -540,18 +540,18 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -590,17 +590,17 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<bool?>("EmailVerified")
                         .HasColumnType("boolean");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -629,6 +629,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -636,12 +642,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -660,169 +660,169 @@ namespace Organization.Shared.Database.Migrations
                         {
                             Id = "882bUq1BWqJecAZxMOr51",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Agriculture",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Agriculture"
                         },
                         new
                         {
                             Id = "0NXImArR8CXFDC9SmmwFn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Arts",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Arts"
                         },
                         new
                         {
                             Id = "pXKhQk06h0DDf6cYf93C1",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Construction",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Construction"
                         },
                         new
                         {
                             Id = "lg-BOyEpbyAi_AGt3EeNX",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Consumer Goods",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Consumer Goods"
                         },
                         new
                         {
                             Id = "xkjX-i2E2Bc6tH2KjCaTu",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Corporate Services",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Corporate Services"
                         },
                         new
                         {
                             Id = "S1mxU6bv5ktRVVIN3AA4K",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Design",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Design"
                         },
                         new
                         {
                             Id = "wzCmjl5D_n22GAmJquRWB",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Education",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Education"
                         },
                         new
                         {
                             Id = "kamIaBPmTt1gZCRjqTlvG",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Energy & Mining",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Energy & Mining"
                         },
                         new
                         {
                             Id = "-PfBGjlmBqLSUhkj5HGfP",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Entertainment",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Entertainment"
                         },
                         new
                         {
                             Id = "zwanHBU5wvwbQrGspAXTb",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Finance",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Finance"
                         },
                         new
                         {
                             Id = "s3_JhMKyBezxJzRJq9BO0",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Hardware & Networking",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Hardware & Networking"
                         },
                         new
                         {
                             Id = "5y-GA2lrc3pk5fHG-3YIy",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Health Care",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Health Care"
                         },
                         new
                         {
                             Id = "zLuSwB4G_EuG4YueixLF0",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Legal",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Legal"
                         },
                         new
                         {
                             Id = "LFaZVLT6kUWs-N_tIKdvv",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Manufacturing",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Manufacturing"
                         },
                         new
                         {
                             Id = "gWWnxzMaGrBIp5JsKqTUV",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Media & Communications",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Media & Communications"
                         },
                         new
                         {
                             Id = "620m_qu0dee49rW0104aI",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Nonprofit",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Nonprofit"
                         },
                         new
                         {
                             Id = "08-giYmx7ja5wepmU10j5",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Public Administration",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Public Administration"
                         },
                         new
                         {
                             Id = "hAxKDrJiJmHK__0M_ewMu",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Public Safety",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Public Safety"
                         },
                         new
                         {
                             Id = "6pu5HDPw5APjFvcT-eL0Q",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Real Estate",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Real Estate"
                         },
                         new
                         {
                             Id = "xY4RDCWRG5G2fOEdNXPng",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Recreation & Travel",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Recreation & Travel"
                         },
                         new
                         {
                             Id = "vS4OynyP3n3kjc3l-bmGS",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Retail",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Retail"
                         },
                         new
                         {
                             Id = "08ILcal4_is07nQlMRtae",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Software & IT Services",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Software & IT Services"
                         },
                         new
                         {
                             Id = "9zzrzqbocNXiv9_OLRgtE",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Transportation & Logistics",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Transportation & Logistics"
                         },
                         new
                         {
                             Id = "eO9IbE_ssHvels5sLHtob",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Wellness & Fitness",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Name = "Wellness & Fitness"
                         });
                 });
 
@@ -838,6 +838,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("IndustryMainCategoryId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -849,12 +855,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -875,1145 +875,1145 @@ namespace Organization.Shared.Database.Migrations
                         {
                             Id = "HauXa9RY9QSr8a54ByFwj",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "pXKhQk06h0DDf6cYf93C1",
-                            Name = "Building Materials",
-                            Version = 0u
+                            Name = "Building Materials"
                         },
                         new
                         {
                             Id = "hJNIh-Im_f7clkYZmZBRE",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "pXKhQk06h0DDf6cYf93C1",
-                            Name = "Civil Engineering",
-                            Version = 0u
+                            Name = "Civil Engineering"
                         },
                         new
                         {
                             Id = "zQRObEMkSHN8QOtTZBwkJ",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "pXKhQk06h0DDf6cYf93C1",
-                            Name = "Construction",
-                            Version = 0u
+                            Name = "Construction"
                         },
                         new
                         {
                             Id = "ih37Ze5aaOGfG7TYXUsbv",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "S1mxU6bv5ktRVVIN3AA4K",
-                            Name = "Architecture & Planning",
-                            Version = 0u
+                            Name = "Architecture & Planning"
                         },
                         new
                         {
                             Id = "HEN-ijto0K1Sf_OciHDIq",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "S1mxU6bv5ktRVVIN3AA4K",
-                            Name = "Design",
-                            Version = 0u
+                            Name = "Design"
                         },
                         new
                         {
                             Id = "btsPkeHzW4sNny11BSvof",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "S1mxU6bv5ktRVVIN3AA4K",
-                            Name = "Graphic Design",
-                            Version = 0u
+                            Name = "Graphic Design"
                         },
                         new
                         {
                             Id = "Anp0oogRUzx-UZ1clwGAa",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Accounting",
-                            Version = 0u
+                            Name = "Accounting"
                         },
                         new
                         {
                             Id = "MXUwHkgay_UZXX2AzY1FU",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Business Supplies & Equipment",
-                            Version = 0u
+                            Name = "Business Supplies & Equipment"
                         },
                         new
                         {
                             Id = "tkF5aFhlRnPPhRsodehd9",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Environmental Services",
-                            Version = 0u
+                            Name = "Environmental Services"
                         },
                         new
                         {
                             Id = "68AhtustNiXT8H107NbXo",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Events Services",
-                            Version = 0u
+                            Name = "Events Services"
                         },
                         new
                         {
                             Id = "K3SqEjUcLSaj-OASf-Vfn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Executive Office",
-                            Version = 0u
+                            Name = "Executive Office"
                         },
                         new
                         {
                             Id = "P5qA_npwKevf0IuQQ-o8V",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Facilities Services",
-                            Version = 0u
+                            Name = "Facilities Services"
                         },
                         new
                         {
                             Id = "PwffwJ0sXibSyQ4oXdBk4",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Human Resources",
-                            Version = 0u
+                            Name = "Human Resources"
                         },
                         new
                         {
                             Id = "oGHZiJyHGGZRlNz9ooLj_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Information Services",
-                            Version = 0u
+                            Name = "Information Services"
                         },
                         new
                         {
                             Id = "_GJ2pKqtFHpFFWeq5uP7A",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Management Consulting",
-                            Version = 0u
+                            Name = "Management Consulting"
                         },
                         new
                         {
                             Id = "Wcxg0azu7qwIOnESWfKD6",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Outsourcing/Offshoring",
-                            Version = 0u
+                            Name = "Outsourcing/Offshoring"
                         },
                         new
                         {
                             Id = "XoecAXYxdwsdOQyH44as-",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Professional Training & Coaching",
-                            Version = 0u
+                            Name = "Professional Training & Coaching"
                         },
                         new
                         {
                             Id = "hzE99r9OYpChAm-J-I95R",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Security & Investigations",
-                            Version = 0u
+                            Name = "Security & Investigations"
                         },
                         new
                         {
                             Id = "fMq27yPPSWdyt56OHGARE",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xkjX-i2E2Bc6tH2KjCaTu",
-                            Name = "Staffing & Recruiting",
-                            Version = 0u
+                            Name = "Staffing & Recruiting"
                         },
                         new
                         {
                             Id = "9SqM8gfgtFgKDpUr1cNco",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "vS4OynyP3n3kjc3l-bmGS",
-                            Name = "Retail",
-                            Version = 0u
+                            Name = "Retail"
                         },
                         new
                         {
                             Id = "Kzq6AwGAsKU2tEky6V6Ym",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "vS4OynyP3n3kjc3l-bmGS",
-                            Name = "Supermarkets",
-                            Version = 0u
+                            Name = "Supermarkets"
                         },
                         new
                         {
                             Id = "jNfz-hPjT4aCuU6Ul0uee",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "vS4OynyP3n3kjc3l-bmGS",
-                            Name = "Wholesale",
-                            Version = 0u
+                            Name = "Wholesale"
                         },
                         new
                         {
                             Id = "kmCWCF7gBidij5s3qIBFa",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "kamIaBPmTt1gZCRjqTlvG",
-                            Name = "Mining & Metals",
-                            Version = 0u
+                            Name = "Mining & Metals"
                         },
                         new
                         {
                             Id = "wuaS-83ScePOPqZDXbSWd",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "kamIaBPmTt1gZCRjqTlvG",
-                            Name = "Oil & Energy",
-                            Version = 0u
+                            Name = "Oil & Energy"
                         },
                         new
                         {
                             Id = "ideEWzCBrRa2lyrKp2lAb",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "kamIaBPmTt1gZCRjqTlvG",
-                            Name = "Utilities",
-                            Version = 0u
+                            Name = "Utilities"
                         },
                         new
                         {
                             Id = "P_Qo9uJlw5ERFBfAxI5PV",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Automotive",
-                            Version = 0u
+                            Name = "Automotive"
                         },
                         new
                         {
                             Id = "S4hTeNXKIRL84bRRzli1k",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Aviation & Aerospace",
-                            Version = 0u
+                            Name = "Aviation & Aerospace"
                         },
                         new
                         {
                             Id = "nMV4PpF25mWpYwN-tSIB0",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Chemicals",
-                            Version = 0u
+                            Name = "Chemicals"
                         },
                         new
                         {
                             Id = "PGAC2vXJHtktpqxfiw5TQ",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Defense & Space",
-                            Version = 0u
+                            Name = "Defense & Space"
                         },
                         new
                         {
                             Id = "KfojPdlEXy5bhjhv9Buti",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Electrical & Electronic Manufacturing",
-                            Version = 0u
+                            Name = "Electrical & Electronic Manufacturing"
                         },
                         new
                         {
                             Id = "rC3xY9zAu8f6RCUPSKVjD",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Food Production",
-                            Version = 0u
+                            Name = "Food Production"
                         },
                         new
                         {
                             Id = "gojKcjl4sTRVokd6Fwm5Q",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Glass, Ceramics & Concrete",
-                            Version = 0u
+                            Name = "Glass, Ceramics & Concrete"
                         },
                         new
                         {
                             Id = "Fl8iL9jTkTcDLniwG8PjM",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Industrial Automation",
-                            Version = 0u
+                            Name = "Industrial Automation"
                         },
                         new
                         {
                             Id = "5_xJDrAIJrMsS8SfvyJ9z",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Machinery",
-                            Version = 0u
+                            Name = "Machinery"
                         },
                         new
                         {
                             Id = "XOKkzryiG28mrlGfF5_H4",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Mechanical or Industrial Engineering",
-                            Version = 0u
+                            Name = "Mechanical or Industrial Engineering"
                         },
                         new
                         {
                             Id = "tkzVx19aJOia3kGSyaug0",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Packaging & Containers",
-                            Version = 0u
+                            Name = "Packaging & Containers"
                         },
                         new
                         {
                             Id = "qh8mwzmfi1NuEjGc8z5S0",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Paper & Forest Products",
-                            Version = 0u
+                            Name = "Paper & Forest Products"
                         },
                         new
                         {
                             Id = "8sdTPVkp6YM4gwIDd6yTL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Plastics",
-                            Version = 0u
+                            Name = "Plastics"
                         },
                         new
                         {
                             Id = "d6K3MC3hA_zZXsGRMyHSM",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Railroad Manufacture",
-                            Version = 0u
+                            Name = "Railroad Manufacture"
                         },
                         new
                         {
                             Id = "XaZJbtarjgHa9aJfGOllq",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Renewables & Environment",
-                            Version = 0u
+                            Name = "Renewables & Environment"
                         },
                         new
                         {
                             Id = "mZE0AvfFQrQAPbExKJTZK",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Shipbuilding",
-                            Version = 0u
+                            Name = "Shipbuilding"
                         },
                         new
                         {
                             Id = "mrVhAaI2m_3ZA7xnddJFt",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "LFaZVLT6kUWs-N_tIKdvv",
-                            Name = "Textiles",
-                            Version = 0u
+                            Name = "Textiles"
                         },
                         new
                         {
                             Id = "hMrZmeoHvKaOy0ufUZa35",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Banking",
-                            Version = 0u
+                            Name = "Banking"
                         },
                         new
                         {
                             Id = "Z7swakPNl1_vEUHT-uip3",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Capital Markets",
-                            Version = 0u
+                            Name = "Capital Markets"
                         },
                         new
                         {
                             Id = "2wvDDgBTMDs5pDVlbS1OX",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Financial Services",
-                            Version = 0u
+                            Name = "Financial Services"
                         },
                         new
                         {
                             Id = "EIJHhNw_wpIVL3pA1OOZr",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Insurance",
-                            Version = 0u
+                            Name = "Insurance"
                         },
                         new
                         {
                             Id = "1vbfjkAaHk0w6svYoDBjd",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Investment Banking",
-                            Version = 0u
+                            Name = "Investment Banking"
                         },
                         new
                         {
                             Id = "GbvxgUqTZIi_eJLzHk101",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Investment Management",
-                            Version = 0u
+                            Name = "Investment Management"
                         },
                         new
                         {
                             Id = "WmZvpAjtGwZ_UBAzXE8qR",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zwanHBU5wvwbQrGspAXTb",
-                            Name = "Venture Capital & Private Equity",
-                            Version = 0u
+                            Name = "Venture Capital & Private Equity"
                         },
                         new
                         {
                             Id = "6FC0NBRxizMTAvhm-huwF",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Airlines/Aviation",
-                            Version = 0u
+                            Name = "Airlines/Aviation"
                         },
                         new
                         {
                             Id = "K_rfAbaRdODY0FzSi4eCP",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Gambling & Casinos",
-                            Version = 0u
+                            Name = "Gambling & Casinos"
                         },
                         new
                         {
                             Id = "cE5QYVgV7Rug2iEmhPSLp",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Hospitality",
-                            Version = 0u
+                            Name = "Hospitality"
                         },
                         new
                         {
                             Id = "LnRhNtxZehp9pPTaHrVcx",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Leisure, Travel & Tourism",
-                            Version = 0u
+                            Name = "Leisure, Travel & Tourism"
                         },
                         new
                         {
                             Id = "eTmgDsQHooF8yfjQibuZx",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Restaurants",
-                            Version = 0u
+                            Name = "Restaurants"
                         },
                         new
                         {
                             Id = "UxWZXcAvWUEMrwqvlLKcR",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Recreational Facilities & Services",
-                            Version = 0u
+                            Name = "Recreational Facilities & Services"
                         },
                         new
                         {
                             Id = "H9-dThKHpcKEPj_ncmau8",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "xY4RDCWRG5G2fOEdNXPng",
-                            Name = "Sports",
-                            Version = 0u
+                            Name = "Sports"
                         },
                         new
                         {
                             Id = "WTd59z5le2R3ljmwoSOMo",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "0NXImArR8CXFDC9SmmwFn",
-                            Name = "Arts & Crafts",
-                            Version = 0u
+                            Name = "Arts & Crafts"
                         },
                         new
                         {
                             Id = "MbTSEkTyZa4sCNPlhzybY",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "0NXImArR8CXFDC9SmmwFn",
-                            Name = "Fine Art",
-                            Version = 0u
+                            Name = "Fine Art"
                         },
                         new
                         {
                             Id = "EBrEnqmLfty7fdbbUCe4f",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "0NXImArR8CXFDC9SmmwFn",
-                            Name = "Performing Arts",
-                            Version = 0u
+                            Name = "Performing Arts"
                         },
                         new
                         {
                             Id = "TKY-GyWAwwhNKtSHVgfjS",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "0NXImArR8CXFDC9SmmwFn",
-                            Name = "Photography",
-                            Version = 0u
+                            Name = "Photography"
                         },
                         new
                         {
                             Id = "xGRNZeN51DBhyNcvIDpmp",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Biotechnology",
-                            Version = 0u
+                            Name = "Biotechnology"
                         },
                         new
                         {
                             Id = "vggS9I-URCNvKv5lDV4Qv",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Hospital & Health Care",
-                            Version = 0u
+                            Name = "Hospital & Health Care"
                         },
                         new
                         {
                             Id = "Qc81ixxiDmrK2nOdrAmmL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Medical Device",
-                            Version = 0u
+                            Name = "Medical Device"
                         },
                         new
                         {
                             Id = "yXJjHKfGxQkrrX8IIQBoX",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Medical Practice",
-                            Version = 0u
+                            Name = "Medical Practice"
                         },
                         new
                         {
                             Id = "LG7xy63xPAdigL2noaJ3Q",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Mental Health Care",
-                            Version = 0u
+                            Name = "Mental Health Care"
                         },
                         new
                         {
                             Id = "ETHXo2XAWdvAVeNraKr7o",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Pharmaceuticals",
-                            Version = 0u
+                            Name = "Pharmaceuticals"
                         },
                         new
                         {
                             Id = "kc6a_bX7NdI8XLPo9O_OQ",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "5y-GA2lrc3pk5fHG-3YIy",
-                            Name = "Veterinary",
-                            Version = 0u
+                            Name = "Veterinary"
                         },
                         new
                         {
                             Id = "4fHASimX1R3Kb-soGZcTn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Computer Hardware",
-                            Version = 0u
+                            Name = "Computer Hardware"
                         },
                         new
                         {
                             Id = "2KfFED1vb65J4w0HIAH4o",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Computer Networking",
-                            Version = 0u
+                            Name = "Computer Networking"
                         },
                         new
                         {
                             Id = "3ALho9Wdd4nPstkcPCaqo",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Nanotechnologie",
-                            Version = 0u
+                            Name = "Nanotechnologie"
                         },
                         new
                         {
                             Id = "OhG4N-hdXRWFsnO3mQQ_K",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Semiconductors",
-                            Version = 0u
+                            Name = "Semiconductors"
                         },
                         new
                         {
                             Id = "mHMMNmKLOEtOvMHM3Vv53",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Telecommunications",
-                            Version = 0u
+                            Name = "Telecommunications"
                         },
                         new
                         {
                             Id = "nnUTfoWcex-OQST0GSBKx",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "s3_JhMKyBezxJzRJq9BO0",
-                            Name = "Wireless",
-                            Version = 0u
+                            Name = "Wireless"
                         },
                         new
                         {
                             Id = "PDzsPTIM6XZ6wG04mfB1o",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "6pu5HDPw5APjFvcT-eL0Q",
-                            Name = "Commercial Real Estate",
-                            Version = 0u
+                            Name = "Commercial Real Estate"
                         },
                         new
                         {
                             Id = "tOLdxfJbbyZseUsruul4F",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "6pu5HDPw5APjFvcT-eL0Q",
-                            Name = "Real Estate",
-                            Version = 0u
+                            Name = "Real Estate"
                         },
                         new
                         {
                             Id = "NwRiGUxTpWjBD_QLTmgb1",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zLuSwB4G_EuG4YueixLF0",
-                            Name = "Alternative Dispute Resolution",
-                            Version = 0u
+                            Name = "Alternative Dispute Resolution"
                         },
                         new
                         {
                             Id = "9lwcTkiRLUx1-yK8CsRc3",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zLuSwB4G_EuG4YueixLF0",
-                            Name = "Law Practice",
-                            Version = 0u
+                            Name = "Law Practice"
                         },
                         new
                         {
                             Id = "LIY449onOi0tKM7y5Lf2E",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "zLuSwB4G_EuG4YueixLF0",
-                            Name = "Legal Services",
-                            Version = 0u
+                            Name = "Legal Services"
                         },
                         new
                         {
                             Id = "DXvW70szUeBs2Qt_FUTyn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Apparel & Fashion",
-                            Version = 0u
+                            Name = "Apparel & Fashion"
                         },
                         new
                         {
                             Id = "HkVmjXmMbNK5rW_yErWrB",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Consumer Electronics",
-                            Version = 0u
+                            Name = "Consumer Electronics"
                         },
                         new
                         {
                             Id = "Cv4P4IfMXEFDds1WILHMf",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Consumer Goods",
-                            Version = 0u
+                            Name = "Consumer Goods"
                         },
                         new
                         {
                             Id = "_TTaYtfsEUmytV_9n2PQy",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Consumer Services",
-                            Version = 0u
+                            Name = "Consumer Services"
                         },
                         new
                         {
                             Id = "4NQjYM6jdfnKVRwz5vJzK",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Cosmetics",
-                            Version = 0u
+                            Name = "Cosmetics"
                         },
                         new
                         {
                             Id = "WYpGJyTVuuM92igAmspbE",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Food & Beverages",
-                            Version = 0u
+                            Name = "Food & Beverages"
                         },
                         new
                         {
                             Id = "DoZAnGTFeGb2lrW--1pJi",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Furniture",
-                            Version = 0u
+                            Name = "Furniture"
                         },
                         new
                         {
                             Id = "0LvvVx4gPaRD73p9dAKA6",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Luxury Goods & Jewelry",
-                            Version = 0u
+                            Name = "Luxury Goods & Jewelry"
                         },
                         new
                         {
                             Id = "Xoox6447RFMKGcnSQRyCM",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Sporting Goods",
-                            Version = 0u
+                            Name = "Sporting Goods"
                         },
                         new
                         {
                             Id = "cyxCXes3Pi4QN_DoTq7QQ",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Tobacco",
-                            Version = 0u
+                            Name = "Tobacco"
                         },
                         new
                         {
                             Id = "PmYm5CdXqxfmNJU9KYpQK",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "lg-BOyEpbyAi_AGt3EeNX",
-                            Name = "Wine and Spirits",
-                            Version = 0u
+                            Name = "Wine and Spirits"
                         },
                         new
                         {
                             Id = "pHYIZBESp80D3ZV4Sn7rV",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "882bUq1BWqJecAZxMOr51",
-                            Name = "Dairy",
-                            Version = 0u
+                            Name = "Dairy"
                         },
                         new
                         {
                             Id = "xVSkoLNA2s6T9Wo1uFD6R",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "882bUq1BWqJecAZxMOr51",
-                            Name = "Farming",
-                            Version = 0u
+                            Name = "Farming"
                         },
                         new
                         {
                             Id = "1OQUodxh6dXzBAzyhE_In",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "882bUq1BWqJecAZxMOr51",
-                            Name = "Fishery",
-                            Version = 0u
+                            Name = "Fishery"
                         },
                         new
                         {
                             Id = "HDkZbXrHsEz9108zjzU3N",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "882bUq1BWqJecAZxMOr51",
-                            Name = "Ranching",
-                            Version = 0u
+                            Name = "Ranching"
                         },
                         new
                         {
                             Id = "v36gThLN0qbHByjyu_Gl_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Market Research",
-                            Version = 0u
+                            Name = "Market Research"
                         },
                         new
                         {
                             Id = "QZvLjlV-l-WUMAsoAVBj-",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Marketing & Advertising",
-                            Version = 0u
+                            Name = "Marketing & Advertising"
                         },
                         new
                         {
                             Id = "zfC86Kgwc8f9fzP5latH9",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Newspapers",
-                            Version = 0u
+                            Name = "Newspapers"
                         },
                         new
                         {
                             Id = "psDvbeMLWDuDiUG6RLtQm",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Online Media",
-                            Version = 0u
+                            Name = "Online Media"
                         },
                         new
                         {
                             Id = "sr2AuEYun_pZUWZI7gQcz",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Printing",
-                            Version = 0u
+                            Name = "Printing"
                         },
                         new
                         {
                             Id = "RgKCDwUMXB5cLaNI5YZ9_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Public Relations & Communications",
-                            Version = 0u
+                            Name = "Public Relations & Communications"
                         },
                         new
                         {
                             Id = "dkD2WRvcb33CAjsB35l1r",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Publishing",
-                            Version = 0u
+                            Name = "Publishing"
                         },
                         new
                         {
                             Id = "sk3VI48ZM0PXC5yKnB91Z",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Translation & Localization",
-                            Version = 0u
+                            Name = "Translation & Localization"
                         },
                         new
                         {
                             Id = "Rc0rGZQCEu39Bw6WdutRL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "gWWnxzMaGrBIp5JsKqTUV",
-                            Name = "Writing & Editing",
-                            Version = 0u
+                            Name = "Writing & Editing"
                         },
                         new
                         {
                             Id = "Gi_MSree2JJPgxibLvwS-",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Civic & Social Organization",
-                            Version = 0u
+                            Name = "Civic & Social Organization"
                         },
                         new
                         {
                             Id = "esqKnQGv3x5aqWniYO6qn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Fundraising",
-                            Version = 0u
+                            Name = "Fundraising"
                         },
                         new
                         {
                             Id = "8y4ShEofzG0tIDWcDFRsL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Individual & Family Services",
-                            Version = 0u
+                            Name = "Individual & Family Services"
                         },
                         new
                         {
                             Id = "4b5K73V1j6E0pXpTT6EF2",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "International Trade & Development",
-                            Version = 0u
+                            Name = "International Trade & Development"
                         },
                         new
                         {
                             Id = "SmwTdBTItdXOsYU1tIBhL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Libraries",
-                            Version = 0u
+                            Name = "Libraries"
                         },
                         new
                         {
                             Id = "3QLolUIA1CaLD1KV01QmU",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Museums & Institutions",
-                            Version = 0u
+                            Name = "Museums & Institutions"
                         },
                         new
                         {
                             Id = "vgBXbrQLaCmsOQVfy68ob",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Non-Profit Organization Management",
-                            Version = 0u
+                            Name = "Non-Profit Organization Management"
                         },
                         new
                         {
                             Id = "7HyAeDaXYrv24Mfsr9Vs8",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Philanthropy",
-                            Version = 0u
+                            Name = "Philanthropy"
                         },
                         new
                         {
                             Id = "WF-XxhBCdD2UN1tZXzWXd",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Program Development",
-                            Version = 0u
+                            Name = "Program Development"
                         },
                         new
                         {
                             Id = "uIE9NifoiClxefpceV_X2",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Religious Institutions",
-                            Version = 0u
+                            Name = "Religious Institutions"
                         },
                         new
                         {
                             Id = "KplQglXodzYl59gK_epnf",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "620m_qu0dee49rW0104aI",
-                            Name = "Think Tanks",
-                            Version = 0u
+                            Name = "Think Tanks"
                         },
                         new
                         {
                             Id = "6fV2OxmlTsfoOVVJ9KFfk",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08ILcal4_is07nQlMRtae",
-                            Name = "Computer & Network Security",
-                            Version = 0u
+                            Name = "Computer & Network Security"
                         },
                         new
                         {
                             Id = "DRD09Q2dKJGDJSp_0_64W",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08ILcal4_is07nQlMRtae",
-                            Name = "Computer Software",
-                            Version = 0u
+                            Name = "Computer Software"
                         },
                         new
                         {
                             Id = "LUyonPGmj7DGOXCnvRKn_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08ILcal4_is07nQlMRtae",
-                            Name = "Information Technology & Services",
-                            Version = 0u
+                            Name = "Information Technology & Services"
                         },
                         new
                         {
                             Id = "Y-EXiW8yWEtnM6MdMq3MD",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08ILcal4_is07nQlMRtae",
-                            Name = "Internet",
-                            Version = 0u
+                            Name = "Internet"
                         },
                         new
                         {
                             Id = "jDUPoojddO2IZNNk7HLn_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Import & Export",
-                            Version = 0u
+                            Name = "Import & Export"
                         },
                         new
                         {
                             Id = "UugkhQXKrqMj0btvXi7S8",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Logistics & Supply Chain",
-                            Version = 0u
+                            Name = "Logistics & Supply Chain"
                         },
                         new
                         {
                             Id = "8Sbp7Tb4ktevjRWWruzye",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Maritime",
-                            Version = 0u
+                            Name = "Maritime"
                         },
                         new
                         {
                             Id = "9hvvmVHeIYptCbkUhj0jH",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Package/Freight Delivery",
-                            Version = 0u
+                            Name = "Package/Freight Delivery"
                         },
                         new
                         {
                             Id = "oCfNjmm0Q5YCrR_qnXhfv",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Transportation/Trucking/Railroad",
-                            Version = 0u
+                            Name = "Transportation/Trucking/Railroad"
                         },
                         new
                         {
                             Id = "4mEHLACzvNFW_GUDtRxjy",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "9zzrzqbocNXiv9_OLRgtE",
-                            Name = "Warehousing",
-                            Version = 0u
+                            Name = "Warehousing"
                         },
                         new
                         {
                             Id = "pGmd11WrkICGA8ZbHSJXZ",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Animation",
-                            Version = 0u
+                            Name = "Animation"
                         },
                         new
                         {
                             Id = "xTZpJWTpdotpEglrHqPvd",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Broadcast Media",
-                            Version = 0u
+                            Name = "Broadcast Media"
                         },
                         new
                         {
                             Id = "PLW5y9Q2M5jZxxzYsZ1zL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Computer Games",
-                            Version = 0u
+                            Name = "Computer Games"
                         },
                         new
                         {
                             Id = "dxmzLuPtXJqUGc4rRYl_8",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Entertainment",
-                            Version = 0u
+                            Name = "Entertainment"
                         },
                         new
                         {
                             Id = "lrjZuf6_7u2jIgNHNIYEx",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Media Production",
-                            Version = 0u
+                            Name = "Media Production"
                         },
                         new
                         {
                             Id = "_tUue6Gl-953pMKTqN7TI",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Mobile Games",
-                            Version = 0u
+                            Name = "Mobile Games"
                         },
                         new
                         {
                             Id = "BsRUgUyxfncNkCq4wpLJj",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Motion Pictures & Film",
-                            Version = 0u
+                            Name = "Motion Pictures & Film"
                         },
                         new
                         {
                             Id = "dwWQZ-qlYhqDloUB0yQhW",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "-PfBGjlmBqLSUhkj5HGfP",
-                            Name = "Music",
-                            Version = 0u
+                            Name = "Music"
                         },
                         new
                         {
                             Id = "N9NMqIS5yQTzU5GYDLGaS",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "eO9IbE_ssHvels5sLHtob",
-                            Name = "Alternative Medicine",
-                            Version = 0u
+                            Name = "Alternative Medicine"
                         },
                         new
                         {
                             Id = "bHXQAM_dBX_jf3YaPVtzn",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "eO9IbE_ssHvels5sLHtob",
-                            Name = "Health, Wellness & Fitness",
-                            Version = 0u
+                            Name = "Health, Wellness & Fitness"
                         },
                         new
                         {
                             Id = "CAtDPbb6rU1Vz2gPAhPlv",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "hAxKDrJiJmHK__0M_ewMu",
-                            Name = "Law Enforcement",
-                            Version = 0u
+                            Name = "Law Enforcement"
                         },
                         new
                         {
                             Id = "jCLq3vnUK-nibBg1JOK_O",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "hAxKDrJiJmHK__0M_ewMu",
-                            Name = "Military",
-                            Version = 0u
+                            Name = "Military"
                         },
                         new
                         {
                             Id = "ngm0upQBvO_Vn-4gsEEJx",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "hAxKDrJiJmHK__0M_ewMu",
-                            Name = "Public Safety",
-                            Version = 0u
+                            Name = "Public Safety"
                         },
                         new
                         {
                             Id = "2Dn5XQlDSvNIuPcNz1Z2_",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Government Administration",
-                            Version = 0u
+                            Name = "Government Administration"
                         },
                         new
                         {
                             Id = "R6UJ7bC5s5RET284J7fTI",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Government Relations",
-                            Version = 0u
+                            Name = "Government Relations"
                         },
                         new
                         {
                             Id = "pPypbwxYDCO_vayD_m1vR",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "International Affairs",
-                            Version = 0u
+                            Name = "International Affairs"
                         },
                         new
                         {
                             Id = "MM_23S9wXuT1XN0hvCpqD",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Judiciary",
-                            Version = 0u
+                            Name = "Judiciary"
                         },
                         new
                         {
                             Id = "PFk8EMo95ki7CBxEFOhgp",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Legislative Office",
-                            Version = 0u
+                            Name = "Legislative Office"
                         },
                         new
                         {
                             Id = "6AUKesJxOibCNaXiVxejR",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Political Organization",
-                            Version = 0u
+                            Name = "Political Organization"
                         },
                         new
                         {
                             Id = "RhArj4cCu9IkPqCmTXpnL",
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EntityFrameworkVersion = 0u,
                             IndustryMainCategoryId = "08-giYmx7ja5wepmU10j5",
-                            Name = "Public Policy",
-                            Version = 0u
+                            Name = "Public Policy"
                         });
                 });
 
@@ -2037,6 +2037,12 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("InviteeId")
                         .HasColumnType("character varying(100)");
 
@@ -2056,12 +2062,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2098,6 +2098,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2107,12 +2113,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2157,6 +2157,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
@@ -2189,11 +2195,9 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnType("character varying(50)")
                         .HasDefaultValue("PRIVATE");
 
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
+                    b.Property<string>("UniqueAlphanumericName")
+                        .HasMaxLength(63)
+                        .HasColumnType("character varying(63)");
 
                     b.Property<string>("Website")
                         .HasMaxLength(2000)
@@ -2218,6 +2222,9 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("TermsOfUseId");
 
                     b.HasIndex("Type");
+
+                    b.HasIndex("UniqueAlphanumericName")
+                        .IsUnique();
 
                     b.HasIndex("Website");
 
@@ -2256,6 +2263,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
@@ -2270,12 +2283,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2331,6 +2338,12 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2346,12 +2359,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.Property<string>("Zipcode")
                         .IsRequired()
@@ -2386,6 +2393,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<bool?>("IsOrganizationOnboardingDone")
                         .HasColumnType("boolean");
 
@@ -2407,12 +2420,6 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
                         .HasDefaultValue("ACTIVE");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2457,6 +2464,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("End")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2472,12 +2485,6 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<int>("UnitPrice")
                         .HasColumnType("integer");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2516,6 +2523,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2526,12 +2539,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationOfferingId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2577,6 +2584,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<decimal?>("Latitude")
                         .HasColumnType("numeric");
 
@@ -2597,12 +2610,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.Property<string>("Zipcode")
                         .IsRequired()
@@ -2637,6 +2644,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("EntityId")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -2658,12 +2671,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2735,6 +2742,12 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
@@ -2777,12 +2790,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("Url")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2828,6 +2835,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<bool>("IsAuthorized")
                         .HasColumnType("boolean");
 
@@ -2837,12 +2850,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationStripeConnectAccountId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2875,6 +2882,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2886,12 +2899,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2920,6 +2927,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2931,12 +2944,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -2974,18 +2981,18 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationStripePaymentMethodId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3050,6 +3057,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3064,12 +3077,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("SetupIntentId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3100,6 +3107,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3113,12 +3126,6 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<decimal>("TaxRatePercentage")
                         .HasColumnType("DECIMAL(5,2)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3152,6 +3159,12 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3168,12 +3181,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3206,6 +3213,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3215,12 +3228,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3250,6 +3257,12 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3257,12 +3270,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -3282,8 +3289,8 @@ namespace Organization.Shared.Database.Migrations
                             Id = "VHzIH3DC09QJrOrCV-PnU",
                             Active = true,
                             CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Terms = "I verify that I am an authorized representative of this organization and have the right to act on its behalf in the creation and management of this page. The organization and I agree to the additional terms for Pages.",
-                            Version = 0u
+                            EntityFrameworkVersion = 0u,
+                            Terms = "I verify that I am an authorized representative of this organization and have the right to act on its behalf in the creation and management of this page. The organization and I agree to the additional terms for Pages."
                         });
                 });
 

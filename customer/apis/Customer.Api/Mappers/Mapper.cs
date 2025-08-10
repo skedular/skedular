@@ -134,7 +134,10 @@ public class Mapper : IMapper
                 ? null
                 : new OrganizationDetails
                 {
-                    UniqueId = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name, LogoUrl = src.DefaultOrganization.LogoUrl
+                    UniqueId = src.DefaultOrganization.Id,
+                    UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName,
+                    Name = src.DefaultOrganization.Name,
+                    LogoUrl = src.DefaultOrganization.LogoUrl
                 },
             PreferredLocations = src.PreferredLocations.Select(item => new LocationDetails
             {
@@ -142,7 +145,13 @@ public class Mapper : IMapper
                 Name = item.Name,
                 Organization = item.Organization is null
                     ? null
-                    : new OrganizationDetails { UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl }
+                    : new OrganizationDetails
+                    {
+                        UniqueId = item.Organization.Id,
+                        UniqueAlphanumericName = item.Organization.UniqueAlphanumericName,
+                        Name = item.Organization.Name,
+                        LogoUrl = item.Organization.LogoUrl
+                    }
             }),
             PreferredZones = src.PreferredOrganizationTags
                 .Where(item => item.Type == OrganizationTagType.Zone)
@@ -158,7 +167,13 @@ public class Mapper : IMapper
                 Name = item.Name,
                 Organization = item.Organization is null
                     ? null
-                    : new OrganizationDetails { UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl }
+                    : new OrganizationDetails
+                    {
+                        UniqueId = item.Organization.Id,
+                        UniqueAlphanumericName = item.Organization.UniqueAlphanumericName,
+                        Name = item.Organization.Name,
+                        LogoUrl = item.Organization.LogoUrl
+                    }
             }),
             PaymentMethods = MapTo(src.StripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
@@ -309,7 +324,9 @@ public class Mapper : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                     {
-                        Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString()
+                        Id = src.DefaultOrganization.Id,
+                        UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName.ToSafeString(),
+                        Name = src.DefaultOrganization.Name.ToSafeString()
                     }
         };
 
@@ -525,6 +542,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
                 Type = src.Type.ToOrganizationType(),

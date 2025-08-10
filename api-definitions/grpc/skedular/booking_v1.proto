@@ -195,9 +195,10 @@ message Identity {
 
 message Organization {
     string id = 1;
-    string name = 2;
-    string contactEmail = 3;
-    string contactPhone = 4;
+    string uniqueAlphanumericName = 2;
+    string name = 3;
+    string contactEmail = 4;
+    string contactPhone = 5;
 }
 
 message Location {

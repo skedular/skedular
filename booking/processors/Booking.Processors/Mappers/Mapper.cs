@@ -145,6 +145,8 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            UniqueAlphanumericName =
+                string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
             Name = organizationAfterState.Name,
             ContactEmail = organizationAfterState.ContactEmail,
             ContactPhone = organizationAfterState.ContactPhone,
@@ -294,6 +296,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Name = src.Name;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;

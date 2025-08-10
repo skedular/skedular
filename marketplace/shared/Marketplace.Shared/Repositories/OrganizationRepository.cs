@@ -40,11 +40,13 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 
     public async Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => ids.Contains(query.Id))
+            .Where(query => ids.Contains(query.Id) || (query.UniqueAlphanumericName != null && ids.Contains(query.UniqueAlphanumericName)))
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
 

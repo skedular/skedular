@@ -449,6 +449,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
@@ -477,7 +478,13 @@ public class Mapper : IMapper
     private IEnumerable<TeamMemberDetails> MapTo(IEnumerable<TeamMember> src) => src.Select(MapTo);
 
     private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new() { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
+        new()
+        {
+            UniqueId = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            Name = src.Name.ToSafeString(),
+            LogoUrl = src.LogoUrl
+        };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };

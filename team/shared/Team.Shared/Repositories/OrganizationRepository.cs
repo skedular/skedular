@@ -32,7 +32,9 @@ public class OrganizationRepository(TeamDbContext dbContext, TimeProvider timePr
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Teams.Where(location => !location.DeletedAt.HasValue))
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 
     public Organization Add(Organization team)
     {

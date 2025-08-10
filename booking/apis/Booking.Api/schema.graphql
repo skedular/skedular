@@ -112,6 +112,7 @@ type Booking_OrganizationCustomTagDetails {
 
 type Booking_OrganizationDetails {
   uniqueId: ID!
+  uniqueAlphanumericName: String
   name: String!
   contactEmail: String
   contactPhone: String

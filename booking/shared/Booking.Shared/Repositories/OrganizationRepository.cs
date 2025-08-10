@@ -80,7 +80,9 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(
+                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
+                cancellationToken);
 
     public async Task<ICollection<Organization>> GetByIdsAsync(
         ICollection<string> ids,
@@ -88,7 +90,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => ids.Contains(query.Id))
+            .Where(query => ids.Contains(query.Id) || (query.UniqueAlphanumericName != null && ids.Contains(query.UniqueAlphanumericName)))
             .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
             .ToListAsync(cancellationToken);
 

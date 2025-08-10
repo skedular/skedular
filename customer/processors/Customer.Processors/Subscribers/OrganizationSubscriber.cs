@@ -90,6 +90,7 @@ public class OrganizationSubscriber(
         await UpdateOrganizationMembersDefaultOrganizationAsync(existingOrganization.Id, existingOrganization.OrganizationMembers, cancellationToken);
         await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken);
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
+        existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

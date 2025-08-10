@@ -215,6 +215,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -286,6 +287,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -305,6 +307,7 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
+        dest.UniqueAlphanumericName = dest.UniqueAlphanumericName;
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Website = src.Website;
@@ -396,6 +399,7 @@ public class Mapper : IMapper
         return new OrganizationDetails
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -460,6 +464,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id.ToSafeString(),
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -476,6 +481,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -493,6 +499,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -513,6 +520,7 @@ public class Mapper : IMapper
         var organization = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),

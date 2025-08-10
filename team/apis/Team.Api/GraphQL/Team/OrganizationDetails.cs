@@ -7,6 +7,10 @@ namespace Team.Api.GraphQL.Team;
 public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
+
+    [GraphQLName("uniqueAlphanumericName")]
+    public string? UniqueAlphanumericName { get; set; }
+
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }

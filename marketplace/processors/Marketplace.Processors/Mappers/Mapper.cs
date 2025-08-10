@@ -107,6 +107,8 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            UniqueAlphanumericName =
+                string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
             Offering = new Offering
             {
                 Id = organizationAfterState.Offering.Id,
@@ -170,6 +172,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();

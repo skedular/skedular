@@ -6,6 +6,7 @@ namespace Organization.Shared.Models;
 
 public class Organization : ModelBaseWithDeleted
 {
+    public string? UniqueAlphanumericName { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Website { get; set; }

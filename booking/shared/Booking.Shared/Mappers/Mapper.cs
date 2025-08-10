@@ -339,6 +339,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
@@ -348,10 +349,9 @@ public class Mapper : IMapper
                 MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
             };
 
+    private static IEnumerable<Location> MapTo(IEnumerable<Database.Entities.Location> src) => src.Select(MapTo)!;
 
-    private IEnumerable<Location> MapTo(IEnumerable<Database.Entities.Location> src) => src.Select(MapTo)!;
-
-    public Location? MapTo(Database.Entities.Location? src) =>
+    private static Location? MapTo(Database.Entities.Location? src) =>
         src is null
             ? null
             : new Location

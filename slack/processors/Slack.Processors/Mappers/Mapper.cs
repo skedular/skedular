@@ -184,6 +184,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Type = src.Type.ToOrganizationType();
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
@@ -245,7 +246,6 @@ public class Mapper : IMapper
         dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
         dest.IsActive = src.IsActive;
         dest.Organization = organization;
-
         return dest;
     }
 }

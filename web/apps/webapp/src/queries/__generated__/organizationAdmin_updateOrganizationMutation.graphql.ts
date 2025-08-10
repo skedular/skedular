@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e8581288ae6f64b6a8461db30c020a4>>
+ * @generated SignedSource<<d7c7c9edc0f625301a57c766ac836c20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,7 @@ export type UpdateOrganizationInput = {
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
   type: OrganizationType;
+  uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
