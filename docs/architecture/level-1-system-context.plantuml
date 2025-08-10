@@ -1,0 +1,24 @@
+@startuml system_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(individualUser, "Individual User", "Books resources from marketplace or organizations")
+Person(coworkingOwner, "Co-working Space Owner", "Manages co-working spaces")
+Person(orgOwner, "Organization Owner", "Manages an organization")
+
+System(skedular, "Skedular", "Scheduling platform\nInterfaces: Web, Slack, Microsoft Teams")
+
+System_Ext(stripe, "Stripe", "Payment processing")
+System_Ext(aws, "AWS", "Email delivery")
+System_Ext(azure, "Azure", "MS Teams integration")
+System_Ext(workOS, "WorkOS", "Trusted Identity Provider")
+
+Rel(individualUser, skedular, "Uses via Web, Slack, or MS Teams interfaces")
+Rel(coworkingOwner, skedular, "Uses via Web, Slack, or MS Teams interfaces")
+Rel(orgOwner, skedular, "Uses via Web, Slack, or MS Teams interfaces")
+
+Rel(skedular, stripe, "Uses for payments")
+Rel(skedular, aws, "Uses for email delivery")
+Rel(skedular, azure, "Uses for MS Teams integration")
+Rel(skedular, workOS, "Uses for identity management")
+
+@enduml

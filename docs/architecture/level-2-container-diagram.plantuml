@@ -1,0 +1,126 @@
+@startuml container_diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(individualUser, "Individual User", "Books resources from marketplace or organizations")
+Person(coworkingOwner, "Co-working Space Owner", "Manages co-working spaces")
+Person(orgOwner, "Organization Owner", "Manages an organization")
+
+System_Boundary(skedular, "Skedular") {
+    Container(webApp, "Web Application", "React/Next.js", "User interface for booking and management via Web")
+    Container(slackApp, "Slack Application", ".Net Core", "User interface for booking and management via Slack")
+    Container(msTeamsApp, "MsTeams Application", "React/Next.js", "User interface for booking and management via Microsoft Teams")
+    Container(gateway, "GraphQL Gateway", ".Net Core", "API Gateway and reverse proxy")
+    Container(kafka, "Kafka", "Event Streaming Platform", "Core asynchronous messaging backbone")
+    Container(temporal, "Temporal", "Workflow Orchestration", "Temporal for managing workflows and long-running processes")
+
+    Container(coreDomain, "Core Domain", "Microservice", "File upload, CDN, private files")
+    ContainerDb(coreDb, "Core Database", "Database", "Stores core domain data")
+    
+    Container(customerDomain, "Customer Domain", "Microservice", "Customer data and identities")
+    ContainerDb(customerDb, "Customer Database", "Database", "Stores customer data")
+
+    Container(organizationDomain, "Organization Domain", "Microservice", "Organizations and members")
+    ContainerDb(organizationDb, "Organization Database", "Database", "Stores organization data")
+
+    Container(locationDomain, "Location Domain", "Microservice", "Locations and resources")
+    ContainerDb(locationDb, "Location Database", "Database", "Stores location data")
+
+    Container(teamDomain, "Team Domain", "Microservice", "Teams within organizations")
+    ContainerDb(teamDb, "Team Database", "Database", "Stores team data")
+
+    Container(bookingDomain, "Booking Domain", "Microservice", "Manages bookings")
+    ContainerDb(bookingDb, "Booking Database", "Database", "Stores booking data")
+
+    Container(marketplaceDomain, "Marketplace Domain", "Microservice", "Marketplace products and orgs")
+    ContainerDb(marketplaceDb, "Marketplace Database", "Database", "Stores marketplace data")
+
+    Container(msTeamsDomain, "MsTeams Domain", "Microservice", "MsTeams related data and integration")
+    ContainerDb(msTeamsDb, "MS Teams Database", "Database", "Stores MS Teams integration data")
+
+    Container(slackDomain, "Slack Domain", "Microservice", "Slack interface and integration")
+    ContainerDb(slackDb, "Slack Database", "Database", "Stores Slack integration data")
+
+}
+
+System_Ext(workOS, "WorkOS", "Trusted Identity Provider")
+System_Ext(stripe, "Stripe", "Payment processing")
+System_Ext(aws, "AWS", "Email delivery")
+System_Ext(azure, "Azure", "MsTeams integration")
+System_Ext(cloudflare, "Cloudflare", "CDN and File Storage")
+
+Rel(individualUser, webApp, "Uses")
+Rel(coworkingOwner, webApp, "Uses")
+Rel(orgOwner, webApp, "Uses")
+
+Rel(individualUser, slackApp, "Uses")
+Rel(coworkingOwner, slackApp, "Uses")
+Rel(orgOwner, slackApp, "Uses")
+
+Rel(individualUser, msTeamsApp, "Uses")
+Rel(coworkingOwner, msTeamsApp, "Uses")
+Rel(orgOwner, msTeamsApp, "Uses")
+
+Rel(webApp, gateway, "API calls")
+Rel(slackApp, gateway, "API calls")
+Rel(msTeamsApp, gateway, "API calls")
+
+Rel(gateway, coreDomain, "Requests")
+Rel(coreDomain, coreDb, "Reads/Writes")
+Rel(coreDomain, cloudflare, "Uses for authentication")
+Rel(coreDomain, workOS, "Uses for authentication")
+Rel(coreDomain, kafka, "Publishes/Consumes events")
+
+Rel(gateway, customerDomain, "Requests")
+Rel(customerDomain, customerDb, "Reads/Writes")
+Rel(customerDomain, workOS, "Uses for authentication")
+Rel(customerDomain, aws, "Uses for sending emails")
+Rel(customerDomain, kafka, "Publishes/Consumes events")
+Rel(customerDomain, temporal, "Worflows and long-running processes")
+
+Rel(gateway, organizationDomain, "Requests")
+Rel(organizationDomain, organizationDb, "Reads/Writes")
+Rel(organizationDomain, workOS, "Uses for authentication")
+Rel(organizationDomain, stripe, "Uses for payment processing")
+Rel(organizationDomain, aws, "Uses for sending emails")
+Rel(organizationDomain, kafka, "Publishes/Consumes events")
+Rel(organizationDomain, temporal, "Worflows and long-running processes")
+
+Rel(gateway, locationDomain, "Requests")
+Rel(locationDomain, locationDb, "Reads/Writes")
+Rel(locationDomain, workOS, "Uses for authentication")
+Rel(locationDomain, kafka, "Publishes/Consumes events")
+
+Rel(gateway, teamDomain, "Requests")
+Rel(teamDomain, teamDb, "Reads/Writes")
+Rel(teamDomain, workOS, "Uses for authentication")
+Rel(teamDomain, aws, "Uses for sending emails")
+Rel(teamDomain, kafka, "Publishes/Consumes events")
+Rel(teamDomain, temporal, "Worflows and long-running processes")
+
+Rel(gateway, bookingDomain, "Requests")
+Rel(bookingDomain, bookingDb, "Reads/Writes")
+Rel(bookingDomain, workOS, "Uses for authentication")
+Rel(bookingDomain, stripe, "Uses for payment processing")
+Rel(bookingDomain, aws, "Uses for sending emails")
+Rel(bookingDomain, kafka, "Publishes/Consumes events")
+Rel(bookingDomain, temporal, "Worflows and long-running processes")
+
+Rel(gateway, marketplaceDomain, "Requests")
+Rel(marketplaceDomain, marketplaceDb, "Reads/Writes")
+Rel(marketplaceDomain, workOS, "Uses for authentication")
+Rel(marketplaceDomain, kafka, "Publishes/Consumes events")
+
+Rel(gateway, msTeamsDomain, "Requests")
+Rel(msTeamsDomain, msTeamsDb, "Reads/Writes")
+Rel(msTeamsDomain, workOS, "Uses for authentication")
+Rel(msTeamsDomain, azure, "Uses for MsTeams integration")
+Rel(msTeamsDomain, kafka, "Publishes/Consumes events")
+
+Rel(gateway, slackDomain, "Requests")
+Rel(slackDomain, slackDb, "Reads/Writes")
+Rel(slackDomain, workOS, "Uses for authentication")
+Rel(slackDomain, aws, "Uses for sending emails")
+Rel(slackDomain, kafka, "Publishes/Consumes events")
+Rel(slackDomain, temporal, "Worflows and long-running processes")
+
+@enduml
