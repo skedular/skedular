@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 
-public record NewSlackWorkspaceJoinedInput(string CustomerId);
+public record NewSlackWorkspaceJoinedInput(string WorkspaceId);
 
 [Workflow]
 public class NewSlackWorkspaceJoined
@@ -12,7 +12,7 @@ public class NewSlackWorkspaceJoined
     [WorkflowRun]
     public async Task ExecuteAsync(NewSlackWorkspaceJoinedInput args) =>
         await Workflow.ExecuteActivityAsync(
-            (EmailIntegrations activity) => activity.SendNewSlackWorkspaceJoinedEmailAsync(args.CustomerId),
+            (EmailIntegrations activity) => activity.SendNewSlackWorkspaceJoinedEmailAsync(args.WorkspaceId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

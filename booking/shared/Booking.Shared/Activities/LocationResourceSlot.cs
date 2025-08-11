@@ -13,6 +13,8 @@ using Temporalio.Client;
 
 namespace Booking.Shared.Activities;
 
+public record ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(bool ShallContinue, ICollection<string> ResourceIds);
+
 public class LocationResourceSlot(
     TemporalConfiguration temporalConfiguration,
     IRepositoryFactory repositoryFactory,

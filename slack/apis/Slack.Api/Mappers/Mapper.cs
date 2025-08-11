@@ -404,9 +404,6 @@ public class Mapper : IMapper
             AuthedUserScope = src.AuthedUserScope,
             AuthedUserAccessToken = src.AuthedUserAccessToken,
             AuthedRefreshToken = src.AuthedRefreshToken,
-            LastRefreshedAt = src.LastRefreshedAt,
-            MembersLastRefreshedAt = src.MembersLastRefreshedAt,
-            ChannelsLastRefreshedAt = src.ChannelsLastRefreshedAt,
             Organization = MapTo(src.Organization)
         };
 

@@ -19,7 +19,6 @@ public class WorkspaceService(
     IRepositoryFactory repositoryFactory,
     IWorkspaceOnboardingService workspaceOnboardingService,
     IMapper mapper,
-    ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
     ITemporalOutboxPublisher temporalOutboxPublisher)
     : IWorkspaceService
 {
@@ -48,10 +47,8 @@ public class WorkspaceService(
             ArgumentNullException.ThrowIfNull(workspace);
 
             workspace = repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(response, workspace, organization));
-            slackInternalOutboxPublisher.PublishRefreshWorkspace([workspace.Id], repositoryFactory.UnitOfWork);
-            slackInternalOutboxPublisher.PublishRefreshWorkspaceMembers([workspace.Id], repositoryFactory.UnitOfWork);
-            slackInternalOutboxPublisher.PublishRefreshWorkspaceChannels([workspace.Id], repositoryFactory.UnitOfWork);
             temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(workspace.Id, repositoryFactory.UnitOfWork);
+            temporalOutboxPublisher.StartWorkflowReSyncSlackWorkspace(workspace.Id, repositoryFactory.UnitOfWork);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

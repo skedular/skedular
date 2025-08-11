@@ -10,6 +10,7 @@ using Slack.Shared.Activities;
 using Slack.Shared.Configurations;
 using Slack.Shared.Database;
 using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
+using Slack.Shared.Workflows.ReSyncSlackWorkspace;
 using Temporalio.Extensions.Hosting;
 
 namespace Slack.Jobs;
@@ -51,7 +52,9 @@ public class Program
         services
             .AddTemporalWorker(configuration)
             .AddWorkflow<NewSlackWorkspaceJoined>()
-            .AddScopedActivities<EmailIntegrations>();
+            .AddWorkflow<ReSyncSlackWorkspace>()
+            .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<SlackIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

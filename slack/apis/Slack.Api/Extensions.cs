@@ -20,6 +20,7 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IHomePageContextService, HomePageContextService>()
             .AddScoped<IBookingsPageContextService, BookingsPageContextService>()
             .AddScoped<ILocationsPageContextService, LocationsPageContextService>()

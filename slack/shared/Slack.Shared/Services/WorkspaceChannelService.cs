@@ -7,7 +7,7 @@ namespace Slack.Shared.Services;
 
 public interface IWorkspaceChannelService
 {
-    Task RefreshWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken);
+    Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
 public class WorkspaceChannelService(
@@ -15,7 +15,7 @@ public class WorkspaceChannelService(
     IRepositoryFactory repositoryFactory,
     TimeProvider timeProvider) : IWorkspaceChannelService
 {
-    public async Task RefreshWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken)
+    public async Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken)
     {
         var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
         if (existingWorkspace is null)
@@ -56,7 +56,6 @@ public class WorkspaceChannelService(
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);
         existingWorkspace.Channels = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        existingWorkspace.ChannelsLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

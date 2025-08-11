@@ -7,7 +7,8 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Slack.V1.Version;
 namespace Slack.Api.Controllers;
 
 [ApiController]
-public class SlackController(IVersionService versionService, IWorkspaceService workspaceService) : SlackControllerBase
+public class SlackController(IVersionService versionService, IWorkspaceService workspaceService, IWorkaroundService workaroundService)
+    : SlackControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -21,4 +22,18 @@ public class SlackController(IVersionService versionService, IWorkspaceService w
 
     public override async Task<IActionResult> Callback(string code, string? state, CancellationToken cancellationToken = default) =>
         Redirect(await workspaceService.InstallAsync(code, state, cancellationToken));
+
+    public override async Task<IActionResult> ReSyncAllSlackWorkspaces(CancellationToken cancellationToken = default)
+    {
+        await workaroundService.ReSyncAllSlackWorkspaces(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> ReSyncSlackWorkspace(string workspaceId, CancellationToken cancellationToken = default)
+    {
+        await workaroundService.ReSyncSlackWorkspace(workspaceId, cancellationToken);
+
+        return Ok();
+    }
 }

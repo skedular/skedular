@@ -21,9 +21,6 @@ public class Workspace : EntityBaseWithDeleted
     public string AuthedUserScope { get; set; }
     public string AuthedUserAccessToken { get; set; }
     public string AuthedRefreshToken { get; set; }
-    public DateTimeOffset? LastRefreshedAt { get; set; }
-    public DateTimeOffset? MembersLastRefreshedAt { get; set; }
-    public DateTimeOffset? ChannelsLastRefreshedAt { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<WorkspaceChannel> Channels { get; set; } = [];
@@ -54,7 +51,5 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
 
         builder.HasIndex(item => item.AuthedUserScope);
         builder.HasIndex(item => item.BotUserScope);
-        builder.HasIndex(item => item.MembersLastRefreshedAt);
-        builder.HasIndex(item => item.ChannelsLastRefreshedAt);
     }
 }

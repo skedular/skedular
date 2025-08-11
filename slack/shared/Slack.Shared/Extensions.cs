@@ -89,12 +89,10 @@ public static class Extensions
             .AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddSingleton<ISlackInternalPublisher, SlackInternalPublisher>();
+        services;
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddSingleton<ISlackInternalOutboxPublisher, SlackInternalOutboxPublisher>()
             .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 
     public static IServiceCollection AddSlack(

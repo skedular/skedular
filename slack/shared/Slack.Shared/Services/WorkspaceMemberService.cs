@@ -30,7 +30,7 @@ namespace Slack.Shared.Services;
 
 public interface IWorkspaceMemberService
 {
-    Task RefreshWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken);
+    Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken);
     Task UpdateWorkspaceMemberProfileStatusAsync(string workspaceMemberId, CancellationToken cancellationToken);
     string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Models.Customer customer);
 }
@@ -49,7 +49,7 @@ public class WorkspaceMemberService(
     IRandomHelper randomHelper,
     TimeProvider timeProvider) : IWorkspaceMemberService
 {
-    public async Task RefreshWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
+    public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
         var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
         if (existingWorkspace is null)
@@ -91,7 +91,6 @@ public class WorkspaceMemberService(
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);
         existingWorkspace.WorkspaceMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        existingWorkspace.MembersLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

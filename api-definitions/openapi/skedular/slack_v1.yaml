@@ -68,6 +68,52 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/slack/workspace/resync-all-workspaces:
+    put:
+      tags:
+        - v1
+        - slack
+        - workspace
+      summary: resync all slack workspace
+      operationId: reSyncAllSlackWorkspaces
+
+      responses:
+        "200":
+          description: the status of resyncing all slack workspaces
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/slack/workspace/{workspaceId}/resync:
+    put:
+      tags:
+        - v1
+        - slack
+        - workspace
+      summary: resync slack workspace
+      operationId: reSyncSlackWorkspace
+      parameters:
+        - in: path
+          name: workspaceId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of resyncing slack workspace
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 components:
   schemas:
     ProblemDetails:

@@ -11,14 +11,14 @@ public interface IWorkspaceRepository : IRepository<Workspace>
     Task<Workspace?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Workspace?> GetByWorkspaceMemberIdAsync(string workspaceMemberId, CancellationToken cancellationToken);
     Task<Workspace?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<ICollection<Workspace>> GetAllAsync(CancellationToken cancellationToken);
     Workspace Add(Workspace workspace);
     Workspace Update(Workspace workspace);
 }
 
 internal static class WorkspaceExtensions
 {
-    internal static IIncludableQueryable<Workspace, ICollection<WorkspaceMember>> AddDependentObjects(
-        this IQueryable<Workspace> originalQuery) =>
+    internal static IIncludableQueryable<Workspace, ICollection<WorkspaceMember>> AddDependentObjects(this IQueryable<Workspace> originalQuery) =>
         originalQuery
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers)
@@ -35,9 +35,7 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Workspace?> GetByWorkspaceMemberIdAsync(
-        string workspaceMemberId,
-        CancellationToken cancellationToken)
+    public async Task<Workspace?> GetByWorkspaceMemberIdAsync(string workspaceMemberId, CancellationToken cancellationToken)
     {
         var workspaceMember = await DbContext.WorkspaceMember
             .Include(query => query.Workspace)
@@ -52,11 +50,16 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
             .FirstOrDefaultAsync(query => query.Id == workspaceMember.Workspace.Id, cancellationToken);
     }
 
-    public async Task<Workspace?>
-        GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+    public async Task<Workspace?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.Workspace
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
+
+    public async Task<ICollection<Workspace>> GetAllAsync(CancellationToken cancellationToken) =>
+        await DbContext.Workspace
+            .Where(query => !query.DeletedAt.HasValue)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public Workspace Add(Workspace workspace)
     {

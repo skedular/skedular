@@ -7,9 +7,7 @@ using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 namespace Slack.Processors.Subscribers;
 
 public class SlackInternalSubscriber(
-    IWorkspaceService workspaceService,
     IWorkspaceMemberService workspaceMemberService,
-    IWorkspaceChannelService workspaceChannelService,
     ILocationDailyUpdaterService locationDailyUpdaterService,
     ITeamDailyUpdaterService teamDailyUpdaterService)
     : IEventSubscriber<Key, Event>
@@ -18,18 +16,6 @@ public class SlackInternalSubscriber(
     {
         switch (@event.Metadata.Type)
         {
-            case Type.RefreshWorkspace:
-                await workspaceService.RefreshWorkspaceAsync(@event.WorkspaceId, cancellationToken);
-                break;
-
-            case Type.RefreshWorkspaceMembers:
-                await workspaceMemberService.RefreshWorkspaceMembersAsync(@event.WorkspaceId, cancellationToken);
-                break;
-
-            case Type.RefreshWorkspaceChannels:
-                await workspaceChannelService.RefreshWorkspaceChannelsAsync(@event.WorkspaceId, cancellationToken);
-                break;
-
             case Type.SendWorkspaceLocationDailyUpdateMessage:
                 await locationDailyUpdaterService.SendDailyUpdateAsync(@event.LocationId, cancellationToken);
                 break;

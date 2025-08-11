@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Confluent.Kafka" Version="9.4.0"/>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.0"/>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="9.4.1"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1"/>
 
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -37,13 +37,13 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.7.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.8.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8"/>
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.7.0"/>
-        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.0"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.89.0"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0"/>
+        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.1"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.90.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.13.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
