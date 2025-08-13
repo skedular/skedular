@@ -11,8 +11,8 @@ namespace Customer.Shared.Publishers;
 
 public interface ITemporalOutboxPublisher
 {
-    void StartWorkflowSubmitCustomerFeedback(string customerFeedbackId, IUnitOfWork unitOfWork);
-    void StartWorkflowNewCustomerJoined(string customerId, IUnitOfWork unitOfWork);
+    void StartWorkflowSubmitCustomerFeedback(SubmitCustomerFeedbackInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowNewCustomerJoined(NewCustomerJoinedInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
@@ -20,24 +20,24 @@ public class TemporalOutboxPublisher(
     ITemporalOutboxWorkflowExecutor<SubmitCustomerFeedback> temporalOutboxSubmitCustomerFeedbackWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<NewCustomerJoined> temporalOutboxNewCustomerJoinedWorkflowExecutor) : ITemporalOutboxPublisher
 {
-    public void StartWorkflowSubmitCustomerFeedback(string customerFeedbackId, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowSubmitCustomerFeedback(SubmitCustomerFeedbackInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxSubmitCustomerFeedbackWorkflowExecutor.Execute(
-            new SubmitCustomerFeedbackInput(customerFeedbackId),
+            args,
             new WorkflowOptions
             {
-                Id = customerFeedbackId,
+                Id = args.CustomerFeedbackId,
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
             unitOfWork);
 
-    public void StartWorkflowNewCustomerJoined(string customerId, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowNewCustomerJoined(NewCustomerJoinedInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxNewCustomerJoinedWorkflowExecutor.Execute(
-            new NewCustomerJoinedInput(customerId),
+            args,
             new WorkflowOptions
             {
-                Id = $"{Constants.NewCustomerJoinedPrefix}-{customerId}",
+                Id = $"{Constants.NewCustomerJoinedPrefix}-{args.CustomerId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

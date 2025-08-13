@@ -4,6 +4,10 @@ using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows.OrganizationOfferingRenewal;
 
+public record ScheduleRenewOrganizationOfferingInput(string OrganizationId, string OrganizationOfferingId, DateTimeOffset RenewalDate);
+
+public record OrganizationOfferingState(bool IsCancelled);
+
 [Workflow]
 public class ScheduleRenewOrganizationOffering
 {

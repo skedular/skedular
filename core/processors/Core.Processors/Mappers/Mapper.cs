@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Core.Shared.Database.Entities;
-using Enterprise.Shared;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = Core.Shared.Models.Customer;
 using Identity = Core.Shared.Database.Entities.Identity;

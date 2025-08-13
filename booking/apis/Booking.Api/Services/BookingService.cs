@@ -6,6 +6,8 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
+using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -187,11 +189,20 @@ public class BookingService(
             switch (booking.PaymentMethod)
             {
                 case PaymentMethod.Card:
-                    temporalOutboxPublisher.StartWorkflowPayBookingViaCard(booking, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.StartWorkflowPayBookingViaCard(
+                        new PayBookingViaCardInput(
+                            booking.Id,
+                            booking.PaymentExpiry,
+                            booking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    temporalOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(booking, repositoryFactory.UnitOfWork);
+                    temporalOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(
+                        new PayBookingViaBankTransferInput(
+                            booking.Id,
+                            booking.PaymentExpiry,
+                            booking.InvoiceEmailList.ToSafeCollection()),
+                        repositoryFactory.UnitOfWork);
                     break;
 
                 default: throw new ArgumentOutOfRangeException();

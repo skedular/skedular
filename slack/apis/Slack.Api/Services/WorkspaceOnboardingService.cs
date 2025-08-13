@@ -7,6 +7,7 @@ using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_AddInput;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
@@ -47,8 +48,7 @@ public class WorkspaceOnboardingService(
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
 
-        temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(workspace.Id, repositoryFactory.UnitOfWork);
-        temporalOutboxPublisher.StartWorkflowReSyncSlackWorkspace(workspace.Id, repositoryFactory.UnitOfWork);
+        temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(new NewSlackWorkspaceJoinedInput(workspace.Id), repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

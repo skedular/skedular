@@ -15,19 +15,13 @@ namespace Organization.Shared.Publishers;
 public interface ITemporalOutboxPublisher
 {
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
-    void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 
     void StartWorkflowInviteToJoinOrganizationExistingCustomer(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerId,
+        SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
         IUnitOfWork unitOfWork);
 
-    void StartWorkflowInviteToJoinOrganizationNewCustomer(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork);
+    void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
+    void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
@@ -50,43 +44,37 @@ public class TemporalOutboxPublisher(
             },
             unitOfWork);
 
+    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(
+        SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
+        IUnitOfWork unitOfWork) =>
+        temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerId}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerEmail}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
     public void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
             offeringId,
             typeof(ScheduleRenewOrganizationOffering).GetMethod(nameof(ScheduleRenewOrganizationOffering.CancelOfferingAsync))!
                 .ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
-            unitOfWork);
-
-    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerId,
-        IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor.Execute(
-            new SendInviteCustomerToJoinOrganizationExistingCustomerInput(organizationId, inviterCustomerId, inviteeCustomerId),
-            new WorkflowOptions
-            {
-                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerId}",
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
-            },
-            unitOfWork);
-
-    public void StartWorkflowInviteToJoinOrganizationNewCustomer(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor.Execute(
-            new InviteToJoinOrganizationNewCustomerInput(organizationId, inviterCustomerId, inviteeCustomerEmail),
-            new WorkflowOptions
-            {
-                Id = $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerEmail}",
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
-            },
             unitOfWork);
 }

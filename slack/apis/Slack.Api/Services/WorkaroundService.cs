@@ -1,10 +1,7 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
-using Enterprise.Shared.Temporal.Configurations;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 using Slack.Shared.Workflows.ReSyncSlackWorkspace;
-using Temporalio.Api.Enums.V1;
-using Temporalio.Client;
 
 namespace Slack.Api.Services;
 
@@ -14,11 +11,7 @@ public interface IWorkaroundService
     Task ReSyncAllSlackWorkspaces(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    TemporalConfiguration temporalConfiguration,
-    IRandomHelper randomHelper,
-    ITemporalClient temporalClient,
-    IRepositoryFactory repositoryFactory) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, ITemporalService temporalService) : IWorkaroundService
 {
     public async Task ReSyncSlackWorkspace(string workspaceId, CancellationToken cancellationToken)
     {
@@ -28,17 +21,7 @@ public class WorkaroundService(
             return;
         }
 
-        await temporalClient.StartWorkflowAsync(
-            (ReSyncSlackWorkspace workflow) =>
-                workflow.ExecuteAsync(new ReSyncSlackWorkspaceInput(workspaceId, null)),
-            new WorkflowOptions
-            {
-                Id = randomHelper.Generate(),
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
-            });
+        await temporalService.StartWorkflowReSyncSlackWorkspaceAsync(new ReSyncSlackWorkspaceInput(workspace.Id, null), cancellationToken);
     }
 
     public async Task ReSyncAllSlackWorkspaces(CancellationToken cancellationToken)
@@ -47,17 +30,7 @@ public class WorkaroundService(
 
         foreach (var workspace in workspaces)
         {
-            await temporalClient.StartWorkflowAsync(
-                (ReSyncSlackWorkspace workflow) =>
-                    workflow.ExecuteAsync(new ReSyncSlackWorkspaceInput(workspace.Id, null)),
-                new WorkflowOptions
-                {
-                    Id = randomHelper.Generate(),
-                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                    RetryPolicy = null,
-                    IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
-                    Rpc = new RpcOptions { CancellationToken = cancellationToken }
-                });
+            await temporalService.StartWorkflowReSyncSlackWorkspaceAsync(new ReSyncSlackWorkspaceInput(workspace.Id, null), cancellationToken);
         }
     }
 }

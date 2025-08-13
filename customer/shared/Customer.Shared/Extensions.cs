@@ -51,8 +51,7 @@ public static class Extensions
             .AddScoped<ICustomerBillingDetailsRepository, CustomerBillingDetailsRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services.
-            AddSingleton<ICustomerPublisher, CustomerPublisher>();
+        services.AddSingleton<ICustomerPublisher, CustomerPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

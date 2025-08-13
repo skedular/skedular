@@ -13,9 +13,9 @@ namespace Booking.Shared.Publishers;
 
 public interface ITemporalOutboxPublisher
 {
-    void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork);
+    void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
-    void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
 }
@@ -27,15 +27,24 @@ public class TemporalOutboxPublisher(
     ITemporalOutboxWorkflowExecutor<PayBookingViaBankTransfer> temporalOutboxPayBookingViaBankTransferWorkflowExecutor)
     : ITemporalOutboxPublisher
 {
-    public void StartWorkflowPayBookingViaCard(Models.Booking booking, IUnitOfWork unitOfWork) =>
+    public void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxPayBookingViaCardWorkflowExecutor.Execute(
-            new PayBookingViaCardInput(
-                booking.Id,
-                booking.PaymentExpiry,
-                Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
+            args,
             new WorkflowOptions
             {
-                Id = $"{Constants.PaidViaCardPrefix}-{booking.Id}",
+                Id = $"{Constants.PaidViaCardPrefix}-{args.BookingId}",
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxPayBookingViaBankTransferWorkflowExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = $"{Constants.PaidViaBankTransferPrefix}-{args.BookingId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -47,21 +56,6 @@ public class TemporalOutboxPublisher(
             $"{Constants.PaidViaCardPrefix}-{bookingId}",
             typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.DeleteBookingAsync))!.ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
-            unitOfWork);
-
-    public void StartWorkflowPayBookingViaBankTransfer(Models.Booking booking, IUnitOfWork unitOfWork) =>
-        temporalOutboxPayBookingViaBankTransferWorkflowExecutor.Execute(
-            new PayBookingViaBankTransferInput(
-                booking.Id,
-                booking.PaymentExpiry,
-                Enterprise.Shared.Extensions.ToSafeCollection(booking.InvoiceEmailList)),
-            new WorkflowOptions
-            {
-                Id = $"{Constants.PaidViaBankTransferPrefix}-{booking.Id}",
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
-            },
             unitOfWork);
 
     public void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(

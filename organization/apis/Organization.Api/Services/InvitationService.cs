@@ -7,9 +7,11 @@ using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
+using Organization.Shared.Activities;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
@@ -121,17 +123,13 @@ public class InvitationService(
             if (matchingCustomerByEmail is null)
             {
                 temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationNewCustomer(
-                    organization.Id,
-                    customer.Id,
-                    email,
+                    new InviteToJoinOrganizationNewCustomerInput(organization.Id, customer.Id, email),
                     repositoryFactory.UnitOfWork);
             }
             else
             {
                 temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationExistingCustomer(
-                    organization.Id,
-                    customer.Id,
-                    matchingCustomerByEmail.Id,
+                    new SendInviteCustomerToJoinOrganizationExistingCustomerInput(organization.Id, customer.Id, matchingCustomerByEmail.Id),
                     repositoryFactory.UnitOfWork);
             }
         }

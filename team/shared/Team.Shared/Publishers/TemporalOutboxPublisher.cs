@@ -12,8 +12,8 @@ namespace Team.Shared.Publishers;
 
 public interface ITemporalOutboxPublisher
 {
-    void StartWorkflowInviteToJoinTeamExistingCustomer(string teamId, string inviterCustomerId, string inviteeCustomerId, IUnitOfWork unitOfWork);
-    void StartWorkflowInviteToJoinTeamNewCustomer(string teamId, string inviterCustomerId, string inviteeCustomerEmail, IUnitOfWork unitOfWork);
+    void StartWorkflowInviteToJoinTeamExistingCustomer(SendInviteCustomerToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowInviteToJoinTeamNewCustomer(InviteToJoinTeamNewCustomerInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
@@ -21,32 +21,24 @@ public class TemporalOutboxPublisher(
     ITemporalOutboxWorkflowExecutor<InviteToJoinTeamExistingCustomer> temporalOutboxInviteToJoinTeamExistingCustomerExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinTeamNewCustomer> temporalOutboxInviteToJoinTeamNewCustomerWorkflowExecutor) : ITemporalOutboxPublisher
 {
-    public void StartWorkflowInviteToJoinTeamExistingCustomer(
-        string teamId,
-        string inviterCustomerId,
-        string inviteeCustomerId,
-        IUnitOfWork unitOfWork) =>
+    public void StartWorkflowInviteToJoinTeamExistingCustomer(SendInviteCustomerToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxInviteToJoinTeamExistingCustomerExecutor.Execute(
-            new SendInviteCustomerToJoinTeamExistingCustomerInput(teamId, inviterCustomerId, inviteeCustomerId),
+            args,
             new WorkflowOptions
             {
-                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{teamId}-{inviteeCustomerId}",
+                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
             unitOfWork);
 
-    public void StartWorkflowInviteToJoinTeamNewCustomer(
-        string teamId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork) =>
+    public void StartWorkflowInviteToJoinTeamNewCustomer(InviteToJoinTeamNewCustomerInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxInviteToJoinTeamNewCustomerWorkflowExecutor.Execute(
-            new InviteToJoinTeamNewCustomerInput(teamId, inviterCustomerId, inviteeCustomerEmail),
+            args,
             new WorkflowOptions
             {
-                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{teamId}-{inviteeCustomerEmail}",
+                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerEmail}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

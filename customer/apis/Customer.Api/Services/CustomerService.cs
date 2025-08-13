@@ -4,6 +4,7 @@ using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -250,7 +251,7 @@ public class CustomerService(
 
         if (sendNewCustomerJoinedEmail)
         {
-            temporalOutboxPublisher.StartWorkflowNewCustomerJoined(customer.Id, repositoryFactory.UnitOfWork);
+            temporalOutboxPublisher.StartWorkflowNewCustomerJoined(new NewCustomerJoinedInput(customer.Id), repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

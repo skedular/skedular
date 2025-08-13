@@ -386,7 +386,7 @@ public class OrganizationService(
         organization.UniqueAlphanumericName = string.IsNullOrWhiteSpace(organization.UniqueAlphanumericName)
             ? existingOrganization.UniqueAlphanumericName
             : organization.UniqueAlphanumericName.ToLowerInvariant();
-        
+
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));

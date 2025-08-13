@@ -7,9 +7,11 @@ using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
+using Team.Shared.Activities;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
 using Customer = Team.Shared.Models.Customer;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 
@@ -114,14 +116,14 @@ public class InvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamNewCustomer(team.Id, customer.Id, email, repositoryFactory.UnitOfWork);
+                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamNewCustomer(
+                    new InviteToJoinTeamNewCustomerInput(team.Id, customer.Id, email),
+                    repositoryFactory.UnitOfWork);
             }
             else
             {
                 temporalOutboxPublisher.StartWorkflowInviteToJoinTeamExistingCustomer(
-                    team.Id,
-                    customer.Id,
-                    matchingCustomerByEmail.Id,
+                    new SendInviteCustomerToJoinTeamExistingCustomerInput(team.Id, customer.Id, matchingCustomerByEmail.Id),
                     repositoryFactory.UnitOfWork);
             }
         }

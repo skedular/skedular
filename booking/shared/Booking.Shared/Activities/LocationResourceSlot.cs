@@ -4,24 +4,18 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows.LocationResource;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
-using Enterprise.Shared.Temporal.Configurations;
 using Enterprise.Shared.Time;
 using Temporalio.Activities;
-using Temporalio.Api.Enums.V1;
-using Temporalio.Client;
 
 namespace Booking.Shared.Activities;
 
 public record ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(bool ShallContinue, ICollection<string> ResourceIds);
 
 public class LocationResourceSlot(
-    TemporalConfiguration temporalConfiguration,
     IRepositoryFactory repositoryFactory,
     ILocationResourceBookingSlotsHelperService locationResourceBookingSlotsHelperService,
-    IRandomHelper randomHelper,
-    ITemporalClient temporalClient,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    ITemporalService temporalService)
 {
     [Activity]
     public async Task<ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse> ExecuteAllLocationResourcesSlotGenerationWorkflowsAsync(
@@ -148,17 +142,9 @@ public class LocationResourceSlot(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
 
-        await temporalClient.StartWorkflowAsync(
-            (LocationResourceSlotGeneration workflow) =>
-                workflow.ExecuteAsync(new LocationResourceSlotGenerationInput(locationId, timeProvider.GetUtcNow().AddDays(1))),
-            new WorkflowOptions
-            {
-                Id = randomHelper.Generate(),
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
-            });
+        await temporalService.StartWorkflowLocationResourceSlotGenerationAsync(
+            new LocationResourceSlotGenerationInput(locationId, timeProvider.GetUtcNow().AddDays(1)),
+            cancellationToken);
     }
 
     private static OpeningHoursDetails GetOpeningHoursDetails(OpeningHours openingHours, ResourceBookingSlot slot) =>

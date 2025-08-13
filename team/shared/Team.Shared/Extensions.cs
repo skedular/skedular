@@ -49,8 +49,8 @@ public static class Extensions
         services
             .AddSingleton<ITeamOutboxPublisher, TeamOutboxPublisher>()
             .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
-    
-     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+
+    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
     {
         var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
         ArgumentNullException.ThrowIfNull(customerConfiguration);

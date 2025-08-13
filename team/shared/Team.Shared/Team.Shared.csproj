@@ -32,10 +32,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.html" />
-      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.txt" />
-      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.html" />
-      <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.txt" />
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.txt"/>
     </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 using SlackNet;
 
 namespace Slack.Api.Services;
@@ -47,8 +48,9 @@ public class WorkspaceService(
             ArgumentNullException.ThrowIfNull(workspace);
 
             workspace = repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(response, workspace, organization));
-            temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(workspace.Id, repositoryFactory.UnitOfWork);
-            temporalOutboxPublisher.StartWorkflowReSyncSlackWorkspace(workspace.Id, repositoryFactory.UnitOfWork);
+            temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(
+                new NewSlackWorkspaceJoinedInput(workspace.Id),
+                repositoryFactory.UnitOfWork);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
