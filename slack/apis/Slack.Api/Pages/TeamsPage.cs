@@ -371,7 +371,7 @@ public class TeamsPage(
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
                 new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
-                    .AddInclude(query => query.DailyUpdateChannel))
+                    .AddInclude(query => query!.DailyUpdateChannel!))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
         {
@@ -600,7 +600,7 @@ public class TeamsPage(
 
         var teamEntity = await repositoryFactory.TeamRepository
             .Query(new Specification<Team> { Criteria = query => query.Id == team.Id }
-                .AddInclude(query => query.DailyUpdateChannel))
+                .AddInclude(query => query.DailyUpdateChannel!))
             .FirstOrDefaultAsync(cancellationToken);
 
         var updateChannel = new InputBlock

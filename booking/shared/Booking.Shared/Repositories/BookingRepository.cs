@@ -39,7 +39,7 @@ internal static class BookingExtensions
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Resource)
             .ThenInclude(query => query.Location)
-            .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.InvolvedCustomers)
             .ThenInclude(query => query.Identities)
             .Include(query => query.InvolvedOrganizations)

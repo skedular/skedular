@@ -129,7 +129,7 @@ public class EditLocationButtonHandler(
                 {
                     var locationEntity = await repositoryFactory.LocationRepository.Query(
                             new Specification<Shared.Database.Entities.Location> { Criteria = query => query.Id == context.LocationId }
-                                .AddInclude(query => query.DailyUpdateChannel))
+                                .AddInclude(query => query.DailyUpdateChannel!))
                         .FirstOrDefaultAsync(cancellationToken);
                     if (locationEntity is not null)
                     {

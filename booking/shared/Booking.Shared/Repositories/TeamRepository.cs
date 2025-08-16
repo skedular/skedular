@@ -31,7 +31,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
@@ -46,7 +46,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PreferredByCustomers)
             .ToListAsync(cancellationToken);

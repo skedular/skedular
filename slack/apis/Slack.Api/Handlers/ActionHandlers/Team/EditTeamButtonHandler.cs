@@ -216,7 +216,7 @@ public class EditTeamButtonHandler(
                 {
                     var teamEntity = await repositoryFactory.TeamRepository.Query(
                             new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
-                                .AddInclude(query => query.DailyUpdateChannel))
+                                .AddInclude(query => query.DailyUpdateChannel!))
                         .FirstOrDefaultAsync(cancellationToken);
                     if (teamEntity is not null)
                     {

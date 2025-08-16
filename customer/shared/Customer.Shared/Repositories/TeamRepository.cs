@@ -31,10 +31,10 @@ public class TeamRepository(CustomerDbContext dbContext, TimeProvider timeProvid
             .ThenInclude(query => query.Identities)
             .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
-            .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query!.Customer)
             .Include(query => query.Organization)
             .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);

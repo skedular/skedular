@@ -30,7 +30,7 @@ internal static class LocationExtensions
             .Include(query => query.Resources.Where(resource =>
                 includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
             .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PreferredByCustomers)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));

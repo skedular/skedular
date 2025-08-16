@@ -420,7 +420,7 @@ public class LocationsPage(
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
             .Query(new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id) }
-                .AddInclude(query => query.DailyUpdateChannel))
+                .AddInclude(query => query.DailyUpdateChannel!))
             .ToListAsync(cancellationToken);
         locations = locations.Select(item =>
         {
@@ -650,7 +650,7 @@ public class LocationsPage(
 
         var locationEntity = await repositoryFactory.LocationRepository
             .Query(new Specification<Location> { Criteria = query => query.Id == location.Id }
-                .AddInclude(query => query.DailyUpdateChannel))
+                .AddInclude(query => query.DailyUpdateChannel!))
             .FirstOrDefaultAsync(cancellationToken);
 
         var updateChannel = new InputBlock

@@ -39,11 +39,11 @@ internal static class TeamExtensions
             .ThenInclude(query => query.Customer)
             .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
-            .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query!.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer);
+            .ThenInclude(query => query!.Customer);
 
     internal static IQueryable<Database.Entities.Team> AddSearchCriteria(
         this IQueryable<Database.Entities.Team> query,

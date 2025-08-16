@@ -33,7 +33,7 @@ internal static class ResourceExtensions
         originalQuery
             .Include(query => query.Location)
             .Include(query => query.ResourcePosition)
-            .ThenInclude(query => query.FloorPlan)
+            .ThenInclude(query => query!.FloorPlan)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)

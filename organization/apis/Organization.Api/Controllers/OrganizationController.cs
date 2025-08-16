@@ -55,7 +55,7 @@ public class OrganizationController(
 
     public override async Task<IActionResult> RegenerateAllOfferings(CancellationToken cancellationToken = default)
     {
-        await organizationOfferingService.RegenrateAllOfferingsAsync(cancellationToken);
+        await organizationOfferingService.RegenerateAllOfferingsAsync(cancellationToken);
 
         return Ok();
     }

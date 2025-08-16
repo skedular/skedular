@@ -32,7 +32,7 @@ internal static class CustomerExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
             .ThenInclude(query => query.Location)
-            .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.PreferredTeams.Where(team => !includeActiveItemsOnly || !team.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization);
 }

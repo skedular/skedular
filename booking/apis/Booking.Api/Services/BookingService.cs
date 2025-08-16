@@ -416,7 +416,7 @@ public class BookingService(
         {
             var locations = await repositoryFactory.LocationRepository.Query(
                     new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization))
+                        .AddInclude(query => query.Organization!))
                 .ToListAsync(cancellationToken);
 
             foreach (var location in locations)
@@ -438,7 +438,7 @@ public class BookingService(
         {
             var teams = await repositoryFactory.TeamRepository.Query(
                     new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization))
+                        .AddInclude(query => query.Organization!))
                 .ToListAsync(cancellationToken);
 
             foreach (var team in teams)

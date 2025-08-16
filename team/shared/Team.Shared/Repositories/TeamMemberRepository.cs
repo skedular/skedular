@@ -51,9 +51,9 @@ internal static class TeamMemberExtensions
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query.Organization)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query!.Customer)
             .ThenInclude(query => query.Identities);
 
     internal static IQueryable<TeamMember> AddSearchCriteria(
@@ -149,7 +149,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .Include(query => query.Team)
             .Include(query => query.Customer)
             .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query!.Customer)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<TeamMember>> GetByIdsAsync(
@@ -160,7 +160,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .Include(query => query.Team)
             .Include(query => query.Customer)
             .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query!.Customer)
             .ToListAsync(cancellationToken);
 
     public TeamMember Add(TeamMember teamMember)

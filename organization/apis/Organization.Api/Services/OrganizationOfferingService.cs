@@ -16,7 +16,7 @@ public interface IOrganizationOfferingService
 {
     Task UpdateOfferingAsync(string organizationId, OfferingCode offeringCode, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken);
-    Task RegenrateAllOfferingsAsync(CancellationToken cancellationToken);
+    Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken);
     Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
 }
 
@@ -125,7 +125,7 @@ public class OrganizationOfferingService(
     public async Task CancelOfferingAsync(string organizationId, CancellationToken cancellationToken) =>
         await UpdateOfferingAsync(organizationId, OfferingCode.FreeTierV1, false, cancellationToken);
 
-    public async Task RegenrateAllOfferingsAsync(CancellationToken cancellationToken)
+    public async Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken)
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
