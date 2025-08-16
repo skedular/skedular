@@ -1,7 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Activities;
 using Organization.Shared.Workflows;
@@ -32,7 +31,6 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-    IRandomHelper randomHelper,
     ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationExistingCustomer> temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor,
@@ -71,7 +69,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.GenerateOrganizationDailyAnalyticsPrefix}-{args.OrganizationId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
@@ -83,7 +81,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.ReSyncAzureTenantPrefix}-{args.TenantId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning

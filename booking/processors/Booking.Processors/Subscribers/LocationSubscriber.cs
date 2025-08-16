@@ -4,7 +4,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows.LocationResource;
+using Booking.Shared.Workflows.ResourcesSlots;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
@@ -91,15 +91,16 @@ public class LocationSubscriber(
         if (locationOpeningHoursChanged)
         {
             // Regenerate all
-            await temporalService.StartWorkflowLocationResourceSlotGenerationAsync(
-                new LocationResourceSlotGenerationInput(existingLocation.Id, null),
+            await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
+                new GenerateLocationResourcesSlotsInput(existingLocation.Id, null),
                 cancellationToken);
         }
         else
         {
             // Regenerate those changed
-            await temporalService.StartWorkflowResourceSlotGenerationAsync(
-                new ResourceSlotGenerationInput(resourceIdsToRegenerateBookingSlots),
+            await temporalService.StartWorkflowGenerateResourcesSlotsAsync(
+                existingLocation.Id,
+                new GenerateResourcesSlotsInput(resourceIdsToRegenerateBookingSlots),
                 cancellationToken);
         }
 

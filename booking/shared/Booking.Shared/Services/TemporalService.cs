@@ -1,5 +1,5 @@
-using Booking.Shared.Workflows.LocationResource;
-using Enterprise.Shared.Random;
+using Booking.Shared.Workflows;
+using Booking.Shared.Workflows.ResourcesSlots;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -8,31 +8,33 @@ namespace Booking.Shared.Services;
 
 public interface ITemporalService
 {
-    Task StartWorkflowLocationResourceSlotGenerationAsync(LocationResourceSlotGenerationInput args, CancellationToken cancellationToken);
-    Task StartWorkflowResourceSlotGenerationAsync(ResourceSlotGenerationInput args, CancellationToken cancellationToken);
+    Task StartWorkflowGenerateLocationResourcesSlotsAsync(GenerateLocationResourcesSlotsInput args, CancellationToken cancellationToken);
+    Task StartWorkflowGenerateResourcesSlotsAsync(string locationId, GenerateResourcesSlotsInput args, CancellationToken cancellationToken);
 }
 
-public class TemporalService(TemporalConfiguration temporalConfiguration, IRandomHelper randomHelper, ITemporalClient temporalClient)
-    : ITemporalService
+public class TemporalService(TemporalConfiguration temporalConfiguration, ITemporalClient temporalClient) : ITemporalService
 {
-    public async Task StartWorkflowLocationResourceSlotGenerationAsync(
-        LocationResourceSlotGenerationInput args,
+    public async Task StartWorkflowGenerateLocationResourcesSlotsAsync(
+        GenerateLocationResourcesSlotsInput args,
         CancellationToken cancellationToken) =>
-        await temporalClient.StartWorkflowAsync((LocationResourceSlotGeneration workflow) => workflow.ExecuteAsync(args),
+        await temporalClient.StartWorkflowAsync((GenerateLocationResourcesSlots workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.GenerateLocationResourcesSlotsPrefix}-{args.LocationId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
-    public async Task StartWorkflowResourceSlotGenerationAsync(ResourceSlotGenerationInput args, CancellationToken cancellationToken) =>
-        await temporalClient.StartWorkflowAsync((ResourceSlotGeneration workflow) => workflow.ExecuteAsync(args),
+    public async Task StartWorkflowGenerateResourcesSlotsAsync(
+        string locationId,
+        GenerateResourcesSlotsInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync((GenerateResourcesSlots workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.GenerateResourcesSlotsPrefix}-{locationId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,

@@ -1,7 +1,7 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
+using Location.Shared.Workflows;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -15,7 +15,6 @@ public interface ITemporalOutboxPublisher
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
-    IRandomHelper randomHelper,
     ITemporalOutboxWorkflowExecutor<GenerateLocationDailyAnalytics> temporalOutboxLocationDailyAnalyticsExecutor)
     : ITemporalOutboxPublisher
 {
@@ -24,7 +23,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning

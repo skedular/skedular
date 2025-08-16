@@ -9,7 +9,6 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Mappers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Activities;
 using Customer = Organization.Shared.Models.Customer;
 using Location = Organization.Shared.Database.Entities.Location;
@@ -25,13 +24,11 @@ public class AzureTenantIntegrations(
     LocationConfiguration locationConfiguration,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider,
     IMapper mapper,
     IGraphService graphService,
     CustomerService.CustomerServiceClient customerServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
-    IOrganizationMemberService organizationMemberService,
-    ITemporalService temporalService)
+    IOrganizationMemberService organizationMemberService)
 {
     [Activity]
     public async Task<bool> ReSyncTenantAsync(string tenantId)
@@ -77,15 +74,6 @@ public class AzureTenantIntegrations(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
-    }
-
-    [Activity]
-    public async Task ExecuteNextReSyncAzureTenantWorkflowAsync(string tenantId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        await temporalService.StartWorkflowReSyncAzureTenantAsync(
-            new ReSyncAzureTenantInput(tenantId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 
     private async Task SyncCustomersAndOrganizationMembersAsync(AzureTenant azureTenant, CancellationToken cancellationToken)

@@ -66,6 +66,11 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
     [Activity]
     public async Task SendNewCustomerJoinedEmailAsync(string customerId)
     {
+        if (!emailConfiguration.EnableNewCustomerJoinedEmail)
+        {
+            return;
+        }
+
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
         if (customer is null)

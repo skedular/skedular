@@ -1,5 +1,5 @@
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
+using Location.Shared.Workflows;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -11,8 +11,7 @@ public interface ITemporalService
     Task StartWorkflowGenerateLocationDailyAnalyticsAsync(GenerateLocationDailyAnalyticsInput args, CancellationToken cancellationToken);
 }
 
-public class TemporalService(TemporalConfiguration temporalConfiguration, IRandomHelper randomHelper, ITemporalClient temporalClient)
-    : ITemporalService
+public class TemporalService(TemporalConfiguration temporalConfiguration, ITemporalClient temporalClient) : ITemporalService
 {
     public async Task StartWorkflowGenerateLocationDailyAnalyticsAsync(
         GenerateLocationDailyAnalyticsInput args,
@@ -20,7 +19,7 @@ public class TemporalService(TemporalConfiguration temporalConfiguration, IRando
         await temporalClient.StartWorkflowAsync((GenerateLocationDailyAnalytics workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,

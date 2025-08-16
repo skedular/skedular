@@ -1,5 +1,5 @@
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
+using MsTeams.Shared.Workflows;
 using MsTeams.Shared.Workflows.ReSyncMsTeams;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -11,14 +11,13 @@ public interface ITemporalService
     Task StartWorkflowReSyncMsTeamsAsync(ReSyncMsTeamsInput args, CancellationToken cancellationToken);
 }
 
-public class TemporalService(TemporalConfiguration temporalConfiguration, IRandomHelper randomHelper, ITemporalClient temporalClient)
-    : ITemporalService
+public class TemporalService(TemporalConfiguration temporalConfiguration, ITemporalClient temporalClient) : ITemporalService
 {
     public async Task StartWorkflowReSyncMsTeamsAsync(ReSyncMsTeamsInput args, CancellationToken cancellationToken) =>
         await temporalClient.StartWorkflowAsync((ReSyncMsTeams workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = randomHelper.Generate(),
+                Id = $"{Constants.ReSyncMsTeamsPrefix}-{args.TenantId}",
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,

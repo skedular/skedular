@@ -4,17 +4,11 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
-using Location.Shared.Services;
-using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Temporalio.Activities;
 
 namespace Location.Shared.Activities;
 
-public class LocationDailyAnalytics(
-    IRepositoryFactory repositoryFactory,
-    IRandomHelper randomHelper,
-    TimeProvider timeProvider,
-    ITemporalService temporalService)
+public class LocationDailyAnalytics(IRepositoryFactory repositoryFactory, IRandomHelper randomHelper, TimeProvider timeProvider)
 {
     [Activity]
     public async Task<bool> RecordLocationDesksCountAsync(string locationId)
@@ -64,14 +58,5 @@ public class LocationDailyAnalytics(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
-    }
-
-    [Activity]
-    public async Task ExecuteNextGenerateLocationDailyAnalyticsWorkflowAsync(string locationId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        await temporalService.StartWorkflowGenerateLocationDailyAnalyticsAsync(
-            new GenerateLocationDailyAnalyticsInput(locationId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 }

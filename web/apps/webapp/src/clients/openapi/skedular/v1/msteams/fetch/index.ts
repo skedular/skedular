@@ -2,20 +2,20 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export {SkedularMSTeamsV1Client} from './SkedularMSTeamsV1Client';
+export { SkedularMSTeamsV1Client } from './SkedularMSTeamsV1Client';
 
-export {ApiError} from './core/ApiError';
-export {BaseHttpRequest} from './core/BaseHttpRequest';
-export {CancelablePromise, CancelError} from './core/CancelablePromise';
-export {OpenAPI} from './core/OpenAPI';
-export type {OpenAPIConfig} from './core/OpenAPI';
+export { ApiError } from './core/ApiError';
+export { BaseHttpRequest } from './core/BaseHttpRequest';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
+export { OpenAPI } from './core/OpenAPI';
+export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type {ProblemDetails} from './models/ProblemDetails';
-export type {Version} from './models/Version';
+export type { ProblemDetails } from './models/ProblemDetails';
+export type { Version } from './models/Version';
 
-export {$ProblemDetails} from './schemas/$ProblemDetails';
-export {$Version} from './schemas/$Version';
+export { $ProblemDetails } from './schemas/$ProblemDetails';
+export { $Version } from './schemas/$Version';
 
-export {AzureTenantService} from './services/AzureTenantService';
-export {MsteamsService} from './services/MsteamsService';
-export {V1Service} from './services/V1Service';
+export { AzureTenantService } from './services/AzureTenantService';
+export { MsteamsService } from './services/MsteamsService';
+export { V1Service } from './services/V1Service';

@@ -1,17 +1,11 @@
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
-using MsTeams.Shared.Workflows.ReSyncMsTeams;
 using Temporalio.Activities;
 
 namespace MsTeams.Shared.Activities;
 
-public class MsTeamsIntegrations(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IGraphService graphService,
-    TimeProvider timeProvider,
-    ITemporalService temporalService)
+public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IMapper mapper, IGraphService graphService)
 {
     [Activity]
     public async Task<bool> ReSyncTeamsAndChannelsAsync(string tenantId)
@@ -68,14 +62,5 @@ public class MsTeamsIntegrations(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
-    }
-
-    [Activity]
-    public async Task ExecuteNextReSyncMsTeamsWorkflowAsync(string tenantId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        await temporalService.StartWorkflowReSyncMsTeamsAsync(
-            new ReSyncMsTeamsInput(tenantId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 }

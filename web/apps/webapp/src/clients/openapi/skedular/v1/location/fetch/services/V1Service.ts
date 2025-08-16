@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {Version} from '../models/Version';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { Version } from '../models/Version';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class V1Service {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * return API version
      * @returns Version the version of the API
@@ -23,7 +20,6 @@ export class V1Service {
             url: '/v1/location/version',
         });
     }
-
     /**
      * republish location
      * @param locationId
@@ -42,7 +38,6 @@ export class V1Service {
             },
         });
     }
-
     /**
      * republish all locations
      * @returns any the status of location republishing
@@ -55,7 +50,6 @@ export class V1Service {
             url: '/v1/location/republish-all',
         });
     }
-
     /**
      * regenerate all locations daily analytics
      * @returns any the status of regenerating all locations daily analytics
@@ -68,7 +62,6 @@ export class V1Service {
             url: '/v1/location/analytics/regenerate-all-daily-analytics',
         });
     }
-
     /**
      * regenerate location daily analytics
      * @param locationId

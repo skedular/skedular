@@ -2,21 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {BaseHttpRequest} from './core/BaseHttpRequest';
-import type {OpenAPIConfig} from './core/OpenAPI';
-import {FetchHttpRequest} from './core/FetchHttpRequest';
-import {AnalyticsService} from './services/AnalyticsService';
-import {LocationService} from './services/LocationService';
-import {V1Service} from './services/V1Service';
-
+import type { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { AnalyticsService } from './services/AnalyticsService';
+import { LocationService } from './services/LocationService';
+import { V1Service } from './services/V1Service';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
-
 export class SkedularLocationV1Client {
     public readonly analytics: AnalyticsService;
     public readonly location: LocationService;
     public readonly v1: V1Service;
     public readonly request: BaseHttpRequest;
-
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
             BASE: config?.BASE ?? 'https://api.skedular.app',

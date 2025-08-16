@@ -51,30 +51,30 @@ export class BookingService {
         });
     }
     /**
-     * republish all locations resources slots
+     * generate all locations resources slots
      * @returns any the status of republishing all location resources slots
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishAllLocationsResourcesSlots(): CancelablePromise<any | ProblemDetails> {
+    public generateAllLocationsResourcesSlots(): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/booking/republish-all-resources-slots',
+            url: '/v1/booking/generate-all-resources-slots',
         });
     }
     /**
-     * republish location's resources slots
+     * generate location's resources slots
      * @param locationId
      * @returns any the status of republishing locations resources slots
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
-    public republishLocationResourcesSlots(
+    public generateLocationResourcesSlots(
         locationId: string,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/booking/resources-slots/{locationId}/republish',
+            url: '/v1/booking/resources-slots/{locationId}/generate-all-resources-slots',
             path: {
                 'locationId': locationId,
             },

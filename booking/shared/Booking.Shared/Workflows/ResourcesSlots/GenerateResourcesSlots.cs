@@ -2,15 +2,15 @@ using Booking.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Booking.Shared.Workflows.LocationResource;
+namespace Booking.Shared.Workflows.ResourcesSlots;
 
-public record ResourceSlotGenerationInput(ICollection<string> ResourceIds);
+public record GenerateResourcesSlotsInput(ICollection<string> ResourceIds);
 
 [Workflow]
-public class ResourceSlotGeneration
+public class GenerateResourcesSlots
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(ResourceSlotGenerationInput args)
+    public async Task ExecuteAsync(GenerateResourcesSlotsInput args)
     {
         foreach (var resourceId in args.ResourceIds)
         {

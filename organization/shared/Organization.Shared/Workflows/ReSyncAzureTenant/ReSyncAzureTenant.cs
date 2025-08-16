@@ -21,24 +21,21 @@ public class ReSyncAzureTenant
             }
         }
 
-        if (!await Workflow.ExecuteActivityAsync(
-                (AzureTenantIntegrations activity) => activity.ReSyncTenantAsync(args.TenantId),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                }))
+        do
         {
-            return;
-        }
-
-        await Workflow.ExecuteActivityAsync((AzureTenantIntegrations activity) => activity.ExecuteNextReSyncAzureTenantWorkflowAsync(args.TenantId),
-            new ActivityOptions
+            if (!await Workflow.ExecuteActivityAsync(
+                    (AzureTenantIntegrations activity) => activity.ReSyncTenantAsync(args.TenantId),
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    }))
             {
-                StartToCloseTimeout = TimeSpan.FromMinutes(5),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-            });
+                break;
+            }
+
+            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
+        } while (true);
     }
 }

@@ -10,6 +10,11 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
     [Activity]
     public async Task SendNewSlackWorkspaceJoinedEmailAsync(string workspaceId)
     {
+        if (!emailConfiguration.EnableNewSlackWorkspaceJoinedEmail)
+        {
+            return;
+        }
+
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var workspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
         if (workspace is null)

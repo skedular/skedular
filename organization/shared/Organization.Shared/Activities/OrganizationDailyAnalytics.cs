@@ -3,15 +3,12 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
-using Organization.Shared.Services;
-using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Temporalio.Activities;
 
 namespace Organization.Shared.Activities;
 
 public class OrganizationDailyAnalytics(
     IRepositoryFactory repositoryFactory,
-    ITemporalService temporalService,
     TimeProvider timeProvider,
     IRandomHelper randomHelper)
 {
@@ -39,14 +36,5 @@ public class OrganizationDailyAnalytics(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
-    }
-
-    [Activity]
-    public async Task ExecuteNextGenerateOrganizationDailyAnalyticsWorkflowAsync(string organizationId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        await temporalService.StartWorkflowGenerateOrganizationDailyAnalyticsAsync(
-            new GenerateOrganizationDailyAnalyticsInput(organizationId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 }

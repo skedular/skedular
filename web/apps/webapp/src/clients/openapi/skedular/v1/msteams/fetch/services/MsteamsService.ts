@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {Version} from '../models/Version';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { Version } from '../models/Version';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class MsteamsService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * return API version
      * @returns Version the version of the API
@@ -23,7 +20,6 @@ export class MsteamsService {
             url: '/v1/msteams/version',
         });
     }
-
     /**
      * resync all MsTeams
      * @returns any the status of resyncing all MsTeams
@@ -36,7 +32,6 @@ export class MsteamsService {
             url: '/v1/msteams/azure-tenant/resync-all-msteams',
         });
     }
-
     /**
      * resync MsTeams
      * @param tenantId

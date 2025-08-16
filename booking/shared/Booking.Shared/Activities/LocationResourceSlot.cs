@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows.LocationResource;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Temporalio.Activities;
@@ -13,9 +12,7 @@ public record ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(bool Sh
 
 public class LocationResourceSlot(
     IRepositoryFactory repositoryFactory,
-    ILocationResourceBookingSlotsHelperService locationResourceBookingSlotsHelperService,
-    TimeProvider timeProvider,
-    ITemporalService temporalService)
+    ILocationResourceBookingSlotsHelperService locationResourceBookingSlotsHelperService)
 {
     [Activity]
     public async Task<ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse> ExecuteAllLocationResourcesSlotGenerationWorkflowsAsync(
@@ -135,16 +132,6 @@ public class LocationResourceSlot(
         {
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-    }
-
-    [Activity]
-    public async Task ExecuteNextLocationResourcesSlotGenerationWorkflowAsync(string locationId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-
-        await temporalService.StartWorkflowLocationResourceSlotGenerationAsync(
-            new LocationResourceSlotGenerationInput(locationId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 
     private static OpeningHoursDetails GetOpeningHoursDetails(OpeningHours openingHours, ResourceBookingSlot slot) =>

@@ -21,37 +21,33 @@ public class GenerateLocationDailyAnalytics
             }
         }
 
-        if (!await Workflow.ExecuteActivityAsync(
-                (LocationDailyAnalytics activity) => activity.RecordLocationDesksCountAsync(args.LocationId),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                }))
+        do
         {
-            return;
-        }
-
-        if (!await Workflow.ExecuteActivityAsync(
-                (LocationDailyAnalytics activity) => activity.RecordLocationRoomsCountAsync(args.LocationId),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                }))
-        {
-            return;
-        }
-
-        await Workflow.ExecuteActivityAsync(
-            (LocationDailyAnalytics activity) => activity.ExecuteNextGenerateLocationDailyAnalyticsWorkflowAsync(args.LocationId),
-            new ActivityOptions
+            if (!await Workflow.ExecuteActivityAsync(
+                    (LocationDailyAnalytics activity) => activity.RecordLocationDesksCountAsync(args.LocationId),
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    }))
             {
-                StartToCloseTimeout = TimeSpan.FromMinutes(5),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-            });
+                return;
+            }
+
+            if (!await Workflow.ExecuteActivityAsync(
+                    (LocationDailyAnalytics activity) => activity.RecordLocationRoomsCountAsync(args.LocationId),
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    }))
+            {
+                return;
+            }
+
+            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
+        } while (true);
     }
 }

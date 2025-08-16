@@ -60,7 +60,7 @@ public class SlackIntegrations(
     }
 
     [Activity]
-    public async Task ExecuteNextReSyncWorkspaceWorkflowAsync(string workspaceId)
+    public async Task StartWorkflowReSyncSlackWorkspaceAsync(string workspaceId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         await temporalService.StartWorkflowReSyncSlackWorkspaceAsync(

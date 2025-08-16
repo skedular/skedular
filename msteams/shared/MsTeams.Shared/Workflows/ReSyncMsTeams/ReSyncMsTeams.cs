@@ -21,25 +21,21 @@ public class ReSyncMsTeams
             }
         }
 
-        if (!await Workflow.ExecuteActivityAsync(
-                (MsTeamsIntegrations activity) => activity.ReSyncTeamsAndChannelsAsync(args.TenantId),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromMinutes(10),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-                }))
+        do
         {
-            return;
-        }
-
-        await Workflow.ExecuteActivityAsync(
-            (MsTeamsIntegrations activity) => activity.ExecuteNextReSyncMsTeamsWorkflowAsync(args.TenantId),
-            new ActivityOptions
+            if (!await Workflow.ExecuteActivityAsync(
+                    (MsTeamsIntegrations activity) => activity.ReSyncTeamsAndChannelsAsync(args.TenantId),
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromMinutes(10),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    }))
             {
-                StartToCloseTimeout = TimeSpan.FromMinutes(5),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
-            });
+                break;
+            }
+
+            await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);
+        } while (true);
     }
 }

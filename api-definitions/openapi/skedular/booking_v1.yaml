@@ -82,13 +82,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/booking/republish-all-resources-slots:
+  /v1/booking/generate-all-resources-slots:
     put:
       tags:
         - v1
         - booking
-      summary: republish all locations resources slots
-      operationId: republishAllLocationsResourcesSlots
+      summary: generate all locations resources slots
+      operationId: generateAllLocationsResourcesSlots
 
       responses:
         "200":
@@ -101,13 +101,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/booking/resources-slots/{locationId}/republish:
+  /v1/booking/resources-slots/{locationId}/generate-all-resources-slots:
     put:
       tags:
         - v1
         - booking
-      summary: republish location's resources slots
-      operationId: republishLocationResourcesSlots
+      summary: generate location's resources slots
+      operationId: generateLocationResourcesSlots
       parameters:
         - in: path
           name: locationId
