@@ -82,48 +82,48 @@ public class LocationResourceSlot(
         }
 
         var slotsToUpdate = existingResourceBookingSlots.Where(item => allSlotsDictionary.ContainsKey(item.Start)).ToList();
-        foreach (var slot in slotsToUpdate)
+        foreach (var slotToUpdate in slotsToUpdate)
         {
             var updateNeeded = false;
-            var openingHoursDetails = GetOpeningHoursDetails(openingHours, slot);
-            if (openingHours.ClosedDates.Any(item => item == slot.Start.StartOfDay()))
+            var openingHoursDetails = GetOpeningHoursDetails(openingHours, slotToUpdate);
+            if (openingHours.ClosedDates.Any(item => item == slotToUpdate.Start.StartOfDay()))
             {
-                if (slot.Available)
+                if (slotToUpdate.Available)
                 {
-                    slot.Available = false;
+                    slotToUpdate.Available = false;
                     updateNeeded = true;
                 }
             }
             else if (openingHoursDetails.Closed)
             {
-                if (slot.Available)
+                if (slotToUpdate.Available)
                 {
-                    slot.Available = false;
+                    slotToUpdate.Available = false;
                     updateNeeded = true;
                 }
             }
             else if (openingHoursDetails.OpenAllDay)
             {
-                if (!slot.Available)
+                if (!slotToUpdate.Available)
                 {
-                    slot.Available = true;
+                    slotToUpdate.Available = true;
                     updateNeeded = true;
                 }
             }
             else
             {
-                var newValue = IsAvailable(TimeOnly.FromDateTime(slot.Start.DateTime), openingHoursDetails);
+                var newValue = IsAvailable(TimeOnly.FromDateTime(slotToUpdate.Start.DateTime), openingHoursDetails);
 
-                if (slot.Available != newValue)
+                if (slotToUpdate.Available != newValue)
                 {
-                    slot.Available = newValue;
+                    slotToUpdate.Available = newValue;
                     updateNeeded = true;
                 }
             }
 
             if (updateNeeded)
             {
-                repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slotsToAdd);
+                repositoryFactory.ResourceBookingSlotRepository.Update(slotToUpdate);
                 savingNeeded = true;
             }
         }

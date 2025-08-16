@@ -9,6 +9,7 @@ namespace Booking.Shared.Repositories;
 public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlot>
 {
     void AddRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
+    void Update(ResourceBookingSlot resourceBookingSlot);
     void UpdateRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
     Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken);
 }
@@ -23,14 +24,23 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
         DbContext.ResourceBookingSlot.AddRange(resourceBookingSlots);
     }
 
+    public void Update(ResourceBookingSlot resourceBookingSlot)
+    {
+        var now = TimeProvider.GetUtcNow();
+        resourceBookingSlot.ModifiedAt = now;
+        DbContext.ResourceBookingSlot.Update(resourceBookingSlot);
+    }
+
     public void UpdateRange(ICollection<ResourceBookingSlot> resourceBookingSlots)
     {
         var now = TimeProvider.GetUtcNow();
-        resourceBookingSlots.ForEach(identity => identity.ModifiedAt = now);
+        resourceBookingSlots.ForEach(item => item.ModifiedAt = now);
         DbContext.ResourceBookingSlot.UpdateRange(resourceBookingSlots);
     }
 
-    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from,
+    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(
+        string resourceId,
+        DateTimeOffset from,
         CancellationToken cancellationToken) =>
         await DbContext.ResourceBookingSlot
             .Where(query => query.Resource.Id == resourceId && query.Start >= from)
