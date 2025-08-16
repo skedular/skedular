@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Enterprise.Shared.Outbox;
 using Organization.Shared.Workflows.AddPayment;
+using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
@@ -16,6 +17,7 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
     private static readonly string s_addOrganizationStripePaymentMethodType = typeof(AddOrganizationStripePaymentMethod).ToWorkflowType();
     private static readonly string s_inviteToJoinOrganizationExistingCustomer = typeof(InviteToJoinOrganizationExistingCustomer).ToWorkflowType();
     private static readonly string s_inviteToJoinOrganizationNewCustomer = typeof(InviteToJoinOrganizationNewCustomer).ToWorkflowType();
+    private static readonly string s_generateOrganizationDailyAnalytics = typeof(GenerateOrganizationDailyAnalytics).ToWorkflowType();
     private static readonly string s_reSyncAzureTenant = typeof(ReSyncAzureTenant).ToWorkflowType();
 
     public async Task StartWorkflowAsync(
@@ -85,6 +87,20 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
                 _ = await temporalClient.StartWorkflowAsync(
                     (InviteToJoinOrganizationNewCustomer workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_generateOrganizationDailyAnalytics)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<GenerateOrganizationDailyAnalyticsInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(input), workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {

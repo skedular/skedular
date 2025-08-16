@@ -227,7 +227,6 @@ public class Mapper : IMapper
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
-            DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
             OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),

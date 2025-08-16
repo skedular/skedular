@@ -24,7 +24,7 @@ public class TemporalService(TemporalConfiguration temporalConfiguration, IRando
                 Id = randomHelper.Generate(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
@@ -35,7 +35,7 @@ public class TemporalService(TemporalConfiguration temporalConfiguration, IRando
                 Id = randomHelper.Generate(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 }

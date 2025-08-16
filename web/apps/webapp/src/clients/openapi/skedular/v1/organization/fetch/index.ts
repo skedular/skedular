@@ -16,6 +16,7 @@ export type { Version } from './models/Version';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
+export { AnalyticsService } from './services/AnalyticsService';
 export { AzureTenantService } from './services/AzureTenantService';
 export { ConnectService } from './services/ConnectService';
 export { OauthService } from './services/OauthService';

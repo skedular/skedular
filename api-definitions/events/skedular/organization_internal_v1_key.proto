@@ -4,6 +4,5 @@ package organizationinternal;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key";
 
 message Key {
-  string organizationId = 1;
-  string stripeConnectAccountWebhookKey = 2;
+  string stripeConnectAccountWebhookKey = 1;
 }

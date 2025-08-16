@@ -13,6 +13,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -201,6 +202,10 @@ public class OrganizationService(
                 organization.Id,
                 organizationOffering.Id,
                 organizationOffering.End.GetNextOfferingPeriodStart()),
+            repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartWorkflowOrganizationDailyAnalytics(
+            new GenerateOrganizationDailyAnalyticsInput(organization.Id, timeProvider.GetUtcNow().AddDays(1)),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -437,7 +442,6 @@ public class OrganizationService(
                 organization.About = null;
                 organization.Website = null;
                 organization.PaymentMethodEventRaisedAt = null;
-                organization.DailyMemberCountLastRecordedAt = null;
                 organization.ContactEmail = null;
                 organization.ContactPhone = null;
                 organization.OrganizationMembers = [];

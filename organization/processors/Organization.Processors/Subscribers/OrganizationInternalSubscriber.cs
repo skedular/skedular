@@ -1,10 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 using Api.Shared.Services;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Time;
-using Microsoft.EntityFrameworkCore;
 using Organization.Processors.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
@@ -18,7 +15,6 @@ namespace Organization.Processors.Subscribers;
 public class OrganizationInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider,
     IMapper mapper,
     IOrganizationPublisher organizationPublisher)
     : IEventSubscriber<Key, Event>
@@ -27,47 +23,12 @@ public class OrganizationInternalSubscriber(
     {
         switch (@event.Metadata.Type)
         {
-            case Type.RecordDailyMemberCount:
-                await HandleRecordDailyMemberCountEventAsync(@event, cancellationToken);
-                break;
-
             case Type.StripeConnectAccountWebhookEventReceived:
                 await HandleStripeConnectAccountWebhookEventReceivedAsync(@event.StripeConnectAccountWebhookEventPayload, cancellationToken);
                 break;
         }
 
         return EventSubscriberResults.Success;
-    }
-
-    private async Task HandleRecordDailyMemberCountEventAsync(Event @event, CancellationToken cancellationToken)
-    {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
-        if (organization is null)
-        {
-            return;
-        }
-
-        var startOfToday = timeProvider.GetUtcNow().StartOfDay();
-        if (await repositoryFactory.DailyMemberCountRecordingRepository.Query(new Specification<DailyMemberCountRecording>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.Date == startOfToday
-            }).AnyAsync(cancellationToken))
-        {
-            return;
-        }
-
-        _ = repositoryFactory.DailyMemberCountRecordingRepository.Add(new DailyMemberCountRecording
-        {
-            Id = randomHelper.Generate(),
-            Count = organization.OrganizationMembers.Count(item => item.IsNotDeleted()),
-            Date = startOfToday,
-            Organization = organization
-        });
-
-        organization.DailyMemberCountLastRecordedAt = timeProvider.GetUtcNow();
-        _ = repositoryFactory.OrganizationRepository.Update(organization);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleStripeConnectAccountWebhookEventReceivedAsync(string json, CancellationToken cancellationToken)

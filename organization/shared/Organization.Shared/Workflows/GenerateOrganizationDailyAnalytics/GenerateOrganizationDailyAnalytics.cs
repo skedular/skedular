@@ -2,19 +2,19 @@ using Organization.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Organization.Shared.Workflows.ReSyncAzureTenant;
+namespace Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 
-public record ReSyncAzureTenantInput(string TenantId, DateTimeOffset? ReSyncTime);
+public record GenerateOrganizationDailyAnalyticsInput(string OrganizationId, DateTimeOffset? GenerationTime);
 
 [Workflow]
-public class ReSyncAzureTenant
+public class GenerateOrganizationDailyAnalytics
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(ReSyncAzureTenantInput args)
+    public async Task ExecuteAsync(GenerateOrganizationDailyAnalyticsInput args)
     {
-        if (args.ReSyncTime.HasValue)
+        if (args.GenerationTime.HasValue)
         {
-            var delayDuration = args.ReSyncTime.Value - TimeProvider.System.GetUtcNow();
+            var delayDuration = args.GenerationTime.Value - TimeProvider.System.GetUtcNow();
             if (delayDuration > TimeSpan.Zero)
             {
                 await Workflow.DelayAsync(delayDuration, Workflow.CancellationToken);
@@ -22,7 +22,7 @@ public class ReSyncAzureTenant
         }
 
         if (!await Workflow.ExecuteActivityAsync(
-                (AzureTenantIntegrations activity) => activity.ReSyncTenantAsync(args.TenantId),
+                (OrganizationDailyAnalytics activity) => activity.RecordOrganizationMemberCountAsync(args.OrganizationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
@@ -33,7 +33,8 @@ public class ReSyncAzureTenant
             return;
         }
 
-        await Workflow.ExecuteActivityAsync((AzureTenantIntegrations activity) => activity.ExecuteNextReSyncAzureTenantWorkflowAsync(args.TenantId),
+        await Workflow.ExecuteActivityAsync(
+            (OrganizationDailyAnalytics activity) => activity.ExecuteNextGenerateOrganizationDailyAnalyticsWorkflowAsync(args.OrganizationId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),

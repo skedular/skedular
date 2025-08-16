@@ -25,14 +25,13 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CiJvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfa2V5LnByb3RvEhRvcmdhbml6",
-            "YXRpb25pbnRlcm5hbCJFCgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAkS",
-            "Jgoec3RyaXBlQ29ubmVjdEFjY291bnRXZWJob29rS2V5GAIgASgJQkGqAj5B",
-            "cGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlv",
-            "bkludGVybmFsLlYxLktleWIGcHJvdG8z"));
+            "YXRpb25pbnRlcm5hbCItCgNLZXkSJgoec3RyaXBlQ29ubmVjdEFjY291bnRX",
+            "ZWJob29rS2V5GAEgASgJQkGqAj5BcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRz",
+            "LlNrZWR1bGFyLk9yZ2FuaXphdGlvbkludGVybmFsLlYxLktleWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key.Parser, new[]{ "OrganizationId", "StripeConnectAccountWebhookKey" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key.Parser, new[]{ "StripeConnectAccountWebhookKey" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,7 +73,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
-      organizationId_ = other.organizationId_;
       stripeConnectAccountWebhookKey_ = other.stripeConnectAccountWebhookKey_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -85,20 +83,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       return new Key(this);
     }
 
-    /// <summary>Field number for the "organizationId" field.</summary>
-    public const int OrganizationIdFieldNumber = 1;
-    private string organizationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationId {
-      get { return organizationId_; }
-      set {
-        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "stripeConnectAccountWebhookKey" field.</summary>
-    public const int StripeConnectAccountWebhookKeyFieldNumber = 2;
+    public const int StripeConnectAccountWebhookKeyFieldNumber = 1;
     private string stripeConnectAccountWebhookKey_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -124,7 +110,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (OrganizationId != other.OrganizationId) return false;
       if (StripeConnectAccountWebhookKey != other.StripeConnectAccountWebhookKey) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -133,7 +118,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (StripeConnectAccountWebhookKey.Length != 0) hash ^= StripeConnectAccountWebhookKey.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -153,12 +137,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrganizationId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
@@ -171,12 +151,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(OrganizationId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
       if (_unknownFields != null) {
@@ -189,9 +165,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (OrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
-      }
       if (StripeConnectAccountWebhookKey.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookKey);
       }
@@ -206,9 +179,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
     public void MergeFrom(Key other) {
       if (other == null) {
         return;
-      }
-      if (other.OrganizationId.Length != 0) {
-        OrganizationId = other.OrganizationId;
       }
       if (other.StripeConnectAccountWebhookKey.Length != 0) {
         StripeConnectAccountWebhookKey = other.StripeConnectAccountWebhookKey;
@@ -233,10 +203,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 18: {
             StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
@@ -260,10 +226,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 18: {
             StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }

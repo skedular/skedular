@@ -151,7 +151,6 @@ public class Mapper : IMapper
             ContactPhone = src.ContactPhone,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
-            DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
         };

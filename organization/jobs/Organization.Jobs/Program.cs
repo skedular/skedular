@@ -11,6 +11,7 @@ using Organization.Shared.Activities;
 using Organization.Shared.Configurations;
 using Organization.Shared.Database;
 using Organization.Shared.Workflows.AddPayment;
+using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.Invitation.ExistingCustomer;
 using Organization.Shared.Workflows.Invitation.NonExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
@@ -63,10 +64,12 @@ public class Program
             .AddWorkflow<InviteExistingCustomerToJoinOrganization>()
             .AddWorkflow<InviteToJoinOrganizationExistingCustomer>()
             .AddWorkflow<InviteToJoinOrganizationNewCustomer>()
+            .AddWorkflow<GenerateOrganizationDailyAnalytics>()
             .AddWorkflow<ReSyncAzureTenant>()
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<OrganizationDailyAnalytics>()
             .AddScopedActivities<AzureTenantIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();

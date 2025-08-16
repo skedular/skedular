@@ -5,6 +5,7 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { AnalyticsService } from './services/AnalyticsService';
 import { AzureTenantService } from './services/AzureTenantService';
 import { ConnectService } from './services/ConnectService';
 import { OauthService } from './services/OauthService';
@@ -21,6 +22,7 @@ import { V1Service } from './services/V1Service';
 import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
+    public readonly analytics: AnalyticsService;
     public readonly azureTenant: AzureTenantService;
     public readonly connect: ConnectService;
     public readonly oauth: OauthService;
@@ -48,6 +50,7 @@ export class SkedularOrganizationV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
+        this.analytics = new AnalyticsService(this.request);
         this.azureTenant = new AzureTenantService(this.request);
         this.connect = new ConnectService(this.request);
         this.oauth = new OauthService(this.request);

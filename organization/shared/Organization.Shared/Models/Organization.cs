@@ -16,7 +16,6 @@ public class Organization : ModelBaseWithDeleted
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
     public bool HasAttachedPaymentMethod => OrganizationStripePaymentMethods.Count != 0;
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
-    public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;

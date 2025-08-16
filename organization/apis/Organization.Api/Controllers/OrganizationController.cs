@@ -278,14 +278,28 @@ public class OrganizationController(
 
     public override async Task<IActionResult> ReSyncAllAzureTenants(CancellationToken cancellationToken = default)
     {
-        await workaroundService.ReSyncAllAzureTenants(cancellationToken);
+        await workaroundService.ReSyncAllAzureTenantsAsync(cancellationToken);
 
         return Ok();
     }
 
     public override async Task<IActionResult> ReSyncAzureTenant(string tenantId, CancellationToken cancellationToken = default)
     {
-        await workaroundService.ReSyncAzureTenant(tenantId, cancellationToken);
+        await workaroundService.ReSyncAzureTenantAsync(tenantId, cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> RegenerateAllDailyAnalytics(CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RegenerateAllDailyAnalyticsAsync(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> RegenerateDailyAnalytics(string organizationId, CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RegenerateDailyAnalyticsAsync(organizationId, cancellationToken);
 
         return Ok();
     }

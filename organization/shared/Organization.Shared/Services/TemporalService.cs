@@ -1,5 +1,6 @@
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
+using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -9,6 +10,7 @@ namespace Organization.Shared.Services;
 public interface ITemporalService
 {
     Task StartWorkflowReSyncAzureTenantAsync(ReSyncAzureTenantInput args, CancellationToken cancellationToken);
+    Task StartWorkflowGenerateOrganizationDailyAnalyticsAsync(GenerateOrganizationDailyAnalyticsInput args, CancellationToken cancellationToken);
 }
 
 public class TemporalService(TemporalConfiguration temporalConfiguration, IRandomHelper randomHelper, ITemporalClient temporalClient)
@@ -21,7 +23,20 @@ public class TemporalService(TemporalConfiguration temporalConfiguration, IRando
                 Id = randomHelper.Generate(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate,
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    public async Task StartWorkflowGenerateOrganizationDailyAnalyticsAsync(
+        GenerateOrganizationDailyAnalyticsInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = randomHelper.Generate(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 }

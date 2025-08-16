@@ -19,7 +19,6 @@ public class Organization : EntityBaseWithDeleted
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
-    public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
 
@@ -74,6 +73,5 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
-        builder.HasIndex(item => item.DailyMemberCountLastRecordedAt);
     }
 }

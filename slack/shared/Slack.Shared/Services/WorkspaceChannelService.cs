@@ -10,10 +10,7 @@ public interface IWorkspaceChannelService
     Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken);
 }
 
-public class WorkspaceChannelService(
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    TimeProvider timeProvider) : IWorkspaceChannelService
+public class WorkspaceChannelService(IMapper mapper, IRepositoryFactory repositoryFactory) : IWorkspaceChannelService
 {
     public async Task ReSyncWorkspaceChannelsAsync(string workspaceId, CancellationToken cancellationToken)
     {

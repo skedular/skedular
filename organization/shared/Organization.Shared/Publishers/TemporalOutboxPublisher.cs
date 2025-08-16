@@ -5,6 +5,7 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Activities;
 using Organization.Shared.Workflows;
+using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
@@ -22,6 +23,7 @@ public interface ITemporalOutboxPublisher
         SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
         IUnitOfWork unitOfWork);
 
+    void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork);
     void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
@@ -34,7 +36,8 @@ public class TemporalOutboxPublisher(
     ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationExistingCustomer> temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<ReSyncAzureTenant> temporalOutboxReSyncAzureTenantExecutor)
+    ITemporalOutboxWorkflowExecutor<ReSyncAzureTenant> temporalOutboxReSyncAzureTenantExecutor,
+    ITemporalOutboxWorkflowExecutor<GenerateOrganizationDailyAnalytics> temporalOutboxOrganizationDailyAnalyticsExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
@@ -63,6 +66,18 @@ public class TemporalOutboxPublisher(
             },
             unitOfWork);
 
+    public void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxOrganizationDailyAnalyticsExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = randomHelper.Generate(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
+            },
+            unitOfWork);
+
     public void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxReSyncAzureTenantExecutor.Execute(
             args,
@@ -71,7 +86,7 @@ public class TemporalOutboxPublisher(
                 Id = randomHelper.Generate(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate
+                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
             },
             unitOfWork);
 
