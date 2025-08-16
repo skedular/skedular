@@ -31,7 +31,10 @@ public static class Extensions
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
-            .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>();
+            .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
+            .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
+            .AddSingleton<ITemporalService, TemporalService>()
+            .AddSingleton<IGraphService, GraphService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -75,7 +78,6 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
-            .AddSingleton<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)

@@ -1,5 +1,4 @@
 using Organization.Processors.Mappers;
-using Organization.Processors.Services;
 
 namespace Organization.Processors;
 
@@ -12,7 +11,5 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
-            .AddScoped<IGraphService, GraphService>();
+        services;
 }

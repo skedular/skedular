@@ -164,8 +164,7 @@ paths:
       tags:
         - v1
         - organization
-        - azure
-        - tenant
+        - azure-tenant
       summary: generate an admin consent Url for the given tenant
       operationId: azureTenantAdminConsentUrl
       responses:
@@ -177,8 +176,7 @@ paths:
       tags:
         - v1
         - organization
-        - azure
-        - tenant
+        - azure-tenant
       summary: OnBoard a tenant
       operationId: onboardAzureTenant
       parameters:
@@ -393,6 +391,53 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/azure-tenant/resync-all-azure-tenants:
+    put:
+      tags:
+        - v1
+        - organization
+        - azure-tenant
+      summary: resync all azure tenants
+      operationId: reSyncAllAzureTenants
+
+      responses:
+        "200":
+          description: the status of resyncing all azure tenants
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/azure-tenant/{tenantId}/resync:
+    put:
+      tags:
+        - v1
+        - organization
+        - azure-tenant
+      summary: resync azure tenant
+      operationId: reSyncAzureTenant
+      parameters:
+        - in: path
+          name: tenantId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of resyncing azure tenant
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 
 components:
   schemas:

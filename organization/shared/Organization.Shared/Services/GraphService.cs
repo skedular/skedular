@@ -1,23 +1,17 @@
 using Enterprise.Shared.Azure.Graph;
-using Organization.Processors.Mappers;
+using Organization.Shared.Mappers;
 using Organization.Shared.Models;
 
-namespace Organization.Processors.Services;
+namespace Organization.Shared.Services;
 
 public interface IGraphService
 {
-    Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(
-        string tenantId,
-        CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken);
 }
 
-public class GraphService(
-    IGraphServiceClientFactory graphServiceClientFactory,
-    IMapper mapper) : IGraphService
+public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, IMapper mapper) : IGraphService
 {
-    public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(
-        string tenantId,
-        CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
         var users = new List<AzureTenantMember>();

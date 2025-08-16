@@ -136,6 +136,20 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/oauth/callback")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> StripeConnectAccountOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string scope, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// resync all azure tenants
+        /// </summary>
+        /// <returns>the status of resyncing all azure tenants</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/resync-all-azure-tenants")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAllAzureTenants(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// resync azure tenant
+        /// </summary>
+        /// <returns>the status of resyncing azure tenant</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/{tenantId}/resync")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAzureTenant(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]

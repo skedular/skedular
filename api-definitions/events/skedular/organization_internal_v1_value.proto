@@ -7,15 +7,13 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationIntern
 
 enum Type {
   Type_RecordDailyMemberCount = 0;
-  Type_RefreshAzureTenantMembers = 1;
-  Type_StripeConnectAccountWebhookEventReceived = 2;
+  Type_StripeConnectAccountWebhookEventReceived = 1;
 }
 
 message Event {
   Metadata metadata = 1;
   oneof payload {
     string organizationId = 2;
-    string azureTenantId = 3;
     string stripeConnectAccountWebhookEventPayload = 4;
   }
 }

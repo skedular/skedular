@@ -1,11 +1,7 @@
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Microsoft.Graph.Models;
 using Organization.Shared.Models;
 using Stripe;
-using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
-using AzureTenantMember = Organization.Shared.Database.Entities.AzureTenantMember;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
 using Location = Organization.Shared.Models.Location;
@@ -37,11 +33,6 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    OrganizationMember MapToEntity(
-        Shared.Models.OrganizationMember src,
-        Shared.Database.Entities.Organization organization,
-        Shared.Database.Entities.Customer customer);
-
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
@@ -58,19 +49,6 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Organization> involvedOrganizations);
 
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
-    IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
-    Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId);
-    Admin_UpdateIdentityInput MapToUpdateIdentityInput(AzureTenantMember src, string customerId);
-
-    Admin_AddInput MapTo(
-        AzureTenantMember src,
-        string customerId,
-        Shared.Database.Entities.Organization defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations);
-
-    Shared.Models.AzureTenantMember MapTo(User src);
-    AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant);
-    AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest, AzureTenant azureTenant);
     OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
 }
 
@@ -194,12 +172,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationMember MapToEntity(
-        Shared.Models.OrganizationMember src,
-        Shared.Database.Entities.Organization organization,
-        Shared.Database.Entities.Customer customer) =>
-        MergeToEntity(src, new OrganizationMember(), organization, customer);
-
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
@@ -273,79 +245,6 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) => src.Select(MapTo);
-
-    public Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
-
-    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
-
-    public Admin_AddInput MapTo(
-        AzureTenantMember src,
-        string customerId,
-        Shared.Database.Entities.Organization defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations)
-    {
-        var input = new Admin_AddInput
-        {
-            Id = customerId,
-            Designation = src.Designation.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            IsOnboardingDone = true,
-            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
-        };
-
-        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
-
-        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
-            {
-                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
-            }));
-
-        return input;
-    }
-
-    public Shared.Models.AzureTenantMember MapTo(User src) =>
-        new()
-        {
-            Id = src.Id!,
-            Email = src.Mail,
-            Designation = src.JobTitle,
-            Name = src.DisplayName,
-            GivenName = src.GivenName,
-            FamilyName = src.Surname,
-            PreferredLanguage = src.PreferredLanguage
-        };
-
-    public AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant) =>
-        MergeToEntity(src, new AzureTenantMember(), azureTenant);
-
-    public AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest, AzureTenant azureTenant)
-    {
-        dest.Id = src.Id;
-        dest.Email = src.Email;
-        dest.Designation = src.Designation;
-        dest.Name = src.Name;
-        dest.GivenName = src.GivenName;
-        dest.FamilyName = src.FamilyName;
-        dest.PreferredLanguage = src.PreferredLanguage;
-        dest.PhotoUrl = src.PhotoUrl;
-        dest.PhotoUrl48 = src.PhotoUrl48;
-        dest.PhotoUrl64 = src.PhotoUrl64;
-        dest.PhotoUrl96 = src.PhotoUrl96;
-        dest.PhotoUrl120 = src.PhotoUrl120;
-        dest.PhotoUrl240 = src.PhotoUrl240;
-        dest.PhotoUrl360 = src.PhotoUrl360;
-        dest.PhotoUrl432 = src.PhotoUrl432;
-        dest.PhotoUrl504 = src.PhotoUrl504;
-        dest.PhotoUrl648 = src.PhotoUrl648;
-        dest.AzureTenant = azureTenant;
-        return dest;
-    }
-
     public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
     {
         dest.StripeAccountId = src.Id;
@@ -365,35 +264,6 @@ public class Mapper : IMapper
         dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
         return dest;
     }
-
-    private static OrganizationMember MergeToEntity(
-        Shared.Models.OrganizationMember src,
-        OrganizationMember dest,
-        Shared.Database.Entities.Organization organization,
-        Shared.Database.Entities.Customer customer)
-    {
-        dest.Id = src.Id;
-        dest.Role = src.Role.ToOrganizationMemberRole();
-        dest.Status = src.Status.ToOrganizationMemberStatus();
-        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
-        dest.Organization = organization;
-        dest.Customer = customer;
-        return dest;
-    }
-
-    private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Email = src.Email,
-            Status = src.Status.ToInvitationStatus(),
-            Organization = MapTo(src.Organization),
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
-        };
 
     private static IEnumerable<Shared.Models.OrganizationMember> MapTo(
         IEnumerable<OrganizationMember> src,
@@ -652,15 +522,6 @@ public class Mapper : IMapper
         IEnumerable<OrganizationStripeConnectAccount> src,
         Shared.Models.Organization organization) => src.Select(item => MapTo(item, organization));
 
-    private static OrganizationStripeConnectAccountAuthorization? MapTo(
-        Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
-        src is null
-            ? null
-            : new OrganizationStripeConnectAccountAuthorization
-            {
-                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
-            };
-
     private static Shared.Models.OrganizationStripeConnectAccount MapTo(
         OrganizationStripeConnectAccount src,
         Shared.Models.Organization organization) => new()
@@ -690,4 +551,13 @@ public class Mapper : IMapper
         Organization = organization,
         OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
     };
+
+    private static OrganizationStripeConnectAccountAuthorization? MapTo(
+        Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
 }

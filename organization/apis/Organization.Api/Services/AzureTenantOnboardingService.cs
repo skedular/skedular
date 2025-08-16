@@ -9,6 +9,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Location = Organization.Shared.Database.Entities.Location;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 
@@ -16,10 +17,7 @@ namespace Organization.Api.Services;
 
 public interface IAzureTenantOnboardingService
 {
-    Task OnboardAsync(
-        string tenantId,
-        AzureInstallStateUserIdLookup azureInstallStateUserIdLookup,
-        CancellationToken cancellationToken);
+    Task OnboardAsync(string tenantId, AzureInstallStateUserIdLookup azureInstallStateUserIdLookup, CancellationToken cancellationToken);
 }
 
 public class AzureTenantOnboardingService(
@@ -30,16 +28,12 @@ public class AzureTenantOnboardingService(
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     ITemporalOutboxPublisher temporalOutboxPublisher,
-    IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
     LocationService.LocationServiceClient locationServiceClient,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     TimeProvider timeProvider) : IAzureTenantOnboardingService
 {
-    public async Task OnboardAsync(
-        string tenantId,
-        AzureInstallStateUserIdLookup azureInstallStateUserIdLookup,
-        CancellationToken cancellationToken)
+    public async Task OnboardAsync(string tenantId, AzureInstallStateUserIdLookup azureInstallStateUserIdLookup, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
 
@@ -86,7 +80,7 @@ public class AzureTenantOnboardingService(
         organizationOutboxPublisher.PublishOrganizations(
             [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
-        organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
+        temporalOutboxPublisher.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
         temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,

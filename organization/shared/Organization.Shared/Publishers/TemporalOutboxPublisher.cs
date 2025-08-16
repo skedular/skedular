@@ -1,12 +1,14 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Activities;
 using Organization.Shared.Workflows;
 using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 
@@ -20,6 +22,7 @@ public interface ITemporalOutboxPublisher
         SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
         IUnitOfWork unitOfWork);
 
+    void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
@@ -27,9 +30,11 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+    IRandomHelper randomHelper,
     ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationExistingCustomer> temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor,
-    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor)
+    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor,
+    ITemporalOutboxWorkflowExecutor<ReSyncAzureTenant> temporalOutboxReSyncAzureTenantExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
@@ -55,6 +60,18 @@ public class TemporalOutboxPublisher(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxReSyncAzureTenantExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = randomHelper.Generate(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.RejectDuplicate
             },
             unitOfWork);
 

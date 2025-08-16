@@ -9,6 +9,7 @@ namespace Organization.Shared.Repositories;
 public interface IAzureTenantRepository : IRepository<AzureTenant>
 {
     Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken);
     AzureTenant Add(AzureTenant azureTenant);
     AzureTenant Update(AzureTenant azureTenant);
 }
@@ -31,6 +32,12 @@ public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider
         await DbContext.AzureTenant
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken) => 
+        await DbContext.AzureTenant
+            .Where(query => !query.DeletedAt.HasValue)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public AzureTenant Add(AzureTenant azureTenant)
     {

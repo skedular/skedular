@@ -5,6 +5,5 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationIntern
 
 message Key {
   string organizationId = 1;
-  string azureTenantId = 2;
-  string stripeConnectAccountWebhookKey = 3;
+  string stripeConnectAccountWebhookKey = 2;
 }

@@ -275,4 +275,18 @@ public class OrganizationController(
 
         return Redirect(redirectUrl.ToString());
     }
+
+    public override async Task<IActionResult> ReSyncAllAzureTenants(CancellationToken cancellationToken = default)
+    {
+        await workaroundService.ReSyncAllAzureTenants(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> ReSyncAzureTenant(string tenantId, CancellationToken cancellationToken = default)
+    {
+        await workaroundService.ReSyncAzureTenant(tenantId, cancellationToken);
+
+        return Ok();
+    }
 }

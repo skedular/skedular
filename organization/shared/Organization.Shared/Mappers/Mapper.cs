@@ -1,10 +1,14 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Graph.Models;
 using Organization.Shared.Models;
+using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
+using Identity = Organization.Shared.Models.Identity;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
@@ -12,7 +16,10 @@ using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettin
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using PaymentMethod = Stripe.PaymentMethod;
+using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress;
+using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
+using Team = Organization.Shared.Models.Team;
 
 namespace Organization.Shared.Mappers;
 
@@ -21,6 +28,22 @@ public interface IMapper
     Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
     OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
     Models.Organization MapTo(Database.Entities.Organization src);
+    AzureTenantMember MapTo(User src);
+    Database.Entities.AzureTenantMember MapTo(AzureTenantMember src, AzureTenant azureTenant);
+    Database.Entities.AzureTenantMember MergeToEntity(AzureTenantMember src, Database.Entities.AzureTenantMember dest, AzureTenant azureTenant);
+    Admin_AddIdentityInput MapTo(Database.Entities.AzureTenantMember src, string customerId);
+    Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId);
+
+    Admin_AddInput MapTo(
+        Database.Entities.AzureTenantMember src,
+        string customerId,
+        Database.Entities.Organization defaultOrganization,
+        ICollection<Database.Entities.Location> preferredLocations);
+
+    Database.Entities.OrganizationMember MapToEntity(
+        Models.OrganizationMember src,
+        Database.Entities.Organization organization,
+        Database.Entities.Customer customer);
 }
 
 public class Mapper : IMapper
@@ -140,9 +163,98 @@ public class Mapper : IMapper
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
+        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
 
         return organization;
     }
+
+    public AzureTenantMember MapTo(User src) =>
+        new()
+        {
+            Id = src.Id!,
+            Email = src.Mail,
+            Designation = src.JobTitle,
+            Name = src.DisplayName,
+            GivenName = src.GivenName,
+            FamilyName = src.Surname,
+            PreferredLanguage = src.PreferredLanguage
+        };
+
+    public Database.Entities.AzureTenantMember MapTo(AzureTenantMember src, AzureTenant azureTenant) =>
+        MergeToEntity(src, new Database.Entities.AzureTenantMember(), azureTenant);
+
+    public Database.Entities.AzureTenantMember MergeToEntity(AzureTenantMember src, Database.Entities.AzureTenantMember dest, AzureTenant azureTenant)
+    {
+        dest.Id = src.Id;
+        dest.Email = src.Email;
+        dest.Designation = src.Designation;
+        dest.Name = src.Name;
+        dest.GivenName = src.GivenName;
+        dest.FamilyName = src.FamilyName;
+        dest.PreferredLanguage = src.PreferredLanguage;
+        dest.PhotoUrl = src.PhotoUrl;
+        dest.PhotoUrl48 = src.PhotoUrl48;
+        dest.PhotoUrl64 = src.PhotoUrl64;
+        dest.PhotoUrl96 = src.PhotoUrl96;
+        dest.PhotoUrl120 = src.PhotoUrl120;
+        dest.PhotoUrl240 = src.PhotoUrl240;
+        dest.PhotoUrl360 = src.PhotoUrl360;
+        dest.PhotoUrl432 = src.PhotoUrl432;
+        dest.PhotoUrl504 = src.PhotoUrl504;
+        dest.PhotoUrl648 = src.PhotoUrl648;
+        dest.AzureTenant = azureTenant;
+        return dest;
+    }
+
+    Admin_AddIdentityInput IMapper.MapTo(Database.Entities.AzureTenantMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_AddInput MapTo(
+        Database.Entities.AzureTenantMember src,
+        string customerId,
+        Database.Entities.Organization defaultOrganization,
+        ICollection<Database.Entities.Location> preferredLocations)
+    {
+        var input = new Admin_AddInput
+        {
+            Id = customerId,
+            Designation = src.Designation.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            IsOnboardingDone = true,
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+        };
+
+        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+
+        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
+            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+            {
+                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            }));
+
+        return input;
+    }
+
+    public Database.Entities.OrganizationMember MapToEntity(
+        Models.OrganizationMember src,
+        Database.Entities.Organization organization,
+        Database.Entities.Customer customer) =>
+        MergeToEntity(src, new Database.Entities.OrganizationMember(), organization, customer);
+
+    private static OrganizationStripeConnectAccountAuthorization? MapTo(
+        Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountAuthorization
+            {
+                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+            };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings? MapTo(OrganizationSsoSettings? src) =>
         src is null
@@ -387,4 +499,96 @@ public class Mapper : IMapper
                 Country = src.Country.ToSafeString(),
                 FormattedAddress = src.ToFormattedAddress()
             };
+
+    private static OrganizationStripeCustomer? MapTo(
+        Database.Entities.OrganizationStripeCustomer? src,
+        Models.Organization organization) =>
+        src is null
+            ? null
+            : new OrganizationStripeCustomer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                StripeCustomerId = src.StripeCustomerId,
+                Organization = organization
+            };
+
+    private static IEnumerable<Models.OrganizationStripePaymentMethod> MapTo(
+        IEnumerable<OrganizationStripePaymentMethod> src,
+        Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Models.OrganizationStripePaymentMethod MapTo(
+        OrganizationStripePaymentMethod src,
+        Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            SetupIntentId = src.SetupIntentId,
+            PaymentMethodId = src.PaymentMethodId,
+            CardBrand = src.CardBrand,
+            CardCountry = src.CardCountry,
+            CardDescription = src.CardDescription,
+            CardExpiryMonth = src.CardExpiryMonth,
+            CardExpiryYear = src.CardExpiryYear,
+            CardFingerprint = src.CardFingerprint,
+            CardFunding = src.CardFunding,
+            CardIssuer = src.CardIssuer,
+            CardLastFourDigit = src.CardLastFourDigit,
+            Organization = organization
+        };
+
+    private static IEnumerable<OrganizationStripeConnectAccount> MapTo(
+        IEnumerable<Database.Entities.OrganizationStripeConnectAccount> src,
+        Models.Organization organization) => src.Select(item => MapTo(item, organization));
+
+    private static OrganizationStripeConnectAccount MapTo(
+        Database.Entities.OrganizationStripeConnectAccount src,
+        Models.Organization organization) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        DeletedAt = src.DeletedAt,
+        IsDefault = src.IsDefault,
+        StripeAccountId = src.StripeAccountId,
+        Name = src.Name,
+        ChargesEnabled = src.ChargesEnabled,
+        PayoutsEnabled = src.PayoutsEnabled,
+        Type = src.Type,
+        Country = src.Country,
+        DefaultCurrency = src.DefaultCurrency,
+        BusinessType = src.BusinessType,
+        Url = src.Url,
+        SupportUrl = src.SupportUrl,
+        CompanyName = src.CompanyName,
+        ContactEmail = src.ContactEmail,
+        ContactPhone = src.ContactPhone,
+        DetailsSubmitted = src.DetailsSubmitted,
+        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+        CapabilitiesTransfers = src.CapabilitiesTransfers,
+        OnboardingUrl = src.OnboardingUrl,
+        Organization = organization,
+        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+    };
+
+    private static Database.Entities.OrganizationMember MergeToEntity(
+        Models.OrganizationMember src,
+        Database.Entities.OrganizationMember dest,
+        Database.Entities.Organization organization,
+        Database.Entities.Customer customer)
+    {
+        dest.Id = src.Id;
+        dest.Role = src.Role.ToOrganizationMemberRole();
+        dest.Status = src.Status.ToOrganizationMemberStatus();
+        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
+        dest.Organization = organization;
+        dest.Customer = customer;
+        return dest;
+    }
 }

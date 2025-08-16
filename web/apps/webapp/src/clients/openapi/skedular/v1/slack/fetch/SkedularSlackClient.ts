@@ -7,10 +7,12 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { SlackService } from './services/SlackService';
 import { V1Service } from './services/V1Service';
+import { WorkspaceService } from './services/WorkspaceService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularSlackClient {
     public readonly slack: SlackService;
     public readonly v1: V1Service;
+    public readonly workspace: WorkspaceService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -26,6 +28,7 @@ export class SkedularSlackClient {
         });
         this.slack = new SlackService(this.request);
         this.v1 = new V1Service(this.request);
+        this.workspace = new WorkspaceService(this.request);
     }
 }
 

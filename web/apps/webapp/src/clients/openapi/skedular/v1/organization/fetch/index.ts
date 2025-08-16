@@ -16,7 +16,7 @@ export type { Version } from './models/Version';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
-export { AzureService } from './services/AzureService';
+export { AzureTenantService } from './services/AzureTenantService';
 export { ConnectService } from './services/ConnectService';
 export { OauthService } from './services/OauthService';
 export { OfferingService } from './services/OfferingService';
@@ -28,6 +28,5 @@ export { PlatformService } from './services/PlatformService';
 export { SamlService } from './services/SamlService';
 export { SsoService } from './services/SsoService';
 export { StripeService } from './services/StripeService';
-export { TenantService } from './services/TenantService';
 export { V1Service } from './services/V1Service';
 export { WebhookService } from './services/WebhookService';

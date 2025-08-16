@@ -1,10 +1,10 @@
 using Api.Shared.Services;
-using Organization.Processors.Mappers;
+using Organization.Shared.Mappers;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 
-namespace Organization.Processors.Services;
+namespace Organization.Shared.Services;
 
 public interface IOrganizationMemberService
 {

@@ -16,6 +16,7 @@ using Organization.Shared.Workflows.Invitation.NonExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Extensions.Hosting;
 
 namespace Organization.Jobs;
@@ -62,9 +63,11 @@ public class Program
             .AddWorkflow<InviteExistingCustomerToJoinOrganization>()
             .AddWorkflow<InviteToJoinOrganizationExistingCustomer>()
             .AddWorkflow<InviteToJoinOrganizationNewCustomer>()
+            .AddWorkflow<ReSyncAzureTenant>()
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>()
-            .AddScopedActivities<EmailIntegrations>();
+            .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<AzureTenantIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -1,43 +1,25 @@
 using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Models;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Organization.Processors.Mappers;
-using Organization.Processors.Services;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Stripe;
-using Customer = Organization.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event;
-using Location = Organization.Shared.Database.Entities.Location;
-using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
-using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
-using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
 
 namespace Organization.Processors.Subscribers;
 
 public class OrganizationInternalSubscriber(
-    CustomerConfiguration customerConfiguration,
-    LocationConfiguration locationConfiguration,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     IMapper mapper,
-    IGraphService graphService,
-    CustomerService.CustomerServiceClient customerServiceClient,
-    LocationService.LocationServiceClient locationServiceClient,
-    IOrganizationMemberService organizationMemberService,
     IOrganizationPublisher organizationPublisher)
     : IEventSubscriber<Key, Event>
 {
@@ -47,10 +29,6 @@ public class OrganizationInternalSubscriber(
         {
             case Type.RecordDailyMemberCount:
                 await HandleRecordDailyMemberCountEventAsync(@event, cancellationToken);
-                break;
-
-            case Type.RefreshAzureTenantMembers:
-                await HandleRefreshAzureTenantMembersAsync(@event.AzureTenantId, cancellationToken);
                 break;
 
             case Type.StripeConnectAccountWebhookEventReceived:
@@ -90,192 +68,6 @@ public class OrganizationInternalSubscriber(
         _ = repositoryFactory.OrganizationRepository.Update(organization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task HandleRefreshAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken)
-    {
-        var existingTenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
-        if (existingTenant is null)
-        {
-            return;
-        }
-
-        var azureTenantMembers = await graphService.GetAzureTenantMembersAsync(tenantId, cancellationToken);
-        var existingAzureTenantMembers = await repositoryFactory.AzureTenantMemberRepository.GetByTenantIdAsync(
-            tenantId,
-            cancellationToken);
-        var itemsToRemove = existingAzureTenantMembers
-            .Where(azureTenantMember => azureTenantMembers.All(item => item.Id != azureTenantMember.Id))
-            .ToList();
-        var updatedItems = existingAzureTenantMembers
-            .Where(azureTenantMember => azureTenantMembers.Any(item => item.Id == azureTenantMember.Id))
-            .Select(azureTenantMember =>
-            {
-                var updatedAzureTenantMembers = mapper.MergeToEntity(
-                    azureTenantMembers.First(item => item.Id == azureTenantMember.Id),
-                    azureTenantMember,
-                    existingTenant);
-                updatedAzureTenantMembers.DeletedAt = null;
-                return repositoryFactory.AzureTenantMemberRepository.Update(updatedAzureTenantMembers);
-            })
-            .ToList();
-        var addedItems = azureTenantMembers
-            .Where(azureTenantMember => existingAzureTenantMembers.All(item => item.Id != azureTenantMember.Id))
-            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapTo(item, existingTenant)))
-            .ToList();
-
-        repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);
-        existingTenant.AzureTenantMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        await SyncCustomersAndOrganizationMembersAsync(existingTenant, cancellationToken);
-
-        existingTenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.AzureTenantRepository.Update(existingTenant);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task SyncCustomersAndOrganizationMembersAsync(AzureTenant azureTenant, CancellationToken cancellationToken)
-    {
-        var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
-        {
-            First = ((int?)null).ToNullInt(),
-            Last = ((int?)null).ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
-        };
-        getPaginatedLocationsInput.OrderBy.AddRange([
-            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
-        ]);
-        var getLocationsResponse = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
-            getPaginatedLocationsInput,
-            locationConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
-
-        var customerIdsTenantMembersPair = new List<(string, AzureTenantMember)>();
-
-        foreach (var tenantMember in azureTenant.AzureTenantMembers)
-        {
-            var anyCustomerExistByVerifiableTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-                new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-            if (anyCustomerExistByVerifiableTokenResponse.Exist)
-            {
-                customerIdsTenantMembersPair.Add((anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
-
-                await customerServiceClient.Admin_UpdateIdentityAsync(
-                    mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
-
-                if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
-                {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
-                        new Admin_SetDefaultOrganizationInput
-                        {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
-                }
-
-                if (getLocationsResponse.TotalCount == 1)
-                {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
-                        new Admin_AddPreferredLocationInput
-                        {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
-                }
-
-                continue;
-            }
-
-            var anyCustomerExistByEmailTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
-                new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-            if (anyCustomerExistByEmailTokenResponse.Exist)
-            {
-                customerIdsTenantMembersPair.Add((anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
-
-                await customerServiceClient.Admin_AddIdentityAsync(
-                    mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
-
-                if (string.IsNullOrWhiteSpace(anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
-                {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
-                        new Admin_SetDefaultOrganizationInput
-                        {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
-                }
-
-                if (getLocationsResponse.TotalCount == 1)
-                {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
-                        new Admin_AddPreferredLocationInput
-                        {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
-                }
-
-                continue;
-            }
-
-            var customerId = randomHelper.Generate();
-            customerIdsTenantMembersPair.Add((customerId, tenantMember));
-            await customerServiceClient.Admin_AddAsync(
-                mapper.MapTo(
-                    tenantMember,
-                    customerId,
-                    new Shared.Database.Entities.Organization { Id = azureTenant.Organization.Id },
-                    getLocationsResponse.TotalCount == 1 ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }] : []),
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-        }
-
-        var members = customerIdsTenantMembersPair.Select(customerIdsTenantMemberPair =>
-        {
-            var customerId = customerIdsTenantMemberPair.Item1;
-            var organizationMember = azureTenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
-
-            if (organizationMember is null)
-            {
-                return new OrganizationMember
-                {
-                    Id = randomHelper.Generate(),
-                    Customer = new Customer { Id = customerId },
-                    Status = OrganizationMemberStatus.Active,
-                    Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                        ? OrganizationMemberRole.Owner
-                        : OrganizationMemberRole.Member,
-                    IsOrganizationOnboardingDone = true
-                };
-            }
-
-            return new OrganizationMember
-            {
-                Id = organizationMember.Id,
-                Customer = new Customer { Id = customerId },
-                Status = OrganizationMemberStatus.Active,
-                Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                    ? OrganizationMemberRole.Owner
-                    : OrganizationMemberRole.Member,
-                IsOrganizationOnboardingDone = true
-            };
-        }).ToList();
-
-        await organizationMemberService.AddMembersAsync(azureTenant.Organization.Id, members, cancellationToken);
     }
 
     private async Task HandleStripeConnectAccountWebhookEventReceivedAsync(string json, CancellationToken cancellationToken)

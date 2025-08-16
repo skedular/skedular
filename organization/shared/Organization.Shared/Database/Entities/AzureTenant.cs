@@ -10,7 +10,6 @@ namespace Organization.Shared.Database.Entities;
 public class AzureTenant : EntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public DateTimeOffset? MembersLastRefreshedAt { get; set; }
     public string InstalledByUserId { get; set; } = string.Empty;
 
     public virtual ICollection<AzureTenantMember> AzureTenantMembers { get; set; } = [];
@@ -30,7 +29,6 @@ public class TenantConfiguration : IEntityTypeConfiguration<AzureTenant>
         builder.HasOne(item => item.Organization).WithMany(item => item.AzureTenants);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.MembersLastRefreshedAt);
         builder.HasIndex(item => item.InstalledByUserId);
     }
 }

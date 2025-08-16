@@ -5,7 +5,7 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
-import { AzureService } from './services/AzureService';
+import { AzureTenantService } from './services/AzureTenantService';
 import { ConnectService } from './services/ConnectService';
 import { OauthService } from './services/OauthService';
 import { OfferingService } from './services/OfferingService';
@@ -17,12 +17,11 @@ import { PlatformService } from './services/PlatformService';
 import { SamlService } from './services/SamlService';
 import { SsoService } from './services/SsoService';
 import { StripeService } from './services/StripeService';
-import { TenantService } from './services/TenantService';
 import { V1Service } from './services/V1Service';
 import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
-    public readonly azure: AzureService;
+    public readonly azureTenant: AzureTenantService;
     public readonly connect: ConnectService;
     public readonly oauth: OauthService;
     public readonly offering: OfferingService;
@@ -34,7 +33,6 @@ export class SkedularOrganizationV1Client {
     public readonly saml: SamlService;
     public readonly sso: SsoService;
     public readonly stripe: StripeService;
-    public readonly tenant: TenantService;
     public readonly v1: V1Service;
     public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
@@ -50,7 +48,7 @@ export class SkedularOrganizationV1Client {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
-        this.azure = new AzureService(this.request);
+        this.azureTenant = new AzureTenantService(this.request);
         this.connect = new ConnectService(this.request);
         this.oauth = new OauthService(this.request);
         this.offering = new OfferingService(this.request);
@@ -62,7 +60,6 @@ export class SkedularOrganizationV1Client {
         this.saml = new SamlService(this.request);
         this.sso = new SsoService(this.request);
         this.stripe = new StripeService(this.request);
-        this.tenant = new TenantService(this.request);
         this.v1 = new V1Service(this.request);
         this.webhook = new WebhookService(this.request);
     }

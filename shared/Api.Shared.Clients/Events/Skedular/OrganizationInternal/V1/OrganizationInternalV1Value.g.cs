@@ -26,23 +26,21 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
           string.Concat(
             "CiRvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfdmFsdWUucHJvdG8SFG9yZ2Fu",
             "aXphdGlvbmludGVybmFsGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1wLnBy",
-            "b3RvIqoBCgVFdmVudBIwCghtZXRhZGF0YRgBIAEoCzIeLm9yZ2FuaXphdGlv",
+            "b3RvIpEBCgVFdmVudBIwCghtZXRhZGF0YRgBIAEoCzIeLm9yZ2FuaXphdGlv",
             "bmludGVybmFsLk1ldGFkYXRhEhgKDm9yZ2FuaXphdGlvbklkGAIgASgJSAAS",
-            "FwoNYXp1cmVUZW5hbnRJZBgDIAEoCUgAEjEKJ3N0cmlwZUNvbm5lY3RBY2Nv",
-            "dW50V2ViaG9va0V2ZW50UGF5bG9hZBgEIAEoCUgAQgkKB3BheWxvYWQiqgEK",
-            "CE1ldGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIR",
-            "CglhcHBTb3VyY2UYAyABKAkSKAoEdHlwZRgEIAEoDjIaLm9yZ2FuaXphdGlv",
-            "bmludGVybmFsLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1",
-            "Zi5UaW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSp+CgRUeXBlEh8K",
-            "G1R5cGVfUmVjb3JkRGFpbHlNZW1iZXJDb3VudBAAEiIKHlR5cGVfUmVmcmVz",
-            "aEF6dXJlVGVuYW50TWVtYmVycxABEjEKLVR5cGVfU3RyaXBlQ29ubmVjdEFj",
-            "Y291bnRXZWJob29rRXZlbnRSZWNlaXZlZBACQkOqAkBBcGkuU2hhcmVkLkNs",
-            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbkludGVybmFsLlYx",
-            "LlZhbHVlYgZwcm90bzM="));
+            "MQonc3RyaXBlQ29ubmVjdEFjY291bnRXZWJob29rRXZlbnRQYXlsb2FkGAQg",
+            "ASgJSABCCQoHcGF5bG9hZCKqAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoM",
+            "ZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIoCgR0eXBl",
+            "GAQgASgOMhoub3JnYW5pemF0aW9uaW50ZXJuYWwuVHlwZRIoCgR0aW1lGAUg",
+            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlv",
+            "bklkGAYgASgJKloKBFR5cGUSHwobVHlwZV9SZWNvcmREYWlseU1lbWJlckNv",
+            "dW50EAASMQotVHlwZV9TdHJpcGVDb25uZWN0QWNjb3VudFdlYmhvb2tFdmVu",
+            "dFJlY2VpdmVkEAFCQ6oCQEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
+            "ZHVsYXIuT3JnYW5pemF0aW9uSW50ZXJuYWwuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event.Parser, new[]{ "Metadata", "OrganizationId", "AzureTenantId", "StripeConnectAccountWebhookEventPayload" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event.Parser, new[]{ "Metadata", "OrganizationId", "StripeConnectAccountWebhookEventPayload" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null)
           }));
     }
@@ -52,8 +50,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
   #region Enums
   public enum Type {
     [pbr::OriginalName("Type_RecordDailyMemberCount")] RecordDailyMemberCount = 0,
-    [pbr::OriginalName("Type_RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 1,
-    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 2,
+    [pbr::OriginalName("Type_StripeConnectAccountWebhookEventReceived")] StripeConnectAccountWebhookEventReceived = 1,
   }
 
   #endregion
@@ -98,9 +95,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       switch (other.PayloadCase) {
         case PayloadOneofCase.OrganizationId:
           OrganizationId = other.OrganizationId;
-          break;
-        case PayloadOneofCase.AzureTenantId:
-          AzureTenantId = other.AzureTenantId;
           break;
         case PayloadOneofCase.StripeConnectAccountWebhookEventPayload:
           StripeConnectAccountWebhookEventPayload = other.StripeConnectAccountWebhookEventPayload;
@@ -154,32 +148,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "azureTenantId" field.</summary>
-    public const int AzureTenantIdFieldNumber = 3;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string AzureTenantId {
-      get { return HasAzureTenantId ? (string) payload_ : ""; }
-      set {
-        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-        payloadCase_ = PayloadOneofCase.AzureTenantId;
-      }
-    }
-    /// <summary>Gets whether the "azureTenantId" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasAzureTenantId {
-      get { return payloadCase_ == PayloadOneofCase.AzureTenantId; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "azureTenantId" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearAzureTenantId() {
-      if (HasAzureTenantId) {
-        ClearPayload();
-      }
-    }
-
     /// <summary>Field number for the "stripeConnectAccountWebhookEventPayload" field.</summary>
     public const int StripeConnectAccountWebhookEventPayloadFieldNumber = 4;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -211,7 +179,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
     public enum PayloadOneofCase {
       None = 0,
       OrganizationId = 2,
-      AzureTenantId = 3,
       StripeConnectAccountWebhookEventPayload = 4,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
@@ -245,7 +212,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       }
       if (!object.Equals(Metadata, other.Metadata)) return false;
       if (OrganizationId != other.OrganizationId) return false;
-      if (AzureTenantId != other.AzureTenantId) return false;
       if (StripeConnectAccountWebhookEventPayload != other.StripeConnectAccountWebhookEventPayload) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -257,7 +223,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       int hash = 1;
       if (metadata_ != null) hash ^= Metadata.GetHashCode();
       if (HasOrganizationId) hash ^= OrganizationId.GetHashCode();
-      if (HasAzureTenantId) hash ^= AzureTenantId.GetHashCode();
       if (HasStripeConnectAccountWebhookEventPayload) hash ^= StripeConnectAccountWebhookEventPayload.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
@@ -286,10 +251,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(OrganizationId);
       }
-      if (HasAzureTenantId) {
-        output.WriteRawTag(26);
-        output.WriteString(AzureTenantId);
-      }
       if (HasStripeConnectAccountWebhookEventPayload) {
         output.WriteRawTag(34);
         output.WriteString(StripeConnectAccountWebhookEventPayload);
@@ -312,10 +273,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(OrganizationId);
       }
-      if (HasAzureTenantId) {
-        output.WriteRawTag(26);
-        output.WriteString(AzureTenantId);
-      }
       if (HasStripeConnectAccountWebhookEventPayload) {
         output.WriteRawTag(34);
         output.WriteString(StripeConnectAccountWebhookEventPayload);
@@ -335,9 +292,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       }
       if (HasOrganizationId) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
-      }
-      if (HasAzureTenantId) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(AzureTenantId);
       }
       if (HasStripeConnectAccountWebhookEventPayload) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookEventPayload);
@@ -363,9 +317,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
       switch (other.PayloadCase) {
         case PayloadOneofCase.OrganizationId:
           OrganizationId = other.OrganizationId;
-          break;
-        case PayloadOneofCase.AzureTenantId:
-          AzureTenantId = other.AzureTenantId;
           break;
         case PayloadOneofCase.StripeConnectAccountWebhookEventPayload:
           StripeConnectAccountWebhookEventPayload = other.StripeConnectAccountWebhookEventPayload;
@@ -402,10 +353,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
             OrganizationId = input.ReadString();
             break;
           }
-          case 26: {
-            AzureTenantId = input.ReadString();
-            break;
-          }
           case 34: {
             StripeConnectAccountWebhookEventPayload = input.ReadString();
             break;
@@ -438,10 +385,6 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value {
           }
           case 18: {
             OrganizationId = input.ReadString();
-            break;
-          }
-          case 26: {
-            AzureTenantId = input.ReadString();
             break;
           }
           case 34: {

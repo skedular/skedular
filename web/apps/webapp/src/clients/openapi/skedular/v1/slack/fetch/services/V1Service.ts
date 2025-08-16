@@ -41,4 +41,34 @@ export class V1Service {
             },
         });
     }
+    /**
+     * resync all slack workspace
+     * @returns any the status of resyncing all slack workspaces
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public reSyncAllSlackWorkspaces(): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/slack/workspace/resync-all-workspaces',
+        });
+    }
+    /**
+     * resync slack workspace
+     * @param workspaceId
+     * @returns any the status of resyncing slack workspace
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public reSyncSlackWorkspace(
+        workspaceId: string,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/slack/workspace/{workspaceId}/resync',
+            path: {
+                'workspaceId': workspaceId,
+            },
+        });
+    }
 }

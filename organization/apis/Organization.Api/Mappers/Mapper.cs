@@ -1628,7 +1628,6 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             Name = src.Name,
-            MembersLastRefreshedAt = src.MembersLastRefreshedAt,
             Organization = organization
         };
 

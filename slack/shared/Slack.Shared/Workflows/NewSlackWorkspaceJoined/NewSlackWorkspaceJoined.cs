@@ -57,8 +57,7 @@ public class NewSlackWorkspaceJoined
             return;
         }
 
-        await Workflow.ExecuteActivityAsync(
-            (SlackIntegrations activity) => activity.ExecuteNextReSyncWorkspaceWorkflowAsync(args.WorkspaceId),
+        await Workflow.ExecuteActivityAsync((SlackIntegrations activity) => activity.ExecuteNextReSyncWorkspaceWorkflowAsync(args.WorkspaceId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),

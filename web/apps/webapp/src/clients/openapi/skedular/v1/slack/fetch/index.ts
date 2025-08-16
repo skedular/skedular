@@ -18,3 +18,4 @@ export { $Version } from './schemas/$Version';
 
 export { SlackService } from './services/SlackService';
 export { V1Service } from './services/V1Service';
+export { WorkspaceService } from './services/WorkspaceService';
