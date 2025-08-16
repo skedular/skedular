@@ -9,7 +9,8 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>();
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
+            .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();

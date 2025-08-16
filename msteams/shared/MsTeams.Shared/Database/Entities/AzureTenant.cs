@@ -8,7 +8,6 @@ namespace MsTeams.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class AzureTenant : ReplicatedEntityBaseWithDeleted
 {
-    public DateTimeOffset? TeamsAndChannelsLastRefreshedAt { get; set; }
     public virtual Organization Organization { get; set; }
     public virtual ICollection<AzureTenantTeam> AzureTenantTeams { get; set; } = [];
 }
@@ -21,7 +20,5 @@ public class TenantConfiguration : IEntityTypeConfiguration<AzureTenant>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.HasOne(item => item.Organization).WithMany(item => item.AzureTenants);
-
-        builder.HasIndex(item => item.TeamsAndChannelsLastRefreshedAt);
     }
 }

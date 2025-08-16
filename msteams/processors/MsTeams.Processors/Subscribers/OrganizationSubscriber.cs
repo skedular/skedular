@@ -3,8 +3,9 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Models;
-using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
+using MsTeams.Shared.Services;
+using MsTeams.Shared.Workflows.ReSyncMsTeams;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
@@ -16,7 +17,7 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    IMsTeamsInternalPublisher msTeamsInternalPublisher)
+    ITemporalService temporalService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -84,9 +85,10 @@ public class OrganizationSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(
-            azureTenants.Select(item => item.Id),
-            cancellationToken);
+        foreach (var azureTenant in azureTenants)
+        {
+            await temporalService.StartWorkflowReSyncMsTeamsAsync(new ReSyncMsTeamsInput(azureTenant.Id, null), cancellationToken);
+        }
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)

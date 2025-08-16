@@ -1,56 +1,44 @@
-using Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key;
-using Enterprise.Shared.Kafka.Consume;
-using MsTeams.Processors.Mappers;
-using MsTeams.Processors.Services;
+using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Type;
+using MsTeams.Shared.Services;
+using MsTeams.Shared.Workflows.ReSyncMsTeams;
+using Temporalio.Activities;
 
-namespace MsTeams.Processors.Subscribers;
+namespace MsTeams.Shared.Activities;
 
-public class MsTeamsInternalSubscriber(
+public class MsTeamsIntegrations(
     IRepositoryFactory repositoryFactory,
-    TimeProvider timeProvider,
     IMapper mapper,
-    IGraphService graphService)
-    : IEventSubscriber<Key, Event>
+    IGraphService graphService,
+    TimeProvider timeProvider,
+    ITemporalService temporalService)
 {
-    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
+    [Activity]
+    public async Task<bool> ReSyncTeamsAndChannelsAsync(string tenantId)
     {
-        switch (@event.Metadata.Type)
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var tenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
+        if (tenant is null)
         {
-            case Type.RefreshAzureTenantTeamsAndChannels:
-                await HandleRefreshAzureTenantTeamsAndChannelsEventAsync(@event.AzureTenantId, cancellationToken);
-                break;
-        }
-
-        return EventSubscriberResults.Success;
-    }
-
-    private async Task HandleRefreshAzureTenantTeamsAndChannelsEventAsync(string tenantId, CancellationToken cancellationToken)
-    {
-        var existingTenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
-        if (existingTenant is null)
-        {
-            return;
+            return false;
         }
 
         var azureTenantTeams = await graphService.GetAzureTenantTeamsAsync(tenantId, cancellationToken);
-        var teamsToRemove = existingTenant.AzureTenantTeams
+        var teamsToRemove = tenant.AzureTenantTeams
             .Where(azureTenantMember => azureTenantTeams.All(item => item.Id != azureTenantMember.Id))
             .ToList();
-        var updatedTeams = existingTenant.AzureTenantTeams
+        var updatedTeams = tenant.AzureTenantTeams
             .Where(azureTenantTeam => azureTenantTeams.Any(item => item.Id == azureTenantTeam.Id))
             .Select(azureTenantTeam => repositoryFactory.AzureTenantTeamRepository.Update(
-                mapper.MergeToEntity(azureTenantTeams.First(item => item.Id == azureTenantTeam.Id), azureTenantTeam, existingTenant)))
+                mapper.MergeToEntity(azureTenantTeams.First(item => item.Id == azureTenantTeam.Id), azureTenantTeam, tenant)))
             .ToList();
         var addedTeams = azureTenantTeams
-            .Where(azureTenantTeam => existingTenant.AzureTenantTeams.All(item => item.Id != azureTenantTeam.Id))
-            .Select(item => repositoryFactory.AzureTenantTeamRepository.Add(mapper.MapTo(item, existingTenant)))
+            .Where(azureTenantTeam => tenant.AzureTenantTeams.All(item => item.Id != azureTenantTeam.Id))
+            .Select(item => repositoryFactory.AzureTenantTeamRepository.Add(mapper.MapTo(item, tenant)))
             .ToList();
 
         repositoryFactory.AzureTenantTeamRepository.RemoveRange(teamsToRemove);
-        existingTenant.AzureTenantTeams = addedTeams.Concat(updatedTeams).Concat(teamsToRemove).ToList();
+        tenant.AzureTenantTeams = addedTeams.Concat(updatedTeams).Concat(teamsToRemove).ToList();
 
         foreach (var existingAzureTenantTeam in addedTeams.Concat(updatedTeams))
         {
@@ -75,9 +63,19 @@ public class MsTeamsInternalSubscriber(
             existingAzureTenantTeam.AzureTenantTeamChannels = addedChannels.Concat(updatedChannels).Concat(channelsToRemove).ToList();
         }
 
-        existingTenant.TeamsAndChannelsLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.AzureTenantRepository.Update(existingTenant);
+        repositoryFactory.AzureTenantRepository.Update(tenant);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
+    [Activity]
+    public async Task ExecuteNextReSyncMsTeamsWorkflowAsync(string tenantId)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        await temporalService.StartWorkflowReSyncMsTeamsAsync(
+            new ReSyncMsTeamsInput(tenantId, timeProvider.GetUtcNow().AddDays(1)),
+            cancellationToken);
     }
 }

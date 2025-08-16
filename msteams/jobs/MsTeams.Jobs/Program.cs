@@ -4,8 +4,12 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Temporal;
 using MsTeams.Shared;
+using MsTeams.Shared.Activities;
 using MsTeams.Shared.Database;
+using MsTeams.Shared.Workflows.ReSyncMsTeams;
+using Temporalio.Extensions.Hosting;
 
 namespace MsTeams.Jobs;
 
@@ -36,6 +40,11 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices();
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<ReSyncMsTeams>()
+            .AddScopedActivities<MsTeamsIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

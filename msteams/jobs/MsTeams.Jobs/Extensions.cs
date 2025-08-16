@@ -1,5 +1,3 @@
-using MsTeams.Jobs.Jobs;
-
 namespace MsTeams.Jobs;
 
 public static class Extensions
@@ -11,6 +9,5 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<RefreshAzureTenantTeamsAndChannelsJob>();
+        services;
 }

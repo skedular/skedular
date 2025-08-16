@@ -2,28 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type {ProblemDetails} from '../models/ProblemDetails';
-import type {Version} from '../models/Version';
-import type {CancelablePromise} from '../core/CancelablePromise';
-import type {BaseHttpRequest} from '../core/BaseHttpRequest';
-
-export class V1Service {
-    constructor(public readonly httpRequest: BaseHttpRequest) {
-    }
-
-    /**
-     * return API version
-     * @returns Version the version of the API
-     * @returns ProblemDetails unexpected error
-     * @throws ApiError
-     */
-    public getVersion(): CancelablePromise<Version | ProblemDetails> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/v1/msteams/version',
-        });
-    }
-
+import type { ProblemDetails } from '../models/ProblemDetails';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+export class AzureTenantService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * resync all MsTeams
      * @returns any the status of resyncing all MsTeams
@@ -36,7 +19,6 @@ export class V1Service {
             url: '/v1/msteams/azure-tenant/resync-all-msteams',
         });
     }
-
     /**
      * resync MsTeams
      * @param tenantId

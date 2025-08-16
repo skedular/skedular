@@ -6,6 +6,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 using MsTeams.Processors.Subscribers;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;
@@ -30,10 +31,6 @@ public class Program
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
-            .AddKafkaReliableEventConsumers<
-                MsTeamsInternalSubscriber,
-                Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
@@ -61,7 +58,8 @@ public class Program
             .AddPublishers()
             .AddMappers()
             .AddJobs()
-            .AddServices();
+            .AddServices()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

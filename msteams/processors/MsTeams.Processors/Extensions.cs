@@ -1,5 +1,4 @@
 using MsTeams.Processors.Mappers;
-using MsTeams.Processors.Services;
 
 namespace MsTeams.Processors;
 
@@ -9,8 +8,7 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IGraphService, GraphService>();
+        services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

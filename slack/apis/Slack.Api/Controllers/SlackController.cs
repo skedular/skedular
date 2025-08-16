@@ -25,14 +25,14 @@ public class SlackController(IVersionService versionService, IWorkspaceService w
 
     public override async Task<IActionResult> ReSyncAllSlackWorkspaces(CancellationToken cancellationToken = default)
     {
-        await workaroundService.ReSyncAllSlackWorkspaces(cancellationToken);
+        await workaroundService.ReSyncAllSlackWorkspacesAsync(cancellationToken);
 
         return Ok();
     }
 
     public override async Task<IActionResult> ReSyncSlackWorkspace(string workspaceId, CancellationToken cancellationToken = default)
     {
-        await workaroundService.ReSyncSlackWorkspace(workspaceId, cancellationToken);
+        await workaroundService.ReSyncSlackWorkspaceAsync(workspaceId, cancellationToken);
 
         return Ok();
     }

@@ -6,6 +6,7 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Temporal;
 using MsTeams.Api.Grpc;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;
@@ -40,7 +41,8 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddGrpcServices(configuration);
+            .AddGrpcServices(configuration)
+            .AddTemporalClient(configuration);
 
         services.AddGrpc();
 

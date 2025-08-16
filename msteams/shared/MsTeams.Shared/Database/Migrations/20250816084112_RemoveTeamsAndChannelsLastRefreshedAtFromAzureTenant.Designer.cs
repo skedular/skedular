@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -13,9 +14,11 @@ using Temporalio.Client;
 namespace MsTeams.Shared.Database.Migrations
 {
     [DbContext(typeof(MsTeamsDbContext))]
-    partial class MsTeamsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250816084112_RemoveTeamsAndChannelsLastRefreshedAtFromAzureTenant")]
+    partial class RemoveTeamsAndChannelsLastRefreshedAtFromAzureTenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

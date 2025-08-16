@@ -1,8 +1,8 @@
 using Enterprise.Shared.Azure.Graph;
-using MsTeams.Processors.Mappers;
+using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Models;
 
-namespace MsTeams.Processors.Services;
+namespace MsTeams.Shared.Services;
 
 public interface IGraphService
 {
