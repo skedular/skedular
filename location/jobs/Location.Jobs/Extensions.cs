@@ -1,5 +1,3 @@
-using Location.Jobs.Jobs;
-
 namespace Location.Jobs;
 
 public static class Extensions
@@ -11,7 +9,5 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<LocationDailyDeskCountRecorderJob>()
-            .AddHostedService<LocationDailyRoomCountRecorderJob>();
+        services;
 }

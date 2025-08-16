@@ -1,6 +1,8 @@
-﻿using Location.Shared.Mappers;
+﻿using Enterprise.Shared.Outbox;
+using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +18,9 @@ public static class Extensions
             .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddSingleton<ITemporalService, TemporalService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -40,10 +44,10 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddSingleton<ILocationInternalPublisher, LocationInternalPublisher>()
             .AddSingleton<ILocationPublisher, LocationPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>();
+            .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>()
+            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 }

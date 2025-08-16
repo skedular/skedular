@@ -16,7 +16,7 @@ public class OrganizationDailyAnalytics(
     IRandomHelper randomHelper)
 {
     [Activity]
-    public async Task<bool> RecordOrganizationMemberCountAsync(string organizationId)
+    public async Task<bool> RecordOrganizationMembersCountAsync(string organizationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);

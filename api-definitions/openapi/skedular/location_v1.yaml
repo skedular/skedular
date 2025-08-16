@@ -85,6 +85,52 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/location/analytics/regenerate-all-daily-analytics:
+    put:
+      tags:
+        - v1
+        - location
+        - analytics
+      summary: regenerate all locations daily analytics
+      operationId: regenerateAllDailyAnalytics
+
+      responses:
+        "200":
+          description: the status of regenerating all locations daily analytics
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/location/analytics/{locationId}/regenerate-daily-analytics:
+    put:
+      tags:
+        - v1
+        - location
+        - analytics
+      summary: regenerate location daily analytics
+      operationId: regenerateDailyAnalytics
+      parameters:
+        - in: path
+          name: locationId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of regenerating location daily analytics
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
 components:
   schemas:
     ProblemDetails:

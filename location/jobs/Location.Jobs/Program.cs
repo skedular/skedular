@@ -4,8 +4,12 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using Enterprise.Shared.Temporal;
 using Location.Shared;
+using Location.Shared.Activities;
 using Location.Shared.Database;
+using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Temporalio.Extensions.Hosting;
 
 namespace Location.Jobs;
 
@@ -36,6 +40,11 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices();
+
+        services
+            .AddTemporalWorker(configuration)
+            .AddWorkflow<GenerateLocationDailyAnalytics>()
+            .AddScopedActivities<LocationDailyAnalytics>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

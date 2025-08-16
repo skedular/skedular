@@ -8,8 +8,6 @@ public class Location : ModelBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
-    public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
     public OpeningHours? OpeningHours { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }

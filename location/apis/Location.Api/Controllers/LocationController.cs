@@ -32,4 +32,18 @@ public class LocationController(IVersionService versionService, IWorkaroundServi
 
         return Ok();
     }
+
+    public override async Task<IActionResult> RegenerateAllDailyAnalytics(CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RegenerateAllDailyAnalyticsAsync(cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> RegenerateDailyAnalytics(string locationId, CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RegenerateDailyAnalyticsAsync(locationId, cancellationToken);
+
+        return Ok();
+    }
 }

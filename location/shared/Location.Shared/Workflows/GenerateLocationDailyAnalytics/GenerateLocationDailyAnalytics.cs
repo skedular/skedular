@@ -1,16 +1,16 @@
-using Organization.Shared.Activities;
+using Location.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
+namespace Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 
-public record GenerateOrganizationDailyAnalyticsInput(string OrganizationId, DateTimeOffset? GenerationTime);
+public record GenerateLocationDailyAnalyticsInput(string LocationId, DateTimeOffset? GenerationTime);
 
 [Workflow]
-public class GenerateOrganizationDailyAnalytics
+public class GenerateLocationDailyAnalytics
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(GenerateOrganizationDailyAnalyticsInput args)
+    public async Task ExecuteAsync(GenerateLocationDailyAnalyticsInput args)
     {
         if (args.GenerationTime.HasValue)
         {
@@ -22,7 +22,19 @@ public class GenerateOrganizationDailyAnalytics
         }
 
         if (!await Workflow.ExecuteActivityAsync(
-                (OrganizationDailyAnalytics activity) => activity.RecordOrganizationMembersCountAsync(args.OrganizationId),
+                (LocationDailyAnalytics activity) => activity.RecordLocationDesksCountAsync(args.LocationId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                }))
+        {
+            return;
+        }
+
+        if (!await Workflow.ExecuteActivityAsync(
+                (LocationDailyAnalytics activity) => activity.RecordLocationRoomsCountAsync(args.LocationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
@@ -34,7 +46,7 @@ public class GenerateOrganizationDailyAnalytics
         }
 
         await Workflow.ExecuteActivityAsync(
-            (OrganizationDailyAnalytics activity) => activity.ExecuteNextGenerateOrganizationDailyAnalyticsWorkflowAsync(args.OrganizationId),
+            (LocationDailyAnalytics activity) => activity.ExecuteNextGenerateLocationDailyAnalyticsWorkflowAsync(args.LocationId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),

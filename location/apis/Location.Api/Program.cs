@@ -6,6 +6,7 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
+using Enterprise.Shared.Temporal;
 using Location.Api.Grpc;
 using Location.Shared;
 using Location.Shared.Database;
@@ -41,7 +42,8 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddServices()
-            .AddGrpcServices(configuration);
+            .AddGrpcServices(configuration)
+            .AddTemporalClient(configuration);
 
         services.AddGrpc();
 

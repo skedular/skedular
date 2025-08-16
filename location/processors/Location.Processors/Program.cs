@@ -6,6 +6,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Temporal;
 using Location.Processors.Subscribers;
 using Location.Shared;
 using Location.Shared.Database;
@@ -39,10 +40,6 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
-                LocationInternalSubscriber,
-                Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
@@ -56,7 +53,8 @@ public class Program
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddJobs();
+            .AddJobs()
+            .AddTemporalClient(configuration);
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

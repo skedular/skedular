@@ -10,6 +10,7 @@ using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Microsoft.EntityFrameworkCore;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
@@ -42,6 +43,7 @@ public class LocationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
+    ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     TimeProvider timeProvider) : ILocationService
 {
@@ -114,6 +116,10 @@ public class LocationService(
         location = mapper.MapTo(locationEntity);
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartWorkflowLocationDailyAnalytics(
+            new GenerateLocationDailyAnalyticsInput(organization.Id, timeProvider.GetUtcNow().AddDays(1)),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

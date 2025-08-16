@@ -13,8 +13,6 @@ public class Location : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
-    public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
     public OpeningHours? OpeningHours { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
@@ -51,7 +49,5 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Timezone);
-        builder.HasIndex(item => item.DailyDeskCountLastRecordedAt);
-        builder.HasIndex(item => item.DailyRoomCountLastRecordedAt);
     }
 }

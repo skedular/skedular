@@ -92,29 +92,6 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/customer_v1_value.proto \
     --output-file-path /output/Skedular/Customer/V1/CustomerValueMetadata.g.cs
 
-RUN mkdir -p /output/Skedular/LocationInternal/V1
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/LocationInternal/V1 --csharp_opt=file_extension=.g.cs location_internal_v1_key.proto
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/LocationInternal/V1 --csharp_opt=file_extension=.g.cs location_internal_v1_value.proto
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key \
-    --event-type Key \
-    --topic-name location.v1.internal \
-    --retry-topic-name-prefix location.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name location.v1.internal.deadletter \
-    --generate-metadata-function-helper False \
-    --protobuf-schema-file-path /events/skedular/location_internal_v1_key.proto \
-    --output-file-path /output/Skedular/LocationInternal/V1/LocationInternalKeyMetadata.g.cs
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value \
-    --event-type Event \
-    --topic-name location.v1.internal \
-    --retry-topic-name-prefix location.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name location.v1.internal.deadletter \
-    --protobuf-schema-file-path /events/skedular/location_internal_v1_value.proto \
-    --output-file-path /output/Skedular/LocationInternal/V1/LocationInternalValueMetadata.g.cs
-
 RUN mkdir -p /output/Skedular/Location/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Location/V1 --csharp_opt=file_extension=.g.cs location_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Location/V1 --csharp_opt=file_extension=.g.cs location_v1_value.proto
