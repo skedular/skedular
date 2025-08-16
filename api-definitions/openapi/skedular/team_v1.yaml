@@ -43,6 +43,7 @@ paths:
       tags:
         - v1
         - team
+        - workaround
       summary: republish team
       operationId: republish
       parameters:
@@ -68,6 +69,7 @@ paths:
       tags:
         - v1
         - team
+        - workaround
       summary: republish all teams
       operationId: republishAll
 

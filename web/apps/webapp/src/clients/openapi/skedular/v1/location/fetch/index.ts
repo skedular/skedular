@@ -19,3 +19,4 @@ export { $Version } from './schemas/$Version';
 export { AnalyticsService } from './services/AnalyticsService';
 export { LocationService } from './services/LocationService';
 export { V1Service } from './services/V1Service';
+export { WorkaroundService } from './services/WorkaroundService';

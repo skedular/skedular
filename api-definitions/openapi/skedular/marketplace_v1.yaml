@@ -44,6 +44,7 @@ paths:
         - v1
         - marketplace
         - product
+        - workaround
       summary: republish organization products
       operationId: republishAllOrganizationProducts
       parameters:
@@ -70,6 +71,7 @@ paths:
         - v1
         - marketplace
         - product
+        - workaround
       summary: republish all products
       operationId: republishAllProducts
 

@@ -43,6 +43,7 @@ paths:
       tags:
         - v1
         - organization
+        - workaround
       summary: republish organization
       operationId: republish
       parameters:
@@ -68,6 +69,7 @@ paths:
       tags:
         - v1
         - organization
+        - workaround
       summary: republish all organizations
       operationId: republishAll
 
@@ -88,6 +90,7 @@ paths:
         - v1
         - organization
         - offering
+        - workaround
       summary: regenerate all offerings
       operationId: regenerateAllOfferings
 
@@ -108,6 +111,7 @@ paths:
         - v1
         - organization
         - offering
+        - workaround
       summary: rerun all offerings workflows
       operationId: rerunAllOfferingsWorkflows
 
@@ -398,6 +402,7 @@ paths:
         - v1
         - organization
         - azure-tenant
+        - workaround
       summary: resync all azure tenants
       operationId: reSyncAllAzureTenants
 
@@ -418,6 +423,7 @@ paths:
         - v1
         - organization
         - azure-tenant
+        - workaround
       summary: resync azure tenant
       operationId: reSyncAzureTenant
       parameters:
@@ -444,6 +450,7 @@ paths:
         - v1
         - organization
         - analytics
+        - workaround
       summary: regenerate all organizations daily analytics
       operationId: regenerateAllDailyAnalytics
 
@@ -464,6 +471,7 @@ paths:
         - v1
         - organization
         - analytics
+        - workaround
       summary: regenerate organization daily analytics
       operationId: regenerateDailyAnalytics
       parameters:

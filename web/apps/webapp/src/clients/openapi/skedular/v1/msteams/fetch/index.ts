@@ -19,3 +19,4 @@ export { $Version } from './schemas/$Version';
 export { AzureTenantService } from './services/AzureTenantService';
 export { MsteamsService } from './services/MsteamsService';
 export { V1Service } from './services/V1Service';
+export { WorkaroundService } from './services/WorkaroundService';

@@ -8,11 +8,13 @@ import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { CustomerService } from './services/CustomerService';
 import { PaymentMethodService } from './services/PaymentMethodService';
 import { V1Service } from './services/V1Service';
+import { WorkaroundService } from './services/WorkaroundService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularCustomerV1Client {
     public readonly customer: CustomerService;
     public readonly paymentMethod: PaymentMethodService;
     public readonly v1: V1Service;
+    public readonly workaround: WorkaroundService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -29,6 +31,7 @@ export class SkedularCustomerV1Client {
         this.customer = new CustomerService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);
         this.v1 = new V1Service(this.request);
+        this.workaround = new WorkaroundService(this.request);
     }
 }
 

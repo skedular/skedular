@@ -44,6 +44,7 @@ paths:
         - v1
         - msteams
         - azure-tenant
+        - workaround
       summary: resync all MsTeams
       operationId: reSyncAllMsTeams
 
@@ -64,6 +65,7 @@ paths:
         - v1
         - msteams
         - azure-tenant
+        - workaround
       summary: resync MsTeams
       operationId: reSyncMsTeams
       parameters:

@@ -18,4 +18,5 @@ export { $Version } from './schemas/$Version';
 
 export { SlackService } from './services/SlackService';
 export { V1Service } from './services/V1Service';
+export { WorkaroundService } from './services/WorkaroundService';
 export { WorkspaceService } from './services/WorkspaceService';

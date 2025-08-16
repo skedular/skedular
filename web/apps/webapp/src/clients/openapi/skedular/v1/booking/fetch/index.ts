@@ -22,3 +22,4 @@ export { PlatformService } from './services/PlatformService';
 export { StripeService } from './services/StripeService';
 export { V1Service } from './services/V1Service';
 export { WebhookService } from './services/WebhookService';
+export { WorkaroundService } from './services/WorkaroundService';

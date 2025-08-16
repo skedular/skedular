@@ -19,7 +19,6 @@ paths:
     get:
       tags:
         - v1
-        - v1
         - location
       summary: return API version
       operationId: getVersion
@@ -43,8 +42,8 @@ paths:
     put:
       tags:
         - v1
-        - v1
         - location
+        - workaround
       summary: republish location
       operationId: republish
       parameters:
@@ -69,8 +68,8 @@ paths:
     put:
       tags:
         - v1
-        - v1
         - location
+        - workaround
       summary: republish all locations
       operationId: republishAll
 

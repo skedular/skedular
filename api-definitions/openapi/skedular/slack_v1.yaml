@@ -74,6 +74,7 @@ paths:
         - v1
         - slack
         - workspace
+        - workaround
       summary: resync all slack workspace
       operationId: reSyncAllSlackWorkspaces
 
@@ -94,6 +95,7 @@ paths:
         - v1
         - slack
         - workspace
+        - workaround
       summary: resync slack workspace
       operationId: reSyncSlackWorkspace
       parameters:

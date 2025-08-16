@@ -43,6 +43,7 @@ paths:
       tags:
         - v1
         - booking
+        - workaround
       summary: republish booking
       operationId: republish
       parameters:
@@ -68,6 +69,7 @@ paths:
       tags:
         - v1
         - booking
+        - workaround
       summary: republish all bookings
       operationId: republishAll
 
@@ -87,6 +89,7 @@ paths:
       tags:
         - v1
         - booking
+        - workaround
       summary: generate all locations resources slots
       operationId: generateAllLocationsResourcesSlots
 
@@ -106,6 +109,7 @@ paths:
       tags:
         - v1
         - booking
+        - workaround
       summary: generate location's resources slots
       operationId: generateLocationResourcesSlots
       parameters:

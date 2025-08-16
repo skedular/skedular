@@ -19,3 +19,4 @@ export { $Version } from './schemas/$Version';
 export { CustomerService } from './services/CustomerService';
 export { PaymentMethodService } from './services/PaymentMethodService';
 export { V1Service } from './services/V1Service';
+export { WorkaroundService } from './services/WorkaroundService';

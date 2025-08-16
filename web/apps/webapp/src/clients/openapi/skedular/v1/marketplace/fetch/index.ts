@@ -19,3 +19,4 @@ export { $Version } from './schemas/$Version';
 export { MarketplaceService } from './services/MarketplaceService';
 export { ProductService } from './services/ProductService';
 export { V1Service } from './services/V1Service';
+export { WorkaroundService } from './services/WorkaroundService';

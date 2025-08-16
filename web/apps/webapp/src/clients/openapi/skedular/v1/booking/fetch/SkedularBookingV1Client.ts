@@ -11,6 +11,7 @@ import { PlatformService } from './services/PlatformService';
 import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
 import { WebhookService } from './services/WebhookService';
+import { WorkaroundService } from './services/WorkaroundService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBookingV1Client {
     public readonly booking: BookingService;
@@ -19,6 +20,7 @@ export class SkedularBookingV1Client {
     public readonly stripe: StripeService;
     public readonly v1: V1Service;
     public readonly webhook: WebhookService;
+    public readonly workaround: WorkaroundService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -38,6 +40,7 @@ export class SkedularBookingV1Client {
         this.stripe = new StripeService(this.request);
         this.v1 = new V1Service(this.request);
         this.webhook = new WebhookService(this.request);
+        this.workaround = new WorkaroundService(this.request);
     }
 }
 
