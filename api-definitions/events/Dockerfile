@@ -230,29 +230,6 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/organization_v1_value.proto \
     --output-file-path /output/Skedular/Organization/V1/OrganizationValueMetadata.g.cs
 
-RUN mkdir -p /output/Skedular/SlackInternal/V1
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/SlackInternal/V1 --csharp_opt=file_extension=.g.cs slack_internal_v1_key.proto
-RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/SlackInternal/V1 --csharp_opt=file_extension=.g.cs slack_internal_v1_value.proto
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key \
-    --event-type Key \
-    --topic-name slack.v1.internal \
-    --retry-topic-name-prefix slack.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name slack.v1.internal.deadletter \
-    --generate-metadata-function-helper False \
-    --protobuf-schema-file-path /events/skedular/slack_internal_v1_key.proto \
-    --output-file-path /output/Skedular/SlackInternal/V1/SlackInternalKeyMetadata.g.cs
-RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
-    --namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value \
-    --event-type Event \
-    --topic-name slack.v1.internal \
-    --retry-topic-name-prefix slack.v1.internal.retry \
-    --retry-topic-count 1 \
-    --dead-letter-topic-name slack.v1.internal.deadletter \
-    --protobuf-schema-file-path /events/skedular/slack_internal_v1_value.proto \
-    --output-file-path /output/Skedular/SlackInternal/V1/SlackInternalValueMetadata.g.cs
-
 RUN mkdir -p /output/Skedular/Team/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Team/V1 --csharp_opt=file_extension=.g.cs team_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Team/V1 --csharp_opt=file_extension=.g.cs team_v1_value.proto

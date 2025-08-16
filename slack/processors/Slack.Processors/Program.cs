@@ -32,10 +32,6 @@ public class Program
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
             .AddKafkaReliableEventConsumers<
-                SlackInternalSubscriber,
-                Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
