@@ -1,4 +1,5 @@
 using Enterprise.Shared;
+using Enterprise.Shared.GraphQL.Configurations;
 using Gateway.Configurations;
 using Gateway.Handlers;
 using HotChocolate.Fusion.Metadata;
@@ -14,14 +15,16 @@ public class Program
         var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
-        var environment = builder.Environment;
 
         var subgraphsConfigurations = configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>();
         ArgumentNullException.ThrowIfNull(subgraphsConfigurations);
         services.AddSingleton(subgraphsConfigurations);
 
+        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
+        ArgumentNullException.ThrowIfNull(graphqlConfig);
+
         services
-            .AddHttpClient("Fusion")
+            .AddHttpClient("Fusion", options => options.Timeout = TimeSpan.FromSeconds(30))
             .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
 
         services
@@ -38,19 +41,18 @@ public class Program
             }
         }
 
-        var fusionGatewayBuilder =
-            services
-                .AddFusionGatewayServer()
-                .ConfigureFromFile(filename);
-
-        if (environment.IsDevelopment())
-        {
-            fusionGatewayBuilder.ModifyFusionOptions(options =>
+        _ = services
+            .AddFusionGatewayServer()
+            .ConfigureFromFile(filename)
+            .ModifyRequestOptions(options =>
             {
-                options.AllowQueryPlan = true;
-                options.IncludeDebugInfo = true;
+                options.ExecutionTimeout = TimeSpan.FromSeconds(30);
+                options.IncludeExceptionDetails = graphqlConfig.IncludeExceptionDetails;
+            }).ModifyFusionOptions(options =>
+            {
+                options.AllowQueryPlan = graphqlConfig.AllowQueryPlan;
+                options.IncludeDebugInfo = graphqlConfig.IncludeDebugInfo;
             });
-        }
 
         services
             .AddReverseProxy()

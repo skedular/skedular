@@ -85,7 +85,8 @@ public static class Extensions
         return string.IsNullOrWhiteSpace(str) || str.Length <= length ? str : str[..length];
     }
 
-    public static WebApplicationBuilder AddDefaultServices<TProgram>(this WebApplicationBuilder builder) where TProgram : class
+    public static WebApplicationBuilder AddDefaultServices<TProgram>(this WebApplicationBuilder builder, bool enableHttpResilience = false)
+        where TProgram : class
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
@@ -146,10 +147,15 @@ public static class Extensions
             .AddServiceDiscovery()
             .ConfigureHttpClientDefaults(httpClientBuilder =>
             {
-                httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(30));
-
-                // Turn on resilience by default
-                httpClientBuilder.AddStandardResilienceHandler();
+                if (enableHttpResilience)
+                {
+                    httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = Timeout.InfiniteTimeSpan);
+                    httpClientBuilder.AddStandardResilienceHandler(options => options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30));
+                }
+                else
+                {
+                    httpClientBuilder.ConfigureHttpClient(httpClient => httpClient.Timeout = TimeSpan.FromSeconds(30));
+                }
 
                 // Turn on service discovery by default
                 httpClientBuilder.AddServiceDiscovery();

@@ -46,6 +46,14 @@ public static class GraphqlExtensions
             return;
         }
 
-        endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions { Tool = { Enable = graphqlConfig.ClientEnabled } });
+        endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions
+        {
+            Tool =
+            {
+                IncludeCookies = graphqlConfig.IncludeCookies,
+                Enable = graphqlConfig.NitroEnabled,
+                DisableTelemetry = graphqlConfig.DisableTelemetry
+            }
+        });
     }
 }

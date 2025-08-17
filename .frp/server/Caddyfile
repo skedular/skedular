@@ -20,6 +20,14 @@ temporal.skedular.app {
 	reverse_proxy localhost:8080
 }
 
+zipkin.skedular.app {
+	reverse_proxy localhost:9411
+}
+
+jaeger.skedular.app {
+	reverse_proxy localhost:16686
+}
+
 crm.skedular.app {
 	reverse_proxy localhost:50000
 }

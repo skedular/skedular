@@ -42,9 +42,9 @@ public class AzureTenantService(
 
     private static readonly string[] s_channelPermissions =
     [
-        "Group.ReadWrite.All", // Maintain channel
+        "Group.ReadWrite.All", // Maintain Channel
         "ChannelSettings.ReadWrite.All", // Archive Channel
-        "Teamwork.Migrate.All" // Send chatMessage in channel
+        "Teamwork.Migrate.All" // Send chatMessage in Channel
     ];
 
     private static readonly string[] s_allPermissions =

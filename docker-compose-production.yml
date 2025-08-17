@@ -36,10 +36,26 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
+    networks:
+      - skedular_network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: unless-stopped
+    ports:
+      - 9411:9411
+    networks:
+      - skedular_network
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    restart: unless-stopped
+    ports:
+      - 16686:16686
     networks:
       - skedular_network
 
@@ -163,6 +179,12 @@ services:
       Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OpenTelemetry__OtlpExporterEndpoint: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
     networks:
       - skedular_network
 
@@ -260,8 +282,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
@@ -278,6 +301,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
+      Graphql__AllowQueryPlan: false
+      Graphql__IncludeDebugInfo: false
     healthcheck:
       test:
         [
@@ -360,8 +385,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
@@ -458,8 +484,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
@@ -524,6 +551,12 @@ services:
       Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+      OpenTelemetry__ConsoleEnabled: false
+      OpenTelemetry__ZipkinEndpoint: ""
+      OpenTelemetry__JaegerEndpoint: ""
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
     networks:
       - skedular_network
 
@@ -622,8 +655,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
@@ -640,6 +674,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+      Graphql__AllowQueryPlan: false
+      Graphql__IncludeDebugInfo: false
     healthcheck:
       test:
         [
@@ -722,8 +758,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
@@ -820,8 +857,9 @@ services:
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
-      OpenTelemetry__MetricsIngestEnabled: false
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OTEL_EXPORTER_OTLP_ENDPOINT: ""
+      OpenTelemetry__MetricsIngestEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
       Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}

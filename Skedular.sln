@@ -41,6 +41,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		.env = .env
 		.dockerignore = .dockerignore
 		.env.template = .env.template
+		docker-compose-crm.yml = docker-compose-crm.yml
+		docker-compose-production.yml = docker-compose-production.yml
+		keyckloak.json = keyckloak.json
+		Makefile = Makefile
+		qodana.yaml = qodana.yaml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Shared.Clients", "shared\Api.Shared.Clients\Api.Shared.Clients.csproj", "{AA1C58C3-6DDE-483E-85BF-2D5B2796BBFB}"
