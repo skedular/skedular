@@ -2,28 +2,21 @@ using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Stripe;
-using Temporalio.Api.Enums.V1;
-using Temporalio.Client;
 
 namespace Organization.Api.Services;
 
 public interface IPaymentService
 {
-    Task<string> HandleStripePaymentMethodEventAsync(
-        string setupIntentId,
-        string clientSecret,
-        string redirectStatus,
-        CancellationToken cancellationToken);
-
+    Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
     Task<string> AddPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken);
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
 }
@@ -40,24 +33,13 @@ public class PaymentService(
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
     ITemporalOutboxPublisher temporalOutboxPublisher,
-    TemporalConfiguration temporalConfiguration,
-    ITemporalClient temporalClient) : IPaymentService
+    ITemporalService temporalService) : IPaymentService
 {
-    public async Task<string> HandleStripePaymentMethodEventAsync(
-        string setupIntentId,
-        string clientSecret,
-        string redirectStatus,
-        CancellationToken cancellationToken)
-    {
-        var handle = temporalClient.GetWorkflowHandle<AddOrganizationStripePaymentMethod>(clientSecret);
-
-        await handle.SignalAsync(
-            workflow => workflow.StripePaymentMethodEventReceivedAsync(new StripePaymentMethodEventState(redirectStatus)),
-            new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
-        );
-
-        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions { CancellationToken = cancellationToken });
-    }
+    public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
+        await temporalService.SignalAddOrganizationStripePaymentMethodAndGetResultAsync(
+            clientSecret,
+            new StripePaymentMethodEventState(redirectStatus),
+            cancellationToken);
 
     public async Task<string> AddPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken)
     {
@@ -76,17 +58,9 @@ public class PaymentService(
             new RequestOptions(),
             cancellationToken);
 
-        _ = await temporalClient.StartWorkflowAsync(
-            (AddOrganizationStripePaymentMethod workflow) =>
-                workflow.ExecuteAsync(new AddOrganizationStripePaymentMethodInput(organization.Id, setupIntent.ClientSecret, setupIntent.Id)),
-            new WorkflowOptions
-            {
-                Id = setupIntent.ClientSecret,
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
-            });
+        await temporalService.StartWorkflowAddOrganizationStripePaymentMethodAsync(
+            new AddOrganizationStripePaymentMethodInput(organization.Id, setupIntent.ClientSecret, setupIntent.Id),
+            cancellationToken);
 
         return setupIntent.ClientSecret;
     }

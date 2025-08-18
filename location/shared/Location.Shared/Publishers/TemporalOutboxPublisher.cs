@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
@@ -15,6 +16,7 @@ public interface ITemporalOutboxPublisher
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
+    ITemporalHelperService temporalHelperService,
     ITemporalOutboxWorkflowExecutor<GenerateLocationDailyAnalytics> temporalOutboxLocationDailyAnalyticsExecutor)
     : ITemporalOutboxPublisher
 {
@@ -23,7 +25,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}",
+                Id = temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning

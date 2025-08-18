@@ -1,7 +1,6 @@
 using Enterprise.Shared.Database;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
-using Slack.Shared.Workflows.ReSyncSlackWorkspace;
 using Temporalio.Activities;
 
 namespace Slack.Shared.Activities;
@@ -10,9 +9,7 @@ public class SlackIntegrations(
     IRepositoryFactory repositoryFactory,
     IWorkspaceService workspaceService,
     IWorkspaceMemberService workspaceMemberService,
-    IWorkspaceChannelService workspaceChannelService,
-    TimeProvider timeProvider,
-    ITemporalService temporalService)
+    IWorkspaceChannelService workspaceChannelService)
 {
     [Activity]
     public async Task<bool> ReSyncWorkspaceAsync(string workspaceId)
@@ -57,14 +54,5 @@ public class SlackIntegrations(
         await workspaceChannelService.ReSyncWorkspaceChannelsAsync(workspaceId, cancellationToken);
 
         return true;
-    }
-
-    [Activity]
-    public async Task StartWorkflowReSyncSlackWorkspaceAsync(string workspaceId)
-    {
-        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        await temporalService.StartWorkflowReSyncSlackWorkspaceAsync(
-            new ReSyncSlackWorkspaceInput(workspaceId, timeProvider.GetUtcNow().AddDays(1)),
-            cancellationToken);
     }
 }

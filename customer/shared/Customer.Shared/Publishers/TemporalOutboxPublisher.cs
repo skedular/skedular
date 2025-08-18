@@ -3,6 +3,7 @@ using Customer.Shared.Workflows.CustomerFeedback;
 using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -17,6 +18,7 @@ public interface ITemporalOutboxPublisher
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
+    ITemporalHelperService temporalHelperService,
     ITemporalOutboxWorkflowExecutor<SubmitCustomerFeedback> temporalOutboxSubmitCustomerFeedbackWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<NewCustomerJoined> temporalOutboxNewCustomerJoinedWorkflowExecutor) : ITemporalOutboxPublisher
 {
@@ -25,7 +27,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = args.CustomerFeedbackId,
+                Id = temporalHelperService.ToId(args.CustomerFeedbackId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -37,7 +39,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.NewCustomerJoinedPrefix}-{args.CustomerId}",
+                Id = temporalHelperService.ToId($"{Constants.NewCustomerJoinedPrefix}-{args.CustomerId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

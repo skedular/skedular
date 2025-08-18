@@ -1,3 +1,4 @@
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using MsTeams.Shared.Workflows;
 using MsTeams.Shared.Workflows.ReSyncMsTeams;
@@ -11,13 +12,16 @@ public interface ITemporalService
     Task StartWorkflowReSyncMsTeamsAsync(ReSyncMsTeamsInput args, CancellationToken cancellationToken);
 }
 
-public class TemporalService(TemporalConfiguration temporalConfiguration, ITemporalClient temporalClient) : ITemporalService
+public class TemporalService(
+    TemporalConfiguration temporalConfiguration,
+    ITemporalClient temporalClient,
+    ITemporalHelperService temporalHelperService) : ITemporalService
 {
     public async Task StartWorkflowReSyncMsTeamsAsync(ReSyncMsTeamsInput args, CancellationToken cancellationToken) =>
         await temporalClient.StartWorkflowAsync((ReSyncMsTeams workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = $"{Constants.ReSyncMsTeamsPrefix}-{args.TenantId}",
+                Id = temporalHelperService.ToId($"{Constants.ReSyncMsTeamsPrefix}-{args.TenantId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,

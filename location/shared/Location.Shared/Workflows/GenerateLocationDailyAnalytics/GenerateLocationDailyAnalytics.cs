@@ -32,7 +32,7 @@ public class GenerateLocationDailyAnalytics
                         RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
                     }))
             {
-                return;
+                break;
             }
 
             if (!await Workflow.ExecuteActivityAsync(
@@ -44,7 +44,7 @@ public class GenerateLocationDailyAnalytics
                         RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
                     }))
             {
-                return;
+                break;
             }
 
             await Workflow.DelayAsync(TimeSpan.FromDays(1), Workflow.CancellationToken);

@@ -26,7 +26,8 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddSingleton<ITemporalService, TemporalService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

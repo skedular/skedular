@@ -1,7 +1,9 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
+using Slack.Shared.Workflows.ReSyncSlackWorkspace;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 
@@ -10,18 +12,33 @@ namespace Slack.Shared.Publishers;
 public interface ITemporalOutboxPublisher
 {
     void StartWorkflowNewSlackWorkspaceJoined(NewSlackWorkspaceJoinedInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowReSyncSlackWorkspace(ReSyncSlackWorkspaceInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
-    ITemporalOutboxWorkflowExecutor<NewSlackWorkspaceJoined> temporalOutboxNewSlackWorkspaceJoinedWorkflowExecutor) : ITemporalOutboxPublisher
+    ITemporalHelperService temporalHelperService,
+    ITemporalOutboxWorkflowExecutor<NewSlackWorkspaceJoined> temporalOutboxNewSlackWorkspaceJoinedWorkflowExecutor,
+    ITemporalOutboxWorkflowExecutor<ReSyncSlackWorkspace> temporalOutboxReSyncSlackWorkspaceInputWorkflowExecutor) : ITemporalOutboxPublisher
 {
     public void StartWorkflowNewSlackWorkspaceJoined(NewSlackWorkspaceJoinedInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxNewSlackWorkspaceJoinedWorkflowExecutor.Execute(
             args,
             new WorkflowOptions
             {
-                Id = $"{Workflows.Constants.NewSlackWorkspaceJoinedPrefix}-{args.WorkspaceId}",
+                Id = temporalHelperService.ToId($"{Workflows.Constants.NewSlackWorkspaceJoinedPrefix}-{args.WorkspaceId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowReSyncSlackWorkspace(ReSyncSlackWorkspaceInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxReSyncSlackWorkspaceInputWorkflowExecutor.Execute(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Workflows.Constants.ReSyncSlackWorkspacePrefix}-{args.WorkspaceId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

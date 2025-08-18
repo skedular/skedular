@@ -1,3 +1,4 @@
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
@@ -11,7 +12,10 @@ public interface ITemporalService
     Task StartWorkflowGenerateLocationDailyAnalyticsAsync(GenerateLocationDailyAnalyticsInput args, CancellationToken cancellationToken);
 }
 
-public class TemporalService(TemporalConfiguration temporalConfiguration, ITemporalClient temporalClient) : ITemporalService
+public class TemporalService(
+    TemporalConfiguration temporalConfiguration,
+    ITemporalClient temporalClient,
+    ITemporalHelperService temporalHelperService) : ITemporalService
 {
     public async Task StartWorkflowGenerateLocationDailyAnalyticsAsync(
         GenerateLocationDailyAnalyticsInput args,
@@ -19,7 +23,7 @@ public class TemporalService(TemporalConfiguration temporalConfiguration, ITempo
         await temporalClient.StartWorkflowAsync((GenerateLocationDailyAnalytics workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = $"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}",
+                Id = temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,

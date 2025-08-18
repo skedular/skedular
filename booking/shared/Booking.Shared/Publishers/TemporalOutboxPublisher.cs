@@ -5,6 +5,7 @@ using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -22,6 +23,7 @@ public interface ITemporalOutboxPublisher
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
+    ITemporalHelperService temporalHelperService,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<PayBookingViaCard> temporalOutboxPayBookingViaCardWorkflowExecutor,
     ITemporalOutboxWorkflowExecutor<PayBookingViaBankTransfer> temporalOutboxPayBookingViaBankTransferWorkflowExecutor)
@@ -32,7 +34,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.PaidViaCardPrefix}-{args.BookingId}",
+                Id = temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{args.BookingId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -44,7 +46,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.PaidViaBankTransferPrefix}-{args.BookingId}",
+                Id = temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{args.BookingId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -53,7 +55,7 @@ public class TemporalOutboxPublisher(
 
     public void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            $"{Constants.PaidViaCardPrefix}-{bookingId}",
+            temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"),
             typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.DeleteBookingAsync))!.ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
             unitOfWork);
@@ -63,7 +65,7 @@ public class TemporalOutboxPublisher(
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            $"{Constants.PaidViaBankTransferPrefix}-{bookingId}",
+            temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{bookingId}"),
             typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.SetPaymentStatusAsync))!.ToWorkflowSignalType(),
             executionArgs,
             new WorkflowSignalOptions(),
@@ -71,7 +73,7 @@ public class TemporalOutboxPublisher(
 
     public void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            $"{Constants.PaidViaBankTransferPrefix}-{bookingId}",
+            temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{bookingId}"),
             typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
             unitOfWork);

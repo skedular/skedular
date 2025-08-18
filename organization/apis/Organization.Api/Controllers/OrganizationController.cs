@@ -137,11 +137,7 @@ public class OrganizationController(
         string redirect_status,
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default) =>
-        Redirect(await paymentService.HandleStripePaymentMethodEventAsync(
-            setup_intent,
-            setup_intent_client_secret,
-            redirect_status,
-            cancellationToken));
+        Redirect(await paymentService.HandleStripePaymentMethodEventAsync(setup_intent_client_secret, redirect_status, cancellationToken));
 
     public override async Task<IActionResult> RefreshOrganizationStripeConnectAccountOnboarding(
         string code,

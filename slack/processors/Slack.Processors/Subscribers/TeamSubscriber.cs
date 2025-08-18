@@ -8,10 +8,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
 namespace Slack.Processors.Subscribers;
 
-public class TeamSubscriber(
-    ILogger<TeamSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {

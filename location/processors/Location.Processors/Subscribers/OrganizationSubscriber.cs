@@ -10,10 +10,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Location.Processors.Subscribers;
 
-public class OrganizationSubscriber(
-    ILogger<OrganizationSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory)
+public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)

@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
+using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Team.Shared.Activities;
 using Team.Shared.Workflows;
@@ -18,6 +19,7 @@ public interface ITemporalOutboxPublisher
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
+    ITemporalHelperService temporalHelperService,
     ITemporalOutboxWorkflowExecutor<InviteToJoinTeamExistingCustomer> temporalOutboxInviteToJoinTeamExistingCustomerExecutor,
     ITemporalOutboxWorkflowExecutor<InviteToJoinTeamNewCustomer> temporalOutboxInviteToJoinTeamNewCustomerWorkflowExecutor) : ITemporalOutboxPublisher
 {
@@ -26,7 +28,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerId}",
+                Id = temporalHelperService.ToId($"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -38,7 +40,7 @@ public class TemporalOutboxPublisher(
             args,
             new WorkflowOptions
             {
-                Id = $"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerEmail}",
+                Id = temporalHelperService.ToId($"{Constants.InviteToTeamExistingCustomerPrefix}-{args.TeamId}-{args.InviteeCustomerEmail}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

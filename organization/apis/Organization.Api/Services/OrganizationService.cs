@@ -97,6 +97,10 @@ public class OrganizationService(
         else
         {
             organization.Id = randomHelper.Generate();
+        }
+
+        if (string.IsNullOrWhiteSpace(organization.UniqueAlphanumericName))
+        {
             organization.UniqueAlphanumericName = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
         }
 
