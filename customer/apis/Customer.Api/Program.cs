@@ -30,7 +30,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
+            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

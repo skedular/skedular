@@ -25,7 +25,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb")
+            .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
             .AddRepositoryFactory()
             .AddRootLevelSharedServices()
             .AddServices()

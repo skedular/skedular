@@ -29,7 +29,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,

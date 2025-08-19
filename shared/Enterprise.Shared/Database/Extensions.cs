@@ -16,14 +16,15 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment environment,
-        string connectionName)
+        string connectionName,
+        bool isPostgisEnabled = false)
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, true, connectionString);
+        var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
 
         return services.AddDbContextPool<TDbContext>(options =>
         {
@@ -36,10 +37,16 @@ public static class Extensions
                 .AddInterceptors(new SelectForUpdateCommandInterceptor())
                 .UseNpgsql(
                     dataSource,
-                    sqlOptions =>
+                    npgsqlOptions =>
                     {
-                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                QuerySplittingBehavior.SplitQuery);
+                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+
+                        if (isPostgisEnabled)
+                        {
+                            npgsqlOptions.UseNetTopologySuite();
+                        }
                     })
                 .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         });
@@ -49,14 +56,15 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment environment,
-        string connectionName)
+        string connectionName,
+        bool isPostgisEnabled = false)
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, false, connectionString);
+        var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
 
         return services.AddDbContext<TDbContext>(options =>
         {
@@ -68,10 +76,16 @@ public static class Extensions
             options
                 .UseNpgsql(
                     dataSource,
-                    sqlOptions =>
+                    npgsqlOptions =>
                     {
-                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                QuerySplittingBehavior.SplitQuery);
+                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+
+                        if (isPostgisEnabled)
+                        {
+                            npgsqlOptions.UseNetTopologySuite();
+                        }
                     })
                 .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         });
@@ -81,14 +95,15 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment environment,
-        string connectionName)
+        string connectionName,
+        bool isPostgisEnabled = false)
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, true, connectionString);
+        var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
 
         return services.AddPooledDbContextFactory<TDbContext>(options =>
         {
@@ -101,10 +116,16 @@ public static class Extensions
                 .AddInterceptors(new SelectForUpdateCommandInterceptor())
                 .UseNpgsql(
                     dataSource,
-                    sqlOptions =>
+                    npgsqlOptions =>
                     {
-                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                QuerySplittingBehavior.SplitQuery);
+                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+
+                        if (isPostgisEnabled)
+                        {
+                            npgsqlOptions.UseNetTopologySuite();
+                        }
                     })
                 .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         });
@@ -114,14 +135,15 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment environment,
-        string connectionName)
+        string connectionName,
+        bool isPostgisEnabled = false)
         where TDbContext : DbContext
     {
         var connectionString = configuration.GetConnectionString(connectionName);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, false, connectionString);
+        var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
 
         return services.AddDbContextFactory<TDbContext>(options =>
         {
@@ -133,22 +155,25 @@ public static class Extensions
             options
                 .UseNpgsql(
                     dataSource,
-                    sqlOptions =>
+                    npgsqlOptions =>
                     {
-                        sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
-                        sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                QuerySplittingBehavior.SplitQuery);
+                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
+
+                        if (isPostgisEnabled)
+                        {
+                            npgsqlOptions.UseNetTopologySuite();
+                        }
                     })
                 .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         });
     }
 
-    private static NpgsqlDataSource GetDatasource(
-        this IServiceCollection services,
-        bool isPooled,
-        string connectionString)
+    private static NpgsqlDataSource GetDatasource(this IServiceCollection services, bool isPooled, bool isPostgisEnabled, string connectionString)
     {
         services
-            .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled })
+            .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
             .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
             .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 

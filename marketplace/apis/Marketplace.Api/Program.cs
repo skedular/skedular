@@ -28,7 +28,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

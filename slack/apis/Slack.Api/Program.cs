@@ -47,7 +47,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
+            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

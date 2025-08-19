@@ -24,7 +24,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddRepositoryFactory()
             .AddRootLevelSharedServices()
             .AddServices()

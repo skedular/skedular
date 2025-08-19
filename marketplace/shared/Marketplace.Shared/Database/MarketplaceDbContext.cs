@@ -25,6 +25,6 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public class MarketplaceDbContextDesignFactory : IDesignTimeDbContextFactory<MarketplaceDbContext>
     {
         public MarketplaceDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<MarketplaceDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<MarketplaceDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

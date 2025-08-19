@@ -32,6 +32,6 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>
     {
         public LocationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<LocationDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<LocationDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

@@ -36,7 +36,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddKafkaReliableEventConsumers<
                 OrganizationInternalSubscriber,
                 Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key,

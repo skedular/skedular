@@ -27,7 +27,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb")
+            .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddKafkaOutboxBackgroundService<MarketplaceDbContext>()
             .AddTemporalOutboxBackgroundService<MarketplaceDbContext>()
             .AddDomainSharedConfigurations(configuration)

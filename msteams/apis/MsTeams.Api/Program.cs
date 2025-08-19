@@ -30,7 +30,7 @@ public class Program
             .AddSso()
             .AddSecurity()
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
-            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb")
+            .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

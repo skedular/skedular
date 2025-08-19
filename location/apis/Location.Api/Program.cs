@@ -29,7 +29,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
+            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

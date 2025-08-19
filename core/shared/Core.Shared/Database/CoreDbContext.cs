@@ -24,6 +24,6 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options, CustomDbCont
     public class CoreDbContextDesignFactory : IDesignTimeDbContextFactory<CoreDbContext>
     {
         public CoreDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<CoreDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<CoreDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

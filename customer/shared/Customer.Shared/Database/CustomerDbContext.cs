@@ -33,6 +33,6 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public class CustomerDbContextDesignFactory : IDesignTimeDbContextFactory<CustomerDbContext>
     {
         public CustomerDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<CustomerDbContext>(), new CustomDbContextOptions { IsPooled = false });
+            new(args.ToDbContextOption<CustomerDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

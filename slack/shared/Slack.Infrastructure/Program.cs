@@ -24,7 +24,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
+            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddRepositoryFactory()
             .AddRootLevelSharedServices()
             .AddServices()

@@ -30,7 +30,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb")
+            .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
                 Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,

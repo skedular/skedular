@@ -34,7 +34,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
+            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

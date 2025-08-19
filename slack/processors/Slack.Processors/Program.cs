@@ -30,7 +30,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb")
+            .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,

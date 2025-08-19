@@ -30,7 +30,7 @@ public class Program
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
+            .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

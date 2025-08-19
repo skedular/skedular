@@ -27,7 +27,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb")
+            .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddKafkaOutboxBackgroundService<LocationDbContext>()
             .AddTemporalOutboxBackgroundService<LocationDbContext>()
             .AddDomainSharedConfigurations(configuration)

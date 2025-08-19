@@ -35,7 +35,7 @@ public class Program
             .AddRedis(configuration, "redis")
             .AddSso()
             .AddSecurity()
-            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb")
+            .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

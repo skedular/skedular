@@ -14,6 +14,11 @@ public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> opt
 
         builder.ApplyConfigurationsFromAssembly(contextAssembly);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        if (customDbContextOptions.IsPostgisEnabled)
+        {
+            builder.HasPostgresExtension("postgis");
+        }
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

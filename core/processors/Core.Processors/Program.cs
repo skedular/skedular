@@ -31,7 +31,7 @@ public class Program
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
-            .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb")
+            .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,

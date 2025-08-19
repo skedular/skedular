@@ -35,7 +35,7 @@ public class Program
         services
             .AddKafka(configuration)
             .AddRedis(configuration, "redis")
-            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb")
+            .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
             .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
                 Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key,
