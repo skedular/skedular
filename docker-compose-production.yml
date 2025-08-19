@@ -2,7 +2,7 @@ networks:
   skedular_network:
 
 volumes:
-  unityhubio_postgres_data:
+  skedular_postgres17_data:
   skedular_redis_data:
   skedular_kafka1_data:
 
@@ -16,17 +16,17 @@ services:
     networks:
       - skedular_network
 
-  postgres:
-    image: postgres:16-alpine
+  postgres17:
+    image: postgis/postgis:17-master
     command: postgres -c 'max_connections=10000'
     restart: unless-stopped
     volumes:
-      - unityhubio_postgres_data:/var/lib/postgresql/data
+      - skedular_postgres17_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${SKEDULAR_POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
     ports:
-      - "13450:5432"
+      - "13451:5432"
     networks:
       - skedular_network
 
@@ -102,10 +102,10 @@ services:
     image: temporalio/auto-setup:latest
     restart: unless-stopped
     depends_on:
-      - postgres
+      - postgres17
     environment:
       - DB=postgres12
-      - POSTGRES_SEEDS=postgres
+      - POSTGRES_SEEDS=postgres17
       - DB_PORT=5432
       - DBNAME=temporal
       - VISIBILITY_DBNAME=temporal_visibility
