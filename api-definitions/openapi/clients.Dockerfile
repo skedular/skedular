@@ -211,3 +211,29 @@ RUN nswag \
   /GenerateDtoTypes:true \
   /GenerateNullableReferenceTypes:true \
   /JsonLibrary:SystemTextJson
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/nominatim/nominatim.openapi_v4.json \
+  /Namespace:Api.Shared.Clients.OpenApi.Nominatim.V4 \
+  /Classname:NominatimClient \
+  /Output:/output/Nominatim/V4/Nominatim.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true \
+  /JsonLibrary:SystemTextJson
+
+RUN sed -i '1i#pragma warning disable CS8981' /output/Nominatim/V4/Nominatim.g.cs
+RUN sed -i '/public Geometry Geometry { get; set; } = default!;/s/^/\/\/ /' /output/Nominatim/V4/Nominatim.g.cs && \
+  sed -i '/\[System.Text.Json.Serialization.JsonPropertyName("geometry")\]/s/^/\/\/ /' /output/Nominatim/V4/Nominatim.g.cs
+
+
