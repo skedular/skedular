@@ -29,20 +29,14 @@ public class CustomerRepository(CoreDbContext dbContext, TimeProvider timeProvid
 {
     private static readonly Func<CoreDbContext, string, CancellationToken, Task<Customer?>>
         s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<CoreDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    id,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<CoreDbContext, string, CancellationToken, Customer?>((dbContext, id, cancellationToken) =>
                 dbContext.Customer
                     .AddDependentObjects()
                     .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<CoreDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<CoreDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    verifiableToken,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<CoreDbContext, string, CancellationToken, Customer?>((dbContext, verifiableToken, cancellationToken) =>
                 dbContext.Customer
                     .AddDependentObjects()
                     .FirstOrDefault(query =>

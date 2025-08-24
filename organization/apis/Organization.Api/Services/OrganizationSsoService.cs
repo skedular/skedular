@@ -188,7 +188,7 @@ public class OrganizationSsoService(
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
     }
 
-    public async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(
+    private async Task<OrganizationSsoValidationResult> ValidateSsoConfigurationAsync(
         OrganizationSsoSettings ssoSettings,
         CancellationToken cancellationToken)
     {

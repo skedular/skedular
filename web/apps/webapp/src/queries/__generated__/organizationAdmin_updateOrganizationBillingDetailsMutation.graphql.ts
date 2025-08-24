@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<94bd7f1994b663be66eed58cf6e3fcf8>>
+ * @generated SignedSource<<5464fe940535f0d5342f7583c0946e77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,13 @@ export type UpdateOrganizationBillingDetailsInput = {
   companyName?: string | null | undefined;
   country: string;
   email: string;
+  formattedAddress?: string | null | undefined;
   id: string;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
   province?: string | null | undefined;
   suburb: string;
   zipcode: string;
@@ -35,7 +41,13 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly email: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -54,7 +66,13 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawRespon
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly email: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -135,6 +153,48 @@ v2 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "osmType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "placeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "longitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "latitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "addressLine1",
                 "storageKey": null
               },
@@ -208,16 +268,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "cc82de4b78f03d960eee0843931062d8",
+    "cacheID": "aa66e08a3826aae333c4186aa50c1c1c",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationBillingDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationBillingDetailsMutation(\n  $input: UpdateOrganizationBillingDetailsInput!\n) {\n  updateOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationBillingDetailsMutation(\n  $input: UpdateOrganizationBillingDetailsInput!\n) {\n  updateOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6ea9e1661a973d5fd580731d4a855318";
+(node as any).hash = "944d2cb6fb1ddb6a3ddf7dc02ba02d92";
 
 export default node;

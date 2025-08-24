@@ -8,6 +8,7 @@ using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using HotChocolate.Types.Pagination;
+using NetTopologySuite.Geometries;
 using Stripe;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
@@ -434,6 +435,11 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.CompanyName = src.CompanyName;
         dest.Email = src.Email;
+        dest.OsmType = src.OsmType;
+        dest.OsmId = src.OsmId;
+        dest.PlaceId = src.PlaceId;
+        dest.Coordinates = src.Coordinates;
+        dest.FormattedAddress = src.FormattedAddress;
         dest.AddressLine1 = src.AddressLine1;
         dest.AddressLine2 = src.AddressLine2;
         dest.Suburb = src.Suburb;
@@ -451,6 +457,11 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             CompanyName = src.CompanyName,
             Email = src.Email,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -466,6 +477,11 @@ public class Mapper : IMapper
             Id = src.Id,
             CompanyName = src.CompanyName,
             Email = src.Email,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -683,6 +699,12 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CompanyName = src.CompanyName,
                 Email = src.Email,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Longitude = src.Coordinates?.X,
+                Latitude = src.Coordinates?.Y,
+                FormattedAddress = src.ToFormattedAddress(),
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

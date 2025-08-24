@@ -613,7 +613,7 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<Point>("Coordinates")
-                        .HasColumnType("geometry(point, 4326)");
+                        .HasColumnType("geometry (point, 4326)");
 
                     b.Property<string>("Country")
                         .IsRequired()

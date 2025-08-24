@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NetTopologySuite.Geometries;
 
 namespace Customer.Shared.Database.Entities;
 
@@ -11,6 +12,11 @@ public class CustomerBillingDetails : EntityBase
 {
     public string? CompanyName { get; set; }
     public string Email { get; set; }
+    public string? OsmType { get; set; }
+    public string? OsmId { get; set; }
+    public string? PlaceId { get; set; }
+    public Point? Coordinates { get; set; }
+    public string? FormattedAddress { get; set; }
     public string AddressLine1 { get; set; }
     public string? AddressLine2 { get; set; }
     public string Suburb { get; set; }
@@ -33,6 +39,11 @@ public class CustomerBillingDetailsConfiguration : IEntityTypeConfiguration<Cust
 
         builder.Property(item => item.CompanyName).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.OsmType).HasMaxLength(Constants.MaxOsmTypeLength);
+        builder.Property(item => item.OsmId).HasMaxLength(Constants.MaxOsmIdLength);
+        builder.Property(item => item.PlaceId).HasMaxLength(Constants.MaxPlaceIdLength);
+        builder.Property(item => item.Coordinates).HasColumnType("geometry (point, 4326)");
+        builder.Property(item => item.FormattedAddress).HasMaxLength(Constants.MaxFormattedAddressLength);
         builder.Property(item => item.AddressLine1).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.AddressLine2).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.Suburb).HasMaxLength(Constants.MaxSuburbLength);
@@ -45,5 +56,10 @@ public class CustomerBillingDetailsConfiguration : IEntityTypeConfiguration<Cust
             .HasOne(item => item.Customer)
             .WithOne(item => item.BillingDetails)
             .HasForeignKey<CustomerBillingDetails>(item => item.CustomerId);
+
+        builder.HasIndex(item => item.OsmType);
+        builder.HasIndex(item => item.OsmId);
+        builder.HasIndex(item => item.PlaceId);
+        builder.HasIndex(item => item.Coordinates);
     }
 }

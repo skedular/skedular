@@ -274,7 +274,13 @@ type CustomerBillingDetails {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: ID!
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -718,7 +724,13 @@ type OrganizationBillingDetails {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: ID!
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -1456,7 +1468,13 @@ input AddMyBillingDetailsInput {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: String
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -1481,8 +1499,14 @@ input AddOrganizationBillingDetailsInput {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: String
+  latitude: Float
+  longitude: Float
   organizationId: String!
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -2232,7 +2256,13 @@ input UpdateMyBillingDetailsInput {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: String!
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -2268,7 +2298,13 @@ input UpdateOrganizationBillingDetailsInput {
   companyName: String
   country: String!
   email: String!
+  formattedAddress: String
   id: String!
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!

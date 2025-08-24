@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<088f5cf7352bb6123b1392a4eafe121d>>
+ * @generated SignedSource<<37db6c974e19f9553b69c417a102ce07>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,13 @@ export type myBillingAndPayment_rootQuery$data = {
       readonly companyName: string | null | undefined;
       readonly country: string;
       readonly email: string;
+      readonly formattedAddress: string | null | undefined;
       readonly id: string;
+      readonly latitude: number | null | undefined;
+      readonly longitude: number | null | undefined;
+      readonly osmId: string | null | undefined;
+      readonly osmType: string | null | undefined;
+      readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
       readonly suburb: string;
       readonly zipcode: string;
@@ -63,6 +69,48 @@ v1 = {
       "args": null,
       "kind": "ScalarField",
       "name": "email",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "osmType",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "osmId",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "placeId",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "longitude",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "latitude",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "formattedAddress",
       "storageKey": null
     },
     {
@@ -208,16 +256,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "12f022a541d03cddf5687978e45379d8",
+    "cacheID": "bc74292c0031443f6a9bcd5002f89d59",
     "id": null,
     "metadata": {},
     "name": "myBillingAndPayment_rootQuery",
     "operationKind": "query",
-    "text": "query myBillingAndPayment_rootQuery {\n  me {\n    id\n    billingDetails {\n      id\n      companyName\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n  ...myBillingAndPayment_customerPaymentMethodsDetails_query\n}\n\nfragment myBillingAndPayment_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
+    "text": "query myBillingAndPayment_rootQuery {\n  me {\n    id\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n  ...myBillingAndPayment_customerPaymentMethodsDetails_query\n}\n\nfragment myBillingAndPayment_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a469c34e75dadce98ca9fcaa90f16878";
+(node as any).hash = "c811d38c9d11311028396ffd01277bc4";
 
 export default node;

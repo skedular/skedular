@@ -100,7 +100,8 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
                 var input = JsonSerializer.Deserialize<GenerateOrganizationDailyAnalyticsInput>(executionArgs);
                 ArgumentNullException.ThrowIfNull(input);
 
-                _ = await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(input), workflowOptions);
+                _ = await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {

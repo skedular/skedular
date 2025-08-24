@@ -405,7 +405,8 @@ public class Mapper : IMapper
         return organizationOffering;
     }
 
-    private static IEnumerable<DailyMemberCountRecording> MapTo(IEnumerable<Database.Entities.DailyMemberCountRecording> src,
+    private static IEnumerable<DailyMemberCountRecording> MapTo(
+        IEnumerable<Database.Entities.DailyMemberCountRecording> src,
         Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
@@ -503,9 +504,7 @@ public class Mapper : IMapper
                 Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
-    private static OrganizationStripeCustomer? MapTo(
-        Database.Entities.OrganizationStripeCustomer? src,
-        Models.Organization organization) =>
+    private static OrganizationStripeCustomer? MapTo(Database.Entities.OrganizationStripeCustomer? src, Models.Organization organization) =>
         src is null
             ? null
             : new OrganizationStripeCustomer
@@ -523,9 +522,7 @@ public class Mapper : IMapper
         Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Models.OrganizationStripePaymentMethod MapTo(
-        OrganizationStripePaymentMethod src,
-        Models.Organization organization) =>
+    private static Models.OrganizationStripePaymentMethod MapTo(OrganizationStripePaymentMethod src, Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -550,35 +547,34 @@ public class Mapper : IMapper
         IEnumerable<Database.Entities.OrganizationStripeConnectAccount> src,
         Models.Organization organization) => src.Select(item => MapTo(item, organization));
 
-    private static OrganizationStripeConnectAccount MapTo(
-        Database.Entities.OrganizationStripeConnectAccount src,
-        Models.Organization organization) => new()
-    {
-        Id = src.Id,
-        CreatedAt = src.CreatedAt,
-        ModifiedAt = src.ModifiedAt,
-        DeletedAt = src.DeletedAt,
-        IsDefault = src.IsDefault,
-        StripeAccountId = src.StripeAccountId,
-        Name = src.Name,
-        ChargesEnabled = src.ChargesEnabled,
-        PayoutsEnabled = src.PayoutsEnabled,
-        Type = src.Type,
-        Country = src.Country,
-        DefaultCurrency = src.DefaultCurrency,
-        BusinessType = src.BusinessType,
-        Url = src.Url,
-        SupportUrl = src.SupportUrl,
-        CompanyName = src.CompanyName,
-        ContactEmail = src.ContactEmail,
-        ContactPhone = src.ContactPhone,
-        DetailsSubmitted = src.DetailsSubmitted,
-        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
-        CapabilitiesTransfers = src.CapabilitiesTransfers,
-        OnboardingUrl = src.OnboardingUrl,
-        Organization = organization,
-        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
-    };
+    private static OrganizationStripeConnectAccount MapTo(Database.Entities.OrganizationStripeConnectAccount src, Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            IsDefault = src.IsDefault,
+            StripeAccountId = src.StripeAccountId,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            Url = src.Url,
+            SupportUrl = src.SupportUrl,
+            CompanyName = src.CompanyName,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            Organization = organization,
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+        };
 
     private static Database.Entities.OrganizationMember MergeToEntity(
         Models.OrganizationMember src,

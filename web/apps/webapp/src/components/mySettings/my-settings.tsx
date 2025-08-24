@@ -103,18 +103,13 @@ const MySettings = ({ queryReference }: Props) => {
   };
 
   const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
-    const me = rootData.me;
-    if (!me) {
-      return;
-    }
-
     const toastId = themedToast(<NotificationContent content={`Updating user profile details'...`} />, infoNotificationOptions);
 
     commitUpdateCustomerDetails({
       variables: {
         input: {
           clientMutationId: uuid(),
-          id: me.id,
+          id: rootData.me.id,
           timezone,
           designation,
           title,
@@ -149,7 +144,7 @@ const MySettings = ({ queryReference }: Props) => {
       optimisticResponse: {
         updateCustomerDetails: {
           customer: {
-            id: me.id,
+            id: rootData.me.id,
             timezone,
             designation,
             title,
@@ -165,9 +160,6 @@ const MySettings = ({ queryReference }: Props) => {
   };
 
   const me = rootData.me;
-  if (!me) {
-    return <></>;
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>

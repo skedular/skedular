@@ -427,6 +427,11 @@ message BillingDetails {
   string province = 8;
   string zipcode = 9;
   string country = 10;
+  string formattedAddress = 11;
+  string osmType = 12;
+  string osmId = 13;
+  string placeId = 14;
+  Coordinates coordinates = 15;
 }
 
 message StripeCustomer {

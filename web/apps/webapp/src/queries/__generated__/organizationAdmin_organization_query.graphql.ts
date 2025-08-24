@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9d0c4b04b8ccfd0e879f657ffcf55d5b>>
+ * @generated SignedSource<<7dd04c15207fa061897e4d982d97c51a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,7 +42,13 @@ export type organizationAdmin_organization_query$data = {
       readonly companyName: string | null | undefined;
       readonly country: string;
       readonly email: string;
+      readonly formattedAddress: string | null | undefined;
       readonly id: string;
+      readonly latitude: number | null | undefined;
+      readonly longitude: number | null | undefined;
+      readonly osmId: string | null | undefined;
+      readonly osmType: string | null | undefined;
+      readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
       readonly suburb: string;
       readonly zipcode: string;
@@ -74,7 +80,13 @@ export type organizationAdmin_organization_query$data = {
       readonly addressLine2: string | null | undefined;
       readonly city: string;
       readonly country: string;
+      readonly formattedAddress: string | null | undefined;
       readonly id: string;
+      readonly latitude: number | null | undefined;
+      readonly longitude: number | null | undefined;
+      readonly osmId: string | null | undefined;
+      readonly osmType: string | null | undefined;
+      readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
       readonly suburb: string;
       readonly zipcode: string;
@@ -134,80 +146,122 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "addressLine1",
+  "name": "osmType",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "addressLine2",
+  "name": "osmId",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "suburb",
+  "name": "placeId",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "city",
+  "name": "longitude",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "province",
+  "name": "latitude",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "zipcode",
+  "name": "formattedAddress",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "country",
+  "name": "addressLine1",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isEnterprise",
+  "name": "addressLine2",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "unitPrice",
+  "name": "suburb",
   "storageKey": null
 },
 v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "featureSet",
+  "name": "city",
   "storageKey": null
 },
 v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "underPriceLines",
+  "name": "province",
   "storageKey": null
 },
 v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "zipcode",
+  "storageKey": null
+},
+v15 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "country",
+  "storageKey": null
+},
+v16 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isEnterprise",
+  "storageKey": null
+},
+v17 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "unitPrice",
+  "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "featureSet",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "underPriceLines",
+  "storageKey": null
+},
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -337,7 +391,13 @@ return {
             (v6/*: any*/),
             (v7/*: any*/),
             (v8/*: any*/),
-            (v9/*: any*/)
+            (v9/*: any*/),
+            (v10/*: any*/),
+            (v11/*: any*/),
+            (v12/*: any*/),
+            (v13/*: any*/),
+            (v14/*: any*/),
+            (v15/*: any*/)
           ],
           "storageKey": null
         },
@@ -397,7 +457,7 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
-            (v10/*: any*/),
+            (v16/*: any*/),
             (v1/*: any*/),
             {
               "alias": null,
@@ -413,10 +473,10 @@ return {
               "name": "end",
               "storageKey": null
             },
-            (v11/*: any*/),
-            (v12/*: any*/),
-            (v13/*: any*/),
-            (v14/*: any*/)
+            (v17/*: any*/),
+            (v18/*: any*/),
+            (v19/*: any*/),
+            (v20/*: any*/)
           ],
           "storageKey": null
         },
@@ -428,7 +488,7 @@ return {
           "name": "availableOfferings",
           "plural": true,
           "selections": [
-            (v10/*: any*/),
+            (v16/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -437,10 +497,10 @@ return {
               "storageKey": null
             },
             (v1/*: any*/),
-            (v11/*: any*/),
-            (v12/*: any*/),
-            (v13/*: any*/),
-            (v14/*: any*/)
+            (v17/*: any*/),
+            (v18/*: any*/),
+            (v19/*: any*/),
+            (v20/*: any*/)
           ],
           "storageKey": null
         },
@@ -538,7 +598,13 @@ return {
             (v6/*: any*/),
             (v7/*: any*/),
             (v8/*: any*/),
-            (v9/*: any*/)
+            (v9/*: any*/),
+            (v10/*: any*/),
+            (v11/*: any*/),
+            (v12/*: any*/),
+            (v13/*: any*/),
+            (v14/*: any*/),
+            (v15/*: any*/)
           ],
           "storageKey": null
         }
@@ -551,6 +617,6 @@ return {
 };
 })();
 
-(node as any).hash = "fbbf496b4e171a8b1974469e83c6ad37";
+(node as any).hash = "432646b0d926c0544b48d17a83c65215";
 
 export default node;

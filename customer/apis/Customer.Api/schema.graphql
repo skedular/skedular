@@ -18,6 +18,12 @@ type ConnectionOfCustomerEdge {
 type CustomerBillingDetails {
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -201,6 +207,12 @@ input AddMyBillingDetailsInput {
   id: String
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -283,6 +295,12 @@ input UpdateMyBillingDetailsInput {
   id: String!
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!

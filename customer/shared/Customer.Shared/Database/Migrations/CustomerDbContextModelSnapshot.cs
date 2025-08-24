@@ -5,6 +5,7 @@ using Customer.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
 
@@ -179,6 +180,9 @@ namespace Customer.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Point>("Coordinates")
+                        .HasColumnType("geometry (point, 4326)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -202,8 +206,24 @@ namespace Customer.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<string>("FormattedAddress")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OsmId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("OsmType")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("PlaceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Province")
                         .HasMaxLength(100)
@@ -221,12 +241,20 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Coordinates");
+
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OsmId");
+
+                    b.HasIndex("OsmType");
+
+                    b.HasIndex("PlaceId");
 
                     b.ToTable("CustomerBillingDetails");
                 });

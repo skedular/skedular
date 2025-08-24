@@ -1,4 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { Address, PhysicalAddress } from '@/components/address';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -14,7 +15,7 @@ import {
 import { CustomTags } from '@/components/customTag';
 import { FloorPlanCard } from '@/components/floorPlan';
 import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
-import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
+import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
@@ -196,6 +197,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           }
           physicalAddress {
             id
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
             addressLine1
             addressLine2
             suburb
@@ -612,6 +619,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id
           physicalAddress {
             id
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
             addressLine1
             addressLine2
             suburb
@@ -632,6 +645,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id
           physicalAddress {
             id
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
             addressLine1
             addressLine2
             suburb
@@ -713,6 +732,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
   const validatePhysicalAddress = makeValidate(physicalAddressSchema);
   const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
+
+  const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(rootData.location?.physicalAddress?.osmType);
+  const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState(rootData.location?.physicalAddress?.osmId);
+  const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState(rootData.location?.physicalAddress?.placeId);
+  const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState(rootData.location?.physicalAddress?.longitude);
+  const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState(rootData.location?.physicalAddress?.latitude);
+  const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState(rootData.location?.physicalAddress?.formattedAddress);
   const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>(rootData.location?.physicalAddress?.addressLine1 ?? '');
   const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
   const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState(rootData.location?.physicalAddress?.addressLine2);
@@ -835,6 +861,22 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     });
   };
 
+  const handlePhysicalAddressSelect = (address: Address) => {
+    setPhysicalAddressOsmType(address.osmType);
+    setPhysicalAddressOsmId(address.osmId);
+    setPhysicalAddressPlaceId(address.placeId);
+    setPhysicalAddressLongitude(address.longitude);
+    setPhysicalAddressLatitude(address.latitude);
+    setPhysicalAddressFormattedAddress(address.formattedAddress);
+    setPhysicalAddressAddressLine1(address.addressLine1 ?? '');
+    setPhysicalAddressAddressLine2(address.addressLine2 ?? '');
+    setPhysicalAddressSuburb(address.suburb ?? '');
+    setPhysicalAddressCity(address.city ?? '');
+    setPhysicalAddressProvince(address.province ?? '');
+    setPhysicalAddressZipcode(address.zipcode ?? '');
+    setPhysicalAddressCountry(address.countryCode ?? '');
+  };
+
   const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: PhysicalAddress) => {
     const location = rootData.location;
     if (!location) {
@@ -851,6 +893,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           input: {
             clientMutationId: uuid(),
             id: physicalAddress.id,
+            osmType: physicalAddressOsmType,
+            osmId: physicalAddressOsmId,
+            placeId: physicalAddressPlaceId,
+            longitude: physicalAddressLongitude,
+            latitude: physicalAddressLatitude,
+            formattedAddress: physicalAddressFormattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -887,6 +935,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               id: location.id,
               physicalAddress: {
                 id: physicalAddress.id,
+                osmType: physicalAddressOsmType,
+                osmId: physicalAddressOsmId,
+                placeId: physicalAddressPlaceId,
+                longitude: physicalAddressLongitude,
+                latitude: physicalAddressLatitude,
+                formattedAddress: physicalAddressFormattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -909,6 +963,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             clientMutationId: uuid(),
             locationId: location.id,
             id,
+            osmType: physicalAddressOsmType,
+            osmId: physicalAddressOsmId,
+            placeId: physicalAddressPlaceId,
+            longitude: physicalAddressLongitude,
+            latitude: physicalAddressLatitude,
+            formattedAddress: physicalAddressFormattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -945,6 +1005,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               id: location.id,
               physicalAddress: {
                 id,
+                osmType: physicalAddressOsmType,
+                osmId: physicalAddressOsmId,
+                placeId: physicalAddressPlaceId,
+                longitude: physicalAddressLongitude,
+                latitude: physicalAddressLatitude,
+                formattedAddress: physicalAddressFormattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -1710,35 +1776,23 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <Divider />
                     </StackColumn>
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Address line 1">
-                        <TextField name="addressLine1" required={requiredPhysicalAddressFields.addressLine1} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Address line 2">
-                        <TextField name="addressLine2" required={requiredPhysicalAddressFields.addressLine2} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Suburb">
-                        <TextField name="suburb" required={requiredPhysicalAddressFields.suburb} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="City">
-                        <TextField name="city" required={requiredPhysicalAddressFields.city} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Province">
-                        <TextField name="province" required={requiredPhysicalAddressFields.province} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Zipcode">
-                        <TextField name="zipcode" required={requiredPhysicalAddressFields.zipcode} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Country">
-                        <SingleChoiceCountry name="country" required={requiredPhysicalAddressFields.country} />
-                      </FormFieldLabel>
-                    </StackColumn>
+                    <PhysicalAddress
+                      addressLine1Name="addressLine1"
+                      addressLine1Required={requiredPhysicalAddressFields.addressLine1}
+                      addressLine2Name="addressLine2"
+                      addressLine2Required={requiredPhysicalAddressFields.addressLine2}
+                      suburbName="suburb"
+                      suburbRequired={requiredPhysicalAddressFields.suburb}
+                      cityName="city"
+                      cityRequired={requiredPhysicalAddressFields.city}
+                      provinceName="province"
+                      provinceRequired={requiredPhysicalAddressFields.province}
+                      zipcodeName="zipcode"
+                      zipcodeRequired={requiredPhysicalAddressFields.zipcode}
+                      countryName="country"
+                      countryRequired={requiredPhysicalAddressFields.country}
+                      onSelect={handlePhysicalAddressSelect}
+                    />
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <StackRow>

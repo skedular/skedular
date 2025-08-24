@@ -826,6 +826,11 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.CompanyName = src.CompanyName;
         dest.Email = src.Email;
+        dest.OsmType = src.OsmType;
+        dest.OsmId = src.OsmId;
+        dest.PlaceId = src.PlaceId;
+        dest.Coordinates = src.Coordinates;
+        dest.FormattedAddress = src.FormattedAddress;
         dest.AddressLine1 = src.AddressLine1;
         dest.AddressLine2 = src.AddressLine2;
         dest.Suburb = src.Suburb;
@@ -852,6 +857,11 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             CompanyName = src.CompanyName,
             Email = src.Email,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -868,6 +878,11 @@ public class Mapper : IMapper
             Id = src.Id,
             CompanyName = src.CompanyName,
             Email = src.Email,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -922,7 +937,12 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                FormattedAddress = src.ToFormattedAddress(),
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
     public Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src) =>
@@ -1365,7 +1385,7 @@ public class Mapper : IMapper
             Customer = MapToGrpcResponse(src.Customer)
         };
 
-    private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
+    private static IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer MapToGrpcResponse(Customer src)
     {
@@ -1716,6 +1736,11 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CompanyName = src.CompanyName,
                 Email = src.Email,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Coordinates = src.Coordinates,
+                FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,
@@ -1734,6 +1759,12 @@ public class Mapper : IMapper
                 Id = src.Id,
                 CompanyName = src.CompanyName,
                 Email = src.Email,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Longitude = src.Coordinates?.X,
+                Latitude = src.Coordinates?.Y,
+                FormattedAddress = src.ToFormattedAddress(),
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

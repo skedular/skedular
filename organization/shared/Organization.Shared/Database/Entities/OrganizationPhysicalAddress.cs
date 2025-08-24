@@ -39,7 +39,6 @@ public class OrganizationPhysicalAddressConfiguration : IEntityTypeConfiguration
         builder.Property(item => item.OsmId).HasMaxLength(Constants.MaxOsmIdLength);
         builder.Property(item => item.PlaceId).HasMaxLength(Constants.MaxPlaceIdLength);
         builder.Property(item => item.Coordinates).HasColumnType("geometry (point, 4326)");
-
         builder.Property(item => item.FormattedAddress).HasMaxLength(Constants.MaxFormattedAddressLength);
         builder.Property(item => item.AddressLine1).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.AddressLine2).HasMaxLength(Constants.MaxAddressLineLength);
@@ -53,5 +52,10 @@ public class OrganizationPhysicalAddressConfiguration : IEntityTypeConfiguration
             .HasOne(item => item.Organization)
             .WithOne(item => item.PhysicalAddress)
             .HasForeignKey<OrganizationPhysicalAddress>(item => item.OrganizationId);
+
+        builder.HasIndex(item => item.OsmType);
+        builder.HasIndex(item => item.OsmId);
+        builder.HasIndex(item => item.PlaceId);
+        builder.HasIndex(item => item.Coordinates);
     }
 }

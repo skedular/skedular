@@ -1,3 +1,4 @@
+import { Address, PhysicalAddress } from '@/components/address';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -11,7 +12,6 @@ import {
   StackColumn,
   StackRow,
 } from '@/components/commons';
-import { SingleChoiceCountry } from '@/components/forms';
 import { DeleteIcon, NewIcon } from '@/components/icons';
 import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
@@ -20,7 +20,7 @@ import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { myBillingAndPayment_addMyBillingDetailsMutation } from '@/queries/__generated__/myBillingAndPayment_addMyBillingDetailsMutation.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_query.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment.graphql';
@@ -38,6 +38,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 import AddMyPaymentMethodDialog from './add-my-payment-method-dialog';
@@ -55,6 +56,12 @@ const RootQuery = graphql`
         id
         companyName
         email
+        osmType
+        osmId
+        placeId
+        longitude
+        latitude
+        formattedAddress
         addressLine1
         addressLine2
         suburb
@@ -69,7 +76,7 @@ const RootQuery = graphql`
 `;
 
 type CustomerBillingDetails = {
-  companyName: string;
+  companyName: string | null;
   email: string;
   addressLine1: string;
   addressLine2: string | null;
@@ -125,6 +132,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             id
             companyName
             email
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
             addressLine1
             addressLine2
             suburb
@@ -147,6 +160,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             id
             companyName
             email
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
             addressLine1
             addressLine2
             suburb
@@ -174,6 +193,31 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateCustomerBilling = makeValidate(customerBillingSchema);
   const requiredCustomerBillingFields = makeRequired(customerBillingSchema);
+  const [billingCompanyName, setBillingCompanyName] = useState(rootData.me.billingDetails?.companyName);
+  const debounceSetBillingCompanyName = useDebounceCallback(setBillingCompanyName, keyboardTextFieldDebounceTimeout);
+  const [billingEmail, setBillingEmail] = useState<string>(rootData.me.billingDetails?.email ?? '');
+  const debounceSetBillingEmail = useDebounceCallback(setBillingEmail, keyboardTextFieldDebounceTimeout);
+  const [billingOsmType, setBillingOsmType] = useState(rootData.me.billingDetails?.osmType);
+  const [billingOsmId, setBillingOsmId] = useState(rootData.me.billingDetails?.osmId);
+  const [billingPlaceId, setBillingPlaceId] = useState(rootData.me.billingDetails?.placeId);
+  const [billingLongitude, setBillingLongitude] = useState(rootData.me.billingDetails?.longitude);
+  const [billingLatitude, setBillingLatitude] = useState(rootData.me.billingDetails?.latitude);
+  const [billingFormattedAddress, setBillingFormattedAddress] = useState(rootData.me.billingDetails?.formattedAddress);
+  const [billingAddressLine1, setBillingAddressLine1] = useState<string>(rootData.me.billingDetails?.addressLine1 ?? '');
+  const debounceSetBillingAddressLine1 = useDebounceCallback(setBillingAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [billingAddressLine2, setBillingAddressLine2] = useState(rootData.me.billingDetails?.addressLine2);
+  const debounceSetBillingAddressLine2 = useDebounceCallback(setBillingAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [billingSuburb, setBillingSuburb] = useState<string>(rootData.me.billingDetails?.suburb ?? '');
+  const debounceSetBillingSuburb = useDebounceCallback(setBillingSuburb, keyboardTextFieldDebounceTimeout);
+  const [billingCity, setBillingCity] = useState<string>(rootData.me.billingDetails?.city ?? '');
+  const debounceSetBillingCity = useDebounceCallback(setBillingCity, keyboardTextFieldDebounceTimeout);
+  const [billingProvince, setBillingProvince] = useState(rootData.me.billingDetails?.province);
+  const debounceSetBillingProvince = useDebounceCallback(setBillingProvince, keyboardTextFieldDebounceTimeout);
+  const [billingZipcode, setBillingZipcode] = useState<string>(rootData.me.billingDetails?.zipcode ?? '');
+  const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
+  const [billingCountry, setBillingCountry] = useState<string>(rootData.me.billingDetails?.country ?? '');
+  const debounceSetBillingCountry = useDebounceCallback(setBillingCountry, keyboardTextFieldDebounceTimeout);
+
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
   const handleRefetchMyPaymentMethodsDetails = useCallback(() => {
@@ -191,6 +235,22 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
     router.push(getRootLink(integratedPlatrform));
   };
 
+  const handleBillingAddressSelect = (address: Address) => {
+    setBillingOsmType(address.osmType);
+    setBillingOsmId(address.osmId);
+    setBillingPlaceId(address.placeId);
+    setBillingLongitude(address.longitude);
+    setBillingLatitude(address.latitude);
+    setBillingFormattedAddress(address.formattedAddress);
+    setBillingAddressLine1(address.addressLine1 ?? '');
+    setBillingAddressLine2(address.addressLine2 ?? '');
+    setBillingSuburb(address.suburb ?? '');
+    setBillingCity(address.city ?? '');
+    setBillingProvince(address.province ?? '');
+    setBillingZipcode(address.zipcode ?? '');
+    setBillingCountry(address.countryCode ?? '');
+  };
+
   const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: CustomerBillingDetails) => {
     const billingDetails = rootData.me.billingDetails;
     if (billingDetails) {
@@ -203,6 +263,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             id: billingDetails.id,
             companyName,
             email,
+            osmType: billingOsmType,
+            osmId: billingOsmId,
+            placeId: billingPlaceId,
+            longitude: billingLongitude,
+            latitude: billingLatitude,
+            formattedAddress: billingFormattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -241,6 +307,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 id: billingDetails.id,
                 companyName,
                 email,
+                osmType: billingOsmType,
+                osmId: billingOsmId,
+                placeId: billingPlaceId,
+                longitude: billingLongitude,
+                latitude: billingLatitude,
+                formattedAddress: billingFormattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -264,6 +336,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             id,
             companyName,
             email,
+            osmType: billingOsmType,
+            osmId: billingOsmId,
+            placeId: billingPlaceId,
+            longitude: billingLongitude,
+            latitude: billingLatitude,
+            formattedAddress: billingFormattedAddress,
             addressLine1,
             addressLine2,
             suburb,
@@ -302,6 +380,12 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 id,
                 companyName,
                 email,
+                osmType: billingOsmType,
+                osmId: billingOsmId,
+                placeId: billingPlaceId,
+                longitude: billingLongitude,
+                latitude: billingLatitude,
+                formattedAddress: billingFormattedAddress,
                 addressLine1,
                 addressLine2,
                 suburb,
@@ -361,21 +445,6 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
     });
   };
 
-  const me = rootData.me;
-  if (!me) {
-    return <></>;
-  }
-
-  const billingDetails = rootData.me.billingDetails;
-  const companyName = billingDetails?.companyName ? billingDetails.companyName : '';
-  const email = billingDetails?.email ? billingDetails.email : '';
-  const addressLine1 = billingDetails?.addressLine1 ? billingDetails.addressLine1 : '';
-  const addressLine2 = billingDetails?.addressLine2 ? billingDetails.addressLine2 : '';
-  const suburb = billingDetails?.suburb ? billingDetails.suburb : '';
-  const city = billingDetails?.city ? billingDetails.city : '';
-  const province = billingDetails?.province ? billingDetails.province : '';
-  const zipcode = billingDetails?.zipcode ? billingDetails.zipcode : '';
-  const country = billingDetails?.country ? billingDetails.country : '';
   const paymentMethodExist = rootDataMyPaymentMethodsDetails.me?.paymentMethods && rootDataMyPaymentMethodsDetails.me.paymentMethods.length > 0;
 
   return (
@@ -425,72 +494,74 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             <Form
               onSubmit={handleMyBillingDetailUpdateClick}
               initialValues={{
-                companyName,
-                email,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
+                companyName: billingCompanyName,
+                email: billingEmail,
+                addressLine1: billingAddressLine1,
+                addressLine2: billingAddressLine2,
+                suburb: billingSuburb,
+                city: billingCity,
+                province: billingProvince,
+                zipcode: billingZipcode,
+                country: billingCountry,
               }}
               validate={validateCustomerBilling}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Billing & Payment Setup" />
-                    <BodyIconTypography label="Edit your billing and payment details" />
-                    <Divider />
-                  </StackColumn>
+              render={({ handleSubmit, values }) => {
+                debounceSetBillingCompanyName(values!.companyName);
+                debounceSetBillingEmail(values!.email);
+                debounceSetBillingAddressLine1(values!.addressLine1);
+                debounceSetBillingAddressLine2(values!.addressLine2);
+                debounceSetBillingSuburb(values!.suburb);
+                debounceSetBillingCity(values!.city);
+                debounceSetBillingProvince(values!.province);
+                debounceSetBillingZipcode(values!.zipcode);
+                debounceSetBillingCountry(values!.country);
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Company">
-                      <TextField name="companyName" required={requiredCustomerBillingFields.companyName} />
-                    </FormFieldLabel>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Billing & Payment Setup" />
+                      <BodyIconTypography label="Edit your billing and payment details" />
+                      <Divider />
+                    </StackColumn>
 
-                    <FormFieldLabel label="Email">
-                      <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
-                    </FormFieldLabel>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Company">
+                        <TextField name="companyName" required={requiredCustomerBillingFields.companyName} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Address line 1">
-                      <TextField name="addressLine1" required={requiredCustomerBillingFields.addressLine1} />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Email">
+                        <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
+                      </FormFieldLabel>
+                    </StackColumn>
 
-                    <FormFieldLabel label="Address line 2">
-                      <TextField name="addressLine2" required={requiredCustomerBillingFields.addressLine2} />
-                    </FormFieldLabel>
+                    <PhysicalAddress
+                      addressLine1Name="addressLine1"
+                      addressLine1Required={requiredCustomerBillingFields.addressLine1}
+                      addressLine2Name="addressLine2"
+                      addressLine2Required={requiredCustomerBillingFields.addressLine2}
+                      suburbName="suburb"
+                      suburbRequired={requiredCustomerBillingFields.suburb}
+                      cityName="city"
+                      cityRequired={requiredCustomerBillingFields.city}
+                      provinceName="province"
+                      provinceRequired={requiredCustomerBillingFields.province}
+                      zipcodeName="zipcode"
+                      zipcodeRequired={requiredCustomerBillingFields.zipcode}
+                      countryName="country"
+                      countryRequired={requiredCustomerBillingFields.country}
+                      onSelect={handleBillingAddressSelect}
+                    />
 
-                    <FormFieldLabel label="Suburb">
-                      <TextField name="suburb" required={requiredCustomerBillingFields.suburb} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="City">
-                      <TextField name="city" required={requiredCustomerBillingFields.city} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Province">
-                      <TextField name="province" required={requiredCustomerBillingFields.province} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Zipcode">
-                      <TextField name="zipcode" required={requiredCustomerBillingFields.zipcode} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="country" required={requiredCustomerBillingFields.country} />
-                    </FormFieldLabel>
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
           </AppBarWithStackColumn>
         </Box>

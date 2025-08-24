@@ -1054,7 +1054,7 @@ public class Mapper : IMapper
     private static ResourcePosition MapTo(ResourcePositionInput src, string floorPlanId) =>
         new() { X = src.X, Y = src.Y, Resource = new Shared.Models.Resource { Id = src.ResourceId }, FloorPlan = new FloorPlan { Id = floorPlanId } };
 
-    private IEnumerable<ResourcePosition> MapTo(IEnumerable<Shared.Database.Entities.ResourcePosition> src, FloorPlan floorPlan) =>
+    private static IEnumerable<ResourcePosition> MapTo(IEnumerable<Shared.Database.Entities.ResourcePosition> src, FloorPlan floorPlan) =>
         src.Select(item => MapTo(item, floorPlan))!;
 
     private ResourcePosition? MapTo(Shared.Database.Entities.ResourcePosition? src) =>

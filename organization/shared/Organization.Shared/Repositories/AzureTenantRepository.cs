@@ -33,7 +33,7 @@ public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken) => 
+    public async Task<ICollection<AzureTenant>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.AzureTenant
             .Where(query => !query.DeletedAt.HasValue)
             .AddDependentObjects()

@@ -14,8 +14,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-        <PackageReference Include="xunit.v3" Version="3.0.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
+        <PackageReference Include="xunit.v3" Version="3.0.1"/>
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,12 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj" />
-        <ProjectReference Include="..\Testing.Shared\Testing.Shared.csproj" />
+        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="..\Testing.Shared\Testing.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Resources\" />
+        <Folder Include="Resources\"/>
     </ItemGroup>
 
     <ItemGroup>

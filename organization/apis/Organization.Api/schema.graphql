@@ -169,6 +169,12 @@ type OrganizationBankAccountsPayload {
 type OrganizationBillingDetails {
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -536,6 +542,12 @@ input AddOrganizationBillingDetailsInput {
   organizationId: String!
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -847,6 +859,12 @@ input UpdateOrganizationBillingDetailsInput {
   id: String!
   companyName: String
   email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0562e6353a8c0ad857b99977ec58ab46>>
+ * @generated SignedSource<<91df934d05049b25d01475a8d0718c4a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,13 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$data = {
         readonly addressLine2: string | null | undefined;
         readonly city: string;
         readonly country: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -55,7 +61,13 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$rawRespon
         readonly addressLine2: string | null | undefined;
         readonly city: string;
         readonly country: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -117,6 +129,48 @@ v2 = [
             "plural": false,
             "selections": [
               (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "placeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "longitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "latitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -194,16 +248,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "b31a83c4d8e3b8a19314d8b7f23117ef",
+    "cacheID": "e07b4e2697d554a490f99095c77a4a17",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationPhysicalAddressMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationPhysicalAddressMutation(\n  $input: UpdateLocationPhysicalAddressInput!\n) {\n  updateLocationPhysicalAddress(input: $input) {\n    location {\n      id\n      physicalAddress {\n        id\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationPhysicalAddressMutation(\n  $input: UpdateLocationPhysicalAddressInput!\n) {\n  updateLocationPhysicalAddress(input: $input) {\n    location {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "204799db3cea7b523dc9eb9dcd3fcc52";
+(node as any).hash = "d10b58e4b0ed17fa89b312136d48c39f";
 
 export default node;

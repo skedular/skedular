@@ -1,12 +1,13 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
+using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using Stripe;
 using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails;
 using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
 using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
 using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
+using PaymentMethod = Stripe.PaymentMethod;
 using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource;
 using Team = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team;
 
@@ -101,6 +102,11 @@ public class Mapper : IMapper
                 City = src.City.ToSafeString(),
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
-                Country = src.Country.ToSafeString()
+                Country = src.Country.ToSafeString(),
+                FormattedAddress = AddressDetailsExtensions.ToFormattedAddress(src),
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 }

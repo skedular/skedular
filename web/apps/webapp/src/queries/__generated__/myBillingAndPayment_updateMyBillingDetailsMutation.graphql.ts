@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<774067cc16ad860e048e3c65d1fe89ec>>
+ * @generated SignedSource<<b8af0f2771f632eea76214807909c974>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,13 @@ export type UpdateMyBillingDetailsInput = {
   companyName?: string | null | undefined;
   country: string;
   email: string;
+  formattedAddress?: string | null | undefined;
   id: string;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
   province?: string | null | undefined;
   suburb: string;
   zipcode: string;
@@ -35,7 +41,13 @@ export type myBillingAndPayment_updateMyBillingDetailsMutation$data = {
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly email: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -54,7 +66,13 @@ export type myBillingAndPayment_updateMyBillingDetailsMutation$rawResponse = {
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly email: string;
+        readonly formattedAddress: string | null | undefined;
         readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
         readonly suburb: string;
         readonly zipcode: string;
@@ -135,6 +153,48 @@ v2 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "osmType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "placeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "longitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "latitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "addressLine1",
                 "storageKey": null
               },
@@ -208,16 +268,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "0006865f9ad5b8f83043c674c307ef15",
+    "cacheID": "2b104e037a5c440658b6d17a3767ab76",
     "id": null,
     "metadata": {},
     "name": "myBillingAndPayment_updateMyBillingDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation myBillingAndPayment_updateMyBillingDetailsMutation(\n  $input: UpdateMyBillingDetailsInput!\n) {\n  updateMyBillingDetails(input: $input) {\n    customer {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation myBillingAndPayment_updateMyBillingDetailsMutation(\n  $input: UpdateMyBillingDetailsInput!\n) {\n  updateMyBillingDetails(input: $input) {\n    customer {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a17f129217eac070725093f35e6b4cb8";
+(node as any).hash = "9c8d1108a99c29039b45d54c64efb090";
 
 export default node;
