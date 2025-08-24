@@ -285,7 +285,7 @@ const toOpeningHoursFromTime = (time?: string | null | undefined) => {
     return null;
   }
 
-  var splittedTime = time.split(':');
+  const splittedTime = time.split(':');
   if (splittedTime.length < 2) {
     return null;
   }

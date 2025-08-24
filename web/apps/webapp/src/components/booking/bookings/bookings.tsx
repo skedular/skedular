@@ -86,7 +86,7 @@ type RowType = {
   resources: ReadonlyArray<ResourceDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
-  canJoinBooking: Boolean;
+  canJoinBooking: boolean;
   date: string;
 };
 
@@ -255,8 +255,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
   const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
   const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
 
-  const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
-
   const handleRefetch = useCallback(
     (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[], customerIds: string[]) => {
       startTransition(() => {
@@ -342,7 +340,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
         });
       },
     });
@@ -384,7 +382,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           return;
         }
 
-        const booking = response.addBooking?.booking!;
+        const booking = response.addBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {
@@ -611,7 +609,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         {viewMode === 'grid' && (
           <GridContainer>
             {bookings.map((booking) => {
-              const key = convertDateToKey(booking.from);
               const canJoinBooking = booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)
                 ? false
                 : !!!bookings

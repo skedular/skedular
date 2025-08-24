@@ -1,6 +1,6 @@
 import { BodyIconTypography } from '@/components/commons';
 import { BillingAndPaymentIcon, CollpaseDrawerIcon, HomeIcon, NotificationsIcon, SettingsIcon } from '@/components/icons';
-import { getBillingAndPaymentLink, getMyBookingsLink, getNotificationsLink, getRootLink, getSettingsLink } from '@/components/links';
+import { getBillingAndPaymentLink, getNotificationsLink, getRootLink, getSettingsLink } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
 import Box from '@mui/material/Box';
@@ -76,7 +76,6 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
   };
 
   const homeLink = getRootLink(integratedPlatrform);
-  const myBookingsLink = getMyBookingsLink(integratedPlatrform);
   const notificationsLink = getNotificationsLink(integratedPlatrform);
   const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const settingsBaseLink = getSettingsLink(integratedPlatrform);
@@ -124,24 +123,6 @@ const NoOrganizationLeftSideNavigationMenuContent = ({ collapsed, enableCollapse
               </ListItemButton>
             </Link>
           </ListItem>
-
-          {/* <ListItem disablePadding>
-            <Link component={NextLink} href={myBookingsLink}>
-              <ListItemButton selected={pathName === myBookingsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === myBookingsLink) }}>
-                {collapsed && (
-                  <BodyIconTypography startElement={!hideIcons && <BookingIcon color="inherit" />} invertDefaultColor={pathName === myBookingsLink && paletteMode === 'dark'} />
-                )}
-                {!collapsed && (
-                  <BodyIconTypography
-                    label="Bookings"
-                    startElement={!hideIcons && <BookingIcon excludeTooltip color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName === myBookingsLink && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem> */}
 
           <ListItem disablePadding>
             <Link component={NextLink} href={notificationsLink}>

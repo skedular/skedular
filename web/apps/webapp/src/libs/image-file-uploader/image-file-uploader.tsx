@@ -71,10 +71,15 @@ const ImageFileUploader = ({ onUploadCompleted }: Props) => {
         ...successNotificationOptions,
         render: <NotificationContent content={'Image uploaded successfully.'} />,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = 'Unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
       toast.update(toastId, {
         ...errorNotificationOptions,
-        render: <NotificationContent content={`Failed to upload image. Error: ${error.message}.`} />,
+        render: <NotificationContent content={`Failed to upload image. Error: ${errorMessage}.`} />,
       });
     }
   };

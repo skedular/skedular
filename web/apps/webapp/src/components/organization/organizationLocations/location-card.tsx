@@ -183,7 +183,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, locationDetails.id);
+  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -202,7 +202,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, { locationId: locationDetails.id }));
         break;
     }
   };

@@ -54,7 +54,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
           }
 
           setToken(accessTokenResult.token);
-        } catch (error) {
+        } catch {
           await credential.login(scope);
 
           const accessTokenResult = await credential.getToken(scope);

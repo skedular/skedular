@@ -633,7 +633,7 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(getOrganizationProductBaseLink(integratedPlatrform, productDetails.organization?.uniqueId!, productDetails.id));
+        router.push(getOrganizationProductBaseLink(integratedPlatrform, productDetails.organization?.uniqueId, productDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteProduct:
@@ -1144,7 +1144,7 @@ const OrganizationMarketplaceSetup = ({
         }
 
         router.push(
-          getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, organizationStripeConnectAccountDetails.organization?.id!, organizationStripeConnectAccountDetails.id),
+          getOrganizationStripeConnectAccountBaseLink(integratedPlatrform, organizationStripeConnectAccountDetails.organization?.id, organizationStripeConnectAccountDetails.id),
         );
         break;
 
@@ -1309,7 +1309,7 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization?.id!, organizationBankAccountDetails.id));
+        router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization?.id, organizationBankAccountDetails.id));
         break;
 
       case MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault:

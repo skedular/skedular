@@ -250,8 +250,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   )}
                   <ImageFileUploaderWithCropper
                     defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                    previewImageHeight={locationFeatureImageHeight}
-                    previewImageWidth={locationFeatureImageWidth}
                     onUploadCompleted={handleFeatureImageUploadCompleted}
                     helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."
                   />

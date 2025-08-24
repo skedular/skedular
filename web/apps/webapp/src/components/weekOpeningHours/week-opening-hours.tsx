@@ -1,6 +1,5 @@
 import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
 import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
-import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@/libs/utils';
 import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
@@ -8,9 +7,8 @@ import Button from '@mui/material/Button';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { Dayjs } from 'dayjs';
-import { memo, useCallback, useContext, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { toast } from 'react-toastify';
 
 type Props = {
   rootDataRelay: weekOpeningHours_query$key;
@@ -53,8 +51,6 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     rootDataRelay,
   );
 
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [mondayErrorMessage, setMondayErrorMessage] = useState<string>('');
   const [mondayOpeningState, setMondayOpeningState] = useState<OpeningHoursState>(defaultValue.monday.closed ? 'closed' : defaultValue.monday.openAllDay ? 'openAllDay' : 'custom');
   const [mondayOpeningHours, setMondayOpeningHours] = useState<DateRange<Dayjs>>([

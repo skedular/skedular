@@ -249,8 +249,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationId, 
                   )}
                   <ImageFileUploaderWithCropper
                     defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                    previewImageHeight={locationFeatureImageHeight}
-                    previewImageWidth={locationFeatureImageWidth}
                     onUploadCompleted={handleFeatureImageUploadCompleted}
                     helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
                   />

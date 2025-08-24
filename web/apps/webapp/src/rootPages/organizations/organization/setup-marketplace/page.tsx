@@ -85,7 +85,7 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, teamId } = useParams();
+  const { organizationId } = useParams();
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {

@@ -328,7 +328,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
         });
       },
     });
@@ -364,7 +364,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           return;
         }
 
-        const booking = response.addBooking?.booking!;
+        const booking = response.addBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {

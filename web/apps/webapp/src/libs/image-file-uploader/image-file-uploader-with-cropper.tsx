@@ -15,8 +15,6 @@ import { toast } from 'react-toastify';
 
 type Props = {
   defaultAspectRatio: number;
-  previewImageHeight: number;
-  previewImageWidth: number;
   onUploadCompleted: (cdnFile: FileUploadResponse) => void;
   helperText?: string;
 };
@@ -36,7 +34,7 @@ const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: numbe
     mediaHeight,
   );
 
-const ImageFileUploaderWithCropper = ({ defaultAspectRatio, previewImageHeight, previewImageWidth, onUploadCompleted, helperText }: Props) => {
+const ImageFileUploaderWithCropper = ({ defaultAspectRatio, onUploadCompleted, helperText }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [imageSource, setImgSrc] = useState<string>('');
@@ -134,10 +132,15 @@ const ImageFileUploaderWithCropper = ({ defaultAspectRatio, previewImageHeight, 
         ...successNotificationOptions,
         render: <NotificationContent content={'Feature image file uploaded.'} />,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = 'Unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
       toast.update(toastId, {
         ...errorNotificationOptions,
-        render: <NotificationContent content={`Failed to upload feature image. Error: ${error.message}.`} />,
+        render: <NotificationContent content={`Failed to upload feature image. Error: ${errorMessage}.`} />,
       });
     }
   };

@@ -18,7 +18,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const RootPage = ({ queryReference, onReloadRequired }: Props) => {
+const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageStartInstallMsTeams_rootQuery>(RootQuery, queryReference);
   const hasOpened = useRef(false);
 

@@ -648,7 +648,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
               type: booking.type.type,
             }}
             validate={validate}
-            render={({ handleSubmit, values }) => {
+            render={({ handleSubmit }) => {
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -700,7 +700,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                               name="date"
                               required={requiredFields.date}
                               fieldProps={{
-                                onChange: (value: any) => {
+                                onChange: (value: unknown) => {
                                   if (value && dayjs.isDayjs(value)) {
                                     setFrom(value);
                                   }
@@ -713,7 +713,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                             required={requiredFields.allDay}
                             data={{ label: 'All Day', value: 'allDay' }}
                             fieldProps={{
-                              onChange: (event: any) => {
+                              onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
                                 setAllDay(event.target.checked);
                               },
                             }}

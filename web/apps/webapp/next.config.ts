@@ -1,13 +1,15 @@
-// @ts-check
-const relay = require("./relay.config");
+import type { NextConfig } from "next";
+import relayConfig from "./relay.config";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
   },
   compiler: {
-    relay,
+    relay: {
+      ...relayConfig,
+      language: relayConfig.language as "typescript" | "javascript" | "flow",
+    },
   },
   images: {
     remotePatterns: [

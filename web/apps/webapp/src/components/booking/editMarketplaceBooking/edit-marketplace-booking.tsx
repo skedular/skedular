@@ -103,7 +103,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     rootDataRelay,
   );
 
-  const [rootDataBooking, refetchBooking] = useRefetchableFragment<editMarketplaceBooking_booking_refetchableFragment, editMarketplaceBooking_booking_query$key>(
+  const [rootDataBooking] = useRefetchableFragment<editMarketplaceBooking_booking_refetchableFragment, editMarketplaceBooking_booking_query$key>(
     graphql`
       fragment editMarketplaceBooking_booking_query on Query @refetchable(queryName: "editMarketplaceBooking_booking_refetchableFragment") {
         booking(id: $bookingId) {
@@ -273,11 +273,14 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
-  const [allDay, setAllDay] = useState<boolean>(isMidnight(rootDataBooking.booking?.from) && isMidnight(rootDataBooking.booking?.until));
-  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([
-    toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.from)),
-    toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.until)),
-  ]);
+  const allDay = useMemo<boolean>(
+    () => isMidnight(rootDataBooking.booking?.from) && isMidnight(rootDataBooking.booking?.until),
+    [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
+  );
+  const timeRange = useMemo<DateRange<Dayjs>>(
+    () => [toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.from)), toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootDataBooking.booking?.until))],
+    [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
+  );
   const [customerId, setCustomerId] = useState<string | undefined>(
     rootDataBooking.booking?.involvedCustomers && rootDataBooking.booking?.involvedCustomers.length > 0 ? rootDataBooking.booking?.involvedCustomers[0].uniqueId : undefined,
   );

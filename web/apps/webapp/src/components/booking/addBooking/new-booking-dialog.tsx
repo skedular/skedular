@@ -475,7 +475,7 @@ const NewBookingDialog = ({
           return;
         }
 
-        const booking = response.addBooking?.booking!;
+        const booking = response.addBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {

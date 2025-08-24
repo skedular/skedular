@@ -120,7 +120,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationId, l
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}.`} />,
+          render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${error.message}.`} />,
         });
       },
     });

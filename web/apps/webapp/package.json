@@ -8,8 +8,8 @@
     "dev:teams": "cross-env PORT=15000 next dev --turbopack --experimental-https",
     "build": "next build",
     "start": "cross-env PORT=15000 next start",
-    "lint": "next lint",
-    "lint-fix": "next lint --fix",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix",
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix",
     "relay": "relay-compiler relay.config.js"
   },
@@ -70,6 +70,7 @@
     "yup": "^1.7.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@types/leaflet": "^1.9.20",
     "@types/logrocket-react": "^3.0.3",
     "@types/node": "^24.3.0",

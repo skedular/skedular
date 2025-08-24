@@ -315,7 +315,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     rootDataResourcesRelay,
   );
 
-  const [rootDataFloorPlans, refetchFloorPlans] = useRefetchableFragment<organizationLocation_floorPlans_refetchableFragment, organizationLocation_floorPlans_query$key>(
+  const [rootDataFloorPlans] = useRefetchableFragment<organizationLocation_floorPlans_refetchableFragment, organizationLocation_floorPlans_query$key>(
     graphql`
       fragment organizationLocation_floorPlans_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -1628,8 +1628,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                           )}
                           <ImageFileUploaderWithCropper
                             defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                            previewImageHeight={locationFeatureImageHeight}
-                            previewImageWidth={locationFeatureImageWidth}
                             onUploadCompleted={handleFeatureImageUploadCompleted}
                           />
                         </StackColumn>

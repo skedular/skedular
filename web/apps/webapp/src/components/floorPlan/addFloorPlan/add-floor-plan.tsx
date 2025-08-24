@@ -61,7 +61,7 @@ const floorPlanSchema = object({
 
 const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
   const rootData = usePreloadedQuery<addFloorPlan_rootQuery>(RootQuery, queryReference);
-  const [rootDataResources, refetchResources] = useRefetchableFragment<addFloorPlan_resources_refetchableFragment, addFloorPlan_resources_query$key>(
+  const [rootDataResources] = useRefetchableFragment<addFloorPlan_resources_refetchableFragment, addFloorPlan_resources_query$key>(
     graphql`
       fragment addFloorPlan_resources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })

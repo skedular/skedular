@@ -1,6 +1,5 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
 import { NewIcon } from '@/components/icons';
-import { useIntegratedPlatrform } from '@/libs/providers';
 import type { existingStripeConnectAccountButton_query$key } from '@/queries/__generated__/existingStripeConnectAccountButton_query.graphql';
 import Button from '@mui/material/Button';
 import { memo } from 'react';
@@ -26,8 +25,6 @@ const ExistingStripeConnectAccountButton = ({ rootDataRelay, fullWidth, label, h
     `,
     rootDataRelay,
   );
-
-  const { integratedPlatrform } = useIntegratedPlatrform();
 
   if (!rootData.organization) {
     return <></>;

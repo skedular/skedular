@@ -56,10 +56,9 @@ type Props = {
   queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
-  bookingId: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId, bookingId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const shouldPay = useMemo(() => {
@@ -211,7 +210,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} bookingId={finalBookingId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };

@@ -2,9 +2,7 @@ import { GridContainer } from '@/components/commons';
 import type { PropsWithChildren } from 'react';
 import { memo } from 'react';
 
-type Props = {};
-
-const TwoSideVerticalWizard = ({ children }: PropsWithChildren<Props>) => (
+const TwoSideVerticalWizard = ({ children }: PropsWithChildren) => (
   <GridContainer
     spacing={1}
     sx={{

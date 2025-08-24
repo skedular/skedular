@@ -211,7 +211,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, teamDetails.id));
+        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
@@ -223,7 +223,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, { teamId: teamDetails.id }));
         break;
     }
   };

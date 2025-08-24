@@ -4,7 +4,7 @@ import { ResponsiveStyleValue } from '@mui/system';
 import type { PropsWithChildren } from 'react';
 
 interface AnyObject {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type Props = {

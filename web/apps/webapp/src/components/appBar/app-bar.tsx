@@ -23,7 +23,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -69,7 +69,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { signOut } = useAuth();
-  const pathName = usePathname();
   const router = useRouter();
   const { organizationId } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());

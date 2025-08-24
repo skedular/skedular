@@ -120,18 +120,14 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
   const resourcePositions = useMemo(
     () =>
       (rootDataFloorPlan.floorPlan?.resourcePositions ? rootDataFloorPlan.floorPlan.resourcePositions : []).reduce(
-        (acc, { x, y, resource }, index) => acc.set(resource.id, { x, y }),
+        (acc, { x, y, resource }) => acc.set(resource.id, { x, y }),
         new Map<string, { x: number; y: number }>(),
       ),
     [rootDataFloorPlan.floorPlan],
   );
   const bookings = useMemo(() => (rootDataBookings.bookings ? rootDataBookings.bookings.edges.map((edge) => edge.node) : []), [rootDataBookings.bookings]);
   const bookingConnectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
-  const [floorPlanIds, setFloorPlanIds] = useState<string[]>([]);
   const [date, setDate] = useState<Dayjs>(startOfDay());
-  const [customerIds, setCustomerIds] = useState<string[]>([]);
-  const [customTagIds, setCustomTagIds] = useState<string[]>([]);
-  const [zoneIds, setZoneIds] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
@@ -173,8 +169,6 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
   );
 
   const handleFloorPlanChanged = (id?: string) => {
-    setFloorPlanIds(id ? [id] : []);
-
     if (id) {
       handleRefetchFloorPlan(id);
     }
@@ -184,18 +178,6 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
     setDate(date);
 
     handleRefetchBookings(date);
-  };
-
-  const handlCustomerChanged = (id?: string) => {
-    setCustomerIds(id ? [id] : []);
-  };
-
-  const handleCustomTagChanged = (id?: string) => {
-    setCustomTagIds(id ? [id] : []);
-  };
-
-  const handleZoneTypeChanged = (id?: string) => {
-    setZoneIds(id ? [id] : []);
   };
 
   const handleResourceClick = (event: React.MouseEvent<HTMLElement>, resourceId: string, bookingId: string | null) => {
@@ -224,9 +206,6 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
         <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
           <FloorPlanSelector rootDataRelay={rootData} onChange={handleFloorPlanChanged} />
           <DayPicker defaultDate={date} onDateChanged={handleDateChanged} />
-          {/* <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} />
-          <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
-          <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} /> */}
         </GridContainer>
         {rootDataFloorPlan.floorPlan && rootDataFloorPlan.resources && (
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

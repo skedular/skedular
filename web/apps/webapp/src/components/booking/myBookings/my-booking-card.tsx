@@ -12,7 +12,6 @@ import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
-import type { myBookingCard_query$key } from '@/queries/__generated__/myBookingCard_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -30,7 +29,6 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
-  rootDataRelay: myBookingCard_query$key;
   bookingDetailsRelay: myBookingCard_BookingDetails$key;
   organizationId: string;
   connectionIds: string[];
@@ -58,19 +56,7 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const MyBookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, otherTeammates, connectionIds }: Props) => {
-  const rootData = useFragment<myBookingCard_query$key>(
-    graphql`
-      fragment myBookingCard_query on Query {
-        paymentStatuses {
-          type
-          name
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, connectionIds }: Props) => {
   const bookingDetails = useFragment(
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
@@ -200,7 +186,7 @@ const MyBookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, oth
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
         });
       },
     });

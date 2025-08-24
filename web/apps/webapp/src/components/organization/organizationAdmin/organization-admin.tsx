@@ -187,7 +187,7 @@ const taxDetailsSchema = object({
     .matches(/^\d+(\.\d{1,2})?$/, 'Tax rate must be a valid decimal number.')
     .required('Tax rate is required.')
     .test('is-greater-than-zero', 'Tax rate must be greater than zero.', function (value) {
-      var taxRatePercentage = Number(value);
+      const taxRatePercentage = Number(value);
       if (isNaN(taxRatePercentage)) {
         return true;
       }

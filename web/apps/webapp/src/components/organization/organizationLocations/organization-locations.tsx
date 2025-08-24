@@ -271,7 +271,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, locationDetails.id));
+        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, locationDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
@@ -283,7 +283,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, { locationId: locationDetails.id }));
         break;
     }
   };

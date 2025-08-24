@@ -81,7 +81,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
       .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
       .required('Price is required.')
       .test('is-greater-than-zero', 'Price must be greater than zero.', function (value) {
-        var price = Number(value);
+        const price = Number(value);
         if (isNaN(price)) {
           return true;
         }
@@ -97,7 +97,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     minDurationMinutes: string()
       .nullable()
       .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        var minDurationMinutes = Number(value);
+        const minDurationMinutes = Number(value);
         if (isNaN(minDurationMinutes)) {
           return true;
         }
@@ -106,12 +106,12 @@ const productSchema = (openingHoursMinutesStep: number) =>
       })
       .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
         const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
-        var maxDurationMinutes = Number(maxDurationMinutesStr);
+        const maxDurationMinutes = Number(maxDurationMinutesStr);
         if (isNaN(maxDurationMinutes)) {
           return true;
         }
 
-        var minDurationMinutes = Number(value);
+        const minDurationMinutes = Number(value);
         if (isNaN(minDurationMinutes)) {
           return true;
         }
@@ -128,7 +128,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        var minDurationMinutes = Number(value);
+        const minDurationMinutes = Number(value);
         if (isNaN(minDurationMinutes)) {
           return true;
         }
@@ -138,7 +138,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     maxDurationMinutes: string()
       .nullable()
       .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        var maxDurationMinutes = Number(value);
+        const maxDurationMinutes = Number(value);
         if (isNaN(maxDurationMinutes)) {
           return true;
         }
@@ -147,12 +147,12 @@ const productSchema = (openingHoursMinutesStep: number) =>
       })
       .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
         const { minDurationMinutes: minDurationMinutesStr } = this.parent;
-        var minDurationMinutes = Number(minDurationMinutesStr);
+        const minDurationMinutes = Number(minDurationMinutesStr);
         if (isNaN(minDurationMinutes)) {
           return true;
         }
 
-        var maxDurationMinutes = Number(value);
+        const maxDurationMinutes = Number(value);
         if (isNaN(maxDurationMinutes)) {
           return true;
         }
@@ -169,7 +169,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        var maxDurationMinutes = Number(value);
+        const maxDurationMinutes = Number(value);
         if (isNaN(maxDurationMinutes)) {
           return true;
         }
@@ -204,12 +204,12 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        var maxBookingSpreadDays = Number(value);
+        const maxBookingSpreadDays = Number(value);
         if (isNaN(maxBookingSpreadDays)) {
           return true;
         }
 
-        var recurrenceWindowDays = Number(recurrenceWindowDaysStr);
+        const recurrenceWindowDays = Number(recurrenceWindowDaysStr);
         if (isNaN(recurrenceWindowDaysStr)) {
           return true;
         }
@@ -222,7 +222,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
           return true;
         }
 
-        var maxBookingSpreadDays = Number(value);
+        const maxBookingSpreadDays = Number(value);
         if (isNaN(maxBookingSpreadDays)) {
           return true;
         }
@@ -233,7 +233,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     locationTagIds: array().nullable(),
     maxAllowedResourcesLockTimePaidViaCard: string()
       .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        var maxAllowedResourcesLockTimePaidViaCard = Number(value);
+        const maxAllowedResourcesLockTimePaidViaCard = Number(value);
         if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
           return false;
         }
@@ -241,7 +241,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
         return true;
       })
       .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        var maxAllowedResourcesLockTimePaidViaCard = Number(value);
+        const maxAllowedResourcesLockTimePaidViaCard = Number(value);
         if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
           return false;
         }
@@ -250,7 +250,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
       }),
     maxAllowedResourcesLockTimePaidViaBankTransfer: string()
       .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        var maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
+        const maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
         if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
           return false;
         }
@@ -258,7 +258,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
         return true;
       })
       .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        var maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
+        const maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
         if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
           return false;
         }
@@ -593,8 +593,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                         )}
                         <ImageFileUploaderWithCropper
                           defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
-                          previewImageHeight={productFeatureImageHeight}
-                          previewImageWidth={productFeatureImageWidth}
                           onUploadCompleted={handleFeatureImageUploadCompleted}
                         />
                       </StackColumn>

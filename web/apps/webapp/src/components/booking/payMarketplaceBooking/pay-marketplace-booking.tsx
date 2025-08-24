@@ -280,7 +280,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}.`} />,
+          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
         });
       },
     });

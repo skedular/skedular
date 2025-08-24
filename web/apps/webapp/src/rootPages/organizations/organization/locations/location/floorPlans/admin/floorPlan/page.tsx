@@ -68,20 +68,7 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocationFloorPlanAdmin_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, locationId, floorPlanId } = useParams();
-  let finalOrganizationId = '';
-
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
-    }
-
-    finalOrganizationId = organizationId[0];
-  } else {
-    throw new Error('organizationId is required');
-  }
+  const { locationId, floorPlanId } = useParams();
 
   let finalLocationId = '';
 

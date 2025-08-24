@@ -3,7 +3,6 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { startOfDay } from '@/libs/utils';
 import type { organizationMarketplacePublic_rootQuery } from '@/queries/__generated__/organizationMarketplacePublic_rootQuery.graphql';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
@@ -80,8 +79,6 @@ const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) 
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const today = startOfDay();
-
     loadQuery(
       {
         organizationId,

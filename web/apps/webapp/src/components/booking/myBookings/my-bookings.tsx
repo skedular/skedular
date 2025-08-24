@@ -94,7 +94,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         me {
           id
         }
-        ...myBookingCard_query
       }
     `,
     rootDataRelay,
@@ -289,7 +288,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
         });
       },
     });
@@ -451,13 +450,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
               return (
                 <Grid key={myBooking.id}>
-                  <MyBookingCard
-                    rootDataRelay={rootData}
-                    bookingDetailsRelay={myBooking}
-                    organizationId={organizationId}
-                    connectionIds={connectionIds}
-                    otherTeammates={otherTeammates}
-                  />
+                  <MyBookingCard bookingDetailsRelay={myBooking} organizationId={organizationId} connectionIds={connectionIds} otherTeammates={otherTeammates} />
                 </Grid>
               );
             })}

@@ -28,7 +28,7 @@ type Props = {
   locationId: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, locationId }: Props) => {
+const RootPage = ({ queryReference, locationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationLocationFloorPlansAdd_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 

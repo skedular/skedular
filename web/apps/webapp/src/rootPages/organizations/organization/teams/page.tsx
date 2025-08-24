@@ -19,8 +19,6 @@ const RootPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const handleReloadRequired = () => {};
-
   return (
     <RootShell>
       <OrganizationTeams organizationId={finalOrganizationId} />

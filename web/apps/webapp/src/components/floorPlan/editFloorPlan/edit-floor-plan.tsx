@@ -78,7 +78,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [rootDataResources, refetchResources] = useRefetchableFragment<editFloorPlan_resources_refetchableFragment, editFloorPlan_resources_query$key>(
+  const [rootDataResources] = useRefetchableFragment<editFloorPlan_resources_refetchableFragment, editFloorPlan_resources_query$key>(
     graphql`
       fragment editFloorPlan_resources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -179,7 +179,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
   const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
   const [resourcePositions, setResourcePositions] = useState<Map<string, { x: number; y: number }>>(() =>
     (rootData.floorPlan?.resourcePositions ? rootData.floorPlan.resourcePositions : []).reduce(
-      (acc, { x, y, resource }, index) => acc.set(resource.id, { x, y }),
+      (acc, { x, y, resource }) => acc.set(resource.id, { x, y }),
       new Map<string, { x: number; y: number }>(),
     ),
   );

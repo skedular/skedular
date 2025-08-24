@@ -3,7 +3,6 @@ import { NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { startOfDay } from '@/libs/utils';
 import type { addOrganizationTeamMemberButton_rootQuery } from '@/queries/__generated__/addOrganizationTeamMemberButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import { memo, useEffect, useState } from 'react';
@@ -90,8 +89,6 @@ const AddOrganizationTeamMemberButtonWithRelay = ({ organizationId, onReloadRequ
   const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const date = startOfDay().toISOString();
-
     loadQuery(
       {
         organizationId,

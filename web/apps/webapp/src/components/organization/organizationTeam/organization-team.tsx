@@ -943,12 +943,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                           <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                         )}
-                        <ImageFileUploaderWithCropper
-                          defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight}
-                          previewImageHeight={teamFeatureImageHeight}
-                          previewImageWidth={teamFeatureImageWidth}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
+                        <ImageFileUploaderWithCropper defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight} onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 

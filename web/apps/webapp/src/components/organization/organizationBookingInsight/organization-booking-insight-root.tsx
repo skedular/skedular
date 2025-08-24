@@ -36,10 +36,9 @@ const MemoLocationBookingInsightRoot = memo(OrganizationBookingInsightRoot);
 type RelayProps = {
   onReloadRequired: () => void;
   organizationId: string;
-  organizationName?: string;
 };
 
-const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId, organizationName }: RelayProps) => {
+const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationBookingInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
