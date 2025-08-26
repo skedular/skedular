@@ -7,7 +7,7 @@ public static class PostgreSqlConfigurationExtensions
 {
     private static readonly ConcurrentDictionary<string, NpgsqlDataSource> s_dataSources = new();
 
-    internal static NpgsqlDataSource BuildDataSource(this string connectionString)
+    internal static NpgsqlDataSource BuildDataSource(this string connectionString, bool isPostgisEnabled)
     {
         try
         {
@@ -16,12 +16,18 @@ public static class PostgreSqlConfigurationExtensions
                 return dataSource;
             }
 
-            s_dataSources[connectionString] = new NpgsqlDataSourceBuilder(connectionString).EnableDynamicJson().Build();
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+            if (isPostgisEnabled)
+            {
+                dataSourceBuilder = dataSourceBuilder.UseNetTopologySuite();
+            }
+
+            s_dataSources[connectionString] = dataSourceBuilder.EnableDynamicJson().Build();
             return s_dataSources[connectionString];
         }
         catch (Exception ex)
         {
-            throw new ArgumentException("Failed to build npgsql datasource {message}", ex.Message);
+            throw new ArgumentException($"Failed to build npgsql datasource {ex.Message}");
         }
     }
 }

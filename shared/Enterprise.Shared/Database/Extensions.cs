@@ -177,7 +177,7 @@ public static class Extensions
             .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
             .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 
-        var dataSource = connectionString.BuildDataSource();
+        var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
 
         services.AddDatabaseHealthCheck(dataSource);
 
