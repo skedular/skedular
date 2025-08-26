@@ -313,9 +313,12 @@ type OrganizationPaymentMethod {
 }
 
 type OrganizationPhysicalAddressDetails {
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
   formattedAddress: String
-  latitude: Decimal
-  longitude: Decimal
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -567,8 +570,12 @@ input AddOrganizationPhysicalAddressInput {
   clientMutationId: String
   id: String
   organizationId: String!
-  latitude: Decimal
-  longitude: Decimal
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -872,8 +879,12 @@ input UpdateOrganizationOfferingInput {
 input UpdateOrganizationPhysicalAddressInput {
   clientMutationId: String
   id: String!
-  latitude: Decimal
-  longitude: Decimal
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!

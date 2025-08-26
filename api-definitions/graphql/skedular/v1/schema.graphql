@@ -494,9 +494,12 @@ type LocationPhysicalAddressDetails {
   country: String!
   formattedAddress: String
   id: ID!
-  latitude: Decimal
-  longitude: Decimal
+  latitude: Float
+  longitude: Float
   organization: LocationDetails!
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -869,9 +872,12 @@ type OrganizationPhysicalAddressDetails {
   country: String!
   formattedAddress: String
   id: ID!
-  latitude: Decimal
-  longitude: Decimal
+  latitude: Float
+  longitude: Float
   organization: OrganizationDetails!
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -1420,10 +1426,14 @@ input AddLocationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  formattedAddress: String
   id: String
-  latitude: Decimal
+  latitude: Float
   locationId: String!
-  longitude: Decimal
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -1505,10 +1515,14 @@ input AddOrganizationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  formattedAddress: String
   id: String
-  latitude: Decimal
-  longitude: Decimal
+  latitude: Float
+  longitude: Float
   organizationId: String!
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -2183,9 +2197,13 @@ input UpdateLocationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  formattedAddress: String
   id: String!
-  latitude: Decimal
-  longitude: Decimal
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!
@@ -2282,9 +2300,13 @@ input UpdateOrganizationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  formattedAddress: String
   id: String!
-  latitude: Decimal
-  longitude: Decimal
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
   province: String
   suburb: String!
   zipcode: String!

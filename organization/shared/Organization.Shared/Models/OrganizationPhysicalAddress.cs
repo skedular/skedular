@@ -1,14 +1,17 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
+using NetTopologySuite.Geometries;
 
 namespace Organization.Shared.Models;
 
 public class OrganizationPhysicalAddress : ModelBaseWithDeleted, IAddressDetails
 {
-    public string FormattedAddress => this.ToFormattedAddress();
-    public decimal? Latitude { get; set; }
-    public decimal? Longitude { get; set; }
+    public string? OsmType { get; set; }
+    public string? OsmId { get; set; }
+    public string? PlaceId { get; set; }
+    public Point? Coordinates { get; set; }
     public virtual Organization Organization { get; set; } = new();
+    public string? FormattedAddress { get; set; }
     public string AddressLine1 { get; set; } = string.Empty;
     public string? AddressLine2 { get; set; }
     public string Suburb { get; set; } = string.Empty;

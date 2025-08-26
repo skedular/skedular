@@ -37,6 +37,6 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public class BookingDbContextDesignFactory : IDesignTimeDbContextFactory<BookingDbContext>
     {
         public BookingDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<BookingDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<BookingDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

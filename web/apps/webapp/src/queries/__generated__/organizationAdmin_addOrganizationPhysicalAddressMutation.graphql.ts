@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f49f1ad854abfb30eeca5afcc1c2ed4>>
+ * @generated SignedSource<<cd88be47561d39aab1df3ab23ef181e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,14 @@ export type AddOrganizationPhysicalAddressInput = {
   city: string;
   clientMutationId?: string | null | undefined;
   country: string;
+  formattedAddress?: string | null | undefined;
   id?: string | null | undefined;
-  latitude?: any | null | undefined;
-  longitude?: any | null | undefined;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
   organizationId: string;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
   province?: string | null | undefined;
   suburb: string;
   zipcode: string;

@@ -28,6 +28,6 @@ public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbCont
     public class TeamDbContextDesignFactory : IDesignTimeDbContextFactory<TeamDbContext>
     {
         public TeamDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<TeamDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<TeamDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

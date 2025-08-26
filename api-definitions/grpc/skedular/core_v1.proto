@@ -4,35 +4,35 @@ package core;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Core.V1";
 
 service CoreService {
-    rpc GetVersion (VersionInput) returns (Version);
-    rpc Admin_UploadToPrivateStorage (stream UploadFileRequest) returns (FileUploadResponse);
+  rpc GetVersion (VersionInput) returns (Version);
+  rpc Admin_UploadToPrivateStorage (stream UploadFileRequest) returns (FileUploadResponse);
 }
 
 message VersionInput {
 }
 
 message Version {
-    int32 major = 1;
-    int32 minor = 2;
-    int32 build = 3;
-    int32 revision = 4;
+  int32 major = 1;
+  int32 minor = 2;
+  int32 build = 3;
+  int32 revision = 4;
 }
 
 message UploadFileRequest {
-    string extension = 1;
-    string contentType = 2;
-    bytes chunk = 3;
+  string extension = 1;
+  string contentType = 2;
+  bytes chunk = 3;
 }
 
 message FileUploadResponse {
-    string id = 1;
-    File original = 2;
-    File thumbnail = 3;
+  string id = 1;
+  File original = 2;
+  File thumbnail = 3;
 }
 
 message File {
-    string url = 1;
-    string contentType = 2;
-    int32 width = 3;
-    int32 height = 4;
+  string url = 1;
+  string contentType = 2;
+  int32 width = 3;
+  int32 height = 4;
 }

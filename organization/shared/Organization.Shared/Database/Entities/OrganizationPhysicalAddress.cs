@@ -1,22 +1,20 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NetTopologySuite.Geometries;
 
 namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class OrganizationPhysicalAddress : EntityBaseWithDeleted, IAddressDetails
+public class OrganizationPhysicalAddress : EntityBaseWithDeleted
 {
-    public decimal? Latitude { get; set; }
-    public decimal? Longitude { get; set; }
-
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? OrganizationId { get; set; }
-    public virtual Organization Organization { get; set; }
-
+    public string? OsmType { get; set; }
+    public string? OsmId { get; set; }
+    public string? PlaceId { get; set; }
+    public Point? Coordinates { get; set; }
+    public string? FormattedAddress { get; set; }
     public string AddressLine1 { get; set; }
     public string? AddressLine2 { get; set; }
     public string Suburb { get; set; }
@@ -24,6 +22,10 @@ public class OrganizationPhysicalAddress : EntityBaseWithDeleted, IAddressDetail
     public string? Province { get; set; }
     public string Zipcode { get; set; }
     public string Country { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? OrganizationId { get; set; }
+    public virtual Organization Organization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -33,6 +35,12 @@ public class OrganizationPhysicalAddressConfiguration : IEntityTypeConfiguration
     {
         builder.ConfigureEntityBaseWithDeleted();
 
+        builder.Property(item => item.OsmType).HasMaxLength(Constants.MaxOsmTypeLength);
+        builder.Property(item => item.OsmId).HasMaxLength(Constants.MaxOsmIdLength);
+        builder.Property(item => item.PlaceId).HasMaxLength(Constants.MaxPlaceIdLength);
+        builder.Property(item => item.Coordinates).HasColumnType("geometry (point, 4326)");
+
+        builder.Property(item => item.FormattedAddress).HasMaxLength(Constants.MaxFormattedAddressLength);
         builder.Property(item => item.AddressLine1).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.AddressLine2).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.Suburb).HasMaxLength(Constants.MaxSuburbLength);

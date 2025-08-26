@@ -62,17 +62,21 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91cnNEZXRhaWxz",
             "GAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJWChNPcGVu",
             "aW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpvcGVuQWxsRGF5",
-            "GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkitQEKD1BoeXNp",
+            "GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkikgIKD1BoeXNp",
             "Y2FsQWRkcmVzcxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkS",
             "FAoMYWRkcmVzc0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5",
             "GAUgASgJEhAKCHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoH",
-            "Y291bnRyeRgIIAEoCRIYChBmb3JtYXR0ZWRBZGRyZXNzGAkgASgJIlkKDENk",
-            "bkltYWdlRmlsZRIjCghvcmlnaW5hbBgBIAEoCzIRLmxvY2F0aW9uLkNkbkZp",
-            "bGUSJAoJdGh1bWJuYWlsGAIgASgLMhEubG9jYXRpb24uQ2RuRmlsZSI1CgdD",
-            "ZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQYAiABKAUSDQoFd2lkdGgY",
-            "AyABKAUqOwoEVHlwZRIZChVUeXBlX0xvY2F0aW9uVXBzZXJ0ZWQQABIYChRU",
-            "eXBlX0xvY2F0aW9uRGVsZXRlZBABQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMu",
-            "RXZlbnRzLlNrZWR1bGFyLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "Y291bnRyeRgIIAEoCRIYChBmb3JtYXR0ZWRBZGRyZXNzGAkgASgJEg8KB29z",
+            "bVR5cGUYCiABKAkSDQoFb3NtSWQYCyABKAkSDwoHcGxhY2VJZBgMIAEoCRIq",
+            "Cgtjb29yZGluYXRlcxgNIAEoCzIVLmxvY2F0aW9uLkNvb3JkaW5hdGVzIjIK",
+            "C0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgC",
+            "IAEoASJZCgxDZG5JbWFnZUZpbGUSIwoIb3JpZ2luYWwYASABKAsyES5sb2Nh",
+            "dGlvbi5DZG5GaWxlEiQKCXRodW1ibmFpbBgCIAEoCzIRLmxvY2F0aW9uLkNk",
+            "bkZpbGUiNQoHQ2RuRmlsZRILCgN1cmwYASABKAkSDgoGaGVpZ2h0GAIgASgF",
+            "Eg0KBXdpZHRoGAMgASgFKjsKBFR5cGUSGQoVVHlwZV9Mb2NhdGlvblVwc2Vy",
+            "dGVkEAASGAoUVHlwZV9Mb2NhdGlvbkRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJl",
+            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5WYWx1ZWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -85,7 +89,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours.Parser, new[]{ "Date", "OpeningHoursDetails" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails.Parser, new[]{ "Closed", "OpenAllDay", "From", "Until" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.PhysicalAddress), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.PhysicalAddress.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country", "FormattedAddress" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.PhysicalAddress), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.PhysicalAddress.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country", "FormattedAddress", "OsmType", "OsmId", "PlaceId", "Coordinates" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates.Parser, new[]{ "Longitude", "Latitude" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null)
           }));
@@ -3484,6 +3489,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       zipcode_ = other.zipcode_;
       country_ = other.country_;
       formattedAddress_ = other.formattedAddress_;
+      osmType_ = other.osmType_;
+      osmId_ = other.osmId_;
+      placeId_ = other.placeId_;
+      coordinates_ = other.coordinates_ != null ? other.coordinates_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3601,6 +3610,54 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "osmType" field.</summary>
+    public const int OsmTypeFieldNumber = 10;
+    private string osmType_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OsmType {
+      get { return osmType_; }
+      set {
+        osmType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "osmId" field.</summary>
+    public const int OsmIdFieldNumber = 11;
+    private string osmId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OsmId {
+      get { return osmId_; }
+      set {
+        osmId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "placeId" field.</summary>
+    public const int PlaceIdFieldNumber = 12;
+    private string placeId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlaceId {
+      get { return placeId_; }
+      set {
+        placeId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "coordinates" field.</summary>
+    public const int CoordinatesFieldNumber = 13;
+    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates coordinates_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates Coordinates {
+      get { return coordinates_; }
+      set {
+        coordinates_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -3625,6 +3682,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Zipcode != other.Zipcode) return false;
       if (Country != other.Country) return false;
       if (FormattedAddress != other.FormattedAddress) return false;
+      if (OsmType != other.OsmType) return false;
+      if (OsmId != other.OsmId) return false;
+      if (PlaceId != other.PlaceId) return false;
+      if (!object.Equals(Coordinates, other.Coordinates)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3641,6 +3702,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Zipcode.Length != 0) hash ^= Zipcode.GetHashCode();
       if (Country.Length != 0) hash ^= Country.GetHashCode();
       if (FormattedAddress.Length != 0) hash ^= FormattedAddress.GetHashCode();
+      if (OsmType.Length != 0) hash ^= OsmType.GetHashCode();
+      if (OsmId.Length != 0) hash ^= OsmId.GetHashCode();
+      if (PlaceId.Length != 0) hash ^= PlaceId.GetHashCode();
+      if (coordinates_ != null) hash ^= Coordinates.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3695,6 +3760,22 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(74);
         output.WriteString(FormattedAddress);
       }
+      if (OsmType.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(OsmType);
+      }
+      if (OsmId.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(OsmId);
+      }
+      if (PlaceId.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(PlaceId);
+      }
+      if (coordinates_ != null) {
+        output.WriteRawTag(106);
+        output.WriteMessage(Coordinates);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3741,6 +3822,22 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(74);
         output.WriteString(FormattedAddress);
       }
+      if (OsmType.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(OsmType);
+      }
+      if (OsmId.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(OsmId);
+      }
+      if (PlaceId.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(PlaceId);
+      }
+      if (coordinates_ != null) {
+        output.WriteRawTag(106);
+        output.WriteMessage(Coordinates);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3777,6 +3874,18 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       if (FormattedAddress.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FormattedAddress);
+      }
+      if (OsmType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OsmType);
+      }
+      if (OsmId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OsmId);
+      }
+      if (PlaceId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlaceId);
+      }
+      if (coordinates_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Coordinates);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3816,6 +3925,21 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       if (other.FormattedAddress.Length != 0) {
         FormattedAddress = other.FormattedAddress;
+      }
+      if (other.OsmType.Length != 0) {
+        OsmType = other.OsmType;
+      }
+      if (other.OsmId.Length != 0) {
+        OsmId = other.OsmId;
+      }
+      if (other.PlaceId.Length != 0) {
+        PlaceId = other.PlaceId;
+      }
+      if (other.coordinates_ != null) {
+        if (coordinates_ == null) {
+          Coordinates = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates();
+        }
+        Coordinates.MergeFrom(other.Coordinates);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3870,6 +3994,25 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
           }
           case 74: {
             FormattedAddress = input.ReadString();
+            break;
+          }
+          case 82: {
+            OsmType = input.ReadString();
+            break;
+          }
+          case 90: {
+            OsmId = input.ReadString();
+            break;
+          }
+          case 98: {
+            PlaceId = input.ReadString();
+            break;
+          }
+          case 106: {
+            if (coordinates_ == null) {
+              Coordinates = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates();
+            }
+            input.ReadMessage(Coordinates);
             break;
           }
         }
@@ -3927,6 +4070,260 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             FormattedAddress = input.ReadString();
             break;
           }
+          case 82: {
+            OsmType = input.ReadString();
+            break;
+          }
+          case 90: {
+            OsmId = input.ReadString();
+            break;
+          }
+          case 98: {
+            PlaceId = input.ReadString();
+            break;
+          }
+          case 106: {
+            if (coordinates_ == null) {
+              Coordinates = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates();
+            }
+            input.ReadMessage(Coordinates);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class Coordinates : pb::IMessage<Coordinates>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Coordinates> _parser = new pb::MessageParser<Coordinates>(() => new Coordinates());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<Coordinates> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Coordinates() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Coordinates(Coordinates other) : this() {
+      longitude_ = other.longitude_;
+      latitude_ = other.latitude_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Coordinates Clone() {
+      return new Coordinates(this);
+    }
+
+    /// <summary>Field number for the "longitude" field.</summary>
+    public const int LongitudeFieldNumber = 1;
+    private double longitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Longitude {
+      get { return longitude_; }
+      set {
+        longitude_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "latitude" field.</summary>
+    public const int LatitudeFieldNumber = 2;
+    private double latitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Latitude {
+      get { return latitude_; }
+      set {
+        latitude_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as Coordinates);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(Coordinates other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Longitude, other.Longitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Latitude, other.Latitude)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Longitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Longitude);
+      if (Latitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Latitude);
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Longitude != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Longitude);
+      }
+      if (Latitude != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Latitude);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Longitude != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Longitude);
+      }
+      if (Latitude != 0D) {
+        output.WriteRawTag(17);
+        output.WriteDouble(Latitude);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Longitude != 0D) {
+        size += 1 + 8;
+      }
+      if (Latitude != 0D) {
+        size += 1 + 8;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(Coordinates other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Longitude != 0D) {
+        Longitude = other.Longitude;
+      }
+      if (other.Latitude != 0D) {
+        Latitude = other.Latitude;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 9: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 9: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 17: {
+            Latitude = input.ReadDouble();
+            break;
+          }
         }
       }
     }
@@ -3949,7 +4346,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4202,7 +4599,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

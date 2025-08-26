@@ -6,321 +6,321 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Booking.V1";
 
 service BookingService {
-    rpc Admin_GetPaginatedBookings (Admin_GetPaginatedBookingsInput) returns (BookingConnection);
+  rpc Admin_GetPaginatedBookings (Admin_GetPaginatedBookingsInput) returns (BookingConnection);
 
-    rpc GetVersion (VersionInput) returns (Version);
-    rpc GetPaginatedBookings (GetPaginatedBookingsInput) returns (BookingConnection);
-    rpc GetOrganizationPermissions (GetOrganizationPermissionsInput) returns (OrganizationPermissions);
-    rpc GetTeamPermissions (GetTeamPermissionsInput) returns (TeamPermissions);
-    rpc Get (GetInput) returns (Booking);
-    rpc Add (AddInput) returns (Booking);
-    rpc Update (UpdateInput) returns (Booking);
-    rpc Delete (DeleteInput) returns (Booking);
-    rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
+  rpc GetVersion (VersionInput) returns (Version);
+  rpc GetPaginatedBookings (GetPaginatedBookingsInput) returns (BookingConnection);
+  rpc GetOrganizationPermissions (GetOrganizationPermissionsInput) returns (OrganizationPermissions);
+  rpc GetTeamPermissions (GetTeamPermissionsInput) returns (TeamPermissions);
+  rpc Get (GetInput) returns (Booking);
+  rpc Add (AddInput) returns (Booking);
+  rpc Update (UpdateInput) returns (Booking);
+  rpc Delete (DeleteInput) returns (Booking);
+  rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
 }
 
 message VersionInput {
 }
 
 message Version {
-    int32 major = 1;
-    int32 minor = 2;
-    int32 build = 3;
-    int32 revision = 4;
+  int32 major = 1;
+  int32 minor = 2;
+  int32 build = 3;
+  int32 revision = 4;
 }
 
 enum OrderDirection {
-    OrderDirection_Ascending = 0;
-    OrderDirection_Descending = 1;
+  OrderDirection_Ascending = 0;
+  OrderDirection_Descending = 1;
 }
 
 message PageInfo {
-    bool hasNextPage = 1;
-    bool hasPreviousPage =2;
-    string startCursor =3;
-    string endCursor =4;
+  bool hasNextPage = 1;
+  bool hasPreviousPage =2;
+  string startCursor =3;
+  string endCursor =4;
 }
 
 message Admin_GetPaginatedBookingsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    BookingWhereInput where = 5;
-    repeated BookingOrderInput orderBy = 6;
+  string after = 1;
+  int32 first = 2;
+  string before = 3;
+  int32 last = 4;
+  BookingWhereInput where = 5;
+  repeated BookingOrderInput orderBy = 6;
 }
 
 message GetPaginatedBookingsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    BookingWhereInput where = 5;
-    repeated BookingOrderInput orderBy = 6;
+  string after = 1;
+  int32 first = 2;
+  string before = 3;
+  int32 last = 4;
+  BookingWhereInput where = 5;
+  repeated BookingOrderInput orderBy = 6;
 }
 
 message BookingWhereInput {
-    google.protobuf.Timestamp fromGt = 1;
-    google.protobuf.Timestamp fromGte  = 2;
-    google.protobuf.Timestamp fromLt  = 3;
-    google.protobuf.Timestamp fromLte  = 4;
-    google.protobuf.Timestamp toGt  = 5;
-    google.protobuf.Timestamp toGte  = 6;
-    google.protobuf.Timestamp toLt  = 7;
-    google.protobuf.Timestamp toLte  = 8;
-    string notesContains  = 9;
-    string nameContains  = 10;
-    repeated string  organizationIds  = 11;
-    repeated string locationIds  = 12;
-    repeated string teamIds  = 13;
-    repeated string customerIds  = 14;
-    bool includeMineOnly  = 15;
-    bool includeFutureBookingsOnly  = 16;
-    string type = 17;
-    repeated string paymentStatuses = 18;
+  google.protobuf.Timestamp fromGt = 1;
+  google.protobuf.Timestamp fromGte  = 2;
+  google.protobuf.Timestamp fromLt  = 3;
+  google.protobuf.Timestamp fromLte  = 4;
+  google.protobuf.Timestamp toGt  = 5;
+  google.protobuf.Timestamp toGte  = 6;
+  google.protobuf.Timestamp toLt  = 7;
+  google.protobuf.Timestamp toLte  = 8;
+  string notesContains  = 9;
+  string nameContains  = 10;
+  repeated string  organizationIds  = 11;
+  repeated string locationIds  = 12;
+  repeated string teamIds  = 13;
+  repeated string customerIds  = 14;
+  bool includeMineOnly  = 15;
+  bool includeFutureBookingsOnly  = 16;
+  string type = 17;
+  repeated string paymentStatuses = 18;
 }
 
 message BookingOrderInput {
-    OrderDirection direction = 1;
-    BookingOrderField field = 2;
+  OrderDirection direction = 1;
+  BookingOrderField field = 2;
 }
 
 enum BookingOrderField {
-    BookingOrderField_From= 0;
-    BookingOrderField_To= 1;
-    BookingOrderField_Notes= 2;
-    BookingOrderField_Type= 3;
+  BookingOrderField_From= 0;
+  BookingOrderField_To= 1;
+  BookingOrderField_Notes= 2;
+  BookingOrderField_Type= 3;
 }
 
 enum BookingType
 {
-    BookingType_WorkingFromHome = 0;
-    BookingType_WorkingFromOffice = 1;
-    BookingType_WorkingFromCoworkingSpace = 2;
-    BookingType_SickLeave = 3;
-    BookingType_AnnualLeave = 4;
-    BookingType_WellbeingLeave = 5;
-    BookingType_ClientOffice = 6;
-    BookingType_Vacation = 7;
-    BookingType_TravelingForWork = 8;
-    BookingType_NonWorkingDay = 9;
+  BookingType_WorkingFromHome = 0;
+  BookingType_WorkingFromOffice = 1;
+  BookingType_WorkingFromCoworkingSpace = 2;
+  BookingType_SickLeave = 3;
+  BookingType_AnnualLeave = 4;
+  BookingType_WellbeingLeave = 5;
+  BookingType_ClientOffice = 6;
+  BookingType_Vacation = 7;
+  BookingType_TravelingForWork = 8;
+  BookingType_NonWorkingDay = 9;
 }
 
 enum PaymentStatus
 {
-    PaymentStatus_Pending = 0;
-    PaymentStatus_Rejected = 1;
-    PaymentStatus_Confirmed = 2;
-    PaymentStatus_Expired = 3;
-    PaymentStatus_RecordNeverCreated = 4;
-    PaymentStatus_NoPaymentRequired = 5;
+  PaymentStatus_Pending = 0;
+  PaymentStatus_Rejected = 1;
+  PaymentStatus_Confirmed = 2;
+  PaymentStatus_Expired = 3;
+  PaymentStatus_RecordNeverCreated = 4;
+  PaymentStatus_NoPaymentRequired = 5;
 }
 
 enum PaymentMethod {
-    PaymentMethodCard = 0;
-    PaymentMethodBankAccount = 1;
+  PaymentMethodCard = 0;
+  PaymentMethodBankAccount = 1;
 }
 
 message BookingConnection {
-    PageInfo pageInfo = 1;
-    repeated BookingEdge edges = 2;
-    int32 totalCount = 3;
+  PageInfo pageInfo = 1;
+  repeated BookingEdge edges = 2;
+  int32 totalCount = 3;
 }
 
 message BookingEdge {
-    Booking node = 1;
-    string cursor = 2;
+  Booking node = 1;
+  string cursor = 2;
 }
 
 message Booking {
-    string id = 1;
-    google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp to = 3;
-    string notes = 4;
-    repeated Resource resources = 5;
-    BookingType type = 6;
-    PaymentStatus paymentStatus = 7;
-    bool isPaymentRequired = 8;
-    repeated Customer involvedCustomers = 9;
-    repeated Organization involvedOrganizations = 10;
-    repeated Location involvedLocations = 11;
-    repeated Team involvedTeams = 12;
-    repeated BookingSchedule Schedules = 13;
-    Customer paidByCustomer = 14;
-    Organization paidByOrganization = 15;
-    Customer createdByCustomer = 16;
-    Customer lastModifiedByCustomer = 17;
-    Customer deletedByCustomer = 18;
-    repeated LineItem lineItems = 19;
-    BookingCheckoutSession bookingCheckoutSession = 20;
-    google.protobuf.Timestamp paymentExpiry = 21;
-    bool bookedOnMarketplace = 22;
-    PaymentMethod PaymentMethod = 23;
-    double totalAmountExcludeTax = 24;
-    double taxAmount = 25;
-    double taxRatePercentage = 26;
-    double totalAmount = 27;
-    string currency = 28;
-    string InvoiceUrl = 29;
-    string InvoiceNumber = 30;
-    repeated string InvoiceEmailList = 31;
+  string id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+  string notes = 4;
+  repeated Resource resources = 5;
+  BookingType type = 6;
+  PaymentStatus paymentStatus = 7;
+  bool isPaymentRequired = 8;
+  repeated Customer involvedCustomers = 9;
+  repeated Organization involvedOrganizations = 10;
+  repeated Location involvedLocations = 11;
+  repeated Team involvedTeams = 12;
+  repeated BookingSchedule Schedules = 13;
+  Customer paidByCustomer = 14;
+  Organization paidByOrganization = 15;
+  Customer createdByCustomer = 16;
+  Customer lastModifiedByCustomer = 17;
+  Customer deletedByCustomer = 18;
+  repeated LineItem lineItems = 19;
+  BookingCheckoutSession bookingCheckoutSession = 20;
+  google.protobuf.Timestamp paymentExpiry = 21;
+  bool bookedOnMarketplace = 22;
+  PaymentMethod PaymentMethod = 23;
+  double totalAmountExcludeTax = 24;
+  double taxAmount = 25;
+  double taxRatePercentage = 26;
+  double totalAmount = 27;
+  string currency = 28;
+  string InvoiceUrl = 29;
+  string InvoiceNumber = 30;
+  repeated string InvoiceEmailList = 31;
 }
 
 message Customer {
-    string id = 1;
-    repeated Identity identities = 2;
-    string designation = 3;
-    string title = 4;
-    string name = 5;
-    string givenName = 6;
-    string middleName = 7;
-    string familyName = 8;
-    string photoUrl = 9;
-    string photoUrl24 = 10;
-    string photoUrl32 = 11;
-    string photoUrl48 = 12;
-    string photoUrl72 = 13;
-    string photoUrl192 = 14;
-    string photoUrl512 = 15;
-    string timezone = 16;
-    string locale = 17;
-    string phoneNumber = 18;
+  string id = 1;
+  repeated Identity identities = 2;
+  string designation = 3;
+  string title = 4;
+  string name = 5;
+  string givenName = 6;
+  string middleName = 7;
+  string familyName = 8;
+  string photoUrl = 9;
+  string photoUrl24 = 10;
+  string photoUrl32 = 11;
+  string photoUrl48 = 12;
+  string photoUrl72 = 13;
+  string photoUrl192 = 14;
+  string photoUrl512 = 15;
+  string timezone = 16;
+  string locale = 17;
+  string phoneNumber = 18;
 }
 
 message Identity {
-    string id = 1;
-    string email = 2;
-    bool emailVerified = 3;
+  string id = 1;
+  string email = 2;
+  bool emailVerified = 3;
 }
 
 message Organization {
-    string id = 1;
-    string uniqueAlphanumericName = 2;
-    string name = 3;
-    string contactEmail = 4;
-    string contactPhone = 5;
+  string id = 1;
+  string uniqueAlphanumericName = 2;
+  string name = 3;
+  string contactEmail = 4;
+  string contactPhone = 5;
 }
 
 message Location {
-    string id = 1;
-    string name = 2;
+  string id = 1;
+  string name = 2;
 }
 
 message Team {
-    string id = 1;
-    string name = 2;
+  string id = 1;
+  string name = 2;
 }
 
 message OrganizationCustomTag {
-    string id = 1;
-    string name = 2;
-    string color = 3;
+  string id = 1;
+  string name = 2;
+  string color = 3;
 }
 
 message OrganizationZone {
-    string id = 1;
-    string name = 2;
-    string color = 3;
+  string id = 1;
+  string name = 2;
+  string color = 3;
 }
 
 message GetOrganizationPermissionsInput {
-    string organizationId = 1;
+  string organizationId = 1;
 }
 
 message OrganizationPermissions {
-    bool canViewBookings = 1;
-    bool canAddBooking = 2;
-    bool canUpdateBooking = 3;
-    bool canDeleteBooking = 4;
+  bool canViewBookings = 1;
+  bool canAddBooking = 2;
+  bool canUpdateBooking = 3;
+  bool canDeleteBooking = 4;
 }
 
 message GetTeamPermissionsInput {
-    string teamId = 1;
+  string teamId = 1;
 }
 
 message TeamPermissions {
-    bool canViewBookings = 1;
-    bool canAddBooking = 2;
-    bool canUpdateBooking = 3;
-    bool canDeleteBooking = 4;
+  bool canViewBookings = 1;
+  bool canAddBooking = 2;
+  bool canUpdateBooking = 3;
+  bool canDeleteBooking = 4;
 }
 
 message GetInput {
-    string id = 1;
+  string id = 1;
 }
 
 message AddInput {
-    string id = 1;
-    google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp until = 3;
-    string notes = 4;
-    BookingType type = 5;
-     repeated string customerIds = 6;
-    repeated string organizationIds = 7;
-    repeated string teamIds = 8;
-    repeated string resourceIds = 9;
+  string id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp until = 3;
+  string notes = 4;
+  BookingType type = 5;
+   repeated string customerIds = 6;
+  repeated string organizationIds = 7;
+  repeated string teamIds = 8;
+  repeated string resourceIds = 9;
 }
 
 message UpdateInput {
-    string id = 1;
-    google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp until = 3;
-    string notes = 4;
-    BookingType type = 5;
-    repeated string customerIds = 6;
-    repeated string organizationIds = 7;
-    repeated string teamIds = 8;
-    repeated string resourceIds = 9;
+  string id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp until = 3;
+  string notes = 4;
+  BookingType type = 5;
+  repeated string customerIds = 6;
+  repeated string organizationIds = 7;
+  repeated string teamIds = 8;
+  repeated string resourceIds = 9;
 }
 
 message DeleteInput {
-    string id = 1;
+  string id = 1;
 }
 
 message Resource {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
-    repeated OrganizationCustomTag organizationCustomTags = 4;
-    repeated OrganizationZone organizationZones = 5;
-    string color = 6;
-    repeated Customer customers = 7;
-    ResourceType resourceType = 8;
-    int32 capacity = 9;
+  string id = 1;
+  string name = 2;
+  Location location = 3;
+  repeated OrganizationCustomTag organizationCustomTags = 4;
+  repeated OrganizationZone organizationZones = 5;
+  string color = 6;
+  repeated Customer customers = 7;
+  ResourceType resourceType = 8;
+  int32 capacity = 9;
 }
 
 message GetAvailableResourcesInput {
-    string organizationId = 1;
-    string locationId = 2;
-    google.protobuf.Timestamp from = 3;
-    google.protobuf.Timestamp until = 4;
-    repeated string CustomTagIds = 5;
-    repeated string ZoneIds = 6;
-    repeated string resourceIdsToInclude = 7;
-    string ProductId = 8;
+  string organizationId = 1;
+  string locationId = 2;
+  google.protobuf.Timestamp from = 3;
+  google.protobuf.Timestamp until = 4;
+  repeated string CustomTagIds = 5;
+  repeated string ZoneIds = 6;
+  repeated string resourceIdsToInclude = 7;
+  string ProductId = 8;
 }
 
 message AvailableResources {
-    repeated Resource resources = 1;
+  repeated Resource resources = 1;
 }
 
 message ResourceType {
-    string id = 1;
-    string name = 2;
-    string color = 3;
+  string id = 1;
+  string name = 2;
+  string color = 3;
 }
 
 message BookingSchedule {
-    google.protobuf.Timestamp from = 1;
-    google.protobuf.Timestamp until = 2;
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp until = 2;
 }
 
 message LineItem {
-    string productVersionId = 1;
-    int32 quantity = 2;
+  string productVersionId = 1;
+  int32 quantity = 2;
 }
 
 message BookingCheckoutSession {
-    string id = 1;
-    string checkoutUrl = 2;
+  string id = 1;
+  string checkoutUrl = 2;
 }

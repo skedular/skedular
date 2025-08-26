@@ -4,6 +4,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
+using NetTopologySuite.Geometries;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.BankAccount;
 using Organization.Api.GraphQL.Invitation;
@@ -23,6 +24,7 @@ using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneIn
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
 using BankAccount = Api.Shared.Services.Grpc.Skedular.Organization.V1.BankAccount;
+using Coordinates = Api.Shared.Services.Grpc.Skedular.Organization.V1.Coordinates;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
 using Identity = Organization.Shared.Models.Identity;
@@ -1182,8 +1184,11 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
-        dest.Latitude = src.Latitude;
-        dest.Longitude = src.Longitude;
+        dest.OsmType = src.OsmType;
+        dest.OsmId = src.OsmId;
+        dest.PlaceId = src.PlaceId;
+        dest.Coordinates = src.Coordinates;
+        dest.FormattedAddress = src.FormattedAddress;
         dest.AddressLine1 = src.AddressLine1;
         dest.AddressLine2 = src.AddressLine2;
         dest.Suburb = src.Suburb;
@@ -1202,8 +1207,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Latitude = src.Latitude,
-            Longitude = src.Longitude,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Coordinates,
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -1218,8 +1226,11 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id.ToSafeString(),
-            Latitude = src.Latitude,
-            Longitude = src.Longitude,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -1234,8 +1245,11 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Latitude = src.Latitude,
-            Longitude = src.Longitude,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -1249,8 +1263,12 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Latitude = src.Latitude,
-            Longitude = src.Longitude,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Longitude = src.Coordinates?.X,
+            Latitude = src.Coordinates?.Y,
+            FormattedAddress = src.ToFormattedAddress(),
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
@@ -1901,9 +1919,12 @@ public class Mapper : IMapper
             : new OrganizationPhysicalAddressDetails
             {
                 Id = src.Id,
-                Latitude = src.Latitude,
-                Longitude = src.Longitude,
-                FormattedAddress = src.FormattedAddress,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Longitude = src.Coordinates?.X,
+                Latitude = src.Coordinates?.Y,
+                FormattedAddress = src.ToFormattedAddress(),
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,
@@ -1919,8 +1940,11 @@ public class Mapper : IMapper
             : new Shared.Models.OrganizationPhysicalAddress
             {
                 Id = src.Id,
-                Latitude = src.Latitude,
-                Longitude = src.Longitude,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Coordinates = src.Coordinates,
+                FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,
@@ -1961,6 +1985,10 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
-                FormattedAddress = src.ToFormattedAddress()
+                FormattedAddress = src.ToFormattedAddress(),
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 }

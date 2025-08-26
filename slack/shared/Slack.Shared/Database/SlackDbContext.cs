@@ -28,6 +28,6 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public class SlackDbContextDesignFactory : IDesignTimeDbContextFactory<SlackDbContext>
     {
         public SlackDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<SlackDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<SlackDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

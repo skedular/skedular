@@ -96,6 +96,15 @@ message PhysicalAddress {
   string zipcode = 7;
   string country = 8;
   string formattedAddress = 9;
+  string osmType = 10;
+  string osmId = 11;
+  string placeId = 12;
+  Coordinates coordinates = 13;
+}
+
+message Coordinates {
+  double longitude = 1;
+  double latitude = 2;
 }
 
 message CdnImageFile {

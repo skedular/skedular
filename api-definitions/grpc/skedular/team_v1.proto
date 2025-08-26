@@ -4,195 +4,195 @@ package team;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Team.V1";
 
 service TeamService {
-    rpc Admin_Get (Admin_GetInput) returns (Team);
+  rpc Admin_Get (Admin_GetInput) returns (Team);
 
-    rpc GetVersion (VersionInput) returns (Version);
-    rpc Get (GetInput) returns (Team);
-    rpc GetPaginatedTeams (GetPaginatedTeamsInput) returns (TeamConnection);
-    rpc GetPermissions (GetPermissionsInput) returns (Permissions);
-    rpc Add (AddInput) returns (Team);
-    rpc Update (UpdateInput) returns (Team);
-    rpc Remove (RemoveInput) returns (Team);
+  rpc GetVersion (VersionInput) returns (Version);
+  rpc Get (GetInput) returns (Team);
+  rpc GetPaginatedTeams (GetPaginatedTeamsInput) returns (TeamConnection);
+  rpc GetPermissions (GetPermissionsInput) returns (Permissions);
+  rpc Add (AddInput) returns (Team);
+  rpc Update (UpdateInput) returns (Team);
+  rpc Remove (RemoveInput) returns (Team);
 }
 
 message VersionInput {
 }
 
 message Version {
-    int32 major = 1;
-    int32 minor = 2;
-    int32 build = 3;
-    int32 revision = 4;
+  int32 major = 1;
+  int32 minor = 2;
+  int32 build = 3;
+  int32 revision = 4;
 }
 
 enum OrderDirection {
-    OrderDirection_Ascending = 0;
-    OrderDirection_Descending = 1;
+  OrderDirection_Ascending = 0;
+  OrderDirection_Descending = 1;
 }
 
 message PageInfo {
-    bool hasNextPage = 1;
-    bool hasPreviousPage =2;
-    string startCursor =3;
-    string endCursor =4;
+  bool hasNextPage = 1;
+  bool hasPreviousPage =2;
+  string startCursor =3;
+  string endCursor =4;
 }
 
 message TeamConnection {
-    PageInfo pageInfo = 1;
-    repeated TeamEdge edges = 2;
-    int32 totalCount = 3;
+  PageInfo pageInfo = 1;
+  repeated TeamEdge edges = 2;
+  int32 totalCount = 3;
 }
 
 message TeamEdge {
-    Team node = 1;
-    string cursor = 2;
+  Team node = 1;
+  string cursor = 2;
 }
 
 message Team {
-    string id = 1;
-    string name = 2;
-    string about = 3;
-    string organizationId = 4;
-    string timezone = 5;
-    repeated TeamMember members = 6;
-    bool hasFutureBooking = 7;
-    Permissions permissions = 8;
-    Location primaryLocation = 9;
-    CdnImageFile primaryFeatureImage = 10;
+  string id = 1;
+  string name = 2;
+  string about = 3;
+  string organizationId = 4;
+  string timezone = 5;
+  repeated TeamMember members = 6;
+  bool hasFutureBooking = 7;
+  Permissions permissions = 8;
+  Location primaryLocation = 9;
+  CdnImageFile primaryFeatureImage = 10;
 }
 
 message Admin_GetInput {
-    string id = 1;
+  string id = 1;
 }
 
 message GetInput {
-    string id = 1;
+  string id = 1;
 }
 
 message GetPaginatedTeamsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    TeamWhereInput where = 5;
-    repeated TeamOrderInput orderBy = 6;
+  string after = 1;
+  int32 first = 2;
+  string before = 3;
+  int32 last = 4;
+  TeamWhereInput where = 5;
+  repeated TeamOrderInput orderBy = 6;
 }
 
 message TeamWhereInput {
-    string organizationId = 1;
-    string customerId = 2;
-    string nameContains = 3;
-    repeated string primaryLocationIds = 4;
+  string organizationId = 1;
+  string customerId = 2;
+  string nameContains = 3;
+  repeated string primaryLocationIds = 4;
 }
 
 message TeamOrderInput {
-    OrderDirection direction = 1;
-    TeamOrderField field = 2;
+  OrderDirection direction = 1;
+  TeamOrderField field = 2;
 }
 
 enum TeamOrderField {
-    TeamOrderField_Name = 0;
-    TeamOrderField_About = 1;
+  TeamOrderField_Name = 0;
+  TeamOrderField_About = 1;
 }
 
 message GetPermissionsInput {
-    string id = 1;
+  string id = 1;
 }
 
 message Permissions {
-    bool canView = 1;
-    bool canModify = 2;
-    bool canDelete = 3;
-    bool canInvitePeople = 4;
-    bool canCancelPeopleExistingInvitations = 5;
+  bool canView = 1;
+  bool canModify = 2;
+  bool canDelete = 3;
+  bool canInvitePeople = 4;
+  bool canCancelPeopleExistingInvitations = 5;
 }
 
 message AddInput {
-    string id = 1;
-    string name = 2;
-    string about = 3;
-    string organizationId = 4;
-    string timezone = 5;
-    repeated TeamMember members = 6;
-    string primaryLocationId = 7;
-    CdnImageFile primaryFeatureImage = 8;
+  string id = 1;
+  string name = 2;
+  string about = 3;
+  string organizationId = 4;
+  string timezone = 5;
+  repeated TeamMember members = 6;
+  string primaryLocationId = 7;
+  CdnImageFile primaryFeatureImage = 8;
 }
 
 message UpdateInput {
-    string id = 1;
-    string name = 2;
-    string about = 3;
-    string organizationId = 4;
-    string timezone = 5;
-    repeated TeamMember members = 6;
-    string primaryLocationId = 7;
-    CdnImageFile primaryFeatureImage = 8;
+  string id = 1;
+  string name = 2;
+  string about = 3;
+  string organizationId = 4;
+  string timezone = 5;
+  repeated TeamMember members = 6;
+  string primaryLocationId = 7;
+  CdnImageFile primaryFeatureImage = 8;
 }
 
 message RemoveInput {
-    string id = 1;
+  string id = 1;
 }
 
 message TeamMember {
-    string id = 1;
-    Customer customer = 2;
-    Role role = 3;
-    OrganizationMember organizationMember = 4;
-    TeamMemberStatus status = 5;
+  string id = 1;
+  Customer customer = 2;
+  Role role = 3;
+  OrganizationMember organizationMember = 4;
+  TeamMemberStatus status = 5;
 }
 
 enum TeamMemberStatus
 {
-    TeamMemberStatus_Active = 0;
-    TeamMemberStatus_Inactive = 1;
+  TeamMemberStatus_Active = 0;
+  TeamMemberStatus_Inactive = 1;
 }
 
 enum Role {
-    Role_Owner = 0;
-    Role_Administrator = 1;
-    Role_Member = 2;
+  Role_Owner = 0;
+  Role_Administrator = 1;
+  Role_Member = 2;
 }
 
 message Customer {
-    string id = 1;
-    string name = 2;
-    string givenName = 3;
-    string middleName = 4;
-    string familyName = 5;
-    string photoUrl = 6;
-    string photoUrl24 = 7;
-    string photoUrl32 = 8;
-    string photoUrl48 = 9;
-    string photoUrl72 = 10;
-    string photoUrl192 = 11;
-    string photoUrl512 = 12;
-    string phoneNumber = 13;
+  string id = 1;
+  string name = 2;
+  string givenName = 3;
+  string middleName = 4;
+  string familyName = 5;
+  string photoUrl = 6;
+  string photoUrl24 = 7;
+  string photoUrl32 = 8;
+  string photoUrl48 = 9;
+  string photoUrl72 = 10;
+  string photoUrl192 = 11;
+  string photoUrl512 = 12;
+  string phoneNumber = 13;
 }
 
 message Location {
-    string id = 1;
-    string name = 2;
+  string id = 1;
+  string name = 2;
 }
 
 message OrganizationMember {
-    string id = 1;
-    Customer customer = 2;
-    Role role = 3;
+  string id = 1;
+  Customer customer = 2;
+  Role role = 3;
 }
 
 enum OrganizationMemberRole {
-    OrganizationMemberRole_Owner = 0;
-    OrganizationMemberRole_Administrator = 1;
-    OrganizationMemberRole_Member = 2;
+  OrganizationMemberRole_Owner = 0;
+  OrganizationMemberRole_Administrator = 1;
+  OrganizationMemberRole_Member = 2;
 }
 
 message CdnImageFile {
-    CdnFile original = 1;
-    CdnFile thumbnail = 2;
+  CdnFile original = 1;
+  CdnFile thumbnail = 2;
 }
 
 message CdnFile {
-    string url = 1;
-    int32 height = 2;
-    int32 width = 3;
+  string url = 1;
+  int32 height = 2;
+  int32 width = 3;
 }

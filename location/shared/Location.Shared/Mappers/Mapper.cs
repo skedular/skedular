@@ -126,7 +126,11 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
-                FormattedAddress = src.ToFormattedAddress()
+                FormattedAddress = src.ToFormattedAddress(),
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>

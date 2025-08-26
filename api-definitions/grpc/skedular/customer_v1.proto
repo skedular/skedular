@@ -4,239 +4,239 @@ package customer;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Customer.V1";
 
 service CustomerService {
-    rpc Admin_Get (Admin_GetInput) returns (Customer);
-    rpc Admin_Add (Admin_AddInput) returns (Customer);
-    rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
-    rpc Admin_UpdateIdentity (Admin_UpdateIdentityInput) returns (Customer);
-    rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
-    rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
-    rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
-    rpc Admin_AddPreferredLocation (Admin_AddPreferredLocationInput) returns (Customer);
-    rpc Admin_AddPreferredTeam (Admin_AddPreferredTeamInput) returns (Customer);
+  rpc Admin_Get (Admin_GetInput) returns (Customer);
+  rpc Admin_Add (Admin_AddInput) returns (Customer);
+  rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
+  rpc Admin_UpdateIdentity (Admin_UpdateIdentityInput) returns (Customer);
+  rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
+  rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
+  rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
+  rpc Admin_AddPreferredLocation (Admin_AddPreferredLocationInput) returns (Customer);
+  rpc Admin_AddPreferredTeam (Admin_AddPreferredTeamInput) returns (Customer);
 
-    rpc GetVersion (VersionInput) returns (Version);
-    rpc Get (GetInput) returns (Customer);
-    rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
-    rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
-    rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
-    rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
-    rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
-    rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
-    rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
-    rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
-    rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
-    rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
-    rpc RemovePreferredResource (RemovePreferredResourceInput) returns (Customer);
+  rpc GetVersion (VersionInput) returns (Version);
+  rpc Get (GetInput) returns (Customer);
+  rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
+  rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
+  rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
+  rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
+  rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
+  rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
+  rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
+  rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
+  rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
+  rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
+  rpc RemovePreferredResource (RemovePreferredResourceInput) returns (Customer);
 }
 
 message VersionInput {
 }
 
 message Version {
-    int32 major = 1;
-    int32 minor = 2;
-    int32 build = 3;
-    int32 revision = 4;
+  int32 major = 1;
+  int32 minor = 2;
+  int32 build = 3;
+  int32 revision = 4;
 }
 
 message Admin_GetInput {
-    string customerId = 1;
+  string customerId = 1;
 }
 
 message GetInput {
 }
 
 message Admin_AnyCustomerExistByVerifiableTokenInput {
-    string verifiableToken = 1;
+  string verifiableToken = 1;
 }
 
 message AnyCustomerExistByVerifiableTokenResponse {
-    bool exist = 1;
-    Customer customer = 2;
+  bool exist = 1;
+  Customer customer = 2;
 }
 
 message Admin_AnyCustomerExistByEmailInput {
-    string email = 1;
+  string email = 1;
 }
 
 message AnyCustomerExistByEmailResponse {
-    bool exist = 1;
-    Customer customer = 2;
+  bool exist = 1;
+  Customer customer = 2;
 }
 
 message Admin_AddInput {
-    string id = 1;
-    repeated Identity identities = 2;
-    string designation = 3;
-    string title = 4;
-    string name = 5;
-    string givenName = 6;
-    string middleName = 7;
-    string familyName = 8;
-    string photoUrl = 9;
-    string photoUrl24 = 10;
-    string photoUrl32 = 11;
-    string photoUrl48 = 12;
-    string photoUrl72 = 13;
-    string photoUrl192 = 14;
-    string photoUrl512 = 15;
-    string timezone = 16;
-    string locale = 17;
-    Organization defaultOrganization = 18;
-    repeated Location preferredLocations = 19;
-    repeated Resource preferredResources = 20;
-    repeated Team preferredTeams = 21;
-    repeated OrganizationTag preferredOrganizationTags = 22;
-    string phoneNumber = 23;
-    bool isOnboardingDone = 24;
+  string id = 1;
+  repeated Identity identities = 2;
+  string designation = 3;
+  string title = 4;
+  string name = 5;
+  string givenName = 6;
+  string middleName = 7;
+  string familyName = 8;
+  string photoUrl = 9;
+  string photoUrl24 = 10;
+  string photoUrl32 = 11;
+  string photoUrl48 = 12;
+  string photoUrl72 = 13;
+  string photoUrl192 = 14;
+  string photoUrl512 = 15;
+  string timezone = 16;
+  string locale = 17;
+  Organization defaultOrganization = 18;
+  repeated Location preferredLocations = 19;
+  repeated Resource preferredResources = 20;
+  repeated Team preferredTeams = 21;
+  repeated OrganizationTag preferredOrganizationTags = 22;
+  string phoneNumber = 23;
+  bool isOnboardingDone = 24;
 }
 
 message Customer {
-    string id = 1;
-    repeated Identity identities = 2;
-    string designation = 3;
-    string title = 4;
-    string name = 5;
-    string givenName = 6;
-    string middleName = 7;
-    string familyName = 8;
-    string photoUrl = 9;
-    string photoUrl24 = 10;
-    string photoUrl32 = 11;
-    string photoUrl48 = 12;
-    string photoUrl72 = 13;
-    string photoUrl192 = 14;
-    string photoUrl512 = 15;
-    string timezone = 16;
-    string locale = 17;
-    Organization defaultOrganization = 18;
-    repeated Location preferredLocations = 19;
-    repeated Resource preferredResources = 20;
-    repeated Team preferredTeams = 21;
-    repeated OrganizationTag preferredOrganizationTags = 22;
-    string phoneNumber = 23;
-    bool isOnboardingDone = 24;
-    string displayableName = 25;
+  string id = 1;
+  repeated Identity identities = 2;
+  string designation = 3;
+  string title = 4;
+  string name = 5;
+  string givenName = 6;
+  string middleName = 7;
+  string familyName = 8;
+  string photoUrl = 9;
+  string photoUrl24 = 10;
+  string photoUrl32 = 11;
+  string photoUrl48 = 12;
+  string photoUrl72 = 13;
+  string photoUrl192 = 14;
+  string photoUrl512 = 15;
+  string timezone = 16;
+  string locale = 17;
+  Organization defaultOrganization = 18;
+  repeated Location preferredLocations = 19;
+  repeated Resource preferredResources = 20;
+  repeated Team preferredTeams = 21;
+  repeated OrganizationTag preferredOrganizationTags = 22;
+  string phoneNumber = 23;
+  bool isOnboardingDone = 24;
+  string displayableName = 25;
 }
 
 message Identity {
-    string id = 1;
-    string email = 2;
-    bool emailVerified = 3;
+  string id = 1;
+  string email = 2;
+  bool emailVerified = 3;
 }
 
 message Organization {
-    string id = 1;
-    string uniqueAlphanumericName = 2;
-    string name = 3;
+  string id = 1;
+  string uniqueAlphanumericName = 2;
+  string name = 3;
 }
 
 message Location {
-    string id = 1;
-    string name = 2;
-    Organization organization = 3;
+  string id = 1;
+  string name = 2;
+  Organization organization = 3;
 }
 
 message Team {
-    string id = 1;
-    string name = 2;
-    Organization organization = 3;
+  string id = 1;
+  string name = 2;
+  Organization organization = 3;
 }
 
 message Admin_AddIdentityInput {
-    string customerId = 1;
-    string id = 2;
-    string email = 3;
-    bool emailVerified = 4;
+  string customerId = 1;
+  string id = 2;
+  string email = 3;
+  bool emailVerified = 4;
 }
 
 message Admin_UpdateIdentityInput {
-    string customerId = 1;
-    string id = 2;
-    string email = 3;
-    bool emailVerified = 4;
+  string customerId = 1;
+  string id = 2;
+  string email = 3;
+  bool emailVerified = 4;
 }
 
 message Admin_SetDefaultOrganizationInput {
-    string customerId = 1;
-    string organizationId = 2;
+  string customerId = 1;
+  string organizationId = 2;
 }
 
 message Admin_AddPreferredLocationInput {
-    string customerId = 1;
-    string locationId = 2;
+  string customerId = 1;
+  string locationId = 2;
 }
 
 message Admin_AddPreferredTeamInput {
-    string customerId = 1;
-    string teamId = 2;
+  string customerId = 1;
+  string teamId = 2;
 }
 
 enum FeedbackChannel {
-    FeedbackChannel_Web = 0;
-    FeedbackChannel_Slack = 1;
-    FeedbackChannel_MsTeams = 2;
+  FeedbackChannel_Web = 0;
+  FeedbackChannel_Slack = 1;
+  FeedbackChannel_MsTeams = 2;
 }
 
 message SubmitFeedbackInput {
-    string id = 1;
-    string feedback = 2;
-    FeedbackChannel channel = 3;
+  string id = 1;
+  string feedback = 2;
+  FeedbackChannel channel = 3;
 }
 
 message Feedback {
-    string id = 1;
+  string id = 1;
 }
 
 message SetDefaultOrganizationInput {
-    string organizationId = 1;
+  string organizationId = 1;
 }
 
 message AddPreferredLocationInput {
-    string locationId = 1;
+  string locationId = 1;
 }
 
 message AddPreferredTeamInput {
-    string teamId = 1;
+  string teamId = 1;
 }
 
 message ClearDefaultOrganizationInput {
 }
 
 message RemovePreferredLocationInput {
-    string locationId = 1;
+  string locationId = 1;
 }
 
 message RemovePreferredTeamInput {
-    string teamId = 1;
+  string teamId = 1;
 }
 
 message OrganizationTag {
-    string id = 1;
-    string name = 2;
-    string type = 3;
-    string color = 4;
-    Organization organization = 5;
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string color = 4;
+  Organization organization = 5;
 }
 
 message AddPreferredOrganizationTagInput {
-    string organizationTagId = 1;
+  string organizationTagId = 1;
 }
 
 message RemovePreferredOrganizationTagInput {
-    string organizationTagId = 1;
+  string organizationTagId = 1;
 }
 
 message Resource {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
+  string id = 1;
+  string name = 2;
+  Location location = 3;
 }
 
 message AddPreferredResourceInput {
-    string resourceId = 1;
+  string resourceId = 1;
 }
 
 message RemovePreferredResourceInput {
-    string resourceId = 1;
+  string resourceId = 1;
 }

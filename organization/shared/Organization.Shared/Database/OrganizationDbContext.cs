@@ -47,6 +47,6 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>
     {
         public OrganizationDbContext CreateDbContext(string[] args) =>
-            new(args.ToDbContextOption<OrganizationDbContext>(), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
+            new(args.ToDbContextOption<OrganizationDbContext>(true), new CustomDbContextOptions { IsPooled = false, IsPostgisEnabled = true });
     }
 }

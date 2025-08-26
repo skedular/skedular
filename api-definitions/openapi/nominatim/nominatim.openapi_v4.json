@@ -113,7 +113,13 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["xml", "json", "jsonv2", "geojson", "geocodejson"],
+              "enum": [
+                "xml",
+                "json",
+                "jsonv2",
+                "geojson",
+                "geocodejson"
+              ],
               "default": "geocodejson"
             },
             "in": "query",
@@ -197,7 +203,12 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["country", "state", "city", "settlement"]
+              "enum": [
+                "country",
+                "state",
+                "city",
+                "settlement"
+              ]
             },
             "in": "query",
             "name": "featureType",
@@ -321,7 +332,9 @@
             }
           }
         },
-        "tags": ["Search"]
+        "tags": [
+          "Search"
+        ]
       }
     },
     "/reverse": {
@@ -351,7 +364,13 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["xml", "json", "jsonv2", "geojson", "geocodejson"],
+              "enum": [
+                "xml",
+                "json",
+                "jsonv2",
+                "geojson",
+                "geocodejson"
+              ],
               "default": "geocodejson"
             },
             "in": "query",
@@ -505,7 +524,9 @@
             }
           }
         },
-        "tags": ["Reverse"]
+        "tags": [
+          "Reverse"
+        ]
       }
     },
     "/lookup": {
@@ -527,7 +548,13 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["xml", "json", "jsonv2", "geojson", "geocodejson"],
+              "enum": [
+                "xml",
+                "json",
+                "jsonv2",
+                "geojson",
+                "geocodejson"
+              ],
               "default": "geocodejson"
             },
             "in": "query",
@@ -665,7 +692,9 @@
             }
           }
         },
-        "tags": ["Lookup"]
+        "tags": [
+          "Lookup"
+        ]
       }
     },
     "/status": {
@@ -677,7 +706,10 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["text", "json"],
+              "enum": [
+                "text",
+                "json"
+              ],
               "default": "json"
             },
             "in": "query",
@@ -697,7 +729,9 @@
             }
           }
         },
-        "tags": ["Status"]
+        "tags": [
+          "Status"
+        ]
       }
     },
     "/details": {
@@ -745,7 +779,9 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["json"],
+              "enum": [
+                "json"
+              ],
               "default": "json"
             },
             "in": "query",
@@ -853,7 +889,9 @@
             }
           }
         },
-        "tags": ["Debug"]
+        "tags": [
+          "Debug"
+        ]
       }
     },
     "/deletable": {
@@ -874,7 +912,9 @@
             }
           }
         },
-        "tags": ["Debug"]
+        "tags": [
+          "Debug"
+        ]
       }
     },
     "/polygons": {
@@ -895,7 +935,9 @@
             }
           }
         },
-        "tags": ["Debug"]
+        "tags": [
+          "Debug"
+        ]
       }
     }
   },
@@ -922,18 +964,29 @@
                           "properties": {
                             "osm_type": {
                               "type": "string",
-                              "examples": ["node", "way", "relation"]
+                              "examples": [
+                                "node",
+                                "way",
+                                "relation"
+                              ]
                             },
                             "osm_id": {
                               "type": "integer"
                             },
                             "osm_key": {
                               "type": "string",
-                              "examples": ["boundary", "highway", "amenity"]
+                              "examples": [
+                                "boundary",
+                                "highway",
+                                "amenity"
+                              ]
                             },
                             "osm_value": {
                               "type": "string",
-                              "examples": ["residential", "restaurant"]
+                              "examples": [
+                                "residential",
+                                "restaurant"
+                              ]
                             }
                           }
                         }
@@ -952,11 +1005,17 @@
           "status": {
             "type": "integer",
             "minimum": 0,
-            "example": [0, 700]
+            "example": [
+              0,
+              700
+            ]
           },
           "message": {
             "type": "string",
-            "example": ["OK", "Database connection failed"]
+            "example": [
+              "OK",
+              "Database connection failed"
+            ]
           },
           "data_updated": {
             "type": "string",
@@ -966,16 +1025,29 @@
             "type": "string",
             "description": "A semver.org compliant version number (see https://semver.org).",
             "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "examples": ["0.1.0", "1.0.0-beta.1", "1.0.0-0.3.7", "2.2.4"]
+            "examples": [
+              "0.1.0",
+              "1.0.0-beta.1",
+              "1.0.0-0.3.7",
+              "2.2.4"
+            ]
           },
           "database_version": {
             "type": "string",
             "description": "A semver.org compliant version number (see https://semver.org).",
             "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            "examples": ["0.1.0", "1.0.0-beta.1", "1.0.0-0.3.7", "2.2.4"]
+            "examples": [
+              "0.1.0",
+              "1.0.0-beta.1",
+              "1.0.0-0.3.7",
+              "2.2.4"
+            ]
           }
         },
-        "required": ["status", "message"]
+        "required": [
+          "status",
+          "message"
+        ]
       },
       "DetailsResponse": {
         "type": "object",
@@ -1115,7 +1187,11 @@
       },
       "OSMType": {
         "type": "string",
-        "enum": ["N", "W", "R"]
+        "enum": [
+          "N",
+          "W",
+          "R"
+        ]
       }
     }
   }
