@@ -413,7 +413,7 @@ const LocationCard = ({
           }
         />
         <CardContent>
-          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
+          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%', flexWrap: 'nowrap' }}>
             <SmallIconTypography label={`${resourcesCount} Resources`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<ResourceIcon />} />
             <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
               <SmallIconTypography label={`${availableResourcesCount} Available Today`} />
@@ -423,11 +423,11 @@ const LocationCard = ({
 
           <Divider />
 
-          <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
 
           <Divider />
 
-          <StackRow>
+          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }}>
             <StackColumn>
               <SmallIconTypography label="Shared with teammates" />
               <StackRow>
