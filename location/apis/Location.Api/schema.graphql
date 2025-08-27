@@ -111,8 +111,8 @@ type LocationPhysicalAddressDetails {
   multilinesFormattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
-  city: String!
+  suburb: String
+  city: String
   province: String
   zipcode: String!
   country: String!
@@ -292,8 +292,8 @@ input AddLocationPhysicalAddressInput {
   formattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
-  city: String!
+  suburb: String
+  city: String
   province: String
   zipcode: String!
   country: String!
@@ -437,8 +437,8 @@ input UpdateLocationPhysicalAddressInput {
   formattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
-  city: String!
+  suburb: String
+  city: String
   province: String
   zipcode: String!
   country: String!

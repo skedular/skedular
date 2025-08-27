@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47255093d2dd2ba7ed3da95f6fdbe36b>>
+ * @generated SignedSource<<ddbbdd4cf796523ac90c131079eeb78a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type myBillingAndPayment_rootQuery$data = {
     readonly billingDetails: {
       readonly addressLine1: string;
       readonly addressLine2: string | null | undefined;
-      readonly city: string;
+      readonly city: string | null | undefined;
       readonly companyName: string | null | undefined;
       readonly country: string;
       readonly countryCode: string | null | undefined;
@@ -29,7 +29,7 @@ export type myBillingAndPayment_rootQuery$data = {
       readonly osmType: string | null | undefined;
       readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
-      readonly suburb: string;
+      readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
     readonly id: string;

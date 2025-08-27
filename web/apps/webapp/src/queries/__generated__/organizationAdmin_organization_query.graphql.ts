@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8244fe2b7a64118b0f5ef74f87c1ab5>>
+ * @generated SignedSource<<2322030e01997c5a411daabc9a80f638>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type organizationAdmin_organization_query$data = {
     readonly billingDetails: {
       readonly addressLine1: string;
       readonly addressLine2: string | null | undefined;
-      readonly city: string;
+      readonly city: string | null | undefined;
       readonly companyName: string | null | undefined;
       readonly country: string;
       readonly countryCode: string | null | undefined;
@@ -51,7 +51,7 @@ export type organizationAdmin_organization_query$data = {
       readonly osmType: string | null | undefined;
       readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
-      readonly suburb: string;
+      readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
     readonly canModify: boolean;
@@ -79,7 +79,7 @@ export type organizationAdmin_organization_query$data = {
     readonly physicalAddress: {
       readonly addressLine1: string;
       readonly addressLine2: string | null | undefined;
-      readonly city: string;
+      readonly city: string | null | undefined;
       readonly country: string;
       readonly countryCode: string | null | undefined;
       readonly formattedAddress: string | null | undefined;
@@ -90,7 +90,7 @@ export type organizationAdmin_organization_query$data = {
       readonly osmType: string | null | undefined;
       readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
-      readonly suburb: string;
+      readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
     readonly ssoSettings: {

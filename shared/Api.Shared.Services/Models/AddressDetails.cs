@@ -5,8 +5,8 @@ public interface IAddressDetails
     string? FormattedAddress { get; set; }
     string AddressLine1 { get; set; }
     string? AddressLine2 { get; set; }
-    string Suburb { get; set; }
-    string City { get; set; }
+    string? Suburb { get; set; }
+    string? City { get; set; }
     string? Province { get; set; }
     string Zipcode { get; set; }
     string Country { get; set; }

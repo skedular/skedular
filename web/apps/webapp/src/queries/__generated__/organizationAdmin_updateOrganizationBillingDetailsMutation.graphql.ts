@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e01d35353fd342b1addc27c45e0ce24f>>
+ * @generated SignedSource<<10543bd6d6b0470cf97b466a6f384671>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type UpdateOrganizationBillingDetailsInput = {
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
   province?: string | null | undefined;
-  suburb: string;
+  suburb?: string | null | undefined;
   zipcode: string;
 };
 export type organizationAdmin_updateOrganizationBillingDetailsMutation$variables = {
@@ -38,7 +38,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
       readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
@@ -51,7 +51,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$data = {
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly id: string;
@@ -64,7 +64,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawRespon
       readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
@@ -77,7 +77,7 @@ export type organizationAdmin_updateOrganizationBillingDetailsMutation$rawRespon
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly id: string;

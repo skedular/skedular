@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed31dbecb1d94bfdf80676094efc379e>>
+ * @generated SignedSource<<f2d9e95dafd28208d905035b6d4a27f2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UpdateLocationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
-  city: string;
+  city?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   country: string;
   countryCode?: string | null | undefined;
@@ -24,7 +24,7 @@ export type UpdateLocationPhysicalAddressInput = {
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
   province?: string | null | undefined;
-  suburb: string;
+  suburb?: string | null | undefined;
   zipcode: string;
 };
 export type organizationLocation_updateLocationPhysicalAddressMutation$variables = {
@@ -37,7 +37,7 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$data = {
       readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
         readonly formattedAddress: string | null | undefined;
@@ -48,7 +48,7 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$data = {
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
     };
@@ -61,7 +61,7 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$rawRespon
       readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
         readonly formattedAddress: string | null | undefined;
@@ -72,7 +72,7 @@ export type organizationLocation_updateLocationPhysicalAddressMutation$rawRespon
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
     };

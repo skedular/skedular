@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e042b4b38d8098b4b0c42d4bc013044a>>
+ * @generated SignedSource<<737b0bd6a6955fe76a4f988e3bc1ac4b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type AddMyBillingDetailsInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
-  city: string;
+  city?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   companyName?: string | null | undefined;
   country: string;
@@ -26,7 +26,7 @@ export type AddMyBillingDetailsInput = {
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;
   province?: string | null | undefined;
-  suburb: string;
+  suburb?: string | null | undefined;
   zipcode: string;
 };
 export type myBillingAndPayment_addMyBillingDetailsMutation$variables = {
@@ -38,7 +38,7 @@ export type myBillingAndPayment_addMyBillingDetailsMutation$data = {
       readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
@@ -51,7 +51,7 @@ export type myBillingAndPayment_addMyBillingDetailsMutation$data = {
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly id: string;
@@ -64,7 +64,7 @@ export type myBillingAndPayment_addMyBillingDetailsMutation$rawResponse = {
       readonly billingDetails: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly companyName: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
@@ -77,7 +77,7 @@ export type myBillingAndPayment_addMyBillingDetailsMutation$rawResponse = {
         readonly osmType: string | null | undefined;
         readonly placeId: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly id: string;

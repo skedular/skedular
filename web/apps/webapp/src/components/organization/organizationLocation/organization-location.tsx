@@ -104,8 +104,8 @@ const locationSchema = object({
 type PhysicalAddress = {
   addressLine1: string;
   addressLine2: string | null;
-  suburb: string;
-  city: string;
+  suburb: string | null;
+  city: string | null;
   province: string | null;
   zipcode: string;
   countryCode: string;
@@ -114,8 +114,8 @@ type PhysicalAddress = {
 const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
-  suburb: string().required('Suburb is required'),
-  city: string().required('City is required'),
+  suburb: string(),
+  city: string(),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
   countryCode: string().required('Country is required'),

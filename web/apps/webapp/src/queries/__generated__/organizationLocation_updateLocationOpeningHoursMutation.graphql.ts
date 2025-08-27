@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e5d4e2bd319968d0684927a22aa21ef>>
+ * @generated SignedSource<<fef108fc99f6732783d66ee5ad9e6c0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -94,11 +94,11 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
       readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly timezone: string | null | undefined;
@@ -167,12 +167,12 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
       readonly physicalAddress: {
         readonly addressLine1: string;
         readonly addressLine2: string | null | undefined;
-        readonly city: string;
+        readonly city: string | null | undefined;
         readonly country: string;
         readonly countryCode: string | null | undefined;
         readonly id: string;
         readonly province: string | null | undefined;
-        readonly suburb: string;
+        readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
       readonly timezone: string | null | undefined;

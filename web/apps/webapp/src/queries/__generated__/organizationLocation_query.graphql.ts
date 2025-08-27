@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5fe50ec641cba9cfef5da748e8ff84b8>>
+ * @generated SignedSource<<0f53cb7fe2be2ba297d593dd91464f70>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -72,7 +72,7 @@ export type organizationLocation_query$data = {
     readonly physicalAddress: {
       readonly addressLine1: string;
       readonly addressLine2: string | null | undefined;
-      readonly city: string;
+      readonly city: string | null | undefined;
       readonly country: string;
       readonly countryCode: string | null | undefined;
       readonly formattedAddress: string | null | undefined;
@@ -83,7 +83,7 @@ export type organizationLocation_query$data = {
       readonly osmType: string | null | undefined;
       readonly placeId: string | null | undefined;
       readonly province: string | null | undefined;
-      readonly suburb: string;
+      readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
     readonly primaryFeatureImage: {

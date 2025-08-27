@@ -27,8 +27,8 @@ type CustomerBillingDetails {
   multilinesFormattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
-  city: String!
+  suburb: String
+  city: String
   province: String
   zipcode: String!
   country: String!
@@ -217,8 +217,8 @@ input AddMyBillingDetailsInput {
   formattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
-  city: String!
+  suburb: String
+  city: String
   province: String
   zipcode: String!
   country: String!
@@ -306,7 +306,7 @@ input UpdateMyBillingDetailsInput {
   formattedAddress: String
   addressLine1: String!
   addressLine2: String
-  suburb: String!
+  suburb: String
   city: String!
   province: String
   zipcode: String!

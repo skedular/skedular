@@ -270,7 +270,7 @@ type CurrencyDetails {
 type CustomerBillingDetails {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   companyName: String
   country: String!
   countryCode: String
@@ -284,7 +284,7 @@ type CustomerBillingDetails {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -498,7 +498,7 @@ type LocationPayload {
 type LocationPhysicalAddressDetails {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   country: String!
   countryCode: String
   formattedAddress: String
@@ -511,7 +511,7 @@ type LocationPhysicalAddressDetails {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -725,7 +725,7 @@ type OrganizationBankAccountsPayload {
 type OrganizationBillingDetails {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   companyName: String
   country: String!
   countryCode: String
@@ -739,7 +739,7 @@ type OrganizationBillingDetails {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -887,7 +887,7 @@ type OrganizationPaymentMethod {
 type OrganizationPhysicalAddressDetails {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   country: String!
   countryCode: String
   formattedAddress: String
@@ -900,7 +900,7 @@ type OrganizationPhysicalAddressDetails {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -1444,7 +1444,7 @@ input AddLocationInput {
 input AddLocationPhysicalAddressInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   country: String!
   countryCode: String
@@ -1457,7 +1457,7 @@ input AddLocationPhysicalAddressInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -1473,7 +1473,7 @@ input AddLocationTagInput {
 input AddMyBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   companyName: String
   country: String!
@@ -1487,7 +1487,7 @@ input AddMyBillingDetailsInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -1506,7 +1506,7 @@ input AddOrganizationBankAccountInput {
 input AddOrganizationBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   companyName: String
   country: String!
@@ -1521,7 +1521,7 @@ input AddOrganizationBillingDetailsInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -1549,7 +1549,7 @@ input AddOrganizationPaymentMethodIntentInput {
 input AddOrganizationPhysicalAddressInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   country: String!
   countryCode: String
@@ -1562,7 +1562,7 @@ input AddOrganizationPhysicalAddressInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -2232,7 +2232,7 @@ input UpdateLocationOpeningHoursInput {
 input UpdateLocationPhysicalAddressInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   country: String!
   countryCode: String
@@ -2244,7 +2244,7 @@ input UpdateLocationPhysicalAddressInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -2280,7 +2280,7 @@ input UpdateMyBillingDetailsInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -2324,7 +2324,7 @@ input UpdateOrganizationBillingDetailsInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
@@ -2351,7 +2351,7 @@ input UpdateOrganizationOfferingInput {
 input UpdateOrganizationPhysicalAddressInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   country: String!
   countryCode: String
@@ -2363,7 +2363,7 @@ input UpdateOrganizationPhysicalAddressInput {
   osmType: String
   placeId: String
   province: String
-  suburb: String!
+  suburb: String
   zipcode: String!
 }
 
