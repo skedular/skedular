@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10543bd6d6b0470cf97b466a6f384671>>
+ * @generated SignedSource<<9c8df7a8a34785a7d8ed97401de9194c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationBillingDetailsInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
-  city: string;
+  city?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   companyName?: string | null | undefined;
   country: string;

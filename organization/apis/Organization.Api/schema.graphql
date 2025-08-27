@@ -877,7 +877,7 @@ input UpdateOrganizationBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
   suburb: String
-  city: String!
+  city: String
   province: String
   zipcode: String!
   country: String!

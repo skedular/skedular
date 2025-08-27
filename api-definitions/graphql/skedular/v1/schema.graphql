@@ -2266,7 +2266,7 @@ input UpdateLocationTagInput {
 input UpdateMyBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   companyName: String
   country: String!
@@ -2310,7 +2310,7 @@ input UpdateOrganizationBankAccountInput {
 input UpdateOrganizationBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
-  city: String!
+  city: String
   clientMutationId: String
   companyName: String
   country: String!
