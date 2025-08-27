@@ -31,6 +31,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useState, useTransition } from 'react';
@@ -69,6 +71,7 @@ const RootQuery = graphql`
         province
         zipcode
         country
+        countryCode
       }
     }
     ...myBillingAndPayment_customerPaymentMethodsDetails_query
@@ -84,7 +87,7 @@ type CustomerBillingDetails = {
   city: string;
   province: string | null;
   zipcode: string;
-  country: string;
+  countryCode: string;
 };
 
 const customerBillingSchema = object({
@@ -98,7 +101,7 @@ const customerBillingSchema = object({
   city: string().required('City is required'),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
+  countryCode: string().required('Country is required'),
 });
 
 const MyBillingAndPayment = ({ queryReference }: Props) => {
@@ -145,6 +148,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -173,6 +177,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -216,7 +221,8 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
   const [billingZipcode, setBillingZipcode] = useState<string>(rootData.me.billingDetails?.zipcode ?? '');
   const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
   const [billingCountry, setBillingCountry] = useState<string>(rootData.me.billingDetails?.country ?? '');
-  const debounceSetBillingCountry = useDebounceCallback(setBillingCountry, keyboardTextFieldDebounceTimeout);
+  const [billingCountryCode, setBillingCountryCode] = useState<string>(rootData.me.billingDetails?.countryCode ?? '');
+  const debounceSetBillingCountryCode = useDebounceCallback(setBillingCountryCode, keyboardTextFieldDebounceTimeout);
 
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
@@ -248,10 +254,17 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
     setBillingCity(address.city ?? '');
     setBillingProvince(address.province ?? '');
     setBillingZipcode(address.zipcode ?? '');
-    setBillingCountry(address.countryCode ?? '');
+    setBillingCountry(address.country ?? '');
+    setBillingCountryCode(address.countryCode ?? '');
   };
 
-  const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: CustomerBillingDetails) => {
+  const handleMyBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: CustomerBillingDetails) => {
+    const countryData = getCountryData(countryCode as TCountryCode);
+    let country = billingCountry;
+    if (countryData) {
+      country = countryData.name;
+    }
+
     const billingDetails = rootData.me.billingDetails;
     if (billingDetails) {
       const toastId = themedToast(<NotificationContent content={`Updating billing...`} />, infoNotificationOptions);
@@ -276,6 +289,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -320,6 +334,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -349,6 +364,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -393,6 +409,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -502,7 +519,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 city: billingCity,
                 province: billingProvince,
                 zipcode: billingZipcode,
-                country: billingCountry,
+                countryCode: billingCountryCode,
               }}
               validate={validateCustomerBilling}
               render={({ handleSubmit, values }) => {
@@ -514,7 +531,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 debounceSetBillingCity(values!.city);
                 debounceSetBillingProvince(values!.province);
                 debounceSetBillingZipcode(values!.zipcode);
-                debounceSetBillingCountry(values!.country);
+                debounceSetBillingCountryCode(values!.countryCode);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -547,8 +564,8 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                       provinceRequired={requiredCustomerBillingFields.province}
                       zipcodeName="zipcode"
                       zipcodeRequired={requiredCustomerBillingFields.zipcode}
-                      countryName="country"
-                      countryRequired={requiredCustomerBillingFields.country}
+                      countryName="countryCode"
+                      countryRequired={requiredCustomerBillingFields.countryCode}
                       onSelect={handleBillingAddressSelect}
                     />
 

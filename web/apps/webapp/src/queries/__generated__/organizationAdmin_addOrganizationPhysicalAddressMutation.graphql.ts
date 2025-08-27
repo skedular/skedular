@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da4ab743b18995a168a0b280316f343f>>
+ * @generated SignedSource<<57e5efb6e0a4fa74efad7734c3fa2813>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type AddOrganizationPhysicalAddressInput = {
   city: string;
   clientMutationId?: string | null | undefined;
   country: string;
+  countryCode?: string | null | undefined;
   formattedAddress?: string | null | undefined;
   id?: string | null | undefined;
   latitude?: number | null | undefined;
@@ -39,6 +40,7 @@ export type organizationAdmin_addOrganizationPhysicalAddressMutation$data = {
         readonly addressLine2: string | null | undefined;
         readonly city: string;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
         readonly latitude: number | null | undefined;
@@ -62,6 +64,7 @@ export type organizationAdmin_addOrganizationPhysicalAddressMutation$rawResponse
         readonly addressLine2: string | null | undefined;
         readonly city: string;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
         readonly latitude: number | null | undefined;
@@ -220,6 +223,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "country",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "countryCode",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -249,16 +259,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "041fa3e66d4952887921d8bcded3f968",
+    "cacheID": "84c2ef943300108fd694f1accec132b5",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_addOrganizationPhysicalAddressMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_addOrganizationPhysicalAddressMutation(\n  $input: AddOrganizationPhysicalAddressInput!\n) {\n  addOrganizationPhysicalAddress(input: $input) {\n    organization {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_addOrganizationPhysicalAddressMutation(\n  $input: AddOrganizationPhysicalAddressInput!\n) {\n  addOrganizationPhysicalAddress(input: $input) {\n    organization {\n      id\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "59f947772ed3b1298a9deb262ff3f1d9";
+(node as any).hash = "ae54b57972d29ba3f3927fc143c72805";
 
 export default node;

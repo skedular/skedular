@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25ea28c0ad212bbae805aa4f060d3e94>>
+ * @generated SignedSource<<e0aed1aac0dba7176b7e705243f1a852>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type AddOrganizationBankAccountInput = {
   bankName: string;
   clientMutationId?: string | null | undefined;
   country: string;
+  countryCode?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
   organizationId: string;

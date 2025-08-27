@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5009d8f9316ef17d43d2231b379747d7>>
+ * @generated SignedSource<<5fe50ec641cba9cfef5da748e8ff84b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,6 +74,7 @@ export type organizationLocation_query$data = {
       readonly addressLine2: string | null | undefined;
       readonly city: string;
       readonly country: string;
+      readonly countryCode: string | null | undefined;
       readonly formattedAddress: string | null | undefined;
       readonly id: string;
       readonly latitude: number | null | undefined;
@@ -442,6 +443,13 @@ return {
               "kind": "ScalarField",
               "name": "country",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "countryCode",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -594,6 +602,6 @@ return {
 };
 })();
 
-(node as any).hash = "d031465ffc734cd543a4de2e7bba0b70";
+(node as any).hash = "445ebcba189da28eb053c47f23c02d9f";
 
 export default node;

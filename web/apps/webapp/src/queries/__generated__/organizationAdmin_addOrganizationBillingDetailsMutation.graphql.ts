@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b8922ab2c922a92687331112ef5af15>>
+ * @generated SignedSource<<f13fe678cc4ca65f64de7ce8dfebf746>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AddOrganizationBillingDetailsInput = {
   clientMutationId?: string | null | undefined;
   companyName?: string | null | undefined;
   country: string;
+  countryCode?: string | null | undefined;
   email: string;
   formattedAddress?: string | null | undefined;
   id?: string | null | undefined;
@@ -41,6 +42,7 @@ export type organizationAdmin_addOrganizationBillingDetailsMutation$data = {
         readonly city: string;
         readonly companyName: string | null | undefined;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
@@ -66,6 +68,7 @@ export type organizationAdmin_addOrganizationBillingDetailsMutation$rawResponse 
         readonly city: string;
         readonly companyName: string | null | undefined;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
@@ -240,6 +243,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "country",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "countryCode",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -269,16 +279,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "d0aeb352f5e829c84b976902d606c95f",
+    "cacheID": "8f4819da6591908bbe8be3a8ba9c5534",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_addOrganizationBillingDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_addOrganizationBillingDetailsMutation(\n  $input: AddOrganizationBillingDetailsInput!\n) {\n  addOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_addOrganizationBillingDetailsMutation(\n  $input: AddOrganizationBillingDetailsInput!\n) {\n  addOrganizationBillingDetails(input: $input) {\n    organization {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3478718d3138b765eef40ae4c03afe15";
+(node as any).hash = "b9c15e8c0209be2455e6806b77194ea4";
 
 export default node;

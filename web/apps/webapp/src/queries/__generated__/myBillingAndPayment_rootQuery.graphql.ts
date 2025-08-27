@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<37db6c974e19f9553b69c417a102ce07>>
+ * @generated SignedSource<<47255093d2dd2ba7ed3da95f6fdbe36b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type myBillingAndPayment_rootQuery$data = {
       readonly city: string;
       readonly companyName: string | null | undefined;
       readonly country: string;
+      readonly countryCode: string | null | undefined;
       readonly email: string;
       readonly formattedAddress: string | null | undefined;
       readonly id: string;
@@ -161,6 +162,13 @@ v1 = {
       "kind": "ScalarField",
       "name": "country",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "countryCode",
+      "storageKey": null
     }
   ],
   "storageKey": null
@@ -256,16 +264,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bc74292c0031443f6a9bcd5002f89d59",
+    "cacheID": "9cd7adccd8f2d9616cc420682eeb1ea8",
     "id": null,
     "metadata": {},
     "name": "myBillingAndPayment_rootQuery",
     "operationKind": "query",
-    "text": "query myBillingAndPayment_rootQuery {\n  me {\n    id\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n  ...myBillingAndPayment_customerPaymentMethodsDetails_query\n}\n\nfragment myBillingAndPayment_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
+    "text": "query myBillingAndPayment_rootQuery {\n  me {\n    id\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n  }\n  ...myBillingAndPayment_customerPaymentMethodsDetails_query\n}\n\nfragment myBillingAndPayment_customerPaymentMethodsDetails_query on Query {\n  me {\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c811d38c9d11311028396ffd01277bc4";
+(node as any).hash = "72041798d6388728c4dd06986a6a4da6";
 
 export default node;

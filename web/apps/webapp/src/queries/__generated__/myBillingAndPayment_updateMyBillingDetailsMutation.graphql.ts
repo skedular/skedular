@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8af0f2771f632eea76214807909c974>>
+ * @generated SignedSource<<988ceb9a763423551fcf97642445fec5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type UpdateMyBillingDetailsInput = {
   clientMutationId?: string | null | undefined;
   companyName?: string | null | undefined;
   country: string;
+  countryCode?: string | null | undefined;
   email: string;
   formattedAddress?: string | null | undefined;
   id: string;
@@ -40,6 +41,7 @@ export type myBillingAndPayment_updateMyBillingDetailsMutation$data = {
         readonly city: string;
         readonly companyName: string | null | undefined;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
@@ -65,6 +67,7 @@ export type myBillingAndPayment_updateMyBillingDetailsMutation$rawResponse = {
         readonly city: string;
         readonly companyName: string | null | undefined;
         readonly country: string;
+        readonly countryCode: string | null | undefined;
         readonly email: string;
         readonly formattedAddress: string | null | undefined;
         readonly id: string;
@@ -239,6 +242,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "country",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "countryCode",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -268,16 +278,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "2b104e037a5c440658b6d17a3767ab76",
+    "cacheID": "ddad967c291e9ce7e463452c69f88afe",
     "id": null,
     "metadata": {},
     "name": "myBillingAndPayment_updateMyBillingDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation myBillingAndPayment_updateMyBillingDetailsMutation(\n  $input: UpdateMyBillingDetailsInput!\n) {\n  updateMyBillingDetails(input: $input) {\n    customer {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation myBillingAndPayment_updateMyBillingDetailsMutation(\n  $input: UpdateMyBillingDetailsInput!\n) {\n  updateMyBillingDetails(input: $input) {\n    customer {\n      id\n      billingDetails {\n        id\n        companyName\n        email\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9c8d1108a99c29039b45d54c64efb090";
+(node as any).hash = "865036bf091bd7038a15ddc887f2d3d6";
 
 export default node;

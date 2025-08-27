@@ -74,6 +74,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Switch from '@mui/material/Switch';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
@@ -125,7 +127,7 @@ type PhysicalAddress = {
   city: string;
   province: string | null;
   zipcode: string;
-  country: string;
+  countryCode: string;
 };
 
 const physicalAddressSchema = object({
@@ -135,7 +137,7 @@ const physicalAddressSchema = object({
   city: string().required('City is required'),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
+  countryCode: string().required('Country is required'),
 });
 
 type BillingDetails = {
@@ -147,7 +149,7 @@ type BillingDetails = {
   city: string;
   province: string | null;
   zipcode: string;
-  country: string;
+  countryCode: string;
 };
 
 const billingSchema = object({
@@ -161,7 +163,7 @@ const billingSchema = object({
   city: string().required('City is required'),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
+  countryCode: string().required('Country is required'),
 });
 
 type ssoSettingsDetails = {
@@ -276,6 +278,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
           hasAttachedPaymentMethod
           paymentMethods {
@@ -333,6 +336,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -458,6 +462,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -486,6 +491,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -512,6 +518,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -538,6 +545,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -718,7 +726,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(rootDataOrganization.organization?.physicalAddress?.zipcode ?? '');
   const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
   const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootDataOrganization.organization?.physicalAddress?.country ?? '');
-  const debounceSetPhysicalAddressCountry = useDebounceCallback(setPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>(rootDataOrganization.organization?.physicalAddress?.countryCode ?? '');
+  const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
 
   const validateOrganizationBilling = makeValidate(billingSchema);
   const requiredBillingFields = makeRequired(billingSchema);
@@ -745,7 +754,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const [billingZipcode, setBillingZipcode] = useState<string>(rootDataOrganization.organization?.billingDetails?.zipcode ?? '');
   const debounceSetBillingZipcode = useDebounceCallback(setBillingZipcode, keyboardTextFieldDebounceTimeout);
   const [billingCountry, setBillingCountry] = useState<string>(rootDataOrganization.organization?.billingDetails?.country ?? '');
-  const debounceSetBillingCountry = useDebounceCallback(setBillingCountry, keyboardTextFieldDebounceTimeout);
+  const [billingCountryCode, setBillingCountryCode] = useState<string>(rootDataOrganization.organization?.billingDetails?.countryCode ?? '');
+  const debounceSetBillingCountryCode = useDebounceCallback(setBillingCountryCode, keyboardTextFieldDebounceTimeout);
 
   const validateSsoSettings = makeValidate(ssoSettingsSchema);
   const requiredSsoSettingsFields = makeRequired(ssoSettingsSchema);
@@ -941,13 +951,20 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     setBillingCity(address.city ?? '');
     setBillingProvince(address.province ?? '');
     setBillingZipcode(address.zipcode ?? '');
-    setBillingCountry(address.countryCode ?? '');
+    setBillingCountry(address.country ?? '');
+    setBillingCountryCode(address.countryCode ?? '');
   };
 
-  const handleBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: BillingDetails) => {
+  const handleBillingDetailUpdateClick = ({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: BillingDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
+    }
+
+    const countryData = getCountryData(countryCode as TCountryCode);
+    let country = billingCountry;
+    if (countryData) {
+      country = countryData.name;
     }
 
     const billingDetails = organization.billingDetails;
@@ -975,6 +992,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -1019,6 +1037,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -1049,6 +1068,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -1093,6 +1113,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -1114,13 +1135,20 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     setPhysicalAddressCity(address.city ?? '');
     setPhysicalAddressProvince(address.province ?? '');
     setPhysicalAddressZipcode(address.zipcode ?? '');
-    setPhysicalAddressCountry(address.countryCode ?? '');
+    setPhysicalAddressCountry(address.country ?? '');
+    setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
-  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: PhysicalAddress) => {
+  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddress) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
+    }
+
+    const countryData = getCountryData(countryCode as TCountryCode);
+    let country = physicalAddressCountry;
+    if (countryData) {
+      country = countryData.name;
     }
 
     const physicalAddress = organization.physicalAddress;
@@ -1146,6 +1174,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -1188,6 +1217,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -1216,6 +1246,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -1258,6 +1289,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -2321,7 +2353,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 city: physicalAddressCity,
                 province: physicalAddressProvince,
                 zipcode: physicalAddressZipcode,
-                country: physicalAddressCountry,
+                countryCode: physicalAddressCountryCode,
               }}
               validate={validatePhysicalAddress}
               render={({ handleSubmit, values }) => {
@@ -2331,7 +2363,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 debounceSetPhysicalAddressCity(values!.city);
                 debounceSetPhysicalAddressProvince(values!.province);
                 debounceSetPhysicalAddressZipcode(values!.zipcode);
-                debounceSetPhysicalAddressCountry(values!.country);
+                debounceSetPhysicalAddressCountryCode(values!.countryCode);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2359,8 +2391,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       provinceRequired={requiredPhysicalAddressFields.province}
                       zipcodeName="zipcode"
                       zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                      countryName="country"
-                      countryRequired={requiredPhysicalAddressFields.country}
+                      countryName="countryCode"
+                      countryRequired={requiredPhysicalAddressFields.countryCode}
                       onSelect={handlePhysicalAddressSelect}
                     />
 
@@ -2387,7 +2419,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 city: billingCity,
                 province: billingProvince,
                 zipcode: billingZipcode,
-                country: billingCountry,
+                countryCode: billingCountryCode,
               }}
               validate={validateOrganizationBilling}
               render={({ handleSubmit, values }) => {
@@ -2399,7 +2431,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 debounceSetBillingCity(values!.city);
                 debounceSetBillingProvince(values!.province);
                 debounceSetBillingZipcode(values!.zipcode);
-                debounceSetBillingCountry(values!.country);
+                debounceSetBillingCountryCode(values!.countryCode);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2437,8 +2469,8 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                       provinceRequired={requiredBillingFields.province}
                       zipcodeName="zipcode"
                       zipcodeRequired={requiredBillingFields.zipcode}
-                      countryName="country"
-                      countryRequired={requiredBillingFields.country}
+                      countryName="countryCode"
+                      countryRequired={requiredBillingFields.countryCode}
                       onSelect={handleBillingAddressSelect}
                     />
 

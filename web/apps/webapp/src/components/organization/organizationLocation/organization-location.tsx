@@ -58,6 +58,8 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -106,7 +108,7 @@ type PhysicalAddress = {
   city: string;
   province: string | null;
   zipcode: string;
-  country: string;
+  countryCode: string;
 };
 
 const physicalAddressSchema = object({
@@ -116,7 +118,7 @@ const physicalAddressSchema = object({
   city: string().required('City is required'),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
-  country: string().required('Country is required'),
+  countryCode: string().required('Country is required'),
 });
 
 type ResourceTypeDetails = {
@@ -210,6 +212,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province
             zipcode
             country
+            countryCode
           }
           locationTags {
             uniqueId
@@ -555,6 +558,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province
             zipcode
             country
+            countryCode
           }
           locationTags {
             uniqueId
@@ -632,6 +636,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -658,6 +663,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province
             zipcode
             country
+            countryCode
           }
         }
       }
@@ -752,7 +758,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>(rootData.location?.physicalAddress?.zipcode ?? '');
   const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
   const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>(rootData.location?.physicalAddress?.country ?? '');
-  const debounceSetPhysicalAddressCountry = useDebounceCallback(setPhysicalAddressCountry, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>(rootData.location?.physicalAddress?.countryCode ?? '');
+  const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
 
   useEffect(() => {
     if (!section || section === 'setup') {
@@ -874,13 +881,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     setPhysicalAddressCity(address.city ?? '');
     setPhysicalAddressProvince(address.province ?? '');
     setPhysicalAddressZipcode(address.zipcode ?? '');
-    setPhysicalAddressCountry(address.countryCode ?? '');
+    setPhysicalAddressCountry(address.country ?? '');
+    setPhysicalAddressCountryCode(address.countryCode ?? '');
   };
 
-  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, country }: PhysicalAddress) => {
+  const handlePhysicalAddressUpdateClick = ({ addressLine1, addressLine2, suburb, city, province, zipcode, countryCode }: PhysicalAddress) => {
     const location = rootData.location;
     if (!location) {
       return;
+    }
+
+    const countryData = getCountryData(countryCode as TCountryCode);
+    let country = physicalAddressCountry;
+    if (countryData) {
+      country = countryData.name;
     }
 
     const physicalAddress = location.physicalAddress;
@@ -906,6 +920,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -948,6 +963,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -976,6 +992,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             province,
             zipcode,
             country,
+            countryCode,
           },
         },
         onCompleted: (_, errors) => {
@@ -1018,6 +1035,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 province,
                 zipcode,
                 country,
+                countryCode,
               },
             },
           },
@@ -1751,7 +1769,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 city: physicalAddressCity,
                 province: physicalAddressProvince,
                 zipcode: physicalAddressZipcode,
-                country: physicalAddressCountry,
+                countryCode: physicalAddressCountryCode,
               }}
               validate={validatePhysicalAddress}
               render={({ handleSubmit, values }) => {
@@ -1761,7 +1779,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetPhysicalAddressCity(values!.city);
                 debounceSetPhysicalAddressProvince(values!.province);
                 debounceSetPhysicalAddressZipcode(values!.zipcode);
-                debounceSetPhysicalAddressCountry(values!.country);
+                debounceSetPhysicalAddressCountryCode(values!.countryCode);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -1789,8 +1807,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       provinceRequired={requiredPhysicalAddressFields.province}
                       zipcodeName="zipcode"
                       zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                      countryName="country"
-                      countryRequired={requiredPhysicalAddressFields.country}
+                      countryName="countryCode"
+                      countryRequired={requiredPhysicalAddressFields.countryCode}
                       onSelect={handlePhysicalAddressSelect}
                     />
 
