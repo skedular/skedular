@@ -14,6 +14,7 @@ public class OrganizationBankAccountDetails : Node
     [GraphQLName("accountHolderName")] public string AccountHolderName { get; set; } = string.Empty;
     [GraphQLName("accountNumber")] public string AccountNumber { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
+    [GraphQLName("countryCode")] public string? CountryCode { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

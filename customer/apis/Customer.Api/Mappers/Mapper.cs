@@ -447,6 +447,7 @@ public class Mapper : IMapper
         dest.Province = src.Province;
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
+        dest.CountryCode = src.CountryCode;
         dest.Customer = customer;
         return dest;
     }
@@ -468,7 +469,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode
         };
 
     public CustomerBillingDetails MapTo(UpdateMyBillingDetailsInput src) =>
@@ -488,7 +490,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode
         };
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
@@ -712,7 +715,8 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode
             };
 
     private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>
@@ -731,6 +735,7 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode
             };
 }

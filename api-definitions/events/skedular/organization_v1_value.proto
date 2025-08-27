@@ -115,11 +115,12 @@ message PhysicalAddress {
   string province = 6;
   string zipcode = 7;
   string country = 8;
-  string formattedAddress = 9;
-  string osmType = 10;
-  string osmId = 11;
-  string placeId = 12;
-  Coordinates coordinates = 13;
+  string countryCode = 9;
+  string formattedAddress = 10;
+  string osmType = 11;
+  string osmId = 12;
+  string placeId = 13;
+  Coordinates coordinates = 14;
 }
 
 message Coordinates {

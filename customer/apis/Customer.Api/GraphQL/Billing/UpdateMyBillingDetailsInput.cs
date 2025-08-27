@@ -22,4 +22,5 @@ public class UpdateMyBillingDetailsInput
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public string Zipcode { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
+    [GraphQLName("countryCode")] public string? CountryCode { get; set; }
 }

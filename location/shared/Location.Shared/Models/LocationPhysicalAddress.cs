@@ -11,6 +11,7 @@ public class LocationPhysicalAddress : ModelBaseWithDeleted, IAddressDetails
     public string? PlaceId { get; set; }
     public Point? Coordinates { get; set; }
     public Location Location { get; set; } = new();
+    public string? CountryCode { get; set; }
     public string? FormattedAddress { get; set; }
     public string AddressLine1 { get; set; } = string.Empty;
     public string? AddressLine2 { get; set; }

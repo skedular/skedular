@@ -99,11 +99,12 @@ message CustomerBillingDetails {
   string province = 8;
   string zipcode = 9;
   string country = 10;
-  string formattedAddress = 11;
-  string osmType = 12;
-  string osmId = 13;
-  string placeId = 14;
-  Coordinates coordinates = 15;
+  string countryCode = 11;
+  string formattedAddress = 12;
+  string osmType = 13;
+  string osmId = 14;
+  string placeId = 15;
+  Coordinates coordinates = 16;
 }
 
 message Coordinates {

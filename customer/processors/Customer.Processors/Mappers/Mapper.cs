@@ -504,6 +504,7 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode
             };
 }

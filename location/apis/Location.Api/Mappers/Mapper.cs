@@ -680,6 +680,7 @@ public class Mapper : IMapper
         dest.Province = src.Province;
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
+        dest.CountryCode = src.CountryCode;
         dest.Location = location;
         return dest;
     }
@@ -703,6 +704,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Location = MapTo(src.Location)
         };
 
@@ -722,6 +724,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
 
@@ -740,7 +743,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode,
         };
 
     public LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src) =>
@@ -761,6 +765,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Location = MapTo(src.Location)!
         };
 
@@ -1117,7 +1122,8 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode,
             };
 
     private static Shared.Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddress? src, Shared.Models.Location location) =>
@@ -1138,6 +1144,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
+                CountryCode = src.CountryCode,
                 Location = location
             };
 }

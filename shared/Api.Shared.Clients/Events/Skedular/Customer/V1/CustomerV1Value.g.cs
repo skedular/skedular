@@ -55,18 +55,18 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "ZWFtEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIioKCFJl",
             "c291cmNlEgoKAmlkGAEgASgJEhIKCmxvY2F0aW9uSWQYAiABKAkiNQoPT3Jn",
             "YW5pemF0aW9uVGFnEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIg",
-            "ASgJIr0CChZDdXN0b21lckJpbGxpbmdEZXRhaWxzEgoKAmlkGAEgASgJEhMK",
+            "ASgJItICChZDdXN0b21lckJpbGxpbmdEZXRhaWxzEgoKAmlkGAEgASgJEhMK",
             "C2NvbXBhbnlOYW1lGAIgASgJEg0KBWVtYWlsGAMgASgJEhQKDGFkZHJlc3NM",
             "aW5lMRgEIAEoCRIUCgxhZGRyZXNzTGluZTIYBSABKAkSDgoGc3VidXJiGAYg",
             "ASgJEgwKBGNpdHkYByABKAkSEAoIcHJvdmluY2UYCCABKAkSDwoHemlwY29k",
-            "ZRgJIAEoCRIPCgdjb3VudHJ5GAogASgJEhgKEGZvcm1hdHRlZEFkZHJlc3MY",
-            "CyABKAkSDwoHb3NtVHlwZRgMIAEoCRINCgVvc21JZBgNIAEoCRIPCgdwbGFj",
-            "ZUlkGA4gASgJEioKC2Nvb3JkaW5hdGVzGA8gASgLMhUuY3VzdG9tZXIuQ29v",
-            "cmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMSEQoJbG9uZ2l0dWRlGAEgASgBEhAK",
-            "CGxhdGl0dWRlGAIgASgBKjsKBFR5cGUSGQoVVHlwZV9DdXN0b21lclVwc2Vy",
-            "dGVkEAASGAoUVHlwZV9DdXN0b21lckRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJl",
-            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5DdXN0b21lci5WMS5WYWx1ZWIG",
-            "cHJvdG8z"));
+            "ZRgJIAEoCRIPCgdjb3VudHJ5GAogASgJEhMKC2NvdW50cnlDb2RlGAsgASgJ",
+            "EhgKEGZvcm1hdHRlZEFkZHJlc3MYDCABKAkSDwoHb3NtVHlwZRgNIAEoCRIN",
+            "CgVvc21JZBgOIAEoCRIPCgdwbGFjZUlkGA8gASgJEioKC2Nvb3JkaW5hdGVz",
+            "GBAgASgLMhUuY3VzdG9tZXIuQ29vcmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMS",
+            "EQoJbG9uZ2l0dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIgASgBKjsKBFR5cGUS",
+            "GQoVVHlwZV9DdXN0b21lclVwc2VydGVkEAASGAoUVHlwZV9DdXN0b21lckRl",
+            "bGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxh",
+            "ci5DdXN0b21lci5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -80,7 +80,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails.Parser, new[]{ "Id", "CompanyName", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country", "FormattedAddress", "OsmType", "OsmId", "PlaceId", "Coordinates" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails.Parser, new[]{ "Id", "CompanyName", "Email", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country", "CountryCode", "FormattedAddress", "OsmType", "OsmId", "PlaceId", "Coordinates" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Coordinates), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Coordinates.Parser, new[]{ "Longitude", "Latitude" }, null, null, null, null)
           }));
     }
@@ -3535,6 +3535,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       province_ = other.province_;
       zipcode_ = other.zipcode_;
       country_ = other.country_;
+      countryCode_ = other.countryCode_;
       formattedAddress_ = other.formattedAddress_;
       osmType_ = other.osmType_;
       osmId_ = other.osmId_;
@@ -3669,8 +3670,20 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "countryCode" field.</summary>
+    public const int CountryCodeFieldNumber = 11;
+    private string countryCode_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CountryCode {
+      get { return countryCode_; }
+      set {
+        countryCode_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "formattedAddress" field.</summary>
-    public const int FormattedAddressFieldNumber = 11;
+    public const int FormattedAddressFieldNumber = 12;
     private string formattedAddress_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3682,7 +3695,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "osmType" field.</summary>
-    public const int OsmTypeFieldNumber = 12;
+    public const int OsmTypeFieldNumber = 13;
     private string osmType_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3694,7 +3707,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "osmId" field.</summary>
-    public const int OsmIdFieldNumber = 13;
+    public const int OsmIdFieldNumber = 14;
     private string osmId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3706,7 +3719,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "placeId" field.</summary>
-    public const int PlaceIdFieldNumber = 14;
+    public const int PlaceIdFieldNumber = 15;
     private string placeId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3718,7 +3731,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "coordinates" field.</summary>
-    public const int CoordinatesFieldNumber = 15;
+    public const int CoordinatesFieldNumber = 16;
     private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Coordinates coordinates_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3754,6 +3767,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Province != other.Province) return false;
       if (Zipcode != other.Zipcode) return false;
       if (Country != other.Country) return false;
+      if (CountryCode != other.CountryCode) return false;
       if (FormattedAddress != other.FormattedAddress) return false;
       if (OsmType != other.OsmType) return false;
       if (OsmId != other.OsmId) return false;
@@ -3776,6 +3790,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Province.Length != 0) hash ^= Province.GetHashCode();
       if (Zipcode.Length != 0) hash ^= Zipcode.GetHashCode();
       if (Country.Length != 0) hash ^= Country.GetHashCode();
+      if (CountryCode.Length != 0) hash ^= CountryCode.GetHashCode();
       if (FormattedAddress.Length != 0) hash ^= FormattedAddress.GetHashCode();
       if (OsmType.Length != 0) hash ^= OsmType.GetHashCode();
       if (OsmId.Length != 0) hash ^= OsmId.GetHashCode();
@@ -3839,24 +3854,28 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(82);
         output.WriteString(Country);
       }
-      if (FormattedAddress.Length != 0) {
+      if (CountryCode.Length != 0) {
         output.WriteRawTag(90);
+        output.WriteString(CountryCode);
+      }
+      if (FormattedAddress.Length != 0) {
+        output.WriteRawTag(98);
         output.WriteString(FormattedAddress);
       }
       if (OsmType.Length != 0) {
-        output.WriteRawTag(98);
+        output.WriteRawTag(106);
         output.WriteString(OsmType);
       }
       if (OsmId.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(OsmId);
       }
       if (PlaceId.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(PlaceId);
       }
       if (coordinates_ != null) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteMessage(Coordinates);
       }
       if (_unknownFields != null) {
@@ -3909,24 +3928,28 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(82);
         output.WriteString(Country);
       }
-      if (FormattedAddress.Length != 0) {
+      if (CountryCode.Length != 0) {
         output.WriteRawTag(90);
+        output.WriteString(CountryCode);
+      }
+      if (FormattedAddress.Length != 0) {
+        output.WriteRawTag(98);
         output.WriteString(FormattedAddress);
       }
       if (OsmType.Length != 0) {
-        output.WriteRawTag(98);
+        output.WriteRawTag(106);
         output.WriteString(OsmType);
       }
       if (OsmId.Length != 0) {
-        output.WriteRawTag(106);
+        output.WriteRawTag(114);
         output.WriteString(OsmId);
       }
       if (PlaceId.Length != 0) {
-        output.WriteRawTag(114);
+        output.WriteRawTag(122);
         output.WriteString(PlaceId);
       }
       if (coordinates_ != null) {
-        output.WriteRawTag(122);
+        output.WriteRawTag(130, 1);
         output.WriteMessage(Coordinates);
       }
       if (_unknownFields != null) {
@@ -3969,6 +3992,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Country.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Country);
       }
+      if (CountryCode.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CountryCode);
+      }
       if (FormattedAddress.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FormattedAddress);
       }
@@ -3982,7 +4008,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PlaceId);
       }
       if (coordinates_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Coordinates);
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(Coordinates);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -4025,6 +4051,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (other.Country.Length != 0) {
         Country = other.Country;
+      }
+      if (other.CountryCode.Length != 0) {
+        CountryCode = other.CountryCode;
       }
       if (other.FormattedAddress.Length != 0) {
         FormattedAddress = other.FormattedAddress;
@@ -4104,22 +4133,26 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 90: {
-            FormattedAddress = input.ReadString();
+            CountryCode = input.ReadString();
             break;
           }
           case 98: {
-            OsmType = input.ReadString();
+            FormattedAddress = input.ReadString();
             break;
           }
           case 106: {
-            OsmId = input.ReadString();
+            OsmType = input.ReadString();
             break;
           }
           case 114: {
-            PlaceId = input.ReadString();
+            OsmId = input.ReadString();
             break;
           }
           case 122: {
+            PlaceId = input.ReadString();
+            break;
+          }
+          case 130: {
             if (coordinates_ == null) {
               Coordinates = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Coordinates();
             }
@@ -4186,22 +4219,26 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 90: {
-            FormattedAddress = input.ReadString();
+            CountryCode = input.ReadString();
             break;
           }
           case 98: {
-            OsmType = input.ReadString();
+            FormattedAddress = input.ReadString();
             break;
           }
           case 106: {
-            OsmId = input.ReadString();
+            OsmType = input.ReadString();
             break;
           }
           case 114: {
-            PlaceId = input.ReadString();
+            OsmId = input.ReadString();
             break;
           }
           case 122: {
+            PlaceId = input.ReadString();
+            break;
+          }
+          case 130: {
             if (coordinates_ == null) {
               Coordinates = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Coordinates();
             }

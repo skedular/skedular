@@ -401,6 +401,7 @@ message AddBillingDetailsInput {
   string province = 9;
   string zipcode = 10;
   string country = 11;
+  string countryCode = 12;
 }
 
 message UpdateBillingDetailsInput {
@@ -414,6 +415,7 @@ message UpdateBillingDetailsInput {
   string province = 8;
   string zipcode = 9;
   string country = 10;
+  string countryCode = 11;
 }
 
 message BillingDetails {
@@ -427,11 +429,12 @@ message BillingDetails {
   string province = 8;
   string zipcode = 9;
   string country = 10;
-  string formattedAddress = 11;
-  string osmType = 12;
-  string osmId = 13;
-  string placeId = 14;
-  Coordinates coordinates = 15;
+  string countryCode = 11;
+  string formattedAddress = 12;
+  string osmType = 13;
+  string osmId = 14;
+  string placeId = 15;
+  Coordinates coordinates = 16;
 }
 
 message StripeCustomer {
@@ -561,11 +564,12 @@ message PhysicalAddress {
   string province = 6;
   string zipcode = 7;
   string country = 8;
-  string formattedAddress = 9;
-  string osmType = 10;
-  string osmId = 11;
-  string placeId = 12;
-  Coordinates coordinates = 13;
+  string countryCode = 9;
+  string formattedAddress = 10;
+  string osmType = 11;
+  string osmId = 12;
+  string placeId = 13;
+  Coordinates coordinates = 14;
 }
 
 message Coordinates {

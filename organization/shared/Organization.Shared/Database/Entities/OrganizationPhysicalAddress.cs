@@ -22,6 +22,7 @@ public class OrganizationPhysicalAddress : EntityBaseWithDeleted
     public string? Province { get; set; }
     public string Zipcode { get; set; }
     public string Country { get; set; }
+    public string? CountryCode { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationId { get; set; }
@@ -47,6 +48,7 @@ public class OrganizationPhysicalAddressConfiguration : IEntityTypeConfiguration
         builder.Property(item => item.Province).HasMaxLength(Constants.MaxProvinceLength);
         builder.Property(item => item.Zipcode).HasMaxLength(Constants.MaxZipcodeLength);
         builder.Property(item => item.Country).HasMaxLength(Constants.MaxCountryLength);
+        builder.Property(item => item.CountryCode).HasMaxLength(Constants.MaxCountryCodeLength);
 
         builder
             .HasOne(item => item.Organization)

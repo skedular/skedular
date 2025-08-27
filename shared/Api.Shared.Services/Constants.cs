@@ -55,6 +55,7 @@ public static class Constants
     public const int MaxProvinceLength = 100;
     public const int MaxZipcodeLength = 20;
     public const int MaxCountryLength = 100;
+    public const int MaxCountryCodeLength = 20;
     public const int MaxCurrencyLength = 20;
     public const int MaxTermsOfUseLength = 10000;
 

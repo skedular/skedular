@@ -26,5 +26,6 @@ public class CustomerBillingDetails : Node
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public string Zipcode { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
+    [GraphQLName("countryCode")] public string? CountryCode { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

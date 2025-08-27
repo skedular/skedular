@@ -147,6 +147,7 @@ type OrganizationBankAccountDetails {
   accountHolderName: String!
   accountNumber: String!
   country: String!
+  countryCode: String
   organization: OrganizationDetails!
   id: ID!
 }
@@ -183,6 +184,7 @@ type OrganizationBillingDetails {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
   id: ID!
 }
 
@@ -334,6 +336,7 @@ type OrganizationPhysicalAddressDetails {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
   organization: OrganizationDetails!
   id: ID!
 }
@@ -536,6 +539,7 @@ input AddOrganizationBankAccountInput {
   accountHolderName: String!
   accountNumber: String!
   country: String!
+  countryCode: String
 }
 
 input AddOrganizationBillingDetailsInput {
@@ -557,6 +561,7 @@ input AddOrganizationBillingDetailsInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input AddOrganizationInput {
@@ -597,6 +602,7 @@ input AddOrganizationPhysicalAddressInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input AddOrganizationStripeConnectAccountInput {
@@ -854,6 +860,7 @@ input UpdateOrganizationBankAccountInput {
   accountHolderName: String!
   accountNumber: String!
   country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationBillingDetailsInput {
@@ -874,6 +881,7 @@ input UpdateOrganizationBillingDetailsInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationInput {
@@ -912,6 +920,7 @@ input UpdateOrganizationPhysicalAddressInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input UpdateOrganizationSsoSettingsInput {

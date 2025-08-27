@@ -32,6 +32,7 @@ type CustomerBillingDetails {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
   id: ID!
 }
 
@@ -221,6 +222,7 @@ input AddMyBillingDetailsInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input ClearCustomerDefaultOrganizationInput {
@@ -309,6 +311,7 @@ input UpdateMyBillingDetailsInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input UpdateMyCustomerDetailsInput {

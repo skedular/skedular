@@ -116,6 +116,7 @@ type LocationPhysicalAddressDetails {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
   organization: LocationDetails!
   id: ID!
 }
@@ -296,6 +297,7 @@ input AddLocationPhysicalAddressInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input AddResourceInput {
@@ -440,6 +442,7 @@ input UpdateLocationPhysicalAddressInput {
   province: String
   zipcode: String!
   country: String!
+  countryCode: String
 }
 
 input UpdateLocationResourceAvailableHoursInput {

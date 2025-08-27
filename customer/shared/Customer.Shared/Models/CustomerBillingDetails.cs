@@ -13,6 +13,7 @@ public class CustomerBillingDetails : ModelBase, IAddressDetails
     public string? PlaceId { get; set; }
     public Point? Coordinates { get; set; }
     public Customer Customer { get; set; } = new();
+    public string? CountryCode { get; set; }
     public string? FormattedAddress { get; set; }
     public string AddressLine1 { get; set; } = string.Empty;
     public string? AddressLine2 { get; set; }

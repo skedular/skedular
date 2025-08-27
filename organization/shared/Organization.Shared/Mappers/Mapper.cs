@@ -497,6 +497,7 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
+                CountryCode = src.CountryCode.ToSafeString(),
                 FormattedAddress = src.ToFormattedAddress(),
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),

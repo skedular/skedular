@@ -12,4 +12,5 @@ public class UpdateOrganizationBankAccountInput
     [GraphQLName("accountHolderName")] public string AccountHolderName { get; set; } = string.Empty;
     [GraphQLName("accountNumber")] public string AccountNumber { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
+    [GraphQLName("countryCode")] public string? CountryCode { get; set; }
 }

@@ -838,6 +838,7 @@ public class Mapper : IMapper
         dest.Province = src.Province;
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
+        dest.CountryCode = src.CountryCode;
         dest.Organization = organization;
         return dest;
     }
@@ -869,6 +870,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -889,7 +891,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode,
         };
 
     public Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
@@ -905,6 +908,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -920,7 +924,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode,
         };
 
     public BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src) =>
@@ -938,6 +943,7 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode,
                 Country = src.Country,
+                CountryCode = src.CountryCode,
                 FormattedAddress = src.ToFormattedAddress(),
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
@@ -959,7 +965,8 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode,
             };
 
     public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
@@ -1216,6 +1223,7 @@ public class Mapper : IMapper
         dest.Province = src.Province;
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
+        dest.CountryCode = src.CountryCode;
         dest.Organization = organization;
         return dest;
     }
@@ -1239,6 +1247,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Organization = MapTo(src.Organization, Constants.EmptyUri)
         };
 
@@ -1258,6 +1267,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1276,7 +1286,8 @@ public class Mapper : IMapper
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            CountryCode = src.CountryCode,
         };
 
     public OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src) =>
@@ -1297,6 +1308,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
+            CountryCode = src.CountryCode,
             Organization = MapTo(src.Organization)!
         };
 
@@ -1749,6 +1761,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
+                CountryCode = src.CountryCode,
                 Organization = organization
             };
 
@@ -1773,7 +1786,8 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode,
             };
 
     private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);
@@ -1965,7 +1979,8 @@ public class Mapper : IMapper
                 City = src.City,
                 Province = src.Province,
                 Zipcode = src.Zipcode,
-                Country = src.Country
+                Country = src.Country,
+                CountryCode = src.CountryCode,
             };
 
     private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddress? src, Shared.Models.Organization organization) =>
@@ -1986,6 +2001,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
+                CountryCode = src.CountryCode,
                 Organization = organization
             };
 
@@ -2019,6 +2035,7 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
+                CountryCode = src.CountryCode.ToSafeString(),
                 FormattedAddress = src.ToFormattedAddress(),
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),

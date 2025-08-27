@@ -273,6 +273,7 @@ type CustomerBillingDetails {
   city: String!
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: ID!
@@ -499,6 +500,7 @@ type LocationPhysicalAddressDetails {
   addressLine2: String
   city: String!
   country: String!
+  countryCode: String
   formattedAddress: String
   id: ID!
   latitude: Float
@@ -698,6 +700,7 @@ type OrganizationBankAccountDetails {
   accountNumber: String!
   bankName: String!
   country: String!
+  countryCode: String
   id: ID!
   isDefault: Boolean!
   name: String!
@@ -725,6 +728,7 @@ type OrganizationBillingDetails {
   city: String!
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: ID!
@@ -885,6 +889,7 @@ type OrganizationPhysicalAddressDetails {
   addressLine2: String
   city: String!
   country: String!
+  countryCode: String
   formattedAddress: String
   id: ID!
   latitude: Float
@@ -1442,6 +1447,7 @@ input AddLocationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   formattedAddress: String
   id: String
   latitude: Float
@@ -1471,6 +1477,7 @@ input AddMyBillingDetailsInput {
   clientMutationId: String
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: String
@@ -1490,6 +1497,7 @@ input AddOrganizationBankAccountInput {
   bankName: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   id: String
   name: String!
   organizationId: String!
@@ -1502,6 +1510,7 @@ input AddOrganizationBillingDetailsInput {
   clientMutationId: String
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: String
@@ -1543,6 +1552,7 @@ input AddOrganizationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   formattedAddress: String
   id: String
   latitude: Float
@@ -2225,6 +2235,7 @@ input UpdateLocationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   formattedAddress: String
   id: String!
   latitude: Float
@@ -2259,6 +2270,7 @@ input UpdateMyBillingDetailsInput {
   clientMutationId: String
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: String!
@@ -2290,6 +2302,7 @@ input UpdateOrganizationBankAccountInput {
   bankName: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   id: String!
   name: String!
 }
@@ -2301,6 +2314,7 @@ input UpdateOrganizationBillingDetailsInput {
   clientMutationId: String
   companyName: String
   country: String!
+  countryCode: String
   email: String!
   formattedAddress: String
   id: String!
@@ -2340,6 +2354,7 @@ input UpdateOrganizationPhysicalAddressInput {
   city: String!
   clientMutationId: String
   country: String!
+  countryCode: String
   formattedAddress: String
   id: String!
   latitude: Float
