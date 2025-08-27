@@ -69,7 +69,7 @@ const PhysicalAddress = ({
       addressLine1: [address.address.house_number, address.address.road].filter(Boolean).join(' '),
       addressLine2: address.address.neighbourhood,
       suburb: address.address.suburb,
-      city: address.address.city ? address.address.city : address.address.town,
+      city: [address.address.town, address.address.city, address.address.county].filter(Boolean).join(', '),
       province: address.address.state ? address.address.state : address.address['ISO3166-2-lvl4'],
       zipcode: address.address.postcode,
       country: address.address.country,
