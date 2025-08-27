@@ -212,9 +212,9 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
   const debounceSetBillingAddressLine1 = useDebounceCallback(setBillingAddressLine1, keyboardTextFieldDebounceTimeout);
   const [billingAddressLine2, setBillingAddressLine2] = useState(rootData.me.billingDetails?.addressLine2);
   const debounceSetBillingAddressLine2 = useDebounceCallback(setBillingAddressLine2, keyboardTextFieldDebounceTimeout);
-  const [billingSuburb, setBillingSuburb] = useState<string>(rootData.me.billingDetails?.suburb ?? '');
+  const [billingSuburb, setBillingSuburb] = useState(rootData.me.billingDetails?.suburb);
   const debounceSetBillingSuburb = useDebounceCallback(setBillingSuburb, keyboardTextFieldDebounceTimeout);
-  const [billingCity, setBillingCity] = useState<string>(rootData.me.billingDetails?.city ?? '');
+  const [billingCity, setBillingCity] = useState(rootData.me.billingDetails?.city);
   const debounceSetBillingCity = useDebounceCallback(setBillingCity, keyboardTextFieldDebounceTimeout);
   const [billingProvince, setBillingProvince] = useState(rootData.me.billingDetails?.province);
   const debounceSetBillingProvince = useDebounceCallback(setBillingProvince, keyboardTextFieldDebounceTimeout);
