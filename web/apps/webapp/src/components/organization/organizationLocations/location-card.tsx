@@ -103,14 +103,7 @@ const LocationCard = ({
           id
         }
         physicalAddress {
-          formattedAddress
-          addressLine1
-          addressLine2
-          suburb
-          city
-          province
-          zipcode
-          country
+          multilinesFormattedAddress
         }
         primaryFeatureImage {
           thumbnail {
@@ -412,7 +405,7 @@ const LocationCard = ({
             <Divider orientation="vertical" flexItem />
 
             <SmallIconTypography
-              label={locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
+              label={locationDetails.physicalAddress?.multilinesFormattedAddress ? locationDetails.physicalAddress?.multilinesFormattedAddress : 'N/A'}
               sx={{ whiteSpace: 'pre-line' }}
             />
           </StackRow>
