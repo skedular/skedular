@@ -705,6 +705,7 @@ public class Mapper : IMapper
                 Longitude = src.Coordinates?.X,
                 Latitude = src.Coordinates?.Y,
                 FormattedAddress = src.ToFormattedAddress(),
+                MultilinesFormattedAddress = src.ToMultilinesFormattedAddress(),
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

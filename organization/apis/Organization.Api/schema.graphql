@@ -175,6 +175,7 @@ type OrganizationBillingDetails {
   longitude: Float
   latitude: Float
   formattedAddress: String
+  multilinesFormattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!
@@ -325,6 +326,7 @@ type OrganizationPhysicalAddressDetails {
   longitude: Float
   latitude: Float
   formattedAddress: String
+  multilinesFormattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!

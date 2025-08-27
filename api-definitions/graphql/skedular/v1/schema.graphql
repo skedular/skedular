@@ -278,6 +278,7 @@ type CustomerBillingDetails {
   id: ID!
   latitude: Float
   longitude: Float
+  multilinesFormattedAddress: String
   osmId: String
   osmType: String
   placeId: String
@@ -502,6 +503,7 @@ type LocationPhysicalAddressDetails {
   id: ID!
   latitude: Float
   longitude: Float
+  multilinesFormattedAddress: String
   organization: LocationDetails!
   osmId: String
   osmType: String
@@ -728,6 +730,7 @@ type OrganizationBillingDetails {
   id: ID!
   latitude: Float
   longitude: Float
+  multilinesFormattedAddress: String
   osmId: String
   osmType: String
   placeId: String
@@ -886,6 +889,7 @@ type OrganizationPhysicalAddressDetails {
   id: ID!
   latitude: Float
   longitude: Float
+  multilinesFormattedAddress: String
   organization: OrganizationDetails!
   osmId: String
   osmType: String

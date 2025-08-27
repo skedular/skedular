@@ -108,6 +108,7 @@ type LocationPhysicalAddressDetails {
   longitude: Float
   latitude: Float
   formattedAddress: String
+  multilinesFormattedAddress: String
   addressLine1: String!
   addressLine2: String
   suburb: String!

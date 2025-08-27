@@ -103,7 +103,7 @@ public class Mapper : IMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
-                FormattedAddress = AddressDetailsExtensions.ToFormattedAddress(src),
+                FormattedAddress = src.ToFormattedAddress(),
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),

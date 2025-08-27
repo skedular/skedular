@@ -15,6 +15,10 @@ public class OrganizationBillingDetails : Node
     [GraphQLName("longitude")] public double? Longitude { get; set; }
     [GraphQLName("latitude")] public double? Latitude { get; set; }
     [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
+
+    [GraphQLName("multilinesFormattedAddress")]
+    public string? MultilinesFormattedAddress { get; set; }
+
     [GraphQLName("addressLine1")] public string AddressLine1 { get; set; } = string.Empty;
     [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
     [GraphQLName("suburb")] public string Suburb { get; set; } = string.Empty;
