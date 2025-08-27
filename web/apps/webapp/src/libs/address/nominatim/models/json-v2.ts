@@ -5,6 +5,7 @@ export type Address = {
   suburb?: string;
   town?: string;
   city?: string;
+  district?: string;
   county?: string;
   state?: string;
   'ISO3166-2-lvl4'?: string;

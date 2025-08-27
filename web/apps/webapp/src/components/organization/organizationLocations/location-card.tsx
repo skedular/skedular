@@ -201,10 +201,6 @@ const LocationCard = ({
     })();
   }, []);
 
-  if (!dynamicLoadReady) {
-    return <></>;
-  }
-
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
   if (locationDetails.canDelete) {
@@ -351,6 +347,10 @@ const LocationCard = ({
       },
     });
   };
+
+  if (!dynamicLoadReady) {
+    return <></>;
+  }
 
   const resourcesCount = locationDetails.resources.length;
   const zones = locationDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
