@@ -31,12 +31,21 @@ import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import 'leaflet/dist/leaflet.css';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+
+let L: typeof import('leaflet');
+let MapContainer: typeof import('react-leaflet').MapContainer;
+let Marker: typeof import('react-leaflet').Marker;
+let TileLayer: typeof import('react-leaflet').TileLayer;
 
 type Props = {
   rootDataRelay: locationCard_query$key;
@@ -104,6 +113,8 @@ const LocationCard = ({
         }
         physicalAddress {
           multilinesFormattedAddress
+          latitude
+          longitude
         }
         primaryFeatureImage {
           thumbnail {
@@ -167,6 +178,32 @@ const LocationCard = ({
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.uniqueId === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
+  const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      // core libraries
+      const leaflet = await import('leaflet');
+      const rl = await import('react-leaflet');
+
+      L = leaflet;
+      MapContainer = rl.MapContainer;
+      Marker = rl.Marker;
+      TileLayer = rl.TileLayer;
+
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: markerIcon2x,
+        iconUrl: markerIcon,
+        shadowUrl: markerShadow,
+      });
+
+      setDynamicLoadReady(true);
+    })();
+  }, []);
+
+  if (!dynamicLoadReady) {
+    return <></>;
+  }
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
@@ -408,6 +445,25 @@ const LocationCard = ({
               label={locationDetails.physicalAddress?.multilinesFormattedAddress ? locationDetails.physicalAddress?.multilinesFormattedAddress : 'N/A'}
               sx={{ whiteSpace: 'pre-line' }}
             />
+
+            <Divider orientation="vertical" flexItem />
+
+            {locationDetails.physicalAddress && locationDetails.physicalAddress.latitude && locationDetails.physicalAddress.longitude && (
+              <Box sx={{ height: '25vh', width: '25vh' }}>
+                <MapContainer
+                  center={[locationDetails.physicalAddress.latitude, locationDetails.physicalAddress.longitude]}
+                  zoom={13}
+                  scrollWheelZoom
+                  style={{ height: '100%', width: '100%' }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={[locationDetails.physicalAddress.latitude, locationDetails.physicalAddress.longitude]} />
+                </MapContainer>
+              </Box>
+            )}
           </StackRow>
         </CardContent>
       </Card>

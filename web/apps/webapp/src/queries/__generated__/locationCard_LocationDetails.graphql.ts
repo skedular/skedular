@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b59354ab5787c26481a3422b3fcc7639>>
+ * @generated SignedSource<<8b7797f7aa5dff3d955763a1253ccb20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,8 @@ export type locationCard_LocationDetails$data = {
     readonly uniqueId: string;
   };
   readonly physicalAddress: {
+    readonly latitude: number | null | undefined;
+    readonly longitude: number | null | undefined;
     readonly multilinesFormattedAddress: string | null | undefined;
   } | null | undefined;
   readonly primaryFeatureImage: {
@@ -136,6 +138,20 @@ return {
           "kind": "ScalarField",
           "name": "multilinesFormattedAddress",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "latitude",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "longitude",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -222,6 +238,6 @@ return {
 };
 })();
 
-(node as any).hash = "50ea18fcc92592ca21082c273eb49bd3";
+(node as any).hash = "69cf4b956fc3318db0ae6fe2a43c9a59";
 
 export default node;
