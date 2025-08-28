@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<500d1ce2ab59e323eb6fbd16e4e7a692>>
+ * @generated SignedSource<<af2a0ba05f263f686bcec60d4fa99a6e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type organizationMarketplaceSetup_organizationBankAccounts_query$data = {
         readonly isDefault: boolean;
         readonly name: string;
         readonly organization: {
-          readonly id: string;
+          readonly uniqueAlphanumericName: string | null | undefined;
         };
       };
     }>;
@@ -41,14 +41,7 @@ import organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment
 const node: ReaderFragment = (function(){
 var v0 = [
   "organizationBankAccounts"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -67,7 +60,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     }
   ],
   "kind": "Fragment",
@@ -117,8 +110,8 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
             }
           ],
           "kind": "ObjectValue",
@@ -153,7 +146,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -204,7 +203,13 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/)
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueAlphanumericName",
+                      "storageKey": null
+                    }
                   ],
                   "storageKey": null
                 },
@@ -274,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "bc833edff70c475d4dfe080d61558ca7";
+(node as any).hash = "c9930fcadd007408c14f3f10e5f67201";
 
 export default node;

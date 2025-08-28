@@ -16,7 +16,8 @@ public class OrganizationDailyAnalytics(
     public async Task<bool> RecordOrganizationMembersCountAsync(string organizationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         if (organization is null || organization.IsDeleted())
         {
             return false;

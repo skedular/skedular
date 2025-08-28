@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7320535effce1090879b34de48e4d166>>
+ * @generated SignedSource<<1e395deda32e7bbda52ab36e696bd5b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type ProductOrderInput = {
   field: ProductOrderField;
 };
 export type organizationMarketplacePublic_rootQuery$variables = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   productsSortingValues?: ReadonlyArray<ProductOrderInput> | null | undefined;
 };
 export type organizationMarketplacePublic_rootQuery$data = {
@@ -46,7 +46,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -71,12 +71,12 @@ v1 = [
         "items": [
           {
             "kind": "Variable",
-            "name": "organizationIds.0",
-            "variableName": "organizationId"
+            "name": "organizationUniqueAlphanumericNames.0",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "kind": "ListValue",
-        "name": "organizationIds"
+        "name": "organizationUniqueAlphanumericNames"
       }
     ],
     "kind": "ObjectValue",
@@ -346,16 +346,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9d20952b55bcbc96be8ad7ac54560b00",
+    "cacheID": "9a39df15aa8bf006e05b3378b4750647",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplacePublic_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n"
+    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6bfc1fb54cff2a010bb33c91ba025ca1";
+(node as any).hash = "11004a45c1620390c09f0544fcb39f62";
 
 export default node;

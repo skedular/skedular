@@ -37,7 +37,17 @@ internal static class OrganizationBankAccountExtensions
         this IQueryable<OrganizationBankAccount> query,
         OrganizationBankAccountSearchCriteria searchCriteria)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        {
+            query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        {
+            query = query.Where(item =>
+                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+        }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {

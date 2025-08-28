@@ -270,7 +270,8 @@ input RemoveCustomerPreferredTeamInput {
 
 input SetCustomerDefaultOrganizationInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input SubmitCustomerFeedbackInput {

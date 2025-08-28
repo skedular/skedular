@@ -18,7 +18,7 @@ const ExistingStripeConnectAccountButton = ({ rootDataRelay, fullWidth, label, h
   const rootData = useFragment<existingStripeConnectAccountButton_query$key>(
     graphql`
       fragment existingStripeConnectAccountButton_query on Query {
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           stripeAuthorizeExistingConnectAccountUrl
         }
       }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b44777da01591f344196b5f3542c4dc7>>
+ * @generated SignedSource<<6d095dcb1d0d8c1dc73a3459d598d1b1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_productTags_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   productTagNameSearchText?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_productTags_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -77,8 +77,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -252,16 +252,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a4976b62a13a8989c4e30eaf328b1e74",
+    "cacheID": "88493916e54aa36e33026be209149f70",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_productTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productTagNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_productTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_productTags_query_1G22uz on Query {\n  productTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_productTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String\n  $productTagNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_productTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_productTags_query_1G22uz on Query {\n  productTags(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5e91a60114af99a2c7ae864f338dcf43";
+(node as any).hash = "985f1133d0d9711ed0878a7615500ee6";
 
 export default node;

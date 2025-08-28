@@ -386,7 +386,11 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization =
+                new Shared.Models.Organization
+                {
+                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -744,7 +748,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
+            CountryCode = src.CountryCode
         };
 
     public LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src) =>
@@ -1123,7 +1127,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode
             };
 
     private static Shared.Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddress? src, Shared.Models.Location location) =>

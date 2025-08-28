@@ -14,7 +14,11 @@ public interface IOrganizationAuthorizationService
     bool CanDeleteBooking(Organization organization, Customer customer);
     bool CanViewMemberPersonalDetails(Organization organization, Customer customer);
     bool CanModifyPaymentMethod(Organization organization, Customer customer);
-    Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task<OrganizationPermissions> GetPermissionsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationAuthorizationService(
@@ -73,12 +77,16 @@ public class OrganizationAuthorizationService(
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 
-    public async Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<OrganizationPermissions> GetPermissionsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+            organizationId,
+            organizationUniqueAlphanumericName,
+            cancellationToken);
 
         return new OrganizationPermissions
         {

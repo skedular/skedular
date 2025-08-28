@@ -45,12 +45,12 @@ import LocationCard from './location-card';
 type Props = {
   queryReference: PreloadedQuery<organizationLocations_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
   query organizationLocations_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $locationsSortingValues: [LocationOrderInput!]
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
@@ -66,7 +66,7 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationMembersSortingValues) {
+    organizationMembers(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $organizationMembersSortingValues) {
       __id
       totalCount
       edges {
@@ -83,7 +83,7 @@ const RootQuery = graphql`
         }
       }
     }
-    organization(id: $organizationId) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       canModify
     }
     ...newLocationButton_query
@@ -128,7 +128,7 @@ type RowType = {
   preferred: boolean;
 };
 
-const OrganizationLocations = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const OrganizationLocations = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationLocations_rootQuery>(RootQuery, queryReference);
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
     organizationLocations_locations_availableOrganizationResources_refetchableFragment,
@@ -138,8 +138,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       fragment organizationLocations_locations_availableOrganizationResources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationLocations_locations_availableOrganizationResources_refetchableFragment") {
-        locations(first: $count, after: $cursor, where: { organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds }, orderBy: $locationsSortingValues)
-          @connection(key: "organizationLocations_locations") {
+        locations(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds }
+          orderBy: $locationsSortingValues
+        ) @connection(key: "organizationLocations_locations") {
           __id
           totalCount
           edges {
@@ -166,13 +170,21 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
               canModify
               canDelete
               organization {
-                uniqueId
+                uniqueAlphanumericName
               }
               ...locationCard_LocationDetails
             }
           }
         }
-        availableResources(where: { organizationId: $organizationId, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds }) {
+        availableResources(
+          where: {
+            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+            from: $fromTodayDate
+            until: $untilTodayDate
+            zoneIds: $zoneIds
+            customTagIds: $customTagIds
+          }
+        ) {
           location {
             uniqueId
           }
@@ -271,7 +283,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, locationDetails.id));
+        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, locationDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
@@ -283,7 +295,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, { locationId: locationDetails.id }));
         break;
     }
   };
@@ -520,7 +532,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
         <NewBookingButton
           onReloadRequired={onReloadRequired}
           defaultDate={defaultDate}
-          organizationId={organizationId}
+          organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
           defaultLocationId={params.id as string}
           label="Book Now"
           hideIcon
@@ -589,7 +601,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
-          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationId={organizationId} />}
+          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />}
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Locations" />
@@ -611,7 +623,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
                       rootDataRelay={rootData}
                       locationDetailsRelay={location}
                       onReloadRequired={onReloadRequired}
-                      organizationId={organizationId}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                       defaultDate={defaultDate}
                       connectionIds={connectionIds}
                       availableResourcesCount={availableResourcesCount}
@@ -668,10 +680,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 const MemoOrganizationLocations = memo(OrganizationLocations);
 
 type RelayProps = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
+const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationLocations_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -681,7 +693,7 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
 
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         locationsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -713,7 +725,7 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -727,7 +739,7 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOrganizationLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

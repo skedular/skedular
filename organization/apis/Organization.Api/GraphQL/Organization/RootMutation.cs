@@ -38,6 +38,6 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, cancellationToken))!
+            Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, input.UniqueAlphanumericName, cancellationToken))!
         };
 }

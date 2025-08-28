@@ -51,7 +51,7 @@ type Props = {
   rootDataRelay: locationCard_query$key;
   locationDetailsRelay: locationCard_LocationDetails$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   connectionIds: string[];
   sharedWithTeammates: CustomerDetails[];
   availableResourcesCount: number;
@@ -73,7 +73,7 @@ const LocationCard = ({
   locationDetailsRelay,
   connectionIds,
   onReloadRequired,
-  organizationId,
+  organizationUniqueAlphanumericName,
   sharedWithTeammates,
   availableResourcesCount,
   availablePercentage,
@@ -127,7 +127,7 @@ const LocationCard = ({
         canModify
         canDelete
         organization {
-          uniqueId
+          uniqueAlphanumericName
         }
       }
     `,
@@ -209,7 +209,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, locationDetails.id);
+  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -228,7 +228,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization?.uniqueId, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, { locationId: locationDetails.id }));
         break;
     }
   };
@@ -242,7 +242,7 @@ const LocationCard = ({
   };
 
   const handleViewFloorPlanClick = () => {
-    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationId, locationDetails.id));
+    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationUniqueAlphanumericName, locationDetails.id));
   };
 
   const handleConfirmRemovingLocationClick = () => {
@@ -376,7 +376,7 @@ const LocationCard = ({
               <NewBookingButton
                 onReloadRequired={onReloadRequired}
                 defaultDate={defaultDate}
-                organizationId={organizationId}
+                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                 defaultLocationId={locationDetails.id}
                 label="Book Now"
                 hideIcon

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0dc34fee54198384d39ba1d8e7bbdf01>>
+ * @generated SignedSource<<c15eb57c455350fc2feeb1101f649e1f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly name: string;
         readonly onboardingUrl: string;
         readonly organization: {
-          readonly id: string;
+          readonly uniqueAlphanumericName: string | null | undefined;
         };
         readonly payoutsEnabled: boolean;
         readonly supportUrl: string | null | undefined;
@@ -51,14 +51,7 @@ import organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchabl
 const node: ReaderFragment = (function(){
 var v0 = [
   "organizationStripeConnectAccounts"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -73,11 +66,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationStripeConnectAccountNameSearchText"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationStripeConnectAccountNameSearchText"
+      "name": "organizationUniqueAlphanumericName"
     }
   ],
   "kind": "Fragment",
@@ -127,8 +120,8 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
             }
           ],
           "kind": "ObjectValue",
@@ -163,7 +156,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -284,7 +283,13 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/)
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueAlphanumericName",
+                      "storageKey": null
+                    }
                   ],
                   "storageKey": null
                 },
@@ -354,6 +359,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc9c1b6e80a8f95edd10ae69585fdda4";
+(node as any).hash = "5014183289c952b3883fb85d8fe57009";
 
 export default node;

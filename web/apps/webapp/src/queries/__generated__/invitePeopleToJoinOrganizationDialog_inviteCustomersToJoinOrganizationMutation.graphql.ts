@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29fbcedfb5ea7a8196213b608d77f98e>>
+ * @generated SignedSource<<a5f5211de2f57a104a381cc915d7e3c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type InviteCustomersToJoinOrganizationInput = {
   clientMutationId?: string | null | undefined;
   emails: ReadonlyArray<string>;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$variables = {
   input: InviteCustomersToJoinOrganizationInput;

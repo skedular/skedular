@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d7773c3a46f912ecf16ed004e9ded23>>
+ * @generated SignedSource<<481a84f9c4b8aa3c116799421d13dacb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,8 +33,8 @@ export type newBookingButton_rootQuery$variables = {
   dateUntilToGetAvailableResources: any;
   locationId: string;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationId: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
+  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
@@ -80,12 +80,12 @@ v5 = {
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationMembersSortingValues"
 },
 v7 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationUniqueAlphanumericName"
 },
 v8 = {
   "defaultValue": null,
@@ -106,8 +106,8 @@ v10 = {
 },
 v11 = {
   "kind": "Variable",
-  "name": "organizationId",
-  "variableName": "organizationId"
+  "name": "organizationUniqueAlphanumericName",
+  "variableName": "organizationUniqueAlphanumericName"
 },
 v12 = {
   "alias": null,
@@ -221,12 +221,12 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v6/*: any*/),
+      (v7/*: any*/),
       (v8/*: any*/),
       (v4/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v7/*: any*/),
+      (v6/*: any*/),
       (v1/*: any*/),
       (v0/*: any*/),
       (v9/*: any*/),
@@ -566,16 +566,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1f8d521b17f1a46be130802a0ea34142",
+    "cacheID": "89735ee426727c9705382c803a74025f",
     "id": null,
     "metadata": {},
     "name": "newBookingButton_rootQuery",
     "operationKind": "query",
-    "text": "query newBookingButton_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $customerId: String!\n  $customerExists: Boolean!\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...newBookingDialog_query\n  ...newBookingDialog_organizationMembers_query\n  ...newBookingDialog_customerTeams_query\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment newBookingDialog_customerTeams_query on Query {\n  customerTeams(where: {organizationId: $organizationId, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment newBookingDialog_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  openingHoursMinutesStep\n  ...singleChoiceBookingType_query\n}\n\nfragment singleChoiceBookingType_query on Query {\n  bookingTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query newBookingButton_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n  $locationId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $customerId: String!\n  $customerExists: Boolean!\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...newBookingDialog_query\n  ...newBookingDialog_organizationMembers_query\n  ...newBookingDialog_customerTeams_query\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment newBookingDialog_customerTeams_query on Query {\n  customerTeams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment newBookingDialog_organizationMembers_query on Query {\n  organizationMembers(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  openingHoursMinutesStep\n  ...singleChoiceBookingType_query\n}\n\nfragment singleChoiceBookingType_query on Query {\n  bookingTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "137b40e514ac3836277fbabf4aae459c";
+(node as any).hash = "01861d33a6935ce5d477452b5b05068f";
 
 export default node;

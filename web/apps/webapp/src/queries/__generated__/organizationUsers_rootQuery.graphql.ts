@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9988b6d1493b0000b7625a271b1e95d8>>
+ * @generated SignedSource<<5cce9f01a32c027462ec68694d51745b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type organizationUsers_rootQuery$variables = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationUsers_rootQuery$data = {
@@ -51,7 +51,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -62,8 +62,8 @@ var v0 = [
 v1 = [
   {
     "kind": "Variable",
-    "name": "id",
-    "variableName": "organizationId"
+    "name": "uniqueAlphanumericName",
+    "variableName": "organizationUniqueAlphanumericName"
   }
 ],
 v2 = {
@@ -75,8 +75,8 @@ v2 = {
 },
 v3 = {
   "kind": "Variable",
-  "name": "organizationId",
-  "variableName": "organizationId"
+  "name": "organizationUniqueAlphanumericName",
+  "variableName": "organizationUniqueAlphanumericName"
 },
 v4 = [
   {
@@ -115,10 +115,7 @@ v8 = {
   "name": "uniqueId",
   "storageKey": null
 },
-v9 = [
-  (v8/*: any*/)
-],
-v10 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -130,42 +127,42 @@ v10 = {
     }
   ]
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "organizationMemberRoles",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "givenName",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "middleName",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "familyName",
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "photoUrl",
   "storageKey": null
 },
-v16 = [
+v15 = [
   {
     "fields": [
       {
@@ -249,7 +246,9 @@ return {
                             "kind": "LinkedField",
                             "name": "customer",
                             "plural": false,
-                            "selections": (v9/*: any*/),
+                            "selections": [
+                              (v8/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
@@ -269,11 +268,11 @@ return {
             ],
             "storageKey": null
           },
-          (v10/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
-      (v11/*: any*/),
+      (v10/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -360,11 +359,11 @@ return {
                             "plural": false,
                             "selections": [
                               (v8/*: any*/),
+                              (v11/*: any*/),
                               (v12/*: any*/),
                               (v13/*: any*/),
-                              (v14/*: any*/),
                               (v7/*: any*/),
-                              (v15/*: any*/)
+                              (v14/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -382,7 +381,15 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v9/*: any*/),
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "uniqueAlphanumericName",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
@@ -455,14 +462,14 @@ return {
             ],
             "storageKey": null
           },
-          (v10/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
-      (v11/*: any*/),
+      (v10/*: any*/),
       {
         "alias": null,
-        "args": (v16/*: any*/),
+        "args": (v15/*: any*/),
         "concreteType": "ConnectionOfOrganizationMemberEdge",
         "kind": "LinkedField",
         "name": "organizationMembers",
@@ -503,10 +510,10 @@ return {
                         "storageKey": null
                       },
                       (v7/*: any*/),
+                      (v11/*: any*/),
                       (v12/*: any*/),
                       (v13/*: any*/),
                       (v14/*: any*/),
-                      (v15/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -576,13 +583,13 @@ return {
             ],
             "storageKey": null
           },
-          (v10/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
+        "args": (v15/*: any*/),
         "filters": [
           "where"
         ],
@@ -594,16 +601,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "50b49ad5341d11a4b1d68f386a2ff4a4",
+    "cacheID": "63ff2dcb5267e426c2f3981494562645",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_rootQuery",
     "operationKind": "query",
-    "text": "query organizationUsers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...teamCard_TeamDetails\n      }\n    }\n  }\n  organizationMemberRoles\n  ...teamSelector_allTeams_query\n  ...organizationUsers_organizationMembers_query\n}\n\nfragment organizationUsers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationUsers_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...teamCard_TeamDetails\n      }\n    }\n  }\n  organizationMemberRoles\n  ...teamSelector_allTeams_query\n  ...organizationUsers_organizationMembers_query\n}\n\nfragment organizationUsers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8f1b6ecbf9e149f20ddf6836a0b1f2c7";
+(node as any).hash = "d9de36763e2f581e08fea5536babd906";
 
 export default node;

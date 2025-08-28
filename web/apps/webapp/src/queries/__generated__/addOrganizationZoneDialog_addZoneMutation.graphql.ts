@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9993645b460df4d61affaab85e817669>>
+ * @generated SignedSource<<6375ec6c9f74efa0b6fa13c2020494ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,8 @@ export type AddZoneInput = {
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type addOrganizationZoneDialog_addZoneMutation$variables = {
   connectionIds: ReadonlyArray<string>;

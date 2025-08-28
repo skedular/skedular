@@ -12,7 +12,11 @@ public class AddLocationInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }

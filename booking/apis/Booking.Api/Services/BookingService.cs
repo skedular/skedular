@@ -251,7 +251,12 @@ public class BookingService(
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
-            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+                organizationIds,
+                null,
+                false,
+                false,
+                cancellationToken);
             if (!organizations.Any(item => organizationAuthorizationService.CanDeleteBooking(item, customer)))
             {
                 throw new UnauthorizedAccessException();
@@ -366,19 +371,20 @@ public class BookingService(
             customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        if (customer is not null && searchCriteria.IncludeMineOnly.HasValue && searchCriteria.IncludeMineOnly.Value)
+        if (customer is not null && searchCriteria.IncludeMineOnly.HasValue)
         {
-            searchCriteria.CustomerIds = [customer.Id];
+            searchCriteria = searchCriteria with { CustomerIds = [customer.Id] };
         }
 
         List<string>? organizationIds = null;
+        List<string>? organizationUniqueAlphanumericNames = null;
         List<string>? locationIds = null;
         List<string>? teamIds = null;
 
         if (searchCriteria.CustomerIds.Count != 0 &&
             customer is not null &&
             searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationIds.Count == 0)
+            searchCriteria.OrganizationIds.Count == 0 && searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0)
         {
             throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
         }
@@ -389,10 +395,25 @@ public class BookingService(
             searchCriteria.OrganizationIds.Count != 0)
         {
             var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-            organizationIds = organizationCustomerPairs.Keys.ToList();
+            organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
 
-            if (searchCriteria.CustomerIds.Any(customerId =>
-                    !organizationCustomerPairs.Keys.Any(item => organizationCustomerPairs[item].Contains(customerId))))
+            if (searchCriteria.CustomerIds
+                .Any(customerId => !organizationCustomerPairs.Item1.Keys.Any(item => organizationCustomerPairs.Item1[item].Contains(customerId))))
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        if (searchCriteria.CustomerIds.Count != 0 &&
+            customer is not null &&
+            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
+            searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+        {
+            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+            organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
+
+            if (searchCriteria.CustomerIds
+                .Any(customerId => !organizationCustomerPairs.Item2.Keys.Any(item => organizationCustomerPairs.Item2[item].Contains(customerId))))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -403,7 +424,7 @@ public class BookingService(
             if (organizationIds is null)
             {
                 var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationIds = organizationCustomerPairs.Keys.ToList();
+                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
             }
 
             if (searchCriteria.OrganizationIds.Any(item => !organizationIds.Contains(item)))
@@ -411,11 +432,25 @@ public class BookingService(
                 throw new UnauthorizedAccessException();
             }
         }
+        else if (customer is not null && searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+        {
+            if (organizationUniqueAlphanumericNames is null)
+            {
+                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
+            }
+
+            if (searchCriteria.OrganizationUniqueAlphanumericNames.Any(item => !organizationUniqueAlphanumericNames.Contains(item)))
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
 
         if (customer is not null && searchCriteria.LocationIds.Count != 0)
         {
+            var criteria = searchCriteria;
             var locations = await repositoryFactory.LocationRepository.Query(
-                    new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(query.Id) }
+                    new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
                         .AddInclude(query => query.Organization!))
                 .ToListAsync(cancellationToken);
 
@@ -424,7 +459,7 @@ public class BookingService(
                 if (organizationIds is null)
                 {
                     var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Keys.ToList();
+                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
                 }
 
                 if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
@@ -436,8 +471,9 @@ public class BookingService(
 
         if (customer is not null && searchCriteria.TeamIds.Count != 0)
         {
+            var criteria = searchCriteria;
             var teams = await repositoryFactory.TeamRepository.Query(
-                    new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(query.Id) }
+                    new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
                         .AddInclude(query => query.Organization!))
                 .ToListAsync(cancellationToken);
 
@@ -446,7 +482,7 @@ public class BookingService(
                 if (organizationIds is null)
                 {
                     var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Keys.ToList();
+                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
                 }
 
                 if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
@@ -459,13 +495,14 @@ public class BookingService(
         if (customer is not null &&
             (!searchCriteria.IncludeMineOnly.HasValue || !searchCriteria.IncludeMineOnly.Value) &&
             searchCriteria.OrganizationIds.Count == 0 &&
+            searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0 &&
             searchCriteria.LocationIds.Count == 0 &&
             searchCriteria.TeamIds.Count == 0)
         {
             if (organizationIds is null)
             {
                 var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationIds = organizationCustomerPairs.Keys.ToList();
+                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
             }
 
             locationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
@@ -476,9 +513,7 @@ public class BookingService(
                 return (new PaginatedInfo(false, false, null, null), [], 0);
             }
 
-            searchCriteria.OrganizationIds = organizationIds;
-            searchCriteria.LocationIds = locationIds;
-            searchCriteria.TeamIds = teamIds;
+            searchCriteria = searchCriteria with { OrganizationIds = organizationIds, LocationIds = locationIds, TeamIds = teamIds };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.BookingRepository.GetPaginatedBookingsAsync(
@@ -527,14 +562,29 @@ public class BookingService(
         bool existing,
         CancellationToken cancellationToken)
     {
-        var organizationIds = booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
-        if (organizationIds.Count == 0)
+        var organizationIds = booking.InvolvedOrganizations
+            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+            .Select(item => item.Id)
+            .Distinct()
+            .ToList();
+        var uniqueAlphanumericNames = booking.InvolvedOrganizations
+            .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+            .Select(item => item.UniqueAlphanumericName!)
+            .Distinct()
+            .ToList();
+
+        if (organizationIds.Count == 0 && uniqueAlphanumericNames.Count == 0)
         {
             return [];
         }
 
-        var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
-        if (organizationIds.Count != organizationEntities.Count)
+        var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            uniqueAlphanumericNames,
+            false,
+            false,
+            cancellationToken);
+        if (organizationIds.Count + uniqueAlphanumericNames.Count != organizationEntities.Count)
         {
             throw new OrganizationNotFound();
         }
@@ -542,7 +592,8 @@ public class BookingService(
         var result = new List<Organization>();
         foreach (var organization in booking.InvolvedOrganizations)
         {
-            var organizationEntity = organizationEntities.First(item => item.Id == organization.Id);
+            var organizationEntity = organizationEntities.First(item =>
+                item.Id == organization.Id || item.UniqueAlphanumericName == organization.UniqueAlphanumericName);
             if (existing)
             {
                 if (!organizationAuthorizationService.CanUpdateBooking(organizationEntity, customer))
@@ -612,15 +663,19 @@ public class BookingService(
         return result;
     }
 
-    private async Task<IDictionary<string, List<string>>> GetCustomerOrganizationIdsAsync(
+    private async Task<(IDictionary<string, List<string>>, IDictionary<string, List<string>>)> GetCustomerOrganizationIdsAsync(
         Shared.Models.Customer customer,
         CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
 
-        return organizations.ToDictionary(
-            item => item.Id,
-            item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList());
+        return (organizations.ToDictionary(
+                item => item.Id, item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()),
+            organizations
+                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                .ToDictionary(
+                    item => item.UniqueAlphanumericName!,
+                    item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
     }
 
     private async Task<List<string>> GetCustomerLocationIdsAsync(Shared.Models.Customer customer, CancellationToken cancellationToken)
@@ -643,7 +698,12 @@ public class BookingService(
         var organizationIds = booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
-            var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
+            var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+                organizationIds,
+                null,
+                false,
+                false,
+                cancellationToken);
             if (!organizationEntities.Any(item => organizationAuthorizationService.CanViewBookings(item, customer)))
             {
                 throw new UnauthorizedAccessException();
@@ -786,7 +846,12 @@ public class BookingService(
         var team = booking.InvolvedTeams.FirstOrDefault();
         var organizationEntity = organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, false, false, cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                organization.Id,
+                organization.UniqueAlphanumericName,
+                false,
+                false,
+                cancellationToken);
         Location? locationEntity = null;
         Team? teamEntity = null;
 
@@ -815,8 +880,12 @@ public class BookingService(
 
                 if (team is not null && team.Organization is not null)
                 {
-                    organizationEntity =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, false, false, cancellationToken);
+                    organizationEntity = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        team.Organization.Id,
+                        team.Organization.UniqueAlphanumericName,
+                        false,
+                        false,
+                        cancellationToken);
                 }
                 else if (locationEntity is not null)
                 {

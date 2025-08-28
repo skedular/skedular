@@ -17,7 +17,12 @@ namespace Organization.Api.Services;
 public interface IPaymentService
 {
     Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
-    Task<string> AddPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task<string> AddPaymentMethodIntentAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
 }
 
@@ -41,10 +46,16 @@ public class PaymentService(
             new StripePaymentMethodEventState(redirectStatus),
             cancellationToken);
 
-    public async Task<string> AddPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<string> AddPaymentMethodIntentAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {
@@ -72,7 +83,10 @@ public class PaymentService(
             await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
             throw new OrganizationPaymentMethodNotFound();
         var organization = organizationStripePaymentMethod.Organization;
-        organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken) ??
+        organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                           organization.Id,
+                           null,
+                           cancellationToken) ??
                        throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
         {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8dd0bc221ffabbe0ada4eb35ef52bf93>>
+ * @generated SignedSource<<920c67c75d2ad3006fcb52a4e488e86f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type OrganizationTagOrderInput = {
 };
 export type addPrivateLocation_rootQuery$variables = {
   multipleChoicesLocationTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 export type addPrivateLocation_rootQuery$data = {
   readonly organization: {
@@ -43,13 +43,13 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v2 = [
   {
     "kind": "Variable",
-    "name": "id",
-    "variableName": "organizationId"
+    "name": "uniqueAlphanumericName",
+    "variableName": "organizationUniqueAlphanumericName"
   }
 ],
 v3 = {
@@ -87,8 +87,8 @@ v5 = [
     "fields": [
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -269,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b484411a31bcf2fad76bbdcf08da4f92",
+    "cacheID": "3e72e8731d82aa00b66b4ae202b8403b",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addPrivateLocation_rootQuery(\n  $organizationId: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  organization(id: $organizationId) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addPrivateLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f5ca419a87c56f364fa34c0a87a28341";
+(node as any).hash = "d9e8d6bdc7f0c28d5603e9f19e7495af";
 
 export default node;

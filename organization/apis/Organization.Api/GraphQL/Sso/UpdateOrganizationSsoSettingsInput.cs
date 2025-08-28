@@ -8,7 +8,11 @@ namespace Organization.Api.GraphQL.Sso;
 public class UpdateOrganizationSsoSettingsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("entityId")] public string EntityId { get; set; } = string.Empty;
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; } = string.Empty;
 

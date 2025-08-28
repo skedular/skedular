@@ -10,13 +10,14 @@ public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
     public async Task<OrganizationAnalytics?> OrganizationAnalyticsAsync(
-        string organizationId,
+        string? id,
+        string? uniqueAlphanumericName,
         DateTimeOffset from,
         DateTimeOffset until,
         [Service] IOrganizationAnalyticsService organizationAnalyticsService,
         CancellationToken cancellationToken)
     {
-        var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
+        var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(id, uniqueAlphanumericName, from, until, cancellationToken);
         return mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
     }
 }

@@ -54,8 +54,9 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const rootData = useFragment<leftSideNavigationMenuContent_query$key>(
     graphql`
       fragment leftSideNavigationMenuContent_query on Query {
-        organization(id: $organizationId) @include(if: $organizationExists) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
           id
+          uniqueAlphanumericName
           type {
             type
           }
@@ -74,7 +75,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
-  const { organizationId } = useParams();
+  const { organizationUniqueAlphanumericName } = useParams();
   const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const logoUrl =
     paletteMode === 'dark'
@@ -112,16 +113,16 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     ...selectedListItemPaddings,
   };
 
-  let finalOrganizationId = '';
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   }
 
   const handleCollpaseClicked = () => {
@@ -140,15 +141,15 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     return <></>;
   }
 
-  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationMarketplaceBaseLink = getOrganizationMarketplaceBaseLink(integratedPlatrform, rootData.organization.id);
-  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.id);
+  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationMarketplaceBaseLink = getOrganizationMarketplaceBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
 
   return (
     <>
@@ -398,14 +399,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
         </List>
       </Box>
 
-      {!collapsed && finalOrganizationId && (
+      {!collapsed && finalOrganizationUniqueAlphanumericName && (
         <>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, finalOrganizationId)}
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, finalOrganizationUniqueAlphanumericName)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
@@ -416,7 +417,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
-                organizationId={finalOrganizationId}
+                organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
                 label="Invite Teammates"
                 size="medium"
                 sx={{ backgroundColor: paletteMode === 'dark' ? coal : emerald, paddingTop: 1, paddingBottom: 1, width: 210 }}

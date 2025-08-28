@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b5378f75ae3d71a293e276277afa3e3>>
+ * @generated SignedSource<<5a3eee2c7f22bd698732b12783ef9b30>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,8 @@ export type AddOrganizationBillingDetailsInput = {
   id?: string | null | undefined;
   latitude?: number | null | undefined;
   longitude?: number | null | undefined;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   osmId?: string | null | undefined;
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;

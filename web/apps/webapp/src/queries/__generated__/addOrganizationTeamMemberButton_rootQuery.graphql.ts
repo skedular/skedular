@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c8271f1d3f05816599afbf22b8a8468>>
+ * @generated SignedSource<<a9d78c467f218c5d1c13c8b21a50ba1c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type OrganizationMemberOrderInput = {
 };
 export type addOrganizationTeamMemberButton_rootQuery$variables = {
   addTeamMemberDialogOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
 };
 export type addOrganizationTeamMemberButton_rootQuery$data = {
@@ -38,7 +38,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v2 = {
   "defaultValue": null,
@@ -60,8 +60,8 @@ v3 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -264,16 +264,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "132e59e4c1dd3dbecb575fdedecb23b3",
+    "cacheID": "27af8b2582b4aca822efab55a1c441a5",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberButton_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organizationMembers(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e95e916f48210f3d519cfa6eb441827b";
+(node as any).hash = "353118099d2f81c328c28ffff841dc4b";
 
 export default node;

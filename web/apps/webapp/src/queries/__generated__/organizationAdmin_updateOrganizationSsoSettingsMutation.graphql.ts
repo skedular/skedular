@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c3d3e0613de677970289593979ed90c>>
+ * @generated SignedSource<<0833944c53a2b0563beb2fadf2aa5c9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,8 @@ export type UpdateOrganizationSsoSettingsInput = {
   entityId: string;
   isActive: boolean;
   loginUrl: string;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationSsoSettingsMutation$variables = {
   input: UpdateOrganizationSsoSettingsInput;

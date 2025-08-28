@@ -53,7 +53,12 @@ public class BookingPaymentService(
         var productVersionIds = existingBooking.ProductVersions.Select(item => item.Id).ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         var organizationIds = productVersions.Select(item => item.Product.Organization.Id).ToList();
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, false, false, cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            false,
+            false,
+            cancellationToken);
         if (organizations.Any(organization => !organizationAuthorizationService.CanModifyPaymentMethod(organization, customer)))
         {
             throw new UnauthorizedAccessException();

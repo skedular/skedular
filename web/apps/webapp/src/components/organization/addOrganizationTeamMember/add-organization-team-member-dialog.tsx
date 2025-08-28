@@ -61,7 +61,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
         organizationMembers(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
           orderBy: $addTeamMemberDialogOrganizationMembersSortingValues
         ) @connection(key: "addTeamMemberDialogQuery_organizationMembers") {
           __id

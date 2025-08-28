@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1cd3eb44275a0f21fbcf41ebe78c6a8e>>
+ * @generated SignedSource<<350d06dc8501045035656518cc15e263>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_organization_refetchableFragment$variables = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 export type organizationAdmin_organization_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_organization_query">;
@@ -26,7 +26,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   }
 ],
 v1 = {
@@ -213,8 +213,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
+            "name": "uniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -223,6 +223,13 @@ return {
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "uniqueAlphanumericName",
+            "storageKey": null
+          },
           (v2/*: any*/),
           {
             "alias": null,
@@ -540,16 +547,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "289b227164f534e6a23ffcbfffe5fc60",
+    "cacheID": "53e40236529c9976a2127955d30cdf08",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_organization_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_organization_refetchableFragment(\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...organizationAdmin_organization_query\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    uniqueAlphanumericName\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c5a9dbfb2d5a6d1430b9f196b33ffe6a";
+(node as any).hash = "5fb09768769fa1439d9e3a9c7e2fcc27";
 
 export default node;

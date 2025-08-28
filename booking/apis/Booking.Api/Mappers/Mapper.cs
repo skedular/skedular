@@ -219,7 +219,11 @@ public class Mapper : IMapper
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
+            InvolvedOrganizations =
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                    .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
@@ -242,7 +246,11 @@ public class Mapper : IMapper
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations = src.OrganizationIds.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
+            InvolvedOrganizations =
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                    .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
             Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
@@ -623,7 +631,11 @@ public class Mapper : IMapper
             ? null
             : new OrganizationDetails
             {
-                UniqueId = src.Id, Name = src.Name.ToSafeString(), ContactEmail = src.ContactEmail, ContactPhone = src.ContactPhone
+                UniqueId = src.Id,
+                Name = src.Name.ToSafeString(),
+                UniqueAlphanumericName = src.UniqueAlphanumericName,
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone
             };
 
     private static LocationDetails? MapTo(Shared.Models.Location? src) =>

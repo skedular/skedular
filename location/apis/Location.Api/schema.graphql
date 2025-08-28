@@ -180,7 +180,7 @@ type Query {
   floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
-  myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
+  myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
@@ -272,7 +272,8 @@ input AddLocationInput {
   id: String
   name: String!
   about: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   timezone: String
   locationTagIds: [String!]!
   contactEmail: String
@@ -366,7 +367,7 @@ input LocationOrderInput {
 }
 
 input LocationWhereInput {
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   locationIds: [String!]
   nameContains: String
   customTagIds: [String!]

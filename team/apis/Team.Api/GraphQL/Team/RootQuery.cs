@@ -29,7 +29,12 @@ public class RootQuery(IMapper mapper)
     {
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
-            new TeamSearchCriteria(where.OrganizationId, null, where.NameContains, where.PrimaryLocationIds),
+            new TeamSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                null,
+                where.NameContains,
+                where.PrimaryLocationIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
@@ -60,7 +65,12 @@ public class RootQuery(IMapper mapper)
     {
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
-            new TeamSearchCriteria(where.OrganizationId, where.CustomerId, where.NameContains, where.PrimaryLocationIds),
+            new TeamSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                where.CustomerId,
+                where.NameContains,
+                where.PrimaryLocationIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
@@ -81,7 +91,8 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<IEnumerable<TeamDetails>> MyTeamsAsync(
         string? organizationId,
+        string? organizationUniqueAlphanumericName,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, cancellationToken));
+        mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken));
 }

@@ -45,7 +45,10 @@ public class TagService(
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       tag.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -57,8 +60,6 @@ public class TagService(
 
     public async Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(tag.Organization.Id);
-
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
@@ -78,8 +79,13 @@ public class TagService(
             tag.Id = randomHelper.Generate();
         }
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
-                                   throw new OrganizationNotFound();
+        var existingOrganization =
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                tag.Organization.Id,
+                tag.Organization.UniqueAlphanumericName,
+                cancellationToken) ??
+            throw new OrganizationNotFound();
+
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -143,7 +149,10 @@ public class TagService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       tag.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -176,7 +185,10 @@ public class TagService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tags = await repositoryFactory.TagRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = tags.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            cancellationToken);
 
         if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
         {
@@ -208,8 +220,13 @@ public class TagService(
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
+
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               searchCriteria.OrganizationId,
+                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
+
         if (!organizationAuthorizationService.CanView(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -235,7 +252,10 @@ public class TagService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTag.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       existingTag.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {

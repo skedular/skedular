@@ -9,7 +9,7 @@ import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: newLocationButton_query$key;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -17,11 +17,11 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewLocationButton = ({ rootDataRelay, organizationId, fullWidth, label, hideIcon, variant, size }: Props) => {
+const NewLocationButton = ({ rootDataRelay, organizationUniqueAlphanumericName, fullWidth, label, hideIcon, variant, size }: Props) => {
   const rootData = useFragment<newLocationButton_query$key>(
     graphql`
       fragment newLocationButton_query on Query {
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           type {
             type
           }
@@ -41,8 +41,8 @@ const NewLocationButton = ({ rootDataRelay, organizationId, fullWidth, label, hi
     <Button
       href={
         rootData.organization.type.type === 'PRIVATE'
-          ? getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationId)
-          : getOrganizationLocationAddMarketplaceLink(integratedPlatrform, organizationId)
+          ? getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationUniqueAlphanumericName)
+          : getOrganizationLocationAddMarketplaceLink(integratedPlatrform, organizationUniqueAlphanumericName)
       }
       variant={variant ?? 'text'}
       fullWidth={fullWidth}

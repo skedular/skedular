@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20d25fb0fd46fe557f8319f34bd86cdb>>
+ * @generated SignedSource<<25133edbaa3003316f70c433f1302d96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,20 +34,8 @@ var v0 = {
 v1 = {
   "alias": null,
   "args": null,
-  "concreteType": "CustomerDetails",
-  "kind": "LinkedField",
-  "name": "me",
-  "plural": false,
-  "selections": [
-    (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "isOnboardingDone",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "isOnboardingDone",
   "storageKey": null
 };
 return {
@@ -57,7 +45,19 @@ return {
     "metadata": null,
     "name": "pageAddMarketplaceOrganization_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/)
+        ],
+        "storageKey": null
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -73,7 +73,26 @@ return {
     "kind": "Operation",
     "name": "pageAddMarketplaceOrganization_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "emails",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -121,12 +140,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "209b649b10633d10e4b719f44df1eeb6",
+    "cacheID": "010c12b63ea32d3b8c0c112422b2f7b1",
     "id": null,
     "metadata": {},
     "name": "pageAddMarketplaceOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddMarketplaceOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addMarketplaceOrganization_query\n}\n\nfragment addMarketplaceOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
+    "text": "query pageAddMarketplaceOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addMarketplaceOrganization_query\n}\n\nfragment addMarketplaceOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

@@ -263,6 +263,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
+            UniqueAlphanumericName = src.UniqueAlphanumericName,
             Tags = MapTo(src.Tags).ToList()
         };
 
@@ -273,7 +274,8 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> locationTags) =>
         MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags);
 
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id };
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
+        new() { UniqueId = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName };
 
     private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 

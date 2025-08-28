@@ -43,8 +43,9 @@ public class OrganizationSubscriber(
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                         organization.Id,
+                        null,
                         true,
                         true,
                         cancellationToken);

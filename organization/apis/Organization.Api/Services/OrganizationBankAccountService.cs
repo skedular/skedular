@@ -38,7 +38,6 @@ public class OrganizationBankAccountService(
 {
     public async Task<OrganizationBankAccount> AddAsync(OrganizationBankAccount organizationBankAccount, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationBankAccount.Organization.Id);
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(organizationBankAccount.Id))
@@ -55,9 +54,11 @@ public class OrganizationBankAccountService(
             organizationBankAccount.Id = randomHelper.Generate();
         }
 
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationBankAccount.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationBankAccount.Organization.Id,
+                                       organizationBankAccount.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -92,8 +93,12 @@ public class OrganizationBankAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resource = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resource.Organization.Id, cancellationToken) ??
+        var existingOrganizationBankAccount = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ??
+                                              throw new ResourceNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       existingOrganizationBankAccount.Organization.Id,
+                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -102,7 +107,7 @@ public class OrganizationBankAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedResource = mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Remove(resource));
+        var deletedResource = mapper.MapTo(repositoryFactory.OrganizationBankAccountRepository.Remove(existingOrganizationBankAccount));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -119,7 +124,10 @@ public class OrganizationBankAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var resources = await repositoryFactory.OrganizationBankAccountRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = resources.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            cancellationToken);
 
         if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
         {
@@ -145,9 +153,11 @@ public class OrganizationBankAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganizationBankAccount = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ??
                                               throw new OrganizationBankAccountNotFound();
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationBankAccount.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       existingOrganizationBankAccount.Organization.Id,
+                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -174,15 +184,19 @@ public class OrganizationBankAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var resource = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resource.Organization.Id, cancellationToken) ??
+        var existingOrganizationBankAccount =
+            await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       existingOrganizationBankAccount.Organization.Id,
+                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanView(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        return mapper.MapTo(resource);
+        return mapper.MapTo(existingOrganizationBankAccount);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<OrganizationBankAccount>>, int)> GetPaginatedAccountsAsync(
@@ -192,7 +206,10 @@ public class OrganizationBankAccountService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               searchCriteria.OrganizationId,
+                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         if (!ignoreAuthorizationCheck)
@@ -220,9 +237,11 @@ public class OrganizationBankAccountService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationBankAccount.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       existingOrganizationBankAccount.Organization.Id,
+                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
         if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new UnauthorizedAccessException();

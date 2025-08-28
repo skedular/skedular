@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6506d52228126f22b43b74a724924883>>
+ * @generated SignedSource<<bf8176d040ffe949f2ff671a5ca12a38>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type organizationMarketplaceSetup_locationTags_refetchableFragment$variab
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   locationTagNameSearchText?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_locationTags_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_locationTags_query">;
@@ -44,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   }
 ],
 v1 = [
@@ -77,8 +77,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -252,16 +252,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "830400e6eabac38fcf5e5b585d579b87",
+    "cacheID": "fe9ef060d549e1baf33832d715ead1bc",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_locationTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_locationTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationMarketplaceSetup_locationTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_locationTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationTagNameSearchText: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...organizationMarketplaceSetup_locationTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $locationTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6637dec23a6c3ccb0b4c6f458b1d51f8";
+(node as any).hash = "48dc6c3ea2a6c6e3237ca9bd70a84d52";
 
 export default node;

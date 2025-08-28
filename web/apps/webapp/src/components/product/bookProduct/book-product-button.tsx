@@ -9,7 +9,7 @@ import type { SxProps, Theme } from '@mui/system';
 import { memo } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   productId: string;
   fullWidth?: boolean;
   label?: string;
@@ -20,7 +20,7 @@ type Props = {
   invertDefaultColor?: boolean;
 };
 
-const BookProductButton = ({ organizationId, productId, fullWidth, label, hideIcon, variant, size, sx, invertDefaultColor }: Props) => {
+const BookProductButton = ({ organizationUniqueAlphanumericName, productId, fullWidth, label, hideIcon, variant, size, sx, invertDefaultColor }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const borderSx = variant === 'contained' ? { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' } : {};
 
@@ -29,7 +29,7 @@ const BookProductButton = ({ organizationId, productId, fullWidth, label, hideIc
       <Button
         variant={variant ?? 'text'}
         LinkComponent={Link}
-        href={getOrganizationBookingProductLink(integratedPlatrform, organizationId, productId)}
+        href={getOrganizationBookingProductLink(integratedPlatrform, organizationUniqueAlphanumericName, productId)}
         fullWidth={fullWidth}
         sx={{ ...sx, ...borderSx }}
       >

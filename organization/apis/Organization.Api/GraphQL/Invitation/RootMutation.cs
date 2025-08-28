@@ -17,7 +17,11 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             InvitesCustomersToJoinOrganization = mapper.MapTo(
-                    await invitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails.ToList(), cancellationToken))
+                    await invitationService.InviteMembersByEmailsAsync(
+                        input.OrganizationId,
+                        input.OrganizationUniqueAlphanumericName,
+                        input.Emails.ToList(),
+                        cancellationToken))
                 .ToList()
         };
 

@@ -13,15 +13,15 @@ import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataOrganizationAnalyticsRelay: organizationMemberAttendancyInsight_organizationAnalytics_query$key;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRelay, organizationId }: Props) => {
+const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRelay, organizationUniqueAlphanumericName }: Props) => {
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query
       @refetchable(queryName: "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment") {
-        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
+        organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {
           memberAttendancePercentage {
             date
             percentage
@@ -39,7 +39,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
       startTransition(() => {
         refetch(
           {
-            organizationId,
+            organizationUniqueAlphanumericName,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -49,7 +49,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
         );
       });
     },
-    [refetch, organizationId],
+    [refetch, organizationUniqueAlphanumericName],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {

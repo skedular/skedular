@@ -11,7 +11,11 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationBillingService
 {
-    Task<OrganizationBillingDetails?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<OrganizationBillingDetails?> GetAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> UpdateAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken);
 }
@@ -26,12 +30,18 @@ public class OrganizationBillingService(
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationBillingService
 {
-    public async Task<OrganizationBillingDetails?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<OrganizationBillingDetails?> GetAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationId,
+                                       organizationUniqueAlphanumericName,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanView(existingOrganization, customer))
         {
@@ -44,12 +54,13 @@ public class OrganizationBillingService(
     public async Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(organizationBillingDetails.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationBillingDetails.Organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationBillingDetails.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationBillingDetails.Organization.Id,
+                                       organizationBillingDetails.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -109,9 +120,11 @@ public class OrganizationBillingService(
             organizationBillingDetails.Id,
             cancellationToken) ?? throw new OrganizationBillingDetailsNotFound();
 
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationBillingDetails.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationBillingDetails.Organization.Id,
+                                       organizationBillingDetails.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {

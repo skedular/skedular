@@ -38,7 +38,6 @@ type Props = {
   rootDataTeamsRelay: editPrivateBooking_customerTeams_query$key;
   rootDataAvailableResourcesRelay: editPrivateBooking_availableResources_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
 };
 
 type CustomerDetails = {
@@ -114,7 +113,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const rootData = useFragment<editPrivateBooking_query$key>(
     graphql`
       fragment editPrivateBooking_query on Query {
-        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
@@ -186,7 +185,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         organizationMembers(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
           orderBy: $organizationMembersSortingValues
         ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
           __id
@@ -213,7 +212,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const [rootDataTeams, refetchTeams] = useRefetchableFragment<editPrivateBooking_customerTeams_refetchableFragment, editPrivateBooking_customerTeams_query$key>(
     graphql`
       fragment editPrivateBooking_customerTeams_query on Query @refetchable(queryName: "editPrivateBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
+        customerTeams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }, orderBy: $teamsSortingValues)
+          @include(if: $customerExists) {
           __id
           totalCount
           edges {
@@ -234,7 +234,14 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   >(
     graphql`
       fragment editPrivateBooking_availableResources_query on Query @refetchable(queryName: "editPrivateBooking_availableResources_refetchableFragment") {
-        availableResources(where: { organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }) {
+        availableResources(
+          where: {
+            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+            locationId: $locationId
+            from: $dateFromToGetAvailableResources
+            until: $dateUntilToGetAvailableResources
+          }
+        ) {
           uniqueId
           name
           customTags {

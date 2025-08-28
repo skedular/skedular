@@ -10,7 +10,11 @@ public class UpdateTeamAndTeamMembersInput
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }

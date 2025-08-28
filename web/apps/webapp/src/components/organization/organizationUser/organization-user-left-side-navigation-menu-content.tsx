@@ -27,13 +27,13 @@ import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: organizationUserLeftSideNavigationMenuContent_query$key;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   customerId: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organizationId, customerId, collapsed, hideIcons }: Props) => {
+const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organizationUniqueAlphanumericName, customerId, collapsed, hideIcons }: Props) => {
   const rootData = useFragment<organizationUserLeftSideNavigationMenuContent_query$key>(
     graphql`
       fragment organizationUserLeftSideNavigationMenuContent_query on Query {
@@ -80,10 +80,10 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationId, customerId);
-  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationId, customerId);
-  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationId, customerId);
-  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationId, customerId);
+  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
+  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
+  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
+  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
 
   return (
     <List

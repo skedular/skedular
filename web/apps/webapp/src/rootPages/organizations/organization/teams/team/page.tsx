@@ -15,7 +15,7 @@ import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'reac
 import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
-  query pageOrganizationTeam_rootQuery($organizationId: String!, $organizationExists: Boolean!, $teamId: String!, $peopleNameSearchText: String) {
+  query pageOrganizationTeam_rootQuery($organizationUniqueAlphanumericName: String!, $organizationExists: Boolean!, $teamId: String!, $peopleNameSearchText: String) {
     team(id: $teamId) {
       name
     }
@@ -27,11 +27,11 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationTeam_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   teamId: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId, teamId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, teamId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationTeam_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -55,7 +55,13 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, teamId }: 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationTeam rootDataRelay={rootData} rootDataTeamMembersRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />
+      <OrganizationTeam
+        rootDataRelay={rootData}
+        rootDataTeamMembersRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        teamId={teamId}
+      />
     </RootShell>
   );
 };
@@ -66,19 +72,19 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, teamId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName, teamId } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   let finalTeamId = '';
@@ -98,15 +104,15 @@ const RootPageWithRelay = () => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
+        organizationExists: !!finalOrganizationUniqueAlphanumericName,
         teamId: finalTeamId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, finalTeamId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalTeamId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -120,7 +126,12 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} teamId={finalTeamId} />
+      <MemoRootPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        teamId={finalTeamId}
+      />
     </ErrorBoundary>
   );
 };

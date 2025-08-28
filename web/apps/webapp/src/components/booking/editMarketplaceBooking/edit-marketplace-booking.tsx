@@ -56,7 +56,6 @@ type Props = {
   rootDataOrganizationMembersRelay: editMarketplaceBooking_organizationMembers_query$key;
   rootDataTeamsRelay: editMarketplaceBooking_customerTeams_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
 };
 
 type CustomerDetails = {
@@ -172,7 +171,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         organizationMembers(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
           orderBy: $organizationMembersSortingValues
         ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
           __id
@@ -199,7 +198,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const [rootDataTeams, refetchTeams] = useRefetchableFragment<editMarketplaceBooking_customerTeams_refetchableFragment, editMarketplaceBooking_customerTeams_query$key>(
     graphql`
       fragment editMarketplaceBooking_customerTeams_query on Query @refetchable(queryName: "editMarketplaceBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
+        customerTeams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }, orderBy: $teamsSortingValues)
+          @include(if: $customerExists) {
           __id
           totalCount
           edges {

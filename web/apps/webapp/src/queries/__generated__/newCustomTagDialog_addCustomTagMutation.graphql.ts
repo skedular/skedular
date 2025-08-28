@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1118624c3a3c24999d60823e96af97e>>
+ * @generated SignedSource<<72f56aea29ca73bc24be47bdf731d7a5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,8 @@ export type AddCustomTagInput = {
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type newCustomTagDialog_addCustomTagMutation$variables = {
   connectionIds: ReadonlyArray<string>;

@@ -17,12 +17,12 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationAdmin_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAdmin_rootQuery($organizationId: String!, $zoneNameSearchText: String, $customTagNameSearchText: String) {
-    organization(id: $organizationId) {
+  query pageOrganizationAdmin_rootQuery($organizationUniqueAlphanumericName: String!, $zoneNameSearchText: String, $customTagNameSearchText: String) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       name
     }
     ...organizationAdmin_query
@@ -32,7 +32,7 @@ const RootQuery = graphql`
   }
 `;
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAdmin_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -62,7 +62,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
         rootDataZonesRelay={rootData}
         rootDataCustomTagsRelay={rootData}
         onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
       />
     </RootShell>
   );
@@ -74,31 +74,31 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAdmin_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationId: finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -112,7 +112,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

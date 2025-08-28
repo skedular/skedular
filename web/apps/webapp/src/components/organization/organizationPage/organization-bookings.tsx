@@ -21,7 +21,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 type Props = {
   queryReference: PreloadedQuery<organizationBookings_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   customerId?: string | null;
   locationId?: string | null;
   teamId?: string | null;
@@ -30,8 +30,7 @@ type Props = {
 
 const RootQuery = graphql`
   query organizationBookings_rootQuery(
-    $organizationId: String!
-    $nullableOrganizationId: String
+    $organizationUniqueAlphanumericName: String!
     $locationIds: [String!]!
     $teamIds: [String!]!
     $customerIds: [String!]!
@@ -41,11 +40,11 @@ const RootQuery = graphql`
     $peopleNameSearchText: String
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
-    organization(id: $organizationId) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       id
       name
     }
-    myLocations(organizationId: $nullableOrganizationId) {
+    myLocations(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       id
       name
       organization {
@@ -53,7 +52,7 @@ const RootQuery = graphql`
         name
       }
     }
-    myTeams(organizationId: $nullableOrganizationId) {
+    myTeams(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       id
       name
       organization {
@@ -69,7 +68,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationBookings = ({ queryReference, onReloadRequired, organizationId, customerId, locationId, teamId, defaultStartWeek }: Props) => {
+const OrganizationBookings = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, customerId, locationId, teamId, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organizationBookings_rootQuery>(RootQuery, queryReference);
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
@@ -104,7 +103,7 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationId
     return <></>;
   }
 
-  if (!organizationId) {
+  if (!organizationUniqueAlphanumericName) {
     return <></>;
   }
 
@@ -117,13 +116,13 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationId
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
-        <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationId={organizationId} />
+        <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
       </GridContainer>
       <Bookings
         rootDataRelay={rootData}
         rootDataBookingRelay={rootData}
         onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         from={startWeek}
         to={endWeek}
         locationIds={locationIds}
@@ -138,13 +137,13 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationId
 const MemoOrganizationBookings = memo(OrganizationBookings);
 
 type RelayProps = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   customerId?: string | null;
   locationId?: string | null;
   teamId?: string | null;
 };
 
-const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
+const ModernOrganizationWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationBookings_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const [, startTransition] = useTransition();
@@ -160,8 +159,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
     loadQuery(
       {
-        organizationId,
-        nullableOrganizationId: organizationId,
+        organizationUniqueAlphanumericName,
         bookingsSearchCriteriaFrom,
         bookingsSearchCriteriaTo,
         locationIds: locationId ? [locationId] : [],
@@ -184,7 +182,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, startWeek, organizationId, locationId, teamId, customerId]);
+  }, [loadQuery, triggerReload, startWeek, organizationUniqueAlphanumericName, locationId, teamId, customerId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -201,7 +199,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
       <MemoOrganizationBookings
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         customerId={customerId}
         locationId={locationId}
         teamId={teamId}

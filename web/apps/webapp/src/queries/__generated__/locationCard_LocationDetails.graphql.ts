@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b7797f7aa5dff3d955763a1253ccb20>>
+ * @generated SignedSource<<64aa1016e6ca336ee91f06964c04b3fd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type locationCard_LocationDetails$data = {
   readonly id: string;
   readonly name: string;
   readonly organization: {
-    readonly uniqueId: string;
+    readonly uniqueAlphanumericName: string | null | undefined;
   };
   readonly physicalAddress: {
     readonly latitude: number | null | undefined;
@@ -66,15 +66,14 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v3 = [
-  (v2/*: any*/),
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  },
   (v1/*: any*/),
   {
     "alias": null,
@@ -99,7 +98,7 @@ return {
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -109,7 +108,7 @@ return {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -228,7 +227,13 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
-        (v2/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueAlphanumericName",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -238,6 +243,6 @@ return {
 };
 })();
 
-(node as any).hash = "69cf4b956fc3318db0ae6fe2a43c9a59";
+(node as any).hash = "05be8401d4e89cc6a4cd686e1a09b945";
 
 export default node;

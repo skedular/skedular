@@ -23,7 +23,11 @@ public interface ITeamService
     Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken);
+
+    Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int )> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
@@ -49,7 +53,6 @@ public class TeamService(
     public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(team.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(team.Organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
 
@@ -63,13 +66,44 @@ public class TeamService(
                 throw new OrganizationNotFound();
             }
 
-            if (primaryLocation.Organization.Id != team.Organization.Id)
+            if (!string.IsNullOrWhiteSpace(team.Organization.Id))
             {
-                throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                if (primaryLocation.Organization.Id != team.Organization.Id)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(team.Organization.UniqueAlphanumericName))
+            {
+                if (primaryLocation.Organization.UniqueAlphanumericName != team.Organization.UniqueAlphanumericName)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
             }
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+        Organization organization;
+        if (!string.IsNullOrWhiteSpace(team.Organization.Id))
+        {
+            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+        }
+        else if (!string.IsNullOrWhiteSpace(team.Organization.UniqueAlphanumericName))
+        {
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                team.Organization.Id,
+                team.Organization.UniqueAlphanumericName,
+                false,
+                cancellationToken) ?? throw new OrganizationNotFound();
+        }
+        else
+        {
+            throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
+        }
+
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
             throw new UnauthorizedAccessException();
@@ -162,13 +196,32 @@ public class TeamService(
         {
             primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken) ??
                               throw new LocationNotFound();
-            if (primaryLocation.Organization.Id != team.Organization.Id)
+
+            if (!string.IsNullOrWhiteSpace(existingTeam.Organization.Id))
             {
-                throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                if (primaryLocation.Organization.Id != existingTeam.Organization.Id)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(existingTeam.Organization.UniqueAlphanumericName))
+            {
+                if (primaryLocation.Organization.UniqueAlphanumericName != existingTeam.Organization.UniqueAlphanumericName)
+                {
+                    throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
             }
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               existingTeam.Organization.Id,
+                               existingTeam.Organization.UniqueAlphanumericName,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
@@ -257,23 +310,30 @@ public class TeamService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
+            string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName) &&
+            string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
             throw new InvalidOperationException();
         }
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
         {
-            // Ensure we do not return other customer team by forcing CustomerId as search criteria
-            searchCriteria.CustomerId = customer.Id;
+            // Ensure we do not return another customer team by forcing CustomerId as search criteria
+            searchCriteria = searchCriteria with { CustomerId = customer.Id };
         }
         else
         {
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, cancellationToken) ??
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                   searchCriteria.OrganizationId,
+                                   searchCriteria.OrganizationUniqueAlphanumericName,
+                                   false,
+                                   cancellationToken) ??
                                throw new OrganizationNotFound();
+
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();
@@ -310,20 +370,28 @@ public class TeamService(
         return (paginatedInfo, mappedTeams, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken)
+    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        if (!string.IsNullOrWhiteSpace(organizationId))
+        Organization? organization = null;
+        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken) ??
-                               throw new OrganizationNotFound();
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               false,
+                               cancellationToken) ??
+                           throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
-        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organizationId, cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organization?.Id, cancellationToken);
         var result = teams.Select(mapper.MapTo).ToList();
         foreach (var team in result)
         {

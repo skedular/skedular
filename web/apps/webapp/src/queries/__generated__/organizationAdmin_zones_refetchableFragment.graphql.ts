@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8c1b2981b9f9116acb505e6ee414a781>>
+ * @generated SignedSource<<5bc6d6aebb1cc7036501e9d3945913a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_zones_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   zoneNameSearchText?: string | null | undefined;
 };
 export type organizationAdmin_zones_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -67,8 +67,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -241,16 +241,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "989c5e2d2d5ad644f213df09435de396",
+    "cacheID": "5a5a09142bd714c504c8add5d2285221",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_zones_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationAdmin_zones_query_1G22uz\n}\n\nfragment organizationAdmin_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String\n  $zoneNameSearchText: String\n) {\n  ...organizationAdmin_zones_query_1G22uz\n}\n\nfragment organizationAdmin_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "58799a9e483a5e0f87cd78ab657b0267";
+(node as any).hash = "b34577721da1179b7106fe31c892d562";
 
 export default node;

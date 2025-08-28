@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c4337a8ad434dd7c10e38d6fa00e939e>>
+ * @generated SignedSource<<d66847536c14867241dcf8955bd2538a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationBookingInsight_organizationAnalytics_refetchableFragment$variables = {
   from: any;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   to: any;
 };
 export type organizationBookingInsight_organizationAnalytics_refetchableFragment$data = {
@@ -33,7 +33,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -73,8 +73,8 @@ return {
           },
           {
             "kind": "Variable",
-            "name": "organizationId",
-            "variableName": "organizationId"
+            "name": "uniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
           },
           {
             "kind": "Variable",
@@ -118,16 +118,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3fdbbb18a49a3a2f55e768f97ffd22c6",
+    "cacheID": "dd8cee476478b5374f98ae7a1c10ee8b",
     "id": null,
     "metadata": {},
     "name": "organizationBookingInsight_organizationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationBookingInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationId: String!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n"
+    "text": "query organizationBookingInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "71d3b5eb6bd5c246cbbb552df0da42b3";
+(node as any).hash = "b24c4a49ea23e76a5046a31237324d07";
 
 export default node;

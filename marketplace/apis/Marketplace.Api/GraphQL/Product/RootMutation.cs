@@ -17,7 +17,13 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Product = mapper.MapTo(await productService.AddAsync(input.Id, input.OrganizationId, mapper.MapTo(input), cancellationToken))!
+            Product = mapper.MapTo(
+                await productService.AddAsync(
+                    input.Id,
+                    input.OrganizationId,
+                    input.OrganizationUniqueAlphanumericName,
+                    mapper.MapTo(input),
+                    cancellationToken))!
         };
 
     [UseResolverScope]

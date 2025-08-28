@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<030424dc0349ea449caf1aaa4f2699e2>>
+ * @generated SignedSource<<f607f13b28c0c863b8660f738aac09fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type teamCard_TeamDetails$data = {
   }>;
   readonly name: string;
   readonly organization: {
-    readonly uniqueId: string;
+    readonly uniqueAlphanumericName: string | null | undefined;
   };
   readonly primaryFeatureImage: {
     readonly thumbnail: {
@@ -83,7 +83,13 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
-        (v1/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueAlphanumericName",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -221,6 +227,6 @@ return {
 };
 })();
 
-(node as any).hash = "cb8bf1c35e4abdf1e2c65f6a22ec7c72";
+(node as any).hash = "f0562a432bc95026c0926ed958e06bd5";
 
 export default node;

@@ -16,7 +16,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationLocation_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $locationId: String!
     $resourceNameSearchText: String
     $resourceZoneIds: [String!]
@@ -39,11 +39,11 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, locationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationLocation_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -72,7 +72,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId, locationId
         rootDataResourcesRelay={rootData}
         rootDataFloorPlansRelay={rootData}
         onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         locationId={locationId}
       />
     </RootShell>
@@ -85,19 +85,19 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, locationId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName, locationId } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   let finalLocationId = '';
@@ -117,7 +117,7 @@ const RootPageWithRelay = () => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         locationId: finalLocationId,
         zonesSortingValues: [
           {
@@ -154,7 +154,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, finalLocationId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalLocationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -168,7 +168,12 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} locationId={finalLocationId} />
+      <MemoRootPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        locationId={finalLocationId}
+      />
     </ErrorBoundary>
   );
 };

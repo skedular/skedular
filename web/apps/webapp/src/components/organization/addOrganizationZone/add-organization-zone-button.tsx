@@ -6,7 +6,7 @@ import AddOrganizationZoneDialog from './add-organization-zone-dialog';
 
 type Props = {
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   connectionIds: string[];
   fullWidth?: boolean;
   label?: string;
@@ -15,7 +15,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddOrganizationZoneButton = ({ organizationId, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddOrganizationZoneButton = ({ organizationUniqueAlphanumericName, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -42,7 +42,7 @@ const AddOrganizationZoneButton = ({ organizationId, onReloadRequired, connectio
         {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
       <AddOrganizationZoneDialog
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}

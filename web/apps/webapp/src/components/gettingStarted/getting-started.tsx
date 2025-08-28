@@ -29,14 +29,14 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   rootDataRelay: gettingStarted_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Props) => {
+const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment gettingStarted_query on Query {
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           isMyOnboardingDone
         }
       }
@@ -66,7 +66,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleAddResourceClicked = (locationId: string) => {
     setIsAddResourceDialogOpen(false);
 
-    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId));
   };
 
   const handleCancelAddResourceClicked = () => {
@@ -80,7 +80,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {
@@ -92,7 +92,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationId,
+          organizationUniqueAlphanumericName,
         },
       },
       onCompleted: (_, errors) => {
@@ -137,7 +137,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationId)}>
+                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationUniqueAlphanumericName)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Location"
@@ -153,7 +153,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Create teams that regularly work or meet together." />
-                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationId)}>
+                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationUniqueAlphanumericName)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Team"
@@ -199,7 +199,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
       <AddResourceDialog
         onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         connectionIds={[]}
         isDialogOpen={isAddResourceDialogOpen}
         onAddClicked={handleAddResourceClicked}
@@ -210,7 +210,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
         isDialogOpen={isInvitePeopleToJoinOrganizationDialogOpen}
         onInviteClicked={handleInvitePeopleToJoinOrganizationClicked}
         onCancel={handleInvitePeopleToJoinOrganizationCancelClicked}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
       />
     </>
   );

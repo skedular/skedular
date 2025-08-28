@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2322030e01997c5a411daabc9a80f638>>
+ * @generated SignedSource<<42cbfffc30f2c92a390093193d406681>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -108,6 +108,7 @@ export type organizationAdmin_organization_query$data = {
       readonly name: string;
       readonly type: OrganizationType;
     };
+    readonly uniqueAlphanumericName: string | null | undefined;
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_organization_query";
@@ -281,7 +282,7 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     }
   ],
   "kind": "Fragment",
@@ -299,8 +300,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "id",
-          "variableName": "organizationId"
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
         }
       ],
       "concreteType": "OrganizationDetails",
@@ -309,6 +310,13 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueAlphanumericName",
+          "storageKey": null
+        },
         (v1/*: any*/),
         {
           "alias": null,
@@ -628,6 +636,6 @@ return {
 };
 })();
 
-(node as any).hash = "c5a9dbfb2d5a6d1430b9f196b33ffe6a";
+(node as any).hash = "5fb09768769fa1439d9e3a9c7e2fcc27";
 
 export default node;

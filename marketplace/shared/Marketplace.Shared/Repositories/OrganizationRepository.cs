@@ -1,4 +1,6 @@
-﻿using Enterprise.Shared.Database;
+﻿using Enterprise.Shared;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Sanitization;
 using Marketplace.Shared.Database;
 using Marketplace.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +11,24 @@ namespace Marketplace.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+
+    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+        ICollection<string>? ids,
+        ICollection<string>? uniqueAlphanumericNames,
+        CancellationToken cancellationToken);
+
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects(
-        this IQueryable<Organization> originalQuery) =>
+    internal static IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects(this IQueryable<Organization> originalQuery) =>
         originalQuery
             .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
@@ -34,21 +44,73 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(
-                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
-                cancellationToken);
+    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
 
-    public async Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .Where(query => ids.Contains(query.Id) || (query.UniqueAlphanumericName != null && ids.Contains(query.UniqueAlphanumericName)))
-            .AddDependentObjects()
-            .ToListAsync(cancellationToken);
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+        ICollection<string>? ids,
+        ICollection<string>? uniqueAlphanumericNames,
+        CancellationToken cancellationToken)
+    {
+        if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
+            uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        {
+            ids = ids.RemoveInvalidIds().ToSafeCollection();
+            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query => ids.Contains(query.Id) && query.UniqueAlphanumericName != null &&
+                                uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .AddDependentObjects()
+                .ToListAsync(cancellationToken);
+        }
+
+        if (ids is not null && ids.RemoveInvalidIds()!.Any())
+        {
+            ids = ids.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query => ids.Contains(query.Id))
+                .AddDependentObjects()
+                .ToListAsync(cancellationToken);
+        }
+
+        if (uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        {
+            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .AddDependentObjects()
+                .ToListAsync(cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
+    }
 
     public Organization Update(Organization organization)
     {

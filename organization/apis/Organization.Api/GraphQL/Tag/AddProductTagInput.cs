@@ -9,6 +9,10 @@ public class AddProductTagInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("color")] public string? Color { get; set; }
 }

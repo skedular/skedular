@@ -23,7 +23,7 @@ const SingleChoiceOrganizationStripeConnectAccount = ({ rootDataRelay, name, req
         organizationStripeConnectAccounts(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, onboardingCompleted: true }
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, onboardingCompleted: true }
           orderBy: $singleChoiceOrganizationStripeConnectAccountSortingValues
         ) @connection(key: "singleChoiceOrganizationStripeConnectAccount_organizationStripeConnectAccounts") {
           __id

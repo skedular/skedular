@@ -13,7 +13,12 @@ public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFact
 {
     public async Task<string> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               null,
+                               false,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         var organizationInvoiceCounter =
             await repositoryFactory.OrganizationInvoiceCounterRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);

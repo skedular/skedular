@@ -56,6 +56,13 @@ internal static class TeamExtensions
             query = query.Where(item => item.Organization.Id == searchCriteria.OrganizationId);
         }
 
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        {
+            query = query.Where(item =>
+                item.Organization.UniqueAlphanumericName != null &&
+                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+        }
+
         if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
             query = query.Where(item =>

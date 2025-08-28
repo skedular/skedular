@@ -10,7 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesCustomTags_query$key;
   name: string;
   required?: boolean;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 type CustomTagDetails = {
@@ -19,12 +19,16 @@ type CustomTagDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organizationId }: Props) => {
+const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<multipleChoicesCustomTags_query$key>(
     graphql`
       fragment multipleChoicesCustomTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        customTags(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $multipleChoicesCustomTagsSortingValues)
-          @connection(key: "multipleChoicesCustomTags_customTags") {
+        customTags(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
+          orderBy: $multipleChoicesCustomTagsSortingValues
+        ) @connection(key: "multipleChoicesCustomTags_customTags") {
           __id
           totalCount
           edges {
@@ -45,7 +49,7 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
   const filter = createFilterOptions<CustomTagDetails>();
 
   if (customTags.length === 0) {
-    return <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationCustomTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
   return (

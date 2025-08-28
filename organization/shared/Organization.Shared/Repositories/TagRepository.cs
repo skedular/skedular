@@ -31,11 +31,19 @@ internal static class TagExtensions
     internal static IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects(this IQueryable<Tag> originalQuery) =>
         originalQuery.Include(query => query.Organization);
 
-    internal static IQueryable<Tag> AddSearchCriteria(
-        this IQueryable<Tag> query,
-        TagSearchCriteria searchCriteria)
+    internal static IQueryable<Tag> AddSearchCriteria(this IQueryable<Tag> query, TagSearchCriteria searchCriteria)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        {
+            query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        {
+            query = query.Where(item =>
+                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+        }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.Type))
         {

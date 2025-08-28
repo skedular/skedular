@@ -10,7 +10,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   name: string;
   required?: boolean;
   readOnly?: boolean;
@@ -32,7 +32,7 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
-const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, required, readOnly, multiple, useMemberId }: Props) => {
+const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanumericName, name, required, readOnly, multiple, useMemberId }: Props) => {
   const [rootData, refetch] = useRefetchableFragment<organizationMemberSelector_refetchableFragment, organizationMemberSelector_query$key>(
     graphql`
       fragment organizationMemberSelector_query on Query
@@ -41,7 +41,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
         organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $bookingPeopleNameSearchText }
           orderBy: $organizationMemberSelectorOrganizationMembersSortingValues
         ) @connection(key: "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers") @include(if: $organizationExists) {
           __id
@@ -78,7 +78,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
         refetch(
           {
             bookingPeopleNameSearchText,
-            organizationExists: !!organizationId,
+            organizationExists: !!organizationUniqueAlphanumericName,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -86,7 +86,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
         );
       });
     },
-    [refetch, organizationId],
+    [refetch, organizationUniqueAlphanumericName],
   );
 
   const handleSearchTextChange = (str: string) => {

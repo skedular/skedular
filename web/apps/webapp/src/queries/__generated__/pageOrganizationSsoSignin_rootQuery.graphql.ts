@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<277c736392c45574034ae0d74af1d07a>>
+ * @generated SignedSource<<796410f9eafc4ed2c158786f4bbb511b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type pageOrganizationSsoSignin_rootQuery$variables = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   redirectUrl: string;
 };
 export type pageOrganizationSsoSignin_rootQuery$data = {
@@ -18,7 +18,7 @@ export type pageOrganizationSsoSignin_rootQuery$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly ssoLoginUrl: string;
+  readonly organizationSsoLoginUrl: string;
 };
 export type pageOrganizationSsoSignin_rootQuery = {
   response: pageOrganizationSsoSignin_rootQuery$data;
@@ -30,7 +30,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -38,32 +38,35 @@ var v0 = [
     "name": "redirectUrl"
   }
 ],
-v1 = {
-  "kind": "Variable",
-  "name": "id",
-  "variableName": "organizationId"
-},
-v2 = [
-  (v1/*: any*/)
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "uniqueAlphanumericName",
+    "variableName": "organizationUniqueAlphanumericName"
+  }
 ],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "logoUrl",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": [
-    (v1/*: any*/),
+    {
+      "kind": "Variable",
+      "name": "organizationUniqueAlphanumericName",
+      "variableName": "organizationUniqueAlphanumericName"
+    },
     {
       "kind": "Variable",
       "name": "redirectUrl",
@@ -71,7 +74,7 @@ v5 = {
     }
   ],
   "kind": "ScalarField",
-  "name": "ssoLoginUrl",
+  "name": "organizationSsoLoginUrl",
   "storageKey": null
 };
 return {
@@ -83,18 +86,18 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/)
         ],
         "storageKey": null
       },
-      (v5/*: any*/)
+      (v4/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
@@ -107,14 +110,14 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           (v3/*: any*/),
-          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -125,20 +128,20 @@ return {
         ],
         "storageKey": null
       },
-      (v5/*: any*/)
+      (v4/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "aebca35badea99232342d4727c94fa4d",
+    "cacheID": "dc22653843ee2b3a337a68d7320b1718",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationSsoSignin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationId: String!\n  $redirectUrl: String!\n) {\n  organization(id: $organizationId) {\n    logoUrl\n    name\n    id\n  }\n  ssoLoginUrl(id: $organizationId, redirectUrl: $redirectUrl)\n}\n"
+    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $redirectUrl: String!\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    logoUrl\n    name\n    id\n  }\n  organizationSsoLoginUrl(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, redirectUrl: $redirectUrl)\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ee0796b70b46f11a88177c91ebdc4c37";
+(node as any).hash = "9f415d5cc5c5563776bbb9abf39eaaaf";
 
 export default node;

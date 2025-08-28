@@ -53,6 +53,7 @@ public class RootQuery(IMapper mapper)
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
+        where.OrganizationUniqueAlphanumericNames = where.OrganizationUniqueAlphanumericNames.RemoveInvalidIds();
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
@@ -75,6 +76,7 @@ public class RootQuery(IMapper mapper)
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.OrganizationIds.ToSafeCollection(),
+                where.OrganizationUniqueAlphanumericNames.ToSafeCollection(),
                 where.LocationIds.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection()),

@@ -68,7 +68,7 @@ public class TeamMemberService(
         if (!teamAuthorizationService.CanViewMemberPersonalDetails(team, customer) &&
             memberVisibilityPolicy == OrganizationMemberVisibilityPolicy.LimitedAccess)
         {
-            searchCriteria.NameContains = null;
+            searchCriteria = searchCriteria with { NameContains = null };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamMemberRepository.GetPaginatedTeamMembersAsync(
@@ -252,9 +252,13 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               existingTeam.Organization.Id,
+                               null,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer!))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -356,7 +360,11 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               existingTeam.Organization.Id,
+                               null,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
@@ -490,7 +498,11 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               existingTeam.Organization.Id,
+                               null,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {

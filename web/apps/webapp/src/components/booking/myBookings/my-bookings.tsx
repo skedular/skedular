@@ -33,7 +33,7 @@ type Props = {
   rootDataRelay: myBookings_query$key;
   rootDataBookingRelay: myBookings_bookings_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   from: Dayjs;
   to: Dayjs;
   locationIds: string[];
@@ -87,7 +87,7 @@ type RowType = {
   date: string;
 };
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, viewMode }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlphanumericName, from, to, locationIds, teamIds, viewMode }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -107,7 +107,13 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         bookings(
           first: $count
           after: $cursor
-          where: { organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo }
+          where: {
+            organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName]
+            locationIds: $locationIds
+            teamIds: $teamIds
+            fromGte: $bookingsSearchCriteriaFrom
+            fromLte: $bookingsSearchCriteriaTo
+          }
           orderBy: [{ field: FROM, direction: ASCENDING }]
         ) @connection(key: "myBookings_bookings") {
           __id
@@ -236,7 +242,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingId));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingId));
 
         break;
 
@@ -450,7 +456,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
               return (
                 <Grid key={myBooking.id}>
-                  <MyBookingCard bookingDetailsRelay={myBooking} organizationId={organizationId} connectionIds={connectionIds} otherTeammates={otherTeammates} />
+                  <MyBookingCard
+                    bookingDetailsRelay={myBooking}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    connectionIds={connectionIds}
+                    otherTeammates={otherTeammates}
+                  />
                 </Grid>
               );
             })}

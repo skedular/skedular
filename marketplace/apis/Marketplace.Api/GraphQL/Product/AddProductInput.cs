@@ -8,7 +8,11 @@ public class AddProductInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public string Price { get; set; } = string.Empty;

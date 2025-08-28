@@ -9,17 +9,19 @@ public class RootQuery
 {
     [UseResolverScope]
     public async Task<bool> IsOrganizationSsoTokenValidAsync(
-        string id,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.IsOrganizationSsoTokenValidAsync(id, cancellationToken);
+        await organizationSsoService.IsOrganizationSsoTokenValidAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken);
 
 
     [UseResolverScope]
-    public async Task<string> SsoLoginUrlAsync(
-        string id,
+    public async Task<string> OrganizationSsoLoginUrlAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string redirectUrl,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.SsoLoginAsync(id, redirectUrl, cancellationToken);
+        await organizationSsoService.SsoLoginAsync(organizationId, organizationUniqueAlphanumericName, redirectUrl, cancellationToken);
 }

@@ -15,7 +15,7 @@ import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
@@ -32,7 +32,7 @@ const productTagSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationProductTagDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationProductTagDialog = ({ organizationUniqueAlphanumericName, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const [commitAddProductTag] = useMutation<addOrganizationProductTagDialog_addProductTagMutation>(graphql`
     mutation addOrganizationProductTagDialog_addProductTagMutation($connectionIds: [ID!]!, $input: AddProductTagInput!) @raw_response_type {
       addProductTag(input: $input) {
@@ -66,7 +66,7 @@ const AddOrganizationProductTagDialog = ({ organizationId, connectionIds, isDial
         input: {
           clientMutationId: uuid(),
           id,
-          organizationId,
+          organizationUniqueAlphanumericName,
           name,
           description,
           color: selectedColor,

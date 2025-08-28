@@ -34,8 +34,19 @@ public interface IOrganizationService
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> DeleteAsync(string id, CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization> DeleteAsync(
+        string? id,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization?> GetByUniqueAlphanumericNameAsync(
+        string uniqueAlphanumericName,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
@@ -81,9 +92,12 @@ public class OrganizationService(
             (customer, customerEntity) = await customerService.GetNullableAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(organization.Id))
+        if (!string.IsNullOrWhiteSpace(organization.Id) || !string.IsNullOrWhiteSpace(organization.UniqueAlphanumericName))
         {
-            var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+            var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                organization.Id,
+                organization.UniqueAlphanumericName,
+                cancellationToken);
             if (existingOrganization is not null)
             {
                 if (!ignoreAuthorizationCheck && customer is null)
@@ -235,21 +249,28 @@ public class OrganizationService(
 
     public async Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organization.Id);
-
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organization.Id,
+                                       organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
 
         return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Organization> DeleteAsync(string id, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> DeleteAsync(
+        string? id,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               id,
+                               organizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanDelete(organization, customer))
@@ -288,9 +309,30 @@ public class OrganizationService(
 
     public async Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken);
+        if (organization is null)
+        {
+            return null;
+        }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken);
+        Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
+        }
+
+        return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
+    }
+
+    public async Task<Shared.Models.Organization?> GetByUniqueAlphanumericNameAsync(
+        string uniqueAlphanumericName,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            null,
+            uniqueAlphanumericName,
+            cancellationToken);
         if (organization is null)
         {
             return null;
@@ -346,7 +388,7 @@ public class OrganizationService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return another customer organization by forcing CustomerId as search criteria
-        searchCriteria.CustomerId = customer.Id;
+        searchCriteria = searchCriteria with { CustomerId = customer.Id };
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsAsync(
             paginationInputParam,

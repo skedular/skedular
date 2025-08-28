@@ -35,7 +35,7 @@ import { array, number, object, string } from 'yup';
 type Props = {
   rootDataRelay: editResource_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 type ResourceDetails = {
@@ -56,11 +56,11 @@ const ResourceSchema = object({
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
-const EditResource = ({ rootDataRelay, organizationId }: Props) => {
+const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<editResource_query$key>(
     graphql`
       fragment editResource_query on Query {
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           type {
             type
           }
@@ -616,16 +616,31 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Tags">
-                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} organizationId={organizationId} />
+                    <MultipleChoicesCustomTags
+                      rootDataRelay={rootData}
+                      name="customTagIds"
+                      required={requiredFields.customTagIds}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
+                    <MultipleChoicesZones
+                      rootDataRelay={rootData}
+                      name="zoneIds"
+                      required={requiredFields.zoneIds}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    />
                   </FormFieldLabel>
 
                   {rootData.organization?.type.type === 'MARKETPLACE' && (
                     <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                      <MultipleChoicesProductTags
+                        rootDataRelay={rootData}
+                        name="productTagIds"
+                        required={requiredFields.productTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
                     </FormFieldLabel>
                   )}
 

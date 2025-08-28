@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cffe6fb61f5fead36187b57f653a65a>>
+ * @generated SignedSource<<9444d027d005b855f8bd1394a6429c6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type bookProduct_availableResources_refetchableFragment$variables = {
   dateFromToGetAvailableResources: any;
   dateUntilToGetAvailableResources: any;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   productId?: string | null | undefined;
 };
 export type bookProduct_availableResources_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -106,8 +106,8 @@ return {
               },
               {
                 "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
+                "name": "organizationUniqueAlphanumericName",
+                "variableName": "organizationUniqueAlphanumericName"
               },
               {
                 "kind": "Variable",
@@ -170,16 +170,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "aa453334c0f7727f4b3d45bbb1057de7",
+    "cacheID": "c232e832233ab4a4bf0dd29567cc75fe",
     "id": null,
     "metadata": {},
     "name": "bookProduct_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationId: String!\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9e2ab79dcce0b8fdaa8b8f183f8ff59b";
+(node as any).hash = "d1b2452a8909cd1e5d8084c462498f48";
 
 export default node;

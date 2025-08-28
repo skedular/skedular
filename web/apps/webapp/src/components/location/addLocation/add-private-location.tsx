@@ -33,8 +33,8 @@ import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
-  query addPrivateLocation_rootQuery($organizationId: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
-    organization(id: $organizationId) {
+  query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       type {
         type
       }
@@ -46,7 +46,7 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<addPrivateLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
@@ -73,7 +73,7 @@ const locationSchema = object({
   contactPhone: string().nullable(),
 });
 
-const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
+const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
   const rootData = usePreloadedQuery<addPrivateLocation_rootQuery>(RootQuery, queryReference);
 
   const [commitAddLocation] = useMutation<addPrivateLocation_addLocationMutation>(graphql`
@@ -140,7 +140,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationId, 
           id,
           name,
           about,
-          organizationId,
+          organizationUniqueAlphanumericName,
           timezone,
           contactEmail,
           contactPhone,
@@ -305,7 +305,12 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationId, 
 
               {rootData.organization?.type.type === 'MARKETPLACE' && (
                 <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
-                  <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                  <MultipleChoicesLocationTags
+                    rootDataRelay={rootData}
+                    name="locationTagIds"
+                    required={requiredFields.locationTagIds}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                  />
                 </FormFieldLabel>
               )}
 
@@ -331,14 +336,14 @@ const MemoAddPrivateLocation = memo(AddPrivateLocation);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
   createLabel?: string;
 };
 
-const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationId, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
+const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addPrivateLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -346,7 +351,7 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationId, onAdded
   useEffect(() => {
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         multipleChoicesLocationTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -358,7 +363,7 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationId, onAdded
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -376,7 +381,7 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationId, onAdded
       <MemoAddPrivateLocation
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         onAdded={onAdded}
         onCancel={onCancel}
         cancelLabel={cancelLabel}

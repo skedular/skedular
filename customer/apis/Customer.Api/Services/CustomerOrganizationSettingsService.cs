@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Customer.Api.Services.Authorization;
+using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
 
 namespace Customer.Api.Services;
@@ -7,7 +8,8 @@ namespace Customer.Api.Services;
 public interface ICustomerOrganizationSettingsService
 {
     Task<Shared.Models.Customer> SetCustomerDefaultOrganizationAsync(
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string? customerId,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
@@ -22,7 +24,8 @@ public class CustomerOrganizationSettingsService(
     : ICustomerOrganizationSettingsService
 {
     public async Task<Shared.Models.Customer> SetCustomerDefaultOrganizationAsync(
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string? customerId,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
@@ -32,8 +35,26 @@ public class CustomerOrganizationSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken) ??
-                           throw new OrganizationNotFound();
+
+        Organization organization;
+        if (!string.IsNullOrWhiteSpace(organizationId))
+        {
+            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
+        }
+        else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        {
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                organizationId,
+                organizationUniqueAlphanumericName,
+                false,
+                false,
+                cancellationToken) ?? throw new OrganizationNotFound();
+        }
+        else
+        {
+            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        }
+
         if (!ignoreAuthorizationCheck && !organizationAuthorizationService.CanAddOrganizationAsDefault(organization, customer))
         {
             throw new UnauthorizedAccessException();

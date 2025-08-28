@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a295b63b38b652f525d8b88b341266d>>
+ * @generated SignedSource<<47baca231517ce945d3de54e4a2d1335>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,8 @@ export type AddLocationTagInput = {
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type addOrganizationLocationTagDialog_addLocationTagMutation$variables = {
   connectionIds: ReadonlyArray<string>;

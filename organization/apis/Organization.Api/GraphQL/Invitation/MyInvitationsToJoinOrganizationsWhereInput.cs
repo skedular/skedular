@@ -6,6 +6,8 @@ namespace Organization.Api.GraphQL.Invitation;
 [GraphQLName("MyInvitationsToJoinOrganizationsWhereInput")]
 public class MyInvitationsToJoinOrganizationsWhereInput
 {
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("status")] public InvitationStatus? Status { get; set; }
 }

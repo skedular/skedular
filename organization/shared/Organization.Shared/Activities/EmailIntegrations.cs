@@ -27,7 +27,8 @@ public class EmailIntegrations(
     public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(SendInviteCustomerToJoinOrganizationNewCustomerInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(args.OrganizationId, cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(args.OrganizationId, null, cancellationToken);
         if (organization is null)
         {
             return;
@@ -78,7 +79,10 @@ public class EmailIntegrations(
     public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(SendInviteCustomerToJoinOrganizationExistingCustomerInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(args.OrganizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            args.OrganizationId,
+            null,
+            cancellationToken);
         if (organization is null)
         {
             return;

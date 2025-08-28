@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { memo } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
   fullWidth?: boolean;
   label?: string;
@@ -15,12 +15,12 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewFloorplanButton = ({ organizationId, locationId, fullWidth, label, hideIcon, variant, size }: Props) => {
+const NewFloorplanButton = ({ organizationUniqueAlphanumericName, locationId, fullWidth, label, hideIcon, variant, size }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
 
   return (
     <Button
-      href={getOrganizationLocationFloorPlanAddLink(integratedPlatrform, organizationId, locationId)}
+      href={getOrganizationLocationFloorPlanAddLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId)}
       variant={variant ?? 'text'}
       fullWidth={fullWidth}
       sx={{ textTransform: 'none' }}

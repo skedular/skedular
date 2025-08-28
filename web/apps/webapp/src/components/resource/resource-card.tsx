@@ -21,12 +21,12 @@ type Props = {
   rootDataRelay: resourceCard_query$key;
   resourceDetailsRelay: resourceCard_ResourceDetails$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
   date: Dayjs;
 };
 
-const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, organizationId, locationId, date }: Props) => {
+const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, organizationUniqueAlphanumericName, locationId, date }: Props) => {
   const rootData = useFragment<resourceCard_query$key>(
     graphql`
       fragment resourceCard_query on Query {
@@ -80,7 +80,7 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
       <CardHeader
         title={
           <StackRow>
-            <Link component={NextLink} href={getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationId, locationId, resourceDetails.id)}>
+            <Link component={NextLink} href={getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, resourceDetails.id)}>
               <LeadIconTypography
                 startElement={
                   resourceDetails.resourceType.tagType === rootData.deskResourceType ? (
@@ -103,7 +103,7 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
             <NewBookingButton
               onReloadRequired={onReloadRequired}
               defaultDate={date}
-              organizationId={organizationId}
+              organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
               defaultLocationId={locationId}
               defaultResourceIds={[resourceDetails.id]}
               label="Book Now"

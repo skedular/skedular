@@ -41,7 +41,7 @@ import OrganizationUserLeftSideNavigationMenuContent from './organization-user-l
 type Props = {
   rootDataRelay: organizationUser_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   customerId: string;
 };
 
@@ -67,7 +67,7 @@ const profileDetailsSchema = object({
   phoneNumber: string().nullable(),
 });
 
-const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) => {
+const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, customerId }: Props) => {
   const rootData = useFragment<organizationUser_query$key>(
     graphql`
       fragment organizationUser_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
@@ -87,8 +87,12 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           timezone
           phoneNumber
         }
-        customerTeams(first: $count, after: $cursor, where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @connection(key: "organizationUser_customerTeams") {
+        customerTeams(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }
+          orderBy: $teamsSortingValues
+        ) @connection(key: "organizationUser_customerTeams") {
           __id
           totalCount
           edges {
@@ -115,7 +119,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             }
           }
         }
-        organizationMembers(where: { organizationId: $organizationId, customerId: $customerId }) {
+        organizationMembers(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }) {
           __id
           totalCount
           edges {
@@ -215,7 +219,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   }, [section]);
 
   const handleCloseClick = () => {
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
@@ -387,7 +391,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           render: <NotificationContent content={'User removed.'} />,
         });
 
-        router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationId));
+        router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -399,7 +403,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   };
 
   const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { customerId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { customerId }));
   };
 
   const customer = rootData.customer;
@@ -411,7 +415,12 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <OrganizationUserLeftSideNavigationMenuContent rootDataRelay={rootData} organizationId={organizationId} customerId={customerId} hideIcons />
+      <OrganizationUserLeftSideNavigationMenuContent
+        rootDataRelay={rootData}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        customerId={customerId}
+        hideIcons
+      />
       <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Edit User Details">
           <Form

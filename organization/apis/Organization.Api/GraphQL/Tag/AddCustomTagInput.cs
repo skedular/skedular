@@ -12,5 +12,8 @@ public class AddCustomTagInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
 }

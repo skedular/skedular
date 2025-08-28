@@ -85,7 +85,10 @@ public class OrganizationInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               account.Organization.Id,
+                               null,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
     }
@@ -113,7 +116,10 @@ public class OrganizationInternalSubscriber(
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               account.Organization.Id,
+                               null,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
     }
@@ -134,7 +140,10 @@ public class OrganizationInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               account.Organization.Id,
+                               null,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
     }

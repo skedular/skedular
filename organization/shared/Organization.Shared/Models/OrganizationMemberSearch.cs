@@ -2,21 +2,11 @@ using Enterprise.Shared.Pagination;
 
 namespace Organization.Shared.Models;
 
-public class OrganizationMemberSearchCriteria
-{
-    public OrganizationMemberSearchCriteria(string organizationId, string? nameContains, string? customerId)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
-        OrganizationId = organizationId;
-        NameContains = nameContains;
-        CustomerId = customerId;
-    }
-
-    public string OrganizationId { get; }
-    public string? NameContains { get; set; }
-    public string? CustomerId { get; }
-}
+public record OrganizationMemberSearchCriteria(
+    string? OrganizationId,
+    string? OrganizationUniqueAlphanumericName,
+    string? NameContains,
+    string? CustomerId);
 
 public record OrganizationMemberOrder(OrderDirection Direction, OrganizationMemberOrderField Field);
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5122bd8e1b2a9528c337fd4354ff2d11>>
+ * @generated SignedSource<<41524884b00f439a361f311f6df56b3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationMemberAttendancyInsightRoot_rootQuery$variables = {
   from: any;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   to: any;
 };
 export type organizationMemberAttendancyInsightRoot_rootQuery$data = {
@@ -32,7 +32,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v2 = {
   "defaultValue": null,
@@ -79,8 +79,8 @@ return {
           },
           {
             "kind": "Variable",
-            "name": "organizationId",
-            "variableName": "organizationId"
+            "name": "uniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
           },
           {
             "kind": "Variable",
@@ -124,16 +124,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "20819098334d90ffcbd8e5b4f1a55829",
+    "cacheID": "1537a474b0e145729423afd236e21d08",
     "id": null,
     "metadata": {},
     "name": "organizationMemberAttendancyInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    memberAttendancePercentage {\n      date\n      percentage\n    }\n  }\n}\n"
+    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {\n    memberAttendancePercentage {\n      date\n      percentage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dfb19d2fb2e261e93ef49e9529d08402";
+(node as any).hash = "b002c44f2887f80f746558e5e45238e5";
 
 export default node;

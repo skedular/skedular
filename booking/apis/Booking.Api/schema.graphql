@@ -203,7 +203,7 @@ type Query {
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
-  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
+  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
@@ -228,7 +228,8 @@ input AddBookingInput {
   clientMutationId: String
   id: String
   customerIds: [String!]!
-  organizationIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   teamIds: [String!]!
   from: DateTime!
   until: DateTime!
@@ -241,7 +242,8 @@ input AddBookingInput {
 }
 
 input AvailableResourcesWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   locationId: String
   from: DateTime!
   until: DateTime!
@@ -270,6 +272,7 @@ input BookingWhereInput {
   paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   locationIds: [String!]
   teamIds: [String!]
   customerIds: [String!]
@@ -298,7 +301,8 @@ input MakeBookingPaymentNotRequiredInput {
 }
 
 input OrganizationAvailableResourcesWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   from: DateTime!
   until: DateTime!
 }
@@ -312,7 +316,8 @@ input UpdateBookingInput {
   clientMutationId: String
   id: String!
   customerIds: [String!]!
-  organizationIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   teamIds: [String!]!
   from: DateTime!
   until: DateTime!

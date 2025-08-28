@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   isDialogOpen: boolean;
   onCancel: () => void;
 };
@@ -27,7 +27,7 @@ enum AddOrganizationPaymentMethodState {
   WAITING_FOR_PAYMENT_METHOD_DETAILS,
 }
 
-const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCancel }: Props) => {
+const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName, isDialogOpen, onCancel }: Props) => {
   const [commitAddOrganizationPaymentMethodIntent] = useMutation<addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation>(graphql`
     mutation addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation($input: AddOrganizationPaymentMethodIntentInput!) {
       addOrganizationPaymentMethodIntent(input: $input) {
@@ -60,7 +60,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationId,
+          organizationUniqueAlphanumericName,
         },
       },
       onCompleted: (response, errors) => {
@@ -82,7 +82,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
     });
 
     setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
-  }, [commitAddOrganizationPaymentMethodIntent, onCancel, organizationId, themedToast]);
+  }, [commitAddOrganizationPaymentMethodIntent, onCancel, organizationUniqueAlphanumericName, themedToast]);
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>

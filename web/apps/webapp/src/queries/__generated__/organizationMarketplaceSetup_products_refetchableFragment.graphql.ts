@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74421d106c0d28bc7a01d8c0c72a7085>>
+ * @generated SignedSource<<e408ff59fcfdb552b2db2c7f955d0bb5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_products_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   productNameSearchText?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_products_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -84,12 +84,12 @@ v1 = [
         "items": [
           {
             "kind": "Variable",
-            "name": "organizationIds.0",
-            "variableName": "organizationId"
+            "name": "organizationUniqueAlphanumericNames.0",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "kind": "ListValue",
-        "name": "organizationIds"
+        "name": "organizationUniqueAlphanumericNames"
       }
     ],
     "kind": "ObjectValue",
@@ -269,7 +269,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "uniqueId",
+                        "name": "uniqueAlphanumericName",
                         "storageKey": null
                       }
                     ],
@@ -357,16 +357,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "de5075e3479ea8d0c0fce9131f49d646",
+    "cacheID": "dfd085085e063d842ec75f185f4d95fd",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_products_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_products_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        isPriceTaxInclusive\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String!\n  $productNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_products_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueAlphanumericName\n        }\n        isPriceTaxInclusive\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "381183dc22a2515279ae2ac433835a6e";
+(node as any).hash = "9b7d80d9533957df64b4a4eb1c3f02bc";
 
 export default node;

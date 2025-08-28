@@ -35,7 +35,10 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        organization.Id,
+                        null,
+                        cancellationToken);
                     if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");

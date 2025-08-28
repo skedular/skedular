@@ -33,7 +33,7 @@ type Props = {
   rootDataRelay: bookings_query$key;
   rootDataBookingRelay: bookings_bookings_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   from: Dayjs;
   to: Dayjs;
   locationIds: string[];
@@ -90,7 +90,7 @@ type RowType = {
   date: string;
 };
 
-const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, customerIds, viewMode }: Props) => {
+const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlphanumericName, from, to, locationIds, teamIds, customerIds, viewMode }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
@@ -117,7 +117,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           first: $count
           after: $cursor
           where: {
-            organizationIds: [$organizationId]
+            organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName]
             locationIds: $locationIds
             teamIds: $teamIds
             customerIds: $customerIds
@@ -288,7 +288,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, bookingId));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingId));
 
         break;
 
@@ -625,7 +625,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                   <BookingCard
                     rootDataRelay={rootData}
                     bookingDetailsRelay={booking}
-                    organizationId={organizationId}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                     connectionIds={connectionIds}
                     canJoinBooking={canJoinBooking}
                   />

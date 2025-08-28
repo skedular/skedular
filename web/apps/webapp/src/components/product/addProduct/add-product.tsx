@@ -30,14 +30,14 @@ import { array, boolean, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   onAdded: (productId: string) => void;
   onCancel: () => void;
 };
 
 const RootQuery = graphql`
   query addProduct_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
@@ -269,7 +269,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     isPriceTaxInclusive: boolean().required(),
   });
 
-const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
+const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addProduct_rootQuery>(RootQuery, queryReference);
   const [commitAddProduct] = useMutation<addProduct_addProductMutation>(graphql`
     mutation addProduct_addProductMutation($input: AddProductInput!) @raw_response_type {
@@ -459,7 +459,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
-          organizationId,
+          organizationUniqueAlphanumericName,
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
@@ -643,11 +643,21 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                      <MultipleChoicesProductTags
+                        rootDataRelay={rootData}
+                        name="productTagIds"
+                        required={requiredFields.productTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Location Tags">
-                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                      <MultipleChoicesLocationTags
+                        rootDataRelay={rootData}
+                        name="locationTagIds"
+                        required={requiredFields.locationTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel>
@@ -726,25 +736,25 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
   const [queryReference, loadQuery] = useQueryLoader<addProduct_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationId: finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         multipleChoicesProductTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -762,7 +772,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -778,7 +788,13 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddProduct queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} onAdded={onAdded} onCancel={onCancel} />
+      <MemoAddProduct
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        onAdded={onAdded}
+        onCancel={onCancel}
+      />
     </ErrorBoundary>
   );
 };

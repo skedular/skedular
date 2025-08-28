@@ -35,8 +35,9 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                         organization.Id,
+                        null,
                         true,
                         cancellationToken);
                     if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)

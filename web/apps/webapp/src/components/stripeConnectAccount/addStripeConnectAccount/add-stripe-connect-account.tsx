@@ -17,7 +17,7 @@ import { object, string } from 'yup';
 
 type Props = {
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   onAdded: (productId: string) => void;
   onCancel: () => void;
 };
@@ -30,7 +30,7 @@ const stripeConnectAccountSchema = object({
   name: string().min(3, 'Stripe Connect account nickname must be at least three characters long.').required('Stripe Connect account nickname is required'),
 });
 
-const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
+const AddStripeConnectAccount = ({ onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel }: Props) => {
   const [commitAddStripeConnectAccount] = useMutation<addStripeConnectAccount_addStripeConnectAccountMutation>(graphql`
     mutation addStripeConnectAccount_addStripeConnectAccountMutation($input: AddOrganizationStripeConnectAccountInput!) @raw_response_type {
       addOrganizationStripeConnectAccount(input: $input) {
@@ -63,8 +63,8 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationId, onAdded, on
           clientMutationId: uuid(),
           id,
           name,
-          organizationId,
-          redirectUrl: new URL(`organizations/${organizationId}/stripe-connect-accounts/${id}`, process.env.NEXT_PUBLIC_SITE_URL).toString(),
+          organizationUniqueAlphanumericName,
+          redirectUrl: new URL(`organizations/${organizationUniqueAlphanumericName}/stripe-connect-accounts/${id}`, process.env.NEXT_PUBLIC_SITE_URL).toString(),
         },
       },
       onCompleted: (_, errors) => {

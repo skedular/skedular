@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a69692f143d2384d5882754710d80a7>>
+ * @generated SignedSource<<e76e81411996cdb5ce39eea047f7c9ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
         readonly id: string;
         readonly name: string;
         readonly organization: {
-          readonly uniqueId: string;
+          readonly uniqueAlphanumericName: string | null | undefined;
         };
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
@@ -69,8 +69,8 @@ v1 = {
 },
 v2 = {
   "kind": "Variable",
-  "name": "organizationId",
-  "variableName": "organizationId"
+  "name": "organizationUniqueAlphanumericName",
+  "variableName": "organizationUniqueAlphanumericName"
 },
 v3 = {
   "kind": "Variable",
@@ -108,9 +108,6 @@ v7 = [
     "name": "color",
     "storageKey": null
   }
-],
-v8 = [
-  (v6/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -138,7 +135,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     },
     {
       "kind": "RootArgument",
@@ -300,7 +297,15 @@ return {
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,
-                  "selections": (v8/*: any*/),
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueAlphanumericName",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -403,7 +408,9 @@ return {
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
-          "selections": (v8/*: any*/),
+          "selections": [
+            (v6/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -415,6 +422,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc24d0c72e4f01b94436d0a1d7657900";
+(node as any).hash = "54427292b4b950aff0d4de74fb08a465";
 
 export default node;

@@ -44,8 +44,6 @@ public class RootMutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(input.OrganizationId);
-
         var team = await teamService.UpdateAsync(mapper.MapTo(input), true, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }

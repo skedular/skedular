@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85fc4e6afb17fc1abfcbde1f531c43f9>>
+ * @generated SignedSource<<e19aa18b885e2117db36060b3d8ebbb7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ export type organizationTeams_teams_query$data = {
         }>;
         readonly name: string;
         readonly organization: {
-          readonly uniqueId: string;
+          readonly uniqueAlphanumericName: string | null | undefined;
         };
         readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
@@ -82,7 +82,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     },
     {
       "kind": "RootArgument",
@@ -130,8 +130,8 @@ return {
           "fields": [
             {
               "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
             },
             {
               "kind": "Variable",
@@ -187,7 +187,13 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v2/*: any*/)
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueAlphanumericName",
+                      "storageKey": null
+                    }
                   ],
                   "storageKey": null
                 },
@@ -347,6 +353,6 @@ return {
 };
 })();
 
-(node as any).hash = "734b0c622a81e96327872bcfa8b20462";
+(node as any).hash = "b193667cfdf06f1dec8b43875a2d2eae";
 
 export default node;

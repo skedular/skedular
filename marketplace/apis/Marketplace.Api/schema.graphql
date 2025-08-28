@@ -131,7 +131,8 @@ input ActivateProductsInput {
 input AddProductInput {
   clientMutationId: String
   id: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   name: String!
   description: String
   price: String!
@@ -180,7 +181,7 @@ input ProductOrderInput {
 }
 
 input ProductWhereInput {
-  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
   nameContains: String
   includeInactive: Boolean!
@@ -189,7 +190,6 @@ input ProductWhereInput {
 input UpdateProductInput {
   clientMutationId: String
   id: String!
-  organizationId: String!
   name: String!
   description: String
   price: String!

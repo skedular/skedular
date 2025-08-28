@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea124c7a913cde70204c5417db0a78de>>
+ * @generated SignedSource<<d2ace904bfbf4f1bc4d983c6dce8090c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type bookings_bookings_refetchableFragment$variables = {
   cursor?: string | null | undefined;
   customerIds?: ReadonlyArray<string> | null | undefined;
   locationIds?: ReadonlyArray<string> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   teamIds?: ReadonlyArray<string> | null | undefined;
 };
 export type bookings_bookings_refetchableFragment$data = {
@@ -63,7 +63,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -118,12 +118,12 @@ v1 = [
         "items": [
           {
             "kind": "Variable",
-            "name": "organizationIds.0",
-            "variableName": "organizationId"
+            "name": "organizationUniqueAlphanumericNames.0",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "kind": "ListValue",
-        "name": "organizationIds"
+        "name": "organizationUniqueAlphanumericNames"
       },
       {
         "kind": "Variable",
@@ -483,16 +483,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "35e63c0c578042a0495364bea1183071",
+    "cacheID": "a0441710cbac59c6b9e96a0b7a5dedf4",
     "id": null,
     "metadata": {},
     "name": "bookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $customerIds: [String!]\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  type {\n    type\n    name\n  }\n  involvedCustomers {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    uniqueId\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    uniqueId\n    name\n  }\n  resources {\n    uniqueId\n    name\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, customerIds: $customerIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        type {\n          type\n          name\n        }\n        involvedCustomers {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedOrganizations {\n          uniqueId\n        }\n        involvedLocations {\n          uniqueId\n          name\n        }\n        involvedTeams {\n          uniqueId\n          name\n        }\n        resources {\n          uniqueId\n          name\n          color\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $customerIds: [String!]\n  $locationIds: [String!]\n  $organizationUniqueAlphanumericName: String!\n  $teamIds: [String!]\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  type {\n    type\n    name\n  }\n  involvedCustomers {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    uniqueId\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    uniqueId\n    name\n  }\n  resources {\n    uniqueId\n    name\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], locationIds: $locationIds, teamIds: $teamIds, customerIds: $customerIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        type {\n          type\n          name\n        }\n        involvedCustomers {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedOrganizations {\n          uniqueId\n        }\n        involvedLocations {\n          uniqueId\n          name\n        }\n        involvedTeams {\n          uniqueId\n          name\n        }\n        resources {\n          uniqueId\n          name\n          color\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b7509e093de775e50412151663615cd2";
+(node as any).hash = "33cb30d1bf5c5aefb3fe9546b30906d3";
 
 export default node;

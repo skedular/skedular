@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4cf1829a921dfd211eed1da4a23d23fe>>
+ * @generated SignedSource<<6440908f39c4ce48d2ee61470fe8a4e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type organizationMarketplaceSetup_organizationBankAccounts_refetchableFra
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationBankAccountNameSearchText?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 export type organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_organizationBankAccounts_query">;
@@ -44,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   }
 ],
 v1 = [
@@ -77,8 +77,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -207,6 +207,13 @@ return {
                     "name": "organization",
                     "plural": false,
                     "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "uniqueAlphanumericName",
+                        "storageKey": null
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -286,16 +293,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3f0aa1368b941af481af783b94ab5c6d",
+    "cacheID": "5325683da0cc9b6c8db6835d7d452b4f",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationBankAccountNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz on Query {\n  organizationBankAccounts(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationBankAccountNameSearchText: String\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz on Query {\n  organizationBankAccounts(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bc833edff70c475d4dfe080d61558ca7";
+(node as any).hash = "c9930fcadd007408c14f3f10e5f67201";
 
 export default node;

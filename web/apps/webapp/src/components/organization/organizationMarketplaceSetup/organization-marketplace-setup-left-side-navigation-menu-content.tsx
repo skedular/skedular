@@ -25,12 +25,12 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -66,11 +66,11 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationId);
-  const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationId);
-  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationId);
-  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationId);
-  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(integratedPlatrform, organizationId);
+  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
 
   return (
     <List

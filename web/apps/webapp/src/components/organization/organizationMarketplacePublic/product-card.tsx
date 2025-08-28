@@ -16,10 +16,10 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: productCard_ProductDetails$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
+const ProductCard = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
   const productDetails = useFragment(
     graphql`
       fragment productCard_ProductDetails on ProductDetails {
@@ -63,13 +63,13 @@ const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
         <CardHeader
           title={
             <StackRow>
-              <Link component={NextLink} href={getOrganizationBookingProductLink(integratedPlatrform, organizationId, productDetails.id)}>
+              <Link component={NextLink} href={getOrganizationBookingProductLink(integratedPlatrform, organizationUniqueAlphanumericName, productDetails.id)}>
                 <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
 
               <PushToRight />
               <BookProductButton
-                organizationId={organizationId}
+                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                 productId={productDetails.id}
                 label="Book Now"
                 hideIcon

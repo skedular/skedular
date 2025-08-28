@@ -16,7 +16,13 @@ namespace Marketplace.Api.Services;
 
 public interface IProductService
 {
-    Task<Product> AddAsync(string? productId, string organizationId, ProductVersion productVersion, CancellationToken cancellationToken);
+    Task<Product> AddAsync(
+        string? productId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        ProductVersion productVersion,
+        CancellationToken cancellationToken);
+
     Task<Product> UpdateAsync(string productId, ProductVersion productVersion, CancellationToken cancellationToken);
     Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken);
@@ -39,9 +45,13 @@ public class ProductService(
     IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
     IMapper mapper) : IProductService
 {
-    public async Task<Product> AddAsync(string? productId, string organizationId, ProductVersion productVersion, CancellationToken cancellationToken)
+    public async Task<Product> AddAsync(
+        string? productId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        ProductVersion productVersion,
+        CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
         Validate(productVersion);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -50,9 +60,23 @@ public class ProductService(
             var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
             if (existingProduct is not null)
             {
-                if (existingProduct.OrganizationId != organizationId)
+                if (!string.IsNullOrWhiteSpace(organizationId))
                 {
-                    throw new UnauthorizedAccessException();
+                    if (existingProduct.Organization.Id != organizationId)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+                {
+                    if (existingProduct.Organization.UniqueAlphanumericName != organizationUniqueAlphanumericName)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
                 }
 
                 return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
@@ -63,7 +87,10 @@ public class ProductService(
             productId = randomHelper.Generate();
         }
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationId,
+                                       organizationUniqueAlphanumericName,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModifyProduct(existingOrganization, customer))
         {
@@ -78,7 +105,9 @@ public class ProductService(
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     productTagIds.Concat(locationTagIds).Contains(query.Id) &&
-                                    query.Organization.Id == organizationId &&
+                                    (query.Organization.Id == organizationId || (query.Organization.UniqueAlphanumericName != null &&
+                                                                                 query.Organization.UniqueAlphanumericName ==
+                                                                                 organizationUniqueAlphanumericName)) &&
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
@@ -156,7 +185,10 @@ public class ProductService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = products.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            cancellationToken);
         if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
         {
             throw new UnauthorizedAccessException();
@@ -192,7 +224,10 @@ public class ProductService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = products.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            cancellationToken);
         if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
         {
             throw new UnauthorizedAccessException();

@@ -29,12 +29,13 @@ public class OrganizationPhysicalAddressService(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(organizationPhysicalAddress.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationPhysicalAddress.Organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationPhysicalAddress.Organization.Id, cancellationToken) ??
-            throw new OrganizationNotFound();
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationPhysicalAddress.Organization.Id,
+                                       organizationPhysicalAddress.Organization.UniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
@@ -95,7 +96,10 @@ public class OrganizationPhysicalAddressService(
             cancellationToken) ?? throw new OrganizationPhysicalAddressNotFound();
 
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingOrganizationPhysicalAddress.Organization.Id, cancellationToken) ??
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                existingOrganizationPhysicalAddress.Organization.Id,
+                null,
+                cancellationToken) ??
             throw new OrganizationNotFound();
 
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))

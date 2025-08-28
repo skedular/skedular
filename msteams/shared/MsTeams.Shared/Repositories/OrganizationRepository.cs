@@ -9,8 +9,12 @@ namespace MsTeams.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Organization Add(Organization organization);
+
+    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -32,19 +36,31 @@ public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider tim
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public Organization Add(Organization organization)
+    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
-        var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Organization.Add(organization).Entity;
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
     }
 
     public Organization Update(Organization organization)

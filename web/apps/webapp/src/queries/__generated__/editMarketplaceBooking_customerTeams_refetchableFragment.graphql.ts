@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<82705729bac55268713a7871cf85e19c>>
+ * @generated SignedSource<<a931f378b48c16086e0fc556c140c2d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type TeamOrderInput = {
 export type editMarketplaceBooking_customerTeams_refetchableFragment$variables = {
   customerExists: boolean;
   customerId: string;
-  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type editMarketplaceBooking_customerTeams_refetchableFragment$data = {
@@ -45,7 +45,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -97,8 +97,8 @@ return {
                   },
                   {
                     "kind": "Variable",
-                    "name": "organizationId",
-                    "variableName": "organizationId"
+                    "name": "organizationUniqueAlphanumericName",
+                    "variableName": "organizationUniqueAlphanumericName"
                   }
                 ],
                 "kind": "ObjectValue",
@@ -173,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "96a10441440facb26c0d20b46f922f29",
+    "cacheID": "22dd8faab3b256e0dcdb8f9a1ca0e758",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_customerTeams_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...editMarketplaceBooking_customerTeams_query\n}\n\nfragment editMarketplaceBooking_customerTeams_query on Query {\n  customerTeams(where: {organizationId: $organizationId, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query editMarketplaceBooking_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationUniqueAlphanumericName: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...editMarketplaceBooking_customerTeams_query\n}\n\nfragment editMarketplaceBooking_customerTeams_query on Query {\n  customerTeams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1af552010907e70841b55b565df21728";
+(node as any).hash = "8df42952d7f6c05a3d0c064c7b575c89";
 
 export default node;

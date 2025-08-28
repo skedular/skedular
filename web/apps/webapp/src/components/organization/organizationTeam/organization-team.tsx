@@ -58,7 +58,7 @@ type Props = {
   rootDataRelay: organizationTeam_query$key;
   rootDataTeamMembersRelay: organizationTeam_teamMembers_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   teamId: string;
 };
 
@@ -96,7 +96,7 @@ type RowType = {
   status: boolean;
 };
 
-const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationId, teamId }: Props) => {
+const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationUniqueAlphanumericName, teamId }: Props) => {
   const rootData = useFragment<organizationTeam_query$key>(
     graphql`
       fragment organizationTeam_query on Query {
@@ -426,7 +426,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleDeactivateMembersClick = () => {
@@ -732,7 +732,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { teamId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { teamId }));
   };
 
   const handleRemoveTeamClicked = () => {
@@ -765,7 +765,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           render: <NotificationContent content={`Team '${team.name}' removed.`} />,
         });
 
-        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationId));
+        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -902,7 +902,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
+        <OrganizationTeamLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} teamId={teamId} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Team Information">
             <Form
@@ -1001,7 +1001,12 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 </Grid>
 
                 <Grid>
-                  <AddOrganizationTeamMemberButton onReloadRequired={onReloadRequired} connectionIds={connectionIds} organizationId={organizationId} teamId={teamId} />
+                  <AddOrganizationTeamMemberButton
+                    onReloadRequired={onReloadRequired}
+                    connectionIds={connectionIds}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    teamId={teamId}
+                  />
                 </Grid>
               </GridContainer>
               <Divider />

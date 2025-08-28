@@ -20,7 +20,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationBooking_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $bookingId: String!
     $peopleNameSearchText: String
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
@@ -55,10 +55,10 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const shouldPay = useMemo(() => {
@@ -99,7 +99,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      {rootData.booking.bookedOnMarketplace && shouldPay && <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {rootData.booking.bookedOnMarketplace && shouldPay && (
+        <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      )}
       {rootData.booking.bookedOnMarketplace && !shouldPay && (
         <EditMarketplaceBooking
           rootDataRelay={rootData}
@@ -107,7 +109,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
           rootDataTeamsRelay={rootData}
           rootDataOrganizationMembersRelay={rootData}
           onReloadRequired={onReloadRequired}
-          organizationId={organizationId}
         />
       )}
       {!rootData.booking.bookedOnMarketplace && (
@@ -117,7 +118,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
           rootDataOrganizationMembersRelay={rootData}
           rootDataAvailableResourcesRelay={rootData}
           onReloadRequired={onReloadRequired}
-          organizationId={organizationId}
         />
       )}
     </RootShell>
@@ -130,19 +130,19 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, bookingId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName, bookingId } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   let finalBookingId = '';
@@ -166,7 +166,7 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationId: finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         bookingId: finalBookingId,
         organizationMembersSortingValues: [
           {
@@ -196,7 +196,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, finalBookingId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalBookingId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -210,7 +210,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

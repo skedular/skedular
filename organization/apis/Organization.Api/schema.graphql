@@ -452,7 +452,7 @@ type PageInfo {
 }
 
 type Query {
-  organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
+  organizationAnalytics(id: String uniqueAlphanumericName: String from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
@@ -469,13 +469,13 @@ type Query {
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organization(id: String!): OrganizationDetails @cost(weight: "10")
+  organization(uniqueAlphanumericName: String!): OrganizationDetails @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
-  isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
-  ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
+  isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
+  organizationSsoLoginUrl(organizationId: String organizationUniqueAlphanumericName: String redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
@@ -518,7 +518,8 @@ input AddCustomTagInput {
   name: String!
   description: String
   color: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddLocationTagInput {
@@ -526,14 +527,16 @@ input AddLocationTagInput {
   id: String
   name: String!
   description: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   color: String
 }
 
 input AddOrganizationBankAccountInput {
   clientMutationId: String
   id: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   name: String!
   bankName: String!
   accountHolderName: String!
@@ -545,7 +548,8 @@ input AddOrganizationBankAccountInput {
 input AddOrganizationBillingDetailsInput {
   clientMutationId: String
   id: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   companyName: String
   email: String!
   osmType: String
@@ -582,13 +586,15 @@ input AddOrganizationInput {
 
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddOrganizationPhysicalAddressInput {
   clientMutationId: String
   id: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   osmType: String
   osmId: String
   placeId: String
@@ -608,7 +614,8 @@ input AddOrganizationPhysicalAddressInput {
 input AddOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   name: String!
   redirectUrl: String!
 }
@@ -618,7 +625,8 @@ input AddProductTagInput {
   id: String
   name: String!
   description: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   color: String
 }
 
@@ -627,7 +635,8 @@ input AddZoneInput {
   id: String
   name: String!
   description: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   color: String
 }
 
@@ -638,7 +647,8 @@ input CancelInvitationToJoinOrganizationInput {
 
 input CancelOrganizationOfferingInput {
   clientMutationId: String
-  id: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input ChangeOrganizationMemberRoleInput {
@@ -655,11 +665,13 @@ input ChangeOrganizationMembersStatusInput {
 
 input CompleteOrganizationMemberOnboardingInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input CustomTagOrganizationTagWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -695,7 +707,8 @@ input DeleteOrganizationBankAccountsInput {
 
 input DeleteOrganizationInput {
   clientMutationId: String
-  id: String!
+  id: String
+  uniqueAlphanumericName: String
 }
 
 input DeleteOrganizationStripeConnectAccountInput {
@@ -730,7 +743,8 @@ input DeleteZonesInput {
 
 input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   emails: [String!]!
 }
 
@@ -740,12 +754,13 @@ input JoinOrganizationInvitationOrderInput {
 }
 
 input LocationTagOrganizationTagWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   status: InvitationStatus
 }
 
@@ -755,7 +770,7 @@ input OrganizationBankAccountOrderInput {
 }
 
 input OrganizationBankAccountWhereInput {
-  organizationId: String!
+  organizationUniqueAlphanumericName: String!
   nameContains: String
   onboardingCompleted: Boolean
 }
@@ -766,7 +781,7 @@ input OrganizationMemberOrderInput {
 }
 
 input OrganizationMemberWhereInput {
-  organizationId: String!
+  organizationUniqueAlphanumericName: String!
   nameContains: String
   customerId: String
 }
@@ -782,7 +797,8 @@ input OrganizationStripeConnectAccountOrderInput {
 }
 
 input OrganizationStripeConnectAccountWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
   onboardingCompleted: Boolean
 }
@@ -797,7 +813,8 @@ input OrganizationWhereInput {
 }
 
 input ProductTagOrganizationTagWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -818,12 +835,14 @@ input RemoveOrganizationPaymentMethodInput {
 
 input RemoveOrganizationSsoSettingsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input RemoveOrganizationTaxDetailsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input SetOrganizationBankAccountAsDefaultInput {
@@ -886,7 +905,7 @@ input UpdateOrganizationBillingDetailsInput {
 
 input UpdateOrganizationInput {
   clientMutationId: String
-  id: String!
+  id: String
   uniqueAlphanumericName: String
   name: String!
   about: String
@@ -900,7 +919,8 @@ input UpdateOrganizationInput {
 
 input UpdateOrganizationOfferingInput {
   clientMutationId: String
-  id: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   offeringCode: String!
 }
 
@@ -925,7 +945,8 @@ input UpdateOrganizationPhysicalAddressInput {
 
 input UpdateOrganizationSsoSettingsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
@@ -940,7 +961,8 @@ input UpdateOrganizationStripeConnectAccountInput {
 
 input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   taxId: String!
   taxRatePercentage: Decimal!
 }
@@ -962,7 +984,8 @@ input UpdateZoneInput {
 }
 
 input ZoneOrganizationTagWhereInput {
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 

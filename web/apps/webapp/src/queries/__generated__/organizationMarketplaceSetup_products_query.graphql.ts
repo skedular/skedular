@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2b54016b9e1c4dc8b7e0373050be0d2>>
+ * @generated SignedSource<<4840e7be91ca6b3dc2ae8317f44029a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly name: string;
         readonly numberOfResourcesToBook: number;
         readonly organization: {
-          readonly uniqueId: string;
+          readonly uniqueAlphanumericName: string | null | undefined;
         };
         readonly priceToDisplay: string;
         readonly priceUnit: {
@@ -72,7 +72,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     },
     {
       "kind": "RootArgument",
@@ -133,12 +133,12 @@ return {
               "items": [
                 {
                   "kind": "Variable",
-                  "name": "organizationIds.0",
-                  "variableName": "organizationId"
+                  "name": "organizationUniqueAlphanumericNames.0",
+                  "variableName": "organizationUniqueAlphanumericName"
                 }
               ],
               "kind": "ListValue",
-              "name": "organizationIds"
+              "name": "organizationUniqueAlphanumericNames"
             }
           ],
           "kind": "ObjectValue",
@@ -275,7 +275,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "uniqueId",
+                      "name": "uniqueAlphanumericName",
                       "storageKey": null
                     }
                   ],
@@ -354,6 +354,6 @@ return {
 };
 })();
 
-(node as any).hash = "381183dc22a2515279ae2ac433835a6e";
+(node as any).hash = "9b7d80d9533957df64b4a4eb1c3f02bc";
 
 export default node;

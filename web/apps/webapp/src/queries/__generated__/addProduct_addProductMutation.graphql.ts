@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f7cc2de3fda6496338bb5240565b94a>>
+ * @generated SignedSource<<c66a2195c6a13363be6ed5e52b7974c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,8 @@ export type AddProductInput = {
   minDurationMinutes?: number | null | undefined;
   name: string;
   numberOfResourcesToBook: number;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   price: string;
   priceUnit: PriceUnit;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;

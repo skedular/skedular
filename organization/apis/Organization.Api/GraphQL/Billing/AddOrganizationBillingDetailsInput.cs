@@ -9,7 +9,11 @@ public class AddOrganizationBillingDetailsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("companyName")] public string? CompanyName { get; set; }
     [GraphQLName("email")] public string Email { get; set; } = string.Empty;
     [GraphQLName("osmType")] public string? OsmType { get; set; }

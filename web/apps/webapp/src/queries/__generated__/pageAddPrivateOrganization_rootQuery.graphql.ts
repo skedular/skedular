@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6519bdd171980d169eab0dc46259882c>>
+ * @generated SignedSource<<a74e5babca1661ae63d5ca5cfc2ab10d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,20 +34,8 @@ var v0 = {
 v1 = {
   "alias": null,
   "args": null,
-  "concreteType": "CustomerDetails",
-  "kind": "LinkedField",
-  "name": "me",
-  "plural": false,
-  "selections": [
-    (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "isOnboardingDone",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "isOnboardingDone",
   "storageKey": null
 };
 return {
@@ -57,7 +45,19 @@ return {
     "metadata": null,
     "name": "pageAddPrivateOrganization_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/)
+        ],
+        "storageKey": null
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -73,7 +73,26 @@ return {
     "kind": "Operation",
     "name": "pageAddPrivateOrganization_rootQuery",
     "selections": [
-      (v1/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "emails",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -121,12 +140,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "eda0b78c16717668d1659036f3fff10d",
+    "cacheID": "943dc6c1fd784f956a99f173acf11c33",
     "id": null,
     "metadata": {},
     "name": "pageAddPrivateOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
+    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

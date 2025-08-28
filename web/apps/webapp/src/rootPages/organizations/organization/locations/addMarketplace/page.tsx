@@ -7,19 +7,19 @@ const RootPage = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirectUrl');
   const router = useRouter();
-  const { organizationId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   const handleAdded = () => {
@@ -42,7 +42,12 @@ const RootPage = () => {
 
   return (
     <RootShell collapsed>
-      <AddMarketplaceLocation organizationId={finalOrganizationId} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
+      <AddMarketplaceLocation
+        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        onAdded={handleAdded}
+        onCancel={handleCancelled}
+        onReloadRequired={handleReloadRequired}
+      />
     </RootShell>
   );
 };

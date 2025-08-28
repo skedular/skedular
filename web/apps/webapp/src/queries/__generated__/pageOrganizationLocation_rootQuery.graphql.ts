@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae37b5f612d9f5b51d0837c103c0c6c1>>
+ * @generated SignedSource<<4eac6d2e5e0e15f7868de9f70e25dac6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type pageOrganizationLocation_rootQuery$variables = {
   floorPlansSortingValues?: ReadonlyArray<FloorPlanOrderInput> | null | undefined;
   locationId: string;
   multipleChoicesLocationTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   resourceCustomTagIds?: ReadonlyArray<string> | null | undefined;
   resourceNameSearchText?: string | null | undefined;
   resourceZoneIds?: ReadonlyArray<string> | null | undefined;
@@ -73,7 +73,7 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v5 = {
   "defaultValue": null,
@@ -207,8 +207,8 @@ v19 = {
   "fields": [
     {
       "kind": "Variable",
-      "name": "organizationId",
-      "variableName": "organizationId"
+      "name": "organizationUniqueAlphanumericName",
+      "variableName": "organizationUniqueAlphanumericName"
     }
   ],
   "kind": "ObjectValue",
@@ -731,8 +731,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
+            "name": "uniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -1035,16 +1035,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f1320c36ac71029ed7205d711b114642",
+    "cacheID": "12a617e5b8b57d496db9ed86480725a5",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n  $resourceCustomTagIds: [String!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n  $floorPlansSortingValues: [FloorPlanOrderInput!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_resources_query\n  ...organizationLocation_floorPlans_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment floorPlanCard_FloorPlanDetails on FloorPlanDetails {\n  id\n  name\n  image {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  resourceCount\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_floorPlans_query on Query {\n  floorPlans(where: {locationId: $locationId}, orderBy: $floorPlansSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        ...floorPlanCard_FloorPlanDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  me {\n    id\n    preferredResources {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    contactEmail\n    contactPhone\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    locationTags {\n      uniqueId\n      name\n      color\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  openingHoursMinutesStep\n  ...multipleChoicesLocationTags_query\n  ...weekOpeningHours_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment organizationLocation_resources_query on Query {\n  resources(where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}, orderBy: $resourcesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        capacity\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        productTags {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  openingHoursMinutesStep\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationId: String!\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n  $resourceCustomTagIds: [String!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n  $floorPlansSortingValues: [FloorPlanOrderInput!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_resources_query\n  ...organizationLocation_floorPlans_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment floorPlanCard_FloorPlanDetails on FloorPlanDetails {\n  id\n  name\n  image {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  resourceCount\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_floorPlans_query on Query {\n  floorPlans(where: {locationId: $locationId}, orderBy: $floorPlansSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        ...floorPlanCard_FloorPlanDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  me {\n    id\n    preferredResources {\n      uniqueId\n    }\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    contactEmail\n    contactPhone\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    locationTags {\n      uniqueId\n      name\n      color\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  openingHoursMinutesStep\n  ...multipleChoicesLocationTags_query\n  ...weekOpeningHours_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment organizationLocation_resources_query on Query {\n  resources(where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}, orderBy: $resourcesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        capacity\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        productTags {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  openingHoursMinutesStep\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "708c1584075eb4aba86d125bcecacafc";
+(node as any).hash = "a84529da34c2236bd81904cb99e92eb7";
 
 export default node;

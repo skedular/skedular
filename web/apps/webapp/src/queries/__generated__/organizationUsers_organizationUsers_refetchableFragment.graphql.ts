@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12de94b9b58b5961a6e4a89092ab3e33>>
+ * @generated SignedSource<<843384b9e4aaecb766609538c2b8ec24>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationUsers_organizationUsers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationUsers_organizationUsers_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -67,8 +67,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -301,16 +301,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d347381195007466776e0fb95459bd79",
+    "cacheID": "ceb6c8341977bfea9b8449967fce117e",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_organizationUsers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ce9f66638b1dd58a1f19498adb328774";
+(node as any).hash = "00781b65f54101160a9c7f0e5fa2e288";
 
 export default node;

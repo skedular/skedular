@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abbaa1c66f701d1cadd81a1ad6c0ad4b>>
+ * @generated SignedSource<<1d0064011d293c848121308ed2dea549>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,8 +19,8 @@ export type OrganizationMemberOrderInput = {
 export type addTeam_rootQuery$variables = {
   bookingPeopleNameSearchText?: string | null | undefined;
   organizationExists: boolean;
-  organizationId: string;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
+  organizationUniqueAlphanumericName: string;
 };
 export type addTeam_rootQuery$data = {
   readonly me: {
@@ -51,12 +51,12 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationMemberSelectorOrganizationMembersSortingValues"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMemberSelectorOrganizationMembersSortingValues"
+  "name": "organizationUniqueAlphanumericName"
 },
 v4 = {
   "alias": null,
@@ -93,8 +93,8 @@ v8 = {
   "args": [
     {
       "kind": "Variable",
-      "name": "id",
-      "variableName": "organizationId"
+      "name": "uniqueAlphanumericName",
+      "variableName": "organizationUniqueAlphanumericName"
     }
   ],
   "concreteType": "OrganizationDetails",
@@ -106,8 +106,8 @@ v8 = {
 },
 v9 = {
   "kind": "Variable",
-  "name": "organizationId",
-  "variableName": "organizationId"
+  "name": "organizationUniqueAlphanumericName",
+  "variableName": "organizationUniqueAlphanumericName"
 },
 v10 = [
   {
@@ -185,10 +185,10 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
+      (v3/*: any*/),
       (v1/*: any*/),
       (v0/*: any*/),
-      (v3/*: any*/)
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "addTeam_rootQuery",
@@ -381,16 +381,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f348307688a0d63dfb43e1859bd59914",
+    "cacheID": "6c93391f2257a30f8d2e2b6d206f9d66",
     "id": null,
     "metadata": {},
     "name": "addTeam_rootQuery",
     "operationKind": "query",
-    "text": "query addTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n  ...organizationMemberSelector_query\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationId: $organizationId}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query addTeam_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $organizationExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {\n    id\n    name\n  }\n  ...organizationMemberSelector_query\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c1993940c5aa90c09cfdfdbc0f646401";
+(node as any).hash = "414317bce4ad8100e25177ec4ac9b457";
 
 export default node;

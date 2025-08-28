@@ -6,5 +6,8 @@ namespace Organization.Api.GraphQL.Organization;
 public class DeleteOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("id")] public string? Id { get; set; }
+
+    [GraphQLName("uniqueAlphanumericName")]
+    public string? UniqueAlphanumericName { get; set; }
 }

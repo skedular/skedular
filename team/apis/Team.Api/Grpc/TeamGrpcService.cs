@@ -59,9 +59,10 @@ public class TeamGrpcService(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TeamSearchCriteria(
                 request.Where.OrganizationId,
+                null,
                 request.Where.CustomerId,
                 request.Where.NameContains,
-                request.Where.PrimaryLocationIds),
+                request.Where.PrimaryLocationIds.ToSafeCollection()),
             request.OrderBy.Select(item =>
             {
                 var field = item.Field switch

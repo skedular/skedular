@@ -14,7 +14,12 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 {
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(string customerId, string? locationId, CancellationToken cancellationToken);
+
+    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
+        string customerId,
+        string? organizationId,
+        CancellationToken cancellationToken);
+
     Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Database.Entities.Location Add(Database.Entities.Location location);
     Database.Entities.Location Update(Database.Entities.Location location);
@@ -52,7 +57,7 @@ internal static class LocationExtensions
     {
         query = query.Where(item => !item.DeletedAt.HasValue);
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
         {
             query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
                                         (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
@@ -60,10 +65,24 @@ internal static class LocationExtensions
         }
         else
         {
-            query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
-                                        item.Organization.Id == searchCriteria.OrganizationId &&
-                                        (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                                            !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId)));
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+            {
+                query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
+                                            item.Organization.Id == searchCriteria.OrganizationId &&
+                                            (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
+                                                !organizationMember.DeletedAt.HasValue &&
+                                                organizationMember.Customer.Id == searchCriteria.CustomerId)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
+                                            item.Organization.UniqueAlphanumericName != null &&
+                                            item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName &&
+                                            (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
+                                                !organizationMember.DeletedAt.HasValue &&
+                                                organizationMember.Customer.Id == searchCriteria.CustomerId)));
+            }
         }
 
         if (searchCriteria.LocationIds.Count > 0)
@@ -155,7 +174,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,
-        string? locationId,
+        string? organizationId,
         CancellationToken cancellationToken)
     {
         var query = DbContext.Location
@@ -163,9 +182,9 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                                location.Organization.OrganizationMembers.Any(organizationMember =>
                                    organizationMember.Customer.Id == customerId));
 
-        if (!string.IsNullOrWhiteSpace(locationId))
+        if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            query = query.Where(location => location.Id == locationId);
+            query = query.Where(team => !team.Organization.DeletedAt.HasValue && team.Organization.Id == organizationId);
         }
 
         return await query

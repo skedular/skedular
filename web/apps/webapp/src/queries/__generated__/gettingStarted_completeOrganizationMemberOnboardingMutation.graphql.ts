@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25acb64edd4121711a67f4830cf4bbdf>>
+ * @generated SignedSource<<31b270cc7f8eff1ad08de8593be1ee31>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type CompleteOrganizationMemberOnboardingInput = {
   clientMutationId?: string | null | undefined;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type gettingStarted_completeOrganizationMemberOnboardingMutation$variables = {
   input: CompleteOrganizationMemberOnboardingInput;

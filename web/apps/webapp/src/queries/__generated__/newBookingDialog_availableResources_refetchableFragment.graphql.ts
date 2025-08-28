@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97c9a1c5e242d59321de28cdbcb86ed8>>
+ * @generated SignedSource<<12fdbf4dce441a940f06fbaf0ac80f91>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type newBookingDialog_availableResources_refetchableFragment$variables = 
   dateFromToGetAvailableResources: any;
   dateUntilToGetAvailableResources: any;
   locationId?: string | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type newBookingDialog_availableResources_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_availableResources_query">;
@@ -44,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   }
 ],
 v1 = {
@@ -111,8 +111,8 @@ return {
               },
               {
                 "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
+                "name": "organizationUniqueAlphanumericName",
+                "variableName": "organizationUniqueAlphanumericName"
               },
               {
                 "kind": "Variable",
@@ -157,16 +157,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "13b37c77258abab555d6e444fda8aa7f",
+    "cacheID": "2d060158ec502c5d34a9981484b7ee9a",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query newBookingDialog_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationId: String!\n) {\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query newBookingDialog_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d9149f89323d9e9bb7081c8100288c72";
+(node as any).hash = "f3ab0347255f9e8d25b23fee5fa12599";
 
 export default node;

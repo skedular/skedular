@@ -308,7 +308,7 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
-        dest.UniqueAlphanumericName = dest.UniqueAlphanumericName;
+        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Website = src.Website;
@@ -465,7 +465,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id.ToSafeString(),
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -481,8 +481,8 @@ public class Mapper : IMapper
     public Shared.Models.Organization MapTo(UpdateOrganizationInput src) =>
         new()
         {
-            Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            Id = src.Id.ToSafeString(),
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -493,8 +493,8 @@ public class Mapper : IMapper
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
-        MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) =>
+        new() { Id = src.Id, Terms = src.Terms };
 
     public Shared.Models.Organization MapTo(Admin_AddInput src) =>
         new()
@@ -637,7 +637,10 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            },
             Type = OrganizationTagType.Custom,
             Color = src.Color
         };
@@ -658,7 +661,10 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            },
             Type = OrganizationTagType.Zone,
             Color = src.Color
         };
@@ -751,7 +757,10 @@ public class Mapper : IMapper
             EntityId = src.EntityId,
             LoginUrl = src.LoginUrl,
             AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            }
         };
 
     public Shared.Database.Entities.OrganizationSsoSettings MapToEntity(
@@ -779,7 +788,10 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            },
             Type = OrganizationTagType.Product,
             Color = src.Color
         };
@@ -800,7 +812,10 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            },
             Type = OrganizationTagType.Location,
             Color = src.Color
         };
@@ -871,7 +886,10 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            }
         };
 
     public Shared.Models.OrganizationBillingDetails MapTo(UpdateOrganizationBillingDetailsInput src) =>
@@ -892,7 +910,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
+            CountryCode = src.CountryCode
         };
 
     public Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
@@ -925,7 +943,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
+            CountryCode = src.CountryCode
         };
 
     public BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src) =>
@@ -966,7 +984,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode
             };
 
     public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
@@ -1143,7 +1161,10 @@ public class Mapper : IMapper
             AccountHolderName = src.AccountHolderName,
             AccountNumber = src.AccountNumber,
             Country = src.Country,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            }
         };
 
     public Shared.Models.OrganizationBankAccount MapTo(UpdateOrganizationBankAccountInput src) =>
@@ -1182,7 +1203,10 @@ public class Mapper : IMapper
         {
             TaxId = src.TaxId,
             TaxRatePercentage = src.TaxRatePercentage,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            }
         };
 
     public Shared.Database.Entities.OrganizationTaxDetails MapToEntity(
@@ -1268,7 +1292,10 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+            }
         };
 
     public Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src) =>
@@ -1287,7 +1314,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
+            CountryCode = src.CountryCode
         };
 
     public OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src) =>
@@ -1787,7 +1814,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode
             };
 
     private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);
@@ -1980,7 +2007,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode
             };
 
     private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddress? src, Shared.Models.Organization organization) =>

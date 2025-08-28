@@ -21,7 +21,7 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   const rootData = useFragment<locationSelector_allLocations_query$key>(
     graphql`
       fragment locationSelector_allLocations_query on Query {
-        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {

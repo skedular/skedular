@@ -9,9 +9,13 @@ namespace Slack.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
     Task<Organization?> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
-    Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -35,15 +39,32 @@ public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeP
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(
-                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
-                cancellationToken);
+    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects()
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
 
     public async Task<Organization?> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
         await DbContext.Organization
@@ -51,13 +72,6 @@ public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeP
             .FirstOrDefaultAsync(
                 query => !query.DeletedAt.HasValue && query.Workspaces.Any(workspace => workspace.Id == workspaceId),
                 cancellationToken);
-
-    public Organization Add(Organization organization)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Organization.Add(organization).Entity;
-    }
 
     public Organization Update(Organization organization)
     {

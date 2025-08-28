@@ -16,30 +16,30 @@ import OrganizationMemberAttendancyInsight from './organization-member-attendanc
 type Props = {
   queryReference: PreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
-  query organizationMemberAttendancyInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
+  query organizationMemberAttendancyInsightRoot_rootQuery($organizationUniqueAlphanumericName: String!, $from: DateTime!, $to: DateTime!) {
     ...organizationMemberAttendancyInsight_organizationAnalytics_query
   }
 `;
 
-const OrganizationMemberAttendancyInsightRoot = ({ queryReference, organizationId }: Props) => {
+const OrganizationMemberAttendancyInsightRoot = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return <OrganizationMemberAttendancyInsight rootDataOrganizationAnalyticsRelay={rootData} organizationId={organizationId} />;
+  return <OrganizationMemberAttendancyInsight rootDataOrganizationAnalyticsRelay={rootData} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />;
 };
 
 const MemoOrganizationMemberAttendancysCard = memo(OrganizationMemberAttendancyInsightRoot);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   organizationName?: string;
 };
 
-const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onReloadRequired }: RelayProps) => {
+const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -50,7 +50,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onRe
 
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -58,7 +58,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onRe
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -87,7 +87,11 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onRe
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMemberAttendancysCard queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOrganizationMemberAttendancysCard
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      />
     </ErrorBoundary>
   );
 };

@@ -15,7 +15,7 @@ import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
@@ -32,7 +32,7 @@ const customTagSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationCustomTagDialog = ({ organizationUniqueAlphanumericName, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const [commitAddCustomTag] = useMutation<addOrganizationCustomTagDialog_addCustomTagMutation>(graphql`
     mutation addOrganizationCustomTagDialog_addCustomTagMutation($connectionIds: [ID!]!, $input: AddCustomTagInput!) @raw_response_type {
       addCustomTag(input: $input) {
@@ -66,7 +66,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
         input: {
           clientMutationId: uuid(),
           id,
-          organizationId,
+          organizationUniqueAlphanumericName,
           name,
           description,
           color: selectedColor,

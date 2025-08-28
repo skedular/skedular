@@ -31,11 +31,11 @@ public class RootQuery(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationUniqueAlphanumericName);
 
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
-            new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains, where.CustomerId),
+            new OrganizationMemberSearchCriteria(null, where.OrganizationUniqueAlphanumericName, where.NameContains, where.CustomerId),
             orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

@@ -63,7 +63,13 @@ public class LocationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.LocationIds, request.Where.NameContains, request.Where.TagIds),
+            new LocationSearchCriteria(
+                request.Where.OrganizationId,
+                null,
+                request.Where.LocationIds,
+                request.Where.NameContains,
+                request.Where.TagIds,
+                null),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
@@ -115,7 +121,12 @@ public class LocationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.LocationIds, request.Where.NameContains, request.Where.TagIds),
+            new LocationSearchCriteria(
+                request.Where.OrganizationId,
+                null,
+                request.Where.LocationIds,
+                request.Where.NameContains,
+                request.Where.TagIds, null),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending

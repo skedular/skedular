@@ -19,15 +19,15 @@ import OrganizationAnalyticsLeftSideNavigationMenuContent from './organization-a
 type Props = {
   rootDataRelay: organizationAnalytics_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId }: Props) => {
+const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<organizationAnalytics_query$key>(
     graphql`
       fragment organizationAnalytics_query on Query {
         ...locationSelector_allLocations_query
-        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
@@ -76,12 +76,12 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <OrganizationAnalyticsLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
+      <OrganizationAnalyticsLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
       <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Analytics">
           <StackColumn
@@ -96,10 +96,10 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
 
           <GridContainer sx={{ padding: defaultPadding }}>
             <Grid>
-              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} />
+              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
             </Grid>
             <Grid>
-              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} />
+              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
             </Grid>
           </GridContainer>
 

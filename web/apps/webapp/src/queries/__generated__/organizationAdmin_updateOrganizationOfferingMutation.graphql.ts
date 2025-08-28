@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42ec03dc86a2a06b915dc969c0c8f5db>>
+ * @generated SignedSource<<c0e39cffc7b3b2f1adf50352a910e681>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,9 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationOfferingInput = {
   clientMutationId?: string | null | undefined;
-  id: string;
   offeringCode: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationOfferingMutation$variables = {
   input: UpdateOrganizationOfferingInput;

@@ -10,7 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesProductTags_query$key;
   name: string;
   required?: boolean;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 type ProductTagDetails = {
@@ -19,12 +19,16 @@ type ProductTagDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizationId }: Props) => {
+const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<multipleChoicesProductTags_query$key>(
     graphql`
       fragment multipleChoicesProductTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        productTags(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $multipleChoicesProductTagsSortingValues)
-          @connection(key: "multipleChoicesProductTags_productTags") {
+        productTags(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
+          orderBy: $multipleChoicesProductTagsSortingValues
+        ) @connection(key: "multipleChoicesProductTags_productTags") {
           __id
           totalCount
           edges {
@@ -45,7 +49,7 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
   const filter = createFilterOptions<ProductTagDetails>();
 
   if (productTags.length === 0) {
-    return <AddOrganizationProductTagButton organizationId={organizationId} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationProductTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
   return (

@@ -20,16 +20,15 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationSsoSignin_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationSsoSignin_rootQuery($organizationId: String!, $redirectUrl: String!) {
-    organization(id: $organizationId) {
+  query pageOrganizationSsoSignin_rootQuery($organizationUniqueAlphanumericName: String!, $redirectUrl: String!) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       logoUrl
       name
     }
-    ssoLoginUrl(id: $organizationId, redirectUrl: $redirectUrl)
+    organizationSsoLoginUrl(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, redirectUrl: $redirectUrl)
   }
 `;
 
@@ -44,7 +43,7 @@ const RootPage = ({ queryReference }: Props) => {
           <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} />
           <LeadIconTypography label={`Single sign-on to ${rootData.organization?.name}`} invertDefaultColor sx={{ marginTop: 2 }} />
           <SmallIconTypography label={`Authenticate your account by logging into ${rootData.organization?.name}'s single sign-on provider.`} invertDefaultColor />
-          <Button variant="contained" href={rootData.ssoLoginUrl} fullWidth sx={{ marginTop: 2 }}>
+          <Button variant="contained" href={rootData.organizationSsoLoginUrl} fullWidth sx={{ marginTop: 2 }}>
             Continue
           </Button>
         </CardContent>
@@ -60,34 +59,34 @@ const RootPageWithRelay = () => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId } = useParams();
+  const { organizationUniqueAlphanumericName } = useParams();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirectUrl');
-  let finalOrganizationId = '';
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationId: finalOrganizationId,
-        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, finalOrganizationId),
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
+        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, finalOrganizationUniqueAlphanumericName),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, redirectUrl, integratedPlatrform]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, redirectUrl, integratedPlatrform]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -101,7 +100,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

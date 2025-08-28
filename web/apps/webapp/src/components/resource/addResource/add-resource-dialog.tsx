@@ -33,7 +33,7 @@ import { array, number, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addResourceDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -43,18 +43,18 @@ type Props = {
 
 const RootQuery = graphql`
   query addResourceDialog_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
   ) {
-    organization(id: $organizationId) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       type {
         type
       }
     }
-    locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+    locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
       __id
       totalCount
       edges {
@@ -96,7 +96,7 @@ const ResourceSchema = object({
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
-const AddResourceDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addResourceDialog_rootQuery>(RootQuery, queryReference);
 
   const [commitAddResource] = useMutation<addResourceDialog_addResourceMutation>(graphql`
@@ -271,16 +271,31 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
               </FormFieldLabel>
 
               <FormFieldLabel label="Tags" useWiderSpace>
-                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} organizationId={organizationId} />
+                <MultipleChoicesCustomTags
+                  rootDataRelay={rootData}
+                  name="customTagIds"
+                  required={requiredFields.customTagIds}
+                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                />
               </FormFieldLabel>
 
               <FormFieldLabel label="Zones" useWiderSpace>
-                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
+                <MultipleChoicesZones
+                  rootDataRelay={rootData}
+                  name="zoneIds"
+                  required={requiredFields.zoneIds}
+                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                />
               </FormFieldLabel>
 
               {rootData.organization?.type.type === 'MARKETPLACE' && (
                 <FormFieldLabel label="Product Tags" useWiderSpace>
-                  <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                  <MultipleChoicesProductTags
+                    rootDataRelay={rootData}
+                    name="productTagIds"
+                    required={requiredFields.productTagIds}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                  />
                 </FormFieldLabel>
               )}
 
@@ -305,7 +320,7 @@ const MemoAddResourceDialog = memo(AddResourceDialog);
 
 type RelayProps = {
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -313,7 +328,7 @@ type RelayProps = {
   onCancel: () => void;
 };
 
-const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
+const AddResourceDialogWithRelay = ({ onReloadRequired, organizationUniqueAlphanumericName, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addResourceDialog_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -321,7 +336,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
   useEffect(() => {
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -351,7 +366,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -372,7 +387,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
       <MemoAddResourceDialog
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         locationId={locationId}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}

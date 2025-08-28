@@ -15,7 +15,7 @@ import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
@@ -32,7 +32,7 @@ const locationTagSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationLocationTagDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationLocationTagDialog = ({ organizationUniqueAlphanumericName, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const [commitAddLocationTag] = useMutation<addOrganizationLocationTagDialog_addLocationTagMutation>(graphql`
     mutation addOrganizationLocationTagDialog_addLocationTagMutation($connectionIds: [ID!]!, $input: AddLocationTagInput!) @raw_response_type {
       addLocationTag(input: $input) {
@@ -66,7 +66,7 @@ const AddOrganizationLocationTagDialog = ({ organizationId, connectionIds, isDia
         input: {
           clientMutationId: uuid(),
           id,
-          organizationId,
+          organizationUniqueAlphanumericName,
           name,
           description,
           color: selectedColor,

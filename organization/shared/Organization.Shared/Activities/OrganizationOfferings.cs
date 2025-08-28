@@ -85,7 +85,10 @@ public class OrganizationOfferings(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(args.OrganizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            args.OrganizationId,
+            null,
+            cancellationToken);
         if (organization is null || organization.IsDeleted())
         {
             return;

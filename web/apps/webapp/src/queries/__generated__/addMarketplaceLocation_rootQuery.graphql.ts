@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80512271bba10d67ab429188928cc9da>>
+ * @generated SignedSource<<66e34736ab458de921767ec0e3336625>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type OrganizationTagOrderInput = {
 };
 export type addMarketplaceLocation_rootQuery$variables = {
   multipleChoicesLocationTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 export type addMarketplaceLocation_rootQuery$data = {
   readonly organization: {
@@ -43,13 +43,13 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v2 = [
   {
     "kind": "Variable",
-    "name": "id",
-    "variableName": "organizationId"
+    "name": "uniqueAlphanumericName",
+    "variableName": "organizationUniqueAlphanumericName"
   }
 ],
 v3 = {
@@ -87,8 +87,8 @@ v5 = [
     "fields": [
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -269,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "31dfec332f3f546c888ae567d7ffd4c9",
+    "cacheID": "b56326e806ee870dad54075de787feae",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationId: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  organization(id: $organizationId) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "561fd749b32c22789376383ed24bbd41";
+(node as any).hash = "e7358c6fbbed42e046c6c427466c3bbd";
 
 export default node;

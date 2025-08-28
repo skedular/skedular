@@ -12,7 +12,11 @@ namespace Organization.Api.Services;
 public interface IOrganizationTaxDetailsService
 {
     Task<Shared.Models.Organization> UpdateAsync(OrganizationTaxDetails taxDetails, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization> RemoveAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationTaxDetailsService(
@@ -28,10 +32,12 @@ public class OrganizationTaxDetailsService(
     public async Task<Shared.Models.Organization> UpdateAsync(OrganizationTaxDetails taxDetails, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(taxDetails.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(taxDetails.Organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(taxDetails.Organization.Id, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               taxDetails.Organization.Id,
+                               taxDetails.Organization.UniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {
@@ -63,12 +69,16 @@ public class OrganizationTaxDetailsService(
         return mappedOrganization;
     }
 
-    public async Task<Shared.Models.Organization> RemoveAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> RemoveAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanModify(organization, customer))
         {

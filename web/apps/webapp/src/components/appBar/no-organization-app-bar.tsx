@@ -53,6 +53,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
         }
         myOrganizations {
           id
+          uniqueAlphanumericName
           logoUrl
           name
           canModify
@@ -165,7 +166,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                     return <BodyIconTypography label="Please select an organization" />;
                   }
 
-                  const selectedItem = rootData.myOrganizations.find((item) => item.id === selectedId);
+                  const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
                   if (!selectedItem) {
                     return <BodyIconTypography label="Please select an organization" />;
                   }
@@ -184,7 +185,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                 }}
               >
                 {rootData.myOrganizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.id}>
+                  <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
                     <StackRow>
                       <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                       <StackColumn spacing={-0.5}>

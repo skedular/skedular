@@ -25,7 +25,8 @@ public interface IOrganizationStripeConnectAccountService
 {
     Task<OrganizationStripeConnectAccount> AddAsync(
         string? id,
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string nickname,
         string redirectUrl,
         CancellationToken cancellationToken);
@@ -77,17 +78,20 @@ public class OrganizationStripeConnectAccountService(
 
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string? id,
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string nickname,
         string redirectUrl,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
         ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
         ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(organization, customer))
         {
@@ -159,7 +163,10 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       account.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
         {
@@ -190,7 +197,10 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var accounts = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = accounts.Select(item => item.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            cancellationToken);
 
         if (existingOrganizations.Any(existingOrganization =>
                 !organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer)))
@@ -218,7 +228,10 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                        account.Organization.Id,
+                                        null,
+                                        cancellationToken) ??
                                     throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanViewStripeConnectAccount(existingOrganizations, customer))
         {
@@ -262,7 +275,10 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       account.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
         {
@@ -297,9 +313,10 @@ public class OrganizationStripeConnectAccountService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.OrganizationId);
-
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               null,
+                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         if (!ignoreAuthorizationCheck)
@@ -335,7 +352,10 @@ public class OrganizationStripeConnectAccountService(
         }
 
         var organizationId = state;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               null,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         var oauthToken = await oauthTokenCreateService.CreateAsync(
@@ -383,7 +403,11 @@ public class OrganizationStripeConnectAccountService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return new Uri(Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organizationId, "setup-marketplace"));
+        return new Uri(Url.Combine(
+            applicationConfiguration.WebAppBaseDomain.ToString(),
+            "organizations",
+            organization.UniqueAlphanumericName,
+            "setup-marketplace"));
     }
 
     public Uri GetStripeAuthorizeExistingConnectAccountUrl(string organizationId) =>
@@ -403,7 +427,10 @@ public class OrganizationStripeConnectAccountService(
         Customer customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(account.Organization.Id, cancellationToken) ??
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       account.Organization.Id,
+                                       null,
+                                       cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
         {

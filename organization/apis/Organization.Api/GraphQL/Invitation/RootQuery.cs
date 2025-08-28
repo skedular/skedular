@@ -44,7 +44,7 @@ public class RootQuery(IMapper mapper)
     {
         var (paginatedInfo, edges, totalCount) = await teamInvitationService.GetMyPaginatedJoinInvitationsAsync(
             new PaginationInputParam(after, first, before, last),
-            new JoinInvitationSearchCriteria(where.OrganizationId, where.Status),
+            new JoinInvitationSearchCriteria(where.OrganizationUniqueAlphanumericName, where.Status, null),
             orderBy.ToSafeCollection().Select(item => new JoinOrganizationInvitationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

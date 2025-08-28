@@ -22,7 +22,12 @@ public class LocationAuthorizationService(
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, false, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               location.Organization.Id,
+                               null,
+                               false,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organizationAuthorizationService.IsOrganizationMember(organization, customer);
@@ -35,7 +40,12 @@ public class LocationAuthorizationService(
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, false, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               location.Organization.Id,
+                               null,
+                               false,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organizationAuthorizationService.IsOrganizationMember(organization, customer);

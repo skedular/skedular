@@ -9,7 +9,8 @@ namespace Booking.Api.Services;
 public interface IResourceService
 {
     Task<ICollection<Resource>> GetAvailableResourcesAsync(
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -20,7 +21,8 @@ public interface IResourceService
         CancellationToken cancellationToken);
 
     Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -34,6 +36,7 @@ public class ResourceService(
 {
     public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
+        string? organizationUniqueAlphanumericName,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -43,17 +46,18 @@ public class ResourceService(
         string? productId,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        if (!string.IsNullOrWhiteSpace(organizationId))
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               false,
+                               false,
+                               cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
-                               throw new OrganizationNotFound();
-            if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
-            {
-                throw new UnauthorizedAccessException();
-            }
+            throw new UnauthorizedAccessException();
         }
 
         ICollection<string> productRelatedTags = [];
@@ -65,7 +69,7 @@ public class ResourceService(
         }
 
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-            organizationId,
+            organization.Id,
             locationId,
             from,
             until,
@@ -89,29 +93,34 @@ public class ResourceService(
     }
 
     public async Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
-        string organizationId,
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               false,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
+
         if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organization.Id, false, cancellationToken);
         var resourceCount = locations.Aggregate(0, (acc, item) => item.Resources.Count + acc);
         var availableResourceCount = 0;
 
         foreach (var location in locations)
         {
             var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                organizationId,
+                organization.Id,
                 location.Id,
                 from,
                 until,

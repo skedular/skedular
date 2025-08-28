@@ -17,7 +17,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationProductBook_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $productId: String!
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
@@ -33,10 +33,10 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationProductBook_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationProductBook_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -64,7 +64,13 @@ const RootPage = ({ queryReference, onReloadRequired, organizationId }: Props) =
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <BookProduct rootDataRelay={rootData} rootDataAvailableResourcesRelay={rootData} onReloadRequired={onReloadRequired} connectionIds={[]} organizationId={organizationId} />
+      <BookProduct
+        rootDataRelay={rootData}
+        rootDataAvailableResourcesRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        connectionIds={[]}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      />
     </RootShell>
   );
 };
@@ -75,19 +81,19 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationProductBook_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationId, productId } = useParams();
-  let finalOrganizationId = '';
+  const { organizationUniqueAlphanumericName, productId } = useParams();
+  let finalOrganizationUniqueAlphanumericName = '';
 
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
+      throw new Error('organizationUniqueAlphanumericName is required');
     }
 
-    finalOrganizationId = organizationId[0];
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   let finalProductId = '';
@@ -111,7 +117,7 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationId: finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         productId: finalProductId,
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
@@ -120,7 +126,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, finalProductId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalProductId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -134,7 +140,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

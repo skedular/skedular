@@ -12,14 +12,14 @@ import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataOrganizationAnalyticsRelay: organizationBookingInsight_organizationAnalytics_query$key;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organizationId }: Props) => {
+const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organizationUniqueAlphanumericName }: Props) => {
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationBookingInsight_organizationAnalytics_query on Query @refetchable(queryName: "organizationBookingInsight_organizationAnalytics_refetchableFragment") {
-        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
+        organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {
           dailyBookingsTotals {
             date
             total
@@ -37,7 +37,7 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
       startTransition(() => {
         refetch(
           {
-            organizationId,
+            organizationUniqueAlphanumericName,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -47,7 +47,7 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
         );
       });
     },
-    [refetch, organizationId],
+    [refetch, organizationUniqueAlphanumericName],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {

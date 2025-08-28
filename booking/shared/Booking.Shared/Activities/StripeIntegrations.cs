@@ -107,9 +107,13 @@ public class StripeIntegrations(
         }
         else if (booking.PaidByOrganization is not null)
         {
-            var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.PaidByOrganization.Id, false, false, cancellationToken) ??
-                throw new OrganizationNotFound();
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                   booking.PaidByOrganization.Id,
+                                   null,
+                                   false,
+                                   false,
+                                   cancellationToken) ??
+                               throw new OrganizationNotFound();
             stripeCustomer = await stripeCustomerService.AddCustomerAsync(organization, args.StripeConnectAccountId, cancellationToken);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

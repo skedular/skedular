@@ -107,7 +107,12 @@ public class InvoiceIntegrations(
             return;
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               null,
+                               false,
+                               false,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
 
         await using var htmlTemplateStream = typeof(InvoiceIntegrations).Assembly.GetManifestResourceStream(

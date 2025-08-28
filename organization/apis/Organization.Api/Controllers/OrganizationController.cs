@@ -79,7 +79,7 @@ public class OrganizationController(
             return Unauthorized();
         }
 
-        await organizationOfferingService.UpdateOfferingAsync(organizationId, offeringCode.ToOfferingCode(), true, cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(organizationId, null, offeringCode.ToOfferingCode(), true, cancellationToken);
 
         return Ok();
     }

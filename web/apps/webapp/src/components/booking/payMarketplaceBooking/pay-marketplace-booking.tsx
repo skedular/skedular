@@ -32,10 +32,10 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   rootDataRelay: payMarketplaceBooking_booking_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
+const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
   const [rootData, refetch] = useRefetchableFragment<payMarketplaceBooking_booking_refetchableFragment, payMarketplaceBooking_booking_query$key>(
     graphql`
       fragment payMarketplaceBooking_booking_query on Query @refetchable(queryName: "payMarketplaceBooking_booking_refetchableFragment") {
@@ -107,7 +107,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
             name
           }
         }
-        organizationBookingPermissions(organizationId: $organizationId) {
+        organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           canModifyPaymentMethod
         }
         paymentStatuses {
@@ -235,7 +235,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
   }, [rootData.booking]);
 
   const handleCloseClick = () => {
-    router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleCancelBookingClick = () => {
@@ -275,7 +275,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationId }: Props) => {
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} cancelled.`} />,
         });
 
-        router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationId));
+        router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
       },
       onError: (error) => {
         toast.update(toastId, {

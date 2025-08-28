@@ -2,12 +2,11 @@ using Enterprise.Shared.Pagination;
 
 namespace Organization.Shared.Models;
 
-public class OrganizationStripeConnectAccountSearchCriteria(string organizationId, string? nameContains, bool? onboardingCompleted)
-{
-    public string OrganizationId { get; } = organizationId;
-    public string? NameContains { get; } = nameContains;
-    public bool? OnboardingCompleted { get; set; } = onboardingCompleted;
-}
+public record OrganizationStripeConnectAccountSearchCriteria(
+    string? OrganizationId,
+    string? OrganizationUniqueAlphanumericName,
+    string? NameContains,
+    bool? OnboardingCompleted);
 
 public record OrganizationStripeConnectAccountOrder(OrderDirection Direction, OrganizationStripeConnectAccountOrderField Field);
 

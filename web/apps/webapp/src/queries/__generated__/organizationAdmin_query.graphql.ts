@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0cba7b4e0dd5f50ef2a0b6c548d6769>>
+ * @generated SignedSource<<042b78189ffdbd2339399c550346f20b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly me: {
+    readonly emails: ReadonlyArray<string>;
     readonly id: string;
     readonly preferredCustomTags: ReadonlyArray<{
       readonly uniqueId: string;
@@ -66,6 +67,13 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "emails",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -140,6 +148,6 @@ return {
 };
 })();
 
-(node as any).hash = "366071f030e1506f2d789ec839acaea4";
+(node as any).hash = "75a305288c7feac78773de9e50b5df32";
 
 export default node;

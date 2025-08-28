@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab1465871e9983eca60c93c1aad0a177>>
+ * @generated SignedSource<<491ba8b136ea146993358fa6a53c134e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,8 @@ export type AddLocationInput = {
   id?: string | null | undefined;
   locationTagIds: ReadonlyArray<string>;
   name: string;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
 };

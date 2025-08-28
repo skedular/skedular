@@ -36,6 +36,7 @@ type Props = {
 };
 
 type OrganizationDetails = {
+  uniqueAlphanumericName: string | null;
   name: string;
   about: string | null;
   website: string | null;
@@ -44,6 +45,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
+  uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
@@ -55,6 +57,9 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const rootData = useFragment<addMarketplaceOrganization_query$key>(
     graphql`
       fragment addMarketplaceOrganization_query on Query {
+        me {
+          emails
+        }
         activeOrganizationTermsOfUse {
           id
         }
@@ -70,6 +75,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
       addOrganization(input: $input) {
         organization {
           id
+          uniqueAlphanumericName
           name
           about
           website
@@ -87,7 +93,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ uniqueAlphanumericName, name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -96,6 +102,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
         input: {
           clientMutationId: uuid(),
           id,
+          uniqueAlphanumericName,
           name,
           about,
           website,
@@ -106,7 +113,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
@@ -121,7 +128,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           render: <NotificationContent content={`Organization ${name} added.`} />,
         });
 
-        onAdded(id);
+        onAdded(response.addOrganization.organization.uniqueAlphanumericName!);
         onReloadRequired();
       },
       onError: (error) => {
@@ -134,6 +141,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
         addOrganization: {
           organization: {
             id,
+            uniqueAlphanumericName: '',
             name,
             about,
             website,
@@ -205,6 +213,12 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                   helperText={<HelperText text="Enter the official name of your co-working space as you want it to appear to members and visitors." />}
                 />
               </FormFieldLabel>
+
+              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
+                  <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
+                </FormFieldLabel>
+              )}
 
               <FormFieldLabel label="About" required={requiredFields.about}>
                 <TextField

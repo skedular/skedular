@@ -53,6 +53,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
         }
         myOrganizations {
           id
+          uniqueAlphanumericName
           logoUrl
           name
           canModify
@@ -70,7 +71,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { signOut } = useAuth();
   const router = useRouter();
-  const { organizationId } = useParams();
+  const { organizationUniqueAlphanumericName } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -78,18 +79,18 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  let finalOrganizationId = '';
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] !== 'undefined') {
-      finalOrganizationId = organizationId[0];
+  let finalOrganizationUniqueAlphanumericName = '';
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] !== 'undefined') {
+      finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
     }
   }
 
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
-    if (finalOrganizationId && rootData.myOrganizations.some((item) => item.id === finalOrganizationId)) {
-      return finalOrganizationId;
+    if (finalOrganizationUniqueAlphanumericName && rootData.myOrganizations.some((item) => item.uniqueAlphanumericName === finalOrganizationUniqueAlphanumericName)) {
+      return finalOrganizationUniqueAlphanumericName;
     }
 
     return undefined;
@@ -187,7 +188,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                     return <BodyIconTypography label="Please select an organization" />;
                   }
 
-                  const selectedItem = rootData.myOrganizations.find((item) => item.id === selectedId);
+                  const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
                   if (!selectedItem) {
                     return <BodyIconTypography label="Please select an organization" />;
                   }
@@ -206,7 +207,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 }}
               >
                 {rootData.myOrganizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.id}>
+                  <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
                     <StackRow>
                       <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                       <StackColumn spacing={-0.5}>

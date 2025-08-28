@@ -5,7 +5,11 @@ namespace Booking.Api.GraphQL.ResourceAvailability;
 [GraphQLName("AvailableResourcesWhereInput")]
 public class AvailableResourcesWhereInput
 {
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }

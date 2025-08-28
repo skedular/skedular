@@ -34,6 +34,7 @@ type Props = {
 };
 
 type OrganizationDetails = {
+  uniqueAlphanumericName: string | null;
   name: string;
   about: string | null;
   website: string | null;
@@ -42,6 +43,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
+  uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
@@ -53,6 +55,9 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const rootData = useFragment<addPrivateOrganization_query$key>(
     graphql`
       fragment addPrivateOrganization_query on Query {
+        me {
+          emails
+        }
         activeOrganizationTermsOfUse {
           id
         }
@@ -68,6 +73,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
       addOrganization(input: $input) {
         organization {
           id
+          uniqueAlphanumericName
           name
           about
           website
@@ -85,7 +91,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ uniqueAlphanumericName, name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -94,6 +100,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         input: {
           clientMutationId: uuid(),
           id,
+          uniqueAlphanumericName,
           name,
           about,
           website,
@@ -104,7 +111,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
@@ -119,7 +126,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           render: <NotificationContent content={`Organization ${name} added.`} />,
         });
 
-        onAdded(id);
+        onAdded(response.addOrganization.organization.uniqueAlphanumericName!);
         onReloadRequired();
       },
       onError: (error) => {
@@ -132,6 +139,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         addOrganization: {
           organization: {
             id,
+            uniqueAlphanumericName: '',
             name,
             about,
             website,
@@ -181,6 +189,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         <Form
           onSubmit={handleOrganizationAddClick}
           initialValues={{
+            uniqueAlphanumericName: null,
             name: '',
             about: null,
             website: null,
@@ -200,6 +209,12 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                   }
                 />
               </FormFieldLabel>
+
+              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
+                  <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
+                </FormFieldLabel>
+              )}
 
               <FormFieldLabel label="About" required={requiredFields.about}>
                 <TextField

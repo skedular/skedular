@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<377de60b8a05a6251a775da83c7b100e>>
+ * @generated SignedSource<<1ab26247cebe2822203629914aaab712>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,8 +19,8 @@ export type OrganizationMemberOrderInput = {
 export type editMarketplaceBooking_organizationMembers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationId: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
+  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
 };
 export type editMarketplaceBooking_organizationMembers_refetchableFragment$data = {
@@ -46,12 +46,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationMembersSortingValues"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationMembersSortingValues"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -84,8 +84,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
+        "name": "organizationUniqueAlphanumericName",
+        "variableName": "organizationUniqueAlphanumericName"
       }
     ],
     "kind": "ObjectValue",
@@ -291,16 +291,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "637fdf86dbdc5160f17c03c898997be8",
+    "cacheID": "4039060216897157a532ba7a82db322a",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...editMarketplaceBooking_organizationMembers_query_1G22uz\n}\n\nfragment editMarketplaceBooking_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query editMarketplaceBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n) {\n  ...editMarketplaceBooking_organizationMembers_query_1G22uz\n}\n\nfragment editMarketplaceBooking_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "161797c90c6e7caeba80c65ed6fef25c";
+(node as any).hash = "fcf78c5307963839c679df506ed4459c";
 
 export default node;

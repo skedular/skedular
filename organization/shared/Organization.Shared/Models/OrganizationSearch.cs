@@ -2,11 +2,7 @@ using Enterprise.Shared.Pagination;
 
 namespace Organization.Shared.Models;
 
-public class OrganizationSearchCriteria(string? nameContains)
-{
-    public string CustomerId { get; set; } = string.Empty;
-    public string? NameContains { get; } = nameContains;
-}
+public record OrganizationSearchCriteria(string? NameContains, string? CustomerId);
 
 public record OrganizationOrder(OrderDirection Direction, OrganizationOrderField Field);
 

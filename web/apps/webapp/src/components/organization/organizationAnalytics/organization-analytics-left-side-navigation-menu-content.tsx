@@ -19,12 +19,12 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -60,8 +60,8 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const organizatinAnalyticsLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, organizationId);
-  const locationsAnalyticsLink = getOrganizationLocationsAnalyticsLocationsBaseLink(integratedPlatrform, organizationId);
+  const organizatinAnalyticsLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const locationsAnalyticsLink = getOrganizationLocationsAnalyticsLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
 
   return (
     <List

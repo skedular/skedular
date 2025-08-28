@@ -6,6 +6,10 @@ namespace Organization.Api.GraphQL.Offering;
 public class UpdateOrganizationOfferingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("offeringCode")] public string OfferingCode { get; set; } = string.Empty;
 }

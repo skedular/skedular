@@ -50,7 +50,7 @@ type Props = {
   rootDataAvailableResourcesRelay: bookProduct_availableResources_query$key;
   onReloadRequired?: () => void;
   connectionIds: string[];
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   defaultDate?: Dayjs;
 };
 
@@ -116,7 +116,7 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationId, defaultDate }: Props) => {
+const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationUniqueAlphanumericName, defaultDate }: Props) => {
   const rootData = useFragment<bookProduct_query$key>(
     graphql`
       fragment bookProduct_query on Query {
@@ -124,7 +124,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           emails
         }
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           taxDetails {
             taxId
             taxRatePercentage
@@ -172,7 +172,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   >(
     graphql`
       fragment bookProduct_availableResources_query on Query @refetchable(queryName: "bookProduct_availableResources_refetchableFragment") {
-        availableResources(where: { organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }) {
+        availableResources(
+          where: {
+            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+            productId: $productId
+            from: $dateFromToGetAvailableResources
+            until: $dateUntilToGetAvailableResources
+          }
+        ) {
           uniqueId
           name
           location {
@@ -517,7 +524,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           from,
           until,
           notes,
-          organizationIds: [organizationId],
+          organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
           teamIds: [],
           resourceIds,
           type: type as BookingType,
@@ -558,7 +565,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           render: <NotificationContent content={message} />,
         });
 
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationId, response.addBooking!.booking.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.addBooking!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -587,7 +594,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                 photoUrl: '',
               },
             ],
-            involvedOrganizations: organizationId ? [{ uniqueId: organizationId, name: '' }] : [],
+            involvedOrganizations: organizationUniqueAlphanumericName ? [{ uniqueId: organizationUniqueAlphanumericName, name: '' }] : [],
             resources: [],
             paymentMethod: {
               type: paymentMethod as PaymentMethod,

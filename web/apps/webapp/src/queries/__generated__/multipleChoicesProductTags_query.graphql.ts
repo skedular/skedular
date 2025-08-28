@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ef1e553f2d9438a7a15f4ce2e1fb05e1>>
+ * @generated SignedSource<<93f8fb4a7774ed85a37118f02934c318>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,7 +47,7 @@ const node: ReaderFragment = {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     }
   ],
   "kind": "Fragment",
@@ -77,8 +77,8 @@ const node: ReaderFragment = {
           "fields": [
             {
               "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
             }
           ],
           "kind": "ObjectValue",
@@ -199,6 +199,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1c5c6bf527590182c5861f3a3da946e7";
+(node as any).hash = "8b10d15c9573b40f49146e3c6563cf76";
 
 export default node;

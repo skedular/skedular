@@ -87,7 +87,7 @@ type Query {
   team(id: String!): TeamDetails @cost(weight: "10")
   teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-  myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
+  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
 }
 
 type TeamDetails {
@@ -204,7 +204,8 @@ input AddTeamInput {
   id: String
   name: String!
   about: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   primaryLocationId: String
   timezone: String
   customerIds: [String!]!
@@ -249,6 +250,7 @@ input ChangeTeamMembersStatusInput {
 
 input CustomerTeamWhereInput {
   organizationId: String
+  organizationUniqueAlphanumericName: String
   customerId: String!
   nameContains: String
   primaryLocationIds: [String!]
@@ -271,7 +273,7 @@ input JoinTeamInvitationOrderInput {
 }
 
 input MyInvitationsToJoinTeamsWhereInput {
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   teamId: String
   status: InvitationStatus
 }
@@ -308,6 +310,7 @@ input TeamOrderInput {
 
 input TeamWhereInput {
   organizationId: String
+  organizationUniqueAlphanumericName: String
   nameContains: String
   primaryLocationIds: [String!]
 }
@@ -317,7 +320,8 @@ input UpdateTeamAndTeamMembersInput {
   id: String!
   name: String!
   about: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   primaryLocationId: String
   timezone: String
   primaryFeatureImage: CdnImageFileInput

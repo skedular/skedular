@@ -10,7 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesLocationTags_query$key;
   name: string;
   required?: boolean;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 type LocationTagDetails = {
@@ -19,12 +19,16 @@ type LocationTagDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesLocationTags = ({ rootDataRelay, name, required, organizationId }: Props) => {
+const MultipleChoicesLocationTags = ({ rootDataRelay, name, required, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<multipleChoicesLocationTags_query$key>(
     graphql`
       fragment multipleChoicesLocationTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        locationTags(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $multipleChoicesLocationTagsSortingValues)
-          @connection(key: "multipleChoicesLocationTags_locationTags") {
+        locationTags(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
+          orderBy: $multipleChoicesLocationTagsSortingValues
+        ) @connection(key: "multipleChoicesLocationTags_locationTags") {
           __id
           totalCount
           edges {
@@ -45,7 +49,7 @@ const MultipleChoicesLocationTags = ({ rootDataRelay, name, required, organizati
   const filter = createFilterOptions<LocationTagDetails>();
 
   if (locationTags.length === 0) {
-    return <AddOrganizationLocationTagButton organizationId={organizationId} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationLocationTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
   return (

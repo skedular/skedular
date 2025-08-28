@@ -13,7 +13,8 @@ namespace Organization.Api.Services;
 public interface IOrganizationAnalyticsService
 {
     Task<OrganizationAnalytics> GetAnalyticsAsync(
-        string organizationId,
+        string? id,
+        string? uniqueAlphanumericName,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -24,28 +25,30 @@ public class OrganizationAnalyticsService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService) : IOrganizationAnalyticsService
 {
-    public async Task<OrganizationAnalytics>
-        GetAnalyticsAsync(
-            string organizationId,
-            DateTimeOffset from,
-            DateTimeOffset until,
-            CancellationToken cancellationToken)
+    public async Task<OrganizationAnalytics> GetAnalyticsAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               id,
+                               uniqueAlphanumericName,
+                               cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!organizationAuthorizationService.CanViewAnalytics(organization, customer))
         {
-            return new OrganizationAnalytics(organizationId, [], []);
+            throw new UnauthorizedAccessException();
         }
 
         var bookings = await repositoryFactory.BookingRepository
             .Query(new Specification<Booking>
             {
                 Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organizationId) && query.From >= from &&
+                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organization.Id) &&
+                    query.From >= from &&
                     query.Until <= until.AddDays(1)
             }).AsNoTracking().ToListAsync(cancellationToken);
 
@@ -53,7 +56,7 @@ public class OrganizationAnalyticsService(
             .Query(new Specification<DailyMemberCountRecording>
                 {
                     Criteria = query =>
-                        !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Date >= from &&
+                        !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.Date >= from &&
                         query.Date <= until
                 }
                 .ApplyOrderBy(query => query.Date))
@@ -84,6 +87,6 @@ public class OrganizationAnalyticsService(
             return new OrganizationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
         }).ToList();
 
-        return new OrganizationAnalytics(organizationId, organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
+        return new OrganizationAnalytics(organization.Id, organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
     }
 }

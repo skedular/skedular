@@ -19,12 +19,12 @@ import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
@@ -58,7 +58,7 @@ const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collap
     },
   };
 
-  const memberesLink = getOrganizationUsersBaseLink(integratedPlatrform, organizationId);
+  const memberesLink = getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
 
   return (
     <List

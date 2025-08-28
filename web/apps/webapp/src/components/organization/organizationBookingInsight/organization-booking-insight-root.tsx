@@ -16,29 +16,29 @@ import OrganizationBookingInsight from './organization-booking-insight';
 type Props = {
   queryReference: PreloadedQuery<organizationBookingInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
-  query organizationBookingInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
+  query organizationBookingInsightRoot_rootQuery($organizationUniqueAlphanumericName: String!, $from: DateTime!, $to: DateTime!) {
     ...organizationBookingInsight_organizationAnalytics_query
   }
 `;
 
-const OrganizationBookingInsightRoot = ({ queryReference, organizationId }: Props) => {
+const OrganizationBookingInsightRoot = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return <OrganizationBookingInsight rootDataOrganizationAnalyticsRelay={rootData} organizationId={organizationId} />;
+  return <OrganizationBookingInsight rootDataOrganizationAnalyticsRelay={rootData} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />;
 };
 
 const MemoLocationBookingInsightRoot = memo(OrganizationBookingInsightRoot);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
+const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizationUniqueAlphanumericName }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationBookingInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -49,7 +49,7 @@ const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizatio
 
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -57,7 +57,7 @@ const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizatio
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -80,7 +80,11 @@ const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizatio
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationBookingInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoLocationBookingInsightRoot
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      />
     </ErrorBoundary>
   );
 };

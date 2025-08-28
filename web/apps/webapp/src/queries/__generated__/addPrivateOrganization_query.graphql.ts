@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be574fbaed392bff64cc546bc083266c>>
+ * @generated SignedSource<<37bdd23dc46832b3475e49795adda578>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type addPrivateOrganization_query$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
+  };
+  readonly me: {
+    readonly emails: ReadonlyArray<string>;
   };
   readonly " $fragmentSpreads": FragmentRefs<"organizationTermsOfUse_query" | "singleChoiceOrganizationMemberVisibilityPolicyquery">;
   readonly " $fragmentType": "addPrivateOrganization_query";
@@ -28,6 +31,24 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "addPrivateOrganization_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "emails",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -61,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2caecf12527d80b2e6ea97c7a7adf78d";
+(node as any).hash = "d973e0c5d06155bca6b4f9a62f790349";
 
 export default node;

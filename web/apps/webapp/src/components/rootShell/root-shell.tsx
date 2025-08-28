@@ -32,11 +32,11 @@ type Props = {
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
+  query rootShell_rootQuery($organizationUniqueAlphanumericName: String!, $organizationExists: Boolean!) {
     me {
       id
       isOnboardingDone
@@ -57,8 +57,8 @@ const RootQuery = graphql`
     azureTenantOrganization {
       id
     }
-    isOrganizationSsoTokenValid(id: $organizationId) @include(if: $organizationExists)
-    organization(id: $organizationId) @include(if: $organizationExists) {
+    isOrganizationSsoTokenValid(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists)
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
       logoUrl
       name
     }
@@ -79,7 +79,7 @@ const RootShell = ({
   hideWelcomeMessage,
   showBreadcrumps,
   breadcrumbs,
-  organizationId,
+  organizationUniqueAlphanumericName,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
@@ -189,7 +189,11 @@ const RootShell = ({
                     startElement={<SsoSigninIcon />}
                   />
                   <PushToRight />
-                  <Button variant="contained" href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationId)} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+                  <Button
+                    variant="contained"
+                    href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationUniqueAlphanumericName)}
+                    sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
+                  >
                     Single sign-on
                   </Button>
                 </StackRow>
@@ -220,18 +224,18 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const { user, loading } = useAuth();
   const [signInUrl, setSignInUrl] = useState('');
   const router = useRouter();
-  const { organizationId } = useParams();
+  const { organizationUniqueAlphanumericName } = useParams();
   const inMsTeams = useContext(InMsTeamsContext);
 
-  let finalOrganizationId = '';
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] !== 'undefined') {
-      finalOrganizationId = organizationId[0];
+  let finalOrganizationUniqueAlphanumericName = '';
+  if (typeof organizationUniqueAlphanumericName === 'string') {
+    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
+  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
+    if (typeof organizationUniqueAlphanumericName[0] !== 'undefined') {
+      finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
     }
   } else {
-    throw new Error('organizationId is required');
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
@@ -260,14 +264,14 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
 
     loadQuery(
       {
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
+        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
+        organizationExists: !!finalOrganizationUniqueAlphanumericName,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, loading, user, router, signInUrl, inMsTeams]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, loading, user, router, signInUrl, inMsTeams]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -289,7 +293,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}
         breadcrumbs={breadcrumbs}
-        organizationId={finalOrganizationId}
+        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
       >
         {children}
       </MemoRootShell>

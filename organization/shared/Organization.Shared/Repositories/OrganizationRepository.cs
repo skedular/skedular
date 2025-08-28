@@ -1,5 +1,7 @@
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Sanitization;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -11,8 +13,16 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
-    Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<Database.Entities.Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+        ICollection<string>? ids,
+        ICollection<string>? uniqueAlphanumericNames,
+        CancellationToken cancellationToken);
+
     Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
@@ -132,8 +142,7 @@ internal static class OrganizationExtensions
 }
 
 public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider),
-        IOrganizationRepository
+    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider), IOrganizationRepository
 {
     public Database.Entities.Organization Add(Database.Entities.Organization organization)
     {
@@ -149,11 +158,71 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         return DbContext.Organization.Update(organization).Entity;
     }
 
-    public async Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await GetByIdAsync(id, false, cancellationToken);
+    public async Task<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
 
-    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
-        await GetByIdsAsync(ids, false, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false)
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async Task<ICollection<Database.Entities.Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+        ICollection<string>? ids,
+        ICollection<string>? uniqueAlphanumericNames,
+        CancellationToken cancellationToken)
+    {
+        if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
+            uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        {
+            ids = ids.RemoveInvalidIds().ToSafeCollection();
+            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query =>
+                    ids.Contains(query.Id) ||
+                    (query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName)))
+                .AddDependentObjects(false)
+                .ToListAsync(cancellationToken);
+        }
+
+        if (ids is not null && ids.RemoveInvalidIds()!.Any())
+        {
+            ids = ids.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query => ids.Contains(query.Id))
+                .AddDependentObjects(false)
+                .ToListAsync(cancellationToken);
+        }
+
+        if (uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        {
+            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+
+            return await DbContext.Organization
+                .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .AddDependentObjects(false)
+                .ToListAsync(cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
+    }
 
     public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Organization
@@ -193,20 +262,4 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
             .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
-
-    private async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
-        ICollection<string> ids,
-        bool includeAllOfferings,
-        CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .Where(query => ids.Contains(query.Id) || (query.UniqueAlphanumericName != null && ids.Contains(query.UniqueAlphanumericName)))
-            .AddDependentObjects(includeAllOfferings)
-            .ToListAsync(cancellationToken);
-
-    private async Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects(includeAllOfferings)
-            .FirstOrDefaultAsync(
-                query => query.Id == id || (query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == id),
-                cancellationToken);
 }

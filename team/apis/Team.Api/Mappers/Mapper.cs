@@ -193,7 +193,11 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization =
+                new Shared.Models.Organization
+                {
+                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })
@@ -220,7 +224,11 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization =
+                new Shared.Models.Organization
+                {
+                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })

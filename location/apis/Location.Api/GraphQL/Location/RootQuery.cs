@@ -30,10 +30,12 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
-                where.OrganizationId,
+                null,
+                where.OrganizationUniqueAlphanumericName,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection())),
+                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
+                null),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
@@ -54,12 +56,12 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
-        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken))
+            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationUniqueAlphanumericName, cancellationToken))
             : null;
 
     [UseResolverScope]
@@ -91,10 +93,12 @@ public class RootQuery(IMapper mapper)
             from,
             until,
             new LocationSearchCriteria(
-                where.OrganizationId,
+                null,
+                where.OrganizationUniqueAlphanumericName,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).ToList(),
+                null),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

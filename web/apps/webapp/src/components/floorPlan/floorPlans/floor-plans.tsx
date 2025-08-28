@@ -25,11 +25,11 @@ type Props = {
   rootDataFloorPlanRelay: floorPlans_floorPlan_query$key;
   rootDataBookingsRelay: floorPlans_bookings_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
 };
 
-const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRelay, onReloadRequired, organizationId, locationId }: Props) => {
+const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRelay, onReloadRequired, organizationUniqueAlphanumericName, locationId }: Props) => {
   const rootData = useFragment<floorPlans_query$key>(
     graphql`
       fragment floorPlans_query on Query {
@@ -275,7 +275,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
           <BookingCard
             rootDataRelay={rootData}
             bookingDetailsRelay={selectedBooking}
-            organizationId={organizationId}
+            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
             connectionIds={bookingConnectionIds}
             canJoinBooking={!bookings.some((item) => item.involvedCustomers.some((involvedCustomer) => involvedCustomer.uniqueId === rootData.me.id))}
           />
@@ -285,7 +285,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
             rootDataRelay={rootData}
             resourceDetailsRelay={selectedResource}
             onReloadRequired={handleReloadRequired}
-            organizationId={organizationId}
+            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
             locationId={locationId}
             date={date}
           />

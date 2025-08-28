@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2025.1.5",
+      "version": "2025.2.0.1",
       "commands": [
         "jb"
       ],
@@ -17,7 +17,7 @@
       "rollForward": false
     },
     "dotnet-stryker": {
-      "version": "4.8.0",
+      "version": "4.8.1",
       "commands": [
         "dotnet-stryker"
       ],
@@ -31,7 +31,7 @@
       "rollForward": false
     },
     "hotchocolate.fusion.commandline": {
-      "version": "15.1.8",
+      "version": "15.1.9",
       "commands": [
         "fusion"
       ],

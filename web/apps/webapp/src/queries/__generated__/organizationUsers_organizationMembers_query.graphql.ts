@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<653ae546f004722cb3906bcdefd18858>>
+ * @generated SignedSource<<057a1abf59bb4bdc1afe3a3fb9158531>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -61,7 +61,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "organizationUniqueAlphanumericName"
     },
     {
       "kind": "RootArgument",
@@ -105,8 +105,8 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
             }
           ],
           "kind": "ObjectValue",
@@ -295,6 +295,6 @@ return {
 };
 })();
 
-(node as any).hash = "ce9f66638b1dd58a1f19498adb328774";
+(node as any).hash = "00781b65f54101160a9c7f0e5fa2e288";
 
 export default node;

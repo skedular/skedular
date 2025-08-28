@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69208bc35b924df9a942635911d3da46>>
+ * @generated SignedSource<<d0d1eae8a675bee96acd64fecb904f8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_refetchableFragment$variables = {
   bookingId: string;
-  organizationId: string;
+  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type payMarketplaceBooking_booking_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"payMarketplaceBooking_booking_query">;
@@ -32,7 +32,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   }
 ],
 v1 = {
@@ -384,8 +384,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "organizationId",
-            "variableName": "organizationId"
+            "name": "organizationUniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
           }
         ],
         "concreteType": "OrganizationBookingPermissions",
@@ -416,16 +416,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "205997223f200af8aeb7663509e8b8bb",
+    "cacheID": "29fbb4bcded2915f21f7817a6ba5ac34",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n  $organizationId: String!\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    totalAmountExcludeTaxToDisplay\n    taxAmountToDisplay\n    totalAmountToDisplay\n    paymentMethod {\n      type\n    }\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentExpiry\n    invoiceUrl\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n"
+    "text": "query payMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n  $organizationUniqueAlphanumericName: String\n) {\n  ...payMarketplaceBooking_booking_query\n}\n\nfragment payMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      uniqueId\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      uniqueId\n      name\n    }\n    resources {\n      uniqueId\n      name\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n    totalAmountExcludeTaxToDisplay\n    taxAmountToDisplay\n    totalAmountToDisplay\n    paymentMethod {\n      type\n    }\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentExpiry\n    invoiceUrl\n    lineItems {\n      quantity\n      productVersion {\n        uniqueId\n        name\n        priceToDisplay\n      }\n    }\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n  }\n  organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0215b04870047384b0a4d207f77ef855";
+(node as any).hash = "b0a0198a6ba13eb4852f55ae5549ccd2";
 
 export default node;

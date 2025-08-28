@@ -40,7 +40,11 @@ public class RootQuery(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Custom, where.NameContains),
+            new TagSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                OrganizationTagTypeConstants.Custom,
+                where.NameContains),
             orderBy,
             tagService,
             cancellationToken);
@@ -64,7 +68,11 @@ public class RootQuery(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Zone, where.NameContains),
+            new TagSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                OrganizationTagTypeConstants.Zone,
+                where.NameContains),
             orderBy,
             tagService,
             cancellationToken);
@@ -88,7 +96,11 @@ public class RootQuery(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Product, where.NameContains),
+            new TagSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                OrganizationTagTypeConstants.Product,
+                where.NameContains),
             orderBy,
             tagService,
             cancellationToken);
@@ -112,7 +124,10 @@ public class RootQuery(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Location, where.NameContains),
+            new TagSearchCriteria(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                OrganizationTagTypeConstants.Location, where.NameContains),
             orderBy,
             tagService,
             cancellationToken);

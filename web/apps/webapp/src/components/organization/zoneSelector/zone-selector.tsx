@@ -19,7 +19,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<zoneSelector_allZones_query$key>(
     graphql`
       fragment zoneSelector_allZones_query on Query {
-        zones(where: { organizationId: $organizationId }, orderBy: $zonesSortingValues) {
+        zones(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $zonesSortingValues) {
           __id
           totalCount
           edges {

@@ -15,16 +15,18 @@ public class RootQuery(IMapper mapper)
         AvailableResourcesWhereInput where,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await resourceService.GetAvailableResourcesAsync(
-            where.OrganizationId,
-            where.LocationId,
-            where.From,
-            where.Until,
-            where.CustomTagIds.ToSafeCollection(),
-            where.ZoneIds.ToSafeCollection(),
-            where.ResourceIdsToInclude.ToSafeCollection(),
-            where.ProductId,
-            cancellationToken));
+        mapper.MapTo(
+            await resourceService.GetAvailableResourcesAsync(
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
+                where.LocationId,
+                where.From,
+                where.Until,
+                where.CustomTagIds.ToSafeCollection(),
+                where.ZoneIds.ToSafeCollection(),
+                where.ResourceIdsToInclude.ToSafeCollection(),
+                where.ProductId,
+                cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationAvailableResources> OrganizationResourcesAvailabilityAsync(
@@ -35,6 +37,7 @@ public class RootQuery(IMapper mapper)
     {
         var (resourcesCount, availableResourcesCount) = await resourceService.GetOrganizationResourceAvailabilityAsync(
             where.OrganizationId,
+            where.OrganizationUniqueAlphanumericName,
             where.From,
             where.Until,
             cancellationToken);

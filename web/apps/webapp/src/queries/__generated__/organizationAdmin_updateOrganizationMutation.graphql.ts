@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7c7c9edc0f625301a57c766ac836c20>>
+ * @generated SignedSource<<1430ee2b201b8ce3e332cb851c6ae495>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type UpdateOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
-  id: string;
+  id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
@@ -47,6 +47,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly name: string;
         readonly type: OrganizationType;
       };
+      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -71,6 +72,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly name: string;
         readonly type: OrganizationType;
       };
+      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -137,6 +139,13 @@ v4 = [
         "plural": false,
         "selections": [
           (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "uniqueAlphanumericName",
+            "storageKey": null
+          },
           (v2/*: any*/),
           {
             "alias": null,
@@ -224,16 +233,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "aeaf341bab5714277a8644ce62349471",
+    "cacheID": "bd87ada982e9b3da71106ca290e75e82",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e1652b0797abde48015d2c72e73023ed";
+(node as any).hash = "a0847ea494f1e0e4694cbb61c8516022";
 
 export default node;

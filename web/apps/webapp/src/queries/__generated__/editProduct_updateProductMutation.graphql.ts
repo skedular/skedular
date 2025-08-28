@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c59fbcc43e0a4a43a73f2f0784fe674>>
+ * @generated SignedSource<<11d79399d4c62c72cf9ea759e698329f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,6 @@ export type UpdateProductInput = {
   minDurationMinutes?: number | null | undefined;
   name: string;
   numberOfResourcesToBook: number;
-  organizationId: string;
   price: string;
   priceUnit: PriceUnit;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;

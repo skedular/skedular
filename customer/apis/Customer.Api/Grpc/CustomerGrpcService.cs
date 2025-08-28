@@ -103,6 +103,7 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
                 request.OrganizationId,
+                null,
                 request.CustomerId,
                 true,
                 context.CancellationToken));
@@ -171,6 +172,7 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
                 request.OrganizationId,
+                null,
                 null,
                 false,
                 context.CancellationToken));

@@ -19,7 +19,7 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<customTagSelector_allCustomTags_query$key>(
     graphql`
       fragment customTagSelector_allCustomTags_query on Query {
-        customTags(where: { organizationId: $organizationId }, orderBy: $customTagsSortingValues) {
+        customTags(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $customTagsSortingValues) {
           __id
           totalCount
           edges {

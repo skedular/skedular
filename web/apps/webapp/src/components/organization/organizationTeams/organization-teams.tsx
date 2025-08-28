@@ -41,12 +41,12 @@ import TeamCard from './team-card';
 type Props = {
   queryReference: PreloadedQuery<organizationTeams_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
   query organizationTeams_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $primaryLocationIds: [String!]
     $teamsSortingValues: [TeamOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
@@ -83,15 +83,19 @@ type RowType = {
   preferred: boolean;
 };
 
-const Teams = ({ queryReference, organizationId }: Props) => {
+const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationTeams_rootQuery>(RootQuery, queryReference);
   const [rootDataRefetchable, refetch] = useRefetchableFragment<organizationTeams_teams_refetchableFragment, organizationTeams_teams_query$key>(
     graphql`
       fragment organizationTeams_teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationTeams_teams_refetchableFragment") {
-        teams(first: $count, after: $cursor, where: { organizationId: $organizationId, primaryLocationIds: $primaryLocationIds }, orderBy: $teamsSortingValues)
-          @connection(key: "organizationTeams_teams") {
+        teams(
+          first: $count
+          after: $cursor
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds }
+          orderBy: $teamsSortingValues
+        ) @connection(key: "organizationTeams_teams") {
           __id
           totalCount
           edges {
@@ -99,7 +103,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
               id
               name
               organization {
-                uniqueId
+                uniqueAlphanumericName
               }
               members {
                 organizationMember {
@@ -211,7 +215,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, teamDetails.id));
+        router.push(getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
@@ -223,7 +227,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, { teamId: teamDetails.id }));
         break;
     }
   };
@@ -452,7 +456,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
-          <NewTeamButton organizationId={organizationId} />
+          <NewTeamButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
           <SectionIconTypography label="Teams" />
@@ -518,10 +522,10 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 const MemoTeams = memo(Teams);
 
 type RelayProps = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
-const TeamsWithRelay = ({ organizationId }: RelayProps) => {
+const TeamsWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationTeams_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -529,7 +533,7 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         teamsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -547,7 +551,7 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -561,7 +565,7 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeams queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoTeams queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

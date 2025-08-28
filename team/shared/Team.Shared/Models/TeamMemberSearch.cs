@@ -2,19 +2,7 @@ using Enterprise.Shared.Pagination;
 
 namespace Team.Shared.Models;
 
-public class TeamMemberSearchCriteria
-{
-    public TeamMemberSearchCriteria(string teamId, string? nameContains)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
-
-        TeamId = teamId;
-        NameContains = nameContains;
-    }
-
-    public string TeamId { get; }
-    public string? NameContains { get; set; }
-}
+public record TeamMemberSearchCriteria(string TeamId, string? NameContains);
 
 public record TeamMemberOrder(OrderDirection Direction, TeamMemberOrderField Field);
 

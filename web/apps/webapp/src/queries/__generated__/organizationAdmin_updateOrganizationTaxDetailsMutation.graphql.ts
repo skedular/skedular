@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b461560016d4899c58341073f058750>>
+ * @generated SignedSource<<58c82b33f675c7f07920b882a6d75add>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationTaxDetailsInput = {
   clientMutationId?: string | null | undefined;
-  organizationId: string;
+  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   taxId: string;
   taxRatePercentage: any;
 };

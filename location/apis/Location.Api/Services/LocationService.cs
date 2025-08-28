@@ -14,6 +14,7 @@ using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Microsoft.EntityFrameworkCore;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
+using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
@@ -24,7 +25,7 @@ public interface ILocationService
     Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationId, CancellationToken cancellationToken);
+    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationUniqueAlphanumericName, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int )> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
@@ -53,13 +54,28 @@ public class LocationService(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(location.Organization.Id);
 
         var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
 
-        ArgumentException.ThrowIfNullOrWhiteSpace(location.Organization.Id);
+        Organization organization;
+        if (!string.IsNullOrWhiteSpace(location.Organization.Id))
+        {
+            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+        }
+        else if (!string.IsNullOrWhiteSpace(location.Organization.UniqueAlphanumericName))
+        {
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                location.Organization.Id,
+                location.Organization.UniqueAlphanumericName,
+                false,
+                false,
+                cancellationToken) ?? throw new OrganizationNotFound();
+        }
+        else
+        {
+            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        }
 
-        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
         if (!ignoreAuthorizationCheck)
         {
             if (customer is null)
@@ -200,7 +216,7 @@ public class LocationService(
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
             // Ensure we do not return another customer location by forcing CustomerId as search criteria
-            searchCriteria.CustomerId = customer.Id;
+            searchCriteria = searchCriteria with { CustomerId = customer.Id };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.LocationRepository.GetPaginatedLocationsAsync(
@@ -223,24 +239,29 @@ public class LocationService(
         return (paginatedInfo, mappedLocations, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationId, CancellationToken cancellationToken)
+    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
-        if (!string.IsNullOrWhiteSpace(organizationId))
+        Organization? organization = null;
+        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken) ??
-                               throw new OrganizationNotFound();
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               null,
+                               organizationUniqueAlphanumericName,
+                               false,
+                               false,
+                               cancellationToken) ??
+                           throw new OrganizationNotFound();
             if (!organizationAuthorizationService.CanView(organization, customer))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(
-            customer.Id,
-            organizationId,
-            cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, organization?.Id, cancellationToken);
+
         return locations.Select(mapper.MapTo).ToList();
     }
 

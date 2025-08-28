@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4b61c8baed2e05f4190233f99a2f860>>
+ * @generated SignedSource<<aa68c9638b0c625d4b5a819dc9ad3b0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type TeamOrderInput = {
 export type newBookingDialog_customerTeams_refetchableFragment$variables = {
   customerExists: boolean;
   customerId: string;
-  organizationId?: string | null | undefined;
+  organizationUniqueAlphanumericName?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type newBookingDialog_customerTeams_refetchableFragment$data = {
@@ -45,7 +45,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "organizationUniqueAlphanumericName"
   },
   {
     "defaultValue": null,
@@ -97,8 +97,8 @@ return {
                   },
                   {
                     "kind": "Variable",
-                    "name": "organizationId",
-                    "variableName": "organizationId"
+                    "name": "organizationUniqueAlphanumericName",
+                    "variableName": "organizationUniqueAlphanumericName"
                   }
                 ],
                 "kind": "ObjectValue",
@@ -173,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bbb89e1bff4e7033cbc6eb872d718431",
+    "cacheID": "9e7711f2060eec3c52a14b6c2fd9362f",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_customerTeams_refetchableFragment",
     "operationKind": "query",
-    "text": "query newBookingDialog_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...newBookingDialog_customerTeams_query\n}\n\nfragment newBookingDialog_customerTeams_query on Query {\n  customerTeams(where: {organizationId: $organizationId, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query newBookingDialog_customerTeams_refetchableFragment(\n  $customerExists: Boolean!\n  $customerId: String!\n  $organizationUniqueAlphanumericName: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...newBookingDialog_customerTeams_query\n}\n\nfragment newBookingDialog_customerTeams_query on Query {\n  customerTeams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId}, orderBy: $teamsSortingValues) @include(if: $customerExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b821e9ee7ead2340740b7ef27f119130";
+(node as any).hash = "395b46b89cdda4e08e65d6c877e503e9";
 
 export default node;

@@ -27,7 +27,7 @@ import { array, boolean, object, string } from 'yup';
 type Props = {
   rootDataRelay: editProduct_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 
 type ProductDetails = {
@@ -247,7 +247,7 @@ const productSchema = (openingHoursMinutesStep: number) =>
     isPriceTaxInclusive: boolean().required(),
   });
 
-const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
+const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
   const rootData = useFragment<editProduct_query$key>(
     graphql`
       fragment editProduct_query on Query {
@@ -537,7 +537,6 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
           maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
-          organizationId: product.organization.uniqueId,
           primaryFeatureImage: finalPrimaryFeatureImage,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
@@ -728,11 +727,21 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                      <MultipleChoicesProductTags
+                        rootDataRelay={rootData}
+                        name="productTagIds"
+                        required={requiredFields.productTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Location Tags">
-                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                      <MultipleChoicesLocationTags
+                        rootDataRelay={rootData}
+                        name="locationTagIds"
+                        required={requiredFields.locationTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel>

@@ -24,13 +24,13 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   teamId: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId, collapsed, hideIcons }: Props) => {
+const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, teamId, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -66,10 +66,10 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, organizationId, teamId);
-  const locationLink = getOrganizationTeamLocationBaseLink(integratedPlatrform, organizationId, teamId);
-  const memberesLink = getOrganizationTeamMembersBaseLink(integratedPlatrform, organizationId, teamId);
-  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(integratedPlatrform, organizationId, teamId);
+  const setupLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, teamId);
+  const locationLink = getOrganizationTeamLocationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, teamId);
+  const memberesLink = getOrganizationTeamMembersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, teamId);
+  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, teamId);
 
   return (
     <List

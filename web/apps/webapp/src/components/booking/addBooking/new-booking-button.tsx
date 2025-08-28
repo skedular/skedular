@@ -18,7 +18,7 @@ type Props = {
   queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -34,7 +34,7 @@ type Props = {
 
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
-    $organizationId: String!
+    $organizationUniqueAlphanumericName: String!
     $peopleNameSearchText: String
     $locationId: String!
     $dateFromToGetAvailableResources: DateTime!
@@ -56,7 +56,7 @@ const NewBookingButton = ({
   queryReference,
   onReloadRequired,
   connectionIds,
-  organizationId,
+  organizationUniqueAlphanumericName,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -118,7 +118,7 @@ const NewBookingButton = ({
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}
         onCancel={handleCancelClicked}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         defaultLocationId={defaultLocationId}
         defaultDate={defaultDate}
         defaultResourceIds={defaultResourceIds}
@@ -132,7 +132,7 @@ const MemoNewBookingButton = memo(NewBookingButton);
 type RelayProps = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -149,7 +149,7 @@ type RelayProps = {
 const NewBookingButtonWithRelay = ({
   onReloadRequired,
   connectionIds,
-  organizationId,
+  organizationUniqueAlphanumericName,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -171,7 +171,7 @@ const NewBookingButtonWithRelay = ({
 
     loadQuery(
       {
-        organizationId,
+        organizationUniqueAlphanumericName,
         locationId: defaultLocationId ?? '',
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
@@ -200,7 +200,7 @@ const NewBookingButtonWithRelay = ({
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationId, defaultLocationId]);
+  }, [loadQuery, organizationUniqueAlphanumericName, defaultLocationId]);
 
   if (!queryReference) {
     return <Loading />;
@@ -211,7 +211,7 @@ const NewBookingButtonWithRelay = ({
       <MemoNewBookingButton
         queryReference={queryReference}
         connectionIds={connectionIds}
-        organizationId={organizationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         defaultLocationId={defaultLocationId}
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}

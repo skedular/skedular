@@ -229,7 +229,7 @@ public class InvitationService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
-        searchCriteria.InviteeId = customer.Id;
+        searchCriteria = searchCriteria with { InviteeId = customer.Id };
 
         var (paginatedInfo, edges, totalCount) =
             await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsAsync(

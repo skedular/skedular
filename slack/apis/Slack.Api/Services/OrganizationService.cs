@@ -9,22 +9,15 @@ namespace Slack.Api.Services;
 
 public interface IOrganizationService
 {
-    ValueTask<Organization> GetOrganizationAsync(
-        string organizationId,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken);
-
-    ValueTask<OrganizationPermissions> GetPermissionsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken);
+    ValueTask<Organization> GetOrganizationAsync(string organizationId, WorkspaceMember workspaceMember, CancellationToken cancellationToken);
+    ValueTask<OrganizationPermissions> GetPermissionsAsync(Workspace workspace, WorkspaceMember workspaceMember, CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
     OrganizationConfiguration organizationConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
-        organizationServiceClient) : IOrganizationService, IDisposable
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient) :
+    IOrganizationService, IDisposable
 {
     private readonly SemaphoreSlim _cachedOrganizationLock = new(1, 1);
     private readonly SemaphoreSlim _cachedPermissionsLock = new(1, 1);
@@ -38,11 +31,10 @@ public class OrganizationService(
         GC.SuppressFinalize(this);
     }
 
-    public async ValueTask<Organization>
-        GetOrganizationAsync(
-            string organizationId,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
+    public async ValueTask<Organization> GetOrganizationAsync(
+        string organizationId,
+        WorkspaceMember workspaceMember,
+        CancellationToken cancellationToken)
     {
         if (_cachedOrganization is not null)
         {
@@ -65,11 +57,10 @@ public class OrganizationService(
         }
     }
 
-    public async ValueTask<OrganizationPermissions>
-        GetPermissionsAsync(
-            Workspace workspace,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
+    public async ValueTask<OrganizationPermissions> GetPermissionsAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CancellationToken cancellationToken)
     {
         if (_cachedPermissions is not null)
         {

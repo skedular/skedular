@@ -14,7 +14,12 @@ public class RootMutation
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await organizationOfferingService.UpdateOfferingAsync(input.Id, input.OfferingCode.ToOfferingCode(), false, cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(
+            input.OrganizationId,
+            input.OrganizationUniqueAlphanumericName,
+            input.OfferingCode.ToOfferingCode(),
+            false,
+            cancellationToken);
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -24,7 +29,7 @@ public class RootMutation
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await organizationOfferingService.CancelOfferingAsync(input.Id, cancellationToken);
+        await organizationOfferingService.CancelOfferingAsync(input.OrganizationId, input.OrganizationUniqueAlphanumericName, cancellationToken);
         return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 }

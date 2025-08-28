@@ -1098,7 +1098,7 @@ type Query {
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
-  isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
+  isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1115,15 +1115,15 @@ type Query {
   msTeamsVersion: Version!
   myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput!): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
-  myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
+  myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
-  myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
+  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
   openingHoursMinutesStep: Int!
-  organization(id: String!): OrganizationDetails @cost(weight: "10")
-  organizationAnalytics(from: DateTime! organizationId: String! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
+  organization(uniqueAlphanumericName: String!): OrganizationDetails @cost(weight: "10")
+  organizationAnalytics(from: DateTime! id: String uniqueAlphanumericName: String until: DateTime!): OrganizationAnalytics @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationBankAccountOrderInput!] where: OrganizationBankAccountWhereInput!): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
-  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
+  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
@@ -1133,6 +1133,7 @@ type Query {
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): ConnectionOfOrganizationEdge! @cost(weight: "10")
+  organizationSsoLoginUrl(organizationId: String organizationUniqueAlphanumericName: String redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
@@ -1153,7 +1154,6 @@ type Query {
   roomResourceType: OrganizationTagType!
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
-  ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1378,7 +1378,8 @@ input AddBookingInput {
   invoiceEmailList: [String!]
   lineItems: [LineItemInput!]!
   notes: String
-  organizationIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   paymentMethod: PaymentMethod
   resourceIds: [String!]!
   teamIds: [String!]!
@@ -1392,7 +1393,8 @@ input AddCustomTagInput {
   description: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddCustomerPaymentMethodIntentInput {
@@ -1436,7 +1438,8 @@ input AddLocationInput {
   id: String
   locationTagIds: [String!]!
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   primaryFeatureImage: CdnImageFileInput
   timezone: String
 }
@@ -1467,7 +1470,8 @@ input AddLocationTagInput {
   description: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddMyBillingDetailsInput {
@@ -1500,7 +1504,8 @@ input AddOrganizationBankAccountInput {
   countryCode: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddOrganizationBillingDetailsInput {
@@ -1516,7 +1521,8 @@ input AddOrganizationBillingDetailsInput {
   id: String
   latitude: Float
   longitude: Float
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   osmId: String
   osmType: String
   placeId: String
@@ -1543,7 +1549,8 @@ input AddOrganizationInput {
 
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddOrganizationPhysicalAddressInput {
@@ -1557,7 +1564,8 @@ input AddOrganizationPhysicalAddressInput {
   id: String
   latitude: Float
   longitude: Float
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   osmId: String
   osmType: String
   placeId: String
@@ -1570,7 +1578,8 @@ input AddOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   redirectUrl: String!
 }
 
@@ -1590,7 +1599,8 @@ input AddProductInput {
   minDurationMinutes: Int
   name: String!
   numberOfResourcesToBook: Int!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   price: String!
   priceUnit: PriceUnit!
   primaryFeatureImage: CdnImageFileInput
@@ -1605,7 +1615,8 @@ input AddProductTagInput {
   description: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AddResourceInput {
@@ -1629,8 +1640,9 @@ input AddTeamInput {
   customerIds: [String!]!
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
   organizationMemberIds: [String!]!
+  organizationUniqueAlphanumericName: String
   primaryFeatureImage: CdnImageFileInput
   primaryLocationId: String
   timezone: String
@@ -1649,14 +1661,16 @@ input AddZoneInput {
   description: String
   id: String
   name: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input AvailableResourcesWhereInput {
   customTagIds: [String!]
   from: DateTime!
   locationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   productId: String
   resourceIdsToInclude: [String!]
   until: DateTime!
@@ -1680,6 +1694,7 @@ input BookingWhereInput {
   nameContains: String
   notesContains: String
   organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   paymentStatuses: [PaymentStatus!]
   teamIds: [String!]
   toGt: DateTime
@@ -1701,7 +1716,8 @@ input CancelInvitationToJoinTeamInput {
 
 input CancelOrganizationOfferingInput {
   clientMutationId: String
-  id: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input CdnFileInput {
@@ -1745,7 +1761,8 @@ input ClearCustomerDefaultOrganizationInput {
 
 input CompleteOrganizationMemberOnboardingInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input CompleteOrganizationOnboardingInput {
@@ -1759,7 +1776,8 @@ input ConfirmBookingPaymentInput {
 
 input CustomTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input CustomerOrderInput {
@@ -1771,6 +1789,7 @@ input CustomerTeamWhereInput {
   customerId: String!
   nameContains: String
   organizationId: String
+  organizationUniqueAlphanumericName: String
   primaryLocationIds: [String!]
 }
 
@@ -1836,7 +1855,8 @@ input DeleteOrganizationBankAccountsInput {
 
 input DeleteOrganizationInput {
   clientMutationId: String
-  id: String!
+  id: String
+  uniqueAlphanumericName: String
 }
 
 input DeleteOrganizationStripeConnectAccountInput {
@@ -1901,7 +1921,8 @@ input FloorPlanWhereInput {
 input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
   emails: [String!]!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input InviteCustomersToJoinTeamInput {
@@ -1932,14 +1953,15 @@ input LocationOrderInput {
 
 input LocationTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input LocationWhereInput {
   customTagIds: [String!]
   locationIds: [String!]
   nameContains: String
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   zoneIds: [String!]
 }
 
@@ -1949,12 +1971,12 @@ input MakeBookingPaymentNotRequiredInput {
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   status: InvitationStatus
 }
 
 input MyInvitationsToJoinTeamsWhereInput {
-  organizationId: String
+  organizationUniqueAlphanumericName: String
   status: InvitationStatus
   teamId: String
 }
@@ -1968,7 +1990,8 @@ input OpeningHoursDetailsInput {
 
 input OrganizationAvailableResourcesWhereInput {
   from: DateTime!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   until: DateTime!
 }
 
@@ -1980,7 +2003,7 @@ input OrganizationBankAccountOrderInput {
 input OrganizationBankAccountWhereInput {
   nameContains: String
   onboardingCompleted: Boolean
-  organizationId: String!
+  organizationUniqueAlphanumericName: String!
 }
 
 input OrganizationMemberOrderInput {
@@ -1991,7 +2014,7 @@ input OrganizationMemberOrderInput {
 input OrganizationMemberWhereInput {
   customerId: String
   nameContains: String
-  organizationId: String!
+  organizationUniqueAlphanumericName: String!
 }
 
 input OrganizationOrderInput {
@@ -2007,7 +2030,8 @@ input OrganizationStripeConnectAccountOrderInput {
 input OrganizationStripeConnectAccountWhereInput {
   nameContains: String
   onboardingCompleted: Boolean
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input OrganizationTagOrderInput {
@@ -2026,13 +2050,14 @@ input ProductOrderInput {
 
 input ProductTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input ProductWhereInput {
   includeInactive: Boolean!
   nameContains: String
-  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
 }
 
@@ -2088,12 +2113,14 @@ input RemoveOrganizationPaymentMethodInput {
 
 input RemoveOrganizationSsoSettingsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input RemoveOrganizationTaxDetailsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input RemoveTeamMemberInput {
@@ -2128,7 +2155,8 @@ input ResourceWhereInput {
 
 input SetCustomerDefaultOrganizationInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input SetOrganizationBankAccountAsDefaultInput {
@@ -2166,6 +2194,7 @@ input TeamOrderInput {
 input TeamWhereInput {
   nameContains: String
   organizationId: String
+  organizationUniqueAlphanumericName: String
   primaryLocationIds: [String!]
 }
 
@@ -2175,7 +2204,8 @@ input UpdateBookingInput {
   from: DateTime!
   id: String!
   notes: String
-  organizationIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
   resourceIds: [String!]!
   teamIds: [String!]!
   type: BookingType!
@@ -2333,7 +2363,7 @@ input UpdateOrganizationInput {
   clientMutationId: String
   contactEmail: String
   contactPhone: String
-  id: String!
+  id: String
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
@@ -2344,8 +2374,9 @@ input UpdateOrganizationInput {
 
 input UpdateOrganizationOfferingInput {
   clientMutationId: String
-  id: String!
   offeringCode: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input UpdateOrganizationPhysicalAddressInput {
@@ -2373,7 +2404,8 @@ input UpdateOrganizationSsoSettingsInput {
   entityId: String!
   isActive: Boolean!
   loginUrl: String!
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input UpdateOrganizationStripeConnectAccountInput {
@@ -2384,7 +2416,8 @@ input UpdateOrganizationStripeConnectAccountInput {
 
 input UpdateOrganizationTaxDetailsInput {
   clientMutationId: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   taxId: String!
   taxRatePercentage: Decimal!
 }
@@ -2405,7 +2438,6 @@ input UpdateProductInput {
   minDurationMinutes: Int
   name: String!
   numberOfResourcesToBook: Int!
-  organizationId: String!
   price: String!
   priceUnit: PriceUnit!
   primaryFeatureImage: CdnImageFileInput
@@ -2448,8 +2480,9 @@ input UpdateTeamAndTeamMembersInput {
   customerIds: [String!]!
   id: String!
   name: String!
-  organizationId: String!
+  organizationId: String
   organizationMemberIds: [String!]!
+  organizationUniqueAlphanumericName: String
   primaryFeatureImage: CdnImageFileInput
   primaryLocationId: String
   timezone: String
@@ -2492,7 +2525,8 @@ input WeekOpeningHoursInput {
 
 input ZoneOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 enum BookingOrderField {

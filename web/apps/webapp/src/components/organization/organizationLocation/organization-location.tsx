@@ -77,7 +77,7 @@ type Props = {
   rootDataResourcesRelay: organizationLocation_resources_query$key;
   rootDataFloorPlansRelay: organizationLocation_floorPlans_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
 };
 
@@ -163,7 +163,7 @@ type ResourceRowType = {
   capacity: number;
 };
 
-const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataFloorPlansRelay, onReloadRequired, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataFloorPlansRelay, onReloadRequired, organizationUniqueAlphanumericName, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
@@ -173,7 +173,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             uniqueId
           }
         }
-        organization(id: $organizationId) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           type {
             type
           }
@@ -1045,7 +1045,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationId));
+    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleResourceNameSearchTextChange = (str: string) => {
@@ -1078,7 +1078,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     switch (id) {
       case MoreActionsMenuOptionType.EditResource:
         if (resourceDetails) {
-          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationId, locationId, resourceDetails.id));
+          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, resourceDetails.id));
           return;
         }
 
@@ -1414,7 +1414,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   };
 
   const handleViewLocationBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationId, { locationId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { locationId }));
   };
 
   const handleRemoveLocationClicked = () => {
@@ -1447,7 +1447,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           render: <NotificationContent content={`Location '${location.name}' removed.`} />,
         });
 
-        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationId));
+        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1659,7 +1659,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationLocationLeftSideNavigationMenuContent organizationId={organizationId} locationId={locationId} hideIcons />
+        <OrganizationLocationLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} locationId={locationId} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Location Information">
             <Form
@@ -1731,7 +1731,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
                       {rootData.organization?.type.type === 'MARKETPLACE' && (
                         <FormFieldLabel label="Location Tags">
-                          <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                          <MultipleChoicesLocationTags
+                            rootDataRelay={rootData}
+                            name="locationTagIds"
+                            required={requiredFields.locationTagIds}
+                            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                          />
                         </FormFieldLabel>
                       )}
 
@@ -1866,7 +1871,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 </Grid>
 
                 <Grid>
-                  <NewFloorplanButton organizationId={organizationId} locationId={locationId} />
+                  <NewFloorplanButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} locationId={locationId} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -1874,7 +1879,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               <GridContainer>
                 {floorPlans.map((floorPlan) => (
                   <Grid key={floorPlan.id}>
-                    <FloorPlanCard floorPlanDetailsRelay={floorPlan} connectionIds={floorPlansConnectionIds} organizationId={organizationId} locationId={locationId} />
+                    <FloorPlanCard
+                      floorPlanDetailsRelay={floorPlan}
+                      connectionIds={floorPlansConnectionIds}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      locationId={locationId}
+                    />
                   </Grid>
                 ))}
               </GridContainer>
@@ -1893,7 +1903,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 </Grid>
 
                 <Grid>
-                  <AddResourceButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={resourcesConnectionIds} />
+                  <AddResourceButton
+                    onReloadRequired={onReloadRequired}
+                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    locationId={locationId}
+                    connectionIds={resourcesConnectionIds}
+                  />
                 </Grid>
               </GridContainer>
               <Divider />

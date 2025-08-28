@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<907a2355e2d3aecfc22d7cbfec6284a9>>
+ * @generated SignedSource<<d72ae722e3cd2987da4ccdaf12f10f1c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,6 +39,7 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
+      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -53,6 +54,7 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
+      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -106,6 +108,13 @@ v2 = [
             "args": null,
             "kind": "ScalarField",
             "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "uniqueAlphanumericName",
             "storageKey": null
           },
           (v1/*: any*/),
@@ -167,16 +176,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "9bad5b383dde09c751d23b5f1846b260",
+    "cacheID": "05b1862f78cd2a8cbaacccb5ab628bd6",
     "id": null,
     "metadata": {},
     "name": "addPrivateOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      memberVisibilityPolicy {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      memberVisibilityPolicy {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b305711166075bc5d0299349f0c2a1f4";
+(node as any).hash = "cbcf63a038c983240d89f2dae721b577";
 
 export default node;

@@ -55,10 +55,10 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
-        string id,
+        string uniqueAlphanumericName,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByIdAsync(id, false, cancellationToken));
+        mapper.MapTo(await organizationService.GetByUniqueAlphanumericNameAsync(uniqueAlphanumericName, false, cancellationToken));
 
     [UseResolverScope]
     public async Task<Connection<OrganizationEdge>> OrganizationsAsync(
@@ -73,7 +73,7 @@ public class RootQuery(IMapper mapper)
     {
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
             new PaginationInputParam(after, first, before, last),
-            new OrganizationSearchCriteria(where.NameContains),
+            new OrganizationSearchCriteria(where.NameContains, null),
             orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

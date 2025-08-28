@@ -18,7 +18,7 @@ import { object, string } from 'yup';
 
 type Props = {
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   onAdded: (productId: string) => void;
   onCancel: () => void;
 };
@@ -39,7 +39,7 @@ const bankAccountSchema = object({
   country: string().required('Country is required'),
 });
 
-const AddBankAccount = ({ onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
+const AddBankAccount = ({ onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel }: Props) => {
   const [commitAddBankAccount] = useMutation<addBankAccount_addBankAccountMutation>(graphql`
     mutation addBankAccount_addBankAccountMutation($input: AddOrganizationBankAccountInput!) @raw_response_type {
       addOrganizationBankAccount(input: $input) {
@@ -84,7 +84,7 @@ const AddBankAccount = ({ onReloadRequired, organizationId, onAdded, onCancel }:
           accountHolderName,
           accountNumber,
           country,
-          organizationId,
+          organizationUniqueAlphanumericName,
         },
       },
       onCompleted: (_, errors) => {

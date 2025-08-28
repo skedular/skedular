@@ -3,12 +3,7 @@ using Enterprise.Shared.Pagination;
 
 namespace Organization.Shared.Models;
 
-public class JoinInvitationSearchCriteria(string? organizationId, InvitationStatus? status)
-{
-    public string? InviteeId { get; set; }
-    public string? OrganizationId { get; set; } = organizationId;
-    public InvitationStatus? Status { get; set; } = status;
-}
+public record JoinInvitationSearchCriteria(string? OrganizationUniqueAlphanumericName, InvitationStatus? Status, string? InviteeId);
 
 public record JoinOrganizationInvitationOrder(OrderDirection Direction, JoinOrganizationInvitationOrderField Field);
 

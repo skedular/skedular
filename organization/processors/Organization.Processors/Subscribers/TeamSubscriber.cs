@@ -24,7 +24,10 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
                     }
                     else
                     {
-                        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, cancellationToken) ??
+                        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                               team.Organization.Id,
+                                               null,
+                                               cancellationToken) ??
                                            throw new OrganizationNotFound();
                         var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                         if (existingTeam.EventRaisedAt > team.EventRaisedAt)

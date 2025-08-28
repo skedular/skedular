@@ -9,7 +9,11 @@ public interface IOrganizationSsoSettingsRepository : IRepository<OrganizationSs
 {
     void Add(OrganizationSsoSettings organizationSsoSettings);
     void Update(OrganizationSsoSettings organizationSsoSettings);
-    Task<OrganizationSsoSettings?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task<OrganizationSsoSettings?> GetByOrganizationUniqueAlphanumericNameAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -29,8 +33,28 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
         DbContext.OrganizationSsoSettings.Update(organizationSsoSettings);
     }
 
-    public async Task<OrganizationSsoSettings?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
-        await DbContext.OrganizationSsoSettings
-            .Include(query => query.Organization)
-            .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
+    public async Task<OrganizationSsoSettings?> GetByOrganizationUniqueAlphanumericNameAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(organizationId))
+        {
+            return await DbContext.OrganizationSsoSettings
+                .Include(query => query.Organization)
+                .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        {
+            return await DbContext.OrganizationSsoSettings
+                .Include(query => query.Organization)
+                .FirstOrDefaultAsync(
+                    query => query.Organization.UniqueAlphanumericName != null &&
+                             query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
 }

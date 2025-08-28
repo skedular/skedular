@@ -55,10 +55,11 @@ public class BookingGrpcService(
                 request.Where.NotesContains,
                 request.Where.NameContains,
                 request.Where.Type.ToNullableBookingType(),
-                request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus()),
+                request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus()).ToList(),
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationIds,
+                [],
                 request.Where.LocationIds,
                 request.Where.TeamIds,
                 request.Where.CustomerIds),
@@ -115,10 +116,11 @@ public class BookingGrpcService(
                 request.Where.NotesContains,
                 request.Where.NameContains,
                 request.Where.Type.ToNullableBookingType(),
-                request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus()),
+                request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus()).ToList(),
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationIds,
+                [],
                 request.Where.LocationIds,
                 request.Where.TeamIds,
                 request.Where.CustomerIds),
@@ -160,7 +162,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.OrganizationId, context.CancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.OrganizationId, null, context.CancellationToken);
         return new OrganizationPermissions
         {
             CanViewBookings = permissions.CanViewBookings,
@@ -219,6 +221,7 @@ public class BookingGrpcService(
 
         var resources = await resourceService.GetAvailableResourcesAsync(
             request.OrganizationId,
+            null,
             request.LocationId,
             request.From.ToDateTimeOffset(),
             request.Until.ToDateTimeOffset(),

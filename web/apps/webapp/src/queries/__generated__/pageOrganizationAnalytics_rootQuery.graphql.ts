@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18e9e1ddfc92ef53acffb15e3835b1e7>>
+ * @generated SignedSource<<b149ecc32a4a15af3a7afdcd61364f8c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type LocationOrderInput = {
 };
 export type pageOrganizationAnalytics_rootQuery$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
 };
 export type pageOrganizationAnalytics_rootQuery$data = {
   readonly organization: {
@@ -40,13 +40,13 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationUniqueAlphanumericName"
 },
 v2 = [
   {
     "kind": "Variable",
-    "name": "id",
-    "variableName": "organizationId"
+    "name": "uniqueAlphanumericName",
+    "variableName": "organizationUniqueAlphanumericName"
   }
 ],
 v3 = {
@@ -128,8 +128,8 @@ return {
             "fields": [
               {
                 "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
+                "name": "organizationUniqueAlphanumericName",
+                "variableName": "organizationUniqueAlphanumericName"
               }
             ],
             "kind": "ObjectValue",
@@ -190,16 +190,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "df076ed5a63787e9b5ca7345661da114",
+    "cacheID": "70d4b3792ba578cb3329570bff96e10b",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAnalytics_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "30d0daaac9a106ac77e35ebc87877405";
+(node as any).hash = "447984e4226b2551cd7b8e51a70ffffa";
 
 export default node;

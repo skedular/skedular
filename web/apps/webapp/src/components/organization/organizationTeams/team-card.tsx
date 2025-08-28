@@ -68,7 +68,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         id
         name
         organization {
-          uniqueId
+          uniqueAlphanumericName
         }
         members {
           organizationMember {
@@ -151,7 +151,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
 
-  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, teamDetails.id);
+  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -170,7 +170,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         break;
 
       case MoreActionsMenuOptionType.ViewTeamBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization?.uniqueId, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, { teamId: teamDetails.id }));
         break;
     }
   };

@@ -81,6 +81,7 @@ public class RootMutation(IMapper mapper)
     {
         var customer = await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
             input.OrganizationId,
+            input.OrganizationUniqueAlphanumericName,
             null,
             false,
             cancellationToken);

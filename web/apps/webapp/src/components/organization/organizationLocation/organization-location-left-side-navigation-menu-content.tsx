@@ -26,13 +26,13 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationId: string;
+  organizationUniqueAlphanumericName: string;
   locationId: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, locationId, collapsed, hideIcons }: Props) => {
+const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, locationId, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -68,12 +68,12 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationId, locationId);
-  const physcialAddressLink = getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationId, locationId);
-  const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationId, locationId);
-  const floorPlansLink = getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationId, locationId);
-  const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationId, locationId);
-  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationId, locationId);
+  const setupLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
+  const physcialAddressLink = getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
+  const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
+  const floorPlansLink = getOrganizationLocationFloorPlansBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
+  const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
+  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId);
 
   return (
     <List

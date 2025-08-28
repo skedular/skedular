@@ -31,7 +31,10 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, 
   const rootDataOrganizationMembers = useFragment<organizationUserSelector_organizationMembers_query$key>(
     graphql`
       fragment organizationUserSelector_organizationMembers_query on Query {
-        organizationMembers(where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues) {
+        organizationMembers(
+          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
+          orderBy: $organizationMembersSortingValues
+        ) {
           __id
           totalCount
           edges {

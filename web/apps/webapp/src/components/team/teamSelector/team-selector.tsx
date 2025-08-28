@@ -21,7 +21,7 @@ const TeamSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   const rootData = useFragment<teamSelector_allTeams_query$key>(
     graphql`
       fragment teamSelector_allTeams_query on Query {
-        teams(where: { organizationId: $organizationId }) {
+        teams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
           __id
           totalCount
           edges {

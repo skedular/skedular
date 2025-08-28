@@ -83,6 +83,7 @@ public class OrganizationGrpcService(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new OrganizationStripeConnectAccountSearchCriteria(
                 request.Where.OrganizationId,
+                null,
                 request.Where.NameContains,
                 request.Where.OnboardingCompleted),
             request.OrderBy.Select(item =>
@@ -123,7 +124,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await organizationBankAccountService.GetPaginatedAccountsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new OrganizationBankAccountSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            new OrganizationBankAccountSearchCriteria(request.Where.OrganizationId, null, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -183,7 +184,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new OrganizationMemberSearchCriteria(request.Where.OrganizationId, request.Where.NameContains, request.Where.CustomerId),
+            new OrganizationMemberSearchCriteria(request.Where.OrganizationId, null, request.Where.NameContains, request.Where.CustomerId),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -243,7 +244,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.OrganizationId, OrganizationTagTypeConstants.Custom, request.Where.NameContains),
+            new TagSearchCriteria(request.Where.OrganizationId, null, OrganizationTagTypeConstants.Custom, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -310,7 +311,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.OrganizationId, OrganizationTagTypeConstants.Zone, request.Where.NameContains),
+            new TagSearchCriteria(request.Where.OrganizationId, null, OrganizationTagTypeConstants.Zone, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -375,7 +376,10 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await organizationBillingService.GetByOrganizationIdAsync(request.OrganizationId, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await organizationBillingService.GetAsync(
+            request.OrganizationId,
+            null,
+            context.CancellationToken));
     }
 
     public override async Task<BillingDetails> AddBillingDetails(AddBillingDetailsInput request, ServerCallContext context)
