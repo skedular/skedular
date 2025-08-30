@@ -21,6 +21,7 @@ public class Organization : EntityBaseWithDeleted
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool IsListable { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -62,6 +63,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.IsListable).HasDefaultValue(true);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
@@ -73,5 +75,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
+        builder.HasIndex(item => item.IsListable);
     }
 }

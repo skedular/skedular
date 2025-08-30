@@ -76,7 +76,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Checkboxes, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -84,7 +84,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
 type Props = {
@@ -98,6 +98,7 @@ type Props = {
 
 type OrganizationDetails = {
   uniqueAlphanumericName: string | null;
+  isListable: boolean;
   name: string;
   about: string | null;
   website: string | null;
@@ -110,6 +111,7 @@ type OrganizationDetails = {
 
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
+  isListable: boolean().required(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().url('Website must be a valid Url').nullable(),
@@ -255,6 +257,7 @@ const OrganizationAdmin = ({
         organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           id
           uniqueAlphanumericName
+          isListable
           name
           logoUrl
           about
@@ -411,6 +414,7 @@ const OrganizationAdmin = ({
         organization {
           id
           uniqueAlphanumericName
+          isListable
           name
           about
           website
@@ -702,6 +706,8 @@ const OrganizationAdmin = ({
 
   const [organizationEditableUniqueAlphanumericName, setOrganizationEditableUniqueAlphanumericName] = useState(rootDataOrganization.organization?.uniqueAlphanumericName);
   const debounceSetOrganizationEditableUniqueAlphanumericName = useDebounceCallback(setOrganizationEditableUniqueAlphanumericName, keyboardTextFieldDebounceTimeout);
+  const [organizationIsListable, setOrganizationIsListable] = useState<boolean>(rootDataOrganization.organization?.isListable ?? true);
+  const debounceSetOrganizationIsListable = useDebounceCallback(setOrganizationIsListable, keyboardTextFieldDebounceTimeout);
   const [organizationName, setOrganizationName] = useState<string>(rootDataOrganization.organization?.name ?? '');
   const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
   const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.about);
@@ -884,6 +890,7 @@ const OrganizationAdmin = ({
 
   const handleOrganizationDetailUpdateClick = ({
     uniqueAlphanumericName,
+    isListable,
     name,
     about,
     website,
@@ -907,6 +914,7 @@ const OrganizationAdmin = ({
           clientMutationId: uuid(),
           id: organization.id,
           uniqueAlphanumericName,
+          isListable,
           name,
           about,
           website,
@@ -943,6 +951,7 @@ const OrganizationAdmin = ({
           organization: {
             id: organization.id,
             uniqueAlphanumericName: organization.uniqueAlphanumericName,
+            isListable,
             name,
             about,
             website,
@@ -2282,6 +2291,7 @@ const OrganizationAdmin = ({
               onSubmit={handleOrganizationDetailUpdateClick}
               initialValues={{
                 uniqueAlphanumericName: organizationEditableUniqueAlphanumericName,
+                isListable: organizationIsListable,
                 name: organizationName,
                 about: organizationAbout,
                 website: organizationWebsite,
@@ -2294,6 +2304,7 @@ const OrganizationAdmin = ({
               validate={validateOrganizationDetails}
               render={({ handleSubmit, values }) => {
                 debounceSetOrganizationEditableUniqueAlphanumericName(values!.uniqueAlphanumericName);
+                debounceSetOrganizationIsListable(values!.isListable);
                 debounceSetOrganizationName(values!.name);
                 debounceSetOrganizationAbout(values!.about);
                 debounceSetOrganizationWebsite(values!.website);
@@ -2332,9 +2343,15 @@ const OrganizationAdmin = ({
                       </FormFieldLabel>
 
                       {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                        <FormFieldLabel label="Unique Name" required={requiredOrganizationDetailsFields.uniqueAlphanumericName}>
-                          <TextField name="uniqueAlphanumericName" required={requiredOrganizationDetailsFields.uniqueAlphanumericName} />
-                        </FormFieldLabel>
+                        <>
+                          <FormFieldLabel label="Unique Name" required={requiredOrganizationDetailsFields.uniqueAlphanumericName}>
+                            <TextField name="uniqueAlphanumericName" required={requiredOrganizationDetailsFields.uniqueAlphanumericName} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="" required={requiredOrganizationDetailsFields.isListable}>
+                            <Checkboxes name="isListable" required={requiredOrganizationDetailsFields.isListable} data={{ label: 'Is listable?', value: true }} />
+                          </FormFieldLabel>
+                        </>
                       )}
 
                       <FormFieldLabel label="About">

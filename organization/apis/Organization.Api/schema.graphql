@@ -206,6 +206,7 @@ type OrganizationDetails {
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   contactEmail: String
   contactPhone: String
+  isListable: Boolean!
   stripeAuthorizeExistingConnectAccountUrl: String!
   physicalAddress: OrganizationPhysicalAddressDetails
   billingDetails: OrganizationBillingDetails
@@ -578,6 +579,7 @@ input AddOrganizationInput {
   type: OrganizationType!
   contactEmail: String
   contactPhone: String
+  isListable: Boolean!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
@@ -913,6 +915,7 @@ input UpdateOrganizationInput {
   type: OrganizationType!
   contactEmail: String
   contactPhone: String
+  isListable: Boolean!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   industrySubCategoryIds: [String!]!
 }

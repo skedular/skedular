@@ -79,6 +79,7 @@ message Admin_AddInput {
   string memberVisibilityPolicy = 12;
   string contactEmail = 13;
   string contactPhone = 14;
+  bool isListable = 15;
 }
 
 message Admin_GetOrganizationStripeConnectAccountsResponse {
@@ -105,12 +106,13 @@ message Organization {
   string memberVisibilityPolicy = 17;
   string contactEmail = 18;
   string contactPhone = 19;
-  BillingDetails billingDetails = 20;
-  StripeCustomer stripeCustomer = 21;
-  repeated StripePaymentMethod stripePaymentMethods = 22;
-  repeated StripeConnectAccount stripeConnectAccounts = 23;
-  TaxDetails taxDetails = 24;
-  PhysicalAddress physicalAddress = 25;
+  bool isListable = 20;
+  BillingDetails billingDetails = 21;
+  StripeCustomer stripeCustomer = 22;
+  repeated StripePaymentMethod stripePaymentMethods = 23;
+  repeated StripeConnectAccount stripeConnectAccounts = 24;
+  TaxDetails taxDetails = 25;
+  PhysicalAddress physicalAddress = 26;
 }
 
 message IndustrySubCategory {

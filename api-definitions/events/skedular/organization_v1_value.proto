@@ -49,8 +49,9 @@ message Organization {
   string type = 14;
   string contactEmail = 15;
   string contactPhone = 16;
-  string memberVisibilityPolicy = 17;
-  PhysicalAddress physicalAddress = 18;
+  bool isListable = 17;
+  string memberVisibilityPolicy = 18;
+  PhysicalAddress physicalAddress = 19;
 }
 
 enum Role {

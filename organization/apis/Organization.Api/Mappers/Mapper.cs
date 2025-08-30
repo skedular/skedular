@@ -226,6 +226,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
@@ -297,6 +298,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories
@@ -317,6 +319,7 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToOrganizationType();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.IsListable = src.IsListable;
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.IndustrySubCategories = industrySubCategories;
         return dest;
@@ -409,6 +412,7 @@ public class Mapper : IMapper
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
             MemberVisibilityPolicy =
                 new OrganizationMemberVisibilityPolicyDetails
@@ -472,6 +476,7 @@ public class Mapper : IMapper
             Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
@@ -489,6 +494,7 @@ public class Mapper : IMapper
             Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
@@ -507,6 +513,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsListable = src.IsListable,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
@@ -528,6 +535,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
+            IsListable = src.IsListable,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),

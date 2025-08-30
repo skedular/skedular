@@ -18,6 +18,7 @@ public class Organization : ModelBaseWithDeleted
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool IsListable { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42cbfffc30f2c92a390093193d406681>>
+ * @generated SignedSource<<c280845b104c19b37942c5d98ff84411>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,6 +63,7 @@ export type organizationAdmin_organization_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
+    readonly isListable: boolean;
     readonly logoUrl: string | null | undefined;
     readonly memberVisibilityPolicy: {
       readonly name: string;
@@ -315,6 +316,13 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "uniqueAlphanumericName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isListable",
           "storageKey": null
         },
         (v1/*: any*/),
@@ -636,6 +644,6 @@ return {
 };
 })();
 
-(node as any).hash = "5fb09768769fa1439d9e3a9c7e2fcc27";
+(node as any).hash = "a28bc2b71b860cae87c000c0f728b412";
 
 export default node;

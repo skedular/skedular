@@ -71,7 +71,8 @@ public class WorkspaceOnboardingService(
                 AgreedToTermsOfUse = true,
                 TermsOfUseId = activeTermsOfUse.Id,
                 Type = OrganizationTypeConstants.Private,
-                MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess
+                MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess,
+                IsListable = true
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

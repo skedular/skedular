@@ -774,6 +774,7 @@ type OrganizationDetails {
   hasTeam: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  isListable: Boolean!
   isMyOnboardingDone: Boolean!
   logoUrl: String
   members: [OrganizationMemberDetails!]!
@@ -1539,6 +1540,7 @@ input AddOrganizationInput {
   contactPhone: String
   id: String
   industrySubCategoryIds: [String!]!
+  isListable: Boolean!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   termsOfUseId: String!
@@ -2365,6 +2367,7 @@ input UpdateOrganizationInput {
   contactPhone: String
   id: String
   industrySubCategoryIds: [String!]!
+  isListable: Boolean!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   type: OrganizationType!
