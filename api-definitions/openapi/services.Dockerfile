@@ -12,6 +12,8 @@ RUN npm install -y -g nswag@latest
 RUN mkdir -p /output/V1
 COPY ["api-definitions/openapi", "/openapi"]
 
+ENV DOTNET_ROLL_FORWARD=LatestMajor
+
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/skedular/gateway_v1.yaml \
@@ -211,3 +213,5 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/Core.g.cs
+
+RUN find /output -type f -name "*.g.cs" -exec sed -i 's/Microsoft\.AspNetCore\.Mvc\.ActionResult<Microsoft\.AspNetCore\.Mvc\.FileResult>/Microsoft.AspNetCore.Mvc.IActionResult/g' {} +

@@ -12,6 +12,8 @@ RUN npm install -y -g nswag@latest
 RUN mkdir -p /output/V1
 COPY ["api-definitions/openapi", "/openapi"]
 
+ENV DOTNET_ROLL_FORWARD=LatestMajor
+
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/skedular/gateway_v1.yaml \
