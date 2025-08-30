@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12dc6ec217bdcb3607f3ab00e84df68e>>
+ * @generated SignedSource<<14027cece0bc2919cf1923a4952f0bae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type noOrganizationAppBar_query$data = {
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
     readonly id: string;
+    readonly isListable: boolean;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly uniqueAlphanumericName: string | null | undefined;
@@ -118,6 +119,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "isListable",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "logoUrl",
           "storageKey": null
         },
@@ -170,6 +178,6 @@ return {
 };
 })();
 
-(node as any).hash = "dd0969fae724425d878117234cccb8ed";
+(node as any).hash = "143938132dc13e339f6a6496b0ed7cfc";
 
 export default node;

@@ -23,7 +23,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -54,6 +54,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
         myOrganizations {
           id
           uniqueAlphanumericName
+          isListable
           logoUrl
           name
           canModify
@@ -78,6 +79,8 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const showAllOrgs = searchParams.get('showAllOrgs');
 
   let finalOrganizationUniqueAlphanumericName = '';
   if (typeof organizationUniqueAlphanumericName === 'string') {
@@ -206,17 +209,19 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                   );
                 }}
               >
-                {rootData.myOrganizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
-                    <StackRow>
-                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                      <StackColumn spacing={-0.5}>
-                        <LeadIconTypography label={organization.name} />
-                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                      </StackColumn>
-                    </StackRow>
-                  </MenuItem>
-                ))}
+                {rootData.myOrganizations
+                  .filter((item) => showAllOrgs === 'true' || item.isListable)
+                  .map((organization) => (
+                    <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
+                      <StackRow>
+                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                        <StackColumn spacing={-0.5}>
+                          <LeadIconTypography label={organization.name} />
+                          <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                        </StackColumn>
+                      </StackRow>
+                    </MenuItem>
+                  ))}
 
                 <Divider />
 
