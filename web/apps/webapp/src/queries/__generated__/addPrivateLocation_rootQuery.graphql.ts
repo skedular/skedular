@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<920c67c75d2ad3006fcb52a4e488e86f>>
+ * @generated SignedSource<<f53b447f4e2ecf6723740f3d9a539f39>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,12 +22,15 @@ export type addPrivateLocation_rootQuery$variables = {
   organizationUniqueAlphanumericName: string;
 };
 export type addPrivateLocation_rootQuery$data = {
+  readonly me: {
+    readonly emails: ReadonlyArray<string>;
+  };
   readonly organization: {
     readonly type: {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "singleChoiceLocationType_query">;
 };
 export type addPrivateLocation_rootQuery = {
   response: addPrivateLocation_rootQuery$data;
@@ -45,14 +48,28 @@ v1 = {
   "kind": "LocalArgument",
   "name": "organizationUniqueAlphanumericName"
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "emails",
+  "storageKey": null
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "uniqueAlphanumericName",
     "variableName": "organizationUniqueAlphanumericName"
   }
 ],
-v3 = {
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationTypeDetails",
@@ -60,24 +77,18 @@ v3 = {
   "name": "type",
   "plural": false,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    }
+    (v4/*: any*/)
   ],
   "storageKey": null
 },
-v4 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v7 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -94,7 +105,14 @@ v5 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-];
+],
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -107,13 +125,25 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v3/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -121,6 +151,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "multipleChoicesLocationTags_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceLocationType_query"
       }
     ],
     "type": "Query",
@@ -137,20 +172,33 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "OrganizationDetails",
+        "args": null,
+        "concreteType": "CustomerDetails",
         "kind": "LinkedField",
-        "name": "organization",
+        "name": "me",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v2/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v3/*: any*/),
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          (v6/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v7/*: any*/),
         "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
@@ -179,14 +227,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v6/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -256,7 +298,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v7/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -265,20 +307,33 @@ return {
         "key": "multipleChoicesLocationTags_locationTags",
         "kind": "LinkedHandle",
         "name": "locationTags"
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "LocationTypeDetails",
+        "kind": "LinkedField",
+        "name": "locationTypes",
+        "plural": true,
+        "selections": [
+          (v4/*: any*/),
+          (v8/*: any*/)
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "3e72e8731d82aa00b66b4ae202b8403b",
+    "cacheID": "09d56fc0eaab50cc47a92eb4e1df33a7",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addPrivateLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addPrivateLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  me {\n    emails\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n  ...singleChoiceLocationType_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d9e8d6bdc7f0c28d5603e9f19e7495af";
+(node as any).hash = "6c183d4c12ffe6492ce2b85eb52c3c88";
 
 export default node;

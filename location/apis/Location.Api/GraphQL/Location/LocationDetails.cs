@@ -14,6 +14,7 @@ public class LocationDetails : Node
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("type")] public LocationTypeDetails Type { get; set; } = new();
     [GraphQLName("openingHours")] public OpeningHours OpeningHours { get; set; } = new();
     [GraphQLName("deskCapacity")] public int DeskCapacity { get; set; }
     [GraphQLName("roomCapacity")] public int RoomCapacity { get; set; }

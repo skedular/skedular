@@ -75,11 +75,16 @@ message Admin_AddInput {
   string termsOfUseId = 8;
   repeated string industrySubCategoryIds = 9;
   string offeringCode = 10;
-  string type = 11;
+  OrganizationType type = 11;
   string memberVisibilityPolicy = 12;
   string contactEmail = 13;
   string contactPhone = 14;
   bool isListable = 15;
+}
+
+enum OrganizationType {
+  OrganizationType_Private = 0;
+  OrganizationType_Marketplace = 1;
 }
 
 message Admin_GetOrganizationStripeConnectAccountsResponse {

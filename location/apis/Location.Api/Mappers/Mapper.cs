@@ -32,6 +32,7 @@ using ResourcePosition = Location.Shared.Models.ResourcePosition;
 using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
+using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 
 namespace Location.Api.Mappers;
 
@@ -143,6 +144,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type.ToLocationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
@@ -194,6 +196,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type.ToLocationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
@@ -211,6 +214,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
+        dest.Type = src.Type.ToLocationType();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
@@ -228,6 +232,11 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
+                Type = new LocationTypeDetails
+                {
+                    Type = src.Type,
+                    Name = src.Type.ToLocationTypeName()
+                },
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
                 PrimaryFeatureImage = src.PrimaryFeatureImage,
@@ -383,6 +392,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
@@ -401,6 +411,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
@@ -449,6 +460,12 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type switch
+            {
+                LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace =>global::Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
@@ -464,6 +481,12 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Models.LocationType.Private => LocationType.Private,
+                global::Api.Shared.Services.Models.LocationType.Marketplace => LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
@@ -494,6 +517,12 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type switch
+            {
+                LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
@@ -508,6 +537,12 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            Type = src.Type switch
+            {
+                LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),

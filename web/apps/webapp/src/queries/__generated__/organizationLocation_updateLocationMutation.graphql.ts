@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06e7bb938e8ab5666ba5bd8bdbefe292>>
+ * @generated SignedSource<<2ccdcbc0d921326d83d3a80bf80cd36f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
@@ -19,6 +20,7 @@ export type UpdateLocationInput = {
   name: string;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
+  type: LocationType;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -104,6 +106,10 @@ export type organizationLocation_updateLocationMutation$data = {
         } | null | undefined;
       } | null | undefined;
       readonly timezone: string | null | undefined;
+      readonly type: {
+        readonly name: string;
+        readonly type: LocationType;
+      };
     };
   };
 };
@@ -179,6 +185,10 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
         } | null | undefined;
       } | null | undefined;
       readonly timezone: string | null | undefined;
+      readonly type: {
+        readonly name: string;
+        readonly type: LocationType;
+      };
     };
   };
 };
@@ -299,6 +309,25 @@ v4 = [
             "args": null,
             "kind": "ScalarField",
             "name": "timezone",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -489,16 +518,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "ecffb2d6c5043585770fae1f66aecac2",
+    "cacheID": "9056935b2b474ab2bc0342fdd83c411c",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a942dd74139ab337adb27085f7bf3623";
+(node as any).hash = "93416ff98d46e4223cf9ab9aabd20d85";
 
 export default node;

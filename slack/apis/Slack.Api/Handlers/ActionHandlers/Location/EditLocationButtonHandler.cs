@@ -47,8 +47,13 @@ public class EditLocationButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
+        var existingLocation = await locationServiceClient.GetAsync(
+            new GetInput { Id = context.LocationId },
+            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateInput { Id = context.LocationId, OrganizationId = workspace.Organization.Id };
+        var updateInput = new UpdateInput { Id = context.LocationId, OrganizationId = workspace.Organization.Id, Type = existingLocation.Type };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {

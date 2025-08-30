@@ -12,8 +12,10 @@ using Slack.Shared.Workflows.ReSyncSlackWorkspace;
 using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_AddInput;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
+using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
 
 namespace Slack.Api.Services;
 
@@ -70,7 +72,7 @@ public class WorkspaceOnboardingService(
                 Name = name.ToSafeString(),
                 AgreedToTermsOfUse = true,
                 TermsOfUseId = activeTermsOfUse.Id,
-                Type = OrganizationTypeConstants.Private,
+                Type = OrganizationType.Private,
                 MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess,
                 IsListable = true
             },
@@ -85,7 +87,7 @@ public class WorkspaceOnboardingService(
         await locationServiceClient.Admin_AddAsync(
             new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput
             {
-                Id = location.Id, Name = $"{name.ToSafeString()} Office", OrganizationId = organization.Id
+                Id = location.Id, Name = $"{name.ToSafeString()} Office", OrganizationId = organization.Id, Type = LocationType.Private
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

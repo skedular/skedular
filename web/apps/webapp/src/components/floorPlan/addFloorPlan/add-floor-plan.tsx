@@ -104,7 +104,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
     rootData,
   );
 
-  const [commitAddLocation] = useMutation<addFloorPlan_addFloorPlanMutation>(graphql`
+  const [commitAddFloorPlan] = useMutation<addFloorPlan_addFloorPlanMutation>(graphql`
     mutation addFloorPlan_addFloorPlanMutation($input: AddFloorPlanInput!) @raw_response_type {
       addFloorPlan(input: $input) {
         floorPlan {
@@ -176,7 +176,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
     };
 
-    commitAddLocation({
+    commitAddFloorPlan({
       variables: {
         input: {
           clientMutationId: uuid(),

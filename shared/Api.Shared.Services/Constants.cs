@@ -85,6 +85,8 @@ public static class Constants
     public const int MaxFeedbackLength = 10240;
     public const int MaxFeedbackChannelLength = 32;
 
+    public const int MaxLocationTypeLength = 50;
+
     public const int MaxOrganizationTypeLength = 50;
     public const int MaxOrganizationMemberVisibilityPolicyLength = 50;
 

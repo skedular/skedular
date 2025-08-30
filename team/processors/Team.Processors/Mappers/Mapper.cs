@@ -12,6 +12,7 @@ using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 
 namespace Team.Processors.Mappers;
 
@@ -117,7 +118,12 @@ public class Mapper : IMapper
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
             },
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

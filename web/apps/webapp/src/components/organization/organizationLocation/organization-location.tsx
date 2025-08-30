@@ -18,7 +18,7 @@ import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
-import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
+import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationType } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -48,7 +48,7 @@ import type { organizationLocation_query$key } from '@/queries/__generated__/org
 import type { organizationLocation_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_resources_query$key } from '@/queries/__generated__/organizationLocation_resources_query.graphql';
 import type { organizationLocation_resources_refetchableFragment } from '@/queries/__generated__/organizationLocation_resources_refetchableFragment.graphql';
-import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
+import type { LocationType, organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
 import type { organizationLocation_updateLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_updateLocationPhysicalAddressMutation.graphql';
 import Box from '@mui/material/Box';
@@ -85,6 +85,7 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
+  type: string;
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
@@ -94,6 +95,7 @@ const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
+  type: string().required('Type is required'),
   locationTagIds: array().nullable(),
   contactEmail: string()
     .nullable()
@@ -169,6 +171,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
       fragment organizationLocation_query on Query {
         me {
           id
+          emails
           preferredResources {
             uniqueId
           }
@@ -183,6 +186,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           about
           timezone
+          type {
+            type
+            name
+          }
           contactEmail
           contactPhone
           primaryFeatureImage {
@@ -271,6 +278,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         ...weekOpeningHours_query
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
+        ...singleChoiceLocationType_query
       }
     `,
     rootDataRelay,
@@ -354,6 +362,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           about
           timezone
+          type {
+            type
+            name
+          }
           contactEmail
           contactPhone
           primaryFeatureImage {
@@ -687,6 +699,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>(rootData.location?.timezone ?? '');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
+  const [locationType, setLocationType] = useState<string>(rootData.location?.type.type ?? '');
+  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
   const [locationContactEmail, setLocationContactEmail] = useState(rootData.location?.contactEmail);
@@ -797,7 +811,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     [refetchResources],
   );
 
-  const handleLocationDetailUpdateClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
       return;
@@ -823,6 +837,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name,
           about,
           timezone,
+          type: type as LocationType,
           contactEmail,
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
@@ -857,6 +872,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name,
             about,
             timezone,
+            type: {
+              type: type as LocationType,
+              name: '',
+            },
             contactEmail,
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
@@ -1668,6 +1687,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 name: locationName,
                 about: locationAbout,
                 timezone: locationTimezone,
+                type: locationType,
                 locationTagIds,
                 contactEmail: locationContactEmail,
                 contactPhone: locationContactPhone,
@@ -1677,6 +1697,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationName(values!.name);
                 debounceSetLocationAbout(values!.about);
                 debounceSetLocationTimezone(values!.timezone);
+                debounceSetLocationType(values!.type);
                 debounceSetLocationTagIds(values!.locationTagIds);
                 debounceSetLocationContactEmail(values!.contactEmail);
                 debounceSetLocationContactPhone(values!.contactPhone);
@@ -1728,6 +1749,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <FormFieldLabel label="Timezone">
                         <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                       </FormFieldLabel>
+
+                      {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                        <FormFieldLabel label="Type">
+                          <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                        </FormFieldLabel>
+                      )}
 
                       {rootData.organization?.type.type === 'MARKETPLACE' && (
                         <FormFieldLabel label="Location Tags">

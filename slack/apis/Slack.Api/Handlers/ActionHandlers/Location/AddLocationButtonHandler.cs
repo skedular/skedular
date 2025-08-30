@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -117,7 +118,7 @@ public class AddLocationButtonHandler(
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var locationId = randomHelper.Generate();
-        var addInput = new AddInput { Id = locationId, OrganizationId = workspace.Organization.Id };
+        var addInput = new AddInput { Id = locationId, OrganizationId = workspace.Organization.Id, Type = LocationType.Private };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {

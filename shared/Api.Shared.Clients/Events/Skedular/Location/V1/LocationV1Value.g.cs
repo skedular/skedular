@@ -32,7 +32,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "Mg4ubG9jYXRpb24uVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIjkKBERhdGES",
             "JgoIbG9jYXRpb24YASABKAsyEi5sb2NhdGlvbi5Mb2NhdGlvbkgAQgkKB3Bh",
-            "eWxvYWQihgMKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgC",
+            "eWxvYWQirAMKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgC",
             "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEo",
             "CRINCgVhYm91dBgEIAEoCRIWCg5vcmdhbml6YXRpb25JZBgFIAEoCRIQCgh0",
             "aW1lem9uZRgGIAEoCRIlCglyZXNvdXJjZXMYByADKAsyEi5sb2NhdGlvbi5S",
@@ -40,50 +40,53 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "MhYubG9jYXRpb24uT3BlbmluZ0hvdXJzEjIKD3BoeXNpY2FsQWRkcmVzcxgK",
             "IAEoCzIZLmxvY2F0aW9uLlBoeXNpY2FsQWRkcmVzcxIUCgxjb250YWN0RW1h",
             "aWwYCyABKAkSFAoMY29udGFjdFBob25lGAwgASgJEjMKE3ByaW1hcnlGZWF0",
-            "dXJlSW1hZ2UYDSABKAsyFi5sb2NhdGlvbi5DZG5JbWFnZUZpbGUi2wEKCFJl",
-            "c291cmNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEAoIaW5hY3RpdmUY",
-            "AyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIOCgZ0YWdJ",
-            "ZHMYBSADKAkSDQoFY29sb3IYBiABKAkSIgoaaXNBdmFpbGFibGVIb3Vyc092",
-            "ZXJyaWRkZW4YByABKAgSLgoOYXZhaWxhYmxlSG91cnMYCCABKAsyFi5sb2Nh",
-            "dGlvbi5PcGVuaW5nSG91cnMSEAoIY2FwYWNpdHkYCSABKAUivAEKDE9wZW5p",
-            "bmdIb3VycxI0ChB3ZWVrT3BlbmluZ0hvdXJzGAEgASgLMhoubG9jYXRpb24u",
-            "V2Vla09wZW5pbmdIb3VycxIvCgtjbG9zZWREYXRlcxgCIAMoCzIaLmdvb2ds",
-            "ZS5wcm90b2J1Zi5UaW1lc3RhbXASRQobRGF0ZXNXaXRoVmFyaWVkT3Blbmlu",
-            "Z0hvdXJzGAMgAygLMiAubG9jYXRpb24uVmFyaWVkRGF0ZU9wZW5pbmdIb3Vy",
-            "cyLjAgoQV2Vla09wZW5pbmdIb3VycxItCgZtb25kYXkYASABKAsyHS5sb2Nh",
-            "dGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi4KB3R1ZXNkYXkYAiABKAsyHS5s",
-            "b2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEjAKCXdlZG5lc2RheRgDIAEo",
-            "CzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoIdGh1cnNkYXkY",
-            "BCABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi0KBmZyaWRh",
-            "eRgFIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoIc2F0",
-            "dXJkYXkYBiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi0K",
-            "BnN1bmRheRgHIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMi",
-            "fgoWVmFyaWVkRGF0ZU9wZW5pbmdIb3VycxIoCgRkYXRlGAEgASgLMhouZ29v",
-            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91cnNEZXRhaWxz",
-            "GAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJWChNPcGVu",
-            "aW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpvcGVuQWxsRGF5",
-            "GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkipwIKD1BoeXNp",
-            "Y2FsQWRkcmVzcxIKCgJpZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkS",
-            "FAoMYWRkcmVzc0xpbmUyGAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5",
-            "GAUgASgJEhAKCHByb3ZpbmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoH",
-            "Y291bnRyeRgIIAEoCRITCgtjb3VudHJ5Q29kZRgJIAEoCRIYChBmb3JtYXR0",
-            "ZWRBZGRyZXNzGAogASgJEg8KB29zbVR5cGUYCyABKAkSDQoFb3NtSWQYDCAB",
-            "KAkSDwoHcGxhY2VJZBgNIAEoCRIqCgtjb29yZGluYXRlcxgOIAEoCzIVLmxv",
-            "Y2F0aW9uLkNvb3JkaW5hdGVzIjIKC0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVk",
-            "ZRgBIAEoARIQCghsYXRpdHVkZRgCIAEoASJZCgxDZG5JbWFnZUZpbGUSIwoI",
-            "b3JpZ2luYWwYASABKAsyES5sb2NhdGlvbi5DZG5GaWxlEiQKCXRodW1ibmFp",
-            "bBgCIAEoCzIRLmxvY2F0aW9uLkNkbkZpbGUiNQoHQ2RuRmlsZRILCgN1cmwY",
-            "ASABKAkSDgoGaGVpZ2h0GAIgASgFEg0KBXdpZHRoGAMgASgFKjsKBFR5cGUS",
-            "GQoVVHlwZV9Mb2NhdGlvblVwc2VydGVkEAASGAoUVHlwZV9Mb2NhdGlvbkRl",
-            "bGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxh",
-            "ci5Mb2NhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "dXJlSW1hZ2UYDSABKAsyFi5sb2NhdGlvbi5DZG5JbWFnZUZpbGUSJAoEdHlw",
+            "ZRgOIAEoDjIWLmxvY2F0aW9uLkxvY2F0aW9uVHlwZSLbAQoIUmVzb3VyY2US",
+            "CgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIQCghpbmFjdGl2ZRgDIAEoCBIe",
+            "ChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEg4KBnRhZ0lkcxgFIAMo",
+            "CRINCgVjb2xvchgGIAEoCRIiChppc0F2YWlsYWJsZUhvdXJzT3ZlcnJpZGRl",
+            "bhgHIAEoCBIuCg5hdmFpbGFibGVIb3VycxgIIAEoCzIWLmxvY2F0aW9uLk9w",
+            "ZW5pbmdIb3VycxIQCghjYXBhY2l0eRgJIAEoBSK8AQoMT3BlbmluZ0hvdXJz",
+            "EjQKEHdlZWtPcGVuaW5nSG91cnMYASABKAsyGi5sb2NhdGlvbi5XZWVrT3Bl",
+            "bmluZ0hvdXJzEi8KC2Nsb3NlZERhdGVzGAIgAygLMhouZ29vZ2xlLnByb3Rv",
+            "YnVmLlRpbWVzdGFtcBJFChtEYXRlc1dpdGhWYXJpZWRPcGVuaW5nSG91cnMY",
+            "AyADKAsyIC5sb2NhdGlvbi5WYXJpZWREYXRlT3BlbmluZ0hvdXJzIuMCChBX",
+            "ZWVrT3BlbmluZ0hvdXJzEi0KBm1vbmRheRgBIAEoCzIdLmxvY2F0aW9uLk9w",
+            "ZW5pbmdIb3Vyc0RldGFpbHMSLgoHdHVlc2RheRgCIAEoCzIdLmxvY2F0aW9u",
+            "Lk9wZW5pbmdIb3Vyc0RldGFpbHMSMAoJd2VkbmVzZGF5GAMgASgLMh0ubG9j",
+            "YXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscxIvCgh0aHVyc2RheRgEIAEoCzId",
+            "LmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLQoGZnJpZGF5GAUgASgL",
+            "Mh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscxIvCghzYXR1cmRheRgG",
+            "IAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLQoGc3VuZGF5",
+            "GAcgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJ+ChZWYXJp",
+            "ZWREYXRlT3BlbmluZ0hvdXJzEigKBGRhdGUYASABKAsyGi5nb29nbGUucHJv",
+            "dG9idWYuVGltZXN0YW1wEjoKE29wZW5pbmdIb3Vyc0RldGFpbHMYAiABKAsy",
+            "HS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzIlYKE09wZW5pbmdIb3Vy",
+            "c0RldGFpbHMSDgoGY2xvc2VkGAEgASgIEhIKCm9wZW5BbGxEYXkYAiABKAgS",
+            "DAoEZnJvbRgDIAEoCRINCgV1bnRpbBgEIAEoCSKnAgoPUGh5c2ljYWxBZGRy",
+            "ZXNzEgoKAmlkGAEgASgJEhQKDGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRy",
+            "ZXNzTGluZTIYAyABKAkSDgoGc3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkS",
+            "EAoIcHJvdmluY2UYBiABKAkSDwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5",
+            "GAggASgJEhMKC2NvdW50cnlDb2RlGAkgASgJEhgKEGZvcm1hdHRlZEFkZHJl",
+            "c3MYCiABKAkSDwoHb3NtVHlwZRgLIAEoCRINCgVvc21JZBgMIAEoCRIPCgdw",
+            "bGFjZUlkGA0gASgJEioKC2Nvb3JkaW5hdGVzGA4gASgLMhUubG9jYXRpb24u",
+            "Q29vcmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMSEQoJbG9uZ2l0dWRlGAEgASgB",
+            "EhAKCGxhdGl0dWRlGAIgASgBIlkKDENkbkltYWdlRmlsZRIjCghvcmlnaW5h",
+            "bBgBIAEoCzIRLmxvY2F0aW9uLkNkbkZpbGUSJAoJdGh1bWJuYWlsGAIgASgL",
+            "MhEubG9jYXRpb24uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIO",
+            "CgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyABKAUqOwoEVHlwZRIZChVUeXBl",
+            "X0xvY2F0aW9uVXBzZXJ0ZWQQABIYChRUeXBlX0xvY2F0aW9uRGVsZXRlZBAB",
+            "KkYKDExvY2F0aW9uVHlwZRIYChRMb2NhdGlvblR5cGVfUHJpdmF0ZRAAEhwK",
+            "GExvY2F0aW9uVHlwZV9NYXJrZXRwbGFjZRABQjeqAjRBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "OrganizationId", "Timezone", "Resources", "TagIds", "OpeningHours", "PhysicalAddress", "ContactEmail", "ContactPhone", "PrimaryFeatureImage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "OrganizationId", "Timezone", "Resources", "TagIds", "OpeningHours", "PhysicalAddress", "ContactEmail", "ContactPhone", "PrimaryFeatureImage", "Type" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsAvailableHoursOverridden", "AvailableHours", "Capacity" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours.Parser, new[]{ "WeekOpeningHours", "ClosedDates", "DatesWithVariedOpeningHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, null, null, null, null),
@@ -102,6 +105,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
   public enum Type {
     [pbr::OriginalName("Type_LocationUpserted")] LocationUpserted = 0,
     [pbr::OriginalName("Type_LocationDeleted")] LocationDeleted = 1,
+  }
+
+  public enum LocationType {
+    [pbr::OriginalName("LocationType_Private")] Private = 0,
+    [pbr::OriginalName("LocationType_Marketplace")] Marketplace = 1,
   }
 
   #endregion
@@ -1041,6 +1049,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       contactEmail_ = other.contactEmail_;
       contactPhone_ = other.contactPhone_;
       primaryFeatureImage_ = other.primaryFeatureImage_ != null ? other.primaryFeatureImage_.Clone() : null;
+      type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1204,6 +1213,18 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 14;
+    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType type_ = global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1232,6 +1253,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (ContactEmail != other.ContactEmail) return false;
       if (ContactPhone != other.ContactPhone) return false;
       if (!object.Equals(PrimaryFeatureImage, other.PrimaryFeatureImage)) return false;
+      if (Type != other.Type) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1252,6 +1274,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (ContactEmail.Length != 0) hash ^= ContactEmail.GetHashCode();
       if (ContactPhone.Length != 0) hash ^= ContactPhone.GetHashCode();
       if (primaryFeatureImage_ != null) hash ^= PrimaryFeatureImage.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private) hash ^= Type.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1316,6 +1339,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(106);
         output.WriteMessage(PrimaryFeatureImage);
       }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private) {
+        output.WriteRawTag(112);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1372,6 +1399,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(106);
         output.WriteMessage(PrimaryFeatureImage);
       }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private) {
+        output.WriteRawTag(112);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1416,6 +1447,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       if (primaryFeatureImage_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(PrimaryFeatureImage);
+      }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1475,6 +1509,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
           PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile();
         }
         PrimaryFeatureImage.MergeFrom(other.PrimaryFeatureImage);
+      }
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private) {
+        Type = other.Type;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1559,6 +1596,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             input.ReadMessage(PrimaryFeatureImage);
             break;
           }
+          case 112: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -1640,6 +1681,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
               PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile();
             }
             input.ReadMessage(PrimaryFeatureImage);
+            break;
+          }
+          case 112: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType) input.ReadEnum();
             break;
           }
         }

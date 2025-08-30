@@ -69,6 +69,11 @@ message Identity {
   bool emailVerified = 3;
 }
 
+enum LocationType {
+  LocationType_Private = 0;
+  LocationType_Marketplace = 1;
+}
+
 message Admin_AddInput {
   string id = 1;
   string name = 2;
@@ -79,6 +84,7 @@ message Admin_AddInput {
   string contactEmail = 7;
   string contactPhone = 8;
   CdnImageFile primaryFeatureImage = 9;
+  LocationType type = 10;
 }
 
 message LocationConnection {
@@ -108,6 +114,7 @@ message Location {
   string contactEmail = 13;
   string contactPhone = 14;
   CdnImageFile primaryFeatureImage = 15;
+  LocationType type = 16;
 }
 
 message Admin_GetInput {
@@ -199,6 +206,7 @@ message AddInput {
   string contactEmail = 7;
   string contactPhone = 8;
   CdnImageFile primaryFeatureImage = 9;
+  LocationType type = 10;
 }
 
 message UpdateInput {
@@ -211,6 +219,7 @@ message UpdateInput {
   string contactEmail = 7;
   string contactPhone = 8;
   CdnImageFile primaryFeatureImage = 9;
+  LocationType type = 10;
 }
 
 message RemoveInput {

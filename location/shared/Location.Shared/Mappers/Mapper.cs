@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using Location.Shared.Models;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile;
+using LocationType = Api.Shared.Services.Models.LocationType;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
@@ -28,6 +29,12 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            Type = src.Type switch
+            {
+                LocationType.Private => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),

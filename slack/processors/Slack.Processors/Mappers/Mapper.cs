@@ -10,6 +10,7 @@ using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 
 namespace Slack.Processors.Mappers;
 
@@ -140,7 +141,12 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

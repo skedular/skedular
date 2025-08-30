@@ -9,6 +9,7 @@ using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = MsTeams.Shared.Database.Entities.OrganizationSsoSetting;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Team = MsTeams.Shared.Models.Team;
 
@@ -106,7 +107,12 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             UniqueAlphanumericName =
                 string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

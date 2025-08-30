@@ -13,6 +13,7 @@ public class Location : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
+    public string Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
@@ -38,6 +39,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength).HasDefaultValue(LocationTypeConstants.Private);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
@@ -49,5 +51,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Timezone);
+        builder.HasIndex(item => item.Type);
     }
 }

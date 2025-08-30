@@ -482,6 +482,7 @@ type LocationDetails {
   resourceTypes: [Location_OrganizationTagDetails!]!
   roomCapacity: Int!
   timezone: String
+  type: LocationTypeDetails!
   zones: [Location_OrganizationTagDetails!]!
 }
 
@@ -513,6 +514,11 @@ type LocationPhysicalAddressDetails {
   province: String
   suburb: String
   zipcode: String!
+}
+
+type LocationTypeDetails {
+  name: String!
+  type: LocationType!
 }
 
 type Location_OrganizationDetails {
@@ -1107,6 +1113,7 @@ type Query {
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
   marketplaceBookingTypes: [BookingTypeDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1443,6 +1450,7 @@ input AddLocationInput {
   organizationUniqueAlphanumericName: String
   primaryFeatureImage: CdnImageFileInput
   timezone: String
+  type: LocationType!
 }
 
 input AddLocationPhysicalAddressInput {
@@ -2253,6 +2261,7 @@ input UpdateLocationInput {
   name: String!
   primaryFeatureImage: CdnImageFileInput
   timezone: String
+  type: LocationType!
 }
 
 input UpdateLocationOpeningHoursInput {
@@ -2601,6 +2610,11 @@ enum LocationOrderField {
   ABOUT
   NAME
   TIMEZONE
+}
+
+enum LocationType {
+  MARKETPLACE
+  PRIVATE
 }
 
 enum OrderDirection {

@@ -33,7 +33,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
             "aW9uSWQYBiABKAkicQoERGF0YRIyCgxvcmdhbml6YXRpb24YASABKAsyGi5v",
             "cmdhbml6YXRpb24uT3JnYW5pemF0aW9uSAASKgoIb2ZmZXJpbmcYAiABKAsy",
-            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkItoECgxPcmdh",
+            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIvoECgxPcmdh",
             "bml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
             "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIeChZ1bmlxdWVBbHBoYW51bWVyaWNO",
             "YW1lGAMgASgJEgwKBG5hbWUYBCABKAkSDQoFYWJvdXQYBSABKAkSDwoHbG9n",
@@ -43,43 +43,45 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "SWRzGAogAygJEh8KBHRhZ3MYCyADKAsyES5vcmdhbml6YXRpb24uVGFnEjoK",
             "C3Nzb1NldHRpbmdzGAwgASgLMiUub3JnYW5pemF0aW9uLk9yZ2FuaXphdGlv",
             "blNzb1NldHRpbmdzEjgKCnRheERldGFpbHMYDSABKAsyJC5vcmdhbml6YXRp",
-            "b24uT3JnYW5pemF0aW9uVGF4RGV0YWlscxIMCgR0eXBlGA4gASgJEhQKDGNv",
-            "bnRhY3RFbWFpbBgPIAEoCRIUCgxjb250YWN0UGhvbmUYECABKAkSEgoKaXNM",
-            "aXN0YWJsZRgRIAEoCBIeChZtZW1iZXJWaXNpYmlsaXR5UG9saWN5GBIgASgJ",
-            "EjYKD3BoeXNpY2FsQWRkcmVzcxgTIAEoCzIdLm9yZ2FuaXphdGlvbi5QaHlz",
-            "aWNhbEFkZHJlc3MifAoST3JnYW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJ",
-            "EhIKCmN1c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEoDjISLm9yZ2FuaXph",
-            "dGlvbi5Sb2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2FuaXphdGlvbi5TdGF0",
-            "dXMi0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoF",
-            "c3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2Vu",
-            "ZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1Jl",
-            "bmV3GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21l",
-            "cklkcxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlv",
-            "bhIKCgJpZBgBIAEoCSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEo",
-            "CRITCgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9y",
-            "GAUgASgJIn0KF09yZ2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJ",
-            "EhAKCGVudGl0eUlkGAIgASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFwcEZl",
-            "ZGVyYXRpb25NZXRhZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEoCCJO",
-            "ChZPcmdhbml6YXRpb25UYXhEZXRhaWxzEgoKAmlkGAEgASgJEg0KBXRheElk",
-            "GAIgASgJEhkKEXRheFJhdGVQZXJjZW50YWdlGAMgASgBIqsCCg9QaHlzaWNh",
-            "bEFkZHJlc3MSCgoCaWQYASABKAkSFAoMYWRkcmVzc0xpbmUxGAIgASgJEhQK",
-            "DGFkZHJlc3NMaW5lMhgDIAEoCRIOCgZzdWJ1cmIYBCABKAkSDAoEY2l0eRgF",
-            "IAEoCRIQCghwcm92aW5jZRgGIAEoCRIPCgd6aXBjb2RlGAcgASgJEg8KB2Nv",
-            "dW50cnkYCCABKAkSEwoLY291bnRyeUNvZGUYCSABKAkSGAoQZm9ybWF0dGVk",
-            "QWRkcmVzcxgKIAEoCRIPCgdvc21UeXBlGAsgASgJEg0KBW9zbUlkGAwgASgJ",
-            "Eg8KB3BsYWNlSWQYDSABKAkSLgoLY29vcmRpbmF0ZXMYDiABKAsyGS5vcmdh",
-            "bml6YXRpb24uQ29vcmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMSEQoJbG9uZ2l0",
-            "dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIgASgBKmkKBFR5cGUSHQoZVHlwZV9P",
-            "cmdhbml6YXRpb25VcHNlcnRlZBAAEhwKGFR5cGVfT3JnYW5pemF0aW9uRGVs",
-            "ZXRlZBABEiQKIFR5cGVfT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVkEAIq",
-            "PwoEUm9sZRIOCgpSb2xlX093bmVyEAASFgoSUm9sZV9BZG1pbmlzdHJhdG9y",
-            "EAESDwoLUm9sZV9NZW1iZXIQAiowCgZTdGF0dXMSEQoNU3RhdHVzX0FjdGl2",
-            "ZRAAEhMKD1N0YXR1c19JbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNsaWVu",
-            "dHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIGcHJv",
-            "dG8z"));
+            "b24uT3JnYW5pemF0aW9uVGF4RGV0YWlscxIsCgR0eXBlGA4gASgOMh4ub3Jn",
+            "YW5pemF0aW9uLk9yZ2FuaXphdGlvblR5cGUSFAoMY29udGFjdEVtYWlsGA8g",
+            "ASgJEhQKDGNvbnRhY3RQaG9uZRgQIAEoCRISCgppc0xpc3RhYmxlGBEgASgI",
+            "Eh4KFm1lbWJlclZpc2liaWxpdHlQb2xpY3kYEiABKAkSNgoPcGh5c2ljYWxB",
+            "ZGRyZXNzGBMgASgLMh0ub3JnYW5pemF0aW9uLlBoeXNpY2FsQWRkcmVzcyJ8",
+            "ChJPcmdhbml6YXRpb25NZW1iZXISCgoCaWQYASABKAkSEgoKY3VzdG9tZXJJ",
+            "ZBgCIAEoCRIgCgRyb2xlGAMgASgOMhIub3JnYW5pemF0aW9uLlJvbGUSJAoG",
+            "c3RhdHVzGAQgASgOMhQub3JnYW5pemF0aW9uLlN0YXR1cyLRAQoIT2ZmZXJp",
+            "bmcSCgoCaWQYASABKAkSDAoEY29kZRgCIAEoCRIpCgVzdGFydBgDIAEoCzIa",
+            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAQgASgLMhouZ29v",
+            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIRCglhdXRvUmVuZXcYBSABKAgSEQoJ",
+            "dW5pdFByaWNlGAYgASgFEhkKEWFjdGl2ZUN1c3RvbWVySWRzGAcgAygJEhYK",
+            "Dm9yZ2FuaXphdGlvbklkGAggASgJIhYKCExvY2F0aW9uEgoKAmlkGAEgASgJ",
+            "IlEKA1RhZxIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0",
+            "aW9uGAMgASgJEgwKBHR5cGUYBCABKAkSDQoFY29sb3IYBSABKAkifQoXT3Jn",
+            "YW5pemF0aW9uU3NvU2V0dGluZ3MSCgoCaWQYASABKAkSEAoIZW50aXR5SWQY",
+            "AiABKAkSEAoIbG9naW5VcmwYAyABKAkSIAoYYXBwRmVkZXJhdGlvbk1ldGFk",
+            "YXRhVXJsGAQgASgJEhAKCGlzQWN0aXZlGAUgASgIIk4KFk9yZ2FuaXphdGlv",
+            "blRheERldGFpbHMSCgoCaWQYASABKAkSDQoFdGF4SWQYAiABKAkSGQoRdGF4",
+            "UmF0ZVBlcmNlbnRhZ2UYAyABKAEiqwIKD1BoeXNpY2FsQWRkcmVzcxIKCgJp",
+            "ZBgBIAEoCRIUCgxhZGRyZXNzTGluZTEYAiABKAkSFAoMYWRkcmVzc0xpbmUy",
+            "GAMgASgJEg4KBnN1YnVyYhgEIAEoCRIMCgRjaXR5GAUgASgJEhAKCHByb3Zp",
+            "bmNlGAYgASgJEg8KB3ppcGNvZGUYByABKAkSDwoHY291bnRyeRgIIAEoCRIT",
+            "Cgtjb3VudHJ5Q29kZRgJIAEoCRIYChBmb3JtYXR0ZWRBZGRyZXNzGAogASgJ",
+            "Eg8KB29zbVR5cGUYCyABKAkSDQoFb3NtSWQYDCABKAkSDwoHcGxhY2VJZBgN",
+            "IAEoCRIuCgtjb29yZGluYXRlcxgOIAEoCzIZLm9yZ2FuaXphdGlvbi5Db29y",
+            "ZGluYXRlcyIyCgtDb29yZGluYXRlcxIRCglsb25naXR1ZGUYASABKAESEAoI",
+            "bGF0aXR1ZGUYAiABKAEqaQoEVHlwZRIdChlUeXBlX09yZ2FuaXphdGlvblVw",
+            "c2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25EZWxldGVkEAESJAogVHlw",
+            "ZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQAipSChBPcmdhbml6YXRp",
+            "b25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJpdmF0ZRAAEiAKHE9yZ2Fu",
+            "aXphdGlvblR5cGVfTWFya2V0cGxhY2UQASo/CgRSb2xlEg4KClJvbGVfT3du",
+            "ZXIQABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchAC",
+            "KjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0",
+            "aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
+            "T3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "Offering" }, new[]{ "Payload" }, null, null, null),
@@ -102,6 +104,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [pbr::OriginalName("Type_OrganizationUpserted")] OrganizationUpserted = 0,
     [pbr::OriginalName("Type_OrganizationDeleted")] OrganizationDeleted = 1,
     [pbr::OriginalName("Type_OrganizationOfferingUpdated")] OrganizationOfferingUpdated = 2,
+  }
+
+  public enum OrganizationType {
+    [pbr::OriginalName("OrganizationType_Private")] Private = 0,
+    [pbr::OriginalName("OrganizationType_Marketplace")] Marketplace = 1,
   }
 
   public enum Role {
@@ -1275,13 +1282,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 14;
-    private string type_ = "";
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType type_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Type {
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType Type {
       get { return type_; }
       set {
-        type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        type_ = value;
       }
     }
 
@@ -1399,7 +1406,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       hash ^= tags_.GetHashCode();
       if (ssoSettings_ != null) hash ^= SsoSettings.GetHashCode();
       if (taxDetails_ != null) hash ^= TaxDetails.GetHashCode();
-      if (Type.Length != 0) hash ^= Type.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private) hash ^= Type.GetHashCode();
       if (ContactEmail.Length != 0) hash ^= ContactEmail.GetHashCode();
       if (ContactPhone.Length != 0) hash ^= ContactPhone.GetHashCode();
       if (IsListable != false) hash ^= IsListable.GetHashCode();
@@ -1466,9 +1473,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(106);
         output.WriteMessage(TaxDetails);
       }
-      if (Type.Length != 0) {
-        output.WriteRawTag(114);
-        output.WriteString(Type);
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private) {
+        output.WriteRawTag(112);
+        output.WriteEnum((int) Type);
       }
       if (ContactEmail.Length != 0) {
         output.WriteRawTag(122);
@@ -1543,9 +1550,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(106);
         output.WriteMessage(TaxDetails);
       }
-      if (Type.Length != 0) {
-        output.WriteRawTag(114);
-        output.WriteString(Type);
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private) {
+        output.WriteRawTag(112);
+        output.WriteEnum((int) Type);
       }
       if (ContactEmail.Length != 0) {
         output.WriteRawTag(122);
@@ -1610,8 +1617,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (taxDetails_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(TaxDetails);
       }
-      if (Type.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (ContactEmail.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ContactEmail);
@@ -1685,7 +1692,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         }
         TaxDetails.MergeFrom(other.TaxDetails);
       }
-      if (other.Type.Length != 0) {
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private) {
         Type = other.Type;
       }
       if (other.ContactEmail.Length != 0) {
@@ -1789,8 +1796,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             input.ReadMessage(TaxDetails);
             break;
           }
-          case 114: {
-            Type = input.ReadString();
+          case 112: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType) input.ReadEnum();
             break;
           }
           case 122: {
@@ -1899,8 +1906,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             input.ReadMessage(TaxDetails);
             break;
           }
-          case 114: {
-            Type = input.ReadString();
+          case 112: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType) input.ReadEnum();
             break;
           }
           case 122: {

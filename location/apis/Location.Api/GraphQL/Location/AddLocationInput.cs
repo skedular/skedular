@@ -18,6 +18,7 @@ public class AddLocationInput
     public string? OrganizationUniqueAlphanumericName { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("type")] public LocationType Type { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }

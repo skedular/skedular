@@ -55,6 +55,7 @@ using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripe
 using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationStripePaymentMethod;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
+using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
 
 namespace Organization.Api.Mappers;
 
@@ -510,7 +511,12 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Website = src.Website,
-            Type = src.Type.ToOrganizationType(),
+            Type = src.Type switch
+            {
+                OrganizationType.Private => global::Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => global::Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsListable = src.IsListable,

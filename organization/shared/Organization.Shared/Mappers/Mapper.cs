@@ -15,6 +15,7 @@ using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Va
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
+using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PaymentMethod = Stripe.PaymentMethod;
 using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
@@ -60,7 +61,12 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
-            Type = src.Type.ToOrganizationType(),
+            Type = src.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             IsListable = src.IsListable,

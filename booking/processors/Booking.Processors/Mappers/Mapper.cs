@@ -10,6 +10,7 @@ using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
@@ -159,7 +160,12 @@ public class Mapper : IMapper
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
             },
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

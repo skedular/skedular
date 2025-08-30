@@ -11,6 +11,7 @@ using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Location.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Processors.Mappers;
@@ -106,7 +107,12 @@ public class Mapper : IMapper
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
             },
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

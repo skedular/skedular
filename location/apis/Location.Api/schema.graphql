@@ -72,6 +72,7 @@ type LocationDetails {
   about: String
   organization: Location_OrganizationDetails!
   timezone: String
+  type: LocationTypeDetails!
   openingHours: OpeningHours!
   deskCapacity: Int!
   roomCapacity: Int!
@@ -119,6 +120,11 @@ type LocationPhysicalAddressDetails {
   countryCode: String
   organization: LocationDetails!
   id: ID!
+}
+
+type LocationTypeDetails {
+  type: LocationType!
+  name: String!
 }
 
 type Location_OrganizationDetails {
@@ -178,6 +184,7 @@ type PageInfo {
 type Query {
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge! @cost(weight: "10")
+  locationTypes: [LocationTypeDetails!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
@@ -275,6 +282,7 @@ input AddLocationInput {
   organizationId: String
   organizationUniqueAlphanumericName: String
   timezone: String
+  type: LocationType!
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
@@ -415,6 +423,7 @@ input UpdateLocationInput {
   name: String!
   about: String
   timezone: String
+  type: LocationType!
   locationTagIds: [String!]!
   contactEmail: String
   contactPhone: String
@@ -491,6 +500,11 @@ enum LocationOrderField {
   NAME
   ABOUT
   TIMEZONE
+}
+
+enum LocationType {
+  PRIVATE
+  MARKETPLACE
 }
 
 enum OrderDirection {

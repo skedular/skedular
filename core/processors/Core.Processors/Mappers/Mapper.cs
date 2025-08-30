@@ -6,6 +6,7 @@ using Customer = Core.Shared.Models.Customer;
 using Identity = Core.Shared.Database.Entities.Identity;
 using Organization = Core.Shared.Models.Organization;
 using OrganizationMember = Core.Shared.Database.Entities.OrganizationMember;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 
 namespace Core.Processors.Mappers;
 
@@ -96,7 +97,12 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             UniqueAlphanumericName =
                 string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

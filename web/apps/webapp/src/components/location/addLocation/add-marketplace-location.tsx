@@ -2,7 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
+import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
@@ -12,7 +12,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addMarketplaceLocation_addLocationMutation } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
+import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GridViewIcon from '@mui/icons-material/GridView';
@@ -33,12 +33,16 @@ import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
   query addMarketplaceLocation_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+    me {
+      emails
+    }
     organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       type {
         type
       }
     }
     ...multipleChoicesLocationTags_query
+    ...singleChoiceLocationType_query
   }
 `;
 
@@ -56,6 +60,7 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
+  type: string;
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
@@ -65,6 +70,7 @@ const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
+  type: string().required('Type is required'),
   locationTagIds: array().nullable(),
   contactEmail: string()
     .nullable()
@@ -83,6 +89,10 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           name
           about
           timezone
+          type {
+            type
+            name
+          }
           contactEmail
           contactPhone
           primaryFeatureImage {
@@ -118,7 +128,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
@@ -141,6 +151,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           about,
           organizationUniqueAlphanumericName,
           timezone,
+          type: type as LocationType,
           contactEmail,
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
@@ -178,6 +189,10 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             name,
             about,
             timezone,
+            type: {
+              type: type as LocationType,
+              name: '',
+            },
             contactEmail,
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
@@ -234,6 +249,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             name: '',
             about: '',
             timezone: '',
+            type: 'MARKETPLACE',
             locationTagIds: [],
             contactEmail: '',
             contactPhone: '',
@@ -285,6 +301,12 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   helperText="Select the local timezone of this location to ensure accurate scheduling and availability for bookings."
                 />
               </FormFieldLabel>
+
+              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                <FormFieldLabel label="Type">
+                  <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                </FormFieldLabel>
+              )}
 
               <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
                 <TextField

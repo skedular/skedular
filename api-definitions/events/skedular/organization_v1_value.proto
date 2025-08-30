@@ -46,12 +46,17 @@ message Organization {
   repeated Tag tags = 11;
   OrganizationSsoSettings ssoSettings = 12;
   OrganizationTaxDetails taxDetails = 13;
-  string type = 14;
+  OrganizationType type = 14;
   string contactEmail = 15;
   string contactPhone = 16;
   bool isListable = 17;
   string memberVisibilityPolicy = 18;
   PhysicalAddress physicalAddress = 19;
+}
+
+enum OrganizationType {
+  OrganizationType_Private = 0;
+  OrganizationType_Marketplace = 1;
 }
 
 enum Role {

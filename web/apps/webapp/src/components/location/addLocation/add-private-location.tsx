@@ -2,7 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { locationFeatureImageHeight, locationFeatureImageWidth } from '@/components/location';
+import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
@@ -12,7 +12,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addPrivateLocation_addLocationMutation } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
+import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ChairAltIcon from '@mui/icons-material/ChairAlt';
@@ -34,12 +34,16 @@ import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
   query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+    me {
+      emails
+    }
     organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       type {
         type
       }
     }
     ...multipleChoicesLocationTags_query
+    ...singleChoiceLocationType_query
   }
 `;
 
@@ -57,6 +61,7 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
+  type: string;
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
@@ -66,6 +71,7 @@ const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
+  type: string().required('Type is required'),
   locationTagIds: array().nullable(),
   contactEmail: string()
     .nullable()
@@ -84,6 +90,10 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           name
           about
           timezone
+          type {
+            type
+            name
+          }
           contactEmail
           contactPhone
           primaryFeatureImage {
@@ -119,7 +129,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
@@ -142,6 +152,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           about,
           organizationUniqueAlphanumericName,
           timezone,
+          type: type as LocationType,
           contactEmail,
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
@@ -179,6 +190,10 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             name,
             about,
             timezone,
+            type: {
+              type: type as LocationType,
+              name: '',
+            },
             contactEmail,
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
@@ -233,6 +248,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             name: '',
             about: '',
             timezone: '',
+            type: 'PRIVATE',
             locationTagIds: [],
             contactEmail: '',
             contactPhone: '',
@@ -284,6 +300,12 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                   helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
                 />
               </FormFieldLabel>
+
+              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                <FormFieldLabel label="Type">
+                  <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                </FormFieldLabel>
+              )}
 
               <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
                 <TextField

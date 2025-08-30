@@ -8,6 +8,7 @@ using Organization = Customer.Shared.Models.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Team = Customer.Shared.Models.Team;
@@ -88,7 +89,12 @@ public class Mapper : IMapper
                 string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
             Name = organizationAfterState.Name,
             LogoUrl = organizationAfterState.LogoUrl,
-            Type = organizationAfterState.Type.ToOrganizationType(),
+            Type = organizationAfterState.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 

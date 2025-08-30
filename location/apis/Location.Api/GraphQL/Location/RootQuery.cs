@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -12,6 +13,13 @@ namespace Location.Api.GraphQL.Location;
 [QueryType]
 public class RootQuery(IMapper mapper)
 {
+    [UseResolverScope]
+    public IEnumerable<LocationTypeDetails> LocationTypes() =>
+    [
+        new() { Type = LocationType.Private, Name = LocationTypeConstants.Private.ToLocationTypeName() },
+        new() { Type = LocationType.Marketplace, Name = LocationTypeConstants.Marketplace.ToLocationTypeName() }
+    ];
+
     [UseResolverScope]
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
         mapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));

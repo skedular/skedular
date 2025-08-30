@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27d76c0c13a2fde50f6abcda66ad83af>>
+ * @generated SignedSource<<c9927643e21cefec2d9e77c0359886b1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
@@ -21,6 +22,7 @@ export type AddLocationInput = {
   organizationUniqueAlphanumericName?: string | null | undefined;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
+  type: LocationType;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -60,6 +62,10 @@ export type addPrivateLocation_addLocationMutation$data = {
         } | null | undefined;
       } | null | undefined;
       readonly timezone: string | null | undefined;
+      readonly type: {
+        readonly name: string;
+        readonly type: LocationType;
+      };
     };
   };
 };
@@ -89,6 +95,10 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
         } | null | undefined;
       } | null | undefined;
       readonly timezone: string | null | undefined;
+      readonly type: {
+        readonly name: string;
+        readonly type: LocationType;
+      };
     };
   };
 };
@@ -179,6 +189,25 @@ v3 = [
             "args": null,
             "kind": "ScalarField",
             "name": "timezone",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -277,16 +306,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "30c347ee6b57ab3e148fbb38cbf9dd34",
+    "cacheID": "b72b53cc8e44c7bb71d3e9c8d3c7b0c3",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f211b04ea1045b146105eab41b437dee";
+(node as any).hash = "70fd91db572e25155ef97dcaf4c71f19";
 
 export default node;

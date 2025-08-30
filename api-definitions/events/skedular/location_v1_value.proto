@@ -44,6 +44,12 @@ message Location {
   string contactEmail = 11;
   string contactPhone = 12;
   CdnImageFile primaryFeatureImage = 13;
+  LocationType type = 14;
+}
+
+enum LocationType {
+  LocationType_Private = 0;
+  LocationType_Marketplace = 1;
 }
 
 message Resource {
