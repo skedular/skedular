@@ -2,8 +2,9 @@ import { Loading } from '@/components/loading';
 import { MarketplaceLocations } from '@/components/location/marketplaceLocations';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { NoOrganizationRootShell } from '@/components/rootShell';
+import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -22,11 +23,24 @@ const RootQuery = graphql`
 
 const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageHome_rootQuery>(RootQuery, queryReference);
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <></>;
+  }
+
+  if (user) {
+    return (
+      <NoOrganizationRootShell collapsed={true}>
+        <MarketplaceLocations rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
+      </NoOrganizationRootShell>
+    );
+  }
 
   return (
-    <NoOrganizationRootShell collapsed={true}>
+    <UnauthenticatedRootShell>
       <MarketplaceLocations rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
-    </NoOrganizationRootShell>
+    </UnauthenticatedRootShell>
   );
 };
 

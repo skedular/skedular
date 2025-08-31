@@ -70,13 +70,44 @@ public class RootQuery(IMapper mapper)
         int? first,
         string? before,
         int? last,
-        LocationWhereInput where,
+        MarketplaceLocationWhereInput where,
         IEnumerable<LocationOrderInput>? orderBy,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken) =>
-        where.SearchBoundaries is null
-            ? Connection<LocationEdge>.Empty
-            : await LocationsAsync(after, first, before, last, where, orderBy, locationService, cancellationToken);
+        CancellationToken cancellationToken)
+    {
+        if (where.SearchBoundaries is null)
+        {
+            return Connection<LocationEdge>.Empty;
+        }
+
+        var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new LocationSearchCriteria(
+                null,
+                null,
+                where.LocationIds.ToSafeCollection(),
+                where.NameContains,
+                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
+                null,
+                [LocationType.Marketplace],
+                where.SearchBoundaries),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
+            true,
+            cancellationToken);
+
+        return new Connection<LocationEdge>
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo),
+            TotalCount = totalCount
+        };
+    }
 
     [UseResolverScope]
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(

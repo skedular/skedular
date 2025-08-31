@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0db105f924d1f5b76595548094e38ab>>
+ * @generated SignedSource<<ec99455c35a1ed9c14c2c3c417e4165d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -99,13 +99,6 @@ return {
               "kind": "Variable",
               "name": "searchBoundaries",
               "variableName": "searchBoundaries"
-            },
-            {
-              "kind": "Literal",
-              "name": "types",
-              "value": [
-                "MARKETPLACE"
-              ]
             }
           ],
           "kind": "ObjectValue",
@@ -250,6 +243,6 @@ return {
 };
 })();
 
-(node as any).hash = "30041715f0531308608422b9853f3b31";
+(node as any).hash = "64ac96100bbc2db4f2b1e7dd11c71533";
 
 export default node;

@@ -32,7 +32,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
       fragment marketplaceLocations_locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "marketplaceLocations_locations_refetchableFragment") {
-        marketplaceLocations(first: $count, after: $cursor, where: { types: [MARKETPLACE], searchBoundaries: $searchBoundaries }, orderBy: $locationsSortingValues)
+        marketplaceLocations(first: $count, after: $cursor, where: { searchBoundaries: $searchBoundaries }, orderBy: $locationsSortingValues)
           @connection(key: "locations_marketplaceLocations") {
           __id
           totalCount

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2584052e3ec8c1ffab550262f76efb68>>
+ * @generated SignedSource<<c72660c39328f90698f29d19eecb6a69>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -59,13 +59,6 @@ v2 = [
         "kind": "Variable",
         "name": "searchBoundaries",
         "variableName": "searchBoundaries"
-      },
-      {
-        "kind": "Literal",
-        "name": "types",
-        "value": [
-          "MARKETPLACE"
-        ]
       }
     ],
     "kind": "ObjectValue",
@@ -297,12 +290,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "11256f707cbf7fe72ae0db5b1ffc53be",
+    "cacheID": "6e8bd2a5c552758737bcc61d410744e5",
     "id": null,
     "metadata": {},
     "name": "pageHome_rootQuery",
     "operationKind": "query",
-    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {types: [MARKETPLACE], searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

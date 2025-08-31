@@ -1138,7 +1138,7 @@ type Query {
   locationVersion: Version!
   marketplaceBookingTypes: [BookingTypeDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
-  marketplaceLocations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
+  marketplaceLocations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: MarketplaceLocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceVersion: Version!
   me: CustomerDetails! @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -2036,6 +2036,14 @@ input LocationWhereInput {
 input MakeBookingPaymentNotRequiredInput {
   clientMutationId: String
   id: String!
+}
+
+input MarketplaceLocationWhereInput {
+  customTagIds: [String!]
+  locationIds: [String!]
+  nameContains: String
+  searchBoundaries: PolygonInput
+  zoneIds: [String!]
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {

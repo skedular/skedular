@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7fa98259fb6319c007ba23f3d6a2f2ed>>
+ * @generated SignedSource<<54a6db001eaccefeec70e67f1ad387bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -83,13 +83,6 @@ v1 = [
         "kind": "Variable",
         "name": "searchBoundaries",
         "variableName": "searchBoundaries"
-      },
-      {
-        "kind": "Literal",
-        "name": "types",
-        "value": [
-          "MARKETPLACE"
-        ]
       }
     ],
     "kind": "ObjectValue",
@@ -326,16 +319,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "63ad11522388ceb2c4d63c9355845d5e",
+    "cacheID": "7f5d3d81ee574bd118f70a5abe13838d",
     "id": null,
     "metadata": {},
     "name": "marketplaceLocations_locations_refetchableFragment",
     "operationKind": "query",
-    "text": "query marketplaceLocations_locations_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $searchBoundaries: PolygonInput\n) {\n  ...marketplaceLocations_locations_query_1G22uz\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query_1G22uz on Query {\n  marketplaceLocations(first: $count, after: $cursor, where: {types: [MARKETPLACE], searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query marketplaceLocations_locations_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $searchBoundaries: PolygonInput\n) {\n  ...marketplaceLocations_locations_query_1G22uz\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query_1G22uz on Query {\n  marketplaceLocations(first: $count, after: $cursor, where: {searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "30041715f0531308608422b9853f3b31";
+(node as any).hash = "64ac96100bbc2db4f2b1e7dd11c71533";
 
 export default node;
