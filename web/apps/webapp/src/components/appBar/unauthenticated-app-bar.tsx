@@ -1,4 +1,4 @@
-import { getSignInUrlAction } from '@/components/authActions';
+import { getSignInUrlAction, getSignUpUrlAction } from '@/components/authActions';
 import { BodyIconTypography, PushToRight } from '@/components/commons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -21,6 +21,7 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [signInUrl, setSignInUrl] = useState('');
+  const [signUpUrl, setSignUpUrl] = useState('');
   const router = useRouter();
 
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
@@ -31,6 +32,19 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const heightPercentage = ((maxWidth - 30) * 100) / originalWidth;
   const width = (originalWidth * widthPercentage) / 100;
   const height = (originalHeight * heightPercentage) / 100;
+
+  useEffect(() => {
+    async function loadSignInUrl() {
+      setSignInUrl(await getSignInUrlAction());
+    }
+
+    async function loadSignUpUrl() {
+      setSignUpUrl(await getSignUpUrlAction());
+    }
+
+    loadSignInUrl();
+    loadSignUpUrl();
+  }, []);
 
   const handleDarkThemeClicked = () => {
     updatePaletteMode('dark');
@@ -44,13 +58,9 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
     router.push(signInUrl);
   };
 
-  useEffect(() => {
-    async function loadSignInUrl() {
-      setSignInUrl(await getSignInUrlAction());
-    }
-
-    loadSignInUrl();
-  }, []);
+  const handleSignUp = () => {
+    router.push(signUpUrl);
+  };
 
   return (
     <MuiAppBar position="sticky" className="app-bar">
@@ -78,8 +88,14 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
         )}
 
         <IconButton onClick={handleSignIn}>
-          <Button variant={'contained'} fullWidth sx={{ textTransform: 'none' }}>
-            <BodyIconTypography label={'Sign In'} />
+          <Button variant="contained" fullWidth sx={{ textTransform: 'none' }}>
+            <BodyIconTypography label="Sign In" />
+          </Button>
+        </IconButton>
+
+        <IconButton onClick={handleSignUp}>
+          <Button variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
+            <BodyIconTypography label="Sign Up" invertDefaultColor={paletteMode === 'dark'} />
           </Button>
         </IconButton>
       </Toolbar>
