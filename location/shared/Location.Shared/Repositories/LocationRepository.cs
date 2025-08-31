@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -102,6 +103,12 @@ internal static class LocationExtensions
                     item.Resources.Any(resource => !resource.DeletedAt.HasValue && resource.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
+        if (searchCriteria.Types.Count > 0)
+        {
+            var types = searchCriteria.Types.Select(item => item.ToLocationType()).ToList();
+            query = query.Where(item => types.Contains(item.Type));
+        }
+
         return query;
     }
 
@@ -126,6 +133,9 @@ internal static class LocationExtensions
             LocationOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Timezone)
                 : originalQuery.OrderByDescending(x => x.Timezone),
+            LocationOrderField.Type => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Type)
+                : originalQuery.OrderByDescending(x => x.Type),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -139,6 +149,9 @@ internal static class LocationExtensions
                 LocationOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Timezone)
                     : query.ThenByDescending(x => x.Timezone),
+                LocationOrderField.Type => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Type)
+                    : query.ThenByDescending(x => x.Type),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

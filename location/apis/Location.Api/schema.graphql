@@ -398,6 +398,7 @@ input LocationWhereInput {
   nameContains: String
   customTagIds: [String!]
   zoneIds: [String!]
+  types: [LocationType!]
 }
 
 input OpeningHoursDetailsInput {
@@ -518,6 +519,7 @@ enum LocationOrderField {
   NAME
   ABOUT
   TIMEZONE
+  TYPE
 }
 
 enum LocationType {

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Location.Api.GraphQL.Location;
@@ -12,4 +13,6 @@ public class LocationWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("types")] public IEnumerable<LocationType>? Types { get; set; }
+    
 }

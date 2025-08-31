@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Pagination;
 
 namespace Location.Shared.Models;
@@ -8,7 +9,8 @@ public record LocationSearchCriteria(
     ICollection<string> LocationIds,
     string? NameContains,
     ICollection<string> TagIds,
-    string? CustomerId);
+    string? CustomerId,
+    ICollection<LocationType> Types);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 
@@ -16,5 +18,6 @@ public enum LocationOrderField
 {
     Name,
     About,
-    Timezone
+    Timezone,
+    Type
 }

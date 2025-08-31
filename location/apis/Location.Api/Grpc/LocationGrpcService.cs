@@ -18,6 +18,7 @@ using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using Version = Api.Shared.Services.Grpc.Skedular.Location.V1.Version;
 using Resource = Api.Shared.Services.Grpc.Skedular.Location.V1.Resource;
 using ResourceOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceOrderField;
+using LocationType = Api.Shared.Services.Models.LocationType;
 
 namespace Location.Api.Grpc;
 
@@ -69,7 +70,13 @@ public class LocationGrpcService(
                 request.Where.LocationIds,
                 request.Where.NameContains,
                 request.Where.TagIds,
-                null),
+                null,
+                request.Where.Types_.Select(item => item switch
+                {
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private => LocationType.Private,
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace => LocationType.Marketplace,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+                }).ToList()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
@@ -126,7 +133,14 @@ public class LocationGrpcService(
                 null,
                 request.Where.LocationIds,
                 request.Where.NameContains,
-                request.Where.TagIds, null),
+                request.Where.TagIds,
+                null,
+                request.Where.Types_.Select(item => item switch
+                {
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private => LocationType.Private,
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace => LocationType.Marketplace,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+                }).ToList()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending

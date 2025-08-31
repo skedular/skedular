@@ -1990,6 +1990,7 @@ input LocationWhereInput {
   locationIds: [String!]
   nameContains: String
   organizationUniqueAlphanumericName: String
+  types: [LocationType!]
   zoneIds: [String!]
 }
 
@@ -2628,6 +2629,7 @@ enum LocationOrderField {
   ABOUT
   NAME
   TIMEZONE
+  TYPE
 }
 
 enum LocationType {

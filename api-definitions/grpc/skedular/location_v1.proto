@@ -148,6 +148,7 @@ message LocationWhereInput {
   repeated string locationIds = 2;
   string nameContains = 3;
   repeated string tagIds = 4;
+  repeated LocationType types = 5;
 }
 
 message LocationOrderInput {

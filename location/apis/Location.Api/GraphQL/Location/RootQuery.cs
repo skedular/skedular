@@ -43,7 +43,8 @@ public class RootQuery(IMapper mapper)
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
-                null),
+                null,
+                where.Types.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
@@ -106,7 +107,8 @@ public class RootQuery(IMapper mapper)
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
                 where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).ToList(),
-                null),
+                null,
+                where.Types.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
