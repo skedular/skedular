@@ -145,8 +145,7 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
+            ExtraMetadata = src.ExtraMetadata,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
@@ -197,8 +196,7 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
+            ExtraMetadata = src.ExtraMetadata,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = organization,
@@ -215,8 +213,7 @@ public class Mapper : IMapper
         dest.About = src.About;
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
-        dest.ContactEmail = src.ContactEmail;
-        dest.ContactPhone = src.ContactPhone;
+        dest.ExtraMetadata = src.ExtraMetadata;
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.OpeningHours = src.OpeningHours;
         dest.OrganizationTags = organizationTags;
@@ -232,13 +229,8 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
-                Type = new LocationTypeDetails
-                {
-                    Type = src.Type,
-                    Name = src.Type.ToLocationTypeName()
-                },
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone,
+                Type = new LocationTypeDetails { Type = src.Type, Name = src.Type.ToLocationTypeName() },
+                ExtraMetadata = src.ExtraMetadata,
                 PrimaryFeatureImage = src.PrimaryFeatureImage,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
@@ -393,8 +385,7 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             Type = src.Type,
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
+            ExtraMetadata = src.ExtraMetadata,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             Organization =
                 new Shared.Models.Organization
@@ -402,7 +393,7 @@ public class Mapper : IMapper
                     Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
                 },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            PhysicalAddress = MapTo(src.PhysicalAddress),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
     public Shared.Models.Location MapTo(UpdateLocationInput src) =>
@@ -413,8 +404,7 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             Type = src.Type,
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
+            ExtraMetadata = src.ExtraMetadata,
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -464,11 +454,9 @@ public class Mapper : IMapper
             Type = src.Type switch
             {
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
-                LocationType.Marketplace =>global::Api.Shared.Services.Models.LocationType.Marketplace,
+                LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
@@ -488,8 +476,6 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Models.LocationType.Marketplace => LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail.ToSafeString(),
-            ContactPhone = src.ContactPhone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
@@ -524,8 +510,6 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
@@ -544,8 +528,6 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
@@ -1191,7 +1173,7 @@ public class Mapper : IMapper
     private static Shared.Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddressInput? src) =>
         src is null
             ? null
-            : new()
+            : new Shared.Models.LocationPhysicalAddress
             {
                 OsmType = src.OsmType,
                 OsmId = src.OsmId,
@@ -1206,6 +1188,6 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
+                CountryCode = src.CountryCode
             };
 }

@@ -64,8 +64,6 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
-  contactEmail: string | null;
-  contactPhone: string | null;
 };
 
 const locationSchema = object({
@@ -74,10 +72,6 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
-  contactEmail: string()
-    .nullable()
-    .email(({ value }) => `${value} is not a valid email`),
-  contactPhone: string().nullable(),
 });
 
 const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
@@ -95,8 +89,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             type
             name
           }
-          contactEmail
-          contactPhone
           primaryFeatureImage {
             original {
               url
@@ -135,17 +127,13 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-  const [locationContactEmail, setLocationContactEmail] = useState<string | null>('');
-  const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
-  const [locationContactPhone, setLocationContactPhone] = useState<string | null>('');
-  const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
 
   const handleCloseClick = () => {
     onCancel();
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, type, locationTagIds }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
@@ -169,8 +157,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           organizationUniqueAlphanumericName,
           timezone,
           type: type as LocationType,
-          contactEmail,
-          contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
         },
@@ -210,8 +196,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
               type: type as LocationType,
               name: '',
             },
-            contactEmail,
-            contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
           },
@@ -266,8 +250,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             timezone: locationTimezone,
             type: locationType,
             locationTagIds,
-            contactEmail: locationContactEmail,
-            contactPhone: locationContactPhone,
           }}
           validate={validateLocationDetails}
           render={({ handleSubmit, values }) => {
@@ -276,8 +258,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
             debounceSetLocationTagIds(values!.locationTagIds);
-            debounceSetLocationContactEmail(values!.contactEmail);
-            debounceSetLocationContactPhone(values!.contactPhone);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -327,7 +307,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                 </FormFieldLabel>
 
                 {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                  <FormFieldLabel label="Type">
+                  <FormFieldLabel label="Type" required={requiredFields.type}>
                     <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>
                 )}
@@ -342,24 +322,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                     />
                   </FormFieldLabel>
                 )}
-
-                <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
-                  <TextField
-                    name="contactEmail"
-                    required={requiredFields.contactEmail}
-                    helperText={
-                      <HelperText text="Enter a contact email for this location. This will be used for inquiries, notifications, and internal communication related to the site." />
-                    }
-                  />
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
-                  <TextField
-                    name="contactPhone"
-                    required={requiredFields.contactPhone}
-                    helperText={<HelperText text="Provide a phone number for this location so members or visitors can reach out directly if needed." />}
-                  />
-                </FormFieldLabel>
 
                 <StackRow>
                   <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>

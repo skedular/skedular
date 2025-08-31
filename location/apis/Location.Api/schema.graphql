@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+type AreaRange {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
 type CdnFile {
   url: String!
   height: Int
@@ -30,6 +35,12 @@ type ConnectionOfResourceEdge {
   pageInfo: PageInfo!
   edges: [ResourceEdge!]!
   totalCount: Int
+}
+
+type ContactDetails {
+  contactPerson: String
+  contactEmail: String
+  contactPhone: String
 }
 
 type DesksOccupancyPercentage {
@@ -86,15 +97,20 @@ type LocationDetails {
   zones: [Location_OrganizationTagDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
   locationTags: [Location_OrganizationTagDetails!]!
-  contactEmail: String
-  contactPhone: String
   primaryFeatureImage: CdnImageFile
+  extraMetadata: LocationExtraMetadata
   id: ID!
 }
 
 type LocationEdge {
   node: LocationDetails!
   cursor: String!
+}
+
+type LocationExtraMetadata {
+  contactDetails: ContactDetails
+  areaRange: AreaRange
+  peopleCapacity: PeopleCapacity
 }
 
 type LocationPayload {
@@ -179,6 +195,11 @@ type PageInfo {
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
+}
+
+type PeopleCapacity {
+  from: String!
+  to: String!
 }
 
 type Query {
@@ -285,10 +306,9 @@ input AddLocationInput {
   timezone: String
   type: LocationType!
   locationTagIds: [String!]!
-  contactEmail: String
-  contactPhone: String
   primaryFeatureImage: CdnImageFileInput
   physicalAddress: LocationPhysicalAddressInput
+  extraMetadata: LocationExtraMetadataInput
 }
 
 input AddLocationPhysicalAddressInput {
@@ -326,6 +346,11 @@ input AddResourceInput {
   organizationResourceTypeId: String!
 }
 
+input AreaRangeInput {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
 input CdnFileInput {
   url: String!
   height: Int
@@ -335,6 +360,12 @@ input CdnFileInput {
 input CdnImageFileInput {
   original: CdnFileInput
   thumbnail: CdnFileInput
+}
+
+input ContactDetailsInput {
+  contactPerson: String
+  contactEmail: String
+  contactPhone: String
 }
 
 input DeactivateResourcesInput {
@@ -369,6 +400,12 @@ input FloorPlanOrderInput {
 
 input FloorPlanWhereInput {
   locationId: String!
+}
+
+input LocationExtraMetadataInput {
+  contactDetails: ContactDetailsInput
+  areaRange: AreaRangeInput
+  peopleCapacity: PeopleCapacityInput
 }
 
 input LocationOrderInput {
@@ -410,14 +447,19 @@ input OpeningHoursDetailsInput {
   until: String
 }
 
-input PointInput {
+input PeopleCapacityInput {
+  from: String!
+  to: String!
+}
+
+input PointCoordinatesInput {
   longitude: Float!
   latitude: Float!
 }
 
 input PolygonInput {
-  northEast: PointInput!
-  southWest: PointInput!
+  northEast: PointCoordinatesInput!
+  southWest: PointCoordinatesInput!
 }
 
 input ResourceOrderInput {
@@ -456,9 +498,8 @@ input UpdateLocationInput {
   timezone: String
   type: LocationType!
   locationTagIds: [String!]!
-  contactEmail: String
-  contactPhone: String
   primaryFeatureImage: CdnImageFileInput
+  extraMetadata: LocationExtraMetadataInput
 }
 
 input UpdateLocationOpeningHoursInput {

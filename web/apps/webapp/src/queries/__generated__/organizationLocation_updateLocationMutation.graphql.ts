@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ccdcbc0d921326d83d3a80bf80cd36f>>
+ * @generated SignedSource<<65dec9aaa34b9015d237125540505a52>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,14 +13,31 @@ export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
-  contactEmail?: string | null | undefined;
-  contactPhone?: string | null | undefined;
+  extraMetadata?: LocationExtraMetadataInput | null | undefined;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
+};
+export type LocationExtraMetadataInput = {
+  areaRange?: AreaRangeInput | null | undefined;
+  contactDetails?: ContactDetailsInput | null | undefined;
+  peopleCapacity?: PeopleCapacityInput | null | undefined;
+};
+export type AreaRangeInput = {
+  fromInSqm: string;
+  toInSqm: string;
+};
+export type ContactDetailsInput = {
+  contactEmail?: string | null | undefined;
+  contactPerson?: string | null | undefined;
+  contactPhone?: string | null | undefined;
+};
+export type PeopleCapacityInput = {
+  from: string;
+  to: string;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -38,8 +55,21 @@ export type organizationLocation_updateLocationMutation$data = {
   readonly updateLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly contactEmail: string | null | undefined;
-      readonly contactPhone: string | null | undefined;
+      readonly extraMetadata: {
+        readonly areaRange: {
+          readonly fromInSqm: string;
+          readonly toInSqm: string;
+        } | null | undefined;
+        readonly contactDetails: {
+          readonly contactEmail: string | null | undefined;
+          readonly contactPerson: string | null | undefined;
+          readonly contactPhone: string | null | undefined;
+        } | null | undefined;
+        readonly peopleCapacity: {
+          readonly from: string;
+          readonly to: string;
+        } | null | undefined;
+      } | null | undefined;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -117,8 +147,21 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
   readonly updateLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly contactEmail: string | null | undefined;
-      readonly contactPhone: string | null | undefined;
+      readonly extraMetadata: {
+        readonly areaRange: {
+          readonly fromInSqm: string;
+          readonly toInSqm: string;
+        } | null | undefined;
+        readonly contactDetails: {
+          readonly contactEmail: string | null | undefined;
+          readonly contactPerson: string | null | undefined;
+          readonly contactPhone: string | null | undefined;
+        } | null | undefined;
+        readonly peopleCapacity: {
+          readonly from: string;
+          readonly to: string;
+        } | null | undefined;
+      } | null | undefined;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -213,7 +256,14 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "from",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -236,7 +286,7 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -251,13 +301,7 @@ v3 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "from",
-    "storageKey": null
-  },
+  (v2/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -266,7 +310,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": [
@@ -333,15 +377,88 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "contactEmail",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "contactPhone",
+            "concreteType": "LocationExtraMetadata",
+            "kind": "LinkedField",
+            "name": "extraMetadata",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ContactDetails",
+                "kind": "LinkedField",
+                "name": "contactDetails",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactPerson",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactEmail",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactPhone",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AreaRange",
+                "kind": "LinkedField",
+                "name": "areaRange",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "fromInSqm",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "toInSqm",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PeopleCapacity",
+                "kind": "LinkedField",
+                "name": "peopleCapacity",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "to",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -359,7 +476,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -369,7 +486,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -424,7 +541,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "monday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -434,7 +551,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "tuesday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -444,7 +561,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "wednesday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -454,7 +571,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "thursday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -464,7 +581,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "friday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -474,7 +591,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "saturday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -484,7 +601,7 @@ v4 = [
                     "kind": "LinkedField",
                     "name": "sunday",
                     "plural": false,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -506,7 +623,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -515,19 +632,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "9056935b2b474ab2bc0342fdd83c411c",
+    "cacheID": "16bc4cbb17a55bd00200d4df3a545cad",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPerson\n          contactEmail\n          contactPhone\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "93416ff98d46e4223cf9ab9aabd20d85";
+(node as any).hash = "25104756dcb0e0417e7ead757258ade2";
 
 export default node;

@@ -23,4 +23,11 @@
         <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Database\Migrations\20250831062335_ReplacedLocationContactDetailsWithExtraMetadata.cs"/>
+        <Compile Remove="Database\Migrations\20250831062335_ReplacedLocationContactDetailsWithExtraMetadata.Designer.cs"/>
+        <Compile Remove="Database\Migrations\20250831063001_ReplacedLocationContactDetailsWithExtraMetadata.cs"/>
+        <Compile Remove="Database\Migrations\20250831063001_ReplacedLocationContactDetailsWithExtraMetadata.Designer.cs"/>
+    </ItemGroup>
+
 </Project>

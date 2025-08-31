@@ -66,8 +66,13 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
+  contactPerson: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
+  areaRangeFromInSqm: string | null;
+  areaRangeToInSqm: string | null;
+  peopleCapacityFrom: string | null;
+  peopleCapacityTo: string | null;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string | null;
@@ -83,10 +88,15 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
+  contactPerson: string().nullable(),
   contactEmail: string()
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
   contactPhone: string().nullable(),
+  areaRangeFromInSqm: string().nullable(),
+  areaRangeToInSqm: string().nullable(),
+  peopleCapacityFrom: string().nullable(),
+  peopleCapacityTo: string().nullable(),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string(),
@@ -111,8 +121,21 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             type
             name
           }
-          contactEmail
-          contactPhone
+          extraMetadata {
+            contactDetails {
+              contactPerson
+              contactEmail
+              contactPhone
+            }
+            areaRange {
+              fromInSqm
+              toInSqm
+            }
+            peopleCapacity {
+              from
+              to
+            }
+          }
           primaryFeatureImage {
             original {
               url
@@ -167,10 +190,24 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-  const [locationContactEmail, setLocationContactEmail] = useState<string | null>('');
+
+  const [locationContactPerson, setLocationContactPerson] = useState<string | null>(null);
+  const debounceSetLocationContactPerson = useDebounceCallback(setLocationContactPerson, keyboardTextFieldDebounceTimeout);
+  const [locationContactEmail, setLocationContactEmail] = useState<string | null>(null);
   const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
-  const [locationContactPhone, setLocationContactPhone] = useState<string | null>('');
+  const [locationContactPhone, setLocationContactPhone] = useState<string | null>(null);
   const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
+
+  const [locationAreaRangeFromSqm, setLocationAreaRangeFromSqm] = useState<string | null>(null);
+  const debounceSetLocationAreaRangeFromSqm = useDebounceCallback(setLocationAreaRangeFromSqm, keyboardTextFieldDebounceTimeout);
+  const [locationAreaRangeToSqm, setLocationAreaRangeToSqm] = useState<string | null>(null);
+  const debounceSetLocationAreaRangeToSqm = useDebounceCallback(setLocationAreaRangeToSqm, keyboardTextFieldDebounceTimeout);
+
+  const [locationPeopleCapacityFrom, setLocationPeopleCapacityFrom] = useState<string | null>(null);
+  const debounceSetLocationPeopleCapacityFrom = useDebounceCallback(setLocationPeopleCapacityFrom, keyboardTextFieldDebounceTimeout);
+  const [locationPeopleCapacityTo, setLocationPeopleCapacityTo] = useState<string | null>(null);
+  const debounceSetLocationPeopleCapacityTo = useDebounceCallback(setLocationPeopleCapacityTo, keyboardTextFieldDebounceTimeout);
+
   const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState<string | null | undefined>(null);
   const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState<string | null | undefined>(null);
   const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState<string | null | undefined>(null);
@@ -222,8 +259,13 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     about,
     timezone,
     type,
+    contactPerson,
     contactEmail,
     contactPhone,
+    areaRangeFromInSqm,
+    areaRangeToInSqm,
+    peopleCapacityFrom,
+    peopleCapacityTo,
     locationTagIds,
     addressLine1,
     addressLine2,
@@ -262,8 +304,30 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           organizationUniqueAlphanumericName,
           timezone,
           type: type as LocationType,
-          contactEmail,
-          contactPhone,
+          extraMetadata: {
+            contactDetails:
+              contactPerson || contactEmail || contactPhone
+                ? {
+                    contactPerson,
+                    contactEmail,
+                    contactPhone,
+                  }
+                : null,
+            areaRange:
+              areaRangeFromInSqm && areaRangeToInSqm
+                ? {
+                    fromInSqm: areaRangeFromInSqm,
+                    toInSqm: areaRangeToInSqm,
+                  }
+                : null,
+            peopleCapacity:
+              peopleCapacityFrom && peopleCapacityTo
+                ? {
+                    from: peopleCapacityFrom,
+                    to: peopleCapacityTo,
+                  }
+                : null,
+          },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
           physicalAddress: {
@@ -319,8 +383,30 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
               type: type as LocationType,
               name: '',
             },
-            contactEmail,
-            contactPhone,
+            extraMetadata: {
+              contactDetails:
+                contactPerson || contactEmail || contactPhone
+                  ? {
+                      contactPerson,
+                      contactEmail,
+                      contactPhone,
+                    }
+                  : null,
+              areaRange:
+                areaRangeFromInSqm && areaRangeToInSqm
+                  ? {
+                      fromInSqm: areaRangeFromInSqm,
+                      toInSqm: areaRangeToInSqm,
+                    }
+                  : null,
+              peopleCapacity:
+                peopleCapacityFrom && peopleCapacityTo
+                  ? {
+                      from: peopleCapacityFrom,
+                      to: peopleCapacityTo,
+                    }
+                  : null,
+            },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
             physicalAddress: {
@@ -394,8 +480,15 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             timezone: locationTimezone,
             type: locationType,
             locationTagIds,
+
+            contactPerson: locationContactPerson,
             contactEmail: locationContactEmail,
             contactPhone: locationContactPhone,
+            areaRangeFromInSqm: locationAreaRangeFromSqm,
+            areaRangeToInSqm: locationAreaRangeToSqm,
+            peopleCapacityFrom: locationPeopleCapacityFrom,
+            peopleCapacityTo: locationPeopleCapacityTo,
+
             addressLine1: physicalAddressAddressLine1,
             addressLine2: physicalAddressAddressLine2,
             suburb: physicalAddressSuburb,
@@ -411,8 +504,15 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
             debounceSetLocationTagIds(values!.locationTagIds);
+
+            debounceSetLocationContactPerson(values!.contactPerson);
             debounceSetLocationContactEmail(values!.contactEmail);
             debounceSetLocationContactPhone(values!.contactPhone);
+            debounceSetLocationAreaRangeFromSqm(values!.areaRangeFromInSqm);
+            debounceSetLocationAreaRangeToSqm(values!.areaRangeToInSqm);
+            debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
+            debounceSetLocationPeopleCapacityTo(values!.peopleCapacityTo);
+
             debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
             debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
             debounceSetPhysicalAddressSuburb(values!.suburb);
@@ -469,9 +569,27 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                 </FormFieldLabel>
 
                 {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                  <FormFieldLabel label="Type">
-                    <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                  </FormFieldLabel>
+                  <>
+                    <FormFieldLabel label="Type" required={requiredFields.type}>
+                      <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
+                      <TextField name="areaRangeFromInSqm" required={requiredFields.areaRangeFromInSqm} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Area To(sqm)" required={requiredFields.areaRangeToInSqm}>
+                      <TextField name="areaRangeToInSqm" required={requiredFields.areaRangeToInSqm} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="People Capacity From" required={requiredFields.peopleCapacityFrom}>
+                      <TextField name="peopleCapacityFrom" required={requiredFields.peopleCapacityFrom} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
+                      <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
+                    </FormFieldLabel>
+                  </>
                 )}
 
                 {rootData.organization?.type.type === 'MARKETPLACE' && (
@@ -484,6 +602,16 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     />
                   </FormFieldLabel>
                 )}
+
+                <FormFieldLabel label="Contact Person" required={requiredFields.contactPerson}>
+                  <TextField
+                    name="contactPerson"
+                    required={requiredFields.contactPerson}
+                    helperText={
+                      <HelperText text="Enter the name of the main contact person for this location. This helps visitors and members know who to reach out to for assistance or inquiries." />
+                    }
+                  />
+                </FormFieldLabel>
 
                 <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
                   <TextField

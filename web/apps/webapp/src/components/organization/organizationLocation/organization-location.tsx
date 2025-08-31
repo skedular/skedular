@@ -87,8 +87,13 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
+  contactPerson: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
+  areaRangeFromInSqm: string | null;
+  areaRangeToInSqm: string | null;
+  peopleCapacityFrom: string | null;
+  peopleCapacityTo: string | null;
 };
 
 const locationSchema = object({
@@ -97,10 +102,15 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
+  contactPerson: string().nullable(),
   contactEmail: string()
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
   contactPhone: string().nullable(),
+  areaRangeFromInSqm: string().nullable(),
+  areaRangeToInSqm: string().nullable(),
+  peopleCapacityFrom: string().nullable(),
+  peopleCapacityTo: string().nullable(),
 });
 
 type PhysicalAddress = {
@@ -190,8 +200,21 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             type
             name
           }
-          contactEmail
-          contactPhone
+          extraMetadata {
+            contactDetails {
+              contactPerson
+              contactEmail
+              contactPhone
+            }
+            areaRange {
+              fromInSqm
+              toInSqm
+            }
+            peopleCapacity {
+              from
+              to
+            }
+          }
           primaryFeatureImage {
             original {
               url
@@ -366,8 +389,21 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             type
             name
           }
-          contactEmail
-          contactPhone
+          extraMetadata {
+            contactDetails {
+              contactPerson
+              contactEmail
+              contactPhone
+            }
+            areaRange {
+              fromInSqm
+              toInSqm
+            }
+            peopleCapacity {
+              from
+              to
+            }
+          }
           primaryFeatureImage {
             original {
               url
@@ -560,8 +596,21 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           about
           timezone
-          contactEmail
-          contactPhone
+          extraMetadata {
+            contactDetails {
+              contactPerson
+              contactEmail
+              contactPhone
+            }
+            areaRange {
+              fromInSqm
+              toInSqm
+            }
+            peopleCapacity {
+              from
+              to
+            }
+          }
           physicalAddress {
             addressLine1
             addressLine2
@@ -703,10 +752,23 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-  const [locationContactEmail, setLocationContactEmail] = useState(rootData.location?.contactEmail);
+
+  const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactPerson);
+  const debounceSetLocationContactPerson = useDebounceCallback(setLocationContactPerson, keyboardTextFieldDebounceTimeout);
+  const [locationContactEmail, setLocationContactEmail] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactEmail);
   const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
-  const [locationContactPhone, setLocationContactPhone] = useState(rootData.location?.contactPhone);
+  const [locationContactPhone, setLocationContactPhone] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactPhone);
   const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
+
+  const [locationAreaRangeFromSqm, setLocationAreaRangeFromSqm] = useState<string | null | undefined>(rootData.location?.extraMetadata?.areaRange?.fromInSqm);
+  const debounceSetLocationAreaRangeFromSqm = useDebounceCallback(setLocationAreaRangeFromSqm, keyboardTextFieldDebounceTimeout);
+  const [locationAreaRangeToSqm, setLocationAreaRangeToSqm] = useState<string | null | undefined>(rootData.location?.extraMetadata?.areaRange?.toInSqm);
+  const debounceSetLocationAreaRangeToSqm = useDebounceCallback(setLocationAreaRangeToSqm, keyboardTextFieldDebounceTimeout);
+
+  const [locationPeopleCapacityFrom, setLocationPeopleCapacityFrom] = useState<string | null | undefined>(rootData.location?.extraMetadata?.peopleCapacity?.from);
+  const debounceSetLocationPeopleCapacityFrom = useDebounceCallback(setLocationPeopleCapacityFrom, keyboardTextFieldDebounceTimeout);
+  const [locationPeopleCapacityTo, setLocationPeopleCapacityTo] = useState<string | null | undefined>(rootData.location?.extraMetadata?.peopleCapacity?.to);
+  const debounceSetLocationPeopleCapacityTo = useDebounceCallback(setLocationPeopleCapacityTo, keyboardTextFieldDebounceTimeout);
 
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.location?.primaryFeatureImage && rootData.location?.primaryFeatureImage.original
@@ -811,7 +873,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     [refetchResources],
   );
 
-  const handleLocationDetailUpdateClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({
+    name,
+    about,
+    timezone,
+    type,
+    contactPerson,
+    contactEmail,
+    contactPhone,
+    areaRangeFromInSqm,
+    areaRangeToInSqm,
+    peopleCapacityFrom,
+    peopleCapacityTo,
+    locationTagIds,
+  }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
       return;
@@ -838,8 +913,30 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           about,
           timezone,
           type: type as LocationType,
-          contactEmail,
-          contactPhone,
+          extraMetadata: {
+            contactDetails:
+              contactPerson || contactEmail || contactPhone
+                ? {
+                    contactPerson,
+                    contactEmail,
+                    contactPhone,
+                  }
+                : null,
+            areaRange:
+              areaRangeFromInSqm && areaRangeToInSqm
+                ? {
+                    fromInSqm: areaRangeFromInSqm,
+                    toInSqm: areaRangeToInSqm,
+                  }
+                : null,
+            peopleCapacity:
+              peopleCapacityFrom && peopleCapacityTo
+                ? {
+                    from: peopleCapacityFrom,
+                    to: peopleCapacityTo,
+                  }
+                : null,
+          },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
         },
@@ -876,8 +973,30 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               type: type as LocationType,
               name: '',
             },
-            contactEmail,
-            contactPhone,
+            extraMetadata: {
+              contactDetails:
+                contactPerson || contactEmail || contactPhone
+                  ? {
+                      contactPerson,
+                      contactEmail,
+                      contactPhone,
+                    }
+                  : null,
+              areaRange:
+                areaRangeFromInSqm && areaRangeToInSqm
+                  ? {
+                      fromInSqm: areaRangeFromInSqm,
+                      toInSqm: areaRangeToInSqm,
+                    }
+                  : null,
+              peopleCapacity:
+                peopleCapacityFrom && peopleCapacityTo
+                  ? {
+                      from: peopleCapacityFrom,
+                      to: peopleCapacityTo,
+                    }
+                  : null,
+            },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: location.locationTags,
             openingHours: location.openingHours,
@@ -1521,8 +1640,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name: location.name,
             about: location.about,
             timezone: location.timezone,
-            contactEmail: location.contactEmail,
-            contactPhone: location.contactPhone,
+            extraMetadata: location.extraMetadata,
             physicalAddress: location.physicalAddress,
             locationTags: location.locationTags,
             openingHours: {
@@ -1689,8 +1807,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 timezone: locationTimezone,
                 type: locationType,
                 locationTagIds,
+                contactPerson: locationContactPerson,
                 contactEmail: locationContactEmail,
                 contactPhone: locationContactPhone,
+                areaRangeFromInSqm: locationAreaRangeFromSqm,
+                areaRangeToInSqm: locationAreaRangeToSqm,
+                peopleCapacityFrom: locationPeopleCapacityFrom,
+                peopleCapacityTo: locationPeopleCapacityTo,
               }}
               validate={validateLocationDetails}
               render={({ handleSubmit, values }) => {
@@ -1699,8 +1822,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationTimezone(values!.timezone);
                 debounceSetLocationType(values!.type);
                 debounceSetLocationTagIds(values!.locationTagIds);
+
+                debounceSetLocationContactPerson(values!.contactPerson);
                 debounceSetLocationContactEmail(values!.contactEmail);
                 debounceSetLocationContactPhone(values!.contactPhone);
+                debounceSetLocationAreaRangeFromSqm(values!.areaRangeFromInSqm);
+                debounceSetLocationAreaRangeToSqm(values!.areaRangeToInSqm);
+                debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
+                debounceSetLocationPeopleCapacityTo(values!.peopleCapacityTo);
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -1751,9 +1880,27 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       </FormFieldLabel>
 
                       {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                        <FormFieldLabel label="Type">
-                          <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
-                        </FormFieldLabel>
+                        <>
+                          <FormFieldLabel label="Type">
+                            <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
+                            <TextField name="areaRangeFromInSqm" required={requiredFields.areaRangeFromInSqm} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Area To(sqm)" required={requiredFields.areaRangeToInSqm}>
+                            <TextField name="areaRangeToInSqm" required={requiredFields.areaRangeToInSqm} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="People Capacity From" required={requiredFields.peopleCapacityFrom}>
+                            <TextField name="peopleCapacityFrom" required={requiredFields.peopleCapacityFrom} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
+                            <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
+                          </FormFieldLabel>
+                        </>
                       )}
 
                       {rootData.organization?.type.type === 'MARKETPLACE' && (
@@ -1770,6 +1917,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <SectionIconTypography label="Contact Details" />
                       <BodyIconTypography label="Edit your location contact details" />
                       <Divider />
+
+                      <FormFieldLabel label="Contact Person" required={requiredFields.contactPerson}>
+                        <TextField name="contactPerson" required={requiredFields.contactPerson} />
+                      </FormFieldLabel>
 
                       <FormFieldLabel label="Email">
                         <TextField name="contactEmail" required={requiredFields.contactEmail} />

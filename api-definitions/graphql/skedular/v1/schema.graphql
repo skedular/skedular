@@ -15,6 +15,11 @@ type AddOrganizationPaymentMethodIntentPayload {
   publishedKeys: String!
 }
 
+type AreaRange {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
 type BookingCheckoutSessionDetails {
   checkoutUrl: String!
   uniqueId: ID!
@@ -262,6 +267,12 @@ type ConnectionOfTeamMemberEdge {
   totalCount: Int
 }
 
+type ContactDetails {
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
+}
+
 type CurrencyDetails {
   name: String!
   type: Currency!
@@ -466,10 +477,9 @@ type LocationDetails {
   canDelete: Boolean!
   canModify: Boolean!
   canViewAnalytics: Boolean!
-  contactEmail: String
-  contactPhone: String
   customTags: [Location_OrganizationTagDetails!]!
   deskCapacity: Int!
+  extraMetadata: LocationExtraMetadata
   hasFutureBooking: Boolean!
   id: ID!
   locationTags: [Location_OrganizationTagDetails!]!
@@ -489,6 +499,12 @@ type LocationDetails {
 type LocationEdge {
   cursor: String!
   node: LocationDetails!
+}
+
+type LocationExtraMetadata {
+  areaRange: AreaRange
+  contactDetails: ContactDetails
+  peopleCapacity: PeopleCapacity
 }
 
 type LocationPayload {
@@ -1031,6 +1047,11 @@ type PaymentStatusDetails {
   type: PaymentStatus!
 }
 
+type PeopleCapacity {
+  from: String!
+  to: String!
+}
+
 type PriceUnitDetails {
   name: String!
   type: PriceUnit!
@@ -1442,8 +1463,7 @@ input AddFloorPlanInput {
 input AddLocationInput {
   about: String
   clientMutationId: String
-  contactEmail: String
-  contactPhone: String
+  extraMetadata: LocationExtraMetadataInput
   id: String
   locationTagIds: [String!]!
   name: String!
@@ -1677,6 +1697,11 @@ input AddZoneInput {
   organizationUniqueAlphanumericName: String
 }
 
+input AreaRangeInput {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
 input AvailableResourcesWhereInput {
   customTagIds: [String!]
   from: DateTime!
@@ -1784,6 +1809,12 @@ input CompleteOrganizationOnboardingInput {
 input ConfirmBookingPaymentInput {
   clientMutationId: String
   id: String!
+}
+
+input ContactDetailsInput {
+  contactEmail: String
+  contactPerson: String
+  contactPhone: String
 }
 
 input CustomTagOrganizationTagWhereInput {
@@ -1958,6 +1989,12 @@ input LineItemInput {
   quantity: Int!
 }
 
+input LocationExtraMetadataInput {
+  areaRange: AreaRangeInput
+  contactDetails: ContactDetailsInput
+  peopleCapacity: PeopleCapacityInput
+}
+
 input LocationOrderInput {
   direction: OrderDirection!
   field: LocationOrderField!
@@ -2074,14 +2111,19 @@ input OrganizationWhereInput {
   nameContains: String
 }
 
-input PointInput {
+input PeopleCapacityInput {
+  from: String!
+  to: String!
+}
+
+input PointCoordinatesInput {
   latitude: Float!
   longitude: Float!
 }
 
 input PolygonInput {
-  northEast: PointInput!
-  southWest: PointInput!
+  northEast: PointCoordinatesInput!
+  southWest: PointCoordinatesInput!
 }
 
 input ProductOrderInput {
@@ -2285,8 +2327,7 @@ input UpdateFloorPlanInput {
 input UpdateLocationInput {
   about: String
   clientMutationId: String
-  contactEmail: String
-  contactPhone: String
+  extraMetadata: LocationExtraMetadataInput
   id: String!
   locationTagIds: [String!]!
   name: String!

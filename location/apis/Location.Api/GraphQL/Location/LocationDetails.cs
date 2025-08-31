@@ -4,6 +4,7 @@ using HotChocolate;
 using HotChocolate.Types.Relay;
 using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
+using Location.Shared.Models;
 
 namespace Location.Api.GraphQL.Location;
 
@@ -28,8 +29,7 @@ public class LocationDetails : Node
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
-    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
-    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

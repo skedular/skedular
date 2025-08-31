@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5950e1df98a1367027ed6fb2285525a5>>
+ * @generated SignedSource<<2584052e3ec8c1ffab550262f76efb68>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,10 @@ import { FragmentRefs } from "relay-runtime";
 export type LocationOrderField = "ABOUT" | "NAME" | "TIMEZONE" | "TYPE" | "%future added value";
 export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
 export type PolygonInput = {
-  northEast: PointInput;
-  southWest: PointInput;
+  northEast: PointCoordinatesInput;
+  southWest: PointCoordinatesInput;
 };
-export type PointInput = {
+export type PointCoordinatesInput = {
   latitude: number;
   longitude: number;
 };

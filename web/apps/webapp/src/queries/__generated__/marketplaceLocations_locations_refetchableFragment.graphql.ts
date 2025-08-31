@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8defa8832aeab029a5461b726d766e4>>
+ * @generated SignedSource<<7fa98259fb6319c007ba23f3d6a2f2ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,10 +17,10 @@ export type LocationOrderInput = {
   field: LocationOrderField;
 };
 export type PolygonInput = {
-  northEast: PointInput;
-  southWest: PointInput;
+  northEast: PointCoordinatesInput;
+  southWest: PointCoordinatesInput;
 };
-export type PointInput = {
+export type PointCoordinatesInput = {
   latitude: number;
   longitude: number;
 };

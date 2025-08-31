@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,9 +16,8 @@ public class Location : EntityBaseWithDeleted
     public string? Timezone { get; set; }
     public string Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
-    public string? ContactEmail { get; set; }
-    public string? ContactPhone { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public LocationExtraMetadata? ExtraMetadata { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
@@ -41,9 +41,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength).HasDefaultValue(LocationTypeConstants.Private);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
-        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
+        builder.Property(item => item.ExtraMetadata).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);

@@ -41,10 +41,8 @@ message Location {
   repeated string tagIds = 8;
   OpeningHours openingHours = 9;
   PhysicalAddress physicalAddress = 10;
-  string contactEmail = 11;
-  string contactPhone = 12;
-  CdnImageFile primaryFeatureImage = 13;
-  LocationType type = 14;
+  CdnImageFile primaryFeatureImage = 11;
+  LocationType type = 12;
 }
 
 enum LocationType {

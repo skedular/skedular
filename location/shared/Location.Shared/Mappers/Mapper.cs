@@ -35,8 +35,6 @@ public class Mapper : IMapper
                 LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail.ToSafeString(),
-            ContactPhone = src.ContactPhone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),

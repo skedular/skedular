@@ -81,10 +81,8 @@ message Admin_AddInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  string contactEmail = 7;
-  string contactPhone = 8;
-  CdnImageFile primaryFeatureImage = 9;
-  LocationType type = 10;
+  CdnImageFile primaryFeatureImage = 7;
+  LocationType type = 8;
 }
 
 message LocationConnection {
@@ -111,10 +109,8 @@ message Location {
   repeated OrganizationZone zones = 10;
   repeated OrganizationLocationTag locationTags = 11;
   OpeningHours openingHours = 12;
-  string contactEmail = 13;
-  string contactPhone = 14;
-  CdnImageFile primaryFeatureImage = 15;
-  LocationType type = 16;
+  CdnImageFile primaryFeatureImage = 13;
+  LocationType type = 14;
 }
 
 message Admin_GetInput {
@@ -204,10 +200,8 @@ message AddInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  string contactEmail = 7;
-  string contactPhone = 8;
-  CdnImageFile primaryFeatureImage = 9;
-  LocationType type = 10;
+  CdnImageFile primaryFeatureImage = 7;
+  LocationType type = 8;
 }
 
 message UpdateInput {
@@ -217,10 +211,8 @@ message UpdateInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  string contactEmail = 7;
-  string contactPhone = 8;
-  CdnImageFile primaryFeatureImage = 9;
-  LocationType type = 10;
+  CdnImageFile primaryFeatureImage = 7;
+  LocationType type = 8;
 }
 
 message RemoveInput {

@@ -22,6 +22,3 @@ public enum LocationOrderField
     Timezone,
     Type
 }
-
-public record Polygon(Point NorthEast, Point SouthWest);
-public record Point(double Longitude, double Latitude);

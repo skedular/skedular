@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5dedeb47cc0df009c8395753f268dcf>>
+ * @generated SignedSource<<96cdbdb11e854e53a16f015c62977b78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,7 @@ export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
-  contactEmail?: string | null | undefined;
-  contactPhone?: string | null | undefined;
+  extraMetadata?: LocationExtraMetadataInput | null | undefined;
   id?: string | null | undefined;
   locationTagIds: ReadonlyArray<string>;
   name: string;
@@ -24,6 +23,24 @@ export type AddLocationInput = {
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
+};
+export type LocationExtraMetadataInput = {
+  areaRange?: AreaRangeInput | null | undefined;
+  contactDetails?: ContactDetailsInput | null | undefined;
+  peopleCapacity?: PeopleCapacityInput | null | undefined;
+};
+export type AreaRangeInput = {
+  fromInSqm: string;
+  toInSqm: string;
+};
+export type ContactDetailsInput = {
+  contactEmail?: string | null | undefined;
+  contactPerson?: string | null | undefined;
+  contactPhone?: string | null | undefined;
+};
+export type PeopleCapacityInput = {
+  from: string;
+  to: string;
 };
 export type LocationPhysicalAddressInput = {
   addressLine1: string;
@@ -57,8 +74,21 @@ export type addMarketplaceLocation_addLocationMutation$data = {
   readonly addLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly contactEmail: string | null | undefined;
-      readonly contactPhone: string | null | undefined;
+      readonly extraMetadata: {
+        readonly areaRange: {
+          readonly fromInSqm: string;
+          readonly toInSqm: string;
+        } | null | undefined;
+        readonly contactDetails: {
+          readonly contactEmail: string | null | undefined;
+          readonly contactPerson: string | null | undefined;
+          readonly contactPhone: string | null | undefined;
+        } | null | undefined;
+        readonly peopleCapacity: {
+          readonly from: string;
+          readonly to: string;
+        } | null | undefined;
+      } | null | undefined;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -107,8 +137,21 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
   readonly addLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly contactEmail: string | null | undefined;
-      readonly contactPhone: string | null | undefined;
+      readonly extraMetadata: {
+        readonly areaRange: {
+          readonly fromInSqm: string;
+          readonly toInSqm: string;
+        } | null | undefined;
+        readonly contactDetails: {
+          readonly contactEmail: string | null | undefined;
+          readonly contactPerson: string | null | undefined;
+          readonly contactPhone: string | null | undefined;
+        } | null | undefined;
+        readonly peopleCapacity: {
+          readonly from: string;
+          readonly to: string;
+        } | null | undefined;
+      } | null | undefined;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -265,15 +308,94 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "contactEmail",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "contactPhone",
+            "concreteType": "LocationExtraMetadata",
+            "kind": "LinkedField",
+            "name": "extraMetadata",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ContactDetails",
+                "kind": "LinkedField",
+                "name": "contactDetails",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactPerson",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactEmail",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "contactPhone",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AreaRange",
+                "kind": "LinkedField",
+                "name": "areaRange",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "fromInSqm",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "toInSqm",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PeopleCapacity",
+                "kind": "LinkedField",
+                "name": "peopleCapacity",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "from",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "to",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -468,16 +590,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "88eec953f668f1c2330dc72c1162a2fc",
+    "cacheID": "f6e354b42326ebb668e96ee47c5ff933",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPerson\n          contactEmail\n          contactPhone\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "665259f9c8bfa2e5c42f08daf737d0b2";
+(node as any).hash = "d4eafef102deeaaa3d2195d5f043c46b";
 
 export default node;
