@@ -27,7 +27,7 @@ public interface ILocationService
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationUniqueAlphanumericName, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int )> GetPaginatedLocationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
@@ -223,8 +223,11 @@ public class LocationService(
         if (!ignoreAuthorizationCheck)
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
-            // Ensure we do not return another customer location by forcing CustomerId as search criteria
-            searchCriteria = searchCriteria with { CustomerId = customer.Id };
+            if (searchCriteria.Types.Count != 1 || searchCriteria.Types.First() != LocationType.Marketplace)
+            {
+                // Ensure we do not return another customer location by forcing CustomerId as search criteria
+                searchCriteria = searchCriteria with { CustomerId = customer.Id };
+            }
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.LocationRepository.GetPaginatedLocationsAsync(
@@ -314,20 +317,24 @@ public class LocationService(
 
     private async Task<Shared.Models.Location> EnrichLocationAsync(
         Customer? customer,
-        Shared.Database.Entities.Location locationEdge,
+        Shared.Database.Entities.Location location,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !organizationAuthorizationService.CanView(locationEdge.Organization, customer))
+        var isMarketplace = location.Type.ToLocationType() == LocationType.Marketplace;
+        if (!isMarketplace && customer is not null && !organizationAuthorizationService.CanView(location.Organization, customer))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var mappedLocation = mapper.MapTo(locationEdge);
+        var mappedLocation = mapper.MapTo(location);
 
         mappedLocation.CustomTags = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new Shared.Models.OrganizationTag
             {
-                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
+                Id = customTag.Id,
+                Name = customTag.Name,
+                Type = OrganizationTagType.Custom,
+                Color = customTag.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
@@ -336,7 +343,10 @@ public class LocationService(
         mappedLocation.Zones = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new Shared.Models.OrganizationTag
             {
-                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
+                Id = zone.Id,
+                Name = zone.Name,
+                Type = OrganizationTagType.Zone,
+                Color = zone.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
@@ -346,10 +356,10 @@ public class LocationService(
         {
             mappedLocation.Permissions = new Permissions
             {
-                CanView = organizationAuthorizationService.CanView(locationEdge.Organization, customer),
-                CanModify = organizationAuthorizationService.CanModify(locationEdge.Organization, customer),
-                CanDelete = organizationAuthorizationService.CanDelete(locationEdge.Organization, customer),
-                CanViewAnalytics = organizationAuthorizationService.CanViewAnalytics(locationEdge.Organization, customer)
+                CanView = isMarketplace || organizationAuthorizationService.CanView(location.Organization, customer),
+                CanModify = organizationAuthorizationService.CanModify(location.Organization, customer),
+                CanDelete = organizationAuthorizationService.CanDelete(location.Organization, customer),
+                CanViewAnalytics = organizationAuthorizationService.CanViewAnalytics(location.Organization, customer)
             };
         }
 
@@ -358,7 +368,7 @@ public class LocationService(
             .Query(new Specification<Booking>
             {
                 Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(locationEdge.Id) && query.From >= now
+                    !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(location.Id) && query.From >= now
             })
             .AnyAsync(cancellationToken);
 

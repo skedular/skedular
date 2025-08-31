@@ -44,7 +44,8 @@ public class RootQuery(IMapper mapper)
                 where.NameContains,
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
                 null,
-                where.Types.ToSafeCollection()),
+                where.Types.ToSafeCollection(),
+                where.SearchBoundaries),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
@@ -62,6 +63,20 @@ public class RootQuery(IMapper mapper)
             TotalCount = totalCount
         };
     }
+
+    [UseResolverScope]
+    public async Task<Connection<LocationEdge>> MarketplaceLocationsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        LocationWhereInput where,
+        IEnumerable<LocationOrderInput>? orderBy,
+        [Service] ILocationService locationService,
+        CancellationToken cancellationToken) =>
+        where.SearchBoundaries is null
+            ? Connection<LocationEdge>.Empty
+            : await LocationsAsync(after, first, before, last, where, orderBy, locationService, cancellationToken);
 
     [UseResolverScope]
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
@@ -108,7 +123,8 @@ public class RootQuery(IMapper mapper)
                 where.NameContains,
                 where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).ToList(),
                 null,
-                where.Types.ToSafeCollection()),
+                where.Types.ToSafeCollection(),
+                where.SearchBoundaries),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

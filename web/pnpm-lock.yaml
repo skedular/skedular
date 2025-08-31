@@ -157,6 +157,9 @@ importers:
       next:
         specifier: 15.5.2
         version: 15.5.2(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      node-ipinfo:
+        specifier: ^4.1.0
+        version: 4.1.0
       react:
         specifier: 19.1.1
         version: 19.1.1
@@ -2952,6 +2955,10 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
+  lru-cache@7.18.3:
+    resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
+    engines: {node: '>=12'}
+
   lru-memoizer@2.3.0:
     resolution: {integrity: sha512-GXn7gyHAMhO13WSKrIiNfztwxodVsP8IoZ3XfrJV4yH2x0/OeTO/FIaAHTY5YekdGgW94njfuKmyyt1E0mR6Ug==}
 
@@ -3061,6 +3068,10 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-ipinfo@4.1.0:
+    resolution: {integrity: sha512-5HJA50uc6zplOV8LmxflE9rtMyyoiQkHibH4F2Jn1A/91yt4uOqle6oR3RtmNesmbrixXTymVONKntjfaQk6qQ==}
+    engines: {node: '>=14'}
 
   node-machine-id@1.1.12:
     resolution: {integrity: sha512-QNABxbrPa3qEIfrE6GOJ7BYIuignnJw7iQ2YPbc3Nla1HzRJjXzZOiikfF8m7eAMfichLt3M4VgLOetqgDmgGQ==}
@@ -3572,6 +3583,10 @@ packages:
 
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
+
+  subnet-check@1.10.1:
+    resolution: {integrity: sha512-e8lXZ9ICcG42fFsMDZO5TTZ3uS2436b5hnx3uS4Z3XkAFuDLa5R3Pvt9lYhewKm/vCd48t14v0jFaSmVYOT2Kg==}
+    engines: {node: '>=4.0.0'}
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -6831,6 +6846,8 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
+  lru-cache@7.18.3: {}
+
   lru-memoizer@2.3.0:
     dependencies:
       lodash.clonedeep: 4.5.0
@@ -6929,6 +6946,14 @@ snapshots:
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
+
+  node-ipinfo@4.1.0:
+    dependencies:
+      lru-cache: 7.18.3
+      node-fetch: 2.7.0
+      subnet-check: 1.10.1
+    transitivePeerDependencies:
+      - encoding
 
   node-machine-id@1.1.12: {}
 
@@ -7512,6 +7537,8 @@ snapshots:
       react: 19.1.1
 
   stylis@4.2.0: {}
+
+  subnet-check@1.10.1: {}
 
   supports-color@7.2.0:
     dependencies:

@@ -7,6 +7,8 @@ using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Shared.Repositories;
@@ -107,6 +109,32 @@ internal static class LocationExtensions
         {
             var types = searchCriteria.Types.Select(item => item.ToLocationType()).ToList();
             query = query.Where(item => types.Contains(item.Type));
+        }
+
+        if (searchCriteria.SearchBoundaries is not null)
+        {
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var envelopePolygon = geometryFactory.CreatePolygon([
+                new Coordinate(
+                    searchCriteria.SearchBoundaries.SouthWest.Longitude,
+                    searchCriteria.SearchBoundaries.SouthWest.Latitude), // SouthWest (bottom-left)
+                new Coordinate(
+                    searchCriteria.SearchBoundaries.SouthWest.Longitude,
+                    searchCriteria.SearchBoundaries.NorthEast.Latitude), // NorthWest (top-left)
+                new Coordinate(
+                    searchCriteria.SearchBoundaries.NorthEast.Longitude,
+                    searchCriteria.SearchBoundaries.NorthEast.Latitude), // NorthEast (top-right)
+                new Coordinate(
+                    searchCriteria.SearchBoundaries.NorthEast.Longitude,
+                    searchCriteria.SearchBoundaries.SouthWest.Latitude), // SouthEast (bottom-right)
+                new Coordinate(
+                    searchCriteria.SearchBoundaries.SouthWest.Longitude,
+                    searchCriteria.SearchBoundaries.SouthWest.Latitude) // Close polygon back to SouthWest
+            ]);
+
+            query = query.Where(item =>
+                item.PhysicalAddress != null && item.PhysicalAddress.Coordinates != null &&
+                envelopePolygon.Contains(item.PhysicalAddress.Coordinates));
         }
 
         return query;

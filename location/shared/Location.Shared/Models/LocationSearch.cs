@@ -10,7 +10,8 @@ public record LocationSearchCriteria(
     string? NameContains,
     ICollection<string> TagIds,
     string? CustomerId,
-    ICollection<LocationType> Types);
+    ICollection<LocationType> Types,
+    Polygon? SearchBoundaries);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 
@@ -21,3 +22,6 @@ public enum LocationOrderField
     Timezone,
     Type
 }
+
+public record Polygon(Point NorthEast, Point SouthWest);
+public record Point(double Longitude, double Latitude);

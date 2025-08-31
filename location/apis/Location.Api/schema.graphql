@@ -187,6 +187,7 @@ type Query {
   locationTypes: [LocationTypeDetails!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
+  marketplaceLocations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
@@ -399,6 +400,7 @@ input LocationWhereInput {
   customTagIds: [String!]
   zoneIds: [String!]
   types: [LocationType!]
+  searchBoundaries: PolygonInput
 }
 
 input OpeningHoursDetailsInput {
@@ -406,6 +408,16 @@ input OpeningHoursDetailsInput {
   openAllDay: Boolean!
   from: String
   until: String
+}
+
+input PointInput {
+  longitude: Float!
+  latitude: Float!
+}
+
+input PolygonInput {
+  northEast: PointInput!
+  southWest: PointInput!
 }
 
 input ResourceOrderInput {

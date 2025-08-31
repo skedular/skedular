@@ -1,6 +1,5 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
-using NetTopologySuite.Geometries;
 
 namespace Location.Shared.Models;
 
@@ -9,7 +8,7 @@ public class LocationPhysicalAddress : ModelBaseWithDeleted, IAddressDetails
     public string? OsmType { get; set; }
     public string? OsmId { get; set; }
     public string? PlaceId { get; set; }
-    public Point? Coordinates { get; set; }
+    public NetTopologySuite.Geometries.Point? Coordinates { get; set; }
     public Location Location { get; set; } = new();
     public string? CountryCode { get; set; }
     public string? FormattedAddress { get; set; }
