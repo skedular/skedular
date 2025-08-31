@@ -11,7 +11,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -29,6 +29,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
@@ -123,6 +124,21 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
+
+  const [locationName, setLocationName] = useState<string>('');
+  const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
+  const [locationAbout, setLocationAbout] = useState<string | null>('');
+  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
+  const [locationTimezone, setLocationTimezone] = useState<string>('');
+  const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
+  const [locationType, setLocationType] = useState<string>('PRIVATE');
+  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
+  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
+  const [locationContactEmail, setLocationContactEmail] = useState<string | null>('');
+  const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
+  const [locationContactPhone, setLocationContactPhone] = useState<string | null>('');
+  const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
 
   const handleCloseClick = () => {
     onCancel();
@@ -245,109 +261,119 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
         <Form
           onSubmit={handleLocationAddClick}
           initialValues={{
-            name: '',
-            about: '',
-            timezone: '',
-            type: 'PRIVATE',
-            locationTagIds: [],
-            contactEmail: '',
-            contactPhone: '',
+            name: locationName,
+            about: locationAbout,
+            timezone: locationTimezone,
+            type: locationType,
+            locationTagIds,
+            contactEmail: locationContactEmail,
+            contactPhone: locationContactPhone,
           }}
           validate={validateLocationDetails}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <Divider />
+          render={({ handleSubmit, values }) => {
+            debounceSetLocationName(values!.name);
+            debounceSetLocationAbout(values!.about);
+            debounceSetLocationTimezone(values!.timezone);
+            debounceSetLocationType(values!.type);
+            debounceSetLocationTagIds(values!.locationTagIds);
+            debounceSetLocationContactEmail(values!.contactEmail);
+            debounceSetLocationContactPhone(values!.contactPhone);
 
-              <FormFieldLabel label="Feature image">
-                <StackColumn>
-                  {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                    <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
-                  )}
-                  <ImageFileUploaderWithCropper
-                    defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                    onUploadCompleted={handleFeatureImageUploadCompleted}
-                    helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
-                  />
-                </StackColumn>
-              </FormFieldLabel>
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <Divider />
 
-              <FormFieldLabel label="Name" required={requiredFields.name}>
-                <TextField
-                  name="name"
-                  required={requiredFields.name}
-                  helperText={
-                    <HelperText text="Enter a unique and descriptive name for this location. This will help team members quickly identify it when booking workspaces or managing resources." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="About" required={requiredFields.about}>
-                <TextField
-                  name="about"
-                  required={requiredFields.about}
-                  multiline
-                  rows={3}
-                  helperText={
-                    <HelperText text="Provide a brief description of this location. Include details like the purpose of the site, departments it hosts, or any distinguishing features to help users understand its context." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
-                <SingleChoinceTimezone
-                  name="timezone"
-                  required={requiredFields.timezone}
-                  helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
-                />
-              </FormFieldLabel>
-
-              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                <FormFieldLabel label="Type">
-                  <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                <FormFieldLabel label="Feature image">
+                  <StackColumn>
+                    {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                      <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                    )}
+                    <ImageFileUploaderWithCropper
+                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                      onUploadCompleted={handleFeatureImageUploadCompleted}
+                      helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
+                    />
+                  </StackColumn>
                 </FormFieldLabel>
-              )}
 
-              <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
-                <TextField
-                  name="contactEmail"
-                  required={requiredFields.contactEmail}
-                  helperText={
-                    <HelperText text="Enter a contact email for this location. This will be used for inquiries, notifications, and internal communication related to the site." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
-                <TextField
-                  name="contactPhone"
-                  required={requiredFields.contactPhone}
-                  helperText={<HelperText text="Provide a phone number for this location so members or visitors can reach out directly if needed." />}
-                />
-              </FormFieldLabel>
-
-              {rootData.organization?.type.type === 'MARKETPLACE' && (
-                <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
-                  <MultipleChoicesLocationTags
-                    rootDataRelay={rootData}
-                    name="locationTagIds"
-                    required={requiredFields.locationTagIds}
-                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                <FormFieldLabel label="Name" required={requiredFields.name}>
+                  <TextField
+                    name="name"
+                    required={requiredFields.name}
+                    helperText={
+                      <HelperText text="Enter a unique and descriptive name for this location. This will help team members quickly identify it when booking workspaces or managing resources." />
+                    }
                   />
                 </FormFieldLabel>
-              )}
 
-              <StackRow>
-                <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
-                  <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-                <PushToRight />
+                <FormFieldLabel label="About" required={requiredFields.about}>
+                  <TextField
+                    name="about"
+                    required={requiredFields.about}
+                    multiline
+                    rows={3}
+                    helperText={
+                      <HelperText text="Provide a brief description of this location. Include details like the purpose of the site, departments it hosts, or any distinguishing features to help users understand its context." />
+                    }
+                  />
+                </FormFieldLabel>
 
-                <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
-                  <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-              </StackRow>
-            </FormStackColumn>
-          )}
+                <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
+                  <SingleChoinceTimezone
+                    name="timezone"
+                    required={requiredFields.timezone}
+                    helperText="Select the time zone for this location. It ensures that bookings, events, and notifications are displayed in the correct local time for everyone using this site."
+                  />
+                </FormFieldLabel>
+
+                {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                  <FormFieldLabel label="Type">
+                    <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                  </FormFieldLabel>
+                )}
+
+                {rootData.organization?.type.type === 'MARKETPLACE' && (
+                  <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
+                    <MultipleChoicesLocationTags
+                      rootDataRelay={rootData}
+                      name="locationTagIds"
+                      required={requiredFields.locationTagIds}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    />
+                  </FormFieldLabel>
+                )}
+
+                <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
+                  <TextField
+                    name="contactEmail"
+                    required={requiredFields.contactEmail}
+                    helperText={
+                      <HelperText text="Enter a contact email for this location. This will be used for inquiries, notifications, and internal communication related to the site." />
+                    }
+                  />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
+                  <TextField
+                    name="contactPhone"
+                    required={requiredFields.contactPhone}
+                    helperText={<HelperText text="Provide a phone number for this location so members or visitors can reach out directly if needed." />}
+                  />
+                </FormFieldLabel>
+
+                <StackRow>
+                  <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
+                    <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                  <PushToRight />
+
+                  <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                    <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                </StackRow>
+              </FormStackColumn>
+            );
+          }}
         />{' '}
       </RightSidePanel>
     </TwoSideVerticalWizard>

@@ -1448,6 +1448,7 @@ input AddLocationInput {
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
+  physicalAddress: LocationPhysicalAddressInput
   primaryFeatureImage: CdnImageFileInput
   timezone: String
   type: LocationType!
@@ -1959,6 +1960,23 @@ input LineItemInput {
 input LocationOrderInput {
   direction: OrderDirection!
   field: LocationOrderField!
+}
+
+input LocationPhysicalAddressInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String
+  country: String!
+  countryCode: String
+  formattedAddress: String
+  latitude: Float
+  longitude: Float
+  osmId: String
+  osmType: String
+  placeId: String
+  province: String
+  suburb: String
+  zipcode: String!
 }
 
 input LocationTagOrganizationTagWhereInput {

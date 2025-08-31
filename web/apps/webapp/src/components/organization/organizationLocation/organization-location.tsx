@@ -1826,23 +1826,25 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <Divider />
                     </StackColumn>
 
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredPhysicalAddressFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredPhysicalAddressFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredPhysicalAddressFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredPhysicalAddressFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredPhysicalAddressFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredPhysicalAddressFields.countryCode}
-                      onSelect={handlePhysicalAddressSelect}
-                    />
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <PhysicalAddress
+                        addressLine1Name="addressLine1"
+                        addressLine1Required={requiredPhysicalAddressFields.addressLine1}
+                        addressLine2Name="addressLine2"
+                        addressLine2Required={requiredPhysicalAddressFields.addressLine2}
+                        suburbName="suburb"
+                        suburbRequired={requiredPhysicalAddressFields.suburb}
+                        cityName="city"
+                        cityRequired={requiredPhysicalAddressFields.city}
+                        provinceName="province"
+                        provinceRequired={requiredPhysicalAddressFields.province}
+                        zipcodeName="zipcode"
+                        zipcodeRequired={requiredPhysicalAddressFields.zipcode}
+                        countryName="countryCode"
+                        countryRequired={requiredPhysicalAddressFields.countryCode}
+                        onSelect={handlePhysicalAddressSelect}
+                      />
+                    </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <StackRow>

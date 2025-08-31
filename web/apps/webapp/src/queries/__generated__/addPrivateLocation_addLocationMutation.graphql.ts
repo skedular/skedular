@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9927643e21cefec2d9e77c0359886b1>>
+ * @generated SignedSource<<f0cb3d4130203f9618d33b50dc70562f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,9 +20,26 @@ export type AddLocationInput = {
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
+  physicalAddress?: LocationPhysicalAddressInput | null | undefined;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
+};
+export type LocationPhysicalAddressInput = {
+  addressLine1: string;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country: string;
+  countryCode?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode: string;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;

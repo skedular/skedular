@@ -549,25 +549,25 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                       <FormFieldLabel label="Email">
                         <TextField name="email" required={requiredCustomerBillingFields.email} helperText="Email to send invoice to" />
                       </FormFieldLabel>
-                    </StackColumn>
 
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredCustomerBillingFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredCustomerBillingFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredCustomerBillingFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredCustomerBillingFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredCustomerBillingFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredCustomerBillingFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredCustomerBillingFields.countryCode}
-                      onSelect={handleBillingAddressSelect}
-                    />
+                      <PhysicalAddress
+                        addressLine1Name="addressLine1"
+                        addressLine1Required={requiredCustomerBillingFields.addressLine1}
+                        addressLine2Name="addressLine2"
+                        addressLine2Required={requiredCustomerBillingFields.addressLine2}
+                        suburbName="suburb"
+                        suburbRequired={requiredCustomerBillingFields.suburb}
+                        cityName="city"
+                        cityRequired={requiredCustomerBillingFields.city}
+                        provinceName="province"
+                        provinceRequired={requiredCustomerBillingFields.province}
+                        zipcodeName="zipcode"
+                        zipcodeRequired={requiredCustomerBillingFields.zipcode}
+                        countryName="countryCode"
+                        countryRequired={requiredCustomerBillingFields.countryCode}
+                        onSelect={handleBillingAddressSelect}
+                      />
+                    </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <StackRow>

@@ -129,6 +129,14 @@ public class LocationService(
 
         locationEntity.OpeningHours = OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
+
+        if (location.PhysicalAddress is not null)
+        {
+            location.PhysicalAddress.Id = randomHelper.Generate();
+            var locationPhysicalAddressEntity = mapper.MapTo(location.PhysicalAddress, locationEntity);
+            repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
+        }
+
         location = mapper.MapTo(locationEntity);
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);

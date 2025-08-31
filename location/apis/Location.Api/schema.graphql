@@ -287,6 +287,7 @@ input AddLocationInput {
   contactEmail: String
   contactPhone: String
   primaryFeatureImage: CdnImageFileInput
+  physicalAddress: LocationPhysicalAddressInput
 }
 
 input AddLocationPhysicalAddressInput {
@@ -372,6 +373,23 @@ input FloorPlanWhereInput {
 input LocationOrderInput {
   direction: OrderDirection!
   field: LocationOrderField!
+}
+
+input LocationPhysicalAddressInput {
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
 }
 
 input LocationWhereInput {

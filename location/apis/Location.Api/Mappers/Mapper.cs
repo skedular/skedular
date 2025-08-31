@@ -401,7 +401,8 @@ public class Mapper : IMapper
                 {
                     Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
                 },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            PhysicalAddress = MapTo(src.PhysicalAddress),
         };
 
     public Shared.Models.Location MapTo(UpdateLocationInput src) =>
@@ -1185,5 +1186,26 @@ public class Mapper : IMapper
                 Country = src.Country,
                 CountryCode = src.CountryCode,
                 Location = location
+            };
+
+    private static Shared.Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddressInput? src) =>
+        src is null
+            ? null
+            : new()
+            {
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Coordinates =
+                    src.Longitude is null || src.Latitude is null ? null : new Point(new Coordinate(src.Longitude.Value, src.Latitude.Value)),
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                CountryCode = src.CountryCode,
             };
 }

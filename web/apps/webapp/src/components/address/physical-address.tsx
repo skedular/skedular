@@ -1,7 +1,6 @@
-import { FormFieldLabel, StackColumn } from '@/components/commons';
+import { FormFieldLabel } from '@/components/commons';
 import { SingleChoiceCountry } from '@/components/forms';
 import { AddressJsonV2 } from '@/libs/address/nominatim';
-import { defaultPadding } from '@/libs/theme';
 import { TextField } from 'mui-rff';
 import { memo } from 'react';
 import AddressSearch from './address-search';
@@ -78,7 +77,7 @@ const PhysicalAddress = ({
   };
 
   return (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+    <>
       <FormFieldLabel label="">
         <AddressSearch onSelect={handleSelect} />
       </FormFieldLabel>
@@ -110,7 +109,7 @@ const PhysicalAddress = ({
       <FormFieldLabel label="Country">
         <SingleChoiceCountry name={countryName} required={countryRequired} />
       </FormFieldLabel>
-    </StackColumn>
+    </>
   );
 };
 

@@ -2451,23 +2451,25 @@ const OrganizationAdmin = ({
                       <Divider />
                     </StackColumn>
 
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredPhysicalAddressFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredPhysicalAddressFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredPhysicalAddressFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredPhysicalAddressFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredPhysicalAddressFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredPhysicalAddressFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredPhysicalAddressFields.countryCode}
-                      onSelect={handlePhysicalAddressSelect}
-                    />
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <PhysicalAddress
+                        addressLine1Name="addressLine1"
+                        addressLine1Required={requiredPhysicalAddressFields.addressLine1}
+                        addressLine2Name="addressLine2"
+                        addressLine2Required={requiredPhysicalAddressFields.addressLine2}
+                        suburbName="suburb"
+                        suburbRequired={requiredPhysicalAddressFields.suburb}
+                        cityName="city"
+                        cityRequired={requiredPhysicalAddressFields.city}
+                        provinceName="province"
+                        provinceRequired={requiredPhysicalAddressFields.province}
+                        zipcodeName="zipcode"
+                        zipcodeRequired={requiredPhysicalAddressFields.zipcode}
+                        countryName="countryCode"
+                        countryRequired={requiredPhysicalAddressFields.countryCode}
+                        onSelect={handlePhysicalAddressSelect}
+                      />
+                    </StackColumn>
 
                     <StackColumn
                       sx={{
@@ -2543,25 +2545,25 @@ const OrganizationAdmin = ({
                       <FormFieldLabel label="Email">
                         <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
                       </FormFieldLabel>
-                    </StackColumn>
 
-                    <PhysicalAddress
-                      addressLine1Name="addressLine1"
-                      addressLine1Required={requiredBillingFields.addressLine1}
-                      addressLine2Name="addressLine2"
-                      addressLine2Required={requiredBillingFields.addressLine2}
-                      suburbName="suburb"
-                      suburbRequired={requiredBillingFields.suburb}
-                      cityName="city"
-                      cityRequired={requiredBillingFields.city}
-                      provinceName="province"
-                      provinceRequired={requiredBillingFields.province}
-                      zipcodeName="zipcode"
-                      zipcodeRequired={requiredBillingFields.zipcode}
-                      countryName="countryCode"
-                      countryRequired={requiredBillingFields.countryCode}
-                      onSelect={handleBillingAddressSelect}
-                    />
+                      <PhysicalAddress
+                        addressLine1Name="addressLine1"
+                        addressLine1Required={requiredBillingFields.addressLine1}
+                        addressLine2Name="addressLine2"
+                        addressLine2Required={requiredBillingFields.addressLine2}
+                        suburbName="suburb"
+                        suburbRequired={requiredBillingFields.suburb}
+                        cityName="city"
+                        cityRequired={requiredBillingFields.city}
+                        provinceName="province"
+                        provinceRequired={requiredBillingFields.province}
+                        zipcodeName="zipcode"
+                        zipcodeRequired={requiredBillingFields.zipcode}
+                        countryName="countryCode"
+                        countryRequired={requiredBillingFields.countryCode}
+                        onSelect={handleBillingAddressSelect}
+                      />
+                    </StackColumn>
 
                     <StackColumn
                       sx={{

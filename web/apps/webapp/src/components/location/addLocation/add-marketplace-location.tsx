@@ -1,4 +1,5 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
+import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
@@ -11,7 +12,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -21,6 +22,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import type { TCountryCode } from 'countries-list';
+import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -28,6 +31,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
@@ -64,6 +68,13 @@ type LocationDetails = {
   locationTagIds: string[];
   contactEmail: string | null;
   contactPhone: string | null;
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string | null;
+  city: string | null;
+  province: string | null;
+  zipcode: string;
+  countryCode: string;
 };
 
 const locationSchema = object({
@@ -76,6 +87,13 @@ const locationSchema = object({
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
   contactPhone: string().nullable(),
+  addressLine1: string().required('Address line 1 is required'),
+  addressLine2: string().nullable(),
+  suburb: string(),
+  city: string(),
+  province: string().nullable(),
+  zipcode: string().required('Zipcode is required'),
+  countryCode: string().required('Country is required'),
 });
 
 const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
@@ -112,6 +130,23 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             name
             color
           }
+          physicalAddress {
+            id
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+            countryCode
+          }
         }
       }
     }
@@ -121,6 +156,43 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+
+  const [locationName, setLocationName] = useState<string>('');
+  const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
+  const [locationAbout, setLocationAbout] = useState<string | null>('');
+  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
+  const [locationTimezone, setLocationTimezone] = useState<string>('');
+  const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
+  const [locationType, setLocationType] = useState<string>('MARKETPLACE');
+  const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
+  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
+  const [locationContactEmail, setLocationContactEmail] = useState<string | null>('');
+  const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
+  const [locationContactPhone, setLocationContactPhone] = useState<string | null>('');
+  const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState<string | null | undefined>(null);
+  const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState<string | null | undefined>(null);
+  const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState<string | null | undefined>(null);
+  const [physicalAddressLongitude, setPhysicalAddressLongitude] = useState<number | null | undefined>(null);
+  const [physicalAddressLatitude, setPhysicalAddressLatitude] = useState<number | null | undefined>(null);
+  const [physicalAddressFormattedAddress, setPhysicalAddressFormattedAddress] = useState<string | null | undefined>(null);
+  const [physicalAddressAddressLine1, setPhysicalAddressAddressLine1] = useState<string>('');
+  const debounceSetPhysicalAddressAddressLine1 = useDebounceCallback(setPhysicalAddressAddressLine1, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressAddressLine2, setPhysicalAddressAddressLine2] = useState<string | null | undefined>(null);
+  const debounceSetPhysicalAddressAddressLine2 = useDebounceCallback(setPhysicalAddressAddressLine2, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressSuburb, setPhysicalAddressSuburb] = useState<string | null | undefined>(null);
+  const debounceSetPhysicalAddressSuburb = useDebounceCallback(setPhysicalAddressSuburb, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCity, setPhysicalAddressCity] = useState<string | null | undefined>(null);
+  const debounceSetPhysicalAddressCity = useDebounceCallback(setPhysicalAddressCity, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressProvince, setPhysicalAddressProvince] = useState<string | null | undefined>(null);
+  const debounceSetPhysicalAddressProvince = useDebounceCallback(setPhysicalAddressProvince, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressZipcode, setPhysicalAddressZipcode] = useState<string>('');
+  const debounceSetPhysicalAddressZipcode = useDebounceCallback(setPhysicalAddressZipcode, keyboardTextFieldDebounceTimeout);
+  const [physicalAddressCountry, setPhysicalAddressCountry] = useState<string>('');
+  const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>('');
+  const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
 
   const handleCloseClick = () => {
@@ -128,7 +200,39 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, type, contactEmail, contactPhone, locationTagIds }: LocationDetails) => {
+  const handlePhysicalAddressSelect = (address: Address) => {
+    setPhysicalAddressOsmType(address.osmType);
+    setPhysicalAddressOsmId(address.osmId);
+    setPhysicalAddressPlaceId(address.placeId);
+    setPhysicalAddressLongitude(address.longitude);
+    setPhysicalAddressLatitude(address.latitude);
+    setPhysicalAddressFormattedAddress(address.formattedAddress);
+    setPhysicalAddressAddressLine1(address.addressLine1 ?? '');
+    setPhysicalAddressAddressLine2(address.addressLine2 ?? '');
+    setPhysicalAddressSuburb(address.suburb ?? '');
+    setPhysicalAddressCity(address.city ?? '');
+    setPhysicalAddressProvince(address.province ?? '');
+    setPhysicalAddressZipcode(address.zipcode ?? '');
+    setPhysicalAddressCountry(address.country ?? '');
+    setPhysicalAddressCountryCode(address.countryCode ?? '');
+  };
+
+  const handleLocationAddClick = ({
+    name,
+    about,
+    timezone,
+    type,
+    contactEmail,
+    contactPhone,
+    locationTagIds,
+    addressLine1,
+    addressLine2,
+    suburb,
+    city,
+    province,
+    zipcode,
+    countryCode,
+  }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalPrimaryFeatureImage = primaryFeatureImage
@@ -141,6 +245,12 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             : null,
         }
       : null;
+
+    const countryData = getCountryData(countryCode as TCountryCode);
+    let country = physicalAddressCountry;
+    if (countryData) {
+      country = countryData.name;
+    }
 
     commitAddLocation({
       variables: {
@@ -156,6 +266,22 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           contactPhone,
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
+          physicalAddress: {
+            osmType: physicalAddressOsmType,
+            osmId: physicalAddressOsmId,
+            placeId: physicalAddressPlaceId,
+            longitude: physicalAddressLongitude,
+            latitude: physicalAddressLatitude,
+            formattedAddress: physicalAddressFormattedAddress,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+            countryCode,
+          },
         },
       },
       onCompleted: (_, errors) => {
@@ -197,6 +323,23 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             contactPhone,
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
+            physicalAddress: {
+              id: '',
+              osmType: physicalAddressOsmType,
+              osmId: physicalAddressOsmId,
+              placeId: physicalAddressPlaceId,
+              longitude: physicalAddressLongitude,
+              latitude: physicalAddressLatitude,
+              formattedAddress: physicalAddressFormattedAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+              countryCode,
+            },
           },
         },
       },
@@ -246,107 +389,149 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
         <Form
           onSubmit={handleLocationAddClick}
           initialValues={{
-            name: '',
-            about: '',
-            timezone: '',
-            type: 'MARKETPLACE',
-            locationTagIds: [],
-            contactEmail: '',
-            contactPhone: '',
+            name: locationName,
+            about: locationAbout,
+            timezone: locationTimezone,
+            type: locationType,
+            locationTagIds,
+            contactEmail: locationContactEmail,
+            contactPhone: locationContactPhone,
+            addressLine1: physicalAddressAddressLine1,
+            addressLine2: physicalAddressAddressLine2,
+            suburb: physicalAddressSuburb,
+            city: physicalAddressCity,
+            province: physicalAddressProvince,
+            zipcode: physicalAddressZipcode,
+            countryCode: physicalAddressCountryCode,
           }}
           validate={validateLocationDetails}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <Divider />
+          render={({ handleSubmit, values }) => {
+            debounceSetLocationName(values!.name);
+            debounceSetLocationAbout(values!.about);
+            debounceSetLocationTimezone(values!.timezone);
+            debounceSetLocationType(values!.type);
+            debounceSetLocationTagIds(values!.locationTagIds);
+            debounceSetLocationContactEmail(values!.contactEmail);
+            debounceSetLocationContactPhone(values!.contactPhone);
+            debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
+            debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
+            debounceSetPhysicalAddressSuburb(values!.suburb);
+            debounceSetPhysicalAddressCity(values!.city);
+            debounceSetPhysicalAddressProvince(values!.province);
+            debounceSetPhysicalAddressZipcode(values!.zipcode);
+            debounceSetPhysicalAddressCountryCode(values!.countryCode);
 
-              <FormFieldLabel label="Feature image">
-                <StackColumn>
-                  {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                    <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
-                  )}
-                  <ImageFileUploaderWithCropper
-                    defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                    onUploadCompleted={handleFeatureImageUploadCompleted}
-                    helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."
-                  />
-                </StackColumn>
-              </FormFieldLabel>
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <Divider />
 
-              <FormFieldLabel label="Name" required={requiredFields.name}>
-                <TextField
-                  name="name"
-                  required={requiredFields.name}
-                  helperText={
-                    <HelperText text="Enter the public name of your co-working location. This will be visible in the marketplace and should clearly represent your space." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="About" required={requiredFields.about}>
-                <TextField
-                  name="about"
-                  required={requiredFields.about}
-                  multiline
-                  rows={3}
-                  helperText={
-                    <HelperText text="Write a brief description of your co-working location. Highlight what makes it unique and the type of professionals or businesses it caters to." />
-                  }
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
-                <SingleChoinceTimezone
-                  name="timezone"
-                  required={requiredFields.timezone}
-                  helperText="Select the local timezone of this location to ensure accurate scheduling and availability for bookings."
-                />
-              </FormFieldLabel>
-
-              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
-                <FormFieldLabel label="Type">
-                  <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                <FormFieldLabel label="Feature image">
+                  <StackColumn>
+                    {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
+                      <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                    )}
+                    <ImageFileUploaderWithCropper
+                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                      onUploadCompleted={handleFeatureImageUploadCompleted}
+                      helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."
+                    />
+                  </StackColumn>
                 </FormFieldLabel>
-              )}
 
-              <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
-                <TextField
-                  name="contactEmail"
-                  required={requiredFields.contactEmail}
-                  helperText={<HelperText text="Enter a public contact email for this location so visitors and potential members can get in touch easily." />}
-                />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
-                <TextField
-                  name="contactPhone"
-                  required={requiredFields.contactPhone}
-                  helperText={<HelperText text="Provide a phone number where your co-working space can be reached for inquiries or support." />}
-                />
-              </FormFieldLabel>
-
-              {rootData.organization?.type.type === 'MARKETPLACE' && (
-                <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
-                  <MultipleChoicesLocationTags
-                    rootDataRelay={rootData}
-                    name="locationTagIds"
-                    required={requiredFields.locationTagIds}
-                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                <FormFieldLabel label="Name" required={requiredFields.name}>
+                  <TextField
+                    name="name"
+                    required={requiredFields.name}
+                    helperText={
+                      <HelperText text="Enter the public name of your co-working location. This will be visible in the marketplace and should clearly represent your space." />
+                    }
                   />
                 </FormFieldLabel>
-              )}
 
-              <StackRow>
-                <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
-                  <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-                <PushToRight />
+                <FormFieldLabel label="About" required={requiredFields.about}>
+                  <TextField
+                    name="about"
+                    required={requiredFields.about}
+                    multiline
+                    rows={3}
+                    helperText={
+                      <HelperText text="Write a brief description of your co-working location. Highlight what makes it unique and the type of professionals or businesses it caters to." />
+                    }
+                  />
+                </FormFieldLabel>
 
-                <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
-                  <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
-                </Button>
-              </StackRow>
-            </FormStackColumn>
-          )}
+                <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
+                  <SingleChoinceTimezone
+                    name="timezone"
+                    required={requiredFields.timezone}
+                    helperText="Select the local timezone of this location to ensure accurate scheduling and availability for bookings."
+                  />
+                </FormFieldLabel>
+
+                {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                  <FormFieldLabel label="Type">
+                    <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                  </FormFieldLabel>
+                )}
+
+                {rootData.organization?.type.type === 'MARKETPLACE' && (
+                  <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
+                    <MultipleChoicesLocationTags
+                      rootDataRelay={rootData}
+                      name="locationTagIds"
+                      required={requiredFields.locationTagIds}
+                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    />
+                  </FormFieldLabel>
+                )}
+
+                <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
+                  <TextField
+                    name="contactEmail"
+                    required={requiredFields.contactEmail}
+                    helperText={<HelperText text="Enter a public contact email for this location so visitors and potential members can get in touch easily." />}
+                  />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
+                  <TextField
+                    name="contactPhone"
+                    required={requiredFields.contactPhone}
+                    helperText={<HelperText text="Provide a phone number where your co-working space can be reached for inquiries or support." />}
+                  />
+                </FormFieldLabel>
+
+                <PhysicalAddress
+                  addressLine1Name="addressLine1"
+                  addressLine1Required={requiredFields.addressLine1}
+                  addressLine2Name="addressLine2"
+                  addressLine2Required={requiredFields.addressLine2}
+                  suburbName="suburb"
+                  suburbRequired={requiredFields.suburb}
+                  cityName="city"
+                  cityRequired={requiredFields.city}
+                  provinceName="province"
+                  provinceRequired={requiredFields.province}
+                  zipcodeName="zipcode"
+                  zipcodeRequired={requiredFields.zipcode}
+                  countryName="countryCode"
+                  countryRequired={requiredFields.countryCode}
+                  onSelect={handlePhysicalAddressSelect}
+                />
+
+                <StackRow>
+                  <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
+                    <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                  <PushToRight />
+
+                  <Button variant="contained" type="submit" sx={{ textTransform: 'none' }} color="primary">
+                    <BodyIconTypography label={createLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
+                  </Button>
+                </StackRow>
+              </FormStackColumn>
+            );
+          }}
         />{' '}
       </RightSidePanel>
     </TwoSideVerticalWizard>

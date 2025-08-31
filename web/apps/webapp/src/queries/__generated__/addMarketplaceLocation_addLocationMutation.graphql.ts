@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97e0c45030907b668517eb822595fb33>>
+ * @generated SignedSource<<c5dedeb47cc0df009c8395753f268dcf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,9 +20,26 @@ export type AddLocationInput = {
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
+  physicalAddress?: LocationPhysicalAddressInput | null | undefined;
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
+};
+export type LocationPhysicalAddressInput = {
+  addressLine1: string;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country: string;
+  countryCode?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  latitude?: number | null | undefined;
+  longitude?: number | null | undefined;
+  osmId?: string | null | undefined;
+  osmType?: string | null | undefined;
+  placeId?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode: string;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -49,6 +66,23 @@ export type addMarketplaceLocation_addLocationMutation$data = {
         readonly uniqueId: string;
       }>;
       readonly name: string;
+      readonly physicalAddress: {
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string | null | undefined;
+        readonly country: string;
+        readonly countryCode: string | null | undefined;
+        readonly formattedAddress: string | null | undefined;
+        readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
+        readonly province: string | null | undefined;
+        readonly suburb: string | null | undefined;
+        readonly zipcode: string;
+      } | null | undefined;
       readonly primaryFeatureImage: {
         readonly original: {
           readonly height: number | null | undefined;
@@ -82,6 +116,23 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
       readonly name: string;
+      readonly physicalAddress: {
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string | null | undefined;
+        readonly country: string;
+        readonly countryCode: string | null | undefined;
+        readonly formattedAddress: string | null | undefined;
+        readonly id: string;
+        readonly latitude: number | null | undefined;
+        readonly longitude: number | null | undefined;
+        readonly osmId: string | null | undefined;
+        readonly osmType: string | null | undefined;
+        readonly placeId: string | null | undefined;
+        readonly province: string | null | undefined;
+        readonly suburb: string | null | undefined;
+        readonly zipcode: string;
+      } | null | undefined;
       readonly primaryFeatureImage: {
         readonly original: {
           readonly height: number | null | undefined;
@@ -120,10 +171,17 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -146,7 +204,7 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -169,14 +227,8 @@ v3 = [
         "name": "location",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -206,7 +258,7 @@ v3 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -239,7 +291,7 @@ v3 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -249,7 +301,7 @@ v3 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -270,12 +322,122 @@ v3 = [
                 "name": "uniqueId",
                 "storageKey": null
               },
-              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "color",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationPhysicalAddressDetails",
+            "kind": "LinkedField",
+            "name": "physicalAddress",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "placeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "longitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "latitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine1",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine2",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "suburb",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "province",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "zipcode",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "country",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "countryCode",
                 "storageKey": null
               }
             ],
@@ -294,7 +456,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -303,19 +465,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "a72972769d0af409ffa1ab66d3fb28aa",
+    "cacheID": "88eec953f668f1c2330dc72c1162a2fc",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b264035d1467635fcab397dcb321e45c";
+(node as any).hash = "665259f9c8bfa2e5c42f08daf737d0b2";
 
 export default node;
