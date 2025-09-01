@@ -15,7 +15,7 @@ namespace Location.Processors;
 
 public class Program
 {
-    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunWithGraphQLCommandsAsync(args);
+    public static async Task Main(string[] args) => await CreateHostBuilder(args).RunAsync();
 
     public static WebApplication CreateHostBuilder(string[] args)
     {

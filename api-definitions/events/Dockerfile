@@ -15,6 +15,7 @@ RUN unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
 RUN unzip -o $PROTOC_ZIP -d /usr/local include/*
 RUN rm -f $PROTOC_ZIP
 
+COPY ["shared/Enterprise.Shared", "shared/Enterprise.Shared"]
 COPY ["shared/Skedularctl", "shared/Skedularctl"]
 WORKDIR shared/Skedularctl
 RUN --mount=type=cache,target=~/.nuget/packages dotnet restore "Skedularctl.csproj"

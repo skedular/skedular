@@ -23,4 +23,8 @@
         <EmbeddedResource Include="Events\Generator\Resources\EventWithoutMetadata.liquid"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+    </ItemGroup>
+
 </Project>

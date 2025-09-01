@@ -24,12 +24,12 @@
         <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.71.0"/>
 
-        <PackageReference Include="HotChocolate" Version="15.1.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.1.9"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.9"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.9"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.9"/>
+        <PackageReference Include="HotChocolate" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.10"/>
 
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.8"/>
