@@ -111,6 +111,10 @@ type LocationExtraMetadata {
   contactDetails: ContactDetails
   areaRange: AreaRange
   peopleCapacity: PeopleCapacity
+  website: String
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  otherLinks: [String!]
 }
 
 type LocationPayload {
@@ -406,6 +410,10 @@ input LocationExtraMetadataInput {
   contactDetails: ContactDetailsInput
   areaRange: AreaRangeInput
   peopleCapacity: PeopleCapacityInput
+  website: String
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  otherLinks: [String!]
 }
 
 input LocationOrderInput {

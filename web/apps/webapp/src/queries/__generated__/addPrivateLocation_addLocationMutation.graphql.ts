@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a954d455673af7db129385f8b37cb35b>>
+ * @generated SignedSource<<9c10c9cee05124f88a548571e87e9ad1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,11 @@ export type AddLocationInput = {
 export type LocationExtraMetadataInput = {
   areaRange?: AreaRangeInput | null | undefined;
   contactDetails?: ContactDetailsInput | null | undefined;
+  otherLinks?: ReadonlyArray<string> | null | undefined;
   peopleCapacity?: PeopleCapacityInput | null | undefined;
+  relatedImageLinks?: ReadonlyArray<string> | null | undefined;
+  relatedVideoLinks?: ReadonlyArray<string> | null | undefined;
+  website?: string | null | undefined;
 };
 export type AreaRangeInput = {
   fromInSqm: string;

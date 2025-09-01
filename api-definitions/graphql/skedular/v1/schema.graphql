@@ -504,7 +504,11 @@ type LocationEdge {
 type LocationExtraMetadata {
   areaRange: AreaRange
   contactDetails: ContactDetails
+  otherLinks: [String!]
   peopleCapacity: PeopleCapacity
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  website: String
 }
 
 type LocationPayload {
@@ -1992,7 +1996,11 @@ input LineItemInput {
 input LocationExtraMetadataInput {
   areaRange: AreaRangeInput
   contactDetails: ContactDetailsInput
+  otherLinks: [String!]
   peopleCapacity: PeopleCapacityInput
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  website: String
 }
 
 input LocationOrderInput {

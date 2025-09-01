@@ -94,6 +94,10 @@ type LocationDetails = {
   areaRangeToInSqm: string | null;
   peopleCapacityFrom: string | null;
   peopleCapacityTo: string | null;
+  website: string | null;
+  relatedImageLinks: string | null;
+  relatedVideoLinks: string | null;
+  otherLinks: string | null;
 };
 
 const locationSchema = object({
@@ -111,6 +115,10 @@ const locationSchema = object({
   areaRangeToInSqm: string().nullable(),
   peopleCapacityFrom: string().nullable(),
   peopleCapacityTo: string().nullable(),
+  website: string().nullable(),
+  relatedImageLinks: string().nullable(),
+  relatedVideoLinks: string().nullable(),
+  otherLinks: string().nullable(),
 });
 
 type PhysicalAddress = {
@@ -214,6 +222,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               from
               to
             }
+            website
+            relatedImageLinks
+            relatedVideoLinks
+            otherLinks
           }
           primaryFeatureImage {
             original {
@@ -403,6 +415,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               from
               to
             }
+            website
+            relatedImageLinks
+            relatedVideoLinks
+            otherLinks
           }
           primaryFeatureImage {
             original {
@@ -610,6 +626,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               from
               to
             }
+            website
+            relatedImageLinks
+            relatedVideoLinks
+            otherLinks
           }
           physicalAddress {
             addressLine1
@@ -770,6 +790,21 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const [locationPeopleCapacityTo, setLocationPeopleCapacityTo] = useState<string | null | undefined>(rootData.location?.extraMetadata?.peopleCapacity?.to);
   const debounceSetLocationPeopleCapacityTo = useDebounceCallback(setLocationPeopleCapacityTo, keyboardTextFieldDebounceTimeout);
 
+  const [locationWebsite, setLocationWebsite] = useState<string | null | undefined>(rootData.location?.extraMetadata?.website);
+  const debounceSetLocationWebsite = useDebounceCallback(setLocationWebsite, keyboardTextFieldDebounceTimeout);
+  const [locationRelatedImageLinks, setLocationRelatedImageLinks] = useState<string | null | undefined>(
+    rootData.location?.extraMetadata?.relatedImageLinks ? rootData.location?.extraMetadata?.relatedImageLinks.join('\n') : '',
+  );
+  const debounceSetLocationRelatedImageLinks = useDebounceCallback(setLocationRelatedImageLinks, keyboardTextFieldDebounceTimeout);
+  const [locationRelatedVideoLinks, setLocationRelatedVideoLinks] = useState<string | null | undefined>(
+    rootData.location?.extraMetadata?.relatedVideoLinks ? rootData.location?.extraMetadata?.relatedVideoLinks.join('\n') : '',
+  );
+  const debounceSetLocationRelatedVideoLinks = useDebounceCallback(setLocationRelatedVideoLinks, keyboardTextFieldDebounceTimeout);
+  const [locationOtherLinks, setLocationOtherLinks] = useState<string | null | undefined>(
+    rootData.location?.extraMetadata?.otherLinks ? rootData.location?.extraMetadata?.otherLinks.join('\n') : '',
+  );
+  const debounceSetLocationOtherLinks = useDebounceCallback(setLocationOtherLinks, keyboardTextFieldDebounceTimeout);
+
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
     rootData.location?.primaryFeatureImage && rootData.location?.primaryFeatureImage.original
       ? {
@@ -885,6 +920,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     areaRangeToInSqm,
     peopleCapacityFrom,
     peopleCapacityTo,
+    website,
+    relatedImageLinks,
+    relatedVideoLinks,
+    otherLinks,
     locationTagIds,
   }: LocationDetails) => {
     const location = rootData.location;
@@ -936,6 +975,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                     to: peopleCapacityTo,
                   }
                 : null,
+            website: website ?? null,
+            relatedImageLinks: relatedImageLinks
+              ? relatedImageLinks
+                  .split('\n')
+                  .map((item) => item.trim())
+                  .filter((item) => item)
+              : [],
+            relatedVideoLinks: relatedVideoLinks
+              ? relatedVideoLinks
+                  .split('\n')
+                  .map((item) => item.trim())
+                  .filter((item) => item)
+              : [],
+            otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
@@ -996,6 +1049,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       to: peopleCapacityTo,
                     }
                   : null,
+              website: website ?? null,
+              relatedImageLinks: relatedImageLinks
+                ? relatedImageLinks
+                    .split('\n')
+                    .map((item) => item.trim())
+                    .filter((item) => item)
+                : [],
+              relatedVideoLinks: relatedVideoLinks
+                ? relatedVideoLinks
+                    .split('\n')
+                    .map((item) => item.trim())
+                    .filter((item) => item)
+                : [],
+              otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
             },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: location.locationTags,
@@ -1814,6 +1881,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 areaRangeToInSqm: locationAreaRangeToSqm,
                 peopleCapacityFrom: locationPeopleCapacityFrom,
                 peopleCapacityTo: locationPeopleCapacityTo,
+                website: locationWebsite,
+                relatedImageLinks: locationRelatedImageLinks,
+                relatedVideoLinks: locationRelatedVideoLinks,
+                otherLinks: locationOtherLinks,
               }}
               validate={validateLocationDetails}
               render={({ handleSubmit, values }) => {
@@ -1831,6 +1902,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
                 debounceSetLocationPeopleCapacityTo(values!.peopleCapacityTo);
 
+                debounceSetLocationWebsite(values!.website);
+                debounceSetLocationRelatedImageLinks(values!.relatedImageLinks);
+                debounceSetLocationRelatedVideoLinks(values!.relatedVideoLinks);
+                debounceSetLocationOtherLinks(values!.otherLinks);
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
@@ -1899,6 +1974,22 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
                           <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
                             <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Website" required={requiredFields.website}>
+                            <TextField name="website" required={requiredFields.website} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Image Links" required={requiredFields.relatedImageLinks}>
+                            <TextField name="relatedImageLinks" required={requiredFields.relatedImageLinks} multiline rows={5} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Video Links" required={requiredFields.relatedVideoLinks}>
+                            <TextField name="relatedVideoLinks" required={requiredFields.relatedVideoLinks} multiline rows={5} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Other Links" required={requiredFields.otherLinks}>
+                            <TextField name="otherLinks" required={requiredFields.otherLinks} multiline rows={5} />
                           </FormFieldLabel>
                         </>
                       )}

@@ -73,6 +73,10 @@ type LocationDetails = {
   areaRangeToInSqm: string | null;
   peopleCapacityFrom: string | null;
   peopleCapacityTo: string | null;
+  website: string | null;
+  relatedImageLinks: string | null;
+  relatedVideoLinks: string | null;
+  otherLinks: string | null;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string | null;
@@ -97,6 +101,10 @@ const locationSchema = object({
   areaRangeToInSqm: string().nullable(),
   peopleCapacityFrom: string().nullable(),
   peopleCapacityTo: string().nullable(),
+  website: string().nullable(),
+  relatedImageLinks: string().nullable(),
+  relatedVideoLinks: string().nullable(),
+  otherLinks: string().nullable(),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string(),
@@ -135,6 +143,10 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
               from
               to
             }
+            website
+            relatedImageLinks
+            relatedVideoLinks
+            otherLinks
           }
           primaryFeatureImage {
             original {
@@ -208,6 +220,15 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const [locationPeopleCapacityTo, setLocationPeopleCapacityTo] = useState<string | null>(null);
   const debounceSetLocationPeopleCapacityTo = useDebounceCallback(setLocationPeopleCapacityTo, keyboardTextFieldDebounceTimeout);
 
+  const [locationWebsite, setLocationWebsite] = useState<string | null>(null);
+  const debounceSetLocationWebsite = useDebounceCallback(setLocationWebsite, keyboardTextFieldDebounceTimeout);
+  const [locationRelatedImageLinks, setLocationRelatedImageLinks] = useState<string | null>(null);
+  const debounceSetLocationRelatedImageLinks = useDebounceCallback(setLocationRelatedImageLinks, keyboardTextFieldDebounceTimeout);
+  const [locationRelatedVideoLinks, setLocationRelatedVideoLinks] = useState<string | null>(null);
+  const debounceSetLocationRelatedVideoLinks = useDebounceCallback(setLocationRelatedVideoLinks, keyboardTextFieldDebounceTimeout);
+  const [locationOtherLinks, setLocationOtherLinks] = useState<string | null>(null);
+  const debounceSetLocationOtherLinks = useDebounceCallback(setLocationOtherLinks, keyboardTextFieldDebounceTimeout);
+
   const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState<string | null | undefined>(null);
   const [physicalAddressOsmId, setPhysicalAddressOsmId] = useState<string | null | undefined>(null);
   const [physicalAddressPlaceId, setPhysicalAddressPlaceId] = useState<string | null | undefined>(null);
@@ -266,6 +287,10 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     areaRangeToInSqm,
     peopleCapacityFrom,
     peopleCapacityTo,
+    website,
+    relatedImageLinks,
+    relatedVideoLinks,
+    otherLinks,
     locationTagIds,
     addressLine1,
     addressLine2,
@@ -327,6 +352,20 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     to: peopleCapacityTo,
                   }
                 : null,
+            website: website ?? null,
+            relatedImageLinks: relatedImageLinks
+              ? relatedImageLinks
+                  .split('\n')
+                  .map((item) => item.trim())
+                  .filter((item) => item)
+              : [],
+            relatedVideoLinks: relatedVideoLinks
+              ? relatedVideoLinks
+                  .split('\n')
+                  .map((item) => item.trim())
+                  .filter((item) => item)
+              : [],
+            otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
@@ -406,6 +445,20 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                       to: peopleCapacityTo,
                     }
                   : null,
+              website: website ?? null,
+              relatedImageLinks: relatedImageLinks
+                ? relatedImageLinks
+                    .split('\n')
+                    .map((item) => item.trim())
+                    .filter((item) => item)
+                : [],
+              relatedVideoLinks: relatedVideoLinks
+                ? relatedVideoLinks
+                    .split('\n')
+                    .map((item) => item.trim())
+                    .filter((item) => item)
+                : [],
+              otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
             },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
@@ -489,6 +542,11 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             peopleCapacityFrom: locationPeopleCapacityFrom,
             peopleCapacityTo: locationPeopleCapacityTo,
 
+            website: locationWebsite,
+            relatedImageLinks: locationRelatedImageLinks,
+            relatedVideoLinks: locationRelatedVideoLinks,
+            otherLinks: locationOtherLinks,
+
             addressLine1: physicalAddressAddressLine1,
             addressLine2: physicalAddressAddressLine2,
             suburb: physicalAddressSuburb,
@@ -512,6 +570,11 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             debounceSetLocationAreaRangeToSqm(values!.areaRangeToInSqm);
             debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
             debounceSetLocationPeopleCapacityTo(values!.peopleCapacityTo);
+
+            debounceSetLocationWebsite(values!.website);
+            debounceSetLocationRelatedImageLinks(values!.relatedImageLinks);
+            debounceSetLocationRelatedVideoLinks(values!.relatedVideoLinks);
+            debounceSetLocationOtherLinks(values!.otherLinks);
 
             debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
             debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
@@ -588,6 +651,22 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
 
                     <FormFieldLabel label="People Capacity To" required={requiredFields.peopleCapacityTo}>
                       <TextField name="peopleCapacityTo" required={requiredFields.peopleCapacityTo} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Website" required={requiredFields.website}>
+                      <TextField name="website" required={requiredFields.website} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Image Links" required={requiredFields.relatedImageLinks}>
+                      <TextField name="relatedImageLinks" required={requiredFields.relatedImageLinks} multiline rows={5} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Video Links" required={requiredFields.relatedVideoLinks}>
+                      <TextField name="relatedVideoLinks" required={requiredFields.relatedVideoLinks} multiline rows={5} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Other Links" required={requiredFields.otherLinks}>
+                      <TextField name="otherLinks" required={requiredFields.otherLinks} multiline rows={5} />
                     </FormFieldLabel>
                   </>
                 )}
