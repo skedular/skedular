@@ -12,7 +12,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
 import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -66,9 +66,9 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
-  contactPerson: string | null;
-  contactEmail: string | null;
-  contactPhone: string | null;
+  contactPeople: string | null;
+  contactEmails: string | null;
+  contactPhones: string | null;
   areaRangeFromInSqm: string | null;
   areaRangeToInSqm: string | null;
   peopleCapacityFrom: string | null;
@@ -92,11 +92,9 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
-  contactPerson: string().nullable(),
-  contactEmail: string()
-    .nullable()
-    .email(({ value }) => `${value} is not a valid email`),
-  contactPhone: string().nullable(),
+  contactPeople: string().nullable(),
+  contactEmails: string().nullable(),
+  contactPhones: string().nullable(),
   areaRangeFromInSqm: string().nullable(),
   areaRangeToInSqm: string().nullable(),
   peopleCapacityFrom: string().nullable(),
@@ -131,9 +129,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           }
           extraMetadata {
             contactDetails {
-              contactPerson
-              contactEmail
-              contactPhone
+              contactPeople
+              contactEmails
+              contactPhones
             }
             areaRange {
               fromInSqm
@@ -280,9 +278,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     about,
     timezone,
     type,
-    contactPerson,
-    contactEmail,
-    contactPhone,
+    contactPeople,
+    contactEmails,
+    contactPhones,
     areaRangeFromInSqm,
     areaRangeToInSqm,
     peopleCapacityFrom,
@@ -330,14 +328,11 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           timezone,
           type: type as LocationType,
           extraMetadata: {
-            contactDetails:
-              contactPerson || contactEmail || contactPhone
-                ? {
-                    contactPerson,
-                    contactEmail,
-                    contactPhone,
-                  }
-                : null,
+            contactDetails: {
+              contactPeople: stringToMultiLines(contactPeople),
+              contactEmails: stringToMultiLines(contactEmails),
+              contactPhones: stringToMultiLines(contactPhones),
+            },
             areaRange:
               areaRangeFromInSqm && areaRangeToInSqm
                 ? {
@@ -353,19 +348,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   }
                 : null,
             website: website ?? null,
-            relatedImageLinks: relatedImageLinks
-              ? relatedImageLinks
-                  .split('\n')
-                  .map((item) => item.trim())
-                  .filter((item) => item)
-              : [],
-            relatedVideoLinks: relatedVideoLinks
-              ? relatedVideoLinks
-                  .split('\n')
-                  .map((item) => item.trim())
-                  .filter((item) => item)
-              : [],
-            otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
+            relatedImageLinks: stringToMultiLines(relatedImageLinks),
+            relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
+            otherLinks: stringToMultiLines(otherLinks),
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
@@ -423,14 +408,11 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
               name: '',
             },
             extraMetadata: {
-              contactDetails:
-                contactPerson || contactEmail || contactPhone
-                  ? {
-                      contactPerson,
-                      contactEmail,
-                      contactPhone,
-                    }
-                  : null,
+              contactDetails: {
+                contactPeople: stringToMultiLines(contactPeople),
+                contactEmails: stringToMultiLines(contactEmails),
+                contactPhones: stringToMultiLines(contactPhones),
+              },
               areaRange:
                 areaRangeFromInSqm && areaRangeToInSqm
                   ? {
@@ -446,19 +428,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     }
                   : null,
               website: website ?? null,
-              relatedImageLinks: relatedImageLinks
-                ? relatedImageLinks
-                    .split('\n')
-                    .map((item) => item.trim())
-                    .filter((item) => item)
-                : [],
-              relatedVideoLinks: relatedVideoLinks
-                ? relatedVideoLinks
-                    .split('\n')
-                    .map((item) => item.trim())
-                    .filter((item) => item)
-                : [],
-              otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
+              relatedImageLinks: stringToMultiLines(relatedImageLinks),
+              relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
+              otherLinks: stringToMultiLines(otherLinks),
             },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
@@ -534,9 +506,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             type: locationType,
             locationTagIds,
 
-            contactPerson: locationContactPerson,
-            contactEmail: locationContactEmail,
-            contactPhone: locationContactPhone,
+            contactPeople: locationContactPerson,
+            contactEmails: locationContactEmail,
+            contactPhones: locationContactPhone,
             areaRangeFromInSqm: locationAreaRangeFromSqm,
             areaRangeToInSqm: locationAreaRangeToSqm,
             peopleCapacityFrom: locationPeopleCapacityFrom,
@@ -563,9 +535,9 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             debounceSetLocationType(values!.type);
             debounceSetLocationTagIds(values!.locationTagIds);
 
-            debounceSetLocationContactPerson(values!.contactPerson);
-            debounceSetLocationContactEmail(values!.contactEmail);
-            debounceSetLocationContactPhone(values!.contactPhone);
+            debounceSetLocationContactPerson(values!.contactPeople);
+            debounceSetLocationContactEmail(values!.contactEmails);
+            debounceSetLocationContactPhone(values!.contactPhones);
             debounceSetLocationAreaRangeFromSqm(values!.areaRangeFromInSqm);
             debounceSetLocationAreaRangeToSqm(values!.areaRangeToInSqm);
             debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
@@ -682,28 +654,34 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   </FormFieldLabel>
                 )}
 
-                <FormFieldLabel label="Contact Person" required={requiredFields.contactPerson}>
+                <FormFieldLabel label="Contact People" required={requiredFields.contactPeople}>
                   <TextField
-                    name="contactPerson"
-                    required={requiredFields.contactPerson}
+                    name="contactPeople"
+                    required={requiredFields.contactPeople}
+                    multiline
+                    rows={2}
                     helperText={
                       <HelperText text="Enter the name of the main contact person for this location. This helps visitors and members know who to reach out to for assistance or inquiries." />
                     }
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Email" required={requiredFields.contactEmail}>
+                <FormFieldLabel label="Emails" required={requiredFields.contactEmails}>
                   <TextField
-                    name="contactEmail"
-                    required={requiredFields.contactEmail}
+                    name="contactEmails"
+                    required={requiredFields.contactEmails}
+                    multiline
+                    rows={2}
                     helperText={<HelperText text="Enter a public contact email for this location so visitors and potential members can get in touch easily." />}
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Phone Number" required={requiredFields.contactPhone}>
+                <FormFieldLabel label="Phone Numbers" required={requiredFields.contactPhones}>
                   <TextField
-                    name="contactPhone"
-                    required={requiredFields.contactPhone}
+                    name="contactPhones"
+                    required={requiredFields.contactPhones}
+                    multiline
+                    rows={2}
                     helperText={<HelperText text="Provide a phone number where your co-working space can be reached for inquiries or support." />}
                   />
                 </FormFieldLabel>

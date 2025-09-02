@@ -268,9 +268,9 @@ type ConnectionOfTeamMemberEdge {
 }
 
 type ContactDetails {
-  contactEmail: String
-  contactPerson: String
-  contactPhone: String
+  contactEmails: [String!]
+  contactPeople: [String!]
+  contactPhones: [String!]
 }
 
 type CurrencyDetails {
@@ -1816,9 +1816,9 @@ input ConfirmBookingPaymentInput {
 }
 
 input ContactDetailsInput {
-  contactEmail: String
-  contactPerson: String
-  contactPhone: String
+  contactEmails: [String!]
+  contactPeople: [String!]
+  contactPhones: [String!]
 }
 
 input CustomTagOrganizationTagWhereInput {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<33e3434b5089585c743012fdb46a1e10>>
+ * @generated SignedSource<<5e80ffca8e5fc5874702488a1ba79200>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,9 +21,9 @@ export type organizationLocation_query$data = {
         readonly toInSqm: string;
       } | null | undefined;
       readonly contactDetails: {
-        readonly contactEmail: string | null | undefined;
-        readonly contactPerson: string | null | undefined;
-        readonly contactPhone: string | null | undefined;
+        readonly contactEmails: ReadonlyArray<string> | null | undefined;
+        readonly contactPeople: ReadonlyArray<string> | null | undefined;
+        readonly contactPhones: ReadonlyArray<string> | null | undefined;
       } | null | undefined;
       readonly otherLinks: ReadonlyArray<string> | null | undefined;
       readonly peopleCapacity: {
@@ -364,21 +364,21 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "contactPerson",
+                  "name": "contactPeople",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "contactEmail",
+                  "name": "contactEmails",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "contactPhone",
+                  "name": "contactPhones",
                   "storageKey": null
                 }
               ],
@@ -753,6 +753,6 @@ return {
 };
 })();
 
-(node as any).hash = "7ea5329a51c8ee50a573d4e6dfc8ba89";
+(node as any).hash = "203c02a67e990b46860bb8390d60d4f2";
 
 export default node;

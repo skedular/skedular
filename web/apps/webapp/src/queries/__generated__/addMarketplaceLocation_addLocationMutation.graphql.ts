@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d8136de90228e223eaa119673d24fb1e>>
+ * @generated SignedSource<<481f5de9491aceba2b6e54865748fce3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,9 +38,9 @@ export type AreaRangeInput = {
   toInSqm: string;
 };
 export type ContactDetailsInput = {
-  contactEmail?: string | null | undefined;
-  contactPerson?: string | null | undefined;
-  contactPhone?: string | null | undefined;
+  contactEmails?: ReadonlyArray<string> | null | undefined;
+  contactPeople?: ReadonlyArray<string> | null | undefined;
+  contactPhones?: ReadonlyArray<string> | null | undefined;
 };
 export type PeopleCapacityInput = {
   from: string;
@@ -84,9 +84,9 @@ export type addMarketplaceLocation_addLocationMutation$data = {
           readonly toInSqm: string;
         } | null | undefined;
         readonly contactDetails: {
-          readonly contactEmail: string | null | undefined;
-          readonly contactPerson: string | null | undefined;
-          readonly contactPhone: string | null | undefined;
+          readonly contactEmails: ReadonlyArray<string> | null | undefined;
+          readonly contactPeople: ReadonlyArray<string> | null | undefined;
+          readonly contactPhones: ReadonlyArray<string> | null | undefined;
         } | null | undefined;
         readonly otherLinks: ReadonlyArray<string> | null | undefined;
         readonly peopleCapacity: {
@@ -151,9 +151,9 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
           readonly toInSqm: string;
         } | null | undefined;
         readonly contactDetails: {
-          readonly contactEmail: string | null | undefined;
-          readonly contactPerson: string | null | undefined;
-          readonly contactPhone: string | null | undefined;
+          readonly contactEmails: ReadonlyArray<string> | null | undefined;
+          readonly contactPeople: ReadonlyArray<string> | null | undefined;
+          readonly contactPhones: ReadonlyArray<string> | null | undefined;
         } | null | undefined;
         readonly otherLinks: ReadonlyArray<string> | null | undefined;
         readonly peopleCapacity: {
@@ -337,21 +337,21 @@ v4 = [
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactPerson",
+                    "name": "contactPeople",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactEmail",
+                    "name": "contactEmails",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactPhone",
+                    "name": "contactPhones",
                     "storageKey": null
                   }
                 ],
@@ -630,16 +630,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "7e3615d21a16f75f657bff25a8c89b1a",
+    "cacheID": "3936372e4b73bb2bf550193042576c3d",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPerson\n          contactEmail\n          contactPhone\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "941fb9de5daebbc70eee87d9407fa08c";
+(node as any).hash = "44a573dae66489ad5cc134c12a00487f";
 
 export default node;

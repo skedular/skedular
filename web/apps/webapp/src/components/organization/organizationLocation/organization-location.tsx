@@ -35,7 +35,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { joinErrors, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
 import type { organizationLocation_activateResourcesMutation } from '@/queries/__generated__/organizationLocation_activateResourcesMutation.graphql';
 import type { organizationLocation_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
@@ -87,9 +87,9 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
-  contactPerson: string | null;
-  contactEmail: string | null;
-  contactPhone: string | null;
+  contactPeople: string | null;
+  contactEmails: string | null;
+  contactPhones: string | null;
   areaRangeFromInSqm: string | null;
   areaRangeToInSqm: string | null;
   peopleCapacityFrom: string | null;
@@ -106,11 +106,11 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
-  contactPerson: string().nullable(),
-  contactEmail: string()
+  contactPeople: string().nullable(),
+  contactEmails: string()
     .nullable()
     .email(({ value }) => `${value} is not a valid email`),
-  contactPhone: string().nullable(),
+  contactPhones: string().nullable(),
   areaRangeFromInSqm: string().nullable(),
   areaRangeToInSqm: string().nullable(),
   peopleCapacityFrom: string().nullable(),
@@ -210,9 +210,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           }
           extraMetadata {
             contactDetails {
-              contactPerson
-              contactEmail
-              contactPhone
+              contactPeople
+              contactEmails
+              contactPhones
             }
             areaRange {
               fromInSqm
@@ -403,9 +403,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           }
           extraMetadata {
             contactDetails {
-              contactPerson
-              contactEmail
-              contactPhone
+              contactPeople
+              contactEmails
+              contactPhones
             }
             areaRange {
               fromInSqm
@@ -614,9 +614,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           timezone
           extraMetadata {
             contactDetails {
-              contactPerson
-              contactEmail
-              contactPhone
+              contactPeople
+              contactEmails
+              contactPhones
             }
             areaRange {
               fromInSqm
@@ -773,11 +773,17 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
 
-  const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactPerson);
+  const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(
+    stringCollectionToString(rootData.location?.extraMetadata?.contactDetails?.contactPeople),
+  );
   const debounceSetLocationContactPerson = useDebounceCallback(setLocationContactPerson, keyboardTextFieldDebounceTimeout);
-  const [locationContactEmail, setLocationContactEmail] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactEmail);
+  const [locationContactEmail, setLocationContactEmail] = useState<string | null | undefined>(
+    stringCollectionToString(rootData.location?.extraMetadata?.contactDetails?.contactEmails),
+  );
   const debounceSetLocationContactEmail = useDebounceCallback(setLocationContactEmail, keyboardTextFieldDebounceTimeout);
-  const [locationContactPhone, setLocationContactPhone] = useState<string | null | undefined>(rootData.location?.extraMetadata?.contactDetails?.contactPhone);
+  const [locationContactPhone, setLocationContactPhone] = useState<string | null | undefined>(
+    stringCollectionToString(rootData.location?.extraMetadata?.contactDetails?.contactPhones),
+  );
   const debounceSetLocationContactPhone = useDebounceCallback(setLocationContactPhone, keyboardTextFieldDebounceTimeout);
 
   const [locationAreaRangeFromSqm, setLocationAreaRangeFromSqm] = useState<string | null | undefined>(rootData.location?.extraMetadata?.areaRange?.fromInSqm);
@@ -793,16 +799,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const [locationWebsite, setLocationWebsite] = useState<string | null | undefined>(rootData.location?.extraMetadata?.website);
   const debounceSetLocationWebsite = useDebounceCallback(setLocationWebsite, keyboardTextFieldDebounceTimeout);
   const [locationRelatedImageLinks, setLocationRelatedImageLinks] = useState<string | null | undefined>(
-    rootData.location?.extraMetadata?.relatedImageLinks ? rootData.location?.extraMetadata?.relatedImageLinks.join('\n') : '',
+    stringCollectionToString(rootData.location?.extraMetadata?.relatedImageLinks),
   );
   const debounceSetLocationRelatedImageLinks = useDebounceCallback(setLocationRelatedImageLinks, keyboardTextFieldDebounceTimeout);
   const [locationRelatedVideoLinks, setLocationRelatedVideoLinks] = useState<string | null | undefined>(
-    rootData.location?.extraMetadata?.relatedVideoLinks ? rootData.location?.extraMetadata?.relatedVideoLinks.join('\n') : '',
+    stringCollectionToString(rootData.location?.extraMetadata?.relatedVideoLinks),
   );
   const debounceSetLocationRelatedVideoLinks = useDebounceCallback(setLocationRelatedVideoLinks, keyboardTextFieldDebounceTimeout);
-  const [locationOtherLinks, setLocationOtherLinks] = useState<string | null | undefined>(
-    rootData.location?.extraMetadata?.otherLinks ? rootData.location?.extraMetadata?.otherLinks.join('\n') : '',
-  );
+  const [locationOtherLinks, setLocationOtherLinks] = useState<string | null | undefined>(stringCollectionToString(rootData.location?.extraMetadata?.otherLinks));
   const debounceSetLocationOtherLinks = useDebounceCallback(setLocationOtherLinks, keyboardTextFieldDebounceTimeout);
 
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
@@ -913,9 +917,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     about,
     timezone,
     type,
-    contactPerson,
-    contactEmail,
-    contactPhone,
+    contactPeople,
+    contactEmails,
+    contactPhones,
     areaRangeFromInSqm,
     areaRangeToInSqm,
     peopleCapacityFrom,
@@ -953,14 +957,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           timezone,
           type: type as LocationType,
           extraMetadata: {
-            contactDetails:
-              contactPerson || contactEmail || contactPhone
-                ? {
-                    contactPerson,
-                    contactEmail,
-                    contactPhone,
-                  }
-                : null,
+            contactDetails: {
+              contactPeople: stringToMultiLines(contactPeople),
+              contactEmails: stringToMultiLines(contactEmails),
+              contactPhones: stringToMultiLines(contactPhones),
+            },
             areaRange:
               areaRangeFromInSqm && areaRangeToInSqm
                 ? {
@@ -976,19 +977,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                   }
                 : null,
             website: website ?? null,
-            relatedImageLinks: relatedImageLinks
-              ? relatedImageLinks
-                  .split('\n')
-                  .map((item) => item.trim())
-                  .filter((item) => item)
-              : [],
-            relatedVideoLinks: relatedVideoLinks
-              ? relatedVideoLinks
-                  .split('\n')
-                  .map((item) => item.trim())
-                  .filter((item) => item)
-              : [],
-            otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
+            relatedImageLinks: stringToMultiLines(relatedImageLinks),
+            relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
+            otherLinks: stringToMultiLines(otherLinks),
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
           locationTagIds,
@@ -1027,14 +1018,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               name: '',
             },
             extraMetadata: {
-              contactDetails:
-                contactPerson || contactEmail || contactPhone
-                  ? {
-                      contactPerson,
-                      contactEmail,
-                      contactPhone,
-                    }
-                  : null,
+              contactDetails: {
+                contactPeople: stringToMultiLines(contactPeople),
+                contactEmails: stringToMultiLines(contactEmails),
+                contactPhones: stringToMultiLines(contactPhones),
+              },
               areaRange:
                 areaRangeFromInSqm && areaRangeToInSqm
                   ? {
@@ -1050,19 +1038,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                     }
                   : null,
               website: website ?? null,
-              relatedImageLinks: relatedImageLinks
-                ? relatedImageLinks
-                    .split('\n')
-                    .map((item) => item.trim())
-                    .filter((item) => item)
-                : [],
-              relatedVideoLinks: relatedVideoLinks
-                ? relatedVideoLinks
-                    .split('\n')
-                    .map((item) => item.trim())
-                    .filter((item) => item)
-                : [],
-              otherLinks: otherLinks ? otherLinks.split('\n').map((item) => item.trim()) : [],
+              relatedImageLinks: stringToMultiLines(relatedImageLinks),
+              relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
+              otherLinks: stringToMultiLines(otherLinks),
             },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: location.locationTags,
@@ -1874,9 +1852,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 timezone: locationTimezone,
                 type: locationType,
                 locationTagIds,
-                contactPerson: locationContactPerson,
-                contactEmail: locationContactEmail,
-                contactPhone: locationContactPhone,
+                contactPeople: locationContactPerson,
+                contactEmails: locationContactEmail,
+                contactPhones: locationContactPhone,
                 areaRangeFromInSqm: locationAreaRangeFromSqm,
                 areaRangeToInSqm: locationAreaRangeToSqm,
                 peopleCapacityFrom: locationPeopleCapacityFrom,
@@ -1894,9 +1872,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationType(values!.type);
                 debounceSetLocationTagIds(values!.locationTagIds);
 
-                debounceSetLocationContactPerson(values!.contactPerson);
-                debounceSetLocationContactEmail(values!.contactEmail);
-                debounceSetLocationContactPhone(values!.contactPhone);
+                debounceSetLocationContactPerson(values!.contactPeople);
+                debounceSetLocationContactEmail(values!.contactEmails);
+                debounceSetLocationContactPhone(values!.contactPhones);
                 debounceSetLocationAreaRangeFromSqm(values!.areaRangeFromInSqm);
                 debounceSetLocationAreaRangeToSqm(values!.areaRangeToInSqm);
                 debounceSetLocationPeopleCapacityFrom(values!.peopleCapacityFrom);
@@ -2009,16 +1987,16 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <BodyIconTypography label="Edit your location contact details" />
                       <Divider />
 
-                      <FormFieldLabel label="Contact Person" required={requiredFields.contactPerson}>
-                        <TextField name="contactPerson" required={requiredFields.contactPerson} />
+                      <FormFieldLabel label="Contact People" required={requiredFields.contactPeople}>
+                        <TextField name="contactPeople" required={requiredFields.contactPeople} multiline rows={2} />
                       </FormFieldLabel>
 
-                      <FormFieldLabel label="Email">
-                        <TextField name="contactEmail" required={requiredFields.contactEmail} />
+                      <FormFieldLabel label="Emails">
+                        <TextField name="contactEmails" required={requiredFields.contactEmails} multiline rows={2} />
                       </FormFieldLabel>
 
-                      <FormFieldLabel label="Phone Number">
-                        <TextField name="contactPhone" required={requiredFields.contactPhone} />
+                      <FormFieldLabel label="Phone Numbers">
+                        <TextField name="contactPhones" required={requiredFields.contactPhones} multiline rows={2} />
                       </FormFieldLabel>
                     </StackColumn>
 

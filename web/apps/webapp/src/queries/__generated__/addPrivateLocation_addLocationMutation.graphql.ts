@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9c10c9cee05124f88a548571e87e9ad1>>
+ * @generated SignedSource<<f0bf4b61b32627e1366afd471ffa351b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,9 +38,9 @@ export type AreaRangeInput = {
   toInSqm: string;
 };
 export type ContactDetailsInput = {
-  contactEmail?: string | null | undefined;
-  contactPerson?: string | null | undefined;
-  contactPhone?: string | null | undefined;
+  contactEmails?: ReadonlyArray<string> | null | undefined;
+  contactPeople?: ReadonlyArray<string> | null | undefined;
+  contactPhones?: ReadonlyArray<string> | null | undefined;
 };
 export type PeopleCapacityInput = {
   from: string;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f005b18e6a967e2590a30475dc8d40cc>>
+ * @generated SignedSource<<8a229a2cb1eb626411d2787c428432bc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,9 +35,9 @@ export type AreaRangeInput = {
   toInSqm: string;
 };
 export type ContactDetailsInput = {
-  contactEmail?: string | null | undefined;
-  contactPerson?: string | null | undefined;
-  contactPhone?: string | null | undefined;
+  contactEmails?: ReadonlyArray<string> | null | undefined;
+  contactPeople?: ReadonlyArray<string> | null | undefined;
+  contactPhones?: ReadonlyArray<string> | null | undefined;
 };
 export type PeopleCapacityInput = {
   from: string;
@@ -65,9 +65,9 @@ export type organizationLocation_updateLocationMutation$data = {
           readonly toInSqm: string;
         } | null | undefined;
         readonly contactDetails: {
-          readonly contactEmail: string | null | undefined;
-          readonly contactPerson: string | null | undefined;
-          readonly contactPhone: string | null | undefined;
+          readonly contactEmails: ReadonlyArray<string> | null | undefined;
+          readonly contactPeople: ReadonlyArray<string> | null | undefined;
+          readonly contactPhones: ReadonlyArray<string> | null | undefined;
         } | null | undefined;
         readonly otherLinks: ReadonlyArray<string> | null | undefined;
         readonly peopleCapacity: {
@@ -161,9 +161,9 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
           readonly toInSqm: string;
         } | null | undefined;
         readonly contactDetails: {
-          readonly contactEmail: string | null | undefined;
-          readonly contactPerson: string | null | undefined;
-          readonly contactPhone: string | null | undefined;
+          readonly contactEmails: ReadonlyArray<string> | null | undefined;
+          readonly contactPeople: ReadonlyArray<string> | null | undefined;
+          readonly contactPhones: ReadonlyArray<string> | null | undefined;
         } | null | undefined;
         readonly otherLinks: ReadonlyArray<string> | null | undefined;
         readonly peopleCapacity: {
@@ -406,21 +406,21 @@ v5 = [
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactPerson",
+                    "name": "contactPeople",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactEmail",
+                    "name": "contactEmails",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "contactPhone",
+                    "name": "contactPhones",
                     "storageKey": null
                   }
                 ],
@@ -675,16 +675,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "e68090c848df44acbee2d45966906075",
+    "cacheID": "cd47ec62698213b059763a272843bca7",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPerson\n          contactEmail\n          contactPhone\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8e0de6e64a13fdd56a5749f21e19fa47";
+(node as any).hash = "65f31f195ed33857d7b5054be9e7a983";
 
 export default node;

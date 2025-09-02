@@ -38,9 +38,9 @@ type ConnectionOfResourceEdge {
 }
 
 type ContactDetails {
-  contactPerson: String
-  contactEmail: String
-  contactPhone: String
+  contactPeople: [String!]
+  contactEmails: [String!]
+  contactPhones: [String!]
 }
 
 type DesksOccupancyPercentage {
@@ -367,9 +367,9 @@ input CdnImageFileInput {
 }
 
 input ContactDetailsInput {
-  contactPerson: String
-  contactEmail: String
-  contactPhone: String
+  contactPeople: [String!]
+  contactEmails: [String!]
+  contactPhones: [String!]
 }
 
 input DeactivateResourcesInput {

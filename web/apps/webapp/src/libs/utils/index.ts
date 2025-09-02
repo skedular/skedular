@@ -305,6 +305,10 @@ const getOpeningHoursFromDateTime = (datetime: Dayjs | string | null) => {
 
 const isMidnight = (datetime: Dayjs | null) => getOpeningHoursFromDateTime(datetime) === '00:00';
 
+const stringToMultiLines = (str?: string | null) => (str ? str.split('\n').map((item) => item.trim()) : []);
+
+const stringCollectionToString = (str?: readonly string[] | null) => (str ? str.join('\n') : '');
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -331,7 +335,9 @@ export {
   startOfDay,
   startOfMonth,
   startOfWeek,
+  stringCollectionToString,
   stringToColor,
+  stringToMultiLines,
   toDayAndMonthDate,
   toFixed,
   toHourAndMinute,

@@ -1,3 +1,4 @@
+import { isServer } from '@/libs/utils';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { v7 as uuid } from 'uuid';
 
@@ -28,7 +29,7 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
 let clientEnvironment: Environment | undefined;
 
 export function getEnvironment(endpoint: string, token?: string | null | undefined): Environment {
-  if (typeof window === 'undefined') {
+  if (isServer) {
     return new Environment({
       network: createNetwork(endpoint, token),
       store: new Store(new RecordSource()),
