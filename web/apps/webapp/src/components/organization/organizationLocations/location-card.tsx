@@ -31,9 +31,6 @@ import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -192,9 +189,9 @@ const LocationCard = ({
       TileLayer = rl.TileLayer;
 
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl: markerIcon2x,
-        iconUrl: markerIcon,
-        shadowUrl: markerShadow,
+        iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+        iconUrl: '/leaflet/marker-icon.png',
+        shadowUrl: '/leaflet/marker-shadow.png',
       });
 
       setDynamicLoadReady(true);

@@ -5,9 +5,6 @@ import type { marketplaceLocations_locations_query$key } from '@/queries/__gener
 import type { marketplaceLocations_locations_refetchableFragment } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import { LatLngBounds, LatLngTuple } from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
@@ -72,9 +69,9 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
       Popup = rl.Popup;
 
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl: markerIcon2x,
-        iconUrl: markerIcon,
-        shadowUrl: markerShadow,
+        iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
+        iconUrl: '/leaflet/images/marker-icon.png',
+        shadowUrl: '/leaflet/images/marker-shadow.png',
       });
 
       if ('geolocation' in navigator) {
