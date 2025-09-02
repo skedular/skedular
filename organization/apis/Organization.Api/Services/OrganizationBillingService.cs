@@ -35,8 +35,6 @@ public class OrganizationBillingService(
         string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                                        organizationId,

@@ -60,8 +60,6 @@ public class InvitationService(
             return [];
         }
 
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                                organizationId,
