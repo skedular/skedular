@@ -164,7 +164,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     const map = useMap();
 
     useEffect(() => {
-      map.flyTo(center, map.getZoom());
+      map.setView(center, map.getZoom());
 
       setCenterSet(true);
     }, [center, map]);
