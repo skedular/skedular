@@ -19,12 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Events\Generator\Resources\EventMetadata.liquid"/>
-        <EmbeddedResource Include="Events\Generator\Resources\EventWithoutMetadata.liquid"/>
+        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <EmbeddedResource Include="Events\Resources\EventMetadata.liquid"/>
+        <EmbeddedResource Include="Events\Resources\EventWithoutMetadata.liquid"/>
     </ItemGroup>
 
 </Project>

@@ -75,8 +75,8 @@ public class ProtobufEventMetadataGenerateService : IProtobufEventMetadataGenera
 
         await using var stream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream(options.GenerateMetadataFunctionHelper == BoolType.True
-                ? "Skedularctl.Events.Generator.Resources.EventMetadata.liquid"
-                : "Skedularctl.Events.Generator.Resources.EventWithoutMetadata.liquid");
+                ? "Skedularctl.Events.Resources.EventMetadata.liquid"
+                : "Skedularctl.Events.Resources.EventWithoutMetadata.liquid");
         ArgumentNullException.ThrowIfNull(stream);
 
         using var streamReader = new StreamReader(stream);
