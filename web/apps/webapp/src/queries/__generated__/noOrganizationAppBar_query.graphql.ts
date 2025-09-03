@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14027cece0bc2919cf1923a4952f0bae>>
+ * @generated SignedSource<<f232d03c97472c52f2ec9529ae0aa03c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type noOrganizationAppBar_query$data = {
   readonly me: {
     readonly email: string | null | undefined;
+    readonly emails: ReadonlyArray<string>;
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly id: string;
@@ -66,6 +67,13 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "email",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "emails",
           "storageKey": null
         },
         {
@@ -178,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "143938132dc13e339f6a6496b0ed7cfc";
+(node as any).hash = "daedb2fb1c1f206ee1792dc4c2c65f61";
 
 export default node;

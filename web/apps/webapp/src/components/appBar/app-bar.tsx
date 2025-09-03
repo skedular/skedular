@@ -11,6 +11,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
+import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -23,7 +24,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -45,6 +46,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
       fragment appBar_query on Query {
         me {
           id
+          emails
           email
           givenName
           middleName
@@ -79,8 +81,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const showAllOrgs = searchParams.get('showAllOrgs');
+  const [showAllOrgs, setShowAllOrgs] = useState(false);
 
   let finalOrganizationUniqueAlphanumericName = '';
   if (typeof organizationUniqueAlphanumericName === 'string') {
@@ -210,7 +211,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 }}
               >
                 {rootData.myOrganizations
-                  .filter((item) => showAllOrgs === 'true' || item.isListable)
+                  .filter((item) => showAllOrgs || item.isListable)
                   .map((organization) => (
                     <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
                       <StackRow>
@@ -230,6 +231,10 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 </MenuItem>
               </Select>
             </FormControl>
+          )}
+
+          {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+            <Checkbox checked={showAllOrgs} size="small" onChange={(event) => setShowAllOrgs(event.target.checked)} />
           )}
 
           {!hideWelcomeMessage && (
