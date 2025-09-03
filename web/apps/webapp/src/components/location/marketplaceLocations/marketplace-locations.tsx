@@ -215,7 +215,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
               .map((item) => {
                 return (
                   <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                    <Popup position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
+                    <Popup>
                       <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                     </Popup>
                   </Marker>

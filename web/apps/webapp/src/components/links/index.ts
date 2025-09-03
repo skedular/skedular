@@ -4,6 +4,8 @@ export const getMyBookingsLink = (integratedPlatrform: string | undefined) => (i
 export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
 export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/billing-and-payment` : '/billing-and-payment');
 export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
+export const getMarketplaceLocationLink = (integratedPlatrform: string | undefined, locationId: string) =>
+  integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
 
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 

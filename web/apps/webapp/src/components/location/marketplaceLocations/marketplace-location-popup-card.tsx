@@ -1,10 +1,13 @@
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import { AreaIcon, PersonIcon } from '@/components/icons';
+import { getMarketplaceLocationLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import type { marketplaceLocationPopupCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationPopupCard_LocationDetails.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
+import NextLink from 'next/link';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -44,6 +47,7 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
     locationDetailsRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const capacity = useMemo(() => {
     if (!locationDetails.extraMetadata?.peopleCapacity) {
       return '';
@@ -69,7 +73,7 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
   }, [locationDetails.extraMetadata?.areaRange]);
 
   return (
-    <Card sx={{ width: { xs: '100%', sm: 300 } }}>
+    <Card sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none' }} component={NextLink} href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}>
       {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
         <CardMedia component="img" image={locationDetails.primaryFeatureImage.thumbnail.url} />
       )}

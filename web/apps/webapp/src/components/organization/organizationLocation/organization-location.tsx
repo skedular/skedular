@@ -107,9 +107,7 @@ const locationSchema = object({
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
   contactPeople: string().nullable(),
-  contactEmails: string()
-    .nullable()
-    .email(({ value }) => `${value} is not a valid email`),
+  contactEmails: string().nullable(),
   contactPhones: string().nullable(),
   areaRangeFromInSqm: string().nullable(),
   areaRangeToInSqm: string().nullable(),
