@@ -56,7 +56,7 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
         if (selectedItem) {
           return (
             <StackRow>
-              <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+              <LeadIconTypography label="Location" startElement={<LocationIcon excludeTooltip />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -66,7 +66,7 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
 
         return (
           <StackRow>
-            <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+            <LeadIconTypography label="Location" startElement={<LocationIcon excludeTooltip />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />

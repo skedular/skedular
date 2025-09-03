@@ -137,7 +137,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationUniqu
                 component={NextLink}
                 href={getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, floorPlanDetails.id)}
               >
-                <LeadIconTypography label={floorPlanDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography label={floorPlanDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
             </StackRow>
           }

@@ -362,7 +362,7 @@ const LocationCard = ({
           title={
             <StackRow>
               <Link component={NextLink} href={editLink}>
-                <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
               <PushToRight />
               <Tooltip title="View floor plan and book resources">

@@ -56,7 +56,7 @@ const TeamSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Team" startElement={<TeamIcon />} />
+              <LeadIconTypography label="Team" startElement={<TeamIcon excludeTooltip />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -66,7 +66,7 @@ const TeamSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Team" startElement={<TeamIcon />} />
+            <LeadIconTypography label="Team" startElement={<TeamIcon excludeTooltip />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />

@@ -294,7 +294,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
           title={
             <StackRow>
               <Link component={NextLink} href={editLink}>
-                <LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography startElement={<TeamIcon excludeTooltip />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
               <PushToRight />
               <Box color={paletteMode === 'dark' ? coal : sandstone}>

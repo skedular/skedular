@@ -42,7 +42,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
       <CardHeader
         title={
           <StackRow>
-            <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+            <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
             <PushToRight />
           </StackRow>
         }
