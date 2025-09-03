@@ -11,6 +11,7 @@ import { memo, startTransition, useCallback, useEffect, useMemo, useState } from
 import { useMap, useMapEvents } from 'react-leaflet';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
+import MarketplaceLocationPopupCard from './marketplace-location-popup-card';
 
 let L: typeof import('leaflet');
 let MapContainer: typeof import('react-leaflet').MapContainer;
@@ -42,6 +43,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
                 latitude
               }
               ...marketplaceLocationCard_LocationDetails
+              ...marketplaceLocationPopupCard_LocationDetails
             }
           }
         }
@@ -213,8 +215,8 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
               .map((item) => {
                 return (
                   <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                    <Popup>
-                      <MarketplaceLocationCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                    <Popup position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
+                      <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                     </Popup>
                   </Marker>
                 );

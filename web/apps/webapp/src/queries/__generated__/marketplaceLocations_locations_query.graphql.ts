@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ec99455c35a1ed9c14c2c3c417e4165d>>
+ * @generated SignedSource<<e098d0071c06f408880707029f805a3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type marketplaceLocations_locations_query$data = {
           readonly latitude: number | null | undefined;
           readonly longitude: number | null | undefined;
         } | null | undefined;
-        readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocationCard_LocationDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocationCard_LocationDetails" | "marketplaceLocationPopupCard_LocationDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -178,6 +178,11 @@ return {
                   "name": "marketplaceLocationCard_LocationDetails"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "marketplaceLocationPopupCard_LocationDetails"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -243,6 +248,6 @@ return {
 };
 })();
 
-(node as any).hash = "64ac96100bbc2db4f2b1e7dd11c71533";
+(node as any).hash = "9f283c63f82a77ac28786b47bb4537a6";
 
 export default node;

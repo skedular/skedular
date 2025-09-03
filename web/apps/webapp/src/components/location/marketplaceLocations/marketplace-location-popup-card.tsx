@@ -1,6 +1,6 @@
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import { AreaIcon, PersonIcon } from '@/components/icons';
-import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
+import type { marketplaceLocationPopupCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationPopupCard_LocationDetails.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,14 +9,14 @@ import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  locationDetailsRelay: marketplaceLocationCard_LocationDetails$key;
+  locationDetailsRelay: marketplaceLocationPopupCard_LocationDetails$key;
   onReloadRequired: () => void;
 };
 
-const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
+const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
   const locationDetails = useFragment(
     graphql`
-      fragment marketplaceLocationCard_LocationDetails on LocationDetails {
+      fragment marketplaceLocationPopupCard_LocationDetails on LocationDetails {
         id
         name
         extraMetadata {
@@ -30,8 +30,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
           }
         }
         physicalAddress {
-          suburb
-          city
+          multilinesFormattedAddress
         }
         primaryFeatureImage {
           thumbnail {
@@ -69,18 +68,6 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
     }
   }, [locationDetails.extraMetadata?.areaRange]);
 
-  const shortAddress = useMemo(() => {
-    if (locationDetails.physicalAddress?.suburb && locationDetails.physicalAddress.city) {
-      return `${locationDetails.physicalAddress.suburb}, ${locationDetails.physicalAddress.city}`;
-    } else if (locationDetails.physicalAddress?.suburb) {
-      return locationDetails.physicalAddress.suburb;
-    } else if (locationDetails.physicalAddress?.city) {
-      return locationDetails.physicalAddress.city;
-    } else {
-      return '';
-    }
-  }, [locationDetails.physicalAddress?.suburb, locationDetails.physicalAddress?.city]);
-
   return (
     <Card sx={{ width: { xs: '100%', sm: 300 } }}>
       {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
@@ -96,10 +83,10 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
       />
       <CardContent>
         <LeadIconTypography label={locationDetails.name} />
-        {shortAddress && <SmallIconTypography label={shortAddress} />}
+        {locationDetails.physicalAddress?.multilinesFormattedAddress && <SmallIconTypography label={locationDetails.physicalAddress?.multilinesFormattedAddress} />}
       </CardContent>
     </Card>
   );
 };
 
-export default memo(MarketplaceLocationCard);
+export default memo(MarketplaceLocationPopupCard);
