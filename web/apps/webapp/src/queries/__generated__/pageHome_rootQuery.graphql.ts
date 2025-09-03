@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c72660c39328f90698f29d19eecb6a69>>
+ * @generated SignedSource<<7cf98c93e9062a7606a1bddc7db22271>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -166,7 +166,75 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "multilinesFormattedAddress",
+                        "name": "suburb",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "city",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationExtraMetadata",
+                    "kind": "LinkedField",
+                    "name": "extraMetadata",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "AreaRange",
+                        "kind": "LinkedField",
+                        "name": "areaRange",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "fromInSqm",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "toInSqm",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PeopleCapacity",
+                        "kind": "LinkedField",
+                        "name": "peopleCapacity",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "from",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "to",
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -290,12 +358,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6e8bd2a5c552758737bcc61d410744e5",
+    "cacheID": "5722ba1dcf6fa101acf8b11ef990ad91",
     "id": null,
     "metadata": {},
     "name": "pageHome_rootQuery",
     "operationKind": "query",
-    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  extraMetadata {\n    areaRange {\n      fromInSqm\n      toInSqm\n    }\n    peopleCapacity {\n      from\n      to\n    }\n  }\n  physicalAddress {\n    suburb\n    city\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

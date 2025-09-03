@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a884ccf07f66039c1c8228207371750d>>
+ * @generated SignedSource<<0839d3d8a1b3e823bafe6b4280662f57>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,21 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceLocationCard_LocationDetails$data = {
+  readonly extraMetadata: {
+    readonly areaRange: {
+      readonly fromInSqm: string;
+      readonly toInSqm: string;
+    } | null | undefined;
+    readonly peopleCapacity: {
+      readonly from: string;
+      readonly to: string;
+    } | null | undefined;
+  } | null | undefined;
   readonly id: string;
   readonly name: string;
   readonly physicalAddress: {
-    readonly multilinesFormattedAddress: string | null | undefined;
+    readonly city: string | null | undefined;
+    readonly suburb: string | null | undefined;
   } | null | undefined;
   readonly primaryFeatureImage: {
     readonly thumbnail: {
@@ -53,6 +64,67 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "LocationExtraMetadata",
+      "kind": "LinkedField",
+      "name": "extraMetadata",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "AreaRange",
+          "kind": "LinkedField",
+          "name": "areaRange",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "fromInSqm",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "toInSqm",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PeopleCapacity",
+          "kind": "LinkedField",
+          "name": "peopleCapacity",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "from",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "to",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "LocationPhysicalAddressDetails",
       "kind": "LinkedField",
       "name": "physicalAddress",
@@ -62,7 +134,14 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "multilinesFormattedAddress",
+          "name": "suburb",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
           "storageKey": null
         }
       ],
@@ -116,6 +195,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e6071eaec8c8fa751f8c04d9ea22fe4c";
+(node as any).hash = "9c78df24f7fdc841428f90bc89eb0afb";
 
 export default node;

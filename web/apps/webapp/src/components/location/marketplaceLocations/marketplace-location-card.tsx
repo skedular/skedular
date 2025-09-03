@@ -5,7 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
@@ -19,8 +19,19 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
       fragment marketplaceLocationCard_LocationDetails on LocationDetails {
         id
         name
+        extraMetadata {
+          areaRange {
+            fromInSqm
+            toInSqm
+          }
+          peopleCapacity {
+            from
+            to
+          }
+        }
         physicalAddress {
-          multilinesFormattedAddress
+          suburb
+          city
         }
         primaryFeatureImage {
           thumbnail {
@@ -33,6 +44,30 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
     `,
     locationDetailsRelay,
   );
+
+  const areaSize = useMemo(() => {
+    if (!locationDetails.extraMetadata?.areaRange) {
+      return '';
+    }
+
+    if (locationDetails.extraMetadata?.areaRange.fromInSqm === locationDetails.extraMetadata?.areaRange.toInSqm) {
+      return `${locationDetails.extraMetadata?.areaRange.fromInSqm} m2`;
+    } else {
+      return `${locationDetails.extraMetadata?.areaRange.fromInSqm} - ${locationDetails.extraMetadata?.areaRange.toInSqm} m2`;
+    }
+  }, [locationDetails.extraMetadata?.areaRange]);
+
+  const shortAddress = useMemo(() => {
+    if (locationDetails.physicalAddress?.suburb && locationDetails.physicalAddress.city) {
+      return `${locationDetails.physicalAddress.suburb}, ${locationDetails.physicalAddress.city}`;
+    } else if (locationDetails.physicalAddress?.suburb) {
+      return locationDetails.physicalAddress.suburb;
+    } else if (locationDetails.physicalAddress?.city) {
+      return locationDetails.physicalAddress.city;
+    } else {
+      return '';
+    }
+  }, [locationDetails.physicalAddress?.suburb, locationDetails.physicalAddress?.city]);
 
   return (
     <Card sx={{ width: { xs: '100%', sm: 300 } }}>
@@ -48,10 +83,8 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
         }
       />
       <CardContent>
-        <SmallIconTypography
-          label={locationDetails.physicalAddress?.multilinesFormattedAddress ? locationDetails.physicalAddress?.multilinesFormattedAddress : 'N/A'}
-          sx={{ whiteSpace: 'pre-line' }}
-        />
+        {areaSize && <SmallIconTypography label={areaSize} />}
+        {shortAddress && <SmallIconTypography label={shortAddress} />}
       </CardContent>
     </Card>
   );
