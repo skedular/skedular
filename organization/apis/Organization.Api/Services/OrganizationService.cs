@@ -150,35 +150,35 @@ public class OrganizationService(
             });
         }
 
-        // // TODO: 20250902 : Morteza: Temporary workaround for onboarding
+        // TODO: 20250902 : Morteza: Temporary workaround for onboarding
         if (!organization.IsListable && customerEntity is not null)
         {
-            var mortezaEntity = await repositoryFactory.CustomerRepository.GetByEmailAsync("morteza.alizadeh@gmail.com", cancellationToken) ??
-                                throw new CustomerNotFound();
-            var leilaEntity = await repositoryFactory.CustomerRepository.GetByEmailAsync("leila.alavi78@gmail.com", cancellationToken) ??
-                              throw new CustomerNotFound();
-
-            if (customerEntity.Id == mortezaEntity.Id)
+            var mortezaEntity = await repositoryFactory.CustomerRepository.GetByEmailAsync("morteza.alizadeh@gmail.com", cancellationToken);
+            var leilaEntity = await repositoryFactory.CustomerRepository.GetByEmailAsync("leila.alavi78@gmail.com", cancellationToken);
+            if (mortezaEntity is not null && leilaEntity is not null)
             {
-                organizationMembers.Add(new OrganizationMember
+                if (customerEntity.Id == mortezaEntity.Id)
                 {
-                    Id = randomHelper.Generate(),
-                    Role = OrganizationMemberRoleConstants.Owner,
-                    Status = OrganizationMemberStatusConstants.Active,
-                    Customer = leilaEntity,
-                    Organization = organizationEntity
-                });
-            }
-            else if (customerEntity.Id == leilaEntity.Id)
-            {
-                organizationMembers.Add(new OrganizationMember
+                    organizationMembers.Add(new OrganizationMember
+                    {
+                        Id = randomHelper.Generate(),
+                        Role = OrganizationMemberRoleConstants.Owner,
+                        Status = OrganizationMemberStatusConstants.Active,
+                        Customer = leilaEntity,
+                        Organization = organizationEntity
+                    });
+                }
+                else if (customerEntity.Id == leilaEntity.Id)
                 {
-                    Id = randomHelper.Generate(),
-                    Role = OrganizationMemberRoleConstants.Owner,
-                    Status = OrganizationMemberStatusConstants.Active,
-                    Customer = mortezaEntity,
-                    Organization = organizationEntity
-                });
+                    organizationMembers.Add(new OrganizationMember
+                    {
+                        Id = randomHelper.Generate(),
+                        Role = OrganizationMemberRoleConstants.Owner,
+                        Status = OrganizationMemberStatusConstants.Active,
+                        Customer = mortezaEntity,
+                        Organization = organizationEntity
+                    });
+                }
             }
         }
 
