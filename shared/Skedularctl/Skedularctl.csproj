@@ -1,12 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <AssemblyName>Skedularctl</AssemblyName>
+        <AssemblyTitle>Skedularctl</AssemblyTitle>
+        <Product>Skedular Skedularctl</Product>
+        <Description>Skedular Skedularctl</Description>
+        <Author>Skedular Team</Author>
+        <Copyright>© Skedular 2025. All rights reserved.</Copyright>
+        <Company>Skedular Ltd</Company>
+        <RepositoryUrl>https://github.com/unityhubio/unityhubio</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GitRepositoryRoot>$(SolutionDir)</GitRepositoryRoot>
+        <WriteVersionInfoToBuildLog>true</WriteVersionInfoToBuildLog>
+        <UseFullSemVerForNuGet>true</UseFullSemVerForNuGet>
+        <UpdateVersionProperties>true</UpdateVersionProperties>
         <OutputType>Exe</OutputType>
         <TargetFramework>net9.0</TargetFramework>
         <LangVersion>13</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="GitVersion.MsBuild" Version="6.4.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1"/>

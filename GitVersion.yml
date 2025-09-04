@@ -1,0 +1,25 @@
+mode: ContinuousDeployment
+next-version: 1.0.0
+
+branches:
+  main:
+    regex: ^main$
+    increment: patch
+
+  feature:
+    regex: ^(feature|feat|bugfix|hotfix|fix)[/-]
+    increment: minor
+
+  pull-request:
+    regex: ^(pull|pr)[/-]
+    increment: patch
+
+ignore:
+  sha: []
+
+commit-message-incrementing: Enabled
+commit-date-format: yyyy-MM-dd
+
+assembly-versioning-scheme: MajorMinorPatch
+assembly-file-versioning-scheme: MajorMinorPatchTag
+assembly-informational-format: '{FullSemVer}+Sha.{Sha}'
