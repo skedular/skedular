@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
@@ -46,7 +47,8 @@ public class LocationService(
     ILocationOutboxPublisher locationOutboxPublisher,
     ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
-    TimeProvider timeProvider) : ILocationService
+    TimeProvider timeProvider,
+    IContext context) : ILocationService
 {
     public async Task<Shared.Models.Location> AddAsync(
         Shared.Models.Location location,
@@ -197,16 +199,20 @@ public class LocationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
-        }
-
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken);
         if (location is null)
         {
             return null;
+        }
+
+        Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            var verifiableToken = context.GetVerifiableToken();
+            if (!string.IsNullOrWhiteSpace(verifiableToken) || location.Type.ToLocationType() != LocationType.Marketplace)
+            {
+                customer = await cachedCustomerService.GetAsync(cancellationToken);
+            }
         }
 
         return await EnrichLocationAsync(customer, location, cancellationToken);
@@ -331,10 +337,7 @@ public class LocationService(
         mappedLocation.CustomTags = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new Shared.Models.OrganizationTag
             {
-                Id = customTag.Id,
-                Name = customTag.Name,
-                Type = OrganizationTagType.Custom,
-                Color = customTag.Color
+                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
@@ -343,10 +346,7 @@ public class LocationService(
         mappedLocation.Zones = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new Shared.Models.OrganizationTag
             {
-                Id = zone.Id,
-                Name = zone.Name,
-                Type = OrganizationTagType.Zone,
-                Color = zone.Color
+                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
