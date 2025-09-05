@@ -28,17 +28,15 @@ public static class AddressDetailsExtensions
             .Aggregate(string.Empty, (current, item) => $"{current}{Environment.NewLine}{item}").Trim();
 
     public static string ToFormattedAddress<T>(this T src) where T : IAddressDetails =>
-        string.IsNullOrWhiteSpace(src.FormattedAddress)
-            ? new List<string?>
-                {
-                    src.AddressLine1,
-                    src.AddressLine2,
-                    src.Suburb,
-                    src.City,
-                    src.Province,
-                    src.Zipcode,
-                    src.Country
-                }.Where(item => !string.IsNullOrWhiteSpace(item))
-                .Aggregate(string.Empty, (current, item) => $"{current}, {item}").Trim()
-            : src.FormattedAddress;
+        new List<string?>
+            {
+                src.AddressLine1,
+                src.AddressLine2,
+                src.Suburb,
+                src.City,
+                src.Province,
+                src.Zipcode,
+                src.Country
+            }.Where(item => !string.IsNullOrWhiteSpace(item))
+            .Aggregate(string.Empty, (current, item) => $"{current}, {item}").Trim().Trim(',');
 }

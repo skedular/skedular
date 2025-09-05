@@ -1,10 +1,12 @@
-import { PushToRight, StackColumn } from '@/components/commons';
-import StackRow from '@/components/commons/stack-row';
+import { BodyIconTypography, CaptionIconTypography, GridContainer, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
+import { stringCollectionToString } from '@/libs/utils';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import Image from 'next/image';
 import { memo, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -53,21 +55,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             }
           }
           physicalAddress {
-            id
-            osmType
-            osmId
-            placeId
             longitude
             latitude
-            formattedAddress
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-            countryCode
+            multilinesFormattedAddress
           }
           openingHours {
             weekOpeningHours {
@@ -122,8 +112,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   );
 
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
-  const locaitonExists = rootData.location?.physicalAddress?.longitude && rootData.location?.physicalAddress?.latitude;
-  const initialPosition: LatLngTuple = locaitonExists ? [rootData.location?.physicalAddress?.latitude, rootData.location?.physicalAddress?.longitude] : [-36.8485, 174.7633];
+  const locationDetails = rootData.location;
+  const locaitonExists = locationDetails?.physicalAddress?.longitude && locationDetails.physicalAddress?.latitude;
+  const initialPosition: LatLngTuple = locaitonExists ? [locationDetails.physicalAddress?.latitude, locationDetails.physicalAddress?.longitude] : [-36.8485, 174.7633];
 
   useEffect(() => {
     (async () => {
@@ -150,11 +141,63 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     return <></>;
   }
 
+  if (!locationDetails) {
+    return <></>;
+  }
+
+  const image = locationDetails.primaryFeatureImage?.original;
+
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <StackRow sx={{ alignItems: 'flex-start' }}>
-        <PushToRight />
-        <Box sx={{ height: '80vh', width: '30%' }}>
+      <StackColumn>
+        {image && <Image src={image.url} height={image.height!} width={image.width!} alt="" />}
+        <GridContainer sx={{ mt: 2 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <StackColumn>
+              <SmallHeadingIconTypography label={locationDetails.name} />
+              <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
+            </StackColumn>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            {locationDetails.extraMetadata?.contactDetails?.contactPeople && (
+              <StackColumn>
+                <CaptionIconTypography label={'Contact People'} />
+                <BodyIconTypography
+                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactPeople)}
+                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
+                />
+              </StackColumn>
+            )}
+            {locationDetails.extraMetadata?.contactDetails?.contactPhones && (
+              <StackColumn>
+                <CaptionIconTypography label={'Phones'} />
+                <BodyIconTypography
+                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactPhones)}
+                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
+                />
+              </StackColumn>
+            )}
+            {locationDetails.extraMetadata?.contactDetails?.contactEmails && (
+              <StackColumn>
+                <CaptionIconTypography label={'Emails'} />
+                <BodyIconTypography
+                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactEmails)}
+                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
+                />
+              </StackColumn>
+            )}
+            {locationDetails.physicalAddress && (
+              <StackColumn>
+                <CaptionIconTypography label={'Address'} />
+                <BodyIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </StackColumn>
+            )}
+          </Grid>
+        </GridContainer>
+      </StackColumn>
+      <StackColumn sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ height: '20vh', width: { xs: '100%', sm: '50%' } }}>
           <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -163,7 +206,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             {locaitonExists && <Marker position={initialPosition} />}
           </MapContainer>
         </Box>
-      </StackRow>
+      </StackColumn>
     </StackColumn>
   );
 };

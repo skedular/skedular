@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83f97f09f1900663c458c79dbf4db8ba>>
+ * @generated SignedSource<<625f7359b4451dfcb8a2228307d62bd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -81,21 +81,9 @@ export type marketplaceLocation_query$data = {
       };
     };
     readonly physicalAddress: {
-      readonly addressLine1: string;
-      readonly addressLine2: string | null | undefined;
-      readonly city: string | null | undefined;
-      readonly country: string;
-      readonly countryCode: string | null | undefined;
-      readonly formattedAddress: string | null | undefined;
-      readonly id: string;
       readonly latitude: number | null | undefined;
       readonly longitude: number | null | undefined;
-      readonly osmId: string | null | undefined;
-      readonly osmType: string | null | undefined;
-      readonly placeId: string | null | undefined;
-      readonly province: string | null | undefined;
-      readonly suburb: string | null | undefined;
-      readonly zipcode: string;
+      readonly multilinesFormattedAddress: string | null | undefined;
     } | null | undefined;
     readonly primaryFeatureImage: {
       readonly original: {
@@ -118,17 +106,10 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "from",
   "storageKey": null
 },
-v2 = [
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -143,7 +124,7 @@ v2 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v1/*: any*/),
+  (v0/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -177,7 +158,13 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -272,7 +259,7 @@ return {
               "name": "peopleCapacity",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -365,28 +352,6 @@ return {
           "name": "physicalAddress",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "osmType",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "osmId",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "placeId",
-              "storageKey": null
-            },
             {
               "alias": null,
               "args": null,
@@ -405,63 +370,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "formattedAddress",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "addressLine1",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "addressLine2",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "suburb",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "city",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "province",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "zipcode",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "country",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "countryCode",
+              "name": "multilinesFormattedAddress",
               "storageKey": null
             }
           ],
@@ -490,7 +399,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -500,7 +409,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -510,7 +419,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -520,7 +429,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -530,7 +439,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -540,7 +449,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -550,7 +459,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -568,6 +477,6 @@ return {
 };
 })();
 
-(node as any).hash = "a794dddf1d513c16975c4fee3f3b6020";
+(node as any).hash = "c1364af0d6e54936249ad231bb34d766";
 
 export default node;
