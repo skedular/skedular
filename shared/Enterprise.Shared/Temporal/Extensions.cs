@@ -4,6 +4,7 @@ using Enterprise.Shared.Temporal.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Temporalio.Client;
+using Temporalio.Common;
 using Temporalio.Extensions.Hosting;
 using Temporalio.Worker;
 
@@ -11,7 +12,11 @@ namespace Enterprise.Shared.Temporal;
 
 public static class Extensions
 {
-    public static ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(this IServiceCollection services, IConfiguration configuration)
+    public static ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string deploymentName,
+        string buildId)
     {
         var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
         ArgumentNullException.ThrowIfNull(temporalConfiguration);
@@ -27,16 +32,23 @@ public static class Extensions
         if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
         {
             temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
+            deploymentName = $"{applicationConfiguration.Environment}.{deploymentName}";
         }
+
+        var workerDeploymentOptions =
+            new WorkerDeploymentOptions(new WorkerDeploymentVersion(deploymentName.Replace(".", "-").Replace(":", "-"), buildId), false)
+            {
+                DefaultVersioningBehavior = VersioningBehavior.Unspecified
+            };
 
         return services
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
             .AddSingleton<ITemporalHelperService, TemporalHelperService>()
-            .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
+            .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
             .Configure<ITemporalClient>(_ => { })
-            .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue)
-            .ConfigureOptions(o => { o.ConfigureService(temporalConfiguration); });
+            .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue, workerDeploymentOptions)
+            .ConfigureOptions(temporalWorkerServiceOptions => temporalWorkerServiceOptions.ConfigureService(temporalConfiguration));
     }
 
     public static IServiceCollection AddTemporalClient(this IServiceCollection services, IConfiguration configuration)
@@ -61,7 +73,7 @@ public static class Extensions
             .AddTemporalOutboxService()
             .AddSingleton(temporalConfiguration)
             .AddSingleton<ITemporalHelperService, TemporalHelperService>()
-            .AddTemporalClient(temporalClientConnectOptions => { temporalClientConnectOptions.ConfigureClient(temporalConfiguration); })
+            .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
             .Configure<ITemporalClient>(_ => { });
     }
 
@@ -87,10 +99,14 @@ public static class Extensions
         return temporalClientConnectOptions;
     }
 
+    private static void ConfigureService(this TemporalWorkerServiceOptions opts, TemporalConfiguration temporalConfiguration)
+    {
+        opts.ClientOptions = opts.ClientOptions.ConfigureClient(temporalConfiguration);
+        opts.ConfigureWorker(temporalConfiguration);
+    }
+
     private static void ConfigureWorker(this TemporalWorkerOptions temporalWorkerOptions, TemporalConfiguration temporalConfiguration)
     {
-        temporalWorkerOptions.UseWorkerVersioning = false;
-
         // rate limits
         temporalWorkerOptions.MaxTaskQueueActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxTaskQueueActivitiesPerSecond;
         temporalWorkerOptions.MaxActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxWorkerActivitiesPerSecond;
@@ -101,15 +117,9 @@ public static class Extensions
         temporalWorkerOptions.MaxConcurrentWorkflowTasks = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskExecutors;
 
         // pollers
-        temporalWorkerOptions.MaxConcurrentActivityTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskPollers;
+        temporalWorkerOptions.MaxConcurrentWorkflowTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskPollers;
         temporalWorkerOptions.MaxConcurrentActivityTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentActivityTaskPollers;
 
         temporalWorkerOptions.MaxCachedWorkflows = temporalConfiguration.Worker.Cache.MaxInstances;
-    }
-
-    private static void ConfigureService(this TemporalWorkerServiceOptions opts, TemporalConfiguration temporalConfiguration)
-    {
-        opts.ClientOptions = opts.ClientOptions.ConfigureClient(temporalConfiguration);
-        opts.ConfigureWorker(temporalConfiguration);
     }
 }

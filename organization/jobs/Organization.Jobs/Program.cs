@@ -57,7 +57,7 @@ public class Program
             .AddGrpcClients(configuration);
 
         services
-            .AddTemporalWorker(configuration)
+            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<ScheduleRenewOrganizationOffering>()
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
             .AddWorkflow<InviteNonExistingCustomerToJoinOrganization>()

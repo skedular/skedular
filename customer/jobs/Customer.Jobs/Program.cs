@@ -46,7 +46,7 @@ public class Program
             .AddStripe(configuration);
 
         services
-            .AddTemporalWorker(configuration)
+            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<SubmitCustomerFeedback>()
             .AddWorkflow<AddCustomerStripePaymentMethod>()
             .AddWorkflow<NewCustomerJoined>()

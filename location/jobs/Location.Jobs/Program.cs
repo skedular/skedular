@@ -42,7 +42,7 @@ public class Program
             .AddServices();
 
         services
-            .AddTemporalWorker(configuration)
+            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<GenerateLocationDailyAnalytics>()
             .AddScopedActivities<LocationDailyAnalytics>();
 
