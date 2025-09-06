@@ -677,6 +677,7 @@ public class OrganizationService(
                 Color = "#B0E0E6",
                 Organization = organizationEntity
             });
+
         repositoryFactory.TagRepository.Add(
             new Tag
             {
