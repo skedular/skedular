@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Skedularctl.Services;
+using Skedularctl.Services.Sharedspaces;
 
 namespace Skedularctl;
 
@@ -10,6 +11,8 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
+        args = ["crawl-sharedspace"];
+
         var cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellationTokenSource.Token;
 
@@ -47,8 +50,11 @@ public static class Program
                 builder.AddConsole();
                 builder.SetMinimumLevel(LogLevel.Information);
 
-                builder.Services.AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>();
-                builder.Services.AddSingleton<ICrawlerService, CrawlerService>();
+                builder.Services
+                    .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
+                    .AddSingleton<IPlaywrightProvider, PlaywrightProvider>()
+                    .AddSingleton<ICrawlerService, CrawlerService>()
+                    .AddSingleton<ILocationsCrawler, LocationsCrawler>();
             });
         }).Build();
 }
