@@ -802,6 +802,7 @@ type OrganizationDetails {
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isListable: Boolean!
   isMyOnboardingDone: Boolean!
+  locationSpaceTypes: [OrganizationTagDetails!]!
   logoUrl: String
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
@@ -2758,6 +2759,16 @@ enum OrganizationTagOrderField {
 enum OrganizationTagType {
   CUSTOM
   LOCATION
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_OTHERS
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
   PRODUCT
   RESOURCE_DESK
   RESOURCE_OTHERS

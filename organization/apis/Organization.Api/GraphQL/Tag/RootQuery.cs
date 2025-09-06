@@ -127,7 +127,8 @@ public class RootQuery(IMapper mapper)
             new TagSearchCriteria(
                 where.OrganizationId,
                 where.OrganizationUniqueAlphanumericName,
-                OrganizationTagTypeConstants.Location, where.NameContains),
+                OrganizationTagTypeConstants.Location,
+                where.NameContains),
             orderBy,
             tagService,
             cancellationToken);

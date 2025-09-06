@@ -222,6 +222,7 @@ type OrganizationDetails {
   isMyOnboardingDone: Boolean!
   members: [OrganizationMemberDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
   paymentMethods: [OrganizationPaymentMethod!]!
   hasAttachedPaymentMethod: Boolean!
   ssoSettings: OrganizationSsoSettingsDetails
@@ -1062,6 +1063,16 @@ enum OrganizationTagType {
   RESOURCE_ROOM
   RESOURCE_PARKING
   RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_OTHERS
 }
 
 enum OrganizationType {

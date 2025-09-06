@@ -440,6 +440,9 @@ public class Mapper : IMapper
             ResourceTypes = src.Tags
                 .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                 .Select(item => MapTo(item)!),
+            LocationSpaceTypes = src.Tags
+                .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(resourceType => resourceType == item.Type))
+                .Select(item => MapTo(item)!),
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails)
         };

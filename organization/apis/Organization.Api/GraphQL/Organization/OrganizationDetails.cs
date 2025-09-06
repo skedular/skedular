@@ -54,6 +54,7 @@ public class OrganizationDetails : Node
     [GraphQLName("isMyOnboardingDone")] public bool IsMyOnboardingDone { get; set; }
     [GraphQLName("members")] public IEnumerable<OrganizationMemberDetails> Members { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
+    [GraphQLName("locationSpaceTypes")] public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
     [GraphQLName("paymentMethods")] public IEnumerable<OrganizationPaymentMethod> PaymentMethods { get; set; } = [];
 
     [GraphQLName("hasAttachedPaymentMethod")]
