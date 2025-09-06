@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<481f5de9491aceba2b6e54865748fce3>>
+ * @generated SignedSource<<ae3f3377f31ec534d1eacf0ee0d5f8d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -98,6 +98,11 @@ export type addMarketplaceLocation_addLocationMutation$data = {
         readonly website: string | null | undefined;
       } | null | undefined;
       readonly id: string;
+      readonly locationSpaceType: {
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -165,6 +170,11 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
         readonly website: string | null | undefined;
       } | null | undefined;
       readonly id: string;
+      readonly locationSpaceType: {
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -260,6 +270,23 @@ v3 = [
   }
 ],
 v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  },
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "alias": null,
     "args": [
@@ -476,23 +503,17 @@ v4 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              },
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "color",
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "locationSpaceType",
+            "plural": false,
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -618,7 +639,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -627,19 +648,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "3936372e4b73bb2bf550193042576c3d",
+    "cacheID": "e10a6573c051ee71791bc6b745954709",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      locationSpaceType {\n        uniqueId\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "44a573dae66489ad5cc134c12a00487f";
+(node as any).hash = "2768e3548f994de18e1fca295b202f1a";
 
 export default node;

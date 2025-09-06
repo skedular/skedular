@@ -482,6 +482,7 @@ type LocationDetails {
   extraMetadata: LocationExtraMetadata
   hasFutureBooking: Boolean!
   id: ID!
+  locationSpaceType: Location_OrganizationTagDetails
   locationTags: [Location_OrganizationTagDetails!]!
   name: String!
   openingHours: OpeningHours!

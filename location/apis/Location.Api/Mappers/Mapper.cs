@@ -245,9 +245,11 @@ public class Mapper : IMapper
                 Zones = MapTo(src.Zones),
                 ResourceTypes = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
-                    .Select(MapTo),
+                    .Select(MapTo)!,
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
-                LocationTags = MapTo(src.Tags)
+                LocationTags = MapTo(src.Tags),
+                LocationSpaceType =
+                    MapTo(src.Tags.FirstOrDefault(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type)))
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -348,7 +350,7 @@ public class Mapper : IMapper
             CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
             Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)),
             ProductTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Product)),
-            ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
+            ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))!
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -791,8 +793,13 @@ public class Mapper : IMapper
             Location = MapTo(src.Location)!
         };
 
-    private static OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+    private static OrganizationTagDetails? MapTo(OrganizationTag? src) =>
+        src is null
+            ? null
+            : new OrganizationTagDetails
+            {
+                UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color
+            };
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()
@@ -846,7 +853,7 @@ public class Mapper : IMapper
     private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
         new() { UniqueId = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
-    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo)!;
 
     private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
 

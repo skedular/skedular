@@ -1,3 +1,4 @@
+export { default as SingleChoiceLocationSpaceType } from './single-choice-location-space-type';
 export { default as SingleChoiceLocationType } from './single-choice-location-type';
 
 export const locationFeatureImageHeight = 200;

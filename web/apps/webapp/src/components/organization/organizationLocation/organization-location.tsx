@@ -18,7 +18,7 @@ import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
-import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationType } from '@/components/location';
+import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationSpaceType, SingleChoiceLocationType } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -98,6 +98,7 @@ type LocationDetails = {
   relatedImageLinks: string | null;
   relatedVideoLinks: string | null;
   otherLinks: string | null;
+  locationSpaceTypeId: string | null;
 };
 
 const locationSchema = object({
@@ -117,6 +118,7 @@ const locationSchema = object({
   relatedImageLinks: string().nullable(),
   relatedVideoLinks: string().nullable(),
   otherLinks: string().nullable(),
+  locationSpaceTypeId: string().nullable(),
 });
 
 type PhysicalAddress = {
@@ -259,6 +261,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name
             color
           }
+          locationSpaceType {
+            uniqueId
+            name
+            color
+          }
           openingHours {
             weekOpeningHours {
               monday {
@@ -312,6 +319,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
         ...singleChoiceLocationType_query
+        ...singleChoiceLocationSpaceType_query
       }
     `,
     rootDataRelay,
@@ -431,6 +439,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             }
           }
           locationTags {
+            uniqueId
+            name
+            color
+          }
+          locationSpaceType {
             uniqueId
             name
             color
@@ -644,6 +657,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name
             color
           }
+          locationSpaceType {
+            uniqueId
+            name
+            color
+          }
           openingHours {
             weekOpeningHours {
               monday {
@@ -770,6 +788,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
+  const [locationSpaceTypeId, setLocationSpaceTypeId] = useState<string | null | undefined>(rootData.location?.locationSpaceType?.uniqueId);
+  const debounceSetLocationSpaceTypeId = useDebounceCallback(setLocationSpaceTypeId, keyboardTextFieldDebounceTimeout);
 
   const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(
     stringCollectionToString(rootData.location?.extraMetadata?.contactDetails?.contactPeople),
@@ -927,6 +947,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     relatedVideoLinks,
     otherLinks,
     locationTagIds,
+    locationSpaceTypeId,
   }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
@@ -944,6 +965,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             : null,
         }
       : null;
+
+    let finalLocationTagIds = locationTagIds;
+    if (locationSpaceTypeId) {
+      finalLocationTagIds = locationTagIds.concat([locationSpaceTypeId]);
+    }
 
     commitUpdateLocation({
       variables: {
@@ -980,7 +1006,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             otherLinks: stringToMultiLines(otherLinks),
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
-          locationTagIds,
+          locationTagIds: finalLocationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -1043,6 +1069,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: location.locationTags,
             openingHours: location.openingHours,
+            locationSpaceType: null,
           },
         },
       },
@@ -1686,6 +1713,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             extraMetadata: location.extraMetadata,
             physicalAddress: location.physicalAddress,
             locationTags: location.locationTags,
+            locationSpaceType: location.locationSpaceType,
             openingHours: {
               weekOpeningHours,
             },
@@ -1850,6 +1878,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 timezone: locationTimezone,
                 type: locationType,
                 locationTagIds,
+                locationSpaceTypeId,
                 contactPeople: locationContactPerson,
                 contactEmails: locationContactEmail,
                 contactPhones: locationContactPhone,
@@ -1869,6 +1898,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationTimezone(values!.timezone);
                 debounceSetLocationType(values!.type);
                 debounceSetLocationTagIds(values!.locationTagIds);
+                debounceSetLocationSpaceTypeId(values!.locationSpaceTypeId);
 
                 debounceSetLocationContactPerson(values!.contactPeople);
                 debounceSetLocationContactEmail(values!.contactEmails);
@@ -1928,6 +1958,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
                       <FormFieldLabel label="Timezone">
                         <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Space Type">
+                        <SingleChoiceLocationSpaceType rootDataRelay={rootData} name="locationSpaceTypeId" required={requiredFields.locationSpaceTypeId} />
                       </FormFieldLabel>
 
                       {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (

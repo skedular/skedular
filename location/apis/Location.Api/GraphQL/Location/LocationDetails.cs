@@ -31,5 +31,6 @@ public class LocationDetails : Node
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
+    [GraphQLName("locationSpaceType")] public OrganizationTagDetails? LocationSpaceType { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<458da59b048140a5a164d41e785f4073>>
+ * @generated SignedSource<<31512bd3c3db1bb1e4c1d1653173aa95>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type addMarketplaceLocation_rootQuery$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "singleChoiceLocationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "singleChoiceLocationSpaceType_query" | "singleChoiceLocationType_query">;
 };
 export type addMarketplaceLocation_rootQuery = {
   response: addMarketplaceLocation_rootQuery$data;
@@ -88,7 +88,21 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = [
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v9 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -105,14 +119,7 @@ v7 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -156,6 +163,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "singleChoiceLocationType_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceLocationSpaceType_query"
       }
     ],
     "type": "Query",
@@ -192,13 +204,27 @@ return {
         "plural": false,
         "selections": [
           (v5/*: any*/),
-          (v6/*: any*/)
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "locationSpaceTypes",
+            "plural": true,
+            "selections": [
+              (v6/*: any*/),
+              (v7/*: any*/),
+              (v8/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v9/*: any*/),
         "concreteType": "ConnectionOfOrganizationTagEdge",
         "kind": "LinkedField",
         "name": "locationTags",
@@ -228,14 +254,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
+                  (v7/*: any*/),
                   (v8/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "color",
-                    "storageKey": null
-                  },
                   {
                     "alias": null,
                     "args": null,
@@ -298,7 +318,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v9/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -317,23 +337,23 @@ return {
         "plural": true,
         "selections": [
           (v4/*: any*/),
-          (v8/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "334e183e8a94bf5d2ece23fa027ee2cb",
+    "cacheID": "91bf3e415cd79b0393e36f3474d1731e",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  me {\n    emails\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n  ...singleChoiceLocationType_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  me {\n    emails\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...multipleChoicesLocationTags_query\n  ...singleChoiceLocationType_query\n  ...singleChoiceLocationSpaceType_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocationSpaceType_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationSpaceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2d8ed656c8512a46ece11e9a015fd04e";
+(node as any).hash = "da20a9ee03e82d86ef3f5db960273895";
 
 export default node;
