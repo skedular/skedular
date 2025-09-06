@@ -11,8 +11,6 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
-        args = ["crawl-sharedspace"];
-
         var cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellationTokenSource.Token;
 
@@ -26,17 +24,17 @@ public static class Program
         var serviceProvider = host.Services;
 
         await Parser.Default
-            .ParseArguments<ProtobufEventMetadataGenerateOptions, CrawlOptions>(args)
+            .ParseArguments<ProtobufEventMetadataGenerateOptions, CrawlSharedspacesOptions>(args)
             .MapResult(
                 async (ProtobufEventMetadataGenerateOptions options) =>
                 {
                     var handler = serviceProvider.GetRequiredService<IProtobufEventMetadataGenerateService>();
                     await handler.HandleAsync(options, cancellationToken);
                 },
-                async (CrawlOptions options) =>
+                async (CrawlSharedspacesOptions sharedspacesOptions) =>
                 {
                     var handler = serviceProvider.GetRequiredService<ICrawlerService>();
-                    await handler.HandleAsync(options, cancellationToken);
+                    await handler.HandleAsync(sharedspacesOptions, cancellationToken);
                 },
                 _ => Task.CompletedTask
             );
@@ -54,7 +52,10 @@ public static class Program
                     .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
                     .AddSingleton<IPlaywrightProvider, PlaywrightProvider>()
                     .AddSingleton<ICrawlerService, CrawlerService>()
-                    .AddSingleton<ILocationsCrawler, LocationsCrawler>();
+                    .AddSingleton<ILocationsCrawler, LocationsCrawler>()
+                    .AddSingleton<ILocationCrawler, LocationCrawler>()
+                    .AddSingleton<IContentEnricherService, ContentEnricherService>()
+                    .AddSingleton(new SharedSpacesConfiguration());
             });
         }).Build();
 }

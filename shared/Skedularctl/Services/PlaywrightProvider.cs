@@ -56,7 +56,7 @@ public class PlaywrightProvider : IPlaywrightProvider, IAsyncDisposable
         {
             _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = false, SlowMo = 1000, Args = ["--start-maximized"]
+                Headless = true, SlowMo = 10, Args = ["--start-maximized"]
             });
             return _browser;
         }
