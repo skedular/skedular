@@ -1,13 +1,17 @@
-import { BodyIconTypography, CaptionIconTypography, GridContainer, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { CaptionIconTypography, GridContainer, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import StackRow from '@/components/commons/stack-row';
+import { AreaIcon, PersonIcon } from '@/components/icons';
 import { defaultPadding } from '@/libs/theme';
 import { stringCollectionToString } from '@/libs/utils';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Image from 'next/image';
-import { memo, useEffect, useState } from 'react';
+import NextLink from 'next/link';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 let L: typeof import('leaflet');
@@ -113,6 +117,29 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
 
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locationDetails = rootData.location;
+  const capacity = useMemo(() => {
+    if (!locationDetails?.extraMetadata?.peopleCapacity) {
+      return '';
+    }
+
+    if (locationDetails.extraMetadata?.peopleCapacity.from === locationDetails.extraMetadata?.peopleCapacity.to) {
+      return `${locationDetails.extraMetadata?.peopleCapacity.from} People`;
+    } else {
+      return `${locationDetails.extraMetadata?.peopleCapacity.from} - ${locationDetails.extraMetadata?.peopleCapacity.to} People`;
+    }
+  }, [locationDetails?.extraMetadata?.peopleCapacity]);
+
+  const areaSize = useMemo(() => {
+    if (!locationDetails?.extraMetadata?.areaRange) {
+      return '';
+    }
+
+    if (locationDetails.extraMetadata?.areaRange.fromInSqm === locationDetails.extraMetadata?.areaRange.toInSqm) {
+      return `${locationDetails.extraMetadata?.areaRange.fromInSqm} m2`;
+    } else {
+      return `${locationDetails.extraMetadata?.areaRange.fromInSqm} - ${locationDetails.extraMetadata?.areaRange.toInSqm} m2`;
+    }
+  }, [locationDetails?.extraMetadata?.areaRange]);
   const locaitonExists = locationDetails?.physicalAddress?.longitude && locationDetails.physicalAddress?.latitude;
   const initialPosition: LatLngTuple = locaitonExists ? [locationDetails.physicalAddress?.latitude, locationDetails.physicalAddress?.longitude] : [-36.8485, 174.7633];
 
@@ -146,11 +173,20 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   }
 
   const image = locationDetails.primaryFeatureImage?.original;
+  const extraMetadata = locationDetails.extraMetadata;
+
+  console.log(capacity);
+  console.log(areaSize);
 
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <StackColumn>
-        {image && <Image src={image.url} height={image.height!} width={image.width!} alt="" />}
+        <StackRow>
+          {image && <Image src={image.url} height={image.height!} width={image.width!} alt="" />}
+          {extraMetadata?.relatedImageLinks?.map((item, index) => (
+            <Image key={index} src={item} height={200} width={400} alt="" />
+          ))}
+        </StackRow>
         <GridContainer sx={{ mt: 2 }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <StackColumn>
@@ -160,38 +196,55 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
-            {locationDetails.extraMetadata?.contactDetails?.contactPeople && (
-              <StackColumn>
+            {extraMetadata?.contactDetails?.contactPeople && (
+              <>
                 <CaptionIconTypography label={'Contact People'} />
-                <BodyIconTypography
-                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactPeople)}
-                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
-                />
-              </StackColumn>
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
             )}
-            {locationDetails.extraMetadata?.contactDetails?.contactPhones && (
-              <StackColumn>
+
+            {extraMetadata?.contactDetails?.contactPhones && (
+              <>
                 <CaptionIconTypography label={'Phones'} />
-                <BodyIconTypography
-                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactPhones)}
-                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
-                />
-              </StackColumn>
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
             )}
-            {locationDetails.extraMetadata?.contactDetails?.contactEmails && (
-              <StackColumn>
+
+            {extraMetadata?.contactDetails?.contactEmails && (
+              <>
                 <CaptionIconTypography label={'Emails'} />
-                <BodyIconTypography
-                  label={stringCollectionToString(locationDetails.extraMetadata.contactDetails.contactEmails)}
-                  sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }}
-                />
-              </StackColumn>
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
             )}
+
+            {extraMetadata?.website && (
+              <>
+                <CaptionIconTypography label={'Website'} />
+                <Link component={NextLink} href={extraMetadata.website} target="_blank" rel="noopener noreferrer">
+                  <SmallIconTypography label={extraMetadata.website} sx={{ paddingBottom: 2 }} />
+                </Link>
+              </>
+            )}
+
             {locationDetails.physicalAddress && (
-              <StackColumn>
+              <>
                 <CaptionIconTypography label={'Address'} />
-                <BodyIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-              </StackColumn>
+                <SmallIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
+            )}
+
+            {areaSize && (
+              <>
+                <CaptionIconTypography label={'Total Area'} />
+                <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+              </>
+            )}
+
+            {capacity && (
+              <>
+                <CaptionIconTypography label={'Capacity'} />
+                <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+              </>
             )}
           </Grid>
         </GridContainer>
