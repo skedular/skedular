@@ -1,8 +1,8 @@
-import { CaptionIconTypography, GridContainer, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { CaptionIconTypography, GridContainer, LeadIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import StackRow from '@/components/commons/stack-row';
 import { AreaIcon, PersonIcon } from '@/components/icons';
 import { defaultPadding } from '@/libs/theme';
-import { stringCollectionToString } from '@/libs/utils';
+import { stringCollectionToString, toOpeningHoursFromTime } from '@/libs/utils';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -173,10 +173,20 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   }
 
   const image = locationDetails.primaryFeatureImage?.original;
+  const openingHours = locationDetails.openingHours;
   const extraMetadata = locationDetails.extraMetadata;
 
-  console.log(capacity);
-  console.log(areaSize);
+  const toOpeningHours = ({ closed, from, openAllDay, until }: { closed: boolean; from: string | null | undefined; openAllDay: boolean; until: string | null | undefined }) => {
+    if (closed) {
+      return 'Closed';
+    }
+
+    if (openAllDay) {
+      return 'Open All Day';
+    }
+
+    return `${toOpeningHoursFromTime(from)?.format('hh:mm a')} - ${toOpeningHoursFromTime(until)?.format('hh:mm a')}`;
+  };
 
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -192,6 +202,16 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             <StackColumn>
               <SmallHeadingIconTypography label={locationDetails.name} />
               <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
+              <LeadIconTypography label={'Opening Hours'} />
+              <StackRow>
+                <SmallIconTypography label={`Mon: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
+                <SmallIconTypography label={`Tue: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
+                <SmallIconTypography label={`Wed: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
+                <SmallIconTypography label={`Thu: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
+                <SmallIconTypography label={`Fri: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
+                <SmallIconTypography label={`Sat: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
+                <SmallIconTypography label={`Sun: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
+              </StackRow>
             </StackColumn>
           </Grid>
 
