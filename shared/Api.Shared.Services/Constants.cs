@@ -28,7 +28,7 @@ public static class Constants
 
     public const int MaxEmailLength = 64 + 1 + 255; // RFC 5321 and RFC 5322
 
-    public const int MaxDescriptionLength = 1000;
+    public const int MaxDescriptionLength = 100000;
 
     public const int MaxOrganizationUniqueAlphanumericNameLength = 63;
     public const int MaxOrganizationNameLength = 200;

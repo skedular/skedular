@@ -529,8 +529,8 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("About")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
