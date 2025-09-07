@@ -38,7 +38,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.HasOne(item => item.PrimaryLocation).WithMany(item => item.PrimaryLocationForTeams);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Timezone);
     }
 }

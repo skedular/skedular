@@ -717,8 +717,6 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("About");
-
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("DeletedAt");

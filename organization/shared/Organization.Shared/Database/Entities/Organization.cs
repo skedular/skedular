@@ -71,7 +71,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.PaymentMethodEventRaisedAt);

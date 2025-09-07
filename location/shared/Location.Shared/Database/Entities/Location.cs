@@ -48,7 +48,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Timezone);
         builder.HasIndex(item => item.Type);
     }
