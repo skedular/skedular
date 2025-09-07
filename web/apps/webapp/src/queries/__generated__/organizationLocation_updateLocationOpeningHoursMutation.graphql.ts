@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4243a15dec7e6239ac641add1cee76fe>>
+ * @generated SignedSource<<8dfa52e6e45d4261b5908e3e745e784a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,11 +56,11 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
         readonly website: string | null | undefined;
       } | null | undefined;
       readonly id: string;
-      readonly locationSpaceType: {
+      readonly locationSpaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -151,11 +151,11 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
         readonly website: string | null | undefined;
       } | null | undefined;
       readonly id: string;
-      readonly locationSpaceType: {
+      readonly locationSpaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
-      } | null | undefined;
+      }>;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -482,8 +482,8 @@ v18 = {
   "args": null,
   "concreteType": "Location_OrganizationTagDetails",
   "kind": "LinkedField",
-  "name": "locationSpaceType",
-  "plural": false,
+  "name": "locationSpaceTypes",
+  "plural": true,
   "selections": (v16/*: any*/),
   "storageKey": null
 },
@@ -722,16 +722,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "daa71574d1aa35af2d28a85086a668f3",
+    "cacheID": "63fe12a4f61e7479de2e093a7cb10f24",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n        id\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      locationSpaceType {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n        id\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      locationSpaceTypes {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "638e98c97c0955b5c21d7fd14414c0c7";
+(node as any).hash = "5d77adee28e4062da652240b3c3dbccb";
 
 export default node;

@@ -482,7 +482,7 @@ type LocationDetails {
   extraMetadata: LocationExtraMetadata
   hasFutureBooking: Boolean!
   id: ID!
-  locationSpaceType: Location_OrganizationTagDetails
+  locationSpaceTypes: [Location_OrganizationTagDetails!]!
   locationTags: [Location_OrganizationTagDetails!]!
   name: String!
   openingHours: OpeningHours!
@@ -1479,6 +1479,7 @@ input AddLocationInput {
   primaryFeatureImage: CdnImageFileInput
   timezone: String
   type: LocationType!
+  weekOpeningHours: WeekOpeningHoursInput
 }
 
 input AddLocationPhysicalAddressInput {

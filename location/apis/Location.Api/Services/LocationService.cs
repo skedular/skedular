@@ -130,7 +130,7 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
-        locationEntity.OpeningHours = OpeningHours.Default;
+        locationEntity.OpeningHours = location.OpeningHours ?? OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
 
         if (location.PhysicalAddress is not null)

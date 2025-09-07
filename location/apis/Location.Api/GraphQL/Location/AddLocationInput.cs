@@ -24,4 +24,5 @@ public class AddLocationInput
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("physicalAddress")] public LocationPhysicalAddressInput? PhysicalAddress { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
+    [GraphQLName("weekOpeningHours")] public WeekOpeningHours? WeekOpeningHours { get; set; }
 }

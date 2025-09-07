@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0bf4b61b32627e1366afd471ffa351b>>
+ * @generated SignedSource<<f069675d1dc6d62e9212a502f0a23223>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type AddLocationInput = {
   primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
+  weekOpeningHours?: WeekOpeningHoursInput | null | undefined;
 };
 export type LocationExtraMetadataInput = {
   areaRange?: AreaRangeInput | null | undefined;
@@ -70,6 +71,21 @@ export type CdnFileInput = {
   height?: number | null | undefined;
   url: string;
   width?: number | null | undefined;
+};
+export type WeekOpeningHoursInput = {
+  friday: OpeningHoursDetailsInput;
+  monday: OpeningHoursDetailsInput;
+  saturday: OpeningHoursDetailsInput;
+  sunday: OpeningHoursDetailsInput;
+  thursday: OpeningHoursDetailsInput;
+  tuesday: OpeningHoursDetailsInput;
+  wednesday: OpeningHoursDetailsInput;
+};
+export type OpeningHoursDetailsInput = {
+  closed: boolean;
+  from?: string | null | undefined;
+  openAllDay: boolean;
+  until?: string | null | undefined;
 };
 export type addPrivateLocation_addLocationMutation$variables = {
   input: AddLocationInput;

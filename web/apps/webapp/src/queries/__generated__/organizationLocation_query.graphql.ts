@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dba49284de7bdce45fded7897764d054>>
+ * @generated SignedSource<<b0d40a69bd86124401b6eaeaa43a20b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,11 +35,11 @@ export type organizationLocation_query$data = {
       readonly website: string | null | undefined;
     } | null | undefined;
     readonly id: string;
-    readonly locationSpaceType: {
+    readonly locationSpaceTypes: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
       readonly uniqueId: string;
-    } | null | undefined;
+    }>;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
@@ -140,7 +140,7 @@ export type organizationLocation_query$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesLocationTags_query" | "singleChoiceLocationSpaceType_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesLocationSpaceTypes_query" | "multipleChoicesLocationTags_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -631,8 +631,8 @@ return {
           "args": null,
           "concreteType": "Location_OrganizationTagDetails",
           "kind": "LinkedField",
-          "name": "locationSpaceType",
-          "plural": false,
+          "name": "locationSpaceTypes",
+          "plural": true,
           "selections": (v6/*: any*/),
           "storageKey": null
         },
@@ -766,7 +766,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceLocationSpaceType_query"
+      "name": "multipleChoicesLocationSpaceTypes_query"
     }
   ],
   "type": "Query",
@@ -774,6 +774,6 @@ return {
 };
 })();
 
-(node as any).hash = "f930fd1af787c6d9ec0af6721efdf7b0";
+(node as any).hash = "3ec7b85bd170843a69c0e89c4748d896";
 
 export default node;

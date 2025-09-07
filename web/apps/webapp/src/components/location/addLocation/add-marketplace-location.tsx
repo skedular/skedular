@@ -3,7 +3,7 @@ import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationSpaceType, SingleChoiceLocationType } from '@/components/location';
+import { locationFeatureImageHeight, locationFeatureImageWidth, MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
@@ -47,7 +47,7 @@ const RootQuery = graphql`
     }
     ...multipleChoicesLocationTags_query
     ...singleChoiceLocationType_query
-    ...singleChoiceLocationSpaceType_query
+    ...multipleChoicesLocationSpaceTypes_query
   }
 `;
 
@@ -67,7 +67,7 @@ type LocationDetails = {
   timezone: string;
   type: string;
   locationTagIds: string[];
-  locationSpaceTypeId: string | null;
+  locationSpaceTypeIds: string[];
   contactPeople: string | null;
   contactEmails: string | null;
   contactPhones: string | null;
@@ -94,7 +94,7 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   locationTagIds: array().nullable(),
-  locationSpaceTypeId: string().nullable(),
+  locationSpaceTypeIds: array().nullable(),
   contactPeople: string().nullable(),
   contactEmails: string().nullable(),
   contactPhones: string().nullable(),
@@ -166,7 +166,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             name
             color
           }
-          locationSpaceType {
+          locationSpaceTypes {
             uniqueId
             name
             color
@@ -208,8 +208,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-  const [locationSpaceTypeId, setLocationSpaceTypeId] = useState<string | null | undefined>();
-  const debounceSetLocationSpaceTypeId = useDebounceCallback(setLocationSpaceTypeId, keyboardTextFieldDebounceTimeout);
+  const [locationSpaceTypeIds, setLocationSpaceTypeIds] = useState<string[]>([]);
+  const debounceSetLocationSpaceTypeIds = useDebounceCallback(setLocationSpaceTypeIds, keyboardTextFieldDebounceTimeout);
 
   const [locationContactPerson, setLocationContactPerson] = useState<string | null>(null);
   const debounceSetLocationContactPerson = useDebounceCallback(setLocationContactPerson, keyboardTextFieldDebounceTimeout);
@@ -289,7 +289,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
     timezone,
     type,
     locationTagIds,
-    locationSpaceTypeId,
+    locationSpaceTypeIds,
     contactPeople,
     contactEmails,
     contactPhones,
@@ -328,11 +328,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
       country = countryData.name;
     }
 
-    let finalLocationTagIds = locationTagIds;
-    if (locationSpaceTypeId) {
-      finalLocationTagIds = locationTagIds.concat([locationSpaceTypeId]);
-    }
-
     commitAddLocation({
       variables: {
         input: {
@@ -369,7 +364,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             otherLinks: stringToMultiLines(otherLinks),
           },
           primaryFeatureImage: finalPrimaryFeatureImage,
-          locationTagIds: finalLocationTagIds,
+          locationTagIds: locationTagIds.concat(locationSpaceTypeIds),
           physicalAddress: {
             osmType: physicalAddressOsmType,
             osmId: physicalAddressOsmId,
@@ -450,7 +445,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             },
             primaryFeatureImage: finalPrimaryFeatureImage,
             locationTags: [],
-            locationSpaceType: null,
+            locationSpaceTypes: [],
             physicalAddress: {
               id: '',
               osmType: physicalAddressOsmType,
@@ -522,7 +517,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             timezone: locationTimezone,
             type: locationType,
             locationTagIds,
-            locationSpaceTypeId,
+            locationSpaceTypeIds,
 
             contactPeople: locationContactPerson,
             contactEmails: locationContactEmail,
@@ -552,7 +547,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
             debounceSetLocationTagIds(values!.locationTagIds);
-            debounceSetLocationSpaceTypeId(values!.locationSpaceTypeId);
+            debounceSetLocationSpaceTypeIds(values!.locationSpaceTypeIds);
 
             debounceSetLocationContactPerson(values!.contactPeople);
             debounceSetLocationContactEmail(values!.contactEmails);
@@ -625,7 +620,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                 {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
                   <>
                     <FormFieldLabel label="Space Type">
-                      <SingleChoiceLocationSpaceType rootDataRelay={rootData} name="locationSpaceTypeId" required={requiredFields.locationSpaceTypeId} />
+                      <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="locationSpaceTypeIds" required={requiredFields.locationSpaceTypeIds} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Type" required={requiredFields.type}>

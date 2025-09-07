@@ -99,7 +99,7 @@ type LocationDetails {
   locationTags: [Location_OrganizationTagDetails!]!
   primaryFeatureImage: CdnImageFile
   extraMetadata: LocationExtraMetadata
-  locationSpaceType: Location_OrganizationTagDetails
+  locationSpaceTypes: [Location_OrganizationTagDetails!]!
   id: ID!
 }
 
@@ -314,6 +314,7 @@ input AddLocationInput {
   primaryFeatureImage: CdnImageFileInput
   physicalAddress: LocationPhysicalAddressInput
   extraMetadata: LocationExtraMetadataInput
+  weekOpeningHours: WeekOpeningHoursInput
 }
 
 input AddLocationPhysicalAddressInput {
