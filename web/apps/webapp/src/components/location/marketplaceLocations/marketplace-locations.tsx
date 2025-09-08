@@ -1,4 +1,6 @@
 import { GridContainer, StackColumn } from '@/components/commons';
+import { getRootLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
@@ -6,6 +8,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
@@ -52,9 +55,16 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     rootDataRelay,
   );
 
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const latitude = searchParams.get('latitude');
+  const longitude = searchParams.get('longitude');
+  const zoom = searchParams.get('zoom');
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locations = useMemo(() => rootDataRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataRefetchable.marketplaceLocations]);
-  const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
+  const [initialPosition, setInitialPosition] = useState<LatLngTuple>(latitude && longitude ? [parseFloat(latitude), parseFloat(longitude)] : [-36.8485, 174.7633]); // Auckland
+  const initialZoom = useMemo(() => (zoom ? parseFloat(zoom) : 13), [zoom]);
   const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
   const [centerSet, setCenterSet] = useState(false);
 
@@ -76,27 +86,29 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
         shadowUrl: '/leaflet/images/marker-shadow.png',
       });
 
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-          setInitialPosition([coords.latitude, coords.longitude]);
-          setCenterSet(false);
-        });
-      } else {
-        const ipinfoWrapper = new IPinfoWrapper('');
-        const ipinfo = await ipinfoWrapper.lookupIp('');
-
-        if (ipinfo.loc) {
-          const [latitude, longitude] = ipinfo.loc.split(',');
-          if (latitude && longitude) {
-            setInitialPosition([parseFloat(latitude), parseFloat(longitude)]);
+      if (!latitude || !longitude) {
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(({ coords }) => {
+            setInitialPosition([coords.latitude, coords.longitude]);
             setCenterSet(false);
+          });
+        } else {
+          const ipinfoWrapper = new IPinfoWrapper('');
+          const ipinfo = await ipinfoWrapper.lookupIp('');
+
+          if (ipinfo.loc) {
+            const [latitude, longitude] = ipinfo.loc.split(',');
+            if (latitude && longitude) {
+              setInitialPosition([parseFloat(latitude), parseFloat(longitude)]);
+              setCenterSet(false);
+            }
           }
         }
       }
 
       setDynamicLoadReady(true);
     })();
-  }, []);
+  }, [latitude, longitude]);
 
   const handleRefetch = useCallback(
     (searchBoundaries: LatLngBounds | null) => {
@@ -174,6 +186,9 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   const MapCenterTracker = () => {
     const map = useMapEvents({
       moveend: () => {
+        const newCenter = map.getCenter();
+        router.push(getRootLink(integratedPlatrform, { latitude: newCenter.lat, longitude: newCenter.lng, zoom: map.getZoom() }));
+
         const newBounds = map.getBounds();
         if (!searchBoundaries) {
           setSearchBoundaries(map.getBounds());
@@ -212,7 +227,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <Box sx={{ height: '90vh', width: '100%' }}>
-            <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+            <MapContainer center={initialPosition} zoom={initialZoom} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
