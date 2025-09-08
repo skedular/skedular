@@ -1,25 +1,4 @@
-export const getRootLink = (integratedPlatrform: string | undefined, options?: { latitude?: number; longitude?: number; zoom?: number }) => {
-  let params = '';
-
-  if (options?.latitude) {
-    params += `latitude=${options.latitude}`;
-  }
-
-  if (options?.longitude) {
-    params += params ? `&longitude=${options.longitude}` : `longitude=${options.longitude}`;
-  }
-
-  if (options?.zoom) {
-    params += params ? `&zoom=${options.zoom}` : `zoom=${options.zoom}`;
-  }
-
-  if (params) {
-    return integratedPlatrform ? `/${integratedPlatrform}?${params}` : `/?${params}`;
-  }
-
-  return integratedPlatrform ? `/${integratedPlatrform}` : '/';
-};
-
+export const getRootLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}` : '/');
 export const getWelcomeLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/welcome` : '/welcome');
 export const getMyBookingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/bookings` : '/bookings');
 export const getNotificationsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/notifications` : '/notifications');
