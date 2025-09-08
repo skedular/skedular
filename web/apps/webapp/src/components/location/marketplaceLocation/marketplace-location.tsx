@@ -206,15 +206,13 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               <SmallHeadingIconTypography label={locationDetails.name} />
               <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
               <LeadIconTypography label={'Opening Hours'} />
-              <StackRow>
-                <SmallIconTypography label={`Mon: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
-                <SmallIconTypography label={`Tue: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
-                <SmallIconTypography label={`Wed: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
-                <SmallIconTypography label={`Thu: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
-                <SmallIconTypography label={`Fri: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
-                <SmallIconTypography label={`Sat: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
-                <SmallIconTypography label={`Sun: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
-              </StackRow>
+              <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
+              <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
+              <SmallIconTypography label={`Wednesday: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
+              <SmallIconTypography label={`Thursday: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
+              <SmallIconTypography label={`Friday: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
+              <SmallIconTypography label={`Saturday: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
+              <SmallIconTypography label={`Sunday: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
             </StackColumn>
           </Grid>
 
