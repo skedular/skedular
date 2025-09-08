@@ -217,21 +217,21 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
-            {extraMetadata?.contactDetails?.contactPeople && (
+            {extraMetadata?.contactDetails?.contactPeople && extraMetadata.contactDetails.contactPeople.length > 0 && (
               <>
                 <CaptionIconTypography label={'Contact People'} />
                 <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
               </>
             )}
 
-            {extraMetadata?.contactDetails?.contactPhones && (
+            {extraMetadata?.contactDetails?.contactPhones && extraMetadata.contactDetails.contactPhones.length > 0 && (
               <>
                 <CaptionIconTypography label={'Phones'} />
                 <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
               </>
             )}
 
-            {extraMetadata?.contactDetails?.contactEmails && (
+            {extraMetadata?.contactDetails?.contactEmails && extraMetadata.contactDetails.contactEmails.length > 0 && (
               <>
                 <CaptionIconTypography label={'Emails'} />
                 <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
