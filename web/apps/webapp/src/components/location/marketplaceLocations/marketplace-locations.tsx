@@ -1,9 +1,9 @@
-import { PushToRight, StackColumn } from '@/components/commons';
-import StackRow from '@/components/commons/stack-row';
+import { GridContainer, StackColumn } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
@@ -199,35 +199,43 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
 
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <StackRow sx={{ alignItems: 'flex-start' }}>
-        {locations.map((item) => (
-          <MarketplaceLocationCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-        ))}
-        <PushToRight />
-        <Box sx={{ height: '80vh', width: '30%' }}>
-          <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {locations
-              .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
-              .map((item) => {
-                return (
-                  <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                    <Popup>
-                      <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-                    </Popup>
-                  </Marker>
-                );
-              })}
+      <GridContainer>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
+            {locations.map((item) => (
+              <Grid key={item.id}>
+                <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+              </Grid>
+            ))}
+          </GridContainer>
+        </Grid>
 
-            <MapInitBoundsTracker />
-            <MapCenterTracker />
-            {!centerSet && <MapUpdater center={initialPosition} />}
-          </MapContainer>
-        </Box>
-      </StackRow>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Box sx={{ height: '90vh', width: '100%' }}>
+            <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {locations
+                .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
+                .map((item) => {
+                  return (
+                    <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
+                      <Popup>
+                        <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                      </Popup>
+                    </Marker>
+                  );
+                })}
+
+              <MapInitBoundsTracker />
+              <MapCenterTracker />
+              {!centerSet && <MapUpdater center={initialPosition} />}
+            </MapContainer>
+          </Box>
+        </Grid>
+      </GridContainer>
     </StackColumn>
   );
 };

@@ -86,7 +86,11 @@ const MarketplaceLocationCard = ({ locationDetailsRelay }: Props) => {
   }, [locationDetails.physicalAddress?.suburb, locationDetails.physicalAddress?.city]);
 
   return (
-    <Card sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none' }} component={NextLink} href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}>
+    <Card
+      sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none', display: 'block' }}
+      component={NextLink}
+      href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
+    >
       {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
         <CardMedia component="img" image={locationDetails.primaryFeatureImage.thumbnail.url} />
       )}
