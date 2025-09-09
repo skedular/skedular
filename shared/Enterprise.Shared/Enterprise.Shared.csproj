@@ -33,7 +33,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.6.13"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.7"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.1.1"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.11.1"/>
@@ -49,17 +49,18 @@
         <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.10"/>
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.10"/>
         <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.10"/>
+        <PackageReference Include="HotChocolate.Fusion.SourceSchema" Version="15.1.10"/>
 
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.8.0"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.2"/>
         <PackageReference Include="Microsoft.Graph" Version="5.91.0"/>
@@ -120,7 +121,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
