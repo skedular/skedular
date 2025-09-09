@@ -2,6 +2,7 @@ using Customer.Api.GraphQL.Billing;
 using Customer.Api.GraphQL.Payment;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
 namespace Customer.Api.GraphQL.Customer;
@@ -30,12 +31,12 @@ public class CustomerDetails : Node
     [GraphQLName("locale")] public string? Locale { get; set; }
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
     [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
-    [GraphQLName("defaultOrganization")] public OrganizationDetails? DefaultOrganization { get; set; }
-    [GraphQLName("preferredLocations")] public IEnumerable<LocationDetails> PreferredLocations { get; set; } = [];
-    [GraphQLName("preferredTeams")] public IEnumerable<CustomerTeamDetails> PreferredTeams { get; set; } = [];
-    [GraphQLName("preferredZones")] public IEnumerable<OrganizationTagDetails> PreferredZones { get; set; } = [];
-    [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
-    [GraphQLName("preferredResources")] public IEnumerable<CustomerResourceDetails> PreferredResources { get; set; } = [];
+    [GraphQLName("defaultOrganizationId")] public string? DefaultOrganizationId { get; set; }
+    [GraphQLName("preferredLocationIds")] public IEnumerable<string> PreferredLocationIds { get; set; } = [];
+    [GraphQLName("preferredTeamIds")] public IEnumerable<string> PreferredTeamIds { get; set; } = [];
+    [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
+    [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
+    [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
     [GraphQLName("paymentMethods")] public IEnumerable<CustomerPaymentMethod> PaymentMethods { get; set; } = [];
     [GraphQLName("billingDetails")] public CustomerBillingDetails? BillingDetails { get; set; }
 
@@ -43,4 +44,37 @@ public class CustomerDetails : Node
     public bool HasAttachedPaymentMethod { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[ObjectType<CustomerDetails>]
+public static partial class CustomerDetailsType
+{
+    static partial void Configure(IObjectTypeDescriptor<CustomerDetails> descriptor)
+    {
+        descriptor.Ignore(item => item.DefaultOrganizationId);
+        descriptor.Ignore(item => item.PreferredLocationIds);
+        descriptor.Ignore(item => item.PreferredTeamIds);
+        descriptor.Ignore(item => item.PreferredZoneIds);
+        descriptor.Ignore(item => item.PreferredCustomTagIds);
+        descriptor.Ignore(item => item.PreferredResourceIds);
+    }
+
+    public static OrganizationDetails? GetOrganization([Parent] CustomerDetails item) => string.IsNullOrWhiteSpace(item.DefaultOrganizationId)
+        ? null
+        : new OrganizationDetails(item.DefaultOrganizationId);
+
+    public static IEnumerable<LocationDetails> GetPreferredLocations([Parent] CustomerDetails item) =>
+        item.PreferredLocationIds.Select(id => new LocationDetails(id));
+
+    public static IEnumerable<TeamDetails> GetPreferredTeams([Parent] CustomerDetails item) =>
+        item.PreferredTeamIds.Select(id => new TeamDetails(id));
+
+    public static IEnumerable<OrganizationTagDetails> GetPreferredZones([Parent] CustomerDetails item) =>
+        item.PreferredZoneIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<OrganizationTagDetails> GetPreferredCustomTags([Parent] CustomerDetails item) =>
+        item.PreferredCustomTagIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<ResourceDetails> GetPreferredResources([Parent] CustomerDetails item) =>
+        item.PreferredResourceIds.Select(id => new ResourceDetails(id));
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<11d79399d4c62c72cf9ea759e698329f>>
+ * @generated SignedSource<<296373b10b3648c278c9bdd65bb17cbd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,8 +64,8 @@ export type editProduct_updateProductMutation$data = {
       readonly isPriceTaxInclusive: boolean;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
@@ -93,8 +93,8 @@ export type editProduct_updateProductMutation$data = {
       } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
@@ -118,8 +118,8 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly isPriceTaxInclusive: boolean;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
@@ -147,8 +147,8 @@ export type editProduct_updateProductMutation$rawResponse = {
       } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly recurrenceWindowDays: number;
       readonly requireConsecutiveDays: boolean;
@@ -173,29 +173,30 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/),
-  (v1/*: any*/)
-],
 v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+  (v3/*: any*/),
+  (v2/*: any*/)
+],
+v5 = [
   (v1/*: any*/),
+  (v2/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -204,7 +205,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -227,7 +228,7 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": [
@@ -250,13 +251,7 @@ v6 = [
         "name": "product",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -264,7 +259,7 @@ v6 = [
             "name": "inactive",
             "storageKey": null
           },
-          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -286,7 +281,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "priceUnit",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -296,7 +291,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -351,21 +346,21 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v5/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v5/*: any*/),
             "storageKey": null
           },
           {
@@ -376,7 +371,7 @@ v6 = [
             "name": "acceptedBookingPaymentMethods",
             "plural": true,
             "selections": [
-              (v2/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -409,7 +404,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -419,7 +414,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               }
             ],
@@ -445,7 +440,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -454,19 +449,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v6/*: any*/)
+    "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "403cfa138df0d19d7ea5909b806317b3",
+    "cacheID": "3294d2dfe60ae18ba3d3ea1385c69ca3",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a1905a53c6810461e2e3a8f75ef4832f";
+(node as any).hash = "35fed2c6f396ffd3ec89251e9f84f9ca";
 
 export default node;

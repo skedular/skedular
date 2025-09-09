@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<98f3553d04aa3ecf15e13d51cf438cfa>>
+ * @generated SignedSource<<a1ca85e2fd72a307ee7017eb60d1ec2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,18 +29,20 @@ export type floorPlans_floorPlan_query$data = {
       readonly y: number;
     }>;
   } | null | undefined;
-  readonly resources?: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly id: string;
-        readonly name: string;
-        readonly resourceType: {
-          readonly tagType: string | null | undefined;
+  readonly location: {
+    readonly resources?: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly id: string;
+          readonly name: string;
+          readonly resourceType: {
+            readonly tagType: string;
+          };
+          readonly " $fragmentSpreads": FragmentRefs<"resourceCard_ResourceDetails">;
         };
-        readonly " $fragmentSpreads": FragmentRefs<"resourceCard_ResourceDetails">;
-      };
-    }>;
-  };
+      }>;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "floorPlans_floorPlan_query";
 };
 export type floorPlans_floorPlan_query$key = {
@@ -197,77 +199,96 @@ return {
             }
           ],
           "storageKey": null
-        },
+        }
+      ]
+    },
+    {
+      "alias": null,
+      "args": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "resourcesSortingValues"
-            },
-            {
-              "fields": [
-                {
-                  "kind": "Variable",
-                  "name": "floorPlanId",
-                  "variableName": "floorPlanId"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "locationId",
-                  "variableName": "locationId"
-                }
-              ],
-              "kind": "ObjectValue",
-              "name": "where"
-            }
-          ],
-          "concreteType": "ConnectionOfResourceEdge",
-          "kind": "LinkedField",
-          "name": "resources",
-          "plural": false,
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "locationId"
+        }
+      ],
+      "concreteType": "LocationDetails",
+      "kind": "LinkedField",
+      "name": "location",
+      "plural": false,
+      "selections": [
+        {
+          "condition": "floorPlanExists",
+          "kind": "Condition",
+          "passingValue": true,
           "selections": [
             {
               "alias": null,
-              "args": null,
-              "concreteType": "ResourceEdge",
+              "args": [
+                {
+                  "kind": "Variable",
+                  "name": "orderBy",
+                  "variableName": "resourcesSortingValues"
+                },
+                {
+                  "fields": [
+                    {
+                      "kind": "Variable",
+                      "name": "floorPlanId",
+                      "variableName": "floorPlanId"
+                    }
+                  ],
+                  "kind": "ObjectValue",
+                  "name": "where"
+                }
+              ],
+              "concreteType": "ConnectionOfResourceEdge",
               "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
+              "name": "resources",
+              "plural": false,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "ResourceDetails",
+                  "concreteType": "ResourceEdge",
                   "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
+                  "name": "edges",
+                  "plural": true,
                   "selections": [
-                    (v0/*: any*/),
-                    (v1/*: any*/),
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "Location_OrganizationTagDetails",
+                      "concreteType": "ResourceDetails",
                       "kind": "LinkedField",
-                      "name": "resourceType",
+                      "name": "node",
                       "plural": false,
                       "selections": [
+                        (v0/*: any*/),
+                        (v1/*: any*/),
                         {
                           "alias": null,
                           "args": null,
-                          "kind": "ScalarField",
-                          "name": "tagType",
+                          "concreteType": "OrganizationTagDetails",
+                          "kind": "LinkedField",
+                          "name": "resourceType",
+                          "plural": false,
+                          "selections": [
+                            {
+                              "alias": null,
+                              "args": null,
+                              "kind": "ScalarField",
+                              "name": "tagType",
+                              "storageKey": null
+                            }
+                          ],
                           "storageKey": null
+                        },
+                        {
+                          "args": null,
+                          "kind": "FragmentSpread",
+                          "name": "resourceCard_ResourceDetails"
                         }
                       ],
                       "storageKey": null
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "resourceCard_ResourceDetails"
                     }
                   ],
                   "storageKey": null
@@ -275,10 +296,10 @@ return {
               ],
               "storageKey": null
             }
-          ],
-          "storageKey": null
+          ]
         }
-      ]
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -286,6 +307,6 @@ return {
 };
 })();
 
-(node as any).hash = "f012ebe5fecfa93d07f94b2c21ada196";
+(node as any).hash = "c8927006bab5fda038897545d5447b65";
 
 export default node;

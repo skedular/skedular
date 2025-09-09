@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<033ddd020aef5b3d83c0cd2ca0208c1b>>
+ * @generated SignedSource<<c39d3e9a8d4378eae8fc1bf1fb6cb82f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type organizationAdmin_addCustomerPreferredOrganizationTagMutation$data =
     readonly customer: {
       readonly id: string;
       readonly preferredZones: ReadonlyArray<{
-        readonly uniqueId: string;
+        readonly id: string;
       }>;
     };
   };
@@ -39,7 +39,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -62,28 +69,16 @@ v1 = [
         "name": "customer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Customer_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "preferredZones",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           }
@@ -100,7 +95,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -109,19 +104,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "6c00ece078fee4faaaf85c2102c6c21f",
+    "cacheID": "dcf0e5723416fdb44df60250d72d34df",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_addCustomerPreferredOrganizationTagMutation(\n  $input: AddCustomerPreferredOrganizationTagInput!\n) {\n  addCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_addCustomerPreferredOrganizationTagMutation(\n  $input: AddCustomerPreferredOrganizationTagInput!\n) {\n  addCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "148e8412b84c5a8861398dcfbb5dbc8c";
+(node as any).hash = "83aa42662f3a3c7d2d5975ab205a5707";
 
 export default node;

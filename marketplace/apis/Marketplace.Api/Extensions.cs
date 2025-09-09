@@ -16,6 +16,7 @@ public static class Extensions
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IProductService, ProductService>()
+            .AddScoped<IProductVersionService, ProductVersionService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>();
 

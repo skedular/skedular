@@ -153,9 +153,8 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 HasFutureBooking = src.HasFutureBooking,
-                Organization = MapTo(src.Organization),
-                PrimaryLocation = MapTo(src.PrimaryLocation),
-                Members = MapTo(src.TeamMembers)
+                OrganizationId = src.Organization.Id,
+                PrimaryLocationId = src.PrimaryLocation?.Id
             };
 
     public TeamMember MapTo(Shared.Database.Entities.TeamMember src, Shared.Models.Team team) =>
@@ -178,7 +177,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Role = src.Role,
             Status = src.Status,
-            Customer = MapTo(src.Customer)!,
+            CustomerId = src.Customer.Id,
             OrganizationMember = MapTo(src.OrganizationMember)
         };
 
@@ -356,8 +355,8 @@ public class Mapper : IMapper
             Status = new TeamInvitationStatusDetails { Type = src.Status, Name = src.Status.ToInvitationStatusName() },
             Role = src.Role,
             Team = MapTo(src.Team)!,
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            CreatedById = src.CreatedBy.Id,
+            InviteeId = src.Invitee?.Id
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
@@ -481,42 +480,7 @@ public class Mapper : IMapper
             };
 
     private static TeamOrganizationMemberDetails? MapTo(OrganizationMember? src) =>
-        src is null ? null : new TeamOrganizationMemberDetails { UniqueId = src.Id, Customer = MapTo(src.Customer)! };
-
-    private IEnumerable<TeamMemberDetails> MapTo(IEnumerable<TeamMember> src) => src.Select(MapTo);
-
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
-            Name = src.Name.ToSafeString(),
-            LogoUrl = src.LogoUrl
-        };
-
-    private static LocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
-
-    private static CustomerDetails? MapTo(Customer? src) =>
-        src is null
-            ? null
-            : new CustomerDetails
-            {
-                UniqueId = src.Id,
-                Email = src.Identities.ToFirstEmail(),
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber
-            };
+        src is null ? null : new TeamOrganizationMemberDetails { UniqueId = src.Id, CustomerId = src.Customer.Id };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 

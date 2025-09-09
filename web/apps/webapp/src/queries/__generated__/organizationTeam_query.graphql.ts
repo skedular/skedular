@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b5a9f886f7c9ce45bde996b978567df>>
+ * @generated SignedSource<<0fad9b766df88c637a60eb17c26683b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,8 +29,8 @@ export type organizationTeam_query$data = {
       } | null | undefined;
     } | null | undefined;
     readonly primaryLocation: {
+      readonly id: string;
       readonly name: string;
-      readonly uniqueId: string;
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
@@ -48,10 +48,17 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v1 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -99,14 +106,8 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
         (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -136,7 +137,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v2/*: any*/),
               "storageKey": null
             },
             {
@@ -146,7 +147,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v2/*: any*/),
               "storageKey": null
             }
           ],
@@ -155,19 +156,13 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Team_LocationDetails",
+          "concreteType": "LocationDetails",
           "kind": "LinkedField",
           "name": "primaryLocation",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "uniqueId",
-              "storageKey": null
-            },
-            (v0/*: any*/)
+            (v0/*: any*/),
+            (v1/*: any*/)
           ],
           "storageKey": null
         }
@@ -192,6 +187,6 @@ return {
 };
 })();
 
-(node as any).hash = "8dfc7aa7c082d350e851ece337614dd1";
+(node as any).hash = "f890a8616217f41730cc78354441a039";
 
 export default node;

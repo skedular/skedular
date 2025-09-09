@@ -19,7 +19,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -38,24 +38,23 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
-        organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $bookingPeopleNameSearchText }
-          orderBy: $organizationMemberSelectorOrganizationMembersSortingValues
-        ) @connection(key: "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers") @include(if: $organizationExists) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $bookingPeopleNameSearchText }, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues)
+            @connection(key: "organizationMemberSelector_members")
+            @include(if: $organizationExists) {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -68,8 +67,8 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
   const [, startTransition] = useTransition();
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootData.organizationMemberSelectorPaginatedOrganizationMembers ? rootData.organizationMemberSelectorPaginatedOrganizationMembers.edges.map(({ node }) => node) : []),
-    [rootData.organizationMemberSelectorPaginatedOrganizationMembers],
+    () => (rootData.organization?.members ? rootData.organization.members.edges.map(({ node }) => node) : []),
+    [rootData.organization?.members],
   );
 
   const handleRefetch = useCallback(
@@ -97,7 +96,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
 
   const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardSearchDebounceTimeout);
 
-  if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
+  if (!rootData.organization?.members) {
     return <></>;
   }
 
@@ -107,13 +106,13 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
       multiple={multiple}
       required={required}
       options={customers}
-      getOptionValue={(option) => (useMemberId ? (option as OrganizationMemberDetails).id : (option as OrganizationMemberDetails).customer.uniqueId)}
+      getOptionValue={(option) => (useMemberId ? (option as OrganizationMemberDetails).id : (option as OrganizationMemberDetails).customer.id)}
       getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
       renderOption={(props, option) => {
         const castedOption = (option as OrganizationMemberDetails).customer;
 
         return (
-          <li {...props} key={castedOption.uniqueId}>
+          <li {...props} key={castedOption.id}>
             <BodyIconTypography
               label={getCustomerFullName(castedOption)}
               startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}

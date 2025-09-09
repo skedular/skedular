@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
+using Location.Api.GraphQL.Analytics;
 using Location.Api.GraphQL.FloorPlan;
 using Location.Api.GraphQL.Location;
 using Location.Api.GraphQL.PhysicalAddress;
@@ -239,17 +240,17 @@ public class Mapper : IMapper
                 HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceDesk)),
                 RoomCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceRoom)),
-                Organization = MapTo(src.Organization),
-                Resources = MapTo(src.Resources),
-                CustomTags = MapTo(src.CustomTags),
-                Zones = MapTo(src.Zones),
-                ResourceTypes = src.Organization.Tags
+                OrganizationId = src.Organization.Id,
+                CustomTagIds = src.CustomTags.Select(item => item.Id),
+                ZoneIds = src.Zones.Select(item => item.Id),
+                ResourceTypeIds = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
-                    .Select(MapTo),
+                    .Select(item => item.Id),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
-                LocationTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Location)),
-                LocationSpaceTypes =
-                    MapTo(src.Tags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type)))
+                LocationTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id),
+                LocationSpaceTypeIds = src.Tags
+                    .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type))
+                    .Select(item => item.Id)
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -347,10 +348,10 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)),
-            ProductTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Product)),
-            ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
+            CustomTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
+            ZoneIds = src.Tags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
+            ProductTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Product).Select(item => item.Id),
+            ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -794,9 +795,6 @@ public class Mapper : IMapper
             Location = MapTo(src.Location)!
         };
 
-    private static OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
-
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()
         {
@@ -845,13 +843,6 @@ public class Mapper : IMapper
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);
-
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
-        new() { UniqueId = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
-
-    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
-
-    private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
 
     private static ResourcePositionDetails MapToResourcePosition(ResourcePosition src) =>
         new() { Id = src.Id, X = src.X, Y = src.Y, Resource = new ResourceDetails { Id = src.Resource.Id, Name = src.Resource.Name } };

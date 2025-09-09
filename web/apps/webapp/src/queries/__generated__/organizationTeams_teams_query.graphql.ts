@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e19aa18b885e2117db36060b3d8ebbb7>>
+ * @generated SignedSource<<67ecf472f037ed84037c190b16525fac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,19 +19,23 @@ export type organizationTeams_teams_query$data = {
         readonly canModify: boolean;
         readonly hasFutureBooking: boolean;
         readonly id: string;
-        readonly members: ReadonlyArray<{
-          readonly organizationMember: {
-            readonly customer: {
-              readonly familyName: string | null | undefined;
-              readonly givenName: string | null | undefined;
-              readonly middleName: string | null | undefined;
-              readonly name: string | null | undefined;
-              readonly photoUrl: string | null | undefined;
-              readonly uniqueId: string;
+        readonly members: {
+          readonly edges: ReadonlyArray<{
+            readonly node: {
+              readonly organizationMember: {
+                readonly customer: {
+                  readonly familyName: string | null | undefined;
+                  readonly givenName: string | null | undefined;
+                  readonly id: string;
+                  readonly middleName: string | null | undefined;
+                  readonly name: string | null | undefined;
+                  readonly photoUrl: string | null | undefined;
+                };
+                readonly uniqueId: string;
+              } | null | undefined;
             };
-            readonly uniqueId: string;
-          } | null | undefined;
-        }>;
+          }>;
+        };
         readonly name: string;
         readonly organization: {
           readonly uniqueAlphanumericName: string | null | undefined;
@@ -39,7 +43,7 @@ export type organizationTeams_teams_query$data = {
         readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationTeams_teams_query";
 };
@@ -58,14 +62,14 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -171,18 +175,12 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
                 (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Team_OrganizationDetails",
+                  "concreteType": "OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,
@@ -200,56 +198,84 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "TeamMemberDetails",
+                  "concreteType": "ConnectionOfTeamMemberEdge",
                   "kind": "LinkedField",
                   "name": "members",
-                  "plural": true,
+                  "plural": false,
                   "selections": [
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "TeamOrganizationMemberDetails",
+                      "concreteType": "TeamMemberEdge",
                       "kind": "LinkedField",
-                      "name": "organizationMember",
-                      "plural": false,
+                      "name": "edges",
+                      "plural": true,
                       "selections": [
-                        (v2/*: any*/),
                         {
                           "alias": null,
                           "args": null,
-                          "concreteType": "Team_CustomerDetails",
+                          "concreteType": "TeamMemberDetails",
                           "kind": "LinkedField",
-                          "name": "customer",
+                          "name": "node",
                           "plural": false,
                           "selections": [
-                            (v2/*: any*/),
                             {
                               "alias": null,
                               "args": null,
-                              "kind": "ScalarField",
-                              "name": "givenName",
-                              "storageKey": null
-                            },
-                            {
-                              "alias": null,
-                              "args": null,
-                              "kind": "ScalarField",
-                              "name": "middleName",
-                              "storageKey": null
-                            },
-                            {
-                              "alias": null,
-                              "args": null,
-                              "kind": "ScalarField",
-                              "name": "familyName",
-                              "storageKey": null
-                            },
-                            (v1/*: any*/),
-                            {
-                              "alias": null,
-                              "args": null,
-                              "kind": "ScalarField",
-                              "name": "photoUrl",
+                              "concreteType": "TeamOrganizationMemberDetails",
+                              "kind": "LinkedField",
+                              "name": "organizationMember",
+                              "plural": false,
+                              "selections": [
+                                {
+                                  "alias": null,
+                                  "args": null,
+                                  "kind": "ScalarField",
+                                  "name": "uniqueId",
+                                  "storageKey": null
+                                },
+                                {
+                                  "alias": null,
+                                  "args": null,
+                                  "concreteType": "CustomerDetails",
+                                  "kind": "LinkedField",
+                                  "name": "customer",
+                                  "plural": false,
+                                  "selections": [
+                                    (v1/*: any*/),
+                                    {
+                                      "alias": null,
+                                      "args": null,
+                                      "kind": "ScalarField",
+                                      "name": "givenName",
+                                      "storageKey": null
+                                    },
+                                    {
+                                      "alias": null,
+                                      "args": null,
+                                      "kind": "ScalarField",
+                                      "name": "middleName",
+                                      "storageKey": null
+                                    },
+                                    {
+                                      "alias": null,
+                                      "args": null,
+                                      "kind": "ScalarField",
+                                      "name": "familyName",
+                                      "storageKey": null
+                                    },
+                                    (v2/*: any*/),
+                                    {
+                                      "alias": null,
+                                      "args": null,
+                                      "kind": "ScalarField",
+                                      "name": "photoUrl",
+                                      "storageKey": null
+                                    }
+                                  ],
+                                  "storageKey": null
+                                }
+                              ],
                               "storageKey": null
                             }
                           ],
@@ -353,6 +379,6 @@ return {
 };
 })();
 
-(node as any).hash = "b193667cfdf06f1dec8b43875a2d2eae";
+(node as any).hash = "ff46c41e9f2f916afda5bd7638ecba3e";
 
 export default node;

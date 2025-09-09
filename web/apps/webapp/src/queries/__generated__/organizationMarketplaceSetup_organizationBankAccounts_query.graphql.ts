@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af2a0ba05f263f686bcec60d4fa99a6e>>
+ * @generated SignedSource<<5b89b9e0d12bca15f00a8864f1b03540>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type organizationMarketplaceSetup_organizationBankAccounts_query$data = {
         };
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationMarketplaceSetup_organizationBankAccounts_query";
 };

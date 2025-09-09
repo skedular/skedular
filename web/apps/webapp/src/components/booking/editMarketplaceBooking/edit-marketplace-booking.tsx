@@ -59,7 +59,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -114,7 +114,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             type
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -122,30 +122,32 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
           isPaymentRequired
@@ -168,24 +170,22 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       fragment editMarketplaceBooking_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "editMarketplaceBooking_organizationMembers_refetchableFragment") {
-        organizationMembers(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
-          orderBy: $organizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
+            @connection(key: "bookingDetailsSelectorQuery_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -227,7 +227,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -235,30 +235,32 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -282,16 +284,16 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
   );
   const [customerId, setCustomerId] = useState<string | undefined>(
-    rootDataBooking.booking?.involvedCustomers && rootDataBooking.booking?.involvedCustomers.length > 0 ? rootDataBooking.booking?.involvedCustomers[0].uniqueId : undefined,
+    rootDataBooking.booking?.involvedCustomers && rootDataBooking.booking?.involvedCustomers.length > 0 ? rootDataBooking.booking?.involvedCustomers[0].id : undefined,
   );
   const [teamId, setTeamId] = useState<string | undefined>(
-    rootDataBooking.booking?.involvedTeams && rootDataBooking.booking?.involvedTeams.length > 0 ? rootDataBooking.booking?.involvedTeams[0].uniqueId : undefined,
+    rootDataBooking.booking?.involvedTeams && rootDataBooking.booking?.involvedTeams.length > 0 ? rootDataBooking.booking?.involvedTeams[0].id : undefined,
   );
   const filterTeam = createFilterOptions<TeamDetails>();
 
   const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
-    [rootDataOrganizationMembers.organizationMembers],
+    () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization?.members.edges.map(({ node }) => node) : []),
+    [rootDataOrganizationMembers.organization?.members],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
 
@@ -333,7 +335,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       return;
     }
 
-    handleRefetchTeams(rootDataBooking.booking.involvedCustomers[0].uniqueId);
+    handleRefetchTeams(rootDataBooking.booking.involvedCustomers[0].id);
   }, [handleRefetchTeams, rootDataBooking.booking?.involvedCustomers]);
 
   const handleCloseClick = () => {
@@ -367,9 +369,9 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           notes,
           type: type as BookingType,
           customerIds: [memberId],
-          organizationIds: booking.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: teamId ? [teamId] : [],
-          resourceIds: booking.resources.map(({ uniqueId }) => uniqueId),
+          resourceIds: booking.bookingResources.map(({ resource }) => resource.id),
         },
       },
       onCompleted: (_, errors) => {
@@ -408,7 +410,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             },
             involvedCustomers: [
               {
-                uniqueId: '',
+                id: '',
                 name: '',
                 givenName: '',
                 middleName: '',
@@ -419,7 +421,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             involvedOrganizations: [],
             involvedLocations: [],
             involvedTeams: [],
-            resources: booking.resources,
+            bookingResources: booking.bookingResources,
           },
         },
       },
@@ -431,7 +433,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       return;
     }
 
-    const customerId = option?.customer.uniqueId;
+    const customerId = option?.customer.id;
     setCustomerId(customerId);
     handleRefetchTeams(customerId);
   };
@@ -506,13 +508,13 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                       multiple={false}
                       required={requiredFields.member}
                       options={customers}
-                      getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                      getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
                       getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                       renderOption={(props, option) => {
                         const castedOption = (option as OrganizationMemberDetails).customer;
 
                         return (
-                          <li {...props} key={castedOption.uniqueId}>
+                          <li {...props} key={castedOption.id}>
                             <BodyIconTypography
                               label={getCustomerFullName(castedOption)}
                               startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}

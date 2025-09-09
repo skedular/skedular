@@ -16,37 +16,41 @@ type CancelOrganizationOfferingPayload {
 type ConnectionOfOrganizationBankAccountEdge {
   pageInfo: PageInfo!
   edges: [OrganizationBankAccountEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationEdge {
   pageInfo: PageInfo!
   edges: [OrganizationEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationJoinInvitationEdge {
   pageInfo: PageInfo!
   edges: [OrganizationJoinInvitationEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationMemberEdge {
   pageInfo: PageInfo!
   edges: [OrganizationMemberEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationStripeConnectAccountEdge {
   pageInfo: PageInfo!
   edges: [OrganizationStripeConnectAccountEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationTagEdge {
   pageInfo: PageInfo!
   edges: [OrganizationTagEdge!]!
-  totalCount: Int
+  totalCount: Int!
+}
+
+type CustomerDetails {
+  id: ID!
 }
 
 type InvitationToJoinOrganizationPayload {
@@ -60,12 +64,12 @@ type InvitationsToJoinOrganizationPayload {
 }
 
 type InviteCustomerToJoinOrganizationDetails {
+  createdBy: CustomerDetails!
+  invitee: CustomerDetails
   email: String
   status: OrganizationInvitationStatusDetails!
   role: OrganizationMemberRole!
   organization: OrganizationDetails!
-  createdBy: Organization_CustomerDetails!
-  invitee: Organization_CustomerDetails
   id: ID!
 }
 
@@ -194,6 +198,12 @@ type OrganizationDailyBookingsTotal {
 }
 
 type OrganizationDetails {
+  members(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
   uniqueAlphanumericName: String
   name: String!
   about: String
@@ -220,7 +230,6 @@ type OrganizationDetails {
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   isMyOnboardingDone: Boolean!
-  members: [OrganizationMemberDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
   locationSpaceTypes: [OrganizationTagDetails!]!
   paymentMethods: [OrganizationPaymentMethod!]!
@@ -263,10 +272,10 @@ type OrganizationMemberAttendancePercentage {
 }
 
 type OrganizationMemberDetails {
+  customer: CustomerDetails!
   role: OrganizationMemberRole
   status: OrganizationMemberStatus!
   isOrganizationOnboardingDone: Boolean!
-  customer: Organization_CustomerDetails!
   id: ID!
 }
 
@@ -429,23 +438,6 @@ type OrganizationTypeDetails {
   name: String!
 }
 
-type Organization_CustomerDetails {
-  uniqueId: ID!
-  email: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  phoneNumber: String
-}
-
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -454,24 +446,24 @@ type PageInfo {
 }
 
 type Query {
-  organizationAnalytics(id: String uniqueAlphanumericName: String from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
+  organizationBankAccountById(id: String!): OrganizationBankAccountDetails @lookup @internal @cost(weight: "10")
   organizationBankAccounts(after: String first: Int before: String last: Int where: OrganizationBankAccountWhereInput! orderBy: [OrganizationBankAccountOrderInput!]): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   myInvitationsToJoinOrganizations(after: String first: Int before: String last: Int where: MyInvitationsToJoinOrganizationsWhereInput! orderBy: [JoinOrganizationInvitationOrderInput!]): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organization(uniqueAlphanumericName: String!): OrganizationDetails @cost(weight: "10")
+  organization(id: String uniqueAlphanumericName: String): OrganizationDetails @cost(weight: "10")
+  organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
@@ -479,19 +471,20 @@ type Query {
   isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
   organizationSsoLoginUrl(organizationId: String organizationUniqueAlphanumericName: String redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
+  organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   deskResourceType: OrganizationTagType!
   roomResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
   otherResourceType: OrganizationTagType!
-  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  customTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zoneById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  productTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  locationTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
 }
 
 type RemoveOrganizationPaymentMethodPayload {
@@ -673,8 +666,6 @@ input CompleteOrganizationMemberOnboardingInput {
 }
 
 input CustomTagOrganizationTagWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -757,8 +748,6 @@ input JoinOrganizationInvitationOrderInput {
 }
 
 input LocationTagOrganizationTagWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -784,7 +773,6 @@ input OrganizationMemberOrderInput {
 }
 
 input OrganizationMemberWhereInput {
-  organizationUniqueAlphanumericName: String!
   nameContains: String
   customerId: String
 }
@@ -816,8 +804,6 @@ input OrganizationWhereInput {
 }
 
 input ProductTagOrganizationTagWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -988,8 +974,6 @@ input UpdateZoneInput {
 }
 
 input ZoneOrganizationTagWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
   nameContains: String
 }
 
@@ -1082,6 +1066,10 @@ enum OrganizationType {
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

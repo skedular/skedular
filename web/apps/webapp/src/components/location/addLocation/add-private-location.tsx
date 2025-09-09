@@ -102,7 +102,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             }
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }

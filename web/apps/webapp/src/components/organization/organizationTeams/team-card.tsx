@@ -39,7 +39,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -54,7 +54,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         me {
           id
           preferredTeams {
-            uniqueId
+            id
           }
         }
       }
@@ -71,15 +71,19 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
           uniqueAlphanumericName
         }
         members {
-          organizationMember {
-            uniqueId
-            customer {
-              uniqueId
-              givenName
-              middleName
-              familyName
-              name
-              photoUrl
+          edges {
+            node {
+              organizationMember {
+                uniqueId
+                customer {
+                  id
+                  givenName
+                  middleName
+                  familyName
+                  name
+                  photoUrl
+                }
+              }
             }
           }
         }
@@ -114,7 +118,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         customer {
           id
           preferredTeams {
-            uniqueId
+            id
           }
         }
       }
@@ -127,7 +131,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         customer {
           id
           preferredTeams {
-            uniqueId
+            id
           }
         }
       }
@@ -141,7 +145,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(() => rootData.me?.preferredTeams.some((item) => item.uniqueId === teamDetails.id), [teamDetails.id, rootData.me?.preferredTeams]);
+  const isPreferred = useMemo(() => rootData.me?.preferredTeams.some((item) => item.id === teamDetails.id), [teamDetails.id, rootData.me?.preferredTeams]);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
 
@@ -329,7 +333,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
             <StackRow>
               <AvatarGroup max={5}>
                 {teammates.map((item) => (
-                  <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+                  <CustomerAvatar key={item.id} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
                 ))}
               </AvatarGroup>
             </StackRow>

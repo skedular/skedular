@@ -12,7 +12,7 @@ type AddCustomerPaymentMethodIntentPayload {
 type ConnectionOfCustomerEdge {
   pageInfo: PageInfo!
   edges: [CustomerEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type CustomerBillingDetails {
@@ -37,6 +37,12 @@ type CustomerBillingDetails {
 }
 
 type CustomerDetails {
+  organization: OrganizationDetails
+  preferredLocations: [LocationDetails!]!
+  preferredTeams: [TeamDetails!]!
+  preferredZones: [OrganizationTagDetails!]!
+  preferredCustomTags: [OrganizationTagDetails!]!
+  preferredResources: [ResourceDetails!]!
   createdAt: DateTime!
   email: String
   emails: [String!]!
@@ -58,12 +64,6 @@ type CustomerDetails {
   locale: String
   phoneNumber: String
   isOnboardingDone: Boolean!
-  defaultOrganization: Customer_OrganizationDetails
-  preferredLocations: [Customer_LocationDetails!]!
-  preferredTeams: [CustomerTeamDetails!]!
-  preferredZones: [Customer_OrganizationTagDetails!]!
-  preferredCustomTags: [Customer_OrganizationTagDetails!]!
-  preferredResources: [CustomerResourceDetails!]!
   paymentMethods: [CustomerPaymentMethod!]!
   billingDetails: CustomerBillingDetails
   hasAttachedPaymentMethod: Boolean!
@@ -99,34 +99,8 @@ type CustomerPaymentMethod {
   id: ID!
 }
 
-type CustomerResourceDetails {
-  uniqueId: ID!
-  name: String
-}
-
-type CustomerTeamDetails {
-  uniqueId: ID!
-  name: String
-  organization: Customer_OrganizationDetails
-}
-
-type Customer_LocationDetails {
-  uniqueId: ID!
-  name: String
-  organization: Customer_OrganizationDetails
-}
-
-type Customer_OrganizationDetails {
-  uniqueId: ID!
-  uniqueAlphanumericName: String
-  name: String
-  logoUrl: String
-}
-
-type Customer_OrganizationTagDetails {
-  uniqueId: ID!
-  name: String
-  color: String
+type LocationDetails {
+  id: ID!
 }
 
 type Mutation {
@@ -150,6 +124,14 @@ type Mutation {
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
 }
 
+type OrganizationDetails {
+  id: ID!
+}
+
+type OrganizationTagDetails {
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -160,6 +142,7 @@ type PageInfo {
 type Query {
   me: CustomerDetails! @cost(weight: "10")
   customer(id: String!): CustomerDetails @cost(weight: "10")
+  customerById(id: String!): CustomerDetails @lookup @internal @cost(weight: "10")
   customerVersion: Version!
   customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): ConnectionOfCustomerEdge! @cost(weight: "10")
 }
@@ -168,9 +151,17 @@ type RemoveCustomerPaymentMethodPayload {
   clientMutationId: String
 }
 
+type ResourceDetails {
+  id: ID!
+}
+
 type SubmitCustomerFeedbackPayload {
   id: ID!
   clientMutationId: String
+}
+
+type TeamDetails {
+  id: ID!
 }
 
 type Version {
@@ -352,6 +343,10 @@ enum OrderDirection {
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

@@ -7,6 +7,7 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -40,6 +41,15 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
         mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<BookingDetails?> BookingByIdAsync(
+        string id,
+        [Service] IBookingService bookingService,
+        CancellationToken cancellationToken) =>
+        await BookingAsync(id, bookingService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<BookingEdge>> BookingsAsync(

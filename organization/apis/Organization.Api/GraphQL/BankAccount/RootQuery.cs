@@ -2,6 +2,7 @@
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
@@ -18,6 +19,15 @@ public class RootQuery(IMapper mapper)
         [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await organizationBankAccountService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<OrganizationBankAccountDetails?> OrganizationBankAccountByIdAsync(
+        string id,
+        [Service] IOrganizationBankAccountService organizationBankAccountService,
+        CancellationToken cancellationToken) =>
+        await OrganizationBankAccountAsync(id, organizationBankAccountService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<OrganizationBankAccountEdge>> OrganizationBankAccountsAsync(

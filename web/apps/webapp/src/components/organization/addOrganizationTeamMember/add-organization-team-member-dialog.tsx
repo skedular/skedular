@@ -28,7 +28,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -58,24 +58,22 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
       fragment addOrganizationTeamMemberDialog_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment") {
-        organizationMembers(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
-          orderBy: $addTeamMemberDialogOrganizationMembersSortingValues
-        ) @connection(key: "addTeamMemberDialogQuery_organizationMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues)
+            @connection(key: "addTeamMemberDialogQuery_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -91,7 +89,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
         teamMember @appendNode(connections: $connectionIds, edgeTypeName: "TeamMemberDetails") {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -113,10 +111,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootData.organizationMembers ? rootData.organizationMembers.edges.map(({ node }) => node) : []),
-    [rootData.organizationMembers],
-  );
+  const customers = useMemo<OrganizationMemberDetails[]>(() => (rootData.organization ? rootData.organization.members.edges.map(({ node }) => node) : []), [rootData.organization]);
 
   const handleRefetch = useCallback(
     (peopleNameSearchText: string) => {
@@ -208,7 +203,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
                       const castedOption = (option as OrganizationMemberDetails).customer;
 
                       return (
-                        <li {...props} key={castedOption.uniqueId}>
+                        <li {...props} key={castedOption.id}>
                           <BodyIconTypography
                             label={getCustomerFullName(castedOption)}
                             startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}

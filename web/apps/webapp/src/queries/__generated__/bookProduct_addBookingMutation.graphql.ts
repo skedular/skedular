@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f0e3feb323ed243e4506c1f1653b305>>
+ * @generated SignedSource<<673a632b89d5ad6dfe00c9263aff221c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,41 +38,43 @@ export type bookProduct_addBookingMutation$variables = {
 export type bookProduct_addBookingMutation$data = {
   readonly addBooking: {
     readonly booking: {
+      readonly bookingResources: ReadonlyArray<{
+        readonly resource: {
+          readonly color: string | null | undefined;
+          readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+          readonly id: string;
+          readonly name: string;
+          readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+        };
+      }>;
       readonly from: any;
       readonly id: string;
       readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
+        readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
+        readonly id: string;
         readonly name: string;
-        readonly uniqueId: string;
       }>;
       readonly notes: string | null | undefined;
       readonly paymentMethod: {
         readonly name: string;
         readonly type: PaymentMethod;
       } | null | undefined;
-      readonly resources: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
       readonly type: {
         readonly name: string;
         readonly type: BookingType;
@@ -84,41 +86,43 @@ export type bookProduct_addBookingMutation$data = {
 export type bookProduct_addBookingMutation$rawResponse = {
   readonly addBooking: {
     readonly booking: {
+      readonly bookingResources: ReadonlyArray<{
+        readonly resource: {
+          readonly color: string | null | undefined;
+          readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+          readonly id: string;
+          readonly name: string;
+          readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+        };
+      }>;
       readonly from: any;
       readonly id: string;
       readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
+        readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
+        readonly id: string;
         readonly name: string;
-        readonly uniqueId: string;
       }>;
       readonly notes: string | null | undefined;
       readonly paymentMethod: {
         readonly name: string;
         readonly type: PaymentMethod;
       } | null | undefined;
-      readonly resources: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
       readonly type: {
         readonly name: string;
         readonly type: BookingType;
@@ -157,10 +161,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -168,15 +179,8 @@ v3 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v3/*: any*/)
 ],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
 v5 = {
   "alias": null,
   "args": null,
@@ -185,8 +189,8 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v4/*: any*/),
   (v2/*: any*/),
+  (v3/*: any*/),
   (v5/*: any*/)
 ],
 v7 = {
@@ -197,13 +201,7 @@ v7 = {
   "name": "booking",
   "plural": false,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -232,19 +230,19 @@ v7 = {
       "kind": "LinkedField",
       "name": "type",
       "plural": false,
-      "selections": (v3/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "concreteType": "Booking_CustomerDetails",
+      "concreteType": "CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
       "plural": true,
       "selections": [
-        (v4/*: any*/),
         (v2/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -279,13 +277,13 @@ v7 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Booking_OrganizationDetails",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
       "name": "involvedOrganizations",
       "plural": true,
       "selections": [
-        (v4/*: any*/),
-        (v2/*: any*/)
+        (v2/*: any*/),
+        (v3/*: any*/)
       ],
       "storageKey": null
     },
@@ -294,30 +292,41 @@ v7 = {
       "args": null,
       "concreteType": "BookingResourceDetails",
       "kind": "LinkedField",
-      "name": "resources",
+      "name": "bookingResources",
       "plural": true,
       "selections": [
-        (v4/*: any*/),
-        (v2/*: any*/),
-        (v5/*: any*/),
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_OrganizationCustomTagDetails",
+          "concreteType": "ResourceDetails",
           "kind": "LinkedField",
-          "name": "customTags",
-          "plural": true,
-          "selections": (v6/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Booking_OrganizationZoneDetails",
-          "kind": "LinkedField",
-          "name": "zones",
-          "plural": true,
-          "selections": (v6/*: any*/),
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            (v2/*: any*/),
+            (v3/*: any*/),
+            (v5/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagDetails",
+              "kind": "LinkedField",
+              "name": "customTags",
+              "plural": true,
+              "selections": (v6/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagDetails",
+              "kind": "LinkedField",
+              "name": "zones",
+              "plural": true,
+              "selections": (v6/*: any*/),
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -330,7 +339,7 @@ v7 = {
       "kind": "LinkedField",
       "name": "paymentMethod",
       "plural": false,
-      "selections": (v3/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
@@ -408,16 +417,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "43aac745fdfa241801b548b41c69cacc",
+    "cacheID": "129a8fe54d9973ee73fba41f30de2fec",
     "id": null,
     "metadata": {},
     "name": "bookProduct_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      invoiceEmailList\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      invoiceEmailList\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "06d091f057493a904d0563023ce280bb";
+(node as any).hash = "8f444d4fc539867816f4d88a2bf9c7e0";
 
 export default node;

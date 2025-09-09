@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28c997707cbdf486e02a86904e4b549a>>
+ * @generated SignedSource<<85544290efeae33ac2ebbe94ffc66dbd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -122,26 +122,26 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "totalCount",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v8 = [
-  (v7/*: any*/),
   (v6/*: any*/),
+  (v7/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -191,13 +191,7 @@ return {
         "name": "locations",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -214,12 +208,12 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
                   (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Location_OrganizationTagDetails",
+                    "concreteType": "OrganizationTagDetails",
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
@@ -229,7 +223,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Location_OrganizationTagDetails",
+                    "concreteType": "OrganizationTagDetails",
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
@@ -239,10 +233,10 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ResourceDetails",
+                    "concreteType": "ConnectionOfResourceEdge",
                     "kind": "LinkedField",
                     "name": "resources",
-                    "plural": true,
+                    "plural": false,
                     "selections": [
                       (v5/*: any*/)
                     ],
@@ -263,7 +257,7 @@ return {
                         "name": "formattedAddress",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -312,7 +306,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Location_OrganizationDetails",
+                    "concreteType": "OrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
@@ -323,7 +317,8 @@ return {
                         "kind": "ScalarField",
                         "name": "uniqueAlphanumericName",
                         "storageKey": null
-                      }
+                      },
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -473,12 +468,12 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Booking_LocationDetails",
+            "concreteType": "LocationDetails",
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
             "selections": [
-              (v7/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -488,16 +483,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2528227441c6c8c85859e6aec84fd7f9",
+    "cacheID": "ce994e5a0fec07ddfbd5bb62d1c0f7ff",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationUniqueAlphanumericName: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n  resources {\n    id\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        resources {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationUniqueAlphanumericName: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "54427292b4b950aff0d4de74fb08a465";
+(node as any).hash = "a72e6a75a37a09759a520e28dcc8f470";
 
 export default node;

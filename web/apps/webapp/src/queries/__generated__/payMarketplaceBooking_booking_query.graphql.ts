@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<364329c7b3ce5f2e655d56f5e393e988>>
+ * @generated SignedSource<<ee36cfa190efe1fb0139b97e121fd91a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,35 +18,52 @@ export type payMarketplaceBooking_booking_query$data = {
     readonly bookingCheckoutSession: {
       readonly checkoutUrl: string;
     } | null | undefined;
+    readonly bookingResources: ReadonlyArray<{
+      readonly resource: {
+        readonly color: string | null | undefined;
+        readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly id: string;
+          readonly name: string;
+        }>;
+        readonly id: string;
+        readonly name: string;
+        readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly id: string;
+          readonly name: string;
+        }>;
+      };
+    }>;
     readonly from: any;
     readonly id: string;
     readonly invoiceUrl: string | null | undefined;
     readonly involvedCustomers: ReadonlyArray<{
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
+      readonly id: string;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
       readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
     }>;
     readonly involvedLocations: ReadonlyArray<{
+      readonly id: string;
       readonly name: string;
-      readonly uniqueId: string;
     }>;
     readonly involvedOrganizations: ReadonlyArray<{
+      readonly id: string;
       readonly name: string;
-      readonly uniqueId: string;
     }>;
     readonly involvedTeams: ReadonlyArray<{
+      readonly id: string;
       readonly name: string;
-      readonly uniqueId: string;
     }>;
     readonly isPaymentRequired: boolean;
     readonly lineItems: ReadonlyArray<{
       readonly productVersion: {
+        readonly id: string;
         readonly name: string;
         readonly priceToDisplay: string;
-        readonly uniqueId: string;
       };
       readonly quantity: number;
     }>;
@@ -59,21 +76,6 @@ export type payMarketplaceBooking_booking_query$data = {
       readonly name: string;
       readonly type: PaymentStatus;
     };
-    readonly resources: ReadonlyArray<{
-      readonly color: string | null | undefined;
-      readonly customTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-      readonly name: string;
-      readonly uniqueId: string;
-      readonly zones: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-    }>;
     readonly taxAmountToDisplay: string;
     readonly totalAmountExcludeTaxToDisplay: string;
     readonly totalAmountToDisplay: string;
@@ -103,19 +105,19 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "id",
   "storageKey": null
 },
-v1 = [
-  (v0/*: any*/)
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "type",
   "storageKey": null
 },
+v2 = [
+  (v1/*: any*/)
+],
 v3 = {
   "alias": null,
   "args": null,
@@ -124,7 +126,7 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/),
+  (v0/*: any*/),
   (v3/*: any*/)
 ],
 v5 = {
@@ -135,12 +137,12 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v2/*: any*/),
+  (v0/*: any*/),
   (v3/*: any*/),
   (v5/*: any*/)
 ],
 v7 = [
-  (v0/*: any*/),
+  (v1/*: any*/),
   (v3/*: any*/)
 ];
 return {
@@ -178,13 +180,7 @@ return {
       "name": "booking",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -213,18 +209,18 @@ return {
           "kind": "LinkedField",
           "name": "type",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_CustomerDetails",
+          "concreteType": "CustomerDetails",
           "kind": "LinkedField",
           "name": "involvedCustomers",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
+            (v0/*: any*/),
             (v3/*: any*/),
             {
               "alias": null,
@@ -260,7 +256,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_OrganizationDetails",
+          "concreteType": "OrganizationDetails",
           "kind": "LinkedField",
           "name": "involvedOrganizations",
           "plural": true,
@@ -270,7 +266,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_LocationDetails",
+          "concreteType": "LocationDetails",
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
@@ -280,7 +276,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_TeamDetails",
+          "concreteType": "TeamDetails",
           "kind": "LinkedField",
           "name": "involvedTeams",
           "plural": true,
@@ -292,30 +288,41 @@ return {
           "args": null,
           "concreteType": "BookingResourceDetails",
           "kind": "LinkedField",
-          "name": "resources",
+          "name": "bookingResources",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/),
-            (v5/*: any*/),
             {
               "alias": null,
               "args": null,
-              "concreteType": "Booking_OrganizationCustomTagDetails",
+              "concreteType": "ResourceDetails",
               "kind": "LinkedField",
-              "name": "customTags",
-              "plural": true,
-              "selections": (v6/*: any*/),
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Booking_OrganizationZoneDetails",
-              "kind": "LinkedField",
-              "name": "zones",
-              "plural": true,
-              "selections": (v6/*: any*/),
+              "name": "resource",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                (v3/*: any*/),
+                (v5/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "customTags",
+                  "plural": true,
+                  "selections": (v6/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "zones",
+                  "plural": true,
+                  "selections": (v6/*: any*/),
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -349,7 +356,7 @@ return {
           "kind": "LinkedField",
           "name": "paymentMethod",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -402,12 +409,12 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Booking_ProductVersionDetails",
+              "concreteType": "ProductVersionDetails",
               "kind": "LinkedField",
               "name": "productVersion",
               "plural": false,
               "selections": [
-                (v2/*: any*/),
+                (v0/*: any*/),
                 (v3/*: any*/),
                 {
                   "alias": null,
@@ -482,6 +489,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0a0198a6ba13eb4852f55ae5549ccd2";
+(node as any).hash = "5de5e99a3fd93763070b526829100596";
 
 export default node;

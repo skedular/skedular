@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
@@ -19,6 +20,29 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<ProductDetails?> ProductAsync(string id, [Service] IProductService productService, CancellationToken cancellationToken) =>
         mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<ProductDetails?> ProductByIdAsync(
+        string id,
+        [Service] IProductService productService,
+        CancellationToken cancellationToken) =>
+        await ProductAsync(id, productService, cancellationToken);
+
+    [UseResolverScope]
+    public async Task<ProductVersionDetails?> ProductVersionAsync(string id, [Service] IProductVersionService productVersionService,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await productVersionService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<ProductVersionDetails?> ProductVersionByIdAsync(
+        string id,
+        [Service] IProductVersionService productVersionService,
+        CancellationToken cancellationToken) =>
+        await ProductVersionAsync(id, productVersionService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<ProductEdge>> ProductsAsync(

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e76e81411996cdb5ce39eea047f7c9ad>>
+ * @generated SignedSource<<b2198e8dcebc596ee19b409e703b6755>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationLocations_locations_availableOrganizationResources_query$data = {
   readonly availableResources: ReadonlyArray<{
     readonly location: {
-      readonly uniqueId: string;
+      readonly id: string;
     } | null | undefined;
   }>;
   readonly locations: {
@@ -24,8 +24,8 @@ export type organizationLocations_locations_availableOrganizationResources_query
         readonly canModify: boolean;
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
+          readonly id: string;
+          readonly name: string;
         }>;
         readonly hasFutureBooking: boolean;
         readonly id: string;
@@ -36,18 +36,18 @@ export type organizationLocations_locations_availableOrganizationResources_query
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;
-        readonly resources: ReadonlyArray<{
-          readonly id: string;
-        }>;
+        readonly resources: {
+          readonly totalCount: number;
+        };
         readonly zones: ReadonlyArray<{
           readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
+          readonly id: string;
+          readonly name: string;
         }>;
         readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationLocations_locations_availableOrganizationResources_query";
 };
@@ -81,26 +81,26 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "totalCount",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "name",
   "storageKey": null
 },
 v7 = [
-  (v6/*: any*/),
   (v5/*: any*/),
+  (v6/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -194,13 +194,7 @@ return {
       "name": "__organizationLocations_locations_connection",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
+        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -217,12 +211,12 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v4/*: any*/),
                 (v5/*: any*/),
+                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
+                  "concreteType": "OrganizationTagDetails",
                   "kind": "LinkedField",
                   "name": "customTags",
                   "plural": true,
@@ -232,7 +226,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
+                  "concreteType": "OrganizationTagDetails",
                   "kind": "LinkedField",
                   "name": "zones",
                   "plural": true,
@@ -242,10 +236,10 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "ResourceDetails",
+                  "concreteType": "ConnectionOfResourceEdge",
                   "kind": "LinkedField",
                   "name": "resources",
-                  "plural": true,
+                  "plural": false,
                   "selections": [
                     (v4/*: any*/)
                   ],
@@ -293,7 +287,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Location_OrganizationDetails",
+                  "concreteType": "OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,
@@ -404,12 +398,12 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Booking_LocationDetails",
+          "concreteType": "LocationDetails",
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
           "selections": [
-            (v6/*: any*/)
+            (v5/*: any*/)
           ],
           "storageKey": null
         }
@@ -422,6 +416,6 @@ return {
 };
 })();
 
-(node as any).hash = "54427292b4b950aff0d4de74fb08a465";
+(node as any).hash = "a72e6a75a37a09759a520e28dcc8f470";
 
 export default node;

@@ -1,4 +1,5 @@
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -6,17 +7,27 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("BookingResourceDetails")]
 public class BookingResourceDetails
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("inactive")] public bool Inactive { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("capacity")] public int Capacity { get; set; }
+    [GraphQLName("resourceId")] [ID] public string ResourceId { get; set; } = string.Empty;
+    [GraphQLName("locationId")] public string? LocationId { get; set; }
+    [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
+}
 
-    [GraphQLName("requireBookingApproval")]
-    public bool RequireBookingApproval { get; set; }
+[ObjectType<BookingResourceDetails>]
+public static partial class BookingResourceDetailsType
+{
+    static partial void Configure(IObjectTypeDescriptor<BookingResourceDetails> descriptor)
+    {
+        descriptor.Ignore(item => item.ResourceId);
+        descriptor.Ignore(item => item.LocationId);
+        descriptor.Ignore(item => item.CustomerIds);
+    }
 
-    [GraphQLName("location")] public LocationDetails? Location { get; set; }
-    [GraphQLName("customTags")] public IEnumerable<OrganizationCustomTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public IEnumerable<OrganizationZoneDetails> Zones { get; set; } = [];
-    [GraphQLName("customers")] public IEnumerable<CustomerDetails> Customers { get; set; } = [];
+    public static ResourceDetails GetResource([Parent] BookingResourceDetails item) => new(item.ResourceId);
+
+    public static LocationDetails? GetLocation([Parent] BookingResourceDetails item) => string.IsNullOrWhiteSpace(item.LocationId)
+        ? null
+        : new LocationDetails(item.LocationId);
+
+    public static IEnumerable<CustomerDetails> GetCustomers([Parent] BookingResourceDetails item) =>
+        item.CustomerIds.Select(id => new CustomerDetails(id));
 }

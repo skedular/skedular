@@ -17,15 +17,15 @@ namespace Marketplace.Api.Services;
 public interface IProductService
 {
     Task<Product> AddAsync(
-        string? productId,
+        string? id,
         string? organizationId,
         string? organizationUniqueAlphanumericName,
         ProductVersion productVersion,
         CancellationToken cancellationToken);
 
-    Task<Product> UpdateAsync(string productId, ProductVersion productVersion, CancellationToken cancellationToken);
+    Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken);
     Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken);
-    Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken);
+    Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
@@ -46,7 +46,7 @@ public class ProductService(
     IMapper mapper) : IProductService
 {
     public async Task<Product> AddAsync(
-        string? productId,
+        string? id,
         string? organizationId,
         string? organizationUniqueAlphanumericName,
         ProductVersion productVersion,
@@ -55,9 +55,9 @@ public class ProductService(
         Validate(productVersion);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        if (!string.IsNullOrWhiteSpace(productId))
+        if (!string.IsNullOrWhiteSpace(id))
         {
-            var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
+            var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken);
             if (existingProduct is not null)
             {
                 if (!string.IsNullOrWhiteSpace(organizationId))
@@ -84,7 +84,7 @@ public class ProductService(
         }
         else
         {
-            productId = randomHelper.Generate();
+            id = randomHelper.Generate();
         }
 
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
@@ -116,7 +116,7 @@ public class ProductService(
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
         var productEntity = mapper.MapTo(
-            new Product { Id = productId, Inactive = true },
+            new Product { Id = id, Inactive = true },
             productVersion,
             existingOrganization,
             productTags,
@@ -135,13 +135,13 @@ public class ProductService(
         return product;
     }
 
-    public async Task<Product> UpdateAsync(string productId, ProductVersion productVersion, CancellationToken cancellationToken)
+    public async Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(productId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
         Validate(productVersion);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
+        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound();
 
         return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
     }
@@ -167,11 +167,11 @@ public class ProductService(
         return deletedProducts;
     }
 
-    public async Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken)
+    public async Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(productId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
+        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken);
         return existingProduct is null ? null : mapper.MapTo(existingProduct);
     }
 

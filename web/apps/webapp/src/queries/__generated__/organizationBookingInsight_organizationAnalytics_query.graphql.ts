@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<367044a669ee7ebf9ed43b929d76ac82>>
+ * @generated SignedSource<<7466a834cabe2a70e37a99f18adfe629>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,13 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationBookingInsight_organizationAnalytics_query$data = {
-  readonly organizationAnalytics: {
-    readonly dailyBookingsTotals: ReadonlyArray<{
-      readonly date: any;
-      readonly total: number;
-    }>;
+  readonly organization: {
+    readonly analytics: {
+      readonly dailyBookingsTotals: ReadonlyArray<{
+        readonly date: any;
+        readonly total: number;
+      }>;
+    };
   } | null | undefined;
   readonly " $fragmentType": "organizationBookingInsight_organizationAnalytics_query";
 };
@@ -56,45 +58,57 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
           "name": "uniqueAlphanumericName",
           "variableName": "organizationUniqueAlphanumericName"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
         }
       ],
-      "concreteType": "OrganizationAnalytics",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "organizationAnalytics",
+      "name": "organization",
       "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "concreteType": "OrganizationDailyBookingsTotal",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "to"
+            }
+          ],
+          "concreteType": "OrganizationAnalytics",
           "kind": "LinkedField",
-          "name": "dailyBookingsTotals",
-          "plural": true,
+          "name": "analytics",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "total",
+              "concreteType": "OrganizationDailyBookingsTotal",
+              "kind": "LinkedField",
+              "name": "dailyBookingsTotals",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "date",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "total",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -108,6 +122,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b24c4a49ea23e76a5046a31237324d07";
+(node as any).hash = "a0c6555f8b8a587e9ac9656458787b7c";
 
 export default node;

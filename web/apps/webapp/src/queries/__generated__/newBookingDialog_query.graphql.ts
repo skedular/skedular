@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfc3f771bdf307d392b741414e7b1b92>>
+ * @generated SignedSource<<59146f90babf51cb7993637fec99c7d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type newBookingDialog_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly me: {
     readonly id: string;

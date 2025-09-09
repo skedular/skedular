@@ -23,19 +23,16 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
   const rootData = useFragment<multipleChoicesProductTags_query$key>(
     graphql`
       fragment multipleChoicesProductTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        productTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
-          orderBy: $multipleChoicesProductTagsSortingValues
-        ) @connection(key: "multipleChoicesProductTags_productTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          productTags(first: $count, after: $cursor, orderBy: $multipleChoicesProductTagsSortingValues) @connection(key: "multipleChoicesProductTags_productTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -44,8 +41,8 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
     rootDataRelay,
   );
 
-  const productTags = useMemo<ProductTagDetails[]>(() => rootData.productTags.edges.map(({ node }) => node), [rootData.productTags]);
-  const connectionIds = useMemo(() => [rootData.productTags.__id], [rootData.productTags]);
+  const productTags = useMemo<ProductTagDetails[]>(() => (rootData.organization ? rootData.organization.productTags.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.productTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ProductTagDetails>();
 
   if (productTags.length === 0) {

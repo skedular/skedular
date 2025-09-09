@@ -23,19 +23,16 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
   const rootData = useFragment<multipleChoicesCustomTags_query$key>(
     graphql`
       fragment multipleChoicesCustomTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        customTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
-          orderBy: $multipleChoicesCustomTagsSortingValues
-        ) @connection(key: "multipleChoicesCustomTags_customTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          customTags(first: $count, after: $cursor, orderBy: $multipleChoicesCustomTagsSortingValues) @connection(key: "multipleChoicesCustomTags_customTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -44,8 +41,8 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
     rootDataRelay,
   );
 
-  const customTags = useMemo<CustomTagDetails[]>(() => rootData.customTags.edges.map(({ node }) => node), [rootData.customTags]);
-  const connectionIds = useMemo(() => [rootData.customTags.__id], [rootData.customTags]);
+  const customTags = useMemo<CustomTagDetails[]>(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.customTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<CustomTagDetails>();
 
   if (customTags.length === 0) {

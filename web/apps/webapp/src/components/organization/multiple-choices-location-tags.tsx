@@ -23,19 +23,16 @@ const MultipleChoicesLocationTags = ({ rootDataRelay, name, required, organizati
   const rootData = useFragment<multipleChoicesLocationTags_query$key>(
     graphql`
       fragment multipleChoicesLocationTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        locationTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }
-          orderBy: $multipleChoicesLocationTagsSortingValues
-        ) @connection(key: "multipleChoicesLocationTags_locationTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          locationTags(first: $count, after: $cursor, orderBy: $multipleChoicesLocationTagsSortingValues) @connection(key: "multipleChoicesLocationTags_locationTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -44,8 +41,11 @@ const MultipleChoicesLocationTags = ({ rootDataRelay, name, required, organizati
     rootDataRelay,
   );
 
-  const locationTags = useMemo<LocationTagDetails[]>(() => rootData.locationTags.edges.map(({ node }) => node), [rootData.locationTags]);
-  const connectionIds = useMemo(() => [rootData.locationTags.__id], [rootData.locationTags]);
+  const locationTags = useMemo<LocationTagDetails[]>(
+    () => (rootData.organization ? rootData.organization.locationTags.edges.map(({ node }) => node) : []),
+    [rootData.organization],
+  );
+  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.locationTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<LocationTagDetails>();
 
   if (locationTags.length === 0) {

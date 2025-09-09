@@ -19,14 +19,16 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<customTagSelector_allCustomTags_query$key>(
     graphql`
       fragment customTagSelector_allCustomTags_query on Query {
-        customTags(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $customTagsSortingValues) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          customTags(orderBy: $customTagsSortingValues) {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -35,7 +37,7 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const allItems = useMemo(() => (rootData.customTags?.edges ? rootData.customTags.edges.map(({ node }) => node) : []), [rootData.customTags]);
+  const allItems = useMemo(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
   const [id, setId] = useState<string>(allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {

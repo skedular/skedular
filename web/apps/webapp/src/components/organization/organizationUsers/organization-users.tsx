@@ -56,10 +56,14 @@ const RootQuery = graphql`
           id
           name
           members {
-            organizationMember {
-              uniqueId
-              customer {
-                uniqueId
+            edges {
+              node {
+                organizationMember {
+                  uniqueId
+                  customer {
+                    id
+                  }
+                }
               }
             }
           }
@@ -74,7 +78,7 @@ const RootQuery = graphql`
 `;
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -104,25 +108,26 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
       fragment organizationUsers_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationUsers_organizationUsers_refetchableFragment") {
-        organizationMembers(first: $count, after: $cursor, where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText })
-          @connection(key: "organizationMembers_organizationMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                email
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
-                phoneNumber
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }) @connection(key: "organizationMembers_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  email
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                  phoneNumber
+                }
+                status
+                role
               }
-              status
-              role
             }
           }
         }
@@ -137,7 +142,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
         members {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -169,7 +174,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
         member {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -206,31 +211,36 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
   ];
 
   const memberDetails = useMemo(
-    () => rootDataOrganizationUsers.organizationMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
-    [selectedMemberId, rootDataOrganizationUsers.organizationMembers],
+    () => rootDataOrganizationUsers.organization?.members?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
+    [selectedMemberId, rootDataOrganizationUsers.organization?.members],
   );
-  const connectionIds = useMemo(() => [rootDataOrganizationUsers.organizationMembers.__id], [rootDataOrganizationUsers.organizationMembers]);
+  const connectionIds = useMemo(
+    () => (rootDataOrganizationUsers.organization ? [rootDataOrganizationUsers.organization.members.__id] : []),
+    [rootDataOrganizationUsers.organization],
+  );
   const members = useMemo(() => {
-    const members = rootDataOrganizationUsers.organizationMembers.edges
-      .map(({ node }) => node)
-      .sort((a, b) => {
-        const name1 = getCustomerFullName(a.customer);
-        const name2 = getCustomerFullName(b.customer);
+    const members = rootDataOrganizationUsers.organization
+      ? rootDataOrganizationUsers.organization.members.edges
+          .map(({ node }) => node)
+          .sort((a, b) => {
+            const name1 = getCustomerFullName(a.customer);
+            const name2 = getCustomerFullName(b.customer);
 
-        return name1.localeCompare(name2);
-      })
-      .map((member) => {
-        const teams = rootData.teams
-          ? rootData.teams.edges
-              .map(({ node }) => node)
-              .filter((item) => item.members.some(({ organizationMember }) => organizationMember?.customer.uniqueId === member.customer.uniqueId))
-          : [];
+            return name1.localeCompare(name2);
+          })
+          .map((member) => {
+            const teams = rootData.teams
+              ? rootData.teams.edges
+                  .map(({ node }) => node)
+                  .filter((item) => item.members.edges.map(({ node }) => node).some(({ organizationMember }) => organizationMember?.customer.id === member.customer.id))
+              : [];
 
-        return {
-          ...member,
-          teams,
-        };
-      });
+            return {
+              ...member,
+              teams,
+            };
+          })
+      : [];
 
     return members.filter((member) => {
       if (teamIds.length === 0) {
@@ -239,7 +249,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
 
       return member.teams.some((team) => teamIds.includes(team.id));
     });
-  }, [rootData.teams, rootDataOrganizationUsers.organizationMembers, teamIds]);
+  }, [rootData.teams, rootDataOrganizationUsers.organization, teamIds]);
 
   const handleRefetchOrganizationUsers = useCallback(
     (peopleNameSearchText: string) => {
@@ -397,7 +407,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
           return;
         }
 
-        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, memberDetails.customer.uniqueId));
+        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, memberDetails.customer.id));
         break;
 
       case MoreActionsMenuOptionType.ViewUserBookings:
@@ -405,7 +415,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { customerId: memberDetails.customer.uniqueId }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { customerId: memberDetails.customer.id }));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:

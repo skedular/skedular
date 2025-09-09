@@ -131,51 +131,12 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities),
             BillingDetails = MapToGraphQl(src.BillingDetails),
             IsOnboardingDone = src.IsOnboardingDone,
-            DefaultOrganization = src.DefaultOrganization is null
-                ? null
-                : new OrganizationDetails
-                {
-                    UniqueId = src.DefaultOrganization.Id,
-                    UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName,
-                    Name = src.DefaultOrganization.Name,
-                    LogoUrl = src.DefaultOrganization.LogoUrl
-                },
-            PreferredLocations = src.PreferredLocations.Select(item => new LocationDetails
-            {
-                UniqueId = item.Id,
-                Name = item.Name,
-                Organization = item.Organization is null
-                    ? null
-                    : new OrganizationDetails
-                    {
-                        UniqueId = item.Organization.Id,
-                        UniqueAlphanumericName = item.Organization.UniqueAlphanumericName,
-                        Name = item.Organization.Name,
-                        LogoUrl = item.Organization.LogoUrl
-                    }
-            }),
-            PreferredZones = src.PreferredOrganizationTags
-                .Where(item => item.Type == OrganizationTagType.Zone)
-                .Select(item => new OrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color }),
-            PreferredCustomTags = src.PreferredOrganizationTags
-                .Where(item => item.Type == OrganizationTagType.Custom)
-                .Select(item => new OrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color }),
-            PreferredResources = src.PreferredResources
-                .Select(item => new CustomerResourceDetails { UniqueId = item.Id, Name = item.Name }),
-            PreferredTeams = src.PreferredTeams.Select(item => new CustomerTeamDetails
-            {
-                UniqueId = item.Id,
-                Name = item.Name,
-                Organization = item.Organization is null
-                    ? null
-                    : new OrganizationDetails
-                    {
-                        UniqueId = item.Organization.Id,
-                        UniqueAlphanumericName = item.Organization.UniqueAlphanumericName,
-                        Name = item.Organization.Name,
-                        LogoUrl = item.Organization.LogoUrl
-                    }
-            }),
+            DefaultOrganizationId = src.DefaultOrganization?.Id,
+            PreferredLocationIds = src.PreferredLocations.Select(item => item.Id),
+            PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
+            PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
+            PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
+            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id),
             PaymentMethods = MapTo(src.StripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
         };

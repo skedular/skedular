@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0d11d940eae5c7fe6d00494c176a60a>>
+ * @generated SignedSource<<adad8395defd798ceead17ce2707d465>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,17 +15,19 @@ export type floorPlans_bookings_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly bookingResources: ReadonlyArray<{
+          readonly resource: {
+            readonly id: string;
+          };
+        }>;
         readonly id: string;
         readonly involvedCustomers: ReadonlyArray<{
-          readonly uniqueId: string;
-        }>;
-        readonly resources: ReadonlyArray<{
-          readonly uniqueId: string;
+          readonly id: string;
         }>;
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "floorPlans_bookings_query";
 };
@@ -40,14 +42,15 @@ const node: ReaderFragment = (function(){
 var v0 = [
   "bookings"
 ],
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  }
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -158,21 +161,15 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Booking_CustomerDetails",
+                  "concreteType": "CustomerDetails",
                   "kind": "LinkedField",
                   "name": "involvedCustomers",
                   "plural": true,
-                  "selections": (v1/*: any*/),
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -180,9 +177,20 @@ return {
                   "args": null,
                   "concreteType": "BookingResourceDetails",
                   "kind": "LinkedField",
-                  "name": "resources",
+                  "name": "bookingResources",
                   "plural": true,
-                  "selections": (v1/*: any*/),
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "ResourceDetails",
+                      "kind": "LinkedField",
+                      "name": "resource",
+                      "plural": false,
+                      "selections": (v2/*: any*/),
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -256,6 +264,6 @@ return {
 };
 })();
 
-(node as any).hash = "14c38a524a386e251c95b9eb3fc9c394";
+(node as any).hash = "d6fdaa896360779039d39b7869728546";
 
 export default node;

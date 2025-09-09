@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0184e726dd6d72597b4840610dba8210>>
+ * @generated SignedSource<<d367cd116cbd736fb68c9e00a741f5dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,23 +11,25 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationUserSelector_organizationMembers_query$data = {
-  readonly organizationMembers: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly customer: {
-          readonly familyName: string | null | undefined;
-          readonly givenName: string | null | undefined;
-          readonly middleName: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly photoUrl: string | null | undefined;
-          readonly uniqueId: string;
+  readonly organization: {
+    readonly members: {
+      readonly __id: string;
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly customer: {
+            readonly familyName: string | null | undefined;
+            readonly givenName: string | null | undefined;
+            readonly id: string;
+            readonly middleName: string | null | undefined;
+            readonly name: string | null | undefined;
+            readonly photoUrl: string | null | undefined;
+          };
+          readonly id: string;
         };
-        readonly id: string;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
+      }>;
+      readonly totalCount: number;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "organizationUserSelector_organizationMembers_query";
 };
 export type organizationUserSelector_organizationMembers_query$key = {
@@ -35,7 +37,15 @@ export type organizationUserSelector_organizationMembers_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationUserSelector_organizationMembers_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -59,109 +69,109 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "organizationMembersSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "peopleNameSearchText"
-            },
-            {
-              "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
         }
       ],
-      "concreteType": "ConnectionOfOrganizationMemberEdge",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "organizationMembers",
+      "name": "organization",
       "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationMemberEdge",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "organizationMembersSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "peopleNameSearchText"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "ConnectionOfOrganizationMemberEdge",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "members",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationMemberDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationMemberEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Organization_CustomerDetails",
+                  "concreteType": "OrganizationMemberDetails",
                   "kind": "LinkedField",
-                  "name": "customer",
+                  "name": "node",
                   "plural": false,
                   "selections": [
+                    (v0/*: any*/),
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
-                      "name": "uniqueId",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "givenName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "middleName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "familyName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "photoUrl",
+                      "concreteType": "CustomerDetails",
+                      "kind": "LinkedField",
+                      "name": "customer",
+                      "plural": false,
+                      "selections": [
+                        (v0/*: any*/),
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "name",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "givenName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "middleName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "familyName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "photoUrl",
+                          "storageKey": null
+                        }
+                      ],
                       "storageKey": null
                     }
                   ],
@@ -169,21 +179,21 @@ const node: ReaderFragment = {
                 }
               ],
               "storageKey": null
+            },
+            {
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -192,7 +202,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "445c6581f2aa562be24bc2feac9b45d8";
+(node as any).hash = "200b867fdd1948986afc342222de2f25";
 
 export default node;

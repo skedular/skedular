@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f069675d1dc6d62e9212a502f0a23223>>
+ * @generated SignedSource<<47206c3ff1a0f2ee2e5bf9e446e9b0a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -97,8 +97,8 @@ export type addPrivateLocation_addLocationMutation$data = {
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly name: string;
       readonly primaryFeatureImage: {
@@ -128,8 +128,8 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly name: string;
       readonly primaryFeatureImage: {
@@ -170,10 +170,17 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -196,7 +203,7 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -219,14 +226,8 @@ v3 = [
         "name": "location",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -256,7 +257,7 @@ v3 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -275,7 +276,7 @@ v3 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -285,7 +286,7 @@ v3 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v2/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -294,19 +295,13 @@ v3 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              },
               (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -330,7 +325,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateLocation_addLocationMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -339,19 +334,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addPrivateLocation_addLocationMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "fc731d5414e052c41a394c2772247625",
+    "cacheID": "0d23d11d8f32b03a72b014d0c836f0fc",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f07311483ce9272535e10a6ab2dd8090";
+(node as any).hash = "6a29a675934f00b149f664efc718a91d";
 
 export default node;

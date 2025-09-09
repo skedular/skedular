@@ -42,7 +42,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -55,19 +55,19 @@ type LocationDetails = {
 };
 
 type CustomTagDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ZoneDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ResourceDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
@@ -125,7 +125,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
               until
               notes
               involvedCustomers {
-                uniqueId
+                id
                 name
                 givenName
                 middleName
@@ -133,26 +133,28 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
                 photoUrl
               }
               involvedLocations {
-                uniqueId
+                id
                 name
               }
               involvedTeams {
-                uniqueId
+                id
                 name
               }
-              resources {
-                uniqueId
-                name
-                color
-                customTags {
-                  uniqueId
+              bookingResources {
+                resource {
+                  id
                   name
                   color
-                }
-                zones {
-                  uniqueId
-                  name
-                  color
+                  customTags {
+                    id
+                    name
+                    color
+                  }
+                  zones {
+                    id
+                    name
+                    color
+                  }
                 }
               }
               ...myBookingCard_BookingDetails
@@ -189,7 +191,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
 
   const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
   const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
-  const myBookings = useMemo(() => bookings.filter((booking) => booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)), [bookings, rootData.me?.id]);
+  const myBookings = useMemo(() => bookings.filter((booking) => booking.involvedCustomers.some((item) => item.id === rootData.me?.id)), [bookings, rootData.me?.id]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
 
@@ -301,19 +303,19 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
   };
 
   const rows: RowType[] = myBookings.map((myBooking) => {
-    const customTags = myBooking.resources
-      .flatMap(({ customTags }) => customTags)
+    const customTags = myBooking.bookingResources
+      .flatMap(({ resource }) => resource.customTags)
       .reduce((acc: CustomTagDetails[], customTag) => {
-        if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+        if (!acc.some((item) => item.id === customTag.id)) {
           acc.push(customTag);
         }
 
         return acc;
       }, []);
-    const zones = myBooking.resources
-      .flatMap(({ zones }) => zones)
+    const zones = myBooking.bookingResources
+      .flatMap(({ resource }) => resource.zones)
       .reduce((acc: ZoneDetails[], zone) => {
-        if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+        if (!acc.some((item) => item.id === zone.id)) {
           acc.push(zone);
         }
 
@@ -325,8 +327,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       groupedBookingsByFromDate[key]
         ?.filter(
           (booking) =>
-            booking.involvedCustomers.some((item) => item.uniqueId !== rootData.me?.id) &&
-            booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
+            booking.involvedCustomers.some((item) => item.id !== rootData.me?.id) &&
+            booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.id === item2.id)),
         )
         .flatMap((booking) => booking.involvedCustomers) ?? [];
 
@@ -334,7 +336,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       id: myBooking.id,
       location: myBooking.involvedLocations.length > 0 ? myBooking.involvedLocations[0] : null,
       team: myBooking.involvedTeams.length > 0 ? myBooking.involvedTeams[0] : null,
-      resources: myBooking.resources,
+      resources: myBooking.bookingResources.map(({ resource }) => resource),
       customTags,
       zones,
       teammates,
@@ -372,9 +374,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       field: 'resources',
       headerName: 'Resources',
       editable: false,
-      renderCell: (params) => (
-        <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))} hideIcon />
-      ),
+      renderCell: (params) => <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.id, name: resource.name, color: resource.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -382,7 +382,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       field: 'customTags',
       headerName: 'Tags',
       editable: false,
-      renderCell: (params) => <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
+      renderCell: (params) => <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.id, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -390,7 +390,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
+      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.id, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -401,7 +401,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
       renderCell: (params) => (
         <AvatarGroup max={5}>
           {params.value?.map((customer: CustomerDetails) => (
-            <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+            <CustomerAvatar key={customer?.id} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
           ))}
         </AvatarGroup>
       ),
@@ -449,8 +449,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
                 groupedBookingsByFromDate[key]
                   ?.filter(
                     (booking) =>
-                      booking.involvedCustomers.some((item) => item.uniqueId !== rootData.me?.id) &&
-                      booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
+                      booking.involvedCustomers.some((item) => item.id !== rootData.me?.id) &&
+                      booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.id === item2.id)),
                   )
                   .flatMap((booking) => booking.involvedCustomers) ?? [];
 

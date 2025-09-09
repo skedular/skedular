@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
@@ -18,6 +19,15 @@ public class RootQuery(IMapper mapper)
         [Service] IFloorPlanService floorPlanService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<FloorPlanDetails?> FloorPlanByIdAsync(
+        string id,
+        [Service] IFloorPlanService floorPlanService,
+        CancellationToken cancellationToken) =>
+        await FloorPlanAsync(id, floorPlanService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<FloorPlanEdge>> FloorPlansAsync(

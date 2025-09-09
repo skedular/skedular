@@ -40,10 +40,9 @@ public interface IOrganizationService
         string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-
-    Task<Shared.Models.Organization?> GetByUniqueAlphanumericNameAsync(
-        string uniqueAlphanumericName,
+    Task<Shared.Models.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
@@ -301,32 +300,14 @@ public class OrganizationService(
         return deletedOrganization;
     }
 
-    public async Task<Shared.Models.Organization?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
-    {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken);
-        if (organization is null)
-        {
-            return null;
-        }
-
-        Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
-        }
-
-        return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
-    }
-
-    public async Task<Shared.Models.Organization?> GetByUniqueAlphanumericNameAsync(
-        string uniqueAlphanumericName,
+    public async Task<Shared.Models.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-            null,
-            uniqueAlphanumericName,
-            cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, cancellationToken);
         if (organization is null)
         {
             return null;

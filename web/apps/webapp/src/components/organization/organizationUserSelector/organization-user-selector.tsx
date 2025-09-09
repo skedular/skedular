@@ -17,7 +17,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -31,22 +31,21 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, 
   const rootDataOrganizationMembers = useFragment<organizationUserSelector_organizationMembers_query$key>(
     graphql`
       fragment organizationUserSelector_organizationMembers_query on Query {
-        organizationMembers(
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
-          orderBy: $organizationMembersSortingValues
-        ) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues) {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -58,8 +57,8 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, 
 
   const [id, setId] = useState<string>(defaultValue ?? allId);
   const customers = useMemo<CustomerDetails[]>(
-    () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node.customer) : []),
-    [rootDataOrganizationMembers.organizationMembers],
+    () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization?.members.edges.map(({ node }) => node.customer) : []),
+    [rootDataOrganizationMembers.organization?.members],
   );
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
@@ -75,7 +74,7 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, 
       onChange={handleChanged}
       size="small"
       renderValue={(selectedId) => {
-        const selectedItem = customers.find((item) => item.uniqueId === selectedId);
+        const selectedItem = customers.find((item) => item.id === selectedId);
         if (selectedItem) {
           return (
             <StackRow>
@@ -102,7 +101,7 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, 
       </MenuItem>
 
       {customers.map((item) => (
-        <MenuItem key={item.uniqueId} value={item.uniqueId}>
+        <MenuItem key={item.id} value={item.id}>
           <BodyIconTypography startElement={<CustomerAvatar photo={{ url: item.photoUrl }} name={item} size="small" />} label={getCustomerFullName(item)} />
         </MenuItem>
       ))}

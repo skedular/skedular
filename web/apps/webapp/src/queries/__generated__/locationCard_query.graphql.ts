@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25da9e09cd37a6d83f96f5c542cc80e3>>
+ * @generated SignedSource<<a63155a5018b241b628df089ef6afeb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type locationCard_query$data = {
   readonly me: {
     readonly id: string;
     readonly preferredLocations: ReadonlyArray<{
-      readonly uniqueId: string;
+      readonly id: string;
     }>;
   };
   readonly " $fragmentType": "locationCard_query";
@@ -24,7 +24,15 @@ export type locationCard_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"locationCard_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -38,28 +46,16 @@ const node: ReaderFragment = {
       "name": "me",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Customer_LocationDetails",
+          "concreteType": "LocationDetails",
           "kind": "LinkedField",
           "name": "preferredLocations",
           "plural": true,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "uniqueId",
-              "storageKey": null
-            }
+            (v0/*: any*/)
           ],
           "storageKey": null
         }
@@ -70,7 +66,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "84fb5f6aadd6565aa9e312e851f5de5b";
+(node as any).hash = "c318f4ff3a911657190684b31ba6ad31";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d5622cc1ba88cc03fb4f2c412953e2b>>
+ * @generated SignedSource<<88e617ee2c5751a5e01c6f7f821fc22f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,27 +15,27 @@ export type resourceCard_ResourceDetails$data = {
   readonly color: string | null | undefined;
   readonly customTags: ReadonlyArray<{
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly id: string;
   readonly inactive: boolean;
   readonly name: string;
   readonly productTags: ReadonlyArray<{
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly resourceType: {
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly tagType: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
+    readonly tagType: string;
   };
   readonly zones: ReadonlyArray<{
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly " $fragmentType": "resourceCard_ResourceDetails";
 };
@@ -49,27 +49,27 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "color",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "color",
   "storageKey": null
 },
 v3 = [
-  (v2/*: any*/),
   (v0/*: any*/),
-  (v1/*: any*/)
+  (v1/*: any*/),
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -77,14 +77,8 @@ return {
   "metadata": null,
   "name": "resourceCard_ResourceDetails",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     (v0/*: any*/),
+    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -92,7 +86,7 @@ return {
       "name": "inactive",
       "storageKey": null
     },
-    (v1/*: any*/),
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -103,7 +97,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
@@ -113,7 +107,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
@@ -123,7 +117,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "productTags",
       "plural": true,
@@ -133,14 +127,14 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "resourceType",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
         (v0/*: any*/),
         (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -157,6 +151,6 @@ return {
 };
 })();
 
-(node as any).hash = "3b9cb704dc9db66b387447aa549b30d0";
+(node as any).hash = "4f69d93a39b385547c17f6fff90a7634";
 
 export default node;

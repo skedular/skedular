@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4840e7be91ca6b3dc2ae8317f44029a1>>
+ * @generated SignedSource<<19267bae44ed33b10a9814c78e936010>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,7 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly requireConsecutiveDays: boolean;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationMarketplaceSetup_products_query";
 };
@@ -266,7 +266,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Marketplace_OrganizationDetails",
+                  "concreteType": "OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,

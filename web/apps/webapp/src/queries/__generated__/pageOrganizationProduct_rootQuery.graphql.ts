@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9206daaeae8cf8d625164e49c1383509>>
+ * @generated SignedSource<<582658067c6eb01e26ee42cb34295e3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -90,22 +90,15 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v11 = [
-  (v9/*: any*/),
+v10 = [
+  (v6/*: any*/),
   (v5/*: any*/),
-  (v10/*: any*/)
+  (v9/*: any*/)
 ],
-v12 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -128,26 +121,14 @@ v12 = [
     "storageKey": null
   }
 ],
-v13 = {
-  "fields": [
-    {
-      "kind": "Variable",
-      "name": "organizationUniqueAlphanumericName",
-      "variableName": "organizationUniqueAlphanumericName"
-    }
-  ],
-  "kind": "ObjectValue",
-  "name": "where"
-},
-v14 = [
+v12 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesProductTagsSortingValues"
-  },
-  (v13/*: any*/)
+  }
 ],
-v15 = [
+v13 = [
   {
     "alias": null,
     "args": null,
@@ -173,7 +154,7 @@ v15 = [
         "selections": [
           (v6/*: any*/),
           (v5/*: any*/),
-          (v10/*: any*/),
+          (v9/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -232,17 +213,15 @@ v15 = [
     ]
   }
 ],
-v16 = [
-  "where",
+v14 = [
   "orderBy"
 ],
-v17 = [
+v15 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesLocationTagsSortingValues"
-  },
-  (v13/*: any*/)
+  }
 ];
 return {
   "fragment": {
@@ -391,32 +370,32 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v11/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v11/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Marketplace_OrganizationDetails",
+            "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
             "selections": [
-              (v9/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -461,7 +440,7 @@ return {
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v12/*: any*/),
+                "selections": (v11/*: any*/),
                 "storageKey": null
               },
               {
@@ -471,7 +450,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v12/*: any*/),
+                "selections": (v11/*: any*/),
                 "storageKey": null
               }
             ],
@@ -510,41 +489,59 @@ return {
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
-        "concreteType": "ConnectionOfOrganizationTagEdge",
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "uniqueAlphanumericName",
+            "variableName": "organizationUniqueAlphanumericName"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
-        "name": "productTags",
+        "name": "organization",
         "plural": false,
-        "selections": (v15/*: any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "concreteType": "ConnectionOfOrganizationTagEdge",
+            "kind": "LinkedField",
+            "name": "productTags",
+            "plural": false,
+            "selections": (v13/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "filters": (v14/*: any*/),
+            "handle": "connection",
+            "key": "multipleChoicesProductTags_productTags",
+            "kind": "LinkedHandle",
+            "name": "productTags"
+          },
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": (v15/*: any*/),
+            "concreteType": "ConnectionOfOrganizationTagEdge",
+            "kind": "LinkedField",
+            "name": "locationTags",
+            "plural": false,
+            "selections": (v13/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v15/*: any*/),
+            "filters": (v14/*: any*/),
+            "handle": "connection",
+            "key": "multipleChoicesLocationTags_locationTags",
+            "kind": "LinkedHandle",
+            "name": "locationTags"
+          }
+        ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v14/*: any*/),
-        "filters": (v16/*: any*/),
-        "handle": "connection",
-        "key": "multipleChoicesProductTags_productTags",
-        "kind": "LinkedHandle",
-        "name": "productTags"
-      },
-      {
-        "alias": null,
-        "args": (v17/*: any*/),
-        "concreteType": "ConnectionOfOrganizationTagEdge",
-        "kind": "LinkedField",
-        "name": "locationTags",
-        "plural": false,
-        "selections": (v15/*: any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v17/*: any*/),
-        "filters": (v16/*: any*/),
-        "handle": "connection",
-        "key": "multipleChoicesLocationTags_locationTags",
-        "kind": "LinkedHandle",
-        "name": "locationTags"
       },
       {
         "alias": null,
@@ -579,12 +576,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2d6161ca26e480dea8115c624d72ef1f",
+    "cacheID": "49268fc5bd295dfc8f50d5535a57fb7b",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProduct_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    productTags {\n      uniqueId\n      name\n      color\n    }\n    locationTags {\n      uniqueId\n      name\n      color\n    }\n    organization {\n      uniqueId\n    }\n    maxAllowedResourcesLockTimePaidViaCard\n    maxAllowedResourcesLockTimePaidViaBankTransfer\n    acceptedBookingPaymentMethods {\n      type\n    }\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    productTags {\n      id\n      name\n      color\n    }\n    locationTags {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    maxAllowedResourcesLockTimePaidViaCard\n    maxAllowedResourcesLockTimePaidViaBankTransfer\n    acceptedBookingPaymentMethods {\n      type\n    }\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationTags(orderBy: $multipleChoicesLocationTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

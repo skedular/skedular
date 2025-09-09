@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7129905d5c176834f9f8d6afbab1cb1e>>
+ * @generated SignedSource<<661439e5ffd3cbec8a2ebf19f2fb4002>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type singleChoiceOrganizationStripeConnectAccount_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "singleChoiceOrganizationStripeConnectAccount_query";
 };

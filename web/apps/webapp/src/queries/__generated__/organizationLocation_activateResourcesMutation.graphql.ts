@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86e7485f085d0855357a5d363d3346b9>>
+ * @generated SignedSource<<d30733d58ae9327e91a4f8c74023d1e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,27 +22,27 @@ export type organizationLocation_activateResourcesMutation$data = {
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly name: string;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       };
       readonly zones: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
+        readonly id: string;
+        readonly name: string;
       }>;
     }>;
   };
@@ -64,28 +64,29 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
-  (v1/*: any*/),
-  (v2/*: any*/)
-],
 v4 = [
+  (v1/*: any*/),
+  (v2/*: any*/),
+  (v3/*: any*/)
+],
+v5 = [
   {
     "alias": null,
     "args": [
@@ -108,15 +109,9 @@ v4 = [
         "name": "resources",
         "plural": true,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
           (v1/*: any*/),
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -134,41 +129,41 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationTagDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           }
         ],
@@ -184,7 +179,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_activateResourcesMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -193,19 +188,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_activateResourcesMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "12a32de147b1642fa525568e10c23aa8",
+    "cacheID": "4982dceffe5bb30f2d723c0645851aac",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_activateResourcesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_activateResourcesMutation(\n  $input: ActivateResourcesInput!\n) {\n  activateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_activateResourcesMutation(\n  $input: ActivateResourcesInput!\n) {\n  activateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      resourceType {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31f6eefd0160605e9696e06f33deb884";
+(node as any).hash = "4693ad6731103d1d8fea32f37b2e1f4b";
 
 export default node;

@@ -17,19 +17,23 @@ type CdnImageFile {
 type ConnectionOfTeamEdge {
   pageInfo: PageInfo!
   edges: [TeamEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfTeamJoinInvitationEdge {
   pageInfo: PageInfo!
   edges: [TeamJoinInvitationEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfTeamMemberEdge {
   pageInfo: PageInfo!
   edges: [TeamMemberEdge!]!
-  totalCount: Int
+  totalCount: Int!
+}
+
+type CustomerDetails {
+  id: ID!
 }
 
 type InvitationToJoinTeamPayload {
@@ -38,18 +42,22 @@ type InvitationToJoinTeamPayload {
 }
 
 type InviteCustomerToJoinTeamDetails {
+  createdBy: CustomerDetails!
+  invitee: CustomerDetails
   email: String
   status: TeamInvitationStatusDetails!
   role: TeamMemberRole!
   team: TeamDetails!
-  createdBy: Team_CustomerDetails!
-  invitee: Team_CustomerDetails
   id: ID!
 }
 
 type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
   invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
+}
+
+type LocationDetails {
+  id: ID!
 }
 
 type Mutation {
@@ -69,6 +77,10 @@ type Mutation {
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
 }
 
+type OrganizationDetails {
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -79,23 +91,23 @@ type PageInfo {
 type Query {
   teamInvitationStatuses: [TeamInvitationStatusDetails!]!
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
-  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput! orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
+  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   teamMemberRoles: [TeamMemberRole!]!
-  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   teamVersion: Version!
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
-  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
 }
 
 type TeamDetails {
+  organization: OrganizationDetails!
+  primaryLocation: LocationDetails
+  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   name: String!
   about: String
-  members: [TeamMemberDetails!]!
-  organization: Team_OrganizationDetails!
-  primaryLocation: Team_LocationDetails
   timezone: String
   hasFutureBooking: Boolean!
   canModify: Boolean!
@@ -121,9 +133,9 @@ type TeamJoinInvitationEdge {
 }
 
 type TeamMemberDetails {
+  customer: CustomerDetails!
   role: TeamMemberRole
   status: TeamMemberStatus!
-  customer: Team_CustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
   id: ID!
 }
@@ -149,42 +161,13 @@ type TeamMembersDetailsPayload {
 }
 
 type TeamOrganizationMemberDetails {
+  customer: CustomerDetails!
   uniqueId: ID!
-  customer: Team_CustomerDetails!
 }
 
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
-}
-
-type Team_CustomerDetails {
-  uniqueId: ID!
-  email: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  phoneNumber: String
-}
-
-type Team_LocationDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type Team_OrganizationDetails {
-  uniqueId: ID!
-  uniqueAlphanumericName: String
-  name: String!
-  logoUrl: String
 }
 
 type Version {
@@ -299,7 +282,6 @@ input TeamMemberOrderInput {
 }
 
 input TeamMemberWhereInput {
-  teamId: String!
   nameContains: String
 }
 
@@ -391,3 +373,7 @@ enum TeamOrderField {
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION

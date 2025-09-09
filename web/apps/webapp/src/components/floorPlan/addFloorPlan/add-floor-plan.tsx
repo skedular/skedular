@@ -66,35 +66,37 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
       fragment addFloorPlan_resources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "addFloorPlan_resources_refetchableFragment") {
-        resources(first: $count, after: $cursor, where: { locationId: $locationId, floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues)
-          @connection(key: "addFloorPlanResourcesQuery_resources") {
-          edges {
-            node {
-              id
-              name
-              inactive
-              color
-              capacity
-              customTags {
-                uniqueId
+        location(id: $locationId) {
+          resources(first: $count, after: $cursor, where: { floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues)
+            @connection(key: "addFloorPlanResourcesQuery_resources") {
+            edges {
+              node {
+                id
                 name
+                inactive
                 color
-              }
-              zones {
-                uniqueId
-                name
-                color
-              }
-              productTags {
-                uniqueId
-                name
-                color
-              }
-              resourceType {
-                uniqueId
-                name
-                color
-                tagType
+                capacity
+                customTags {
+                  id
+                  name
+                  color
+                }
+                zones {
+                  id
+                  name
+                  color
+                }
+                productTags {
+                  id
+                  name
+                  color
+                }
+                resourceType {
+                  id
+                  name
+                  color
+                  tagType
+                }
               }
             }
           }
@@ -139,7 +141,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
   const validateFloorPlanDetails = makeValidate(floorPlanSchema);
   const requiredFields = makeRequired(floorPlanSchema);
   const [image, setImage] = useState<FileUploadResponse>();
-  const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
+  const resources = useMemo(() => (rootDataResources.location ? rootDataResources.location.resources.edges.map(({ node }) => node) : []), [rootDataResources.location]);
   const [resourcePositions, setResourcePositions] = useState<Map<string, { x: number; y: number }>>(new Map<string, { x: number; y: number }>());
   const [draggingResourceId, setDraggingResourceId] = useState<string | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });

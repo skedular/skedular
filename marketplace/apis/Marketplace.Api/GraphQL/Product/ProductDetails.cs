@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
 namespace Marketplace.Api.GraphQL.Product;
@@ -42,13 +43,32 @@ public class ProductDetails : Node
     [GraphQLName("numberOfResourcesToBook")]
     public int NumberOfResourcesToBook { get; set; }
 
-    [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
-    [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
+    [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
+    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 
     [GraphQLName("latestProductVersionId")]
     public string LatestProductVersionId { get; set; } = string.Empty;
 
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[ObjectType<ProductDetails>]
+public static partial class ProductDetailsType
+{
+    static partial void Configure(IObjectTypeDescriptor<ProductDetails> descriptor)
+    {
+        descriptor.Ignore(item => item.OrganizationId);
+        descriptor.Ignore(item => item.ProductTagIds);
+        descriptor.Ignore(item => item.LocationTagIds);
+    }
+
+    public static OrganizationDetails GetOrganization([Parent] ProductDetails item) => new(item.OrganizationId);
+
+    public static IEnumerable<OrganizationTagDetails> GetProductTags([Parent] ProductDetails item) =>
+        item.ProductTagIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<OrganizationTagDetails> GetLocationTags([Parent] ProductDetails item) =>
+        item.LocationTagIds.Select(id => new OrganizationTagDetails(id));
 }

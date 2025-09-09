@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f36c630d597eddb2bc91cf08e947004>>
+ * @generated SignedSource<<c7ccd159909541b021df3ca83f274134>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,7 +51,7 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
@@ -129,26 +129,37 @@ return {
         "name": "availableResources",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Booking_OrganizationCustomTagDetails",
+            "concreteType": "ResourceDetails",
             "kind": "LinkedField",
-            "name": "customTags",
-            "plural": true,
-            "selections": (v3/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Booking_OrganizationZoneDetails",
-            "kind": "LinkedField",
-            "name": "zones",
-            "plural": true,
-            "selections": (v3/*: any*/),
+            "name": "resource",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTagDetails",
+                "kind": "LinkedField",
+                "name": "customTags",
+                "plural": true,
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTagDetails",
+                "kind": "LinkedField",
+                "name": "zones",
+                "plural": true,
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -157,16 +168,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "151491b96e349544cd62374407aad8e2",
+    "cacheID": "628baee3f09997fa8a140071ffdbb9b9",
     "id": null,
     "metadata": {},
     "name": "editPrivateBooking_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query editPrivateBooking_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...editPrivateBooking_availableResources_query\n}\n\nfragment editPrivateBooking_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query editPrivateBooking_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...editPrivateBooking_availableResources_query\n}\n\nfragment editPrivateBooking_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "39b009aa073992e67d5bbac68352810d";
+(node as any).hash = "5f3a5084a760eaf687912332e907fb9d";
 
 export default node;

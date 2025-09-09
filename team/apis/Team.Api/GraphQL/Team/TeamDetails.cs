@@ -1,8 +1,14 @@
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 using Team.Api.GraphQL.Member;
+using Team.Api.Mappers;
+using Team.Api.Services;
+using Team.Shared.Models;
 
 namespace Team.Api.GraphQL.Team;
 
@@ -11,9 +17,8 @@ public class TeamDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("members")] public IEnumerable<TeamMemberDetails> Members { get; set; } = [];
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
-    [GraphQLName("primaryLocation")] public LocationDetails? PrimaryLocation { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
@@ -21,4 +26,53 @@ public class TeamDetails : Node
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+
+    [UseResolverScope]
+    public async Task<Connection<TeamMemberEdge>> MembersAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        TeamMemberWhereInput? where,
+        IEnumerable<TeamMemberOrderInput>? orderBy,
+        [Parent] TeamDetails team,
+        [Service] ITeamMemberService teamMemberService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
+            new PaginationInputParam(after, first, before, last),
+            new TeamMemberSearchCriteria(team.Id, where?.NameContains),
+            orderBy.ToSafeCollection().Select(item => new TeamMemberOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
+
+        return new Connection<TeamMemberEdge>
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo),
+            TotalCount = totalCount
+        };
+    }
+}
+
+[ObjectType<TeamDetails>]
+public static partial class TeamDetailsType
+{
+    static partial void Configure(IObjectTypeDescriptor<TeamDetails> descriptor)
+    {
+        descriptor.Ignore(item => item.OrganizationId);
+        descriptor.Ignore(item => item.PrimaryLocationId);
+    }
+
+    public static OrganizationDetails GetOrganization([Parent] TeamDetails item) => new(item.OrganizationId);
+
+    public static LocationDetails? GetPrimaryLocation([Parent] TeamDetails item) => string.IsNullOrWhiteSpace(item.PrimaryLocationId)
+        ? null
+        : new LocationDetails(item.PrimaryLocationId);
 }

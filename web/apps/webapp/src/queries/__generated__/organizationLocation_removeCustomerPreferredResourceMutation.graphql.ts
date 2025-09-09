@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1ac2943a58d540778ee7f1faf19e716e>>
+ * @generated SignedSource<<84e07856cb2727907ad6a91627f3f1a9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type organizationLocation_removeCustomerPreferredResourceMutation$data = 
     readonly customer: {
       readonly id: string;
       readonly preferredResources: ReadonlyArray<{
-        readonly uniqueId: string;
+        readonly id: string;
       }>;
     };
   };
@@ -39,7 +39,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -62,28 +69,16 @@ v1 = [
         "name": "customer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerResourceDetails",
+            "concreteType": "ResourceDetails",
             "kind": "LinkedField",
             "name": "preferredResources",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           }
@@ -100,7 +95,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_removeCustomerPreferredResourceMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -109,19 +104,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_removeCustomerPreferredResourceMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "a42a493d133e8e260bed241d5d8f6582",
+    "cacheID": "fce7033f2db5b0d97d63d9fdc1ba963f",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_removeCustomerPreferredResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_removeCustomerPreferredResourceMutation(\n  $input: RemoveCustomerPreferredResourceInput!\n) {\n  removeCustomerPreferredResource(input: $input) {\n    customer {\n      id\n      preferredResources {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_removeCustomerPreferredResourceMutation(\n  $input: RemoveCustomerPreferredResourceInput!\n) {\n  removeCustomerPreferredResource(input: $input) {\n    customer {\n      id\n      preferredResources {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "12abd6a9fb9adcf70aa5154148df98bb";
+(node as any).hash = "75d445386afc025984c9f332fccb93b0";
 
 export default node;

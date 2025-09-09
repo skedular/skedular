@@ -1,13 +1,11 @@
+using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
 namespace Marketplace.Api.GraphQL.Product;
 
-[GraphQLName("Marketplace_OrganizationDetails")]
-public class OrganizationDetails
+[GraphQLName("OrganizationDetails")]
+public class OrganizationDetails(string id) : Node
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = id;
 }

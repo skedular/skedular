@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<38c855d4d948ed975389b0fd832b92cb>>
+ * @generated SignedSource<<59be68d0d739bcefbc65edd612a16a85>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,11 +26,11 @@ export type organizationUsers_changeOrganizationMemberRoleMutation$data = {
         readonly email: string | null | undefined;
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
+        readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly phoneNumber: string | null | undefined;
         readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
       };
       readonly id: string;
       readonly role: OrganizationMemberRole | null | undefined;
@@ -45,11 +45,11 @@ export type organizationUsers_changeOrganizationMemberRoleMutation$rawResponse =
         readonly email: string | null | undefined;
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
+        readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly phoneNumber: string | null | undefined;
         readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
       };
       readonly id: string;
       readonly role: OrganizationMemberRole | null | undefined;
@@ -71,7 +71,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -94,28 +101,16 @@ v1 = [
         "name": "member",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Organization_CustomerDetails",
+            "concreteType": "CustomerDetails",
             "kind": "LinkedField",
             "name": "customer",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              },
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -195,7 +190,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationUsers_changeOrganizationMemberRoleMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -204,19 +199,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationUsers_changeOrganizationMemberRoleMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "f582001c81a03dd112396d67d8834883",
+    "cacheID": "73a776c5a1cde68a48bf2b6c53fb46cf",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_changeOrganizationMemberRoleMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationUsers_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1c73c2074692575a5875a8ed6281f884";
+(node as any).hash = "9b806ef35f4f574e8cce0685e5d45c0f";
 
 export default node;

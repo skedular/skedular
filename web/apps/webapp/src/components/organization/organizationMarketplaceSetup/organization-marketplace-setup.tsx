@@ -190,20 +190,18 @@ const OrganizationMarketplaceSetup = ({
       fragment organizationMarketplaceSetup_productTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMarketplaceSetup_productTags_refetchableFragment") {
-        productTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $productTagNameSearchText }
-          orderBy: [{ direction: ASCENDING, field: NAME }]
-        ) @connection(key: "organizationMarketplaceSetup_productTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              description
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          productTags(first: $count, after: $cursor, where: { nameContains: $productTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
+            @connection(key: "organizationMarketplaceSetup_productTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                description
+                color
+              }
             }
           }
         }
@@ -220,20 +218,18 @@ const OrganizationMarketplaceSetup = ({
       fragment organizationMarketplaceSetup_locationTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMarketplaceSetup_locationTags_refetchableFragment") {
-        locationTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $locationTagNameSearchText }
-          orderBy: [{ direction: ASCENDING, field: NAME }]
-        ) @connection(key: "organizationMarketplaceSetup_locationTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              description
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          locationTags(first: $count, after: $cursor, where: { nameContains: $locationTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
+            @connection(key: "organizationMarketplaceSetup_locationTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                description
+                color
+              }
             }
           }
         }
@@ -464,8 +460,11 @@ const OrganizationMarketplaceSetup = ({
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productTagMoreActionsMenuOpen = Boolean(productTagMoreActionsAnchorEl);
   const [isEditProductTagDialogOpen, setIsEditProductTagDialogOpen] = useState(false);
-  const productTags = useMemo(() => rootDataProductTags.productTags.edges.map(({ node }) => node), [rootDataProductTags.productTags]);
-  const productTagsConnectionIds = useMemo(() => [rootDataProductTags.productTags.__id], [rootDataProductTags.productTags]);
+  const productTags = useMemo(
+    () => (rootDataProductTags.organization ? rootDataProductTags.organization.productTags.edges.map(({ node }) => node) : []),
+    [rootDataProductTags.organization],
+  );
+  const productTagsConnectionIds = useMemo(() => (rootDataProductTags.organization ? [rootDataProductTags.organization.productTags.__id] : []), [rootDataProductTags.organization]);
   const productTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditProductTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProductTag],
@@ -493,8 +492,14 @@ const OrganizationMarketplaceSetup = ({
   const [locationTagMoreActionsAnchorEl, setLocationTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const locationTagMoreActionsMenuOpen = Boolean(locationTagMoreActionsAnchorEl);
   const [isEditLocationTagDialogOpen, setIsEditLocationTagDialogOpen] = useState(false);
-  const locationTags = useMemo(() => rootDataLocationTags.locationTags.edges.map(({ node }) => node), [rootDataLocationTags.locationTags]);
-  const locationTagsConnectionIds = useMemo(() => [rootDataLocationTags.locationTags.__id], [rootDataLocationTags.locationTags]);
+  const locationTags = useMemo(
+    () => (rootDataLocationTags.organization ? rootDataLocationTags.organization.locationTags.edges.map(({ node }) => node) : []),
+    [rootDataLocationTags.organization],
+  );
+  const locationTagsConnectionIds = useMemo(
+    () => (rootDataLocationTags.organization ? [rootDataLocationTags.organization.locationTags.__id] : []),
+    [rootDataLocationTags.organization],
+  );
   const locationTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocationTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocationTag],

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1567d4783d2741eb1a2d1ca10fe65110>>
+ * @generated SignedSource<<26d8a96ce222582cf7299de015abda65>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,48 +68,67 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "from",
-            "variableName": "from"
-          },
-          {
-            "kind": "Variable",
-            "name": "locationId",
+            "name": "id",
             "variableName": "locationId"
-          },
-          {
-            "kind": "Variable",
-            "name": "until",
-            "variableName": "to"
           }
         ],
-        "concreteType": "LocationAnalytics",
+        "concreteType": "LocationDetails",
         "kind": "LinkedField",
-        "name": "locationAnalytics",
+        "name": "location",
         "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "DesksOccupancyPercentage",
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "from"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "to"
+              }
+            ],
+            "concreteType": "LocationAnalytics",
             "kind": "LinkedField",
-            "name": "desksOccupancyPercentage",
-            "plural": true,
+            "name": "analytics",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "date",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "percentage",
+                "concreteType": "DesksOccupancyPercentage",
+                "kind": "LinkedField",
+                "name": "desksOccupancyPercentage",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "date",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "percentage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -118,16 +137,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a8f2a01a1bfd94971fb55130bdfd9f2b",
+    "cacheID": "364bd3ea6e2aeb44af4712c14443c40e",
     "id": null,
     "metadata": {},
     "name": "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDeskOccupancyInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationDeskOccupancyInsight_locationAnalytics_query\n}\n\nfragment locationDeskOccupancyInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) {\n    desksOccupancyPercentage {\n      date\n      percentage\n    }\n  }\n}\n"
+    "text": "query locationDeskOccupancyInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationDeskOccupancyInsight_locationAnalytics_query\n}\n\nfragment locationDeskOccupancyInsight_locationAnalytics_query on Query {\n  location(id: $locationId) {\n    analytics(from: $from, until: $to) {\n      desksOccupancyPercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ec5590930e3eb17f96cd8094253dab87";
+(node as any).hash = "0fbcfcd225e53c4a4a346290e4bb67bc";
 
 export default node;

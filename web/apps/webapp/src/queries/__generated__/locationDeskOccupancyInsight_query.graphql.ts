@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ee219ccc43b44d18cd3d8c84b25de42>>
+ * @generated SignedSource<<95b899af516cb399e431b319b80cf290>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type locationDeskOccupancyInsight_query$data = {
     readonly id: string;
     readonly name: string;
     readonly organization: {
-      readonly uniqueId: string;
+      readonly id: string;
     };
   } | null | undefined;
   readonly " $fragmentType": "locationDeskOccupancyInsight_query";
@@ -25,7 +25,15 @@ export type locationDeskOccupancyInsight_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"locationDeskOccupancyInsight_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -50,13 +58,7 @@ const node: ReaderFragment = {
       "name": "location",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -67,18 +69,12 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Location_OrganizationDetails",
+          "concreteType": "OrganizationDetails",
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "uniqueId",
-              "storageKey": null
-            }
+            (v0/*: any*/)
           ],
           "storageKey": null
         }
@@ -89,7 +85,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "eb2b3944167b37815d5b2592e3bdcbc6";
+(node as any).hash = "26b86d5217225741c776b83cfa639e23";
 
 export default node;

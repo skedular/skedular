@@ -162,12 +162,12 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             }
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
           locationSpaceTypes {
-            uniqueId
+            id
             name
             color
           }

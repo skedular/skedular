@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fa170187ff31307cf458738bf77791eb>>
+ * @generated SignedSource<<cfb75800f76238b808bc4f5d4306cf5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,13 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationDeskOccupancyInsight_locationAnalytics_query$data = {
-  readonly locationAnalytics: {
-    readonly desksOccupancyPercentage: ReadonlyArray<{
-      readonly date: any;
-      readonly percentage: number;
-    }>;
+  readonly location: {
+    readonly analytics: {
+      readonly desksOccupancyPercentage: ReadonlyArray<{
+        readonly date: any;
+        readonly percentage: number;
+      }>;
+    };
   } | null | undefined;
   readonly " $fragmentType": "locationDeskOccupancyInsight_locationAnalytics_query";
 };
@@ -56,45 +58,57 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "locationId",
+          "name": "id",
           "variableName": "locationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
         }
       ],
-      "concreteType": "LocationAnalytics",
+      "concreteType": "LocationDetails",
       "kind": "LinkedField",
-      "name": "locationAnalytics",
+      "name": "location",
       "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "concreteType": "DesksOccupancyPercentage",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "to"
+            }
+          ],
+          "concreteType": "LocationAnalytics",
           "kind": "LinkedField",
-          "name": "desksOccupancyPercentage",
-          "plural": true,
+          "name": "analytics",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "percentage",
+              "concreteType": "DesksOccupancyPercentage",
+              "kind": "LinkedField",
+              "name": "desksOccupancyPercentage",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "date",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "percentage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -108,6 +122,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ec5590930e3eb17f96cd8094253dab87";
+(node as any).hash = "0fbcfcd225e53c4a4a346290e4bb67bc";
 
 export default node;

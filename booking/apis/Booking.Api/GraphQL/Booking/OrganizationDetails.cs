@@ -1,17 +1,11 @@
+using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("Booking_OrganizationDetails")]
-public class OrganizationDetails
+[GraphQLName("OrganizationDetails")]
+public class OrganizationDetails(string id) : Node
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
-
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
-    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = id;
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4cc96dc102ebc070186b2243fac773f4>>
+ * @generated SignedSource<<84cfc963d4b52cd14b5d1e2fe34f68e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type locationSelector_allLocations_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "locationSelector_allLocations_query";
 };

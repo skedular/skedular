@@ -71,15 +71,17 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
             }
           }
         }
-        resources(where: { locationId: $locationId, floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {
-          edges {
-            node {
-              id
-              name
-              resourceType {
-                tagType
+        location(id: $locationId) {
+          resources(where: { floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {
+            edges {
+              node {
+                id
+                name
+                resourceType {
+                  tagType
+                }
+                ...resourceCard_ResourceDetails
               }
-              ...resourceCard_ResourceDetails
             }
           }
         }
@@ -101,10 +103,12 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
             node {
               id
               involvedCustomers {
-                uniqueId
+                id
               }
-              resources {
-                uniqueId
+              bookingResources {
+                resource {
+                  id
+                }
               }
               ...bookingCard_BookingDetails
             }
@@ -116,7 +120,10 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
   );
 
   const [, startTransition] = useTransition();
-  const resources = useMemo(() => (rootDataFloorPlan.resources ? rootDataFloorPlan.resources.edges.map(({ node }) => node) : []), [rootDataFloorPlan.resources]);
+  const resources = useMemo(
+    () => (rootDataFloorPlan.location && rootDataFloorPlan.location.resources ? rootDataFloorPlan.location.resources.edges.map(({ node }) => node) : []),
+    [rootDataFloorPlan.location],
+  );
   const resourcePositions = useMemo(
     () =>
       (rootDataFloorPlan.floorPlan?.resourcePositions ? rootDataFloorPlan.floorPlan.resourcePositions : []).reduce(
@@ -207,7 +214,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
           <FloorPlanSelector rootDataRelay={rootData} onChange={handleFloorPlanChanged} />
           <DayPicker defaultDate={date} onDateChanged={handleDateChanged} />
         </GridContainer>
-        {rootDataFloorPlan.floorPlan && rootDataFloorPlan.resources && (
+        {rootDataFloorPlan.floorPlan && rootDataFloorPlan.location?.resources && (
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
             {rootDataFloorPlan.floorPlan.image?.original && rootDataFloorPlan.floorPlan.image.original.height && rootDataFloorPlan.floorPlan.image.original.width && (
               <Box
@@ -230,7 +237,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
                   if (!resource) {
                     return <></>;
                   }
-                  const booking = bookings.find((item) => item.resources.some((bookingResource) => bookingResource.uniqueId === resource.id));
+                  const booking = bookings.find((item) => item.bookingResources.some((bookingResource) => bookingResource.resource.id === resource.id));
 
                   return (
                     <Box
@@ -277,7 +284,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
             bookingDetailsRelay={selectedBooking}
             organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
             connectionIds={bookingConnectionIds}
-            canJoinBooking={!bookings.some((item) => item.involvedCustomers.some((involvedCustomer) => involvedCustomer.uniqueId === rootData.me.id))}
+            canJoinBooking={!bookings.some((item) => item.involvedCustomers.some((involvedCustomer) => involvedCustomer.id === rootData.me.id))}
           />
         )}
         {selectedResource && !selectedBooking && (

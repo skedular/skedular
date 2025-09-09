@@ -77,7 +77,7 @@ const teamSchema = object({
 });
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -118,7 +118,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             }
           }
           primaryLocation {
-            uniqueId
+            id
             name
           }
         }
@@ -134,24 +134,26 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       fragment organizationTeam_teamMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationTeam_teamMembers_refetchableFragment") {
-        teamMembers(first: $count, after: $cursor, where: { teamId: $teamId, nameContains: $peopleNameSearchText }) @connection(key: "teamMembers_teamMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                email
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
-                phoneNumber
+        team(id: $teamId) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }) @connection(key: "teamMembers_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  email
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                  phoneNumber
+                }
+                status
+                role
               }
-              status
-              role
             }
           }
         }
@@ -181,7 +183,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             }
           }
           primaryLocation {
-            uniqueId
+            id
             name
           }
         }
@@ -195,7 +197,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         members {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -227,7 +229,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         member {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -295,8 +297,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   ];
 
   const memberDetails = useMemo(
-    () => rootDataTeamMembers.teamMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
-    [selectedMemberId, rootDataTeamMembers.teamMembers],
+    () => rootDataTeamMembers.team?.members?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
+    [selectedMemberId, rootDataTeamMembers.team?.members],
   );
 
   useEffect(() => {
@@ -317,11 +319,11 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     });
   }, [section]);
 
-  const connectionIds = useMemo(() => [rootDataTeamMembers.teamMembers.__id], [rootDataTeamMembers.teamMembers]);
+  const connectionIds = useMemo(() => (rootDataTeamMembers.team ? [rootDataTeamMembers.team.members.__id] : []), [rootDataTeamMembers.team]);
   const members = useMemo(
     () =>
-      rootDataTeamMembers.teamMembers
-        ? rootDataTeamMembers.teamMembers.edges
+      rootDataTeamMembers.team?.members
+        ? rootDataTeamMembers.team.members.edges
             .map(({ node }) => node)
             .sort((a, b) => {
               const name1 = getCustomerFullName(a.customer);
@@ -330,7 +332,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               return name1.localeCompare(name2);
             })
         : [],
-    [rootDataTeamMembers.teamMembers],
+    [rootDataTeamMembers.team?.members],
   );
 
   const handleRefetchTeamMembers = useCallback(
@@ -911,7 +913,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 name: team.name,
                 about: team.about,
                 timezone: team.timezone ?? '',
-                primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.uniqueId : null,
+                primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.id : null,
               }}
               validate={validate}
               render={({ handleSubmit }) => (

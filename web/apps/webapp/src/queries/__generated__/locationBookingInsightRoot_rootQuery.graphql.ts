@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f8fb37ae0c5c05042911f6c7f3f5ba2>>
+ * @generated SignedSource<<276deea988d110e8b3f12e336eeae70e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,6 +38,13 @@ v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
   "name": "to"
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -88,13 +95,7 @@ return {
         "name": "location",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -105,68 +106,57 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Location_OrganizationDetails",
+            "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
             "name": "organization",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "from"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "to"
+              }
+            ],
+            "concreteType": "LocationAnalytics",
+            "kind": "LinkedField",
+            "name": "analytics",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "from",
-            "variableName": "from"
-          },
-          {
-            "kind": "Variable",
-            "name": "locationId",
-            "variableName": "locationId"
-          },
-          {
-            "kind": "Variable",
-            "name": "until",
-            "variableName": "to"
-          }
-        ],
-        "concreteType": "LocationAnalytics",
-        "kind": "LinkedField",
-        "name": "locationAnalytics",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "LocationDailyBookingsTotal",
-            "kind": "LinkedField",
-            "name": "dailyBookingsTotals",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "date",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "total",
+                "concreteType": "LocationDailyBookingsTotal",
+                "kind": "LinkedField",
+                "name": "dailyBookingsTotals",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "date",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "total",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -178,12 +168,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fd2e76d86fc1f965fbe755022a68bee7",
+    "cacheID": "47649fb3a9b16a1545f4b4b58c45fc7c",
     "id": null,
     "metadata": {},
     "name": "locationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n\nfragment locationBookingInsight_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  location(id: $locationId) {\n    analytics(from: $from, until: $to) {\n      dailyBookingsTotals {\n        date\n        total\n      }\n    }\n    id\n  }\n}\n\nfragment locationBookingInsight_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      id\n    }\n  }\n}\n"
   }
 };
 })();

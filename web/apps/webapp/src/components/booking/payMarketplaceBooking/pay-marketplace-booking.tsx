@@ -48,7 +48,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             type
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -56,30 +56,32 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
           totalAmountExcludeTaxToDisplay
@@ -96,7 +98,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
           lineItems {
             quantity
             productVersion {
-              uniqueId
+              id
               name
               priceToDisplay
             }
@@ -481,7 +483,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
                 <StackRow>
                   {booking.involvedCustomers.map((customer) => (
                     <BodyIconTypography
-                      key={customer.uniqueId}
+                      key={customer.id}
                       label={getCustomerFullName(customer)}
                       startElement={<CustomerAvatar name={customer} photo={{ url: booking.involvedCustomers[0].photoUrl }} size="small" />}
                     />
@@ -494,7 +496,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               <FormFieldLabel label="Teams">
                 <StackRow>
                   {booking.involvedTeams.map((team) => (
-                    <BodyIconTypography key={team.uniqueId} label={team.name} startElement={<TeamAvatar name={team} size="small" />} />
+                    <BodyIconTypography key={team.id} label={team.name} startElement={<TeamAvatar name={team} size="small" />} />
                   ))}
                 </StackRow>
               </FormFieldLabel>
@@ -504,17 +506,17 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               <FormFieldLabel label="Locations">
                 <StackRow>
                   {booking.involvedLocations.map((location) => (
-                    <BodyIconTypography key={location.uniqueId} label={location.name} startElement={<LocationAvatar name={location} size="small" />} />
+                    <BodyIconTypography key={location.id} label={location.name} startElement={<LocationAvatar name={location} size="small" />} />
                   ))}
                 </StackRow>
               </FormFieldLabel>
             )}
 
-            {booking.resources.length > 0 && (
+            {booking.bookingResources.length > 0 && (
               <FormFieldLabel label="Resources">
                 <BodyIconTypography
-                  label={booking.resources
-                    .reduce((acc, val) => `${acc}, ${val.name}`, '')
+                  label={booking.bookingResources
+                    .reduce((acc, val) => `${acc}, ${val.resource.name}`, '')
                     .trim()
                     .replace(/^,+|,+$/g, '')}
                 />

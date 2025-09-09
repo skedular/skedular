@@ -296,12 +296,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           requireConsecutiveDays
           maxBookingSpreadDays
           productTags {
-            uniqueId
+            id
             name
             color
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }

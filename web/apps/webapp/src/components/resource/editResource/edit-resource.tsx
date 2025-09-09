@@ -121,22 +121,22 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
           color
           capacity
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -209,22 +209,22 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
           color
           capacity
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -291,22 +291,22 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
           color
           capacity
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -440,7 +440,7 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
             color: selectedColor,
             capacity,
             resourceType: {
-              uniqueId: resourceTypeId,
+              id: resourceTypeId,
               name: '',
               color: '',
             },
@@ -591,10 +591,10 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
             onSubmit={handleResourceDetailUpdateClick}
             initialValues={{
               name: resource.name,
-              resourceTypeId: resource.resourceType.uniqueId,
-              customTagIds: resource.customTags.map(({ uniqueId }) => uniqueId),
-              zoneIds: resource.zones.map(({ uniqueId }) => uniqueId),
-              productTagIds: resource.productTags.map(({ uniqueId }) => uniqueId),
+              resourceTypeId: resource.resourceType.id,
+              customTagIds: resource.customTags.map(({ id }) => id),
+              zoneIds: resource.zones.map(({ id }) => id),
+              productTagIds: resource.productTags.map(({ id }) => id),
               capacity: resource.capacity,
             }}
             validate={validateResourceDetails}

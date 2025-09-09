@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<479a4ed51a7c16096e5cebec34ae7c11>>
+ * @generated SignedSource<<594e6ccb92b4663c9bb23add0e129519>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,18 +11,20 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_customTags_query$data = {
-  readonly customTags: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly color: string | null | undefined;
-        readonly description: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
+  readonly organization: {
+    readonly customTags: {
+      readonly __id: string;
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly color: string | null | undefined;
+          readonly description: string | null | undefined;
+          readonly id: string;
+          readonly name: string;
+        };
+      }>;
+      readonly totalCount: number;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_customTags_query";
 };
 export type organizationAdmin_customTags_query$key = {
@@ -34,6 +36,7 @@ import organizationAdmin_customTags_refetchableFragment_graphql from './organiza
 
 const node: ReaderFragment = (function(){
 var v0 = [
+  "organization",
   "customTags"
 ];
 return {
@@ -83,96 +86,115 @@ return {
   "name": "organizationAdmin_customTags_query",
   "selections": [
     {
-      "alias": "customTags",
+      "alias": null,
       "args": [
         {
-          "kind": "Literal",
-          "name": "orderBy",
-          "value": [
-            {
-              "direction": "ASCENDING",
-              "field": "NAME"
-            }
-          ]
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "customTagNameSearchText"
-            },
-            {
-              "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
+          "kind": "Variable",
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
         }
       ],
-      "concreteType": "ConnectionOfOrganizationTagEdge",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "__organizationAdmin_customTags_connection",
+      "name": "organization",
       "plural": false,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTagEdge",
+          "alias": "customTags",
+          "args": [
+            {
+              "kind": "Literal",
+              "name": "orderBy",
+              "value": [
+                {
+                  "direction": "ASCENDING",
+                  "field": "NAME"
+                }
+              ]
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "customTagNameSearchText"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "ConnectionOfOrganizationTagEdge",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__organizationAdmin_customTags_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationTagDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "name",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "description",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "color",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "description",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "color",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -181,49 +203,42 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -234,6 +249,6 @@ return {
 };
 })();
 
-(node as any).hash = "52b76f7a3d92ef7d9794a9ca08199c56";
+(node as any).hash = "2f3f563779f51f278f87dd0dfb0a6401";
 
 export default node;

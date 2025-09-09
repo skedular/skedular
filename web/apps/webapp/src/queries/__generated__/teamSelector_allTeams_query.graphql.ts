@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7fbc360c06b06412b5f991d35d5dc9b2>>
+ * @generated SignedSource<<9ac4c3a55f98dda1eafd8de2ee7f64c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type teamSelector_allTeams_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "teamSelector_allTeams_query";
 };

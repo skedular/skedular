@@ -28,29 +28,29 @@ type BookingCheckoutSessionDetails {
 type BookingDetails {
   bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
-  createdByCustomer: Booking_CustomerDetails
+  bookingResources: [BookingResourceDetails!]!
+  createdByCustomer: CustomerDetails
   currency: String
   currencyToDisplay: String!
-  deletedByCustomer: Booking_CustomerDetails
+  deletedByCustomer: CustomerDetails
   from: DateTime!
   id: ID!
   invoiceEmailList: [String!]
   invoiceNumber: String
   invoiceUrl: String
-  involvedCustomers: [Booking_CustomerDetails!]!
-  involvedLocations: [Booking_LocationDetails!]!
-  involvedOrganizations: [Booking_OrganizationDetails!]!
-  involvedTeams: [Booking_TeamDetails!]!
+  involvedCustomers: [CustomerDetails!]!
+  involvedLocations: [LocationDetails!]!
+  involvedOrganizations: [OrganizationDetails!]!
+  involvedTeams: [TeamDetails!]!
   isPaymentRequired: Boolean!
-  lastModifiedByCustomer: Booking_CustomerDetails
+  lastModifiedByCustomer: CustomerDetails
   lineItems: [LineItemDetails!]!
   notes: String
-  paidByCustomer: Booking_CustomerDetails
-  paidByOrganization: Booking_OrganizationDetails
+  paidByCustomer: CustomerDetails
+  paidByOrganization: OrganizationDetails
   paymentExpiry: DateTime!
   paymentMethod: PaymentMethodTypeDetails
   paymentStatus: PaymentStatusDetails!
-  resources: [BookingResourceDetails!]!
   taxAmount: Decimal
   taxAmountToDisplay: String!
   taxRatePercentage: Decimal
@@ -74,92 +74,14 @@ type BookingPayload {
 }
 
 type BookingResourceDetails {
-  capacity: Int!
-  color: String
-  customers: [Booking_CustomerDetails!]!
-  customTags: [Booking_OrganizationCustomTagDetails!]!
-  inactive: Boolean!
-  location: Booking_LocationDetails
-  name: String!
-  requireBookingApproval: Boolean!
-  uniqueId: ID!
-  zones: [Booking_OrganizationZoneDetails!]!
+  customers: [CustomerDetails!]!
+  location: LocationDetails
+  resource: ResourceDetails!
 }
 
 type BookingTypeDetails {
   name: String!
   type: BookingType!
-}
-
-type Booking_CurrencyDetails {
-  name: String!
-  type: Currency!
-}
-
-type Booking_CustomerDetails {
-  designation: String
-  familyName: String
-  givenName: String
-  locale: String
-  middleName: String
-  name: String
-  phoneNumber: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  timezone: String
-  title: String
-  uniqueId: ID!
-}
-
-type Booking_LocationDetails {
-  name: String!
-  uniqueId: ID!
-}
-
-type Booking_OrganizationCustomTagDetails {
-  color: String
-  name: String
-  uniqueId: ID!
-}
-
-type Booking_OrganizationDetails {
-  contactEmail: String
-  contactPhone: String
-  name: String!
-  uniqueAlphanumericName: String
-  uniqueId: ID!
-}
-
-type Booking_OrganizationZoneDetails {
-  color: String
-  name: String
-  uniqueId: ID!
-}
-
-type Booking_PriceUnitDetails {
-  name: String!
-  type: PriceUnit!
-}
-
-type Booking_ProductVersionDetails {
-  currency: Booking_CurrencyDetails!
-  isPriceTaxInclusive: Boolean!
-  name: String!
-  organization: Booking_OrganizationDetails!
-  price: String!
-  priceToDisplay: String!
-  priceUnit: Booking_PriceUnitDetails!
-  uniqueId: ID!
-}
-
-type Booking_TeamDetails {
-  name: String!
-  uniqueId: ID!
 }
 
 type CancelOrganizationOfferingPayload {
@@ -180,91 +102,91 @@ type CdnImageFile {
 type ConnectionOfBookingEdge {
   edges: [BookingEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfCustomerEdge {
   edges: [CustomerEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfFloorPlanEdge {
   edges: [FloorPlanEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfLocationEdge {
   edges: [LocationEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationBankAccountEdge {
   edges: [OrganizationBankAccountEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationEdge {
   edges: [OrganizationEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationJoinInvitationEdge {
   edges: [OrganizationJoinInvitationEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationMemberEdge {
   edges: [OrganizationMemberEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationStripeConnectAccountEdge {
   edges: [OrganizationStripeConnectAccountEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfOrganizationTagEdge {
   edges: [OrganizationTagEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfProductEdge {
   edges: [ProductEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfResourceEdge {
   edges: [ResourceEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfTeamEdge {
   edges: [TeamEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfTeamJoinInvitationEdge {
   edges: [TeamJoinInvitationEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfTeamMemberEdge {
   edges: [TeamMemberEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ContactDetails {
@@ -302,7 +224,6 @@ type CustomerBillingDetails {
 type CustomerDetails {
   billingDetails: CustomerBillingDetails
   createdAt: DateTime!
-  defaultOrganization: Customer_OrganizationDetails
   designation: String
   email: String
   emails: [String!]!
@@ -315,6 +236,7 @@ type CustomerDetails {
   locale: String
   middleName: String
   name: String
+  organization: OrganizationDetails
   paymentMethods: [CustomerPaymentMethod!]!
   phoneNumber: String
   photoUrl: String
@@ -324,11 +246,11 @@ type CustomerDetails {
   photoUrl48: String
   photoUrl512: String
   photoUrl72: String
-  preferredCustomTags: [Customer_OrganizationTagDetails!]!
-  preferredLocations: [Customer_LocationDetails!]!
-  preferredResources: [CustomerResourceDetails!]!
-  preferredTeams: [CustomerTeamDetails!]!
-  preferredZones: [Customer_OrganizationTagDetails!]!
+  preferredCustomTags: [OrganizationTagDetails!]!
+  preferredLocations: [LocationDetails!]!
+  preferredResources: [ResourceDetails!]!
+  preferredTeams: [TeamDetails!]!
+  preferredZones: [OrganizationTagDetails!]!
   timezone: String
   title: String
 }
@@ -360,36 +282,6 @@ type CustomerPaymentMethod {
   cardIssuer: String
   cardLastFourDigit: String
   id: ID!
-}
-
-type CustomerResourceDetails {
-  name: String
-  uniqueId: ID!
-}
-
-type CustomerTeamDetails {
-  name: String
-  organization: Customer_OrganizationDetails
-  uniqueId: ID!
-}
-
-type Customer_LocationDetails {
-  name: String
-  organization: Customer_OrganizationDetails
-  uniqueId: ID!
-}
-
-type Customer_OrganizationDetails {
-  logoUrl: String
-  name: String
-  uniqueAlphanumericName: String
-  uniqueId: ID!
-}
-
-type Customer_OrganizationTagDetails {
-  color: String
-  name: String
-  uniqueId: ID!
 }
 
 type DesksOccupancyPercentage {
@@ -431,20 +323,20 @@ type InvitationsToJoinOrganizationPayload {
 }
 
 type InviteCustomerToJoinOrganizationDetails {
-  createdBy: Organization_CustomerDetails!
+  createdBy: CustomerDetails!
   email: String
   id: ID!
-  invitee: Organization_CustomerDetails
+  invitee: CustomerDetails
   organization: OrganizationDetails!
   role: OrganizationMemberRole!
   status: OrganizationInvitationStatusDetails!
 }
 
 type InviteCustomerToJoinTeamDetails {
-  createdBy: Team_CustomerDetails!
+  createdBy: CustomerDetails!
   email: String
   id: ID!
-  invitee: Team_CustomerDetails
+  invitee: CustomerDetails
   role: TeamMemberRole!
   status: TeamInvitationStatusDetails!
   team: TeamDetails!
@@ -456,7 +348,7 @@ type InviteCustomersToJoinTeamPayload {
 }
 
 type LineItemDetails {
-  productVersion: Booking_ProductVersionDetails!
+  productVersion: ProductVersionDetails!
   quantity: Int!
 }
 
@@ -474,27 +366,28 @@ type LocationDailyBookingsTotal {
 
 type LocationDetails {
   about: String
+  analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   canDelete: Boolean!
   canModify: Boolean!
   canViewAnalytics: Boolean!
-  customTags: [Location_OrganizationTagDetails!]!
+  customTags: [OrganizationTagDetails!]!
   deskCapacity: Int!
   extraMetadata: LocationExtraMetadata
   hasFutureBooking: Boolean!
   id: ID!
-  locationSpaceTypes: [Location_OrganizationTagDetails!]!
-  locationTags: [Location_OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
   name: String!
   openingHours: OpeningHours!
-  organization: Location_OrganizationDetails!
+  organization: OrganizationDetails!
   physicalAddress: LocationPhysicalAddressDetails
   primaryFeatureImage: CdnImageFile
-  resources: [ResourceDetails!]!
-  resourceTypes: [Location_OrganizationTagDetails!]!
+  resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput): ConnectionOfResourceEdge! @cost(weight: "10")
+  resourceTypes: [OrganizationTagDetails!]!
   roomCapacity: Int!
   timezone: String
   type: LocationTypeDetails!
-  zones: [Location_OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
 }
 
 type LocationEdge {
@@ -540,32 +433,6 @@ type LocationPhysicalAddressDetails {
 type LocationTypeDetails {
   name: String!
   type: LocationType!
-}
-
-type Location_OrganizationDetails {
-  logoUrl: String
-  name: String!
-  uniqueAlphanumericName: String
-  uniqueId: ID!
-}
-
-type Location_OrganizationTagDetails {
-  color: String
-  name: String
-  tagType: String
-  uniqueId: ID!
-}
-
-type Marketplace_OrganizationDetails {
-  uniqueAlphanumericName: String
-  uniqueId: ID!
-}
-
-type Marketplace_OrganizationTagDetails {
-  color: String
-  name: String
-  tagType: String
-  uniqueId: ID!
 }
 
 type Marketplace_PaymentMethodTypeDetails {
@@ -787,6 +654,7 @@ type OrganizationDetails {
   about: String
   activeOffering: OrganizationActiveOfferingDetails!
   agreedToTermsOfUse: Boolean!
+  analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
   availableOfferings: [OrganizationOfferingDetails!]!
   billingDetails: OrganizationBillingDetails
   canDelete: Boolean!
@@ -795,6 +663,7 @@ type OrganizationDetails {
   canViewAnalytics: Boolean!
   contactEmail: String
   contactPhone: String
+  customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
@@ -804,12 +673,14 @@ type OrganizationDetails {
   isListable: Boolean!
   isMyOnboardingDone: Boolean!
   locationSpaceTypes: [OrganizationTagDetails!]!
+  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   logoUrl: String
-  members: [OrganizationMemberDetails!]!
+  members(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
   paymentMethods: [OrganizationPaymentMethod!]!
   physicalAddress: OrganizationPhysicalAddressDetails
+  productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
   stripeAuthorizeExistingConnectAccountUrl: String!
@@ -818,6 +689,7 @@ type OrganizationDetails {
   type: OrganizationTypeDetails!
   uniqueAlphanumericName: String
   website: String
+  zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
 }
 
 type OrganizationEdge {
@@ -853,7 +725,7 @@ type OrganizationMemberAttendancePercentage {
 }
 
 type OrganizationMemberDetails {
-  customer: Organization_CustomerDetails!
+  customer: CustomerDetails!
   id: ID!
   isOrganizationOnboardingDone: Boolean!
   role: OrganizationMemberRole
@@ -1019,23 +891,6 @@ type OrganizationTypeDetails {
   type: OrganizationType!
 }
 
-type Organization_CustomerDetails {
-  email: String
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  phoneNumber: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -1073,7 +928,7 @@ type ProductDetails {
   inactive: Boolean!
   isPriceTaxInclusive: Boolean!
   latestProductVersionId: String!
-  locationTags: [Marketplace_OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxBookingSpreadDays: Int
@@ -1081,12 +936,12 @@ type ProductDetails {
   minDurationMinutes: Int
   name: String!
   numberOfResourcesToBook: Int!
-  organization: Marketplace_OrganizationDetails!
+  organization: OrganizationDetails!
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   primaryFeatureImage: CdnImageFile
-  productTags: [Marketplace_OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
   recurrenceWindowDays: Int!
   requireConsecutiveDays: Boolean!
 }
@@ -1099,6 +954,32 @@ type ProductEdge {
 type ProductPayload {
   clientMutationId: String
   product: ProductDetails!
+}
+
+type ProductVersionDetails {
+  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
+  bookAllLocationResources: Boolean!
+  currency: CurrencyDetails!
+  currencyToDisplay: String!
+  description: String
+  id: ID!
+  inactive: Boolean!
+  isPriceTaxInclusive: Boolean!
+  locationTags: [OrganizationTagDetails!]!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxBookingSpreadDays: Int
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
+  name: String!
+  numberOfResourcesToBook: Int!
+  price: String!
+  priceToDisplay: String!
+  priceUnit: PriceUnitDetails!
+  primaryFeatureImage: CdnImageFile
+  productTags: [OrganizationTagDetails!]!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
 }
 
 type ProductsPayload {
@@ -1122,10 +1003,9 @@ type Query {
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): ConnectionOfCustomerEdge! @cost(weight: "10")
-  customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput): ConnectionOfTeamEdge! @cost(weight: "10")
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   deskResourceType: OrganizationTagType!
@@ -1134,12 +1014,10 @@ type Query {
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
-  locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
-  locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
+  locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput): [LocationAnalytics!]! @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
   marketplaceBookingTypes: [BookingTypeDetails!]!
@@ -1150,13 +1028,12 @@ type Query {
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
   myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
-  myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput!): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
+  myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
   openingHoursMinutesStep: Int!
-  organization(uniqueAlphanumericName: String!): OrganizationDetails @cost(weight: "10")
-  organizationAnalytics(from: DateTime! id: String uniqueAlphanumericName: String until: DateTime!): OrganizationAnalytics @cost(weight: "10")
+  organization(id: String uniqueAlphanumericName: String): OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationBankAccountOrderInput!] where: OrganizationBankAccountWhereInput!): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
   organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
@@ -1164,7 +1041,6 @@ type Query {
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
@@ -1184,9 +1060,8 @@ type Query {
   product(id: String!): ProductDetails @cost(weight: "10")
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
-  resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ConnectionOfResourceEdge! @cost(weight: "10")
   roomResourceType: OrganizationTagType!
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
@@ -1195,11 +1070,9 @@ type Query {
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   teamInvitationStatuses: [TeamInvitationStatusDetails!]!
   teamMemberRoles: [TeamMemberRole!]!
-  teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): ConnectionOfTeamMemberEdge! @cost(weight: "10")
-  teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): ConnectionOfTeamEdge! @cost(weight: "10")
+  teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput): ConnectionOfTeamEdge! @cost(weight: "10")
   teamVersion: Version!
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput!): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
 }
 
 type RemoveCustomerPaymentMethodPayload {
@@ -1214,15 +1087,15 @@ type ResourceDetails {
   availableHours: OpeningHours
   capacity: Int!
   color: String
-  customTags: [Location_OrganizationTagDetails!]!
+  customTags: [OrganizationTagDetails!]!
   id: ID!
   inactive: Boolean!
   isAvailableHoursOverridden: Boolean!
   name: String!
-  productTags: [Location_OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
   requireBookingApproval: Boolean!
-  resourceType: Location_OrganizationTagDetails!
-  zones: [Location_OrganizationTagDetails!]!
+  resourceType: OrganizationTagDetails!
+  zones: [OrganizationTagDetails!]!
 }
 
 type ResourceEdge {
@@ -1270,11 +1143,11 @@ type TeamDetails {
   canModify: Boolean!
   hasFutureBooking: Boolean!
   id: ID!
-  members: [TeamMemberDetails!]!
+  members(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   name: String!
-  organization: Team_OrganizationDetails!
+  organization: OrganizationDetails!
   primaryFeatureImage: CdnImageFile
-  primaryLocation: Team_LocationDetails
+  primaryLocation: LocationDetails
   timezone: String
 }
 
@@ -1294,7 +1167,7 @@ type TeamJoinInvitationEdge {
 }
 
 type TeamMemberDetails {
-  customer: Team_CustomerDetails!
+  customer: CustomerDetails!
   id: ID!
   organizationMember: TeamOrganizationMemberDetails
   role: TeamMemberRole
@@ -1322,42 +1195,13 @@ type TeamMembersDetailsPayload {
 }
 
 type TeamOrganizationMemberDetails {
-  customer: Team_CustomerDetails!
+  customer: CustomerDetails!
   uniqueId: ID!
 }
 
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
-}
-
-type Team_CustomerDetails {
-  email: String
-  familyName: String
-  givenName: String
-  middleName: String
-  name: String
-  phoneNumber: String
-  photoUrl: String
-  photoUrl192: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl512: String
-  photoUrl72: String
-  uniqueId: ID!
-}
-
-type Team_LocationDetails {
-  name: String!
-  uniqueId: ID!
-}
-
-type Team_OrganizationDetails {
-  logoUrl: String
-  name: String!
-  uniqueAlphanumericName: String
-  uniqueId: ID!
 }
 
 type UpdateOrganizationOfferingPayload {
@@ -1826,8 +1670,6 @@ input ContactDetailsInput {
 
 input CustomTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
 }
 
 input CustomerOrderInput {
@@ -2030,8 +1872,6 @@ input LocationPhysicalAddressInput {
 
 input LocationTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
 }
 
 input LocationWhereInput {
@@ -2101,7 +1941,6 @@ input OrganizationMemberOrderInput {
 input OrganizationMemberWhereInput {
   customerId: String
   nameContains: String
-  organizationUniqueAlphanumericName: String!
 }
 
 input OrganizationOrderInput {
@@ -2152,8 +1991,6 @@ input ProductOrderInput {
 
 input ProductTagOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
 }
 
 input ProductWhereInput {
@@ -2249,7 +2086,6 @@ input ResourcePositionInput {
 input ResourceWhereInput {
   customTagIds: [String!]
   floorPlanId: String
-  locationId: String!
   nameContains: String
   productTagIds: [String!]
   zoneIds: [String!]
@@ -2285,7 +2121,6 @@ input TeamMemberOrderInput {
 
 input TeamMemberWhereInput {
   nameContains: String
-  teamId: String!
 }
 
 input TeamOrderInput {
@@ -2628,8 +2463,6 @@ input WeekOpeningHoursInput {
 
 input ZoneOrganizationTagWhereInput {
   nameContains: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
 }
 
 enum BookingOrderField {

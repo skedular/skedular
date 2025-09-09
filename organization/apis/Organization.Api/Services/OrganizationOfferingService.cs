@@ -91,7 +91,8 @@ public class OrganizationOfferingService(
             matchingOffering = await repositoryFactory.OrganizationOfferingRepository.Query(
                 new Specification<OrganizationOffering>
                 {
-                    Criteria = query =>query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericNam && query.Code == offeringCode &&
+                    Criteria = query => query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericNam &&
+                                        query.Code == offeringCode &&
                                         query.Start <= now && query.End >= now
                 }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
         }

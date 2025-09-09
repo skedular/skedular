@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab51f94776a1f2591292dd54c7df45b4>>
+ * @generated SignedSource<<ff559cc62e98d60381ef61b63a9f97d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,17 +11,19 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type multipleChoicesLocationTags_query$data = {
-  readonly locationTags: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
+  readonly organization: {
+    readonly locationTags: {
+      readonly __id: string;
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly color: string | null | undefined;
+          readonly id: string;
+          readonly name: string;
+        };
+      }>;
+      readonly totalCount: number;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "multipleChoicesLocationTags_query";
 };
 export type multipleChoicesLocationTags_query$key = {
@@ -58,6 +60,7 @@ const node: ReaderFragment = {
         "cursor": "cursor",
         "direction": "forward",
         "path": [
+          "organization",
           "locationTags"
         ]
       }
@@ -66,79 +69,92 @@ const node: ReaderFragment = {
   "name": "multipleChoicesLocationTags_query",
   "selections": [
     {
-      "alias": "locationTags",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "multipleChoicesLocationTagsSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
         }
       ],
-      "concreteType": "ConnectionOfOrganizationTagEdge",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "__multipleChoicesLocationTags_locationTags_connection",
+      "name": "organization",
       "plural": false,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTagEdge",
+          "alias": "locationTags",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "multipleChoicesLocationTagsSortingValues"
+            }
+          ],
+          "concreteType": "ConnectionOfOrganizationTagEdge",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__multipleChoicesLocationTags_locationTags_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationTagDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "name",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "color",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "color",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -147,49 +163,42 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -199,6 +208,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "81958465bc2f15dbc962086e9008b3c0";
+(node as any).hash = "3d6cc3f854ab4373d1f1ff839a451380";
 
 export default node;

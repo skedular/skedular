@@ -273,17 +273,17 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           requireConsecutiveDays
           maxBookingSpreadDays
           productTags {
-            uniqueId
+            id
             name
             color
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
           organization {
-            uniqueId
+            id
           }
           maxAllowedResourcesLockTimePaidViaCard
           maxAllowedResourcesLockTimePaidViaBankTransfer
@@ -342,12 +342,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           requireConsecutiveDays
           maxBookingSpreadDays
           productTags {
-            uniqueId
+            id
             name
             color
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
@@ -422,10 +422,10 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   );
   const debounceSetMaxBookingSpreadDays = useDebounceCallback(setMaxBookingSpreadDays, keyboardTextFieldDebounceTimeout);
 
-  const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
+  const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ id }) => id) : []);
   const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
 
-  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ id }) => id) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
 
   const [maxAllowedResourcesLockTimePaidViaCard, setMaxAllowedResourcesLockTimePaidViaCard] = useState<string>(

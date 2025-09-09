@@ -23,15 +23,16 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqu
   const rootData = useFragment<multipleChoicesZones_query$key>(
     graphql`
       fragment multipleChoicesZones_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        zones(first: $count, after: $cursor, where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $multipleChoicesZonesSortingValues)
-          @connection(key: "multipleChoicesZones_zones") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          zones(first: $count, after: $cursor, orderBy: $multipleChoicesZonesSortingValues) @connection(key: "multipleChoicesZones_zones") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -40,8 +41,8 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqu
     rootDataRelay,
   );
 
-  const zones = useMemo<ZoneDetails[]>(() => rootData.zones.edges.map(({ node }) => node), [rootData.zones]);
-  const connectionIds = useMemo(() => [rootData.zones.__id], [rootData.zones]);
+  const zones = useMemo<ZoneDetails[]>(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.zones.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ZoneDetails>();
 
   if (zones.length === 0) {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9444d027d005b855f8bd1394a6429c6f>>
+ * @generated SignedSource<<1da45bbd180a13226ef7cbdf59c6e257>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,7 +51,7 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
@@ -129,12 +129,10 @@ return {
         "name": "availableResources",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Booking_LocationDetails",
+            "concreteType": "LocationDetails",
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
@@ -147,21 +145,34 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Booking_OrganizationCustomTagDetails",
+            "concreteType": "ResourceDetails",
             "kind": "LinkedField",
-            "name": "customTags",
-            "plural": true,
-            "selections": (v3/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Booking_OrganizationZoneDetails",
-            "kind": "LinkedField",
-            "name": "zones",
-            "plural": true,
-            "selections": (v3/*: any*/),
+            "name": "resource",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTagDetails",
+                "kind": "LinkedField",
+                "name": "customTags",
+                "plural": true,
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTagDetails",
+                "kind": "LinkedField",
+                "name": "zones",
+                "plural": true,
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -170,16 +181,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c232e832233ab4a4bf0dd29567cc75fe",
+    "cacheID": "ed29314d63632ee63c2b4f49e38de0ca",
     "id": null,
     "metadata": {},
     "name": "bookProduct_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d1b2452a8909cd1e5d8084c462498f48";
+(node as any).hash = "e52a6b46a6e184243079de44a526d475";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0324830b161326c9a61e6bf0bfbfe3a>>
+ * @generated SignedSource<<1da38473e3e59bea3f6bb2a3acc194e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,17 +11,19 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type zoneSelector_allZones_query$data = {
-  readonly zones: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
+  readonly organization: {
+    readonly zones: {
+      readonly __id: string;
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly color: string | null | undefined;
+          readonly id: string;
+          readonly name: string;
+        };
+      }>;
+      readonly totalCount: number;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "zoneSelector_allZones_query";
 };
 export type zoneSelector_allZones_query$key = {
@@ -49,87 +51,93 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "zonesSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
         }
       ],
-      "concreteType": "ConnectionOfOrganizationTagEdge",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
-      "name": "zones",
+      "name": "organization",
       "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTagEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
+          "args": [
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "OrganizationTagDetails",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "color",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "zonesSortingValues"
             }
           ],
-          "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
+          "concreteType": "ConnectionOfOrganizationTagEdge",
+          "kind": "LinkedField",
+          "name": "zones",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "__id",
+              "name": "totalCount",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagEdge",
+              "kind": "LinkedField",
+              "name": "edges",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "name",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "color",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
-          ]
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -139,6 +147,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "825f102effb56efaaeb7a7b9c472f935";
+(node as any).hash = "f78f957741e80e7f795b859c04b8ddc1";
 
 export default node;

@@ -6,7 +6,7 @@ public class Connection<T> where T : class
 
     [GraphQLName("edges")] public IEnumerable<T> Edges { get; set; } = [];
 
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
+    [GraphQLName("totalCount")] public int TotalCount { get; set; }
 
     public static Connection<T> Empty => new()
     {

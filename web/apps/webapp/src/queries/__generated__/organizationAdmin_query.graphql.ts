@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<042b78189ffdbd2339399c550346f20b>>
+ * @generated SignedSource<<864ac4500997ad48a871c3327790a6ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,10 @@ export type organizationAdmin_query$data = {
     readonly emails: ReadonlyArray<string>;
     readonly id: string;
     readonly preferredCustomTags: ReadonlyArray<{
-      readonly uniqueId: string;
+      readonly id: string;
     }>;
     readonly preferredZones: ReadonlyArray<{
-      readonly uniqueId: string;
+      readonly id: string;
     }>;
   };
   readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{
@@ -44,13 +44,7 @@ var v0 = {
   "storageKey": null
 },
 v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  }
+  (v0/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -77,7 +71,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Customer_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "preferredZones",
           "plural": true,
@@ -87,7 +81,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Customer_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "preferredCustomTags",
           "plural": true,
@@ -148,6 +142,6 @@ return {
 };
 })();
 
-(node as any).hash = "75a305288c7feac78773de9e50b5df32";
+(node as any).hash = "611fb883b1cab1f1b3b3dd94560d735e";
 
 export default node;

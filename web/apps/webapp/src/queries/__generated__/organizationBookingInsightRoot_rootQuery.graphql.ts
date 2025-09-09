@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3faed8dededa7c68a0b4d0f364557af>>
+ * @generated SignedSource<<c71ef1da152bba7b18fe88b69a380511>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,48 +74,67 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "from",
-            "variableName": "from"
-          },
-          {
-            "kind": "Variable",
             "name": "uniqueAlphanumericName",
             "variableName": "organizationUniqueAlphanumericName"
-          },
-          {
-            "kind": "Variable",
-            "name": "until",
-            "variableName": "to"
           }
         ],
-        "concreteType": "OrganizationAnalytics",
+        "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
-        "name": "organizationAnalytics",
+        "name": "organization",
         "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "OrganizationDailyBookingsTotal",
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "from"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "to"
+              }
+            ],
+            "concreteType": "OrganizationAnalytics",
             "kind": "LinkedField",
-            "name": "dailyBookingsTotals",
-            "plural": true,
+            "name": "analytics",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "date",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "total",
+                "concreteType": "OrganizationDailyBookingsTotal",
+                "kind": "LinkedField",
+                "name": "dailyBookingsTotals",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "date",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "total",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -124,12 +143,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d8a99a1a235d5b8ed1886d315eb9d11c",
+    "cacheID": "e75059ba6b10b12d5c35762d7c2e2fe8",
     "id": null,
     "metadata": {},
     "name": "organizationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n"
+    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    analytics(from: $from, until: $to) {\n      dailyBookingsTotals {\n        date\n        total\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e5dd73d24aae12107fbab93201b6544a>>
+ * @generated SignedSource<<ce34657a56d70896d08c89c37c1250db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -128,7 +128,7 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
@@ -218,13 +218,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -249,7 +243,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_CustomerDetails",
+                    "concreteType": "CustomerDetails",
                     "kind": "LinkedField",
                     "name": "involvedCustomers",
                     "plural": true,
@@ -290,7 +284,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_LocationDetails",
+                    "concreteType": "LocationDetails",
                     "kind": "LinkedField",
                     "name": "involvedLocations",
                     "plural": true,
@@ -300,7 +294,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_TeamDetails",
+                    "concreteType": "TeamDetails",
                     "kind": "LinkedField",
                     "name": "involvedTeams",
                     "plural": true,
@@ -312,30 +306,41 @@ return {
                     "args": null,
                     "concreteType": "BookingResourceDetails",
                     "kind": "LinkedField",
-                    "name": "resources",
+                    "name": "bookingResources",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/),
-                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Booking_OrganizationCustomTagDetails",
+                        "concreteType": "ResourceDetails",
                         "kind": "LinkedField",
-                        "name": "customTags",
-                        "plural": true,
-                        "selections": (v6/*: any*/),
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Booking_OrganizationZoneDetails",
-                        "kind": "LinkedField",
-                        "name": "zones",
-                        "plural": true,
-                        "selections": (v6/*: any*/),
+                        "name": "resource",
+                        "plural": false,
+                        "selections": [
+                          (v2/*: any*/),
+                          (v3/*: any*/),
+                          (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OrganizationTagDetails",
+                            "kind": "LinkedField",
+                            "name": "customTags",
+                            "plural": true,
+                            "selections": (v6/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OrganizationTagDetails",
+                            "kind": "LinkedField",
+                            "name": "zones",
+                            "plural": true,
+                            "selections": (v6/*: any*/),
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -449,16 +454,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4e45e2d309be77b3a1aedd2f9b029457",
+    "cacheID": "3aa3e68ad423db63ae9b1a2ede6662a3",
     "id": null,
     "metadata": {},
     "name": "myBookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationIds: [String!]\n  $organizationUniqueAlphanumericName: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query_1G22uz\n}\n\nfragment myBookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  involvedCustomers {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    uniqueId\n    name\n  }\n  resources {\n    uniqueId\n    name\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment myBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], locationIds: $locationIds, teamIds: $teamIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        involvedCustomers {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedLocations {\n          uniqueId\n          name\n        }\n        involvedTeams {\n          uniqueId\n          name\n        }\n        resources {\n          uniqueId\n          name\n          color\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n        ...myBookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationIds: [String!]\n  $organizationUniqueAlphanumericName: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query_1G22uz\n}\n\nfragment myBookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment myBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], locationIds: $locationIds, teamIds: $teamIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedLocations {\n          id\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n            color\n            customTags {\n              id\n              name\n              color\n            }\n            zones {\n              id\n              name\n              color\n            }\n          }\n        }\n        ...myBookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f0338e9f5556d9be67d85ba5fbde16e1";
+(node as any).hash = "061fb8fee7cd747793a0be17911fa103";
 
 export default node;

@@ -9,20 +9,22 @@ type BookingCheckoutSessionDetails {
 }
 
 type BookingDetails {
+  involvedCustomers: [CustomerDetails!]!
+  paidByCustomer: CustomerDetails
+  createdByCustomer: CustomerDetails
+  lastModifiedByCustomer: CustomerDetails
+  deletedByCustomer: CustomerDetails
+  involvedOrganizations: [OrganizationDetails!]!
+  paidByOrganization: OrganizationDetails
+  involvedLocations: [LocationDetails!]!
+  involvedTeams: [TeamDetails!]!
   from: DateTime!
   until: DateTime!
   notes: String
   type: BookingTypeDetails!
   paymentStatus: PaymentStatusDetails!
-  resources: [BookingResourceDetails!]!
+  bookingResources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
-  involvedCustomers: [Booking_CustomerDetails!]!
-  involvedOrganizations: [Booking_OrganizationDetails!]!
-  involvedLocations: [Booking_LocationDetails!]!
-  involvedTeams: [Booking_TeamDetails!]!
-  paidByCustomer: Booking_CustomerDetails
-  paidByOrganization: Booking_OrganizationDetails
-  createdByCustomer: Booking_CustomerDetails
   paymentMethod: PaymentMethodTypeDetails
   totalAmountExcludeTax: Decimal
   totalAmountExcludeTaxToDisplay: String!
@@ -37,8 +39,6 @@ type BookingDetails {
   invoiceUrl: String
   invoiceNumber: String
   invoiceEmailList: [String!]
-  lastModifiedByCustomer: Booking_CustomerDetails
-  deletedByCustomer: Booking_CustomerDetails
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   paymentExpiry: DateTime!
@@ -57,16 +57,9 @@ type BookingPayload {
 }
 
 type BookingResourceDetails {
-  uniqueId: ID!
-  name: String!
-  inactive: Boolean!
-  color: String
-  capacity: Int!
-  requireBookingApproval: Boolean!
-  location: Booking_LocationDetails
-  customTags: [Booking_OrganizationCustomTagDetails!]!
-  zones: [Booking_OrganizationZoneDetails!]!
-  customers: [Booking_CustomerDetails!]!
+  resource: ResourceDetails!
+  location: LocationDetails
+  customers: [CustomerDetails!]!
 }
 
 type BookingTypeDetails {
@@ -74,86 +67,23 @@ type BookingTypeDetails {
   name: String!
 }
 
-type Booking_CurrencyDetails {
-  type: Currency!
-  name: String!
-}
-
-type Booking_CustomerDetails {
-  uniqueId: ID!
-  designation: String
-  title: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  timezone: String
-  locale: String
-  phoneNumber: String
-}
-
-type Booking_LocationDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type Booking_OrganizationCustomTagDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-}
-
-type Booking_OrganizationDetails {
-  uniqueId: ID!
-  uniqueAlphanumericName: String
-  name: String!
-  contactEmail: String
-  contactPhone: String
-}
-
-type Booking_OrganizationZoneDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-}
-
-type Booking_PriceUnitDetails {
-  type: PriceUnit!
-  name: String!
-}
-
-type Booking_ProductVersionDetails {
-  uniqueId: ID!
-  name: String!
-  price: String!
-  priceToDisplay: String!
-  priceUnit: Booking_PriceUnitDetails!
-  isPriceTaxInclusive: Boolean!
-  currency: Booking_CurrencyDetails!
-  organization: Booking_OrganizationDetails!
-}
-
-type Booking_TeamDetails {
-  uniqueId: ID!
-  name: String!
-}
-
 type ConnectionOfBookingEdge {
   pageInfo: PageInfo!
   edges: [BookingEdge!]!
-  totalCount: Int
+  totalCount: Int!
+}
+
+type CustomerDetails {
+  id: ID!
 }
 
 type LineItemDetails {
-  productVersion: Booking_ProductVersionDetails!
+  productVersion: ProductVersionDetails!
   quantity: Int!
+}
+
+type LocationDetails {
+  id: ID!
 }
 
 type Mutation {
@@ -178,6 +108,10 @@ type OrganizationBookingPermissions {
   canModifyPaymentMethod: Boolean!
 }
 
+type OrganizationDetails {
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -195,10 +129,15 @@ type PaymentStatusDetails {
   name: String!
 }
 
+type ProductVersionDetails {
+  id: ID!
+}
+
 type Query {
   bookingTypes: [BookingTypeDetails!]!
   marketplaceBookingTypes: [BookingTypeDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
+  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
@@ -211,10 +150,18 @@ type Query {
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
+type ResourceDetails {
+  id: ID!
+}
+
 type TeamBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
   canDeleteBooking: Boolean!
+}
+
+type TeamDetails {
+  id: ID!
 }
 
 type Version {
@@ -347,11 +294,6 @@ enum BookingType {
   NON_WORKING_DAY
 }
 
-enum Currency {
-  NZD
-  USD
-}
-
 enum OrderDirection {
   ASCENDING
   DESCENDING
@@ -371,14 +313,12 @@ enum PaymentStatus {
   NO_PAYMENT_REQUIRED
 }
 
-enum PriceUnit {
-  PER_MINUTE
-  PER_HOUR
-  PER_USE
-}
-
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

@@ -47,22 +47,22 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
         color
         capacity
         customTags {
-          uniqueId
+          id
           name
           color
         }
         zones {
-          uniqueId
+          id
           name
           color
         }
         productTags {
-          uniqueId
+          id
           name
           color
         }
         resourceType {
-          uniqueId
+          id
           name
           color
           tagType
@@ -117,9 +117,9 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
         }
       />
       <CardContent>
-        <CustomTags customTags={resourceDetails.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+        <CustomTags customTags={resourceDetails.customTags.map((item) => ({ id: item.id, name: item.name, color: item.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         <Divider />
-        <Zones zones={resourceDetails.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+        <Zones zones={resourceDetails.zones.map((item) => ({ id: item.id, name: item.name, color: item.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         <Divider />
 
         <StackRow>

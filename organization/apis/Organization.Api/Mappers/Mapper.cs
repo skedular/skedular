@@ -436,7 +436,6 @@ public class Mapper : IMapper
             HasTeam = src.HasTeam,
             HasFutureBooking = src.HasFutureBooking,
             IsMyOnboardingDone = src.IsMyOnboardingDone,
-            Members = MapTo(src.OrganizationMembers),
             ResourceTypes = src.Tags
                 .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                 .Select(item => MapTo(item)!),
@@ -455,7 +454,7 @@ public class Mapper : IMapper
             Role = src.Role,
             Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapTo(src.Customer)!
+            CustomerId = src.Customer.Id
         };
 
     public OrganizationAnalytics MapTo(
@@ -1367,8 +1366,8 @@ public class Mapper : IMapper
             Status = new OrganizationInvitationStatusDetails { Type = src.Status, Name = src.Status.ToInvitationStatusName() },
             Role = src.Role,
             Organization = MapTo(src.Organization)!,
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            CreatedById = src.CreatedBy.Id,
+            InviteeId = src.Invitee?.Id
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
@@ -1495,27 +1494,6 @@ public class Mapper : IMapper
             Customer = new Customer { Id = src.Customer.Id },
             Organization = organization
         };
-
-    private static CustomerDetails? MapTo(Customer? src) =>
-        src is null
-            ? null
-            : new CustomerDetails
-            {
-                UniqueId = src.Id,
-                Email = src.Identities.ToFirstEmail(),
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber
-            };
 
     private OrganizationActiveOfferingDetails MapTo(OrganizationOffering? src)
     {
@@ -1765,8 +1743,6 @@ public class Mapper : IMapper
         tag.Organization = organization;
         return new Edge<Tag>(tag, src.Cursor);
     }
-
-    private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) => src.Select(MapTo);
 
     private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));

@@ -24,7 +24,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay 
           id
           name
           organization {
-            uniqueId
+            id
           }
         }
       }
@@ -35,10 +35,12 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay 
   const [rootDataLocationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment locationBookingInsight_locationAnalytics_query on Query @refetchable(queryName: "locationBookingInsight_locationAnalytics_refetchableFragment") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) {
-          dailyBookingsTotals {
-            date
-            total
+        location(id: $locationId) {
+          analytics(from: $from, until: $to) {
+            dailyBookingsTotals {
+              date
+              total
+            }
           }
         }
       }
@@ -69,14 +71,14 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay 
     handleRefetch(from, until);
   };
 
-  if (!rootDataLocationAnalytics.locationAnalytics || !rootData.location) {
+  if (!rootDataLocationAnalytics.location || !rootData.location) {
     return <></>;
   }
 
   const dataset =
-    rootDataLocationAnalytics.locationAnalytics.dailyBookingsTotals.length === 0
+    rootDataLocationAnalytics.location.analytics.dailyBookingsTotals.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootDataLocationAnalytics.locationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
+      : rootDataLocationAnalytics.location.analytics.dailyBookingsTotals.map(({ date, total }) => ({
           date: toDayAndMonthDate(date),
           total,
         }));

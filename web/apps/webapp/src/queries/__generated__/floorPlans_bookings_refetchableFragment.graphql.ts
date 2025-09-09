@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<050232df38048ec9070905cfc00199c2>>
+ * @generated SignedSource<<25ecc5de47093d6d45ca656577ef6cbf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -96,7 +96,7 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
@@ -196,17 +196,11 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Booking_CustomerDetails",
+                    "concreteType": "CustomerDetails",
                     "kind": "LinkedField",
                     "name": "involvedCustomers",
                     "plural": true,
@@ -249,30 +243,41 @@ return {
                     "args": null,
                     "concreteType": "BookingResourceDetails",
                     "kind": "LinkedField",
-                    "name": "resources",
+                    "name": "bookingResources",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/),
-                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Booking_OrganizationCustomTagDetails",
+                        "concreteType": "ResourceDetails",
                         "kind": "LinkedField",
-                        "name": "customTags",
-                        "plural": true,
-                        "selections": (v5/*: any*/),
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Booking_OrganizationZoneDetails",
-                        "kind": "LinkedField",
-                        "name": "zones",
-                        "plural": true,
-                        "selections": (v5/*: any*/),
+                        "name": "resource",
+                        "plural": false,
+                        "selections": [
+                          (v2/*: any*/),
+                          (v3/*: any*/),
+                          (v4/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OrganizationTagDetails",
+                            "kind": "LinkedField",
+                            "name": "customTags",
+                            "plural": true,
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OrganizationTagDetails",
+                            "kind": "LinkedField",
+                            "name": "zones",
+                            "plural": true,
+                            "selections": (v5/*: any*/),
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       }
                     ],
@@ -312,7 +317,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_OrganizationDetails",
+                    "concreteType": "OrganizationDetails",
                     "kind": "LinkedField",
                     "name": "involvedOrganizations",
                     "plural": true,
@@ -324,7 +329,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_LocationDetails",
+                    "concreteType": "LocationDetails",
                     "kind": "LinkedField",
                     "name": "involvedLocations",
                     "plural": true,
@@ -334,7 +339,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Booking_TeamDetails",
+                    "concreteType": "TeamDetails",
                     "kind": "LinkedField",
                     "name": "involvedTeams",
                     "plural": true,
@@ -439,16 +444,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1aa9c09d9aaf443cae75bafed18277b0",
+    "cacheID": "1485ceb31a013ea10206a7a776fb21ed",
     "id": null,
     "metadata": {},
     "name": "floorPlans_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  type {\n    type\n    name\n  }\n  involvedCustomers {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    uniqueId\n  }\n  involvedLocations {\n    uniqueId\n    name\n  }\n  involvedTeams {\n    uniqueId\n    name\n  }\n  resources {\n    uniqueId\n    name\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          uniqueId\n        }\n        resources {\n          uniqueId\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  type {\n    type\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "14c38a524a386e251c95b9eb3fc9c394";
+(node as any).hash = "d6fdaa896360779039d39b7869728546";
 
 export default node;

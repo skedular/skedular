@@ -83,35 +83,37 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
       fragment editFloorPlan_resources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "editFloorPlan_resources_refetchableFragment") {
-        resources(first: $count, after: $cursor, where: { locationId: $locationId, floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues)
-          @connection(key: "editFloorPlanResourcesQuery_resources") {
-          edges {
-            node {
-              id
-              name
-              inactive
-              color
-              capacity
-              customTags {
-                uniqueId
+        location(id: $locationId) {
+          resources(first: $count, after: $cursor, where: { floorPlanId: $floorPlanId }, orderBy: $resourcesSortingValues)
+            @connection(key: "editFloorPlanResourcesQuery_resources") {
+            edges {
+              node {
+                id
                 name
+                inactive
                 color
-              }
-              zones {
-                uniqueId
-                name
-                color
-              }
-              productTags {
-                uniqueId
-                name
-                color
-              }
-              resourceType {
-                uniqueId
-                name
-                color
-                tagType
+                capacity
+                customTags {
+                  id
+                  name
+                  color
+                }
+                zones {
+                  id
+                  name
+                  color
+                }
+                productTags {
+                  id
+                  name
+                  color
+                }
+                resourceType {
+                  id
+                  name
+                  color
+                  tagType
+                }
               }
             }
           }
@@ -176,7 +178,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
         }
       : null,
   );
-  const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
+  const resources = useMemo(() => (rootDataResources.location ? rootDataResources.location.resources.edges.map(({ node }) => node) : []), [rootDataResources.location]);
   const [resourcePositions, setResourcePositions] = useState<Map<string, { x: number; y: number }>>(() =>
     (rootData.floorPlan?.resourcePositions ? rootData.floorPlan.resourcePositions : []).reduce(
       (acc, { x, y, resource }) => acc.set(resource.id, { x, y }),

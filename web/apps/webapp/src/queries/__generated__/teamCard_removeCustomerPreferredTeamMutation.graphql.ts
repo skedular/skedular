@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b5e4ad3087586a242f81530fb9f287f>>
+ * @generated SignedSource<<93490a8ab97c1e8abd1468558aa61159>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type teamCard_removeCustomerPreferredTeamMutation$data = {
     readonly customer: {
       readonly id: string;
       readonly preferredTeams: ReadonlyArray<{
-        readonly uniqueId: string;
+        readonly id: string;
       }>;
     };
   };
@@ -39,7 +39,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -62,28 +69,16 @@ v1 = [
         "name": "customer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerTeamDetails",
+            "concreteType": "TeamDetails",
             "kind": "LinkedField",
             "name": "preferredTeams",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           }
@@ -100,7 +95,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "teamCard_removeCustomerPreferredTeamMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -109,19 +104,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "teamCard_removeCustomerPreferredTeamMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "4835326f2d7d268e8028febd3b257df5",
+    "cacheID": "ae8d6ab116d2ec7e27c85394e0c3cb0e",
     "id": null,
     "metadata": {},
     "name": "teamCard_removeCustomerPreferredTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation teamCard_removeCustomerPreferredTeamMutation(\n  $input: RemoveCustomerPreferredTeamInput!\n) {\n  removeCustomerPreferredTeam(input: $input) {\n    customer {\n      id\n      preferredTeams {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation teamCard_removeCustomerPreferredTeamMutation(\n  $input: RemoveCustomerPreferredTeamInput!\n) {\n  removeCustomerPreferredTeam(input: $input) {\n    customer {\n      id\n      preferredTeams {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cb984ddc7a1daa14091b401c100496f8";
+(node as any).hash = "1d7f77ea5ffb830edecfa1d23e3ca042";
 
 export default node;

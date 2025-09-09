@@ -41,13 +41,13 @@ type Props = {
 };
 
 type CustomTagDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ZoneDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
@@ -88,7 +88,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           name
         }
         involvedCustomers {
-          uniqueId
+          id
           name
           givenName
           middleName
@@ -96,29 +96,31 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           photoUrl
         }
         involvedOrganizations {
-          uniqueId
+          id
         }
         involvedLocations {
-          uniqueId
+          id
           name
         }
         involvedTeams {
-          uniqueId
+          id
           name
         }
-        resources {
-          uniqueId
-          name
-          color
-          customTags {
-            uniqueId
+        bookingResources {
+          resource {
+            id
             name
             color
-          }
-          zones {
-            uniqueId
-            name
-            color
+            customTags {
+              id
+              name
+              color
+            }
+            zones {
+              id
+              name
+              color
+            }
           }
         }
         isPaymentRequired
@@ -155,7 +157,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -163,26 +165,28 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             photoUrl
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -347,8 +351,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           from: bookingDetails.from,
           until: bookingDetails.until,
           customerIds: [rootData.me.id],
-          organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
-          teamIds: bookingDetails.involvedTeams.map(({ uniqueId }) => uniqueId),
+          organizationIds: bookingDetails.involvedOrganizations.map(({ id }) => id),
+          teamIds: bookingDetails.involvedTeams.map(({ id }) => id),
           resourceIds: [],
           type: bookingDetails.type.type,
           lineItems: [],
@@ -371,12 +375,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           message += ` from the "${booking.involvedLocations[0]!.name}"`;
         }
 
-        if (booking.resources.length > 0) {
-          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
+        if (booking.bookingResources.length > 0) {
+          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
 
-          const zones = booking.resources.flatMap(({ zones }) => zones);
+          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
           if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
 
             message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
           }
@@ -408,7 +412,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             },
             involvedCustomers: [
               {
-                uniqueId: rootData.me.id,
+                id: rootData.me.id,
                 name: rootData.me.name,
                 givenName: rootData.me.givenName,
                 middleName: rootData.me.middleName,
@@ -418,7 +422,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             ],
             involvedLocations: [],
             involvedTeams: [],
-            resources: [],
+            bookingResources: [],
           },
         },
       },
@@ -581,19 +585,19 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
     });
   };
 
-  const customTags = bookingDetails.resources
-    .flatMap(({ customTags }) => customTags)
+  const customTags = bookingDetails.bookingResources
+    .flatMap(({ resource }) => resource.customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
-      if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+      if (!acc.some((item) => item.id === customTag.id)) {
         acc.push(customTag);
       }
 
       return acc;
     }, []);
-  const zones = bookingDetails.resources
-    .flatMap(({ zones }) => zones)
+  const zones = bookingDetails.bookingResources
+    .flatMap(({ resource }) => resource.zones)
     .reduce((acc: ZoneDetails[], zone) => {
-      if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+      if (!acc.some((item) => item.id === zone.id)) {
         acc.push(zone);
       }
 
@@ -608,7 +612,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             <StackRow>
               <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id)}>
                 {bookingDetails.involvedLocations.map((item) => (
-                  <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                  <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
                 ))}
               </Link>
 
@@ -654,7 +658,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           <Divider />
           {bookingDetails.involvedCustomers.map((item) => (
             <SmallIconTypography
-              key={item.uniqueId}
+              key={item.id}
               label={getCustomerFullName(item)}
               startElement={<CustomerAvatar name={item} photo={{ url: item.photoUrl }} size="small" />}
               sx={{ paddingTop: 1, paddingBottom: 1 }}
@@ -664,21 +668,21 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           {bookingDetails.involvedTeams.length === 0 && <SmallIconTypography startElement={<TeamIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
           {bookingDetails.involvedTeams.length > 0 &&
             bookingDetails.involvedTeams.map((item) => (
-              <SmallIconTypography key={item.uniqueId} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              <SmallIconTypography key={item.id} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
             ))}
           <Divider />
           <Resources
-            resources={bookingDetails.resources.map((resource) => ({
-              id: resource.uniqueId,
-              name: resource.name,
-              color: resource.color,
+            resources={bookingDetails.bookingResources.map((item) => ({
+              id: item.resource.id,
+              name: item.resource.name,
+              color: item.resource.color,
             }))}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
           <CustomTags
             customTags={customTags.map((customTag: CustomTagDetails) => ({
-              id: customTag.uniqueId,
+              id: customTag.id,
               name: customTag.name,
               color: customTag.color,
             }))}
@@ -687,7 +691,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           <Divider />
           <Zones
             zones={zones.map((zone: ZoneDetails) => ({
-              id: zone.uniqueId,
+              id: zone.id,
               name: zone.name,
               color: zone.color,
             }))}

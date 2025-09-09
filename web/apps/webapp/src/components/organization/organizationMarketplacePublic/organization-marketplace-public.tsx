@@ -29,7 +29,7 @@ const RootQuery = graphql`
           id
           name
           organization {
-            uniqueId
+            id
           }
           ...productCard_ProductDetails
         }

@@ -3,6 +3,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
@@ -55,10 +56,20 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
-        string uniqueAlphanumericName,
+        string? id,
+        string? uniqueAlphanumericName,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByUniqueAlphanumericNameAsync(uniqueAlphanumericName, false, cancellationToken));
+        mapper.MapTo(await organizationService.GetByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, false, cancellationToken));
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<OrganizationDetails?> OrganizationByIdAsync(
+        string id,
+        [Service] IOrganizationService organizationService,
+        CancellationToken cancellationToken) =>
+        await OrganizationAsync(id, null, organizationService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<OrganizationEdge>> OrganizationsAsync(

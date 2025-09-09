@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd1855de0243cd09e32da68f2d8a2e4d>>
+ * @generated SignedSource<<d5ad6f9fd04f90765ec2a21099e3b159>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type organizationLocations_addCustomerPreferredLocationMutation$data = {
     readonly customer: {
       readonly id: string;
       readonly preferredLocations: ReadonlyArray<{
-        readonly uniqueId: string;
+        readonly id: string;
       }>;
     };
   };
@@ -39,7 +39,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -62,28 +69,16 @@ v1 = [
         "name": "customer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Customer_LocationDetails",
+            "concreteType": "LocationDetails",
             "kind": "LinkedField",
             "name": "preferredLocations",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           }
@@ -100,7 +95,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocations_addCustomerPreferredLocationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -109,19 +104,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocations_addCustomerPreferredLocationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "7455b7ca57376b0d958d4947068edf8a",
+    "cacheID": "cbb9476f90d85c63e188ee97039dc706",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_addCustomerPreferredLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocations_addCustomerPreferredLocationMutation(\n  $input: AddCustomerPreferredLocationInput!\n) {\n  addCustomerPreferredLocation(input: $input) {\n    customer {\n      id\n      preferredLocations {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocations_addCustomerPreferredLocationMutation(\n  $input: AddCustomerPreferredLocationInput!\n) {\n  addCustomerPreferredLocation(input: $input) {\n    customer {\n      id\n      preferredLocations {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8dd6bdd0297460628f9595d5e8f8086e";
+(node as any).hash = "34e2f8c5c1d2c897aebae292647ae37c";
 
 export default node;

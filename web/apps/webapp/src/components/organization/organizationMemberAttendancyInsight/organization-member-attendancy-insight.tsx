@@ -21,10 +21,12 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
     graphql`
       fragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query
       @refetchable(queryName: "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment") {
-        organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {
-          memberAttendancePercentage {
-            date
-            percentage
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          analytics(from: $from, until: $to) {
+            memberAttendancePercentage {
+              date
+              percentage
+            }
           }
         }
       }
@@ -56,14 +58,14 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
     handleRefetch(from, until);
   };
 
-  if (!rootDataOrganizationAnalytics.organizationAnalytics) {
+  if (!rootDataOrganizationAnalytics.organization) {
     return <> </>;
   }
 
   const dataset =
-    rootDataOrganizationAnalytics.organizationAnalytics.memberAttendancePercentage.length === 0
+    rootDataOrganizationAnalytics.organization.analytics.memberAttendancePercentage.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootDataOrganizationAnalytics.organizationAnalytics.memberAttendancePercentage.map(({ date, percentage }) => ({
+      : rootDataOrganizationAnalytics.organization.analytics.memberAttendancePercentage.map(({ date, percentage }) => ({
           date: toDayAndMonthDate(date),
           percentage: toFixed(percentage, 2),
         }));

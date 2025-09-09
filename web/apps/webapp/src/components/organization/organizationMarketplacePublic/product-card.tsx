@@ -36,7 +36,7 @@ const ProductCard = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         requireConsecutiveDays
         maxBookingSpreadDays
         organization {
-          uniqueId
+          id
         }
         primaryFeatureImage {
           thumbnail {

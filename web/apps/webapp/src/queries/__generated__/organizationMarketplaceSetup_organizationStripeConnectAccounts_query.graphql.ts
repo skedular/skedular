@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c15eb57c455350fc2feeb1101f649e1f>>
+ * @generated SignedSource<<cbf70822762d15577acad412f747216d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly url: string | null | undefined;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationMarketplaceSetup_organizationStripeConnectAccounts_query";
 };

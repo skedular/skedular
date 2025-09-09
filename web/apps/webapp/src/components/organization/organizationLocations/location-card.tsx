@@ -57,7 +57,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -82,7 +82,7 @@ const LocationCard = ({
         me {
           id
           preferredLocations {
-            uniqueId
+            id
           }
         }
       }
@@ -96,17 +96,17 @@ const LocationCard = ({
         id
         name
         customTags {
-          uniqueId
+          id
           name
           color
         }
         zones {
-          uniqueId
+          id
           name
           color
         }
         resources {
-          id
+          totalCount
         }
         physicalAddress {
           multilinesFormattedAddress
@@ -147,7 +147,7 @@ const LocationCard = ({
         customer {
           id
           preferredLocations {
-            uniqueId
+            id
           }
         }
       }
@@ -160,7 +160,7 @@ const LocationCard = ({
         customer {
           id
           preferredLocations {
-            uniqueId
+            id
           }
         }
       }
@@ -174,7 +174,7 @@ const LocationCard = ({
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.uniqueId === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
+  const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.id === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
 
   useEffect(() => {
@@ -349,8 +349,8 @@ const LocationCard = ({
     return <></>;
   }
 
-  const resourcesCount = locationDetails.resources.length;
-  const zones = locationDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
+  const resourcesCount = locationDetails.resources.totalCount;
+  const zones = locationDetails.zones.map(({ id, name, color }) => ({ id, name, color }));
 
   return (
     <>
@@ -430,7 +430,7 @@ const LocationCard = ({
               <StackRow>
                 <AvatarGroup max={5}>
                   {sharedWithTeammates.map((item) => (
-                    <CustomerAvatar key={item?.uniqueId} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
+                    <CustomerAvatar key={item?.id} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
                   ))}
                 </AvatarGroup>
               </StackRow>

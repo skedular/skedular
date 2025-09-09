@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc28388937cc82a0b422f538aa46fd65>>
+ * @generated SignedSource<<9ec507d738c13ebf5d7670138f389558>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,11 +26,11 @@ export type organizationUsers_changeOrganizationUsersStatusMutation$data = {
         readonly email: string | null | undefined;
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
+        readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
         readonly phoneNumber: string | null | undefined;
         readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
       };
       readonly id: string;
       readonly role: OrganizationMemberRole | null | undefined;
@@ -51,7 +51,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -74,28 +81,16 @@ v1 = [
         "name": "members",
         "plural": true,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Organization_CustomerDetails",
+            "concreteType": "CustomerDetails",
             "kind": "LinkedField",
             "name": "customer",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              },
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -175,7 +170,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -184,19 +179,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "bf8e58a10a6503939cda1c8e0def0b83",
+    "cacheID": "ea1126a8b5b6d324a8c5d94bf7b68501",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_changeOrganizationUsersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationUsers_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d1a26f4ddfff08ee8df31da8f8c9ba6a";
+(node as any).hash = "87c1e580b7abfc0f8976c52e66e61375";
 
 export default node;

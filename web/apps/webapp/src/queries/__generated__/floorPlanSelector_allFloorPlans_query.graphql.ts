@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95740f7428fd914fb647a7f0bddbb9d2>>
+ * @generated SignedSource<<8811251c03a48fb43d4def895a4bae1d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type floorPlanSelector_allFloorPlans_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "floorPlanSelector_allFloorPlans_query";
 };

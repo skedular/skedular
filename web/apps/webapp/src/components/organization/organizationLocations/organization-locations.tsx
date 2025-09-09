@@ -63,22 +63,24 @@ const RootQuery = graphql`
     me {
       id
       preferredLocations {
-        uniqueId
+        id
       }
     }
-    organizationMembers(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $organizationMembersSortingValues) {
-      __id
-      totalCount
-      edges {
-        node {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+      members(orderBy: $organizationMembersSortingValues) {
+        __id
+        totalCount
+        edges {
+          node {
+            id
+            customer {
+              id
+              name
+              givenName
+              middleName
+              familyName
+              photoUrl
+            }
           }
         }
       }
@@ -110,7 +112,7 @@ type ZoneDetails = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -151,17 +153,17 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               id
               name
               customTags {
-                uniqueId
+                id
                 name
                 color
               }
               zones {
-                uniqueId
+                id
                 name
                 color
               }
               resources {
-                id
+                totalCount
               }
               physicalAddress {
                 formattedAddress
@@ -186,7 +188,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           }
         ) {
           location {
-            uniqueId
+            id
           }
         }
       }
@@ -210,7 +212,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         customer {
           id
           preferredLocations {
-            uniqueId
+            id
           }
         }
       }
@@ -223,7 +225,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         customer {
           id
           preferredLocations {
-            uniqueId
+            id
           }
         }
       }
@@ -243,7 +245,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
@@ -253,7 +255,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
 
   const locations = useMemo(() => rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.locations]);
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
-  const organizationMembers = useMemo(() => (rootData.organizationMembers ? rootData.organizationMembers.edges.map((edge) => edge.node) : []), [rootData.organizationMembers]);
+  const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
 
   const handleRefetch = useCallback(
     (customTagIds: string[], zoneIds: string[]) => {
@@ -442,12 +444,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   };
 
   const rows: RowType[] = locations.map((location) => {
-    const resourcesCount = location.resources.length;
+    const resourcesCount = location.resources.totalCount;
     const availableResourcesCount = rootDataRefetchable.availableResources
-      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.id === location.id).length
       : 0;
     const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
-    const zones = location.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
+    const zones = location.zones.map(({ id, name, color }) => ({ id, name, color }));
 
     return {
       id: location.id,
@@ -509,7 +511,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
       renderCell: (params) => (
         <AvatarGroup max={5}>
           {params.value.map((customer: CustomerDetails) => (
-            <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+            <CustomerAvatar key={customer?.id} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
           ))}
         </AvatarGroup>
       ),
@@ -589,7 +591,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     },
   ];
 
-  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organizationMembers) {
+  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organization) {
     return <></>;
   }
 
@@ -611,9 +613,9 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           {viewMode === 'grid' && (
             <GridContainer>
               {locations.map((location) => {
-                const resourcesCount = location.resources.length;
+                const resourcesCount = location.resources.totalCount;
                 const availableResourcesCount = rootDataRefetchable.availableResources
-                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.id === location.id).length
                   : 0;
                 const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
 

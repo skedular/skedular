@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3811491ad2be8d5c9de35dc1c0c09754>>
+ * @generated SignedSource<<52362c9fa1d0dc67ad66496b853478c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type editMarketplaceBooking_customerTeams_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "editMarketplaceBooking_customerTeams_query";
 };

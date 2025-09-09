@@ -48,7 +48,7 @@ const RootQuery = graphql`
       id
       name
       organization {
-        uniqueId
+        id
         name
       }
     }
@@ -56,7 +56,7 @@ const RootQuery = graphql`
       id
       name
       organization {
-        uniqueId
+        id
         name
       }
     }

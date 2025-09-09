@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00d0d7f4679ca1a8964e355829691b44>>
+ * @generated SignedSource<<811117b9b986fbd92bb870a3dd99cfd6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type newBookingDialog_customerTeams_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "newBookingDialog_customerTeams_query";
 };

@@ -54,7 +54,7 @@ const RootQuery = graphql`
     me {
       id
       preferredTeams {
-        uniqueId
+        id
       }
     }
     ...teamCard_query
@@ -68,7 +68,7 @@ type TeamDetails = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -106,15 +106,19 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
                 uniqueAlphanumericName
               }
               members {
-                organizationMember {
-                  uniqueId
-                  customer {
-                    uniqueId
-                    givenName
-                    middleName
-                    familyName
-                    name
-                    photoUrl
+                edges {
+                  node {
+                    organizationMember {
+                      uniqueId
+                      customer {
+                        id
+                        givenName
+                        middleName
+                        familyName
+                        name
+                        photoUrl
+                      }
+                    }
                   }
                 }
               }
@@ -146,7 +150,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
         customer {
           id
           preferredTeams {
-            uniqueId
+            id
           }
         }
       }
@@ -159,7 +163,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
         customer {
           id
           preferredTeams {
-            uniqueId
+            id
           }
         }
       }
@@ -177,7 +181,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.preferredTeams.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.preferredTeams.map(({ id }) => id) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
@@ -373,7 +377,10 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
     return {
       id: team.id,
       team,
-      teammates: team.members.filter(({ organizationMember }) => !!organizationMember).map(({ organizationMember }) => organizationMember!.customer),
+      teammates: team.members.edges
+        .map(({ node }) => node)
+        .filter(({ organizationMember }) => !!organizationMember)
+        .map(({ organizationMember }) => organizationMember!.customer),
       preferred: preferredTeams.includes(team.id),
     };
   });
@@ -394,7 +401,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
       renderCell: (params) => (
         <AvatarGroup max={5}>
           {params.value.map((customer: CustomerDetails) => (
-            <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+            <CustomerAvatar key={customer?.id} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
           ))}
         </AvatarGroup>
       ),
@@ -471,7 +478,10 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
                     rootDataRelay={rootData}
                     teamDetailsRelay={team}
                     connectionIds={connectionIds}
-                    teammates={team.members.filter(({ organizationMember }) => !!organizationMember)!.map(({ organizationMember }) => organizationMember!.customer)}
+                    teammates={team.members.edges
+                      .map(({ node }) => node)
+                      .filter(({ organizationMember }) => !!organizationMember)!
+                      .map(({ organizationMember }) => organizationMember!.customer)}
                   />
                 </Grid>
               ))}

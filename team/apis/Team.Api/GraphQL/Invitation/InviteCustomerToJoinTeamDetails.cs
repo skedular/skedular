@@ -1,7 +1,9 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
+using Team.Api.GraphQL.Member;
 using Team.Api.GraphQL.Team;
 
 namespace Team.Api.GraphQL.Invitation;
@@ -13,7 +15,23 @@ public class InviteCustomerToJoinTeamDetails : Node
     [GraphQLName("status")] public TeamInvitationStatusDetails Status { get; set; } = new();
     [GraphQLName("role")] public TeamMemberRole Role { get; set; }
     [GraphQLName("team")] public TeamDetails Team { get; set; } = new();
-    [GraphQLName("createdBy")] public CustomerDetails CreatedBy { get; set; } = new();
-    [GraphQLName("invitee")] public CustomerDetails? Invitee { get; set; }
+    [GraphQLName("createdById")] public string CreatedById { get; set; } = string.Empty;
+    [GraphQLName("inviteeId")] public string? InviteeId { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[ObjectType<InviteCustomerToJoinTeamDetails>]
+public static partial class InviteCustomerToJoinTeamDetailsType
+{
+    static partial void Configure(IObjectTypeDescriptor<InviteCustomerToJoinTeamDetails> descriptor)
+    {
+        descriptor.Ignore(item => item.CreatedById);
+        descriptor.Ignore(item => item.InviteeId);
+    }
+
+    public static CustomerDetails GetCreatedBy([Parent] InviteCustomerToJoinTeamDetails item)
+        => new(item.CreatedById);
+
+    public static CustomerDetails? GetInvitee([Parent] InviteCustomerToJoinTeamDetails item)
+        => string.IsNullOrWhiteSpace(item.InviteeId) ? null : new CustomerDetails(item.InviteeId);
 }

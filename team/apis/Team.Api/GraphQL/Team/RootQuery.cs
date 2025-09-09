@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;
@@ -17,12 +18,21 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await teamService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<TeamDetails?> TeamByIdAsync(
+        string id,
+        [Service] ITeamService teamService,
+        CancellationToken cancellationToken) =>
+        await TeamAsync(id, teamService, cancellationToken);
+
+    [UseResolverScope]
     public async Task<Connection<TeamEdge>> TeamsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
-        TeamWhereInput where,
+        TeamWhereInput? where,
         IEnumerable<TeamOrderInput>? orderBy,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -30,11 +40,11 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
             new TeamSearchCriteria(
-                where.OrganizationId,
-                where.OrganizationUniqueAlphanumericName,
+                where?.OrganizationId,
+                where?.OrganizationUniqueAlphanumericName,
                 null,
-                where.NameContains,
-                where.PrimaryLocationIds.ToSafeCollection()),
+                where?.NameContains,
+                where is null ? [] : where.PrimaryLocationIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
@@ -58,7 +68,7 @@ public class RootQuery(IMapper mapper)
         int? first,
         string? before,
         int? last,
-        CustomerTeamWhereInput where,
+        CustomerTeamWhereInput? where,
         IEnumerable<TeamOrderInput>? orderBy,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -66,11 +76,11 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
             new TeamSearchCriteria(
-                where.OrganizationId,
-                where.OrganizationUniqueAlphanumericName,
-                where.CustomerId,
-                where.NameContains,
-                where.PrimaryLocationIds.ToSafeCollection()),
+                where?.OrganizationId,
+                where?.OrganizationUniqueAlphanumericName,
+                where?.CustomerId,
+                where?.NameContains,
+                where is null ? [] : where.PrimaryLocationIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

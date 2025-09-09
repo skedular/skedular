@@ -1,6 +1,7 @@
 using HotChocolate;
+using Location.Api.GraphQL.Location;
 
-namespace Location.Api.GraphQL.Location;
+namespace Location.Api.GraphQL.Analytics;
 
 [GraphQLName("LocationAnalytics")]
 public class LocationAnalytics

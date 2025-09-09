@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69586243aa02abd9a0bccc457e9d0d43>>
+ * @generated SignedSource<<fa3be4dd9d03980248c7a5597ec026b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type editPrivateBooking_customerTeams_query$data = {
         readonly name: string;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "editPrivateBooking_customerTeams_query";
 };

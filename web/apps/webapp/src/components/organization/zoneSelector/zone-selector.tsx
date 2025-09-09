@@ -19,14 +19,16 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<zoneSelector_allZones_query$key>(
     graphql`
       fragment zoneSelector_allZones_query on Query {
-        zones(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $zonesSortingValues) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          zones(orderBy: $zonesSortingValues) {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -35,7 +37,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const allItems = useMemo(() => (rootData.zones?.edges ? rootData.zones.edges.map(({ node }) => node) : []), [rootData.zones]);
+  const allItems = useMemo(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
   const [id, setId] = useState<string>(allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {

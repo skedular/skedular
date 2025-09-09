@@ -37,14 +37,14 @@ public class RootQuery(IMapper mapper)
         int? first,
         string? before,
         int? last,
-        MyInvitationsToJoinTeamsWhereInput where,
+        MyInvitationsToJoinTeamsWhereInput? where,
         IEnumerable<JoinTeamInvitationOrder>? orderBy,
         [Service] IInvitationService invitationService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await invitationService.GetMyPaginatedJoinInvitationsAsync(
             new PaginationInputParam(after, first, before, last),
-            new JoinInvitationSearchCriteria(where.OrganizationUniqueAlphanumericName, where.TeamId, where.Status, null),
+            new JoinInvitationSearchCriteria(where?.OrganizationUniqueAlphanumericName, where?.TeamId, where?.Status, null),
             orderBy.ToSafeCollection().Select(item => new JoinTeamInvitationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

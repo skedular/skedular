@@ -43,7 +43,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -56,19 +56,19 @@ type LocationDetails = {
 };
 
 type CustomTagDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ZoneDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ResourceDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
@@ -139,7 +139,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
                 name
               }
               involvedCustomers {
-                uniqueId
+                id
                 name
                 givenName
                 middleName
@@ -147,29 +147,31 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
                 photoUrl
               }
               involvedOrganizations {
-                uniqueId
+                id
               }
               involvedLocations {
-                uniqueId
+                id
                 name
               }
               involvedTeams {
-                uniqueId
+                id
                 name
               }
-              resources {
-                uniqueId
-                name
-                color
-                customTags {
-                  uniqueId
+              bookingResources {
+                resource {
+                  id
                   name
                   color
-                }
-                zones {
-                  uniqueId
-                  name
-                  color
+                  customTags {
+                    id
+                    name
+                    color
+                  }
+                  zones {
+                    id
+                    name
+                    color
+                  }
                 }
               }
               ...bookingCard_BookingDetails
@@ -204,7 +206,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -212,26 +214,28 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
             photoUrl
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -365,7 +369,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
           customerIds: [rootData.me.id],
           from: bookingDetails.from,
           until: bookingDetails.until,
-          organizationIds: bookingDetails.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          organizationIds: bookingDetails.involvedOrganizations.map(({ id }) => id),
           teamIds: [],
           resourceIds: [],
           lineItems: [],
@@ -389,12 +393,12 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
           message += ` from the "${booking.involvedLocations[0].name}"`;
         }
 
-        if (booking.resources.length > 0) {
-          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
+        if (booking.bookingResources.length > 0) {
+          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
 
-          const zones = booking.resources.flatMap(({ zones }) => zones);
+          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
           if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
 
             message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
           }
@@ -426,7 +430,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
             },
             involvedCustomers: [
               {
-                uniqueId: rootData.me.id,
+                id: rootData.me.id,
                 name: rootData.me.name,
                 givenName: rootData.me.givenName,
                 middleName: rootData.me.middleName,
@@ -436,7 +440,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
             ],
             involvedLocations: [],
             involvedTeams: [],
-            resources: [],
+            bookingResources: [],
           },
         },
       },
@@ -444,29 +448,29 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
   };
 
   const rows: RowType[] = bookings.map((booking) => {
-    const customTags = booking.resources
-      .flatMap(({ customTags }) => customTags)
+    const customTags = booking.bookingResources
+      .flatMap(({ resource }) => resource.customTags)
       .reduce((acc: CustomTagDetails[], customTag) => {
-        if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+        if (!acc.some((item) => item.id === customTag.id)) {
           acc.push(customTag);
         }
 
         return acc;
       }, []);
-    const zones = booking.resources
-      .flatMap(({ zones }) => zones)
+    const zones = booking.bookingResources
+      .flatMap(({ resource }) => resource.zones)
       .reduce((acc: ZoneDetails[], zone) => {
-        if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+        if (!acc.some((item) => item.id === zone.id)) {
           acc.push(zone);
         }
 
         return acc;
       }, []);
 
-    const canJoinBooking = booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)
+    const canJoinBooking = booking.involvedCustomers.some((item) => item.id === rootData.me?.id)
       ? false
       : !!!bookings
-          .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id))
+          .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.id === rootData.me?.id))
           .find((myBooking) => {
             const from = dayjs(booking.from);
             const myFrom = dayjs(myBooking.from);
@@ -480,7 +484,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
       user: booking.involvedCustomers[0],
       location: booking.involvedLocations.length > 0 ? booking.involvedLocations[0] : null,
       team: booking.involvedTeams.length > 0 ? booking.involvedTeams[0] : null,
-      resources: booking.resources,
+      resources: booking.bookingResources.map(({ resource }) => resource),
       customTags,
       zones,
       date: dateRangeToShortDateWithAdditionalDayInfo(dayjs(booking.from), dayjs(booking.until)),
@@ -534,9 +538,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
       field: 'resources',
       headerName: 'Resources',
       editable: false,
-      renderCell: (params) => (
-        <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))} hideIcon />
-      ),
+      renderCell: (params) => <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.id, name: resource.name, color: resource.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -544,7 +546,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
       field: 'customTags',
       headerName: 'Tags',
       editable: false,
-      renderCell: (params) => <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
+      renderCell: (params) => <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.id, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -552,7 +554,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
+      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.id, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -609,10 +611,10 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
         {viewMode === 'grid' && (
           <GridContainer>
             {bookings.map((booking) => {
-              const canJoinBooking = booking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id)
+              const canJoinBooking = booking.involvedCustomers.some((item) => item.id === rootData.me?.id)
                 ? false
                 : !!!bookings
-                    .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.uniqueId === rootData.me?.id))
+                    .filter((otherBooking) => otherBooking.involvedCustomers.some((item) => item.id === rootData.me?.id))
                     .find((myBooking) => {
                       const from = dayjs(booking.from);
                       const myFrom = dayjs(myBooking.from);

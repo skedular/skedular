@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b74c44c92f70617d920f84f55ea7c70>>
+ * @generated SignedSource<<8713ffa66cf0840600affe8998ca7cf9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type organizationLocation_floorPlans_query$data = {
         readonly " $fragmentSpreads": FragmentRefs<"floorPlanCard_FloorPlanDetails">;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "organizationLocation_floorPlans_query";
 };

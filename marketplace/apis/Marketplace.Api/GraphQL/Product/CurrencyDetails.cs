@@ -1,8 +1,6 @@
 using Api.Shared.Services.Models;
 using HotChocolate;
 
-// ReSharper disable ClassNeverInstantiated.Global
-
 namespace Marketplace.Api.GraphQL.Product;
 
 [GraphQLName("CurrencyDetails")]

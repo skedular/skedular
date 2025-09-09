@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64aa1016e6ca336ee91f06964c04b3fd>>
+ * @generated SignedSource<<32c496effb4551dc971ac8980f0de9a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,8 @@ export type locationCard_LocationDetails$data = {
   readonly canModify: boolean;
   readonly customTags: ReadonlyArray<{
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly hasFutureBooking: boolean;
   readonly id: string;
@@ -36,13 +36,13 @@ export type locationCard_LocationDetails$data = {
       readonly width: number | null | undefined;
     } | null | undefined;
   } | null | undefined;
-  readonly resources: ReadonlyArray<{
-    readonly id: string;
-  }>;
+  readonly resources: {
+    readonly totalCount: number;
+  };
   readonly zones: ReadonlyArray<{
     readonly color: string | null | undefined;
-    readonly name: string | null | undefined;
-    readonly uniqueId: string;
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly " $fragmentType": "locationCard_LocationDetails";
 };
@@ -67,13 +67,7 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+  (v0/*: any*/),
   (v1/*: any*/),
   {
     "alias": null,
@@ -94,7 +88,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
@@ -104,7 +98,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationTagDetails",
+      "concreteType": "OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
@@ -114,12 +108,18 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ResourceDetails",
+      "concreteType": "ConnectionOfResourceEdge",
       "kind": "LinkedField",
       "name": "resources",
-      "plural": true,
+      "plural": false,
       "selections": [
-        (v0/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -222,7 +222,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Location_OrganizationDetails",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
@@ -243,6 +243,6 @@ return {
 };
 })();
 
-(node as any).hash = "05be8401d4e89cc6a4cd686e1a09b945";
+(node as any).hash = "93bf96ba8dee4799d7d2495b81ece76c";
 
 export default node;

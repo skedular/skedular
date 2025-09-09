@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfe880c74752ef19738494e33d8e8cb6>>
+ * @generated SignedSource<<a278d50f9e2ec74bf2788f078909821f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -116,8 +116,8 @@ export type editResource_query$data = {
     readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     }>;
     readonly id: string;
     readonly inactive: boolean;
@@ -125,19 +125,19 @@ export type editResource_query$data = {
     readonly name: string;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     }>;
     readonly requireBookingApproval: boolean;
     readonly resourceType: {
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     };
     readonly zones: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     }>;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesProductTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query" | "weekOpeningHours_query">;
@@ -266,26 +266,27 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+v5 = [
   (v2/*: any*/),
-  (v3/*: any*/)
+  (v3/*: any*/),
+  (v4/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -382,14 +383,8 @@ return {
       "name": "resource",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
         (v2/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -404,7 +399,7 @@ return {
           "name": "requireBookingApproval",
           "storageKey": null
         },
-        (v3/*: any*/),
+        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -415,41 +410,41 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Location_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Location_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Location_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Location_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "resourceType",
           "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
@@ -503,6 +498,6 @@ return {
 };
 })();
 
-(node as any).hash = "88c3e827ba297f7f9041a835084bb988";
+(node as any).hash = "b23963bf37167c02bd9ca954886cc999";
 
 export default node;

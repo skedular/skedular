@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<093eac1ef8166a927963ff191e5fb471>>
+ * @generated SignedSource<<132aff8edf526a7129fe2aec39bcc308>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,13 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationBookingInsight_locationAnalytics_query$data = {
-  readonly locationAnalytics: {
-    readonly dailyBookingsTotals: ReadonlyArray<{
-      readonly date: any;
-      readonly total: number;
-    }>;
+  readonly location: {
+    readonly analytics: {
+      readonly dailyBookingsTotals: ReadonlyArray<{
+        readonly date: any;
+        readonly total: number;
+      }>;
+    };
   } | null | undefined;
   readonly " $fragmentType": "locationBookingInsight_locationAnalytics_query";
 };
@@ -56,45 +58,57 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "locationId",
+          "name": "id",
           "variableName": "locationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
         }
       ],
-      "concreteType": "LocationAnalytics",
+      "concreteType": "LocationDetails",
       "kind": "LinkedField",
-      "name": "locationAnalytics",
+      "name": "location",
       "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "concreteType": "LocationDailyBookingsTotal",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "to"
+            }
+          ],
+          "concreteType": "LocationAnalytics",
           "kind": "LinkedField",
-          "name": "dailyBookingsTotals",
-          "plural": true,
+          "name": "analytics",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "total",
+              "concreteType": "LocationDailyBookingsTotal",
+              "kind": "LinkedField",
+              "name": "dailyBookingsTotals",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "date",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "total",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -108,6 +122,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1a8a6a355221a1c718ea558a3ff49f4f";
+(node as any).hash = "4430d77b8f91b4b831e5febf5b80bafd";
 
 export default node;

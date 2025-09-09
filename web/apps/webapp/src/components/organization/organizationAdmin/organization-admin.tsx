@@ -231,10 +231,10 @@ const OrganizationAdmin = ({
           id
           emails
           preferredZones {
-            uniqueId
+            id
           }
           preferredCustomTags {
-            uniqueId
+            id
           }
         }
         organizationIndustryMainCategoriesReferences {
@@ -363,16 +363,17 @@ const OrganizationAdmin = ({
       fragment organizationAdmin_zones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationAdmin_zones_refetchableFragment") {
-        zones(first: $count, after: $cursor, where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $zoneNameSearchText })
-          @connection(key: "organizationAdmin_zones") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              description
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          zones(first: $count, after: $cursor, where: { nameContains: $zoneNameSearchText }) @connection(key: "organizationAdmin_zones") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                description
+                color
+              }
             }
           }
         }
@@ -386,20 +387,18 @@ const OrganizationAdmin = ({
       fragment organizationAdmin_customTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationAdmin_customTags_refetchableFragment") {
-        customTags(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $customTagNameSearchText }
-          orderBy: [{ direction: ASCENDING, field: NAME }]
-        ) @connection(key: "organizationAdmin_customTags") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              description
-              color
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          customTags(first: $count, after: $cursor, where: { nameContains: $customTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
+            @connection(key: "organizationAdmin_customTags") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                name
+                description
+                color
+              }
             }
           }
         }
@@ -599,7 +598,7 @@ const OrganizationAdmin = ({
         customer {
           id
           preferredZones {
-            uniqueId
+            id
           }
         }
       }
@@ -612,7 +611,7 @@ const OrganizationAdmin = ({
         customer {
           id
           preferredZones {
-            uniqueId
+            id
           }
         }
       }
@@ -805,9 +804,9 @@ const OrganizationAdmin = ({
   const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
   const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
-  const [preferredZones, setPreferredZones] = useState(rootData.me?.preferredZones.map(({ uniqueId }) => uniqueId) ?? []);
-  const zones = useMemo(() => rootDataZones.zones.edges.map(({ node }) => node), [rootDataZones.zones]);
-  const zonesConnectionIds = useMemo(() => [rootDataZones.zones.__id], [rootDataZones.zones]);
+  const [preferredZones, setPreferredZones] = useState(rootData.me?.preferredZones.map(({ id }) => id) ?? []);
+  const zones = useMemo(() => (rootDataZones.organization ? rootDataZones.organization.zones.edges.map(({ node }) => node) : []), [rootDataZones.organization]);
+  const zonesConnectionIds = useMemo(() => (rootDataZones.organization ? [rootDataZones.organization.zones.__id] : []), [rootDataZones.organization]);
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone],
@@ -835,9 +834,12 @@ const OrganizationAdmin = ({
   const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
   const [isEditCustomTagDialogOpen, setIsEditCustomTagDialogOpen] = useState(false);
-  const [preferredCustomTags, setPreferredCustomTags] = useState(rootData.me?.preferredCustomTags.map(({ uniqueId }) => uniqueId) ?? []);
-  const customTags = useMemo(() => rootDataCustomTags.customTags.edges.map(({ node }) => node), [rootDataCustomTags.customTags]);
-  const customTagsConnectionIds = useMemo(() => [rootDataCustomTags.customTags.__id], [rootDataCustomTags.customTags]);
+  const [preferredCustomTags, setPreferredCustomTags] = useState(rootData.me?.preferredCustomTags.map(({ id }) => id) ?? []);
+  const customTags = useMemo(
+    () => (rootDataCustomTags.organization ? rootDataCustomTags.organization.customTags.edges.map(({ node }) => node) : []),
+    [rootDataCustomTags.organization],
+  );
+  const customTagsConnectionIds = useMemo(() => (rootDataCustomTags.organization ? [rootDataCustomTags.organization.customTags.__id] : []), [rootDataCustomTags.organization]);
   const customTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditCustomTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteCustomTag],

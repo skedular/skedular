@@ -36,19 +36,19 @@ type Props = {
 };
 
 type CustomTagDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type ZoneDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   familyName?: string | null | undefined;
@@ -65,7 +65,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
         until
         notes
         involvedCustomers {
-          uniqueId
+          id
           name
           givenName
           middleName
@@ -73,26 +73,28 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
           photoUrl
         }
         involvedLocations {
-          uniqueId
+          id
           name
         }
         involvedTeams {
-          uniqueId
+          id
           name
         }
-        resources {
-          uniqueId
-          name
-          color
-          customTags {
-            uniqueId
+        bookingResources {
+          resource {
+            id
             name
             color
-          }
-          zones {
-            uniqueId
-            name
-            color
+            customTags {
+              id
+              name
+              color
+            }
+            zones {
+              id
+              name
+              color
+            }
           }
         }
         isPaymentRequired
@@ -192,19 +194,19 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
     });
   };
 
-  const customTags = bookingDetails.resources
-    .flatMap(({ customTags }) => customTags)
+  const customTags = bookingDetails.bookingResources
+    .flatMap(({ resource }) => resource.customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
-      if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+      if (!acc.some((item) => item.id === customTag.id)) {
         acc.push(customTag);
       }
 
       return acc;
     }, []);
-  const zones = bookingDetails.resources
-    .flatMap(({ zones }) => zones)
+  const zones = bookingDetails.bookingResources
+    .flatMap(({ resource }) => resource.zones)
     .reduce((acc: ZoneDetails[], zone) => {
-      if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+      if (!acc.some((item) => item.id === zone.id)) {
         acc.push(zone);
       }
 
@@ -218,7 +220,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
           title={
             <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id)}>
               {bookingDetails.involvedLocations.map((item) => (
-                <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               ))}
             </Link>
           }
@@ -255,20 +257,20 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
           {bookingDetails.involvedTeams.length === 0 && <SmallIconTypography startElement={<TeamIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
           {bookingDetails.involvedTeams.length > 0 &&
             bookingDetails.involvedTeams.map((item) => (
-              <SmallIconTypography key={item.uniqueId} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              <SmallIconTypography key={item.id} startElement={<TeamIcon />} label={item ? item.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
             ))}
           <Divider />
           <Resources
-            resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}
+            resources={bookingDetails.bookingResources.map((item) => ({ id: item.resource.id, name: item.resource.name, color: item.resource.color }))}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
           <CustomTags
-            customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}
+            customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.id, name: customTag.name, color: customTag.color }))}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.id, name: zone.name, color: zone.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <SmallIconTypography startElement={<NotesIcon />} label={bookingDetails.notes ? bookingDetails.notes : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
@@ -277,7 +279,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
             <StackRow>
               <AvatarGroup max={5}>
                 {otherTeammates.map((item) => (
-                  <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+                  <CustomerAvatar key={item.id} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
                 ))}
               </AvatarGroup>
             </StackRow>

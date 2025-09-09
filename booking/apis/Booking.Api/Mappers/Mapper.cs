@@ -158,20 +158,20 @@ public class Mapper : IMapper
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
             PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
             IsPaymentRequired = src.IsPaymentRequired,
-            Resources = MapTo(src.Resources),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations),
-            InvolvedLocations = MapTo(src.InvolvedLocations),
-            InvolvedTeams = MapTo(src.InvolvedTeams),
-            PaidByCustomer = MapTo(src.PaidByCustomer),
-            PaidByOrganization = MapTo(src.PaidByOrganization),
-            CreatedByCustomer = MapTo(src.CreatedByCustomer),
-            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            BookingResources = MapTo(src.Resources),
+            InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
+            InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => item.Id),
+            InvolvedLocationIds = src.InvolvedLocations.Select(item => item.Id),
+            InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
+            PaidByCustomerId = src.PaidByCustomer?.Id,
+            PaidByOrganizationId = src.PaidByOrganization?.Id,
+            CreatedByCustomerId = src.CreatedByCustomer?.Id,
+            LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
+            DeletedByCustomerId = src.DeletedByCustomer?.Id,
             LineItems =
                 src.LineItems.Select(item => new LineItemDetails
                 {
-                    ProductVersionDetails = MapTo(src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId)),
+                    ProductVersionId = src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId).Id,
                     Quantity = item.Quantity
                 }),
             BookedOnMarketplace = src.BookedOnMarketplace,
@@ -503,17 +503,6 @@ public class Mapper : IMapper
     public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
         src.Select(item => MapToGrpcResponse(item, []));
 
-    private static ProductVersionDetails MapTo(Shared.Models.ProductVersion src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name,
-            Price = src.Price.ToRoundedPrice(),
-            PriceToDisplay = src.Price.ToRoundedPrice().ToPriceToDisplay(src.Currency),
-            PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
-            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() }
-        };
-
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
@@ -602,58 +591,6 @@ public class Mapper : IMapper
     private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
-    private static CustomerDetails? MapTo(Customer? src) =>
-        src is null
-            ? null
-            : new CustomerDetails
-            {
-                UniqueId = src.Id,
-                Designation = src.Designation,
-                Title = src.Title,
-                Timezone = src.Timezone,
-                Locale = src.Locale,
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber
-            };
-
-    private static OrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null
-            ? null
-            : new OrganizationDetails
-            {
-                UniqueId = src.Id,
-                Name = src.Name.ToSafeString(),
-                UniqueAlphanumericName = src.UniqueAlphanumericName,
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone
-            };
-
-    private static LocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
-
-    private static TeamDetails MapTo(Shared.Models.Team src) => new() { UniqueId = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<OrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);
-
-    private static OrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
-
-    private static IEnumerable<OrganizationZoneDetails> MapToZones(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
-
-    private static OrganizationZoneDetails MapToZone(OrganizationTag src) => new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
-
     private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>
@@ -713,19 +650,7 @@ public class Mapper : IMapper
         };
 
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name.ToSafeString(),
-            CustomTags = MapToCustomTags(src.OrganizationTags),
-            Zones = MapToZones(src.OrganizationTags),
-            Inactive = src.Inactive,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Capacity = src.Capacity,
-            Location = MapTo(src.Location),
-            Customers = MapTo(customers)
-        };
+        new() { ResourceId = src.Id, LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource MapToGrpcResponse(Resource src, IEnumerable<Customer> customers)
     {
@@ -786,10 +711,6 @@ public class Mapper : IMapper
 
     private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
     private IEnumerable<Shared.Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
-    private static IEnumerable<CustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo)!;
-    private static IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
-    private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
-    private static IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) => src.Select(MapTo);
 
     private static BookingCheckoutSessionDetails? MapTo(Shared.Models.StripeCheckoutSession? src) =>
         src is null

@@ -48,7 +48,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -84,7 +84,7 @@ type ZoneDetails = {
 };
 
 type ResourceDetails = {
-  uniqueId: string;
+  id: string;
   name: string;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
@@ -161,24 +161,22 @@ const NewBookingDialog = ({
       fragment newBookingDialog_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "newBookingDialog_organizationMembers_refetchableFragment") {
-        organizationMembers(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
-          orderBy: $organizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
+            @connection(key: "bookingDetailsSelectorQuery_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -221,17 +219,19 @@ const NewBookingDialog = ({
             until: $dateUntilToGetAvailableResources
           }
         ) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
+          resource {
+            id
             name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
+            customTags {
+              id
+              name
+              color
+            }
+            zones {
+              id
+              name
+              color
+            }
           }
         }
       }
@@ -252,7 +252,7 @@ const NewBookingDialog = ({
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -260,30 +260,32 @@ const NewBookingDialog = ({
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -319,19 +321,19 @@ const NewBookingDialog = ({
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
-    () => rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node),
-    [rootDataOrganizationMembers.organizationMembers],
+    () => (rootDataOrganizationMembers.organization ? rootDataOrganizationMembers.organization.members.edges.map(({ node }) => node) : []),
+    [rootDataOrganizationMembers.organization],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
   const resources = useMemo<ResourceDetails[]>(
     () =>
       timeRangeValid
-        ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
+        ? rootDataAvailableResources.availableResources.map(({ resource: { id, name, customTags, zones } }) => ({
+            id,
             name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
           }))
         : [],
     [rootDataAvailableResources.availableResources, timeRangeValid],
@@ -490,12 +492,12 @@ const NewBookingDialog = ({
           message += ` from the "${booking.involvedLocations[0]!.name}"`;
         }
 
-        if (booking.resources.length > 0) {
-          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
+        if (booking.bookingResources.length > 0) {
+          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
 
-          const zones = booking.resources.flatMap(({ zones }) => zones);
+          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
           if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
 
             message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
           }
@@ -529,7 +531,7 @@ const NewBookingDialog = ({
             },
             involvedCustomers: [
               {
-                uniqueId: rootData.me.id,
+                id: rootData.me.id,
                 name: '',
                 givenName: '',
                 middleName: '',
@@ -537,10 +539,10 @@ const NewBookingDialog = ({
                 photoUrl: '',
               },
             ],
-            involvedOrganizations: organizationUniqueAlphanumericName ? [{ uniqueId: organizationUniqueAlphanumericName, name: '' }] : [],
-            involvedLocations: locationId ? [{ uniqueId: locationId, name: '' }] : [],
-            involvedTeams: teamId ? [{ uniqueId: teamId, name: '' }] : [],
-            resources: [],
+            involvedOrganizations: [],
+            involvedLocations: locationId ? [{ id: locationId, name: '' }] : [],
+            involvedTeams: [],
+            bookingResources: [],
           },
         },
       },
@@ -548,7 +550,7 @@ const NewBookingDialog = ({
   };
 
   const handleMemberChange = (option: OrganizationMemberDetails | null) => {
-    const customerId = option?.customer.uniqueId;
+    const customerId = option?.customer.id;
 
     setCustomerId(customerId);
     handleRefetchTeams(customerId);
@@ -618,13 +620,13 @@ const NewBookingDialog = ({
                     multiple={false}
                     required={requiredFields.member}
                     options={customers}
-                    getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                    getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
                     getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                     renderOption={(props, option) => {
                       const castedOption = (option as OrganizationMemberDetails).customer;
 
                       return (
-                        <li {...props} key={castedOption.uniqueId}>
+                        <li {...props} key={castedOption.id}>
                           <BodyIconTypography
                             label={getCustomerFullName(castedOption)}
                             startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
@@ -730,13 +732,13 @@ const NewBookingDialog = ({
                       multiple={true}
                       required={requiredFields.resources}
                       options={resources}
-                      getOptionValue={(option) => (option as ResourceDetails).uniqueId}
+                      getOptionValue={(option) => (option as ResourceDetails).id}
                       getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
                       renderOption={(props, option) => {
                         const castedOption = option as ResourceDetails;
 
                         return (
-                          <li {...props} key={castedOption.uniqueId}>
+                          <li {...props} key={castedOption.id}>
                             <StackRow sx={{ alignItems: 'center' }}>
                               <BodyIconTypography label={castedOption.name} />
                               <CustomTags customTags={castedOption.customTags} hideNAText />

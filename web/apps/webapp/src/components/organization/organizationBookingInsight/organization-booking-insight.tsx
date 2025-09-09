@@ -19,10 +19,12 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationBookingInsight_organizationAnalytics_query on Query @refetchable(queryName: "organizationBookingInsight_organizationAnalytics_refetchableFragment") {
-        organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {
-          dailyBookingsTotals {
-            date
-            total
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          analytics(from: $from, until: $to) {
+            dailyBookingsTotals {
+              date
+              total
+            }
           }
         }
       }
@@ -54,14 +56,14 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
     handleRefetch(from, until);
   };
 
-  if (!rootDataOrganizationAnalytics.organizationAnalytics) {
+  if (!rootDataOrganizationAnalytics.organization) {
     return <></>;
   }
 
   const dataset =
-    rootDataOrganizationAnalytics.organizationAnalytics.dailyBookingsTotals.length === 0
+    rootDataOrganizationAnalytics.organization.analytics.dailyBookingsTotals.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootDataOrganizationAnalytics.organizationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
+      : rootDataOrganizationAnalytics.organization.analytics.dailyBookingsTotals.map(({ date, total }) => ({
           date: toDayAndMonthDate(date),
           total,
         }));

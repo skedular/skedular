@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<322e666aecbd7f299c7bba1eb2f33081>>
+ * @generated SignedSource<<130a48bc2872aa117963a01c8f0be8dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,48 +68,67 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "from",
-            "variableName": "from"
-          },
-          {
-            "kind": "Variable",
-            "name": "locationId",
+            "name": "id",
             "variableName": "locationId"
-          },
-          {
-            "kind": "Variable",
-            "name": "until",
-            "variableName": "to"
           }
         ],
-        "concreteType": "LocationAnalytics",
+        "concreteType": "LocationDetails",
         "kind": "LinkedField",
-        "name": "locationAnalytics",
+        "name": "location",
         "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "LocationDailyBookingsTotal",
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "from"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "to"
+              }
+            ],
+            "concreteType": "LocationAnalytics",
             "kind": "LinkedField",
-            "name": "dailyBookingsTotals",
-            "plural": true,
+            "name": "analytics",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "date",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "total",
+                "concreteType": "LocationDailyBookingsTotal",
+                "kind": "LinkedField",
+                "name": "dailyBookingsTotals",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "date",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "total",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -118,16 +137,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4097ce04625f6a9830ae35a29e79fa3d",
+    "cacheID": "508d26e1ea77993fd2c081f955b41264",
     "id": null,
     "metadata": {},
     "name": "locationBookingInsight_locationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationBookingInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n"
+    "text": "query locationBookingInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  location(id: $locationId) {\n    analytics(from: $from, until: $to) {\n      dailyBookingsTotals {\n        date\n        total\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1a8a6a355221a1c718ea558a3ff49f4f";
+(node as any).hash = "4430d77b8f91b4b831e5febf5b80bafd";
 
 export default node;

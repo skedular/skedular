@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0df4e55df83749b40ce0162ee22759cc>>
+ * @generated SignedSource<<a26f9798d5f618aa6f6b0374f1bb34a9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type productCard_ProductDetails$data = {
   readonly name: string;
   readonly numberOfResourcesToBook: number;
   readonly organization: {
-    readonly uniqueId: string;
+    readonly id: string;
   };
   readonly priceToDisplay: string;
   readonly priceUnit: {
@@ -46,6 +46,13 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 };
@@ -55,14 +62,8 @@ return {
   "metadata": null,
   "name": "productCard_ProductDetails",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     (v0/*: any*/),
+    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -85,7 +86,7 @@ return {
       "name": "priceUnit",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        (v1/*: any*/)
       ],
       "storageKey": null
     },
@@ -127,18 +128,12 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Marketplace_OrganizationDetails",
+      "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "uniqueId",
-          "storageKey": null
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
     },
@@ -198,6 +193,6 @@ return {
 };
 })();
 
-(node as any).hash = "9c8447058ccc9d2234dd8cc2e4a7a8d2";
+(node as any).hash = "eb0ad306b98ede5bb7a07f686c46bbfb";
 
 export default node;

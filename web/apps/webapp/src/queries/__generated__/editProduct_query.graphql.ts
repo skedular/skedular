@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e24ca9091f5b8622c07c2ea3af7ac98>>
+ * @generated SignedSource<<2a8b73e8becc10465d86bcb1950da671>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,8 +32,8 @@ export type editProduct_query$data = {
     readonly isPriceTaxInclusive: boolean;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     }>;
     readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
     readonly maxAllowedResourcesLockTimePaidViaCard: number;
@@ -43,7 +43,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly numberOfResourcesToBook: number;
     readonly organization: {
-      readonly uniqueId: string;
+      readonly id: string;
     };
     readonly price: string;
     readonly priceUnit: {
@@ -64,8 +64,8 @@ export type editProduct_query$data = {
     } | null | undefined;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly uniqueId: string;
+      readonly id: string;
+      readonly name: string;
     }>;
     readonly recurrenceWindowDays: number;
     readonly requireConsecutiveDays: boolean;
@@ -83,30 +83,30 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "name",
   "storageKey": null
 },
-v2 = [
-  (v1/*: any*/),
-  (v0/*: any*/)
-],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueId",
+  "name": "type",
   "storageKey": null
 },
+v3 = [
+  (v2/*: any*/),
+  (v1/*: any*/)
+],
 v4 = [
-  (v3/*: any*/),
   (v0/*: any*/),
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -163,13 +163,7 @@ return {
       "name": "product",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -177,7 +171,7 @@ return {
           "name": "inactive",
           "storageKey": null
         },
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -199,7 +193,7 @@ return {
           "kind": "LinkedField",
           "name": "priceUnit",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -209,7 +203,7 @@ return {
           "kind": "LinkedField",
           "name": "currency",
           "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -264,7 +258,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Marketplace_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
@@ -274,7 +268,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Marketplace_OrganizationTagDetails",
+          "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "locationTags",
           "plural": true,
@@ -284,12 +278,12 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Marketplace_OrganizationDetails",
+          "concreteType": "OrganizationDetails",
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
           "selections": [
-            (v3/*: any*/)
+            (v0/*: any*/)
           ],
           "storageKey": null
         },
@@ -315,7 +309,7 @@ return {
           "name": "acceptedBookingPaymentMethods",
           "plural": true,
           "selections": [
-            (v1/*: any*/)
+            (v2/*: any*/)
           ],
           "storageKey": null
         },
@@ -412,6 +406,6 @@ return {
 };
 })();
 
-(node as any).hash = "72ee6fdc0edfbeef52ade953b59dbc1f";
+(node as any).hash = "f429561b01d150d5acb3e8f14e32340d";
 
 export default node;

@@ -1,6 +1,7 @@
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using HotChocolate;
+using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
 
 namespace Customer.Api.GraphQL.Customer;
@@ -21,4 +22,13 @@ public class RootQuery(IMapper mapper)
 
         return customer;
     }
+
+    [UseResolverScope]
+    [Lookup]
+    [Internal]
+    public async Task<CustomerDetails?> CustomerByIdAsync(
+        string id,
+        [Service] ICustomerService customerService,
+        CancellationToken cancellationToken) =>
+        await CustomerAsync(id, customerService, cancellationToken);
 }

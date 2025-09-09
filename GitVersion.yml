@@ -15,7 +15,7 @@ branches:
     increment: patch
 
 ignore:
-  sha: []
+  sha: [ ]
 
 commit-message-incrementing: Enabled
 commit-date-format: yyyy-MM-dd

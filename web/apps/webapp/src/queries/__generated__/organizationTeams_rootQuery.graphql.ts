@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c29f717ab053d33dbb2976e9a0734cd9>>
+ * @generated SignedSource<<edb3a9f15a3d051463ac77c5e7ddc384>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type organizationTeams_rootQuery$data = {
   readonly me: {
     readonly id: string;
     readonly preferredTeams: ReadonlyArray<{
-      readonly uniqueId: string;
+      readonly id: string;
     }>;
   };
   readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "organizationTeams_teams_query" | "teamCard_query">;
@@ -72,13 +72,6 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
   "concreteType": "CustomerDetails",
   "kind": "LinkedField",
   "name": "me",
@@ -88,38 +81,38 @@ v6 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "CustomerTeamDetails",
+      "concreteType": "TeamDetails",
       "kind": "LinkedField",
       "name": "preferredTeams",
       "plural": true,
       "selections": [
-        (v5/*: any*/)
+        (v4/*: any*/)
       ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v7 = {
+v6 = {
   "kind": "Variable",
   "name": "organizationUniqueAlphanumericName",
   "variableName": "organizationUniqueAlphanumericName"
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -131,7 +124,7 @@ v10 = {
     }
   ]
 },
-v11 = [
+v10 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -139,7 +132,7 @@ v11 = [
   },
   {
     "fields": [
-      (v7/*: any*/),
+      (v6/*: any*/),
       {
         "kind": "Variable",
         "name": "primaryLocationIds",
@@ -162,7 +155,7 @@ return {
     "metadata": null,
     "name": "organizationTeams_rootQuery",
     "selections": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -193,7 +186,7 @@ return {
     "kind": "Operation",
     "name": "organizationTeams_rootQuery",
     "selections": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       {
         "alias": null,
         "args": [
@@ -204,7 +197,7 @@ return {
           },
           {
             "fields": [
-              (v7/*: any*/)
+              (v6/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -215,7 +208,7 @@ return {
         "name": "locations",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -233,26 +226,26 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
-                  (v9/*: any*/)
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v10/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v11/*: any*/),
+        "args": (v10/*: any*/),
         "concreteType": "ConnectionOfTeamEdge",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -270,11 +263,11 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
-                  (v9/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Team_OrganizationDetails",
+                    "concreteType": "OrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
@@ -285,72 +278,101 @@ return {
                         "kind": "ScalarField",
                         "name": "uniqueAlphanumericName",
                         "storageKey": null
-                      }
+                      },
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "TeamMemberDetails",
+                    "concreteType": "ConnectionOfTeamMemberEdge",
                     "kind": "LinkedField",
                     "name": "members",
-                    "plural": true,
+                    "plural": false,
                     "selections": [
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "TeamOrganizationMemberDetails",
+                        "concreteType": "TeamMemberEdge",
                         "kind": "LinkedField",
-                        "name": "organizationMember",
-                        "plural": false,
+                        "name": "edges",
+                        "plural": true,
                         "selections": [
-                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Team_CustomerDetails",
+                            "concreteType": "TeamMemberDetails",
                             "kind": "LinkedField",
-                            "name": "customer",
+                            "name": "node",
                             "plural": false,
                             "selections": [
-                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "givenName",
+                                "concreteType": "TeamOrganizationMemberDetails",
+                                "kind": "LinkedField",
+                                "name": "organizationMember",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "uniqueId",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "CustomerDetails",
+                                    "kind": "LinkedField",
+                                    "name": "customer",
+                                    "plural": false,
+                                    "selections": [
+                                      (v4/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "givenName",
+                                        "storageKey": null
+                                      },
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "middleName",
+                                        "storageKey": null
+                                      },
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "familyName",
+                                        "storageKey": null
+                                      },
+                                      (v8/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "photoUrl",
+                                        "storageKey": null
+                                      }
+                                    ],
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "middleName",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "familyName",
-                                "storageKey": null
-                              },
-                              (v9/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "photoUrl",
-                                "storageKey": null
-                              }
+                              (v4/*: any*/)
                             ],
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -463,13 +485,13 @@ return {
             ],
             "storageKey": null
           },
-          (v10/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v11/*: any*/),
+        "args": (v10/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -482,16 +504,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ca16fa47b7f499c0163b5ce1198d27f9",
+    "cacheID": "b9b4c7f476013eb8ef446661893a2cc0",
     "id": null,
     "metadata": {},
     "name": "organizationTeams_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n    preferredTeams {\n      uniqueId\n    }\n  }\n  ...teamCard_query\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n        }\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teamCard_query on Query {\n  me {\n    id\n    preferredTeams {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n    preferredTeams {\n      id\n    }\n  }\n  ...teamCard_query\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teamCard_query on Query {\n  me {\n    id\n    preferredTeams {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7998f2303c0785dc8f34af1c56239c93";
+(node as any).hash = "644fac7a732e8e0ac481374fa4a365ff";
 
 export default node;

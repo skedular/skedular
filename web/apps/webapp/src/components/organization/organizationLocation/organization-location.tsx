@@ -191,7 +191,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id
           emails
           preferredResources {
-            uniqueId
+            id
           }
         }
         organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
@@ -257,12 +257,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             countryCode
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
           locationSpaceTypes {
-            uniqueId
+            id
             name
             color
           }
@@ -330,41 +330,43 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
       fragment organizationLocation_resources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationLocation_resources_refetchableFragment") {
-        resources(
-          first: $count
-          after: $cursor
-          where: { locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }
-          orderBy: $resourcesSortingValues
-        ) @connection(key: "organizationLocation_resources") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              inactive
-              requireBookingApproval
-              color
-              capacity
-              customTags {
-                uniqueId
+        location(id: $locationId) {
+          resources(
+            first: $count
+            after: $cursor
+            where: { nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }
+            orderBy: $resourcesSortingValues
+          ) @connection(key: "organizationLocation_resources") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
                 name
+                inactive
+                requireBookingApproval
                 color
-              }
-              zones {
-                uniqueId
-                name
-                color
-              }
-              productTags {
-                uniqueId
-                name
-                color
-              }
-              resourceType {
-                uniqueId
-                name
-                color
+                capacity
+                customTags {
+                  id
+                  name
+                  color
+                }
+                zones {
+                  id
+                  name
+                  color
+                }
+                productTags {
+                  id
+                  name
+                  color
+                }
+                resourceType {
+                  id
+                  name
+                  color
+                }
               }
             }
           }
@@ -439,12 +441,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             }
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
           locationSpaceTypes {
-            uniqueId
+            id
             name
             color
           }
@@ -520,22 +522,22 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           requireBookingApproval
           color
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -555,22 +557,22 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           requireBookingApproval
           color
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -585,7 +587,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         customer {
           id
           preferredResources {
-            uniqueId
+            id
           }
         }
       }
@@ -598,7 +600,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         customer {
           id
           preferredResources {
-            uniqueId
+            id
           }
         }
       }
@@ -653,12 +655,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             countryCode
           }
           locationTags {
-            uniqueId
+            id
             name
             color
           }
           locationSpaceTypes {
-            uniqueId
+            id
             name
             color
           }
@@ -786,9 +788,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
   const [locationType, setLocationType] = useState<string>(rootData.location?.type.type ?? '');
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
-  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.uniqueId) : []);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.location ? rootData.location.locationTags.map((item) => item.id) : []);
   const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-  const [locationSpaceTypeIds, setLocationSpaceTypeIds] = useState<string[]>(rootData.location?.locationSpaceTypes.map((item) => item.uniqueId) ?? []);
+  const [locationSpaceTypeIds, setLocationSpaceTypeIds] = useState<string[]>(rootData.location?.locationSpaceTypes.map((item) => item.id) ?? []);
   const debounceSetLocationSpaceTypeIds = useDebounceCallback(setLocationSpaceTypeIds, keyboardTextFieldDebounceTimeout);
 
   const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(
@@ -853,7 +855,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const [seledctedResources, setSeledctedResources] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
-  const [preferredResources, setPreferredResources] = useState(rootData.me?.preferredResources.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredResources, setPreferredResources] = useState(rootData.me?.preferredResources.map(({ id }) => id) ?? []);
 
   const resourceMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditResource],
@@ -862,8 +864,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResource],
   ];
 
-  const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
-  const resourcesConnectionIds = useMemo(() => [rootDataResources.resources.__id], [rootDataResources.resources]);
+  const resources = useMemo(() => (rootDataResources.location ? rootDataResources.location.resources.edges.map(({ node }) => node) : []), [rootDataResources.location]);
+  const resourcesConnectionIds = useMemo(() => (rootDataResources.location ? [rootDataResources.location.resources.__id] : []), [rootDataResources.location]);
   const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [selectedResourceId, resources]);
 
   const floorPlans = useMemo(() => rootDataFloorPlans.floorPlans.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataFloorPlans.floorPlans]);
@@ -1730,13 +1732,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     id: resource.id,
     resource,
     resourceType: {
-      id: resource.resourceType.uniqueId,
+      id: resource.resourceType.id,
       name: resource.resourceType.name,
       color: resource.resourceType.color,
     },
-    customTags: resource.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
-    zones: resource.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
-    productTags: resource.productTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    customTags: resource.customTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
+    zones: resource.zones.map((item) => ({ id: item.id, name: item.name, color: item.color })),
+    productTags: resource.productTags.map((item) => ({ id: item.id, name: item.name, color: item.color })),
     status: !resource.inactive,
     preferred: preferredResources.includes(resource.id),
     capacity: resource.capacity,

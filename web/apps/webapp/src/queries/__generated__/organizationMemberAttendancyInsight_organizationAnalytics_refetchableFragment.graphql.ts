@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b913bf03c6eae6bcea395144b49e9db1>>
+ * @generated SignedSource<<0994045dd7d737bee255471f8cd70feb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,48 +68,67 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "from",
-            "variableName": "from"
-          },
-          {
-            "kind": "Variable",
             "name": "uniqueAlphanumericName",
             "variableName": "organizationUniqueAlphanumericName"
-          },
-          {
-            "kind": "Variable",
-            "name": "until",
-            "variableName": "to"
           }
         ],
-        "concreteType": "OrganizationAnalytics",
+        "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
-        "name": "organizationAnalytics",
+        "name": "organization",
         "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "OrganizationMemberAttendancePercentage",
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "from"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "to"
+              }
+            ],
+            "concreteType": "OrganizationAnalytics",
             "kind": "LinkedField",
-            "name": "memberAttendancePercentage",
-            "plural": true,
+            "name": "analytics",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "date",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "percentage",
+                "concreteType": "OrganizationMemberAttendancePercentage",
+                "kind": "LinkedField",
+                "name": "memberAttendancePercentage",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "date",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "percentage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -118,16 +137,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8b6db719e344a990f3f5d1ff30376902",
+    "cacheID": "f697242447a60ffaad45ca5a02ad0430",
     "id": null,
     "metadata": {},
     "name": "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(uniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $from, until: $to) {\n    memberAttendancePercentage {\n      date\n      percentage\n    }\n  }\n}\n"
+    "text": "query organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    analytics(from: $from, until: $to) {\n      memberAttendancePercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9c5f3bbefaa574927946ad36a42a2213";
+(node as any).hash = "df14cdc661c2724605a498bf1e55025e";
 
 export default node;

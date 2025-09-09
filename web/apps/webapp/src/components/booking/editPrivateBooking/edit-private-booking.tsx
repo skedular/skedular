@@ -41,7 +41,7 @@ type Props = {
 };
 
 type CustomerDetails = {
-  uniqueId: string;
+  id: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
@@ -77,7 +77,7 @@ type ZoneDetails = {
 };
 
 type ResourceDetails = {
-  uniqueId: string;
+  id: string;
   name: string;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
@@ -132,7 +132,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             type
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -140,30 +140,32 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -182,24 +184,22 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       fragment editPrivateBooking_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "editPrivateBooking_organizationMembers_refetchableFragment") {
-        organizationMembers(
-          first: $count
-          after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $peopleNameSearchText }
-          orderBy: $organizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
+            @connection(key: "bookingDetailsSelectorQuery_members") {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                customer {
+                  id
+                  name
+                  givenName
+                  middleName
+                  familyName
+                  photoUrl
+                }
               }
             }
           }
@@ -242,17 +242,19 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             until: $dateUntilToGetAvailableResources
           }
         ) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
+          resource {
+            id
             name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
+            customTags {
+              id
+              name
+              color
+            }
+            zones {
+              id
+              name
+              color
+            }
           }
         }
       }
@@ -273,7 +275,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -281,30 +283,32 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
           involvedLocations {
-            uniqueId
+            id
             name
           }
           involvedTeams {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
         }
@@ -328,21 +332,21 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [customerId, setCustomerId] = useState<string | undefined>(
-    rootData.booking?.involvedCustomers && rootData.booking?.involvedCustomers.length > 0 ? rootData.booking?.involvedCustomers[0].uniqueId : undefined,
+    rootData.booking?.involvedCustomers && rootData.booking?.involvedCustomers.length > 0 ? rootData.booking?.involvedCustomers[0].id : undefined,
   );
   const [teamId, setTeamId] = useState<string | undefined>(
-    rootData.booking?.involvedTeams && rootData.booking?.involvedTeams.length > 0 ? rootData.booking?.involvedTeams[0].uniqueId : undefined,
+    rootData.booking?.involvedTeams && rootData.booking?.involvedTeams.length > 0 ? rootData.booking?.involvedTeams[0].id : undefined,
   );
   const [locationId, setLocationId] = useState<string | undefined>(
-    rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].uniqueId : undefined,
+    rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].id : undefined,
   );
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
 
   const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
-    [rootDataOrganizationMembers.organizationMembers],
+    () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization.members.edges.map(({ node }) => node) : []),
+    [rootDataOrganizationMembers.organization?.members],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
@@ -352,28 +356,30 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       return [];
     }
 
-    const availableResources = rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
-      uniqueId,
-      name,
-      customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-      zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-    }));
+    const availableResources = rootDataAvailableResources.availableResources
+      .map(({ resource }) => resource)
+      .map(({ id, name, customTags, zones }) => ({
+        id,
+        name,
+        customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+        zones: zones.map(({ id, name, color }) => ({ id, name, color })),
+      }));
 
     if (from && rootData.booking?.from) {
       return availableResources.concat(
-        rootData.booking.resources
-          .filter((item) => !availableResources.some((resource) => resource.uniqueId === item.uniqueId))
-          .map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
+        rootData.booking.bookingResources
+          .filter((item) => !availableResources.some((resource) => resource.id === item.resource.id))
+          .map(({ resource: { id, name, customTags, zones } }) => ({
+            id,
             name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
           })),
       );
     }
 
     return availableResources;
-  }, [rootDataAvailableResources.availableResources, from, timeRangeValid, rootData.booking?.from, rootData.booking?.resources]);
+  }, [rootDataAvailableResources.availableResources, from, timeRangeValid, rootData.booking?.from, rootData.booking?.bookingResources]);
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -473,7 +479,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       return;
     }
 
-    handleRefetchTeams(rootData.booking.involvedCustomers[0].uniqueId);
+    handleRefetchTeams(rootData.booking.involvedCustomers[0].id);
   }, [handleRefetchTeams, rootData.booking?.involvedCustomers]);
 
   useEffect(() => {
@@ -527,7 +533,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           notes,
           type: type as BookingType,
           customerIds: [memberId],
-          organizationIds: booking.involvedOrganizations.map(({ uniqueId }) => uniqueId),
+          organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: teamId ? [teamId] : [],
           resourceIds,
         },
@@ -568,7 +574,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             },
             involvedCustomers: [
               {
-                uniqueId: '',
+                id: '',
                 name: '',
                 givenName: '',
                 middleName: '',
@@ -580,7 +586,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             involvedLocations: [],
             involvedTeams: [],
             // TODO: 20240112 - Morteza: Below line stores the existing/old resource, but not the updated value for optimistic update, update this line with the updated value in future
-            resources: booking.resources,
+            bookingResources: booking.bookingResources,
           },
         },
       },
@@ -592,7 +598,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       return;
     }
 
-    const customerId = option?.customer.uniqueId;
+    const customerId = option?.customer.id;
     setCustomerId(customerId);
     handleRefetchTeams(customerId);
   };
@@ -651,7 +657,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
               notes: booking.notes,
               team: teamId,
               location: locationId,
-              resources: booking.resources ? booking.resources.map(({ uniqueId }) => uniqueId) : [],
+              resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
               type: booking.type.type,
             }}
             validate={validate}
@@ -671,13 +677,13 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                         multiple={false}
                         required={requiredFields.member}
                         options={customers}
-                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.id}
                         getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                         renderOption={(props, option) => {
                           const castedOption = (option as OrganizationMemberDetails).customer;
 
                           return (
-                            <li {...props} key={castedOption.uniqueId}>
+                            <li {...props} key={castedOption.id}>
                               <BodyIconTypography
                                 label={getCustomerFullName(castedOption)}
                                 startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
@@ -802,13 +808,13 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                           multiple={true}
                           required={requiredFields.resources}
                           options={resources}
-                          getOptionValue={(option) => (option as ResourceDetails).uniqueId}
+                          getOptionValue={(option) => (option as ResourceDetails).id}
                           getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
                           renderOption={(props, option) => {
                             const castedOption = option as ResourceDetails;
 
                             return (
-                              <li {...props} key={castedOption.uniqueId}>
+                              <li {...props} key={castedOption.id}>
                                 <StackRow sx={{ alignItems: 'center' }}>
                                   <BodyIconTypography label={castedOption.name} />
                                   <CustomTags customTags={castedOption.customTags} hideNAText />

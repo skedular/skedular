@@ -57,14 +57,14 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.9"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.8.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.9.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.9"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.2"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.91.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.14.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.92.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.14.1"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4"/>
@@ -109,7 +109,7 @@
         <PackageReference Include="Scrutor" Version="6.1.0"/>
         <PackageReference Include="SimpleBase" Version="5.4.1"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.9.11"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.9.17"/>
         <PackageReference Include="Stripe.net" Version="48.5.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0"/>

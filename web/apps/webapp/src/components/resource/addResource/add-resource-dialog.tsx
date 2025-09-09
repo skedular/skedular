@@ -110,22 +110,22 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
           color
           capacity
           customTags {
-            uniqueId
+            id
             name
             color
           }
           zones {
-            uniqueId
+            id
             name
             color
           }
           productTags {
-            uniqueId
+            id
             name
             color
           }
           resourceType {
-            uniqueId
+            id
             name
             color
           }
@@ -205,7 +205,7 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
             color: selectedColor,
             capacity,
             resourceType: {
-              uniqueId: resourceTypeId,
+              id: resourceTypeId,
               name: '',
               color: '',
             },

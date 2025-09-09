@@ -67,12 +67,12 @@ type ZoneDetails = {
 };
 
 type LocationDetails = {
-  uniqueId: string;
+  id: string;
   name: string;
 };
 
 type ResourceDetails = {
-  uniqueId: string;
+  id: string;
   name: string;
   location: LocationDetails | null;
   customTags: CustomTagDetails[];
@@ -180,21 +180,23 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             until: $dateUntilToGetAvailableResources
           }
         ) {
-          uniqueId
-          name
           location {
-            uniqueId
+            id
             name
           }
-          customTags {
-            uniqueId
+          resource {
+            id
             name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
+            customTags {
+              id
+              name
+              color
+            }
+            zones {
+              id
+              name
+              color
+            }
           }
         }
       }
@@ -215,7 +217,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             name
           }
           involvedCustomers {
-            uniqueId
+            id
             name
             givenName
             middleName
@@ -223,22 +225,24 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             photoUrl
           }
           involvedOrganizations {
-            uniqueId
+            id
             name
           }
-          resources {
-            uniqueId
-            name
-            color
-            customTags {
-              uniqueId
+          bookingResources {
+            resource {
+              id
               name
               color
-            }
-            zones {
-              uniqueId
-              name
-              color
+              customTags {
+                id
+                name
+                color
+              }
+              zones {
+                id
+                name
+                color
+              }
             }
           }
           paymentMethod {
@@ -284,19 +288,19 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const resources = useMemo<ResourceDetails[]>(
     () =>
       timeRangeValid
-        ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, location, customTags, zones }) => ({
-            uniqueId,
+        ? rootDataAvailableResources.availableResources.map(({ resource: { id, name, customTags, zones }, location }) => ({
+            id,
             name,
-            location: location ? { uniqueId: location.uniqueId, name: location.name } : null,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+            location: location ? { id: location.id, name: location.name } : null,
+            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
           }))
         : [],
     [rootDataAvailableResources.availableResources, timeRangeValid],
   );
 
   const locations = useMemo<LocationDetails[]>(
-    () => Array.from(new Map<string, LocationDetails>(resources.filter((item) => item.location !== null).map((item) => [item.location!.uniqueId, item.location!])).values()),
+    () => Array.from(new Map<string, LocationDetails>(resources.filter((item) => item.location !== null).map((item) => [item.location!.id, item.location!])).values()),
     [resources],
   );
   const customTags = useMemo<CustomTagDetails[]>(
@@ -312,7 +316,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     let filtered = resources;
 
     if (selectedLocationId !== allId) {
-      filtered = filtered.filter((item) => item.location?.uniqueId === selectedLocationId);
+      filtered = filtered.filter((item) => item.location?.id === selectedLocationId);
     }
 
     if (selectedCustomTagId !== allId) {
@@ -326,9 +330,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     return filtered;
   }, [resources, selectedLocationId, selectedCustomTagId, selectedZoneId]);
 
-  const [resourceIds, setResourceIds] = useState<string[]>(
-    filteredResources.slice(0, (rootData.product?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.uniqueId),
-  );
+  const [resourceIds, setResourceIds] = useState<string[]>(filteredResources.slice(0, (rootData.product?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.id));
   const validate = makeValidate(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
   const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
 
@@ -547,12 +549,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
-        if (booking.resources.length > 0) {
-          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
+        if (booking.bookingResources.length > 0) {
+          message += ` at resource "${booking.bookingResources.map(({ resource }) => resource.name).join(', ')}"`;
 
-          const zones = booking.resources.flatMap(({ zones }) => zones);
+          const zones = booking.bookingResources.flatMap(({ resource }) => resource.zones);
           if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.id, zone), new Map()).values());
 
             message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
           }
@@ -586,7 +588,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             },
             involvedCustomers: [
               {
-                uniqueId: rootData.me.id,
+                id: rootData.me.id,
                 name: '',
                 givenName: '',
                 middleName: '',
@@ -594,8 +596,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                 photoUrl: '',
               },
             ],
-            involvedOrganizations: organizationUniqueAlphanumericName ? [{ uniqueId: organizationUniqueAlphanumericName, name: '' }] : [],
-            resources: [],
+            involvedOrganizations: [],
+            bookingResources: [],
             paymentMethod: {
               type: paymentMethod as PaymentMethod,
               name: '',
@@ -711,7 +713,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                           onChange={handleLocationChanged}
                           size="small"
                           renderValue={(selectedId) => {
-                            const selectedItem = locations.find((item) => item.uniqueId === selectedId);
+                            const selectedItem = locations.find((item) => item.id === selectedId);
                             if (selectedItem) {
                               return (
                                 <StackRow>
@@ -738,7 +740,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                           </MenuItem>
 
                           {locations.map((item) => (
-                            <MenuItem key={item.uniqueId} value={item.uniqueId}>
+                            <MenuItem key={item.id} value={item.id}>
                               <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
                             </MenuItem>
                           ))}
@@ -834,13 +836,13 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                           multiple={true}
                           required={requiredFields.resources}
                           options={filteredResources}
-                          getOptionValue={(option) => (option as ResourceDetails).uniqueId}
+                          getOptionValue={(option) => (option as ResourceDetails).id}
                           getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
                           renderOption={(props, option) => {
                             const castedOption = option as ResourceDetails;
 
                             return (
-                              <li {...props} key={castedOption.uniqueId}>
+                              <li {...props} key={castedOption.id}>
                                 <StackRow sx={{ alignItems: 'center' }}>
                                   <BodyIconTypography label={castedOption.name} />
                                   <CustomTags customTags={castedOption.customTags} hideNAText />

@@ -22,19 +22,19 @@ type CdnImageFile {
 type ConnectionOfFloorPlanEdge {
   pageInfo: PageInfo!
   edges: [FloorPlanEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfLocationEdge {
   pageInfo: PageInfo!
   edges: [LocationEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ConnectionOfResourceEdge {
   pageInfo: PageInfo!
   edges: [ResourceEdge!]!
-  totalCount: Int
+  totalCount: Int!
 }
 
 type ContactDetails {
@@ -79,9 +79,16 @@ type LocationDailyBookingsTotal {
 }
 
 type LocationDetails {
+  organization: OrganizationDetails!
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  resourceTypes: [OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
+  resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
   name: String!
   about: String
-  organization: Location_OrganizationDetails!
   timezone: String
   type: LocationTypeDetails!
   openingHours: OpeningHours!
@@ -91,15 +98,9 @@ type LocationDetails {
   canModify: Boolean!
   canDelete: Boolean!
   canViewAnalytics: Boolean!
-  resources: [ResourceDetails!]!
   physicalAddress: LocationPhysicalAddressDetails
-  customTags: [Location_OrganizationTagDetails!]!
-  zones: [Location_OrganizationTagDetails!]!
-  resourceTypes: [Location_OrganizationTagDetails!]!
-  locationTags: [Location_OrganizationTagDetails!]!
   primaryFeatureImage: CdnImageFile
   extraMetadata: LocationExtraMetadata
-  locationSpaceTypes: [Location_OrganizationTagDetails!]!
   id: ID!
 }
 
@@ -148,20 +149,6 @@ type LocationTypeDetails {
   name: String!
 }
 
-type Location_OrganizationDetails {
-  uniqueId: ID!
-  uniqueAlphanumericName: String
-  name: String!
-  logoUrl: String
-}
-
-type Location_OrganizationTagDetails {
-  uniqueId: ID!
-  name: String
-  tagType: String
-  color: String
-}
-
 type Mutation {
   addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
@@ -195,6 +182,14 @@ type OpeningHoursDetails {
   until: String
 }
 
+type OrganizationDetails {
+  id: ID!
+}
+
+type OrganizationTagDetails {
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -208,31 +203,32 @@ type PeopleCapacity {
 }
 
 type Query {
+  locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
+  floorPlanById(id: String!): FloorPlanDetails @lookup @internal @cost(weight: "10")
   floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
   location(id: String!): LocationDetails @cost(weight: "10")
+  locationById(id: String!): LocationDetails @lookup @internal @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceLocations(after: String first: Int before: String last: Int where: MarketplaceLocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
-  locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
-  locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
-  resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
+  resourceById(id: String!): ResourceDetails @lookup @internal @cost(weight: "10")
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type ResourceDetails {
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
+  resourceType: OrganizationTagDetails!
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
   color: String
   capacity: Int!
-  customTags: [Location_OrganizationTagDetails!]!
-  zones: [Location_OrganizationTagDetails!]!
-  productTags: [Location_OrganizationTagDetails!]!
-  resourceType: Location_OrganizationTagDetails!
   isAvailableHoursOverridden: Boolean!
   availableHours: OpeningHours
   id: ID!
@@ -492,7 +488,6 @@ input ResourcePositionInput {
 }
 
 input ResourceWhereInput {
-  locationId: String!
   nameContains: String
   customTagIds: [String!]
   zoneIds: [String!]
@@ -609,6 +604,10 @@ enum ResourceOrderField {
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

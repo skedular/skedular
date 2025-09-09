@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6e098248f11e8153966e5671c8445d5>>
+ * @generated SignedSource<<b12a20bf55e57e25c07609e00e384fbb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,40 +11,42 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_resources_query$data = {
-  readonly resources: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly capacity: number;
-        readonly color: string | null | undefined;
-        readonly customTags: ReadonlyArray<{
+  readonly location: {
+    readonly resources: {
+      readonly __id: string;
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly capacity: number;
           readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly id: string;
-        readonly inactive: boolean;
-        readonly name: string;
-        readonly productTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly requireBookingApproval: boolean;
-        readonly resourceType: {
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
+          readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+          readonly id: string;
+          readonly inactive: boolean;
+          readonly name: string;
+          readonly productTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
+          readonly requireBookingApproval: boolean;
+          readonly resourceType: {
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          };
+          readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly id: string;
+            readonly name: string;
+          }>;
         };
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  };
+      }>;
+      readonly totalCount: number;
+    };
+  } | null | undefined;
   readonly " $fragmentType": "organizationLocation_resources_query";
 };
 export type organizationLocation_resources_query$key = {
@@ -56,32 +58,34 @@ import organizationLocation_resources_refetchableFragment_graphql from './organi
 
 const node: ReaderFragment = (function(){
 var v0 = [
+  "location",
   "resources"
 ],
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+v4 = [
   (v1/*: any*/),
-  (v2/*: any*/)
+  (v2/*: any*/),
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -142,143 +146,156 @@ return {
   "name": "organizationLocation_resources_query",
   "selections": [
     {
-      "alias": "resources",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "resourcesSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "customTagIds",
-              "variableName": "resourceCustomTagIds"
-            },
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "resourceNameSearchText"
-            },
-            {
-              "kind": "Variable",
-              "name": "zoneIds",
-              "variableName": "resourceZoneIds"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
+          "name": "id",
+          "variableName": "locationId"
         }
       ],
-      "concreteType": "ConnectionOfResourceEdge",
+      "concreteType": "LocationDetails",
       "kind": "LinkedField",
-      "name": "__organizationLocation_resources_connection",
+      "name": "location",
       "plural": false,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceEdge",
+          "alias": "resources",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "resourcesSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "customTagIds",
+                  "variableName": "resourceCustomTagIds"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "resourceNameSearchText"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "zoneIds",
+                  "variableName": "resourceZoneIds"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "ConnectionOfResourceEdge",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__organizationLocation_resources_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "ResourceDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ResourceEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "inactive",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "requireBookingApproval",
-                  "storageKey": null
-                },
-                (v2/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "capacity",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
+                  "concreteType": "ResourceDetails",
                   "kind": "LinkedField",
-                  "name": "customTags",
-                  "plural": true,
-                  "selections": (v3/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "zones",
-                  "plural": true,
-                  "selections": (v3/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "productTags",
-                  "plural": true,
-                  "selections": (v3/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Location_OrganizationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "resourceType",
+                  "name": "node",
                   "plural": false,
-                  "selections": (v3/*: any*/),
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "inactive",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "requireBookingApproval",
+                      "storageKey": null
+                    },
+                    (v3/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "capacity",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "customTags",
+                      "plural": true,
+                      "selections": (v4/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "zones",
+                      "plural": true,
+                      "selections": (v4/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "productTags",
+                      "plural": true,
+                      "selections": (v4/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "resourceType",
+                      "plural": false,
+                      "selections": (v4/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -287,49 +304,42 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -340,6 +350,6 @@ return {
 };
 })();
 
-(node as any).hash = "b675ef443b61f487faccf6e6ce0fffd4";
+(node as any).hash = "3fcfb1d5de4bedf21159088f13ac47c0";
 
 export default node;

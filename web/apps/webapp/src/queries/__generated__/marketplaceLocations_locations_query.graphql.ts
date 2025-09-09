@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e098d0071c06f408880707029f805a3c>>
+ * @generated SignedSource<<354ac94ff042228e71d501a28e6f0316>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type marketplaceLocations_locations_query$data = {
         readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocationCard_LocationDetails" | "marketplaceLocationPopupCard_LocationDetails">;
       };
     }>;
-    readonly totalCount: number | null | undefined;
+    readonly totalCount: number;
   };
   readonly " $fragmentType": "marketplaceLocations_locations_query";
 };

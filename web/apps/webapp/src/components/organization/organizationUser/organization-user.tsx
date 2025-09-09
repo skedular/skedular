@@ -100,18 +100,22 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
               id
               name
               organization {
-                uniqueId
+                id
               }
               members {
-                organizationMember {
-                  uniqueId
-                  customer {
-                    uniqueId
-                    givenName
-                    middleName
-                    familyName
-                    name
-                    photoUrl
+                edges {
+                  node {
+                    organizationMember {
+                      uniqueId
+                      customer {
+                        id
+                        givenName
+                        middleName
+                        familyName
+                        name
+                        photoUrl
+                      }
+                    }
                   }
                 }
               }
@@ -119,14 +123,16 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
             }
           }
         }
-        organizationMembers(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              status
-              role
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          members(where: { customerId: $customerId }) {
+            __id
+            totalCount
+            edges {
+              node {
+                id
+                status
+                role
+              }
             }
           }
         }
@@ -161,7 +167,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
         members {
           id
           customer {
-            uniqueId
+            id
             email
             name
             givenName
@@ -198,7 +204,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
   const teams = useMemo(() => rootData.customerTeams.edges.map((edge) => edge.node), [rootData.customerTeams]);
   const teamsConnectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
-  const member = useMemo(() => (rootData.organizationMembers.edges.length > 0 ? rootData.organizationMembers.edges[0]?.node : null), [rootData.organizationMembers]);
+  const member = useMemo(
+    () => (rootData.organization?.members && rootData.organization.members.edges.length > 0 ? rootData.organization.members.edges[0]?.node : null),
+    [rootData.organization?.members],
+  );
 
   useEffect(() => {
     if (!section || section === 'profile') {
@@ -537,7 +546,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
                   rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={teamsConnectionIds}
-                  teammates={team.members.filter(({ organizationMember }) => !!organizationMember)!.map(({ organizationMember }) => organizationMember!.customer)}
+                  teammates={team.members.edges
+                    .map(({ node }) => node)
+                    .filter(({ organizationMember }) => !!organizationMember)!
+                    .map(({ organizationMember }) => organizationMember!.customer)}
                 />
               </Grid>
             ))}
