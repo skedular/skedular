@@ -129,6 +129,14 @@ internal static class BookingExtensions
                 !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
         }
 
+        if (searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+        {
+            query = query.Where(item => item.InvolvedOrganizations.Any(organization =>
+                !organization.DeletedAt.HasValue &&
+                organization.UniqueAlphanumericName != null &&
+                searchCriteria.OrganizationUniqueAlphanumericNames.Contains(organization.UniqueAlphanumericName)));
+        }
+
         if (searchCriteria.LocationIds.Count != 0)
         {
             query = query.Where(item => item.InvolvedLocations.Any(location =>
