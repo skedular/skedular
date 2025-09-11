@@ -12,8 +12,8 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddSingleton<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<ICustomerService, CustomerService>()

@@ -8,6 +8,7 @@ using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
+using Team.Shared.Services.Cache;
 
 namespace Team.Shared;
 
@@ -22,7 +23,9 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddScoped<ICachedTeamService, CachedTeamService>()
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

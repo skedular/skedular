@@ -1,16 +1,25 @@
 using Enterprise.Shared.Context;
 using Team.Shared.Database.Entities;
+using Team.Shared.Services.Cache;
 using Customer = Team.Shared.Models.Customer;
 
 namespace Team.Api.Services.Authorization;
 
 public interface IOrganizationSsoAuthorizationService
 {
+    ValueTask<bool> IsSsoValidAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
     bool IsSsoValid(Organization organization, Customer customer);
 }
 
-public class OrganizationSsoAuthorizationService(IContext context) : IOrganizationSsoAuthorizationService
+public class OrganizationSsoAuthorizationService(IContext context, ICachedOrganizationService cachedOrganizationService)
+    : IOrganizationSsoAuthorizationService
 {
+    public async ValueTask<bool> IsSsoValidAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        return organization is not null && IsSsoValid(organization, customer);
+    }
+
     public bool IsSsoValid(Organization organization, Customer customer)
     {
         if (organization.OrganizationSsoSettings is null || !organization.OrganizationSsoSettings.IsActive)

@@ -10,6 +10,7 @@ using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Services.Cache;
 using Booking = Team.Shared.Database.Entities.Booking;
 using Customer = Team.Shared.Models.Customer;
 using Location = Team.Shared.Database.Entities.Location;
@@ -48,7 +49,8 @@ public class TeamService(
     ITeamOutboxPublisher teamOutboxPublisher,
     IMapper mapper,
     TimeProvider timeProvider,
-    ITeamMemberService teamMemberService) : ITeamService
+    ITeamMemberService teamMemberService,
+    ICachedTeamService cachedTeamService) : ITeamService
 {
     public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken)
     {
@@ -157,7 +159,9 @@ public class TeamService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
+        await cachedTeamService.UpdateByIdAsync(team.Id, cancellationToken);
+
+        if (await teamAuthorizationService.CanViewMemberPersonalDetailsAsync(teamEntity, customer, cancellationToken))
         {
             return team;
         }
@@ -242,7 +246,7 @@ public class TeamService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!teamAuthorizationService.CanDelete(existingTeam, customer))
+        if (!await teamAuthorizationService.CanDeleteAsync(existingTeam, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -256,7 +260,9 @@ public class TeamService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
+        await cachedTeamService.RemoveByIdAsync(existingTeam.Id, cancellationToken);
+
+        if (await teamAuthorizationService.CanViewMemberPersonalDetailsAsync(existingTeam, customer, cancellationToken))
         {
             return deletedTeam;
         }
@@ -293,7 +299,7 @@ public class TeamService(
             customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(id, cancellationToken);
         if (team is null)
         {
             return null;
@@ -396,7 +402,7 @@ public class TeamService(
         foreach (var team in result)
         {
             var teamEntity = teams.First(item => item.Id == team.Id);
-            if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
+            if (await teamAuthorizationService.CanViewMemberPersonalDetailsAsync(teamEntity, customer, cancellationToken))
             {
                 continue;
             }
@@ -433,7 +439,7 @@ public class TeamService(
         bool updateTeamMembers,
         CancellationToken cancellationToken)
     {
-        if (!teamAuthorizationService.CanModify(existingTeam, customer))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -472,7 +478,9 @@ public class TeamService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
+        await cachedTeamService.UpdateByIdAsync(team.Id, cancellationToken);
+
+        if (await teamAuthorizationService.CanViewMemberPersonalDetailsAsync(existingTeam, customer, cancellationToken))
         {
             return team;
         }
@@ -504,7 +512,7 @@ public class TeamService(
         Shared.Database.Entities.Team team,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !teamAuthorizationService.CanView(team, customer))
+        if (customer is not null && !await teamAuthorizationService.CanViewAsync(team, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -514,11 +522,12 @@ public class TeamService(
         {
             mappedTeam.Permissions = new Permissions
             {
-                CanView = teamAuthorizationService.CanView(team, customer),
-                CanModify = teamAuthorizationService.CanModify(team, customer),
-                CanDelete = teamAuthorizationService.CanDelete(team, customer),
-                CanInvitePeople = teamAuthorizationService.CanInvitePeople(team, customer),
-                CanCancelPeopleExistingInvitations = teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer)
+                CanView = await teamAuthorizationService.CanViewAsync(team, customer, cancellationToken),
+                CanModify = await teamAuthorizationService.CanModifyAsync(team, customer, cancellationToken),
+                CanDelete = await teamAuthorizationService.CanDeleteAsync(team, customer, cancellationToken),
+                CanInvitePeople = await teamAuthorizationService.CanInvitePeopleAsync(team, customer, cancellationToken),
+                CanCancelPeopleExistingInvitations =
+                    await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customer, cancellationToken)
             };
         }
 
@@ -531,7 +540,7 @@ public class TeamService(
             })
             .AnyAsync(cancellationToken);
 
-        if (customer is null || teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
+        if (customer is null || await teamAuthorizationService.CanViewMemberPersonalDetailsAsync(team, customer, cancellationToken))
         {
             return mappedTeam;
         }
