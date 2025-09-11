@@ -229,6 +229,21 @@ public class OrganizationDetails : Node
         return mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
     }
 
+    [UseResolverScope]
+    public async Task<bool> IsSsoTokenValidAsync(
+        [Parent] OrganizationDetails organization,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        await organizationSsoService.IsSsoTokenValidAsync(organization.Id, organization.UniqueAlphanumericName, cancellationToken);
+
+    [UseResolverScope]
+    public async Task<string> SsoLoginUrlAsync(
+        string redirectUrl,
+        [Parent] OrganizationDetails organization,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        await organizationSsoService.SsoLoginAsync(organization.Id, organization.UniqueAlphanumericName, redirectUrl, cancellationToken);
+
     private async Task<Connection<OrganizationTagEdge>> OrganizationTagsAsync(
         string? after,
         int? first,

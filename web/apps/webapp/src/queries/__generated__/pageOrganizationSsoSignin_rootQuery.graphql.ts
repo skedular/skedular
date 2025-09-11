@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<796410f9eafc4ed2c158786f4bbb511b>>
+ * @generated SignedSource<<5290bc22ec747c3de6963494e546179e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,8 @@ export type pageOrganizationSsoSignin_rootQuery$data = {
   readonly organization: {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
+    readonly ssoLoginUrl: string;
   } | null | undefined;
-  readonly organizationSsoLoginUrl: string;
 };
 export type pageOrganizationSsoSignin_rootQuery = {
   response: pageOrganizationSsoSignin_rootQuery$data;
@@ -64,17 +64,12 @@ v4 = {
   "args": [
     {
       "kind": "Variable",
-      "name": "organizationUniqueAlphanumericName",
-      "variableName": "organizationUniqueAlphanumericName"
-    },
-    {
-      "kind": "Variable",
       "name": "redirectUrl",
       "variableName": "redirectUrl"
     }
   ],
   "kind": "ScalarField",
-  "name": "organizationSsoLoginUrl",
+  "name": "ssoLoginUrl",
   "storageKey": null
 };
 return {
@@ -93,11 +88,11 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/)
+          (v3/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
+      }
     ],
     "type": "Query",
     "abstractKey": null
@@ -118,6 +113,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -127,21 +123,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
+      }
     ]
   },
   "params": {
-    "cacheID": "dc22653843ee2b3a337a68d7320b1718",
+    "cacheID": "82adcc2b96f2bde8cee51cef5e76ef11",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationSsoSignin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $redirectUrl: String!\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    logoUrl\n    name\n    id\n  }\n  organizationSsoLoginUrl(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, redirectUrl: $redirectUrl)\n}\n"
+    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $redirectUrl: String!\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    logoUrl\n    name\n    ssoLoginUrl(redirectUrl: $redirectUrl)\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9f415d5cc5c5563776bbb9abf39eaaaf";
+(node as any).hash = "9daf75e80ba3f094483573ab29b7280a";
 
 export default node;

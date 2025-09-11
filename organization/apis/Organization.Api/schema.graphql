@@ -204,6 +204,8 @@ type OrganizationDetails {
   productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
+  isSsoTokenValid: Boolean! @cost(weight: "10")
+  ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
   uniqueAlphanumericName: String
   name: String!
   about: String
@@ -468,8 +470,6 @@ type Query {
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
-  isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
-  organizationSsoLoginUrl(organizationId: String organizationUniqueAlphanumericName: String redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")

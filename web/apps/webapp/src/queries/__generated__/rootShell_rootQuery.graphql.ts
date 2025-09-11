@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df701fb1b82cb31339567e73eb25a40d>>
+ * @generated SignedSource<<1e6212aa9a612b9c36e58f6642fc2e92>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type rootShell_rootQuery$data = {
   readonly bookingCustomerRecordSynced: boolean;
   readonly coreCustomerRecordSynced: boolean;
   readonly isAzureTenantInstalled: boolean;
-  readonly isOrganizationSsoTokenValid?: boolean;
   readonly locationCustomerRecordSynced: boolean;
   readonly marketplaceCustomerRecordSynced: boolean;
   readonly me: {
@@ -33,6 +32,7 @@ export type rootShell_rootQuery$data = {
     readonly id: string;
   }>;
   readonly organization?: {
+    readonly isSsoTokenValid: boolean;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
@@ -155,38 +155,32 @@ v15 = {
   "selections": (v4/*: any*/),
   "storageKey": null
 },
-v16 = {
-  "alias": null,
-  "args": [
-    {
-      "kind": "Variable",
-      "name": "organizationUniqueAlphanumericName",
-      "variableName": "organizationUniqueAlphanumericName"
-    }
-  ],
-  "kind": "ScalarField",
-  "name": "isOrganizationSsoTokenValid",
-  "storageKey": null
-},
-v17 = [
+v16 = [
   {
     "kind": "Variable",
     "name": "uniqueAlphanumericName",
     "variableName": "organizationUniqueAlphanumericName"
   }
 ],
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "logoUrl",
   "storageKey": null
 },
-v19 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isSsoTokenValid",
   "storageKey": null
 },
 v20 = {
@@ -259,15 +253,15 @@ return {
         "kind": "Condition",
         "passingValue": true,
         "selections": [
-          (v16/*: any*/),
           {
             "alias": null,
-            "args": (v17/*: any*/),
+            "args": (v16/*: any*/),
             "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
             "selections": [
+              (v17/*: any*/),
               (v18/*: any*/),
               (v19/*: any*/)
             ],
@@ -355,7 +349,7 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v19/*: any*/),
+          (v18/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -383,8 +377,8 @@ return {
             "name": "isListable",
             "storageKey": null
           },
+          (v17/*: any*/),
           (v18/*: any*/),
-          (v19/*: any*/),
           (v21/*: any*/),
           (v22/*: any*/)
         ],
@@ -406,15 +400,15 @@ return {
         "kind": "Condition",
         "passingValue": true,
         "selections": [
-          (v16/*: any*/),
           {
             "alias": null,
-            "args": (v17/*: any*/),
+            "args": (v16/*: any*/),
             "concreteType": "OrganizationDetails",
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
             "selections": [
+              (v17/*: any*/),
               (v18/*: any*/),
               (v19/*: any*/),
               (v2/*: any*/),
@@ -480,16 +474,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "152f84e3b35908f5be011bb3e2363bc4",
+    "cacheID": "3219a0880355a310e993a0646cedbbd8",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  myOrganizations {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  isOrganizationSsoTokenValid(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists)\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {\n    logoUrl\n    name\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    uniqueAlphanumericName\n    isListable\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {\n    id\n    uniqueAlphanumericName\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  myOrganizations {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {\n    logoUrl\n    name\n    isSsoTokenValid\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    uniqueAlphanumericName\n    isListable\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {\n    id\n    uniqueAlphanumericName\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "99fbf4bb1e55902b08341d54821ab610";
+(node as any).hash = "96ae250cf671e3d97c0a59ca62d9a069";
 
 export default node;

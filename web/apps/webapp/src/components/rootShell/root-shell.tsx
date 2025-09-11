@@ -57,10 +57,10 @@ const RootQuery = graphql`
     azureTenantOrganization {
       id
     }
-    isOrganizationSsoTokenValid(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists)
     organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
       logoUrl
       name
+      isSsoTokenValid
     }
     ...appBar_query
     ...leftSideNavigationMenu_query
@@ -179,7 +179,7 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {rootData.me.isOnboardingDone && !rootData.isOrganizationSsoTokenValid && (
+          {rootData.me.isOnboardingDone && !rootData.organization?.isSsoTokenValid && (
             <Card sx={{ textAlign: 'center', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
               <CardContent>
                 <StackRow>
@@ -200,7 +200,7 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
-          {rootData.me.isOnboardingDone && rootData.isOrganizationSsoTokenValid && <>{children}</>}
+          {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && <>{children}</>}
         </Box>
       </Box>
     </>

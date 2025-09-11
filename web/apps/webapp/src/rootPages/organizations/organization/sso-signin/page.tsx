@@ -27,14 +27,18 @@ const RootQuery = graphql`
     organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       logoUrl
       name
+      ssoLoginUrl(redirectUrl: $redirectUrl)
     }
-    organizationSsoLoginUrl(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, redirectUrl: $redirectUrl)
   }
 `;
 
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationSsoSignin_rootQuery>(RootQuery, queryReference);
   const paletteMode = useContext(PaletteModeContext);
+
+  if (!rootData.organization) {
+    return <></>;
+  }
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -43,7 +47,7 @@ const RootPage = ({ queryReference }: Props) => {
           <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} />
           <LeadIconTypography label={`Single sign-on to ${rootData.organization?.name}`} invertDefaultColor sx={{ marginTop: 2 }} />
           <SmallIconTypography label={`Authenticate your account by logging into ${rootData.organization?.name}'s single sign-on provider.`} invertDefaultColor />
-          <Button variant="contained" href={rootData.organizationSsoLoginUrl} fullWidth sx={{ marginTop: 2 }}>
+          <Button variant="contained" href={rootData.organization.ssoLoginUrl} fullWidth sx={{ marginTop: 2 }}>
             Continue
           </Button>
         </CardContent>

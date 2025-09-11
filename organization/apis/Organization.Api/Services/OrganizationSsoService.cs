@@ -15,7 +15,7 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
-    Task<bool> IsOrganizationSsoTokenValidAsync(
+    Task<bool> IsSsoTokenValidAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken);
@@ -50,7 +50,7 @@ public class OrganizationSsoService(
     TimeProvider timeProvider,
     IContext context) : IOrganizationSsoService
 {
-    public async Task<bool> IsOrganizationSsoTokenValidAsync(
+    public async Task<bool> IsSsoTokenValidAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken)

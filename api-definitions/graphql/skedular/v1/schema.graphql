@@ -672,6 +672,7 @@ type OrganizationDetails {
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isListable: Boolean!
   isMyOnboardingDone: Boolean!
+  isSsoTokenValid: Boolean! @cost(weight: "10")
   locationSpaceTypes: [OrganizationTagDetails!]!
   locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   logoUrl: String
@@ -682,6 +683,7 @@ type OrganizationDetails {
   physicalAddress: OrganizationPhysicalAddressDetails
   productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   resourceTypes: [OrganizationTagDetails!]!
+  ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
   ssoSettings: OrganizationSsoSettingsDetails
   stripeAuthorizeExistingConnectAccountUrl: String!
   taxDetails: OrganizationTaxDetails
@@ -1012,7 +1014,6 @@ type Query {
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
-  isOrganizationSsoTokenValid(organizationId: String organizationUniqueAlphanumericName: String): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
@@ -1045,7 +1046,6 @@ type Query {
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): ConnectionOfOrganizationEdge! @cost(weight: "10")
-  organizationSsoLoginUrl(organizationId: String organizationUniqueAlphanumericName: String redirectUrl: String!): String! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
