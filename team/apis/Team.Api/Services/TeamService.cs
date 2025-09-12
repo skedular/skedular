@@ -111,8 +111,8 @@ public class TeamService(
             throw new UnauthorizedAccessException();
         }
 
-        if (!organizationOfferingService.CanCreateTeam(organization) ||
-            !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        if (!await organizationOfferingService.CanCreateTeamAsync(organization.Id, cancellationToken) ||
+            !await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }

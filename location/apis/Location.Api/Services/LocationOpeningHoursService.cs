@@ -31,12 +31,12 @@ public class LocationOpeningHoursService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

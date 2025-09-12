@@ -44,12 +44,12 @@ public class ResourceAvailableHoursService(
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

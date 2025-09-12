@@ -34,7 +34,7 @@ public class LocationPhysicalAddressService(
             await repositoryFactory.LocationRepository.GetByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken) ??
             throw new LocationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -94,7 +94,7 @@ public class LocationPhysicalAddressService(
             await repositoryFactory.LocationRepository.GetByIdAsync(existingLocationPhysicalAddress.Location.Id, cancellationToken) ??
             throw new LocationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

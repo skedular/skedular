@@ -3,6 +3,7 @@ using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
+using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +21,9 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddSingleton<ITemporalService, TemporalService>();
+            .AddSingleton<ITemporalService, TemporalService>()
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+            .AddScoped<ICachedLocationService, CachedLocationService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

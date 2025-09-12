@@ -33,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NetTopologySuite.IO.Converters;
 using QuestPDF;
 using QuestPDF.Infrastructure;
 using WorkOS;
@@ -177,7 +178,7 @@ public static class Extensions
         services
             .AddKeyedSingleton<JsonSerializerOptions>(
                 typeof(IHybridCacheSerializer<>),
-                new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles });
+                new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles, Converters = { new GeoJsonConverterFactory() } });
 
         services
             .AddCors()

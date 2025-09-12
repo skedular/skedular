@@ -79,7 +79,6 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
         await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
@@ -89,7 +88,6 @@ public class OrganizationSubscriber(
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
         await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 

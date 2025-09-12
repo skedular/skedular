@@ -1,36 +1,31 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
+using Location.Shared.Repositories;
 using Microsoft.Extensions.Caching.Hybrid;
-using Team.Shared.Database.Entities;
-using Team.Shared.Repositories;
 
-namespace Team.Shared.Services.Cache;
+namespace Location.Shared.Services.Cache;
 
-public interface ICachedOrganizationService
+public interface ICachedLocationService
 {
-    ValueTask<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
-public class CachedOrganizationService(
-    ApplicationConfiguration applicationConfiguration,
-    IRepositoryFactory repositoryFactory,
-    HybridCache hybridCache)
-    : ICachedOrganizationService
+public class CachedLocationService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
+    : ICachedLocationService
 {
-    public async ValueTask<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         try
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, ct) ??
-                            throw new OrganizationNotFound(),
+                async ct => await repositoryFactory.LocationRepository.GetByIdAsync(id, ct) ?? throw new TeamNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
-        catch (OrganizationNotFound)
+        catch (TeamNotFound)
         {
             return null;
         }
@@ -39,13 +34,12 @@ public class CachedOrganizationService(
     public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, cancellationToken) ??
-            throw new OrganizationNotFound(),
+            await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:lcoation-id-{id}";
 }

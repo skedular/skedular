@@ -19,7 +19,10 @@ public class Location : EntityBaseWithDeleted
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public LocationExtraMetadata? ExtraMetadata { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
+
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public virtual ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
@@ -44,7 +47,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
         builder.Property(item => item.ExtraMetadata).HasColumnType("jsonb");
 
-        builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Locations).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
 
         builder.HasIndex(item => item.Name);

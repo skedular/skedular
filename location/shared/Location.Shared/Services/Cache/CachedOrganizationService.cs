@@ -1,10 +1,10 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
+using Location.Shared.Database.Entities;
+using Location.Shared.Repositories;
 using Microsoft.Extensions.Caching.Hybrid;
-using Team.Shared.Database.Entities;
-using Team.Shared.Repositories;
 
-namespace Team.Shared.Services.Cache;
+namespace Location.Shared.Services.Cache;
 
 public interface ICachedOrganizationService
 {
@@ -25,7 +25,7 @@ public class CachedOrganizationService(
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, ct) ??
+                async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, ct) ??
                             throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
@@ -39,7 +39,7 @@ public class CachedOrganizationService(
     public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, cancellationToken) ??
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, cancellationToken) ??
             throw new OrganizationNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
