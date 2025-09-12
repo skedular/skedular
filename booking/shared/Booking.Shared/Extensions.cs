@@ -7,6 +7,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,8 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
         services
             .AddSingleton<IMapper, Mapper>()
-            .AddSingleton<ITemporalService, TemporalService>();
+            .AddSingleton<ITemporalService, TemporalService>()
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services

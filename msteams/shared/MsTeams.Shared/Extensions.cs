@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
+using MsTeams.Shared.Services.Cache;
 
 namespace MsTeams.Shared;
 
@@ -20,7 +21,8 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<IGraphService, GraphService>()
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>();
+            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

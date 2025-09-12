@@ -4,13 +4,18 @@ using Enterprise.Shared.Kafka.Consume;
 using Slack.Processors.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.Cache;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Slack.Processors.Subscribers;
 
-public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class OrganizationSubscriber(
+    ILogger<OrganizationSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -73,6 +78,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -81,6 +87,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

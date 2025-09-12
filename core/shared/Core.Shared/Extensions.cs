@@ -1,5 +1,6 @@
 using Core.Shared.Mappers;
 using Core.Shared.Repositories;
+using Core.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +16,8 @@ public static class Extensions
             .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

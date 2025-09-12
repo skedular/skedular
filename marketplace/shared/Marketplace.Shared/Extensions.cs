@@ -1,6 +1,7 @@
 using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
+using Marketplace.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,8 @@ public static class Extensions
             .AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

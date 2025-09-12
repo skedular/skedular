@@ -14,6 +14,7 @@ using Slack.Shared.Mappers;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
+using Slack.Shared.Services.Cache;
 using SlackNet.AspNetCore;
 
 namespace Slack.Shared;
@@ -66,6 +67,7 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
             .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()
             .AddScoped<ITeamDailyUpdaterService, TeamDailyUpdaterService>()
             .AddScoped<IWorkspaceService, WorkspaceService>()

@@ -3,6 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Core.Processors.Mappers;
 using Core.Shared.Models;
 using Core.Shared.Repositories;
+using Core.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Core.Shared.Database.Entities.Organization;
 using OrganizationMember = Core.Shared.Database.Entities.OrganizationMember;
@@ -10,7 +11,11 @@ using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Core.Processors.Subscribers;
 
-public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class OrganizationSubscriber(
+    ILogger<OrganizationSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -73,6 +78,8 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
+        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)

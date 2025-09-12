@@ -5,6 +5,7 @@ using Customer.Processors.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,8 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    ICustomerPublisher customerPublisher)
+    ICustomerPublisher customerPublisher,
+    ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -84,6 +86,7 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -94,6 +97,7 @@ public class OrganizationSubscriber(
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

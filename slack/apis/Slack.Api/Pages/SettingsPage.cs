@@ -11,6 +11,7 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.Cache;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
@@ -43,7 +44,8 @@ public class SettingsPage(
     ICommonComponents commonComponents,
     IOrganizationService organizationService,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IWorkspaceChannelService workspaceChannelService) :
+    IWorkspaceChannelService workspaceChannelService,
+    ICachedOrganizationService cachedOrganizationService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
     ISettingsPage,
@@ -74,6 +76,8 @@ public class SettingsPage(
 
                 repositoryFactory.OrganizationRepository.Update(workspaceEntity.Organization);
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await cachedOrganizationService.UpdateByIdAsync(workspaceEntity.Organization.Id, cancellationToken);
+
                 break;
         }
     }

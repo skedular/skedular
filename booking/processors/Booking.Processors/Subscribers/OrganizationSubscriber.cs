@@ -3,6 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Booking.Processors.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
@@ -10,7 +11,11 @@ using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class OrganizationSubscriber(
+    ILogger<OrganizationSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -76,6 +81,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -84,6 +90,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

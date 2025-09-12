@@ -5,6 +5,7 @@ using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Models;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
+using MsTeams.Shared.Services.Cache;
 using MsTeams.Shared.Workflows.ReSyncMsTeams;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
@@ -17,7 +18,8 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    ITemporalService temporalService)
+    ITemporalService temporalService,
+    ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -87,6 +89,7 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
 
         foreach (var azureTenant in azureTenants)
         {
@@ -100,6 +103,7 @@ public class OrganizationSubscriber(
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(
