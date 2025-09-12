@@ -76,7 +76,10 @@ public class SettingsPage(
 
                 repositoryFactory.OrganizationRepository.Update(workspaceEntity.Organization);
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-                await cachedOrganizationService.UpdateByIdAsync(workspaceEntity.Organization.Id, cancellationToken);
+                await cachedOrganizationService.UpdateByIdOrUniqueAlphanumericNameAsync(
+                    workspaceEntity.Organization.Id,
+                    workspaceEntity.Organization.UniqueAlphanumericName,
+                    cancellationToken);
 
                 break;
         }

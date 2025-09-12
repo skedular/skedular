@@ -1,5 +1,7 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using Booking.Shared.Services.Cache;
 using Customer = Booking.Shared.Models.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
 
@@ -86,7 +88,7 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
             organizationId,
             organizationUniqueAlphanumericName,
-            cancellationToken);
+            cancellationToken) ?? throw new OrganizationNotFound();
 
         return new OrganizationPermissions
         {

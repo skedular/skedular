@@ -86,7 +86,10 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await cachedOrganizationService.UpdateByIdAsync(existingOrganization.Id, cancellationToken);
+        await cachedOrganizationService.UpdateByIdOrUniqueAlphanumericNameAsync(
+            existingOrganization.Id,
+            existingOrganization.UniqueAlphanumericName,
+            cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -97,7 +100,10 @@ public class OrganizationSubscriber(
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await cachedOrganizationService.RemoveByIdAsync(existingOrganization.Id, cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrUniqueAlphanumericNameAsync(
+            existingOrganization.Id,
+            existingOrganization.UniqueAlphanumericName,
+            cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

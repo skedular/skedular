@@ -1,14 +1,13 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Caching.Hybrid;
-using Team.Shared.Database.Entities;
-using Team.Shared.Repositories;
+using Organization.Shared.Repositories;
 
-namespace Team.Shared.Services.Cache;
+namespace Organization.Shared.Services.Cache;
 
 public interface ICachedOrganizationService
 {
-    ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    ValueTask<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
         string? id,
         string? uniqueAlphanumericName,
         CancellationToken cancellationToken);
@@ -23,7 +22,7 @@ public class CachedOrganizationService(
     HybridCache hybridCache)
     : ICachedOrganizationService
 {
-    public async ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async ValueTask<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
         string? id,
         string? uniqueAlphanumericName,
         CancellationToken cancellationToken)
@@ -34,7 +33,7 @@ public class CachedOrganizationService(
             {
                 return await hybridCache.GetOrCreateAsync(
                     CreateKeyById(id),
-                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, ct) ??
+                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, ct) ??
                                 throw new OrganizationNotFound(),
                     new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                     cancellationToken: cancellationToken);
@@ -45,11 +44,7 @@ public class CachedOrganizationService(
                 return await hybridCache.GetOrCreateAsync(
                     CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
                     async ct =>
-                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                            null,
-                            uniqueAlphanumericName,
-                            false,
-                            ct) ??
+                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(null, uniqueAlphanumericName, ct) ??
                         throw new OrganizationNotFound(),
                     new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                     cancellationToken: cancellationToken);
@@ -69,7 +64,7 @@ public class CachedOrganizationService(
         {
             await hybridCache.SetAsync(
                 CreateKeyById(id),
-                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, cancellationToken) ??
+                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken) ??
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
@@ -82,7 +77,6 @@ public class CachedOrganizationService(
                 await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                     null,
                     uniqueAlphanumericName,
-                    false,
                     cancellationToken) ??
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },

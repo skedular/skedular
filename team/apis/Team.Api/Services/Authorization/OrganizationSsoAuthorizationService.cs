@@ -16,7 +16,7 @@ public class OrganizationSsoAuthorizationService(IContext context, ICachedOrgani
 {
     public async ValueTask<bool> IsSsoValidAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && IsSsoValid(organization, customer);
     }
 

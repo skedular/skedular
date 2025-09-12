@@ -28,7 +28,7 @@ public class OrganizationAuthorizationService(
 {
     public async ValueTask<bool> CanViewAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanView(organization, customer);
     }
 
@@ -41,7 +41,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanModifyAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanModify(organization, customer);
     }
 
@@ -54,7 +54,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanDeleteAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanDelete(organization, customer);
     }
 
@@ -67,7 +67,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanInvitePeopleAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanInvitePeople(organization, customer);
     }
 
@@ -81,7 +81,7 @@ public class OrganizationAuthorizationService(
     public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(string organizationId, Customer customer,
         CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanCancelPeopleExistingInvitations(organization, customer);
     }
 
@@ -94,7 +94,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanViewMemberPersonalDetailsAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanViewMemberPersonalDetails(organization, customer);
     }
 

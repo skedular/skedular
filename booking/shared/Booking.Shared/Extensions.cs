@@ -29,7 +29,8 @@ public static class Extensions
         services
             .AddSingleton<IMapper, Mapper>()
             .AddSingleton<ITemporalService, TemporalService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services

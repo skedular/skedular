@@ -29,7 +29,7 @@ public class OrganizationAuthorizationService(
 {
     public async ValueTask<bool> CanViewAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanView(organization, customer);
     }
 
@@ -44,7 +44,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanModifyAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanModify(organization, customer);
     }
 
@@ -58,7 +58,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanDeleteAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanDelete(organization, customer);
     }
 
@@ -71,7 +71,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanViewAnalyticsAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanViewAnalytics(organization, customer);
     }
 

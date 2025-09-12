@@ -8,9 +8,13 @@ namespace Slack.Shared.Services.Cache;
 
 public interface ICachedOrganizationService
 {
-    ValueTask<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
+    ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
+    ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
 }
 
 public class CachedOrganizationService(
@@ -19,16 +23,35 @@ public class CachedOrganizationService(
     HybridCache hybridCache)
     : ICachedOrganizationService
 {
-    public async ValueTask<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
     {
         try
         {
-            return await hybridCache.GetOrCreateAsync(
-                CreateKeyById(id),
-                async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, ct) ??
-                            throw new OrganizationNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
-                cancellationToken: cancellationToken);
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                return await hybridCache.GetOrCreateAsync(
+                    CreateKeyById(id),
+                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, ct) ??
+                                throw new OrganizationNotFound(),
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                    cancellationToken: cancellationToken);
+            }
+
+            if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+            {
+                return await hybridCache.GetOrCreateAsync(
+                    CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
+                    async ct =>
+                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(null, uniqueAlphanumericName, ct) ??
+                        throw new OrganizationNotFound(),
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                    cancellationToken: cancellationToken);
+            }
+
+            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
         }
         catch (OrganizationNotFound)
         {
@@ -36,16 +59,51 @@ public class CachedOrganizationService(
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
-        await hybridCache.SetAsync(
-            CreateKeyById(id),
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken) ??
-            throw new OrganizationNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
-            cancellationToken: cancellationToken);
+    public async ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(id),
+                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken) ??
+                throw new OrganizationNotFound(),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                cancellationToken: cancellationToken);
+        }
 
-    public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
-        await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            await hybridCache.SetAsync(
+                CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
+                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                    null,
+                    uniqueAlphanumericName,
+                    cancellationToken) ??
+                throw new OrganizationNotFound(),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                cancellationToken: cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName), cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id-{id}";
+
+    private string CreateKeyByUniqueAlphanumericName(string uniqueAlphanumericName) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-uniqueAlphanumericName-{uniqueAlphanumericName}";
 }

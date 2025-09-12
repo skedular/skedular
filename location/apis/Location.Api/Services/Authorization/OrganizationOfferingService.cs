@@ -17,7 +17,7 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
 {
     public async ValueTask<bool> CanCreateLocationAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && CanCreateLocation(organization);
     }
 
@@ -30,7 +30,7 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
 
     public async ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         return organization is not null && IsMoreInteractionAllowed(organization, customer);
     }
 

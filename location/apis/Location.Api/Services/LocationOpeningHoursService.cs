@@ -5,6 +5,7 @@ using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services.Cache;
 
 namespace Location.Api.Services;
 
@@ -20,7 +21,8 @@ public class LocationOpeningHoursService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    IMapper mapper) : ILocationOpeningHoursService
+    IMapper mapper,
+    ICachedLocationService cachedLocationService) : ILocationOpeningHoursService
 {
     public async Task<Shared.Models.Location> UpdateOpeningHoursAsync(
         string id,
@@ -53,6 +55,9 @@ public class LocationOpeningHoursService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        
+        await cachedLocationService.UpdateByIdAsync(location.Id, cancellationToken);
+
         return location;
     }
 }

@@ -21,7 +21,6 @@ public static class Extensions
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IResourceService, ResourceService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
             .AddScoped<ICachedLocationService, CachedLocationService>()
             .AddScoped<ICachedTeamService, CachedTeamService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();

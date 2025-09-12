@@ -29,7 +29,8 @@ public static class Extensions
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddSingleton<ITemporalService, TemporalService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>();
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

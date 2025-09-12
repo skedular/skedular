@@ -68,6 +68,7 @@ public static class Extensions
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()
             .AddScoped<ITeamDailyUpdaterService, TeamDailyUpdaterService>()
             .AddScoped<IWorkspaceService, WorkspaceService>()
