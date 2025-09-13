@@ -13,16 +13,13 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<IBookingPaymentService, BookingPaymentService>()
             .AddScoped<IBookingService, BookingService>()
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IResourceService, ResourceService>()
-            .AddScoped<ICachedLocationService, CachedLocationService>()
-            .AddScoped<ICachedTeamService, CachedTeamService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

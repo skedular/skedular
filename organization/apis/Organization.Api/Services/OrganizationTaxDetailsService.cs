@@ -39,7 +39,7 @@ public class OrganizationTaxDetailsService(
                                taxDetails.Organization.UniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -80,7 +80,7 @@ public class OrganizationTaxDetailsService(
                                organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

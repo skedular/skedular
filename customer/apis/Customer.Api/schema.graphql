@@ -43,6 +43,9 @@ type CustomerDetails {
   preferredZones: [OrganizationTagDetails!]!
   preferredCustomTags: [OrganizationTagDetails!]!
   preferredResources: [ResourceDetails!]!
+  hasAttachedPaymentMethod: Boolean! @cost(weight: "10")
+  paymentMethods: [CustomerPaymentMethod!]! @cost(weight: "10")
+  billingDetails: CustomerBillingDetails @cost(weight: "10")
   createdAt: DateTime!
   email: String
   emails: [String!]!
@@ -64,9 +67,6 @@ type CustomerDetails {
   locale: String
   phoneNumber: String
   isOnboardingDone: Boolean!
-  paymentMethods: [CustomerPaymentMethod!]!
-  billingDetails: CustomerBillingDetails
-  hasAttachedPaymentMethod: Boolean!
   id: ID!
 }
 

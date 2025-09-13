@@ -9,7 +9,7 @@ namespace Customer.Api.Services;
 
 public interface IStripeCustomerService
 {
-    Task<StripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken);
+    Task<StripeCustomer> AddAsync(string customerId, CancellationToken cancellationToken);
 }
 
 public class StripeCustomerService(
@@ -18,9 +18,9 @@ public class StripeCustomerService(
     IRandomHelper randomHelper,
     ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
-    public async Task<StripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<StripeCustomer> AddAsync(string customerId, CancellationToken cancellationToken)
     {
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationId, cancellationToken) ?? throw new CustomerNotFound();
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
         if (customer.StripeCustomer is not null)
         {
             return customer.StripeCustomer;

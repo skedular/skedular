@@ -19,7 +19,9 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>();
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
+            .AddScoped<ICachedProductService, CachedProductService>()
+            .AddScoped<ICachedProductVersionService, CachedProductVersionService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

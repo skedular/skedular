@@ -1,4 +1,3 @@
-using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Team.Shared.Database;
@@ -24,15 +23,12 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<TeamDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(
-        IDbContextFactory<TeamDbContext> dbContextFactory,
-        TimeProvider timeProvider,
-        IGenericCustomerCacheService genericCustomerCacheService)
+    public RepositoryFactory(IDbContextFactory<TeamDbContext> dbContextFactory, TimeProvider timeProvider)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);

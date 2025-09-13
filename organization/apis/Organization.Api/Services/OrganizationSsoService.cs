@@ -131,7 +131,7 @@ public class OrganizationSsoService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -175,7 +175,7 @@ public class OrganizationSsoService(
                                organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

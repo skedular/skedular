@@ -1,23 +1,30 @@
-using Customer.Shared.Database.Entities;
+using Api.Shared.Services;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 
 namespace Customer.Api.Services.Authorization;
 
 public interface IOrganizationSsoAuthorizationService
 {
-    bool IsSsoValid(Organization organization, Shared.Database.Entities.Customer customer);
+    ValueTask<bool> IsSsoValidAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
-public class OrganizationSsoAuthorizationService(IContext context) : IOrganizationSsoAuthorizationService
+public class OrganizationSsoAuthorizationService(
+    IContext context,
+    ICachedOrganizationService cachedOrganizationService,
+    Shared.Services.Cache.ICachedCustomerService cachedCustomerService)
+    : IOrganizationSsoAuthorizationService
 {
-    public bool IsSsoValid(Organization organization, Shared.Database.Entities.Customer customer)
+    public async ValueTask<bool> IsSsoValidAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        if (organization.OrganizationSsoSettings is null || !organization.OrganizationSsoSettings.IsActive)
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
+        if (organization?.OrganizationSsoSettings is null || !organization.OrganizationSsoSettings.IsActive)
         {
             return true;
         }
 
         var userSso = context.GetUserSsoContext(organization.Id);
+        var customer = await cachedCustomerService.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
         return userSso is not null && customer.Identities.Select(item => item.Email).Contains(userSso.Email);
     }
 }

@@ -7,6 +7,7 @@ using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
+using Location.Shared.Services.Cache;
 using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Api.Services;
@@ -37,17 +38,18 @@ public class FloorPlanService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
     IRandomHelper randomHelper,
-    IMapper mapper) : IFloorPlanService
+    IMapper mapper,
+    ICachedLocationService cachedLocationService) : IFloorPlanService
 {
     public async Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(id, cancellationToken) ?? throw new FloorPlanNotFound();
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
+        var existingLocation = await cachedLocationService.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -64,7 +66,7 @@ public class FloorPlanService(
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -148,7 +150,7 @@ public class FloorPlanService(
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -165,7 +167,7 @@ public class FloorPlanService(
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -193,7 +195,7 @@ public class FloorPlanService(
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -267,9 +269,8 @@ public class FloorPlanService(
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
+        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

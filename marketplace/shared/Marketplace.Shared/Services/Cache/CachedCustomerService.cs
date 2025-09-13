@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Context;
 using Marketplace.Shared.Database.Entities;
 using Marketplace.Shared.Repositories;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -8,6 +9,8 @@ namespace Marketplace.Shared.Services.Cache;
 
 public interface ICachedCustomerService
 {
+    ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
@@ -16,9 +19,29 @@ public interface ICachedCustomerService
     ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
 }
 
-public class CachedCustomerService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
+public class CachedCustomerService(
+    ApplicationConfiguration applicationConfiguration,
+    IRepositoryFactory repositoryFactory,
+    IContext context,
+    HybridCache hybridCache)
     : ICachedCustomerService
 {
+    public async ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
+    }
+
+    public async ValueTask<Customer> GetAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
+    }
+
     public async ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         try

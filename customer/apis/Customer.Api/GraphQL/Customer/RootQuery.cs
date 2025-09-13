@@ -14,14 +14,8 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]
-    public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken)
-    {
-        var customer = mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
-
-        customer.PaymentMethods = [];
-
-        return customer;
-    }
+    public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]

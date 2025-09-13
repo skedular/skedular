@@ -1,29 +1,37 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Customer.Shared.Database.Entities;
+using Customer.Shared.Services.Cache;
 
 namespace Customer.Api.Services.Authorization;
 
 public interface IOrganizationAuthorizationService
 {
-    bool CanAddOrganizationAsDefault(Organization organization, Shared.Database.Entities.Customer customer);
-    bool CanAddOrganizationTagAsDefault(Organization organization, Shared.Database.Entities.Customer customer);
-    bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer);
+    ValueTask<bool> CanAddOrganizationAsDefaultAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanAddOrganizationTagAsDefaultAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> IsOrganizationMemberAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+public class OrganizationAuthorizationService(
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+    ICachedOrganizationService cachedOrganizationService)
     : IOrganizationAuthorizationService
 {
-    public bool CanAddOrganizationAsDefault(Organization organization, Shared.Database.Entities.Customer customer) =>
-        IsOrganizationMember(organization, customer);
+    public async ValueTask<bool> CanAddOrganizationAsDefaultAsync(string organizationId, string customerId, CancellationToken cancellationToken) =>
+        await IsOrganizationMemberAsync(organizationId, customerId, cancellationToken);
 
-    public bool CanAddOrganizationTagAsDefault(Organization organization, Shared.Database.Entities.Customer customer) =>
-        IsOrganizationMember(organization, customer);
+    public async ValueTask<bool> CanAddOrganizationTagAsDefaultAsync(string organizationId, string customerId, CancellationToken cancellationToken) =>
+        await IsOrganizationMemberAsync(organizationId, customerId, cancellationToken);
 
-    public bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> IsOrganizationMemberAsync(string organizationId, string customerId, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+    }
 }

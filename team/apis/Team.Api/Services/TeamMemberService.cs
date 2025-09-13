@@ -10,6 +10,7 @@ using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Services.Cache;
 using Organization = Team.Shared.Database.Entities.Organization;
 
 namespace Team.Api.Services;
@@ -58,17 +59,9 @@ public class TeamMemberService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanView(team, customer))
+        if (!await teamAuthorizationService.CanViewAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
-        }
-
-        var memberVisibilityPolicy = team.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        // TODO: 20250415 - Morteza: Make sure for now (need to be reconsidered) to not let customer to search for team members using name if member view policy is set to limited 
-        if (!teamAuthorizationService.CanViewMemberPersonalDetails(team, customer) &&
-            memberVisibilityPolicy == OrganizationMemberVisibilityPolicy.LimitedAccess)
-        {
-            searchCriteria = searchCriteria with { NameContains = null };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamMemberRepository.GetPaginatedTeamMembersAsync(
@@ -77,31 +70,7 @@ public class TeamMemberService(
             orderByFields,
             cancellationToken);
 
-        var result = (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(team)).ToList(), totalCount);
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
-        {
-            return result;
-        }
-
-        foreach (var edge in result.Item2.Where(item => item.Node.Customer.Id != customer.Id))
-        {
-            edge.Node.Customer = edge.Node.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in edge.Node.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-
-            if (edge.Node.OrganizationMember is not null)
-            {
-                edge.Node.OrganizationMember.Customer = edge.Node.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-                foreach (var identity in edge.Node.OrganizationMember.Customer.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-                }
-            }
-        }
-
-        return result;
+        return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(team)).ToList(), totalCount);
     }
 
     public async Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken)
@@ -109,7 +78,7 @@ public class TeamMemberService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanModify(team, customer))
+        if (!await teamAuthorizationService.CanModifyAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -140,34 +109,8 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = mapper.MapTo(teamMember, mapper.MapTo(team));
-        if (teamMember.Customer.Id == customer.Id)
-        {
-            return result;
-        }
 
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
-        {
-            return result;
-        }
-
-        var memberVisibilityPolicy = team.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        result.Customer = result.Customer.Redact(memberVisibilityPolicy);
-        foreach (var identity in result.Customer.Identities)
-        {
-            identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-        }
-
-        if (result.OrganizationMember is not null)
-        {
-            result.OrganizationMember.Customer = result.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in result.OrganizationMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
+        return mapper.MapTo(teamMember, mapper.MapTo(team));
     }
 
     public async Task<ICollection<TeamMember>> ChangeStatusAsync(
@@ -192,9 +135,13 @@ public class TeamMemberService(
 
         var teamIds = teamMembers.Select(item => item.Team.Id).Distinct().ToList();
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
-        if (!teamMembers.All(item => teamAuthorizationService.CanModify(teams.Single(organization => organization.Id == item.Team.Id), customer)))
+        foreach (var item in teamMembers)
         {
-            throw new UnauthorizedAccessException();
+            if (!await teamAuthorizationService.CanModifyAsync(teams.Single(organization => organization.Id == item.Team.Id), customer.Id,
+                    cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -210,36 +157,10 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = teamMembers
+
+        return teamMembers
             .Select(item => mapper.MapTo(item, mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
             .ToList();
-
-        foreach (var teamMember in result.Where(item => item.Customer.Id != customer.Id))
-        {
-            var teamEntity = teams.First(item => item.TeamMembers.Select(member => member.Id).Contains(teamMember.Id));
-            if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
-            {
-                continue;
-            }
-
-            var memberVisibilityPolicy = teamEntity.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-            teamMember.Customer = teamMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in teamMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-
-            if (teamMember.OrganizationMember is not null)
-            {
-                teamMember.OrganizationMember.Customer = teamMember.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-                foreach (var identity in teamMember.OrganizationMember.Customer.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-                }
-            }
-        }
-
-        return result;
     }
 
     public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, ICollection<TeamMember> members, CancellationToken cancellationToken)
@@ -247,7 +168,7 @@ public class TeamMemberService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
 
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanModify(existingTeam, customer))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -258,7 +179,7 @@ public class TeamMemberService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -355,7 +276,7 @@ public class TeamMemberService(
         var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken) ??
                            throw new TeamNotFound();
-        if (!teamAuthorizationService.CanModify(existingTeam, customer))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -366,7 +287,7 @@ public class TeamMemberService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -388,35 +309,8 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = mapper.MapTo(existingTeamMember);
 
-        if (result.Customer.Id == customer.Id)
-        {
-            return result;
-        }
-
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
-        {
-            return result;
-        }
-
-        var memberVisibilityPolicy = existingTeam.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        result.Customer = result.Customer.Redact(memberVisibilityPolicy);
-        foreach (var identity in result.Customer.Identities)
-        {
-            identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-        }
-
-        if (result.OrganizationMember is not null)
-        {
-            result.OrganizationMember.Customer = result.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in result.OrganizationMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
+        return mapper.MapTo(existingTeamMember);
     }
 
     public async Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
@@ -436,9 +330,12 @@ public class TeamMemberService(
 
         var teamIds = teamMembers.Select(item => item.Team.Id).Distinct().ToList();
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
-        if (!teamMembers.All(item => teamAuthorizationService.CanModify(teams.Single(team => team.Id == item.Team.Id), customer)))
+        foreach (var item in teamMembers)
         {
-            throw new UnauthorizedAccessException();
+            if (!await teamAuthorizationService.CanModifyAsync(teams.Single(team => team.Id == item.Team.Id), customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -457,43 +354,16 @@ public class TeamMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = teamMembers
+        return teamMembers
             .Select(item => mapper.MapTo(item, mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
             .ToList();
-
-        foreach (var teamMember in result.Where(item => item.Customer.Id != customer.Id))
-        {
-            var teamEntity = teams.First(item => item.TeamMembers.Select(member => member.Id).Contains(teamMember.Id));
-            if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
-            {
-                continue;
-            }
-
-            var memberVisibilityPolicy = teamEntity.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-            teamMember.Customer = teamMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in teamMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-
-            if (teamMember.OrganizationMember is not null)
-            {
-                teamMember.OrganizationMember.Customer = teamMember.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-                foreach (var identity in teamMember.OrganizationMember.Customer.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-                }
-            }
-        }
-
-        return result;
     }
 
     public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanModify(existingTeam, customer))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -504,7 +374,7 @@ public class TeamMemberService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -562,33 +432,6 @@ public class TeamMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        var result = mapper.MapTo(addedItem);
-        if (teamMember.Customer.Id == customer.Id)
-        {
-            return result;
-        }
-
-        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
-        {
-            return result;
-        }
-
-        var memberVisibilityPolicy = existingTeam.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        result.Customer = result.Customer.Redact(memberVisibilityPolicy);
-        foreach (var identity in result.Customer.Identities)
-        {
-            identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-        }
-
-        if (result.OrganizationMember is not null)
-        {
-            result.OrganizationMember.Customer = result.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in result.OrganizationMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
+        return mapper.MapTo(addedItem);
     }
 }

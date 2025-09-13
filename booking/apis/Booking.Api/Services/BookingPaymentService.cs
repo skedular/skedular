@@ -59,9 +59,12 @@ public class BookingPaymentService(
             false,
             false,
             cancellationToken);
-        if (organizations.Any(organization => !organizationAuthorizationService.CanModifyPaymentMethod(organization, customer)))
+        foreach (var organization in organizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -88,23 +91,6 @@ public class BookingPaymentService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-
-        if ((existingBooking.InvolvedOrganizations.Count == 0 ||
-             existingBooking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-            existingBooking.InvolvedOrganizations.Any(item =>
-                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-        {
-            booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
-            {
-                item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                foreach (var identity in item.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                }
-
-                return item;
-            }).ToList();
-        }
 
         return booking;
     }

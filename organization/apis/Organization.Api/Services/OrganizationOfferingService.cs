@@ -58,7 +58,7 @@ public class OrganizationOfferingService(
         if (!ignoreAuthorizationCheck)
         {
             var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-            if (!organizationAuthorizationService.CanModify(organization, customer))
+            if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

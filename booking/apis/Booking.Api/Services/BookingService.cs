@@ -6,6 +6,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
 using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
@@ -51,7 +52,8 @@ public class BookingService(
     ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingService
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    ICachedBookingService cachedBookingService) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -212,22 +214,7 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
-             bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-            bookingEntity.InvolvedOrganizations.Any(item =>
-                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-        {
-            booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
-            {
-                item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                foreach (var identity in item.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                }
-
-                return item;
-            }).ToList();
-        }
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         return booking;
     }
@@ -257,9 +244,13 @@ public class BookingService(
                 false,
                 false,
                 cancellationToken);
-            if (!organizations.Any(item => organizationAuthorizationService.CanDeleteBooking(item, customer)))
+
+            foreach (var organization in organizations)
             {
-                throw new UnauthorizedAccessException();
+                if (!await organizationAuthorizationService.CanDeleteBookingAsync(organization.Id, customer.Id, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
         }
 
@@ -267,9 +258,12 @@ public class BookingService(
         if (teamIds.Count != 0)
         {
             var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            if (!teams.Any(item => teamAuthorizationService.CanDeleteBooking(item, customer)))
+            foreach (var team in teams)
             {
-                throw new UnauthorizedAccessException();
+                if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
         }
 
@@ -309,22 +303,7 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if ((existingBooking.InvolvedOrganizations.Count == 0 ||
-             existingBooking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-            existingBooking.InvolvedOrganizations.Any(item =>
-                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-        {
-            deletedBooking.InvolvedCustomers = deletedBooking.InvolvedCustomers.Select(item =>
-            {
-                item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                foreach (var identity in item.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                }
-
-                return item;
-            }).ToList();
-        }
+        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
 
         return deletedBooking;
     }
@@ -334,28 +313,11 @@ public class BookingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
+        var booking = await cachedBookingService.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
+
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
-        var result = mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
 
-        if ((booking.InvolvedOrganizations.Count == 0 ||
-             booking.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-            booking.InvolvedOrganizations.Any(item =>
-                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-        {
-            result.InvolvedCustomers = result.InvolvedCustomers.Select(item =>
-            {
-                item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                foreach (var identity in item.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                }
-
-                return item;
-            }).ToList();
-        }
-
-        return result;
+        return mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
@@ -365,7 +327,7 @@ public class BookingService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        Shared.Models.Customer? customer = null;
+        Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -522,38 +484,9 @@ public class BookingService(
             orderByFields,
             cancellationToken);
 
-        var result = (paginatedInfo,
+        return (paginatedInfo,
             edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item.Node))).ToList(),
             totalCount);
-        if (customer is null)
-        {
-            return result;
-        }
-
-        foreach (var booking in result.Item2
-                     .Select(item => item.Node)
-                     .Where(item => !item.InvolvedCustomers.Select(involvedCustomer => involvedCustomer.Id).Contains(customer.Id)))
-        {
-            var bookingEntity = edges.Select(item => item.Node).First(item => item.Id == booking.Id);
-            if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
-                 bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-                bookingEntity.InvolvedOrganizations.Any(item =>
-                    item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-            {
-                booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
-                {
-                    item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                    foreach (var identity in item.Identities)
-                    {
-                        identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                    }
-
-                    return item;
-                }).ToList();
-            }
-        }
-
-        return result;
     }
 
     private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
@@ -596,19 +529,19 @@ public class BookingService(
                 item.Id == organization.Id || item.UniqueAlphanumericName == organization.UniqueAlphanumericName);
             if (existing)
             {
-                if (!organizationAuthorizationService.CanUpdateBooking(organizationEntity, customer))
+                if (!await organizationAuthorizationService.CanUpdateBookingAsync(organizationEntity.Id, customer.Id, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
             }
             else
             {
-                if (!organizationAuthorizationService.CanAddBooking(organizationEntity, customer))
+                if (!await organizationAuthorizationService.CanAddBookingAsync(organizationEntity.Id, customer.Id, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
 
-                if (!organizationOfferingService.IsMoreInteractionAllowed(organizationEntity, customer))
+                if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customer.Id, cancellationToken))
                 {
                     throw new NoMoreInteractionAllowed();
                 }
@@ -644,14 +577,14 @@ public class BookingService(
             var teamEntity = teamEntities.First(item => item.Id == team.Id);
             if (existing)
             {
-                if (!teamAuthorizationService.CanUpdateBooking(teamEntity, customer))
+                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customer.Id, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
             }
             else
             {
-                if (!teamAuthorizationService.CanAddBooking(teamEntity, customer))
+                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customer.Id, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -664,7 +597,7 @@ public class BookingService(
     }
 
     private async Task<(IDictionary<string, List<string>>, IDictionary<string, List<string>>)> GetCustomerOrganizationIdsAsync(
-        Shared.Models.Customer customer,
+        Customer customer,
         CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
@@ -678,13 +611,13 @@ public class BookingService(
                     item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
     }
 
-    private async Task<List<string>> GetCustomerLocationIdsAsync(Shared.Models.Customer customer, CancellationToken cancellationToken)
+    private async Task<List<string>> GetCustomerLocationIdsAsync(Customer customer, CancellationToken cancellationToken)
     {
         var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, cancellationToken);
         return locations.Select(item => item.Id).ToList();
     }
 
-    private async Task<List<string>> GetCustomerTeamIdsAsync(Shared.Models.Customer customer, CancellationToken cancellationToken)
+    private async Task<List<string>> GetCustomerTeamIdsAsync(Customer customer, CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
         return teams.Select(item => item.Id).ToList();
@@ -692,7 +625,7 @@ public class BookingService(
 
     private async Task EnsureCustomerCanViewBookingAsync(
         Shared.Database.Entities.Booking booking,
-        Shared.Models.Customer customer,
+        Customer customer,
         CancellationToken cancellationToken)
     {
         var organizationIds = booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
@@ -704,9 +637,12 @@ public class BookingService(
                 false,
                 false,
                 cancellationToken);
-            if (!organizationEntities.Any(item => organizationAuthorizationService.CanViewBookings(item, customer)))
+            foreach (var organization in organizationEntities)
             {
-                throw new UnauthorizedAccessException();
+                if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customer.Id, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
         }
 
@@ -714,9 +650,12 @@ public class BookingService(
         if (teamIds.Count != 0)
         {
             var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            if (!teamEntities.Any(item => teamAuthorizationService.CanViewBookings(item, customer)))
+            foreach (var team in teamEntities)
             {
-                throw new UnauthorizedAccessException();
+                if (!await teamAuthorizationService.CanViewBookingsAsync(team, customer.Id, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
         }
     }
@@ -807,22 +746,7 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if ((bookingEntity.InvolvedOrganizations.Count == 0 ||
-             bookingEntity.InvolvedOrganizations.Any(item => !organizationAuthorizationService.CanViewMemberPersonalDetails(item, customer))) &&
-            bookingEntity.InvolvedOrganizations.Any(item =>
-                item.MemberVisibilityPolicy == OrganizationMemberVisibilityPolicyConstants.LimitedAccess))
-        {
-            booking.InvolvedCustomers = booking.InvolvedCustomers.Select(item =>
-            {
-                item = item.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                foreach (var identity in item.Identities)
-                {
-                    identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                }
-
-                return item;
-            }).ToList();
-        }
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         return booking;
     }

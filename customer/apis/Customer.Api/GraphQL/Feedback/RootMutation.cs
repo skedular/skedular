@@ -15,6 +15,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(mapper.MapTo(input), cancellationToken);
-        return mapper.MapTo(customerFeedback, input.ClientMutationId);
+        return new SubmitCustomerFeedbackPayload { ClientMutationId = input.ClientMutationId, Id = customerFeedback.Id };
     }
 }

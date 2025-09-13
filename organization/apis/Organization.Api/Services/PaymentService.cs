@@ -57,7 +57,7 @@ public class PaymentService(
                                organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
+        if (!await organizationAuthorizationService.CanManagePaymentMethodAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -88,7 +88,7 @@ public class PaymentService(
                            null,
                            cancellationToken) ??
                        throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManagePaymentMethod(organization, customer))
+        if (!await organizationAuthorizationService.CanManagePaymentMethodAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

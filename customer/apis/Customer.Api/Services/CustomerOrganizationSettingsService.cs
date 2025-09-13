@@ -53,7 +53,8 @@ public class CustomerOrganizationSettingsService(
             throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
         }
 
-        if (!ignoreAuthorizationCheck && !organizationAuthorizationService.CanAddOrganizationAsDefault(organization, customer))
+        if (!ignoreAuthorizationCheck &&
+            !await organizationAuthorizationService.CanAddOrganizationAsDefaultAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

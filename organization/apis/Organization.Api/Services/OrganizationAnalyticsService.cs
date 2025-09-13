@@ -5,6 +5,7 @@ using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using DailyMemberCountRecording = Organization.Shared.Database.Entities.DailyMemberCountRecording;
 
@@ -38,7 +39,7 @@ public class OrganizationAnalyticsService(
                                uniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanViewAnalytics(organization, customer))
+        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

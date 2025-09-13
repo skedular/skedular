@@ -1,28 +1,22 @@
 using Api.Shared.Services;
 using Team.Shared.Models;
 using Team.Shared.Repositories;
+using Team.Shared.Services.Cache;
 
 namespace Team.Api.Services.Authorization;
 
 public interface ITeamAuthorizationService
 {
-    ValueTask<bool> CanViewAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken);
-    bool CanView(Shared.Database.Entities.Team team, Customer customer);
-    ValueTask<bool> CanModifyAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken);
-    bool CanModify(Shared.Database.Entities.Team team, Customer customer);
-    ValueTask<bool> CanDeleteAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken);
-    bool CanDelete(Shared.Database.Entities.Team team, Customer customer);
-    ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken);
-    bool CanInvitePeople(Shared.Database.Entities.Team team, Customer customer);
+    ValueTask<bool> CanViewAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanModifyAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanDeleteAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken);
 
     ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
         Shared.Database.Entities.Team team,
-        Customer customer,
+        string customerId,
         CancellationToken cancellationToken);
 
-    bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Team team, Customer customer);
-    ValueTask<bool> CanViewMemberPersonalDetailsAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken);
-    bool CanViewMemberPersonalDetails(Shared.Database.Entities.Team team, Customer customer);
     ValueTask<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
 }
 
@@ -31,47 +25,23 @@ public class TeamAuthorizationService(
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService) : ITeamAuthorizationService
 {
-    public async ValueTask<bool> CanViewAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanViewAsync(team.OrganizationId, customer, cancellationToken);
+    public async ValueTask<bool> CanViewAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken) =>
+        await organizationAuthorizationService.CanViewAsync(team.OrganizationId, customerId, cancellationToken);
 
-    public bool CanView(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanView(team.Organization, customer);
+    public async ValueTask<bool> CanModifyAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken) =>
+        await organizationAuthorizationService.CanModifyAsync(team.OrganizationId, customerId, cancellationToken);
 
-    public async ValueTask<bool> CanModifyAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanModifyAsync(team.OrganizationId, customer, cancellationToken);
+    public async ValueTask<bool> CanDeleteAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken) =>
+        await organizationAuthorizationService.CanDeleteAsync(team.OrganizationId, customerId, cancellationToken);
 
-    public bool CanModify(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanModify(team.Organization, customer);
-
-    public async ValueTask<bool> CanDeleteAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanDeleteAsync(team.OrganizationId, customer, cancellationToken);
-
-    public bool CanDelete(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanDelete(team.Organization, customer);
-
-    public async ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Team team, Customer customer, CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanInvitePeopleAsync(team.OrganizationId, customer, cancellationToken);
-
-    public bool CanInvitePeople(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanInvitePeople(team.Organization, customer);
+    public async ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken) =>
+        await organizationAuthorizationService.CanInvitePeopleAsync(team.OrganizationId, customerId, cancellationToken);
 
     public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
         Shared.Database.Entities.Team team,
-        Customer customer,
+        string customerId,
         CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team.OrganizationId, customer, cancellationToken);
-
-    public bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanCancelPeopleExistingInvitations(team.Organization, customer);
-
-    public async ValueTask<bool> CanViewMemberPersonalDetailsAsync(
-        Shared.Database.Entities.Team team,
-        Customer customer,
-        CancellationToken cancellationToken) =>
-        await organizationAuthorizationService.CanViewMemberPersonalDetailsAsync(team.OrganizationId, customer, cancellationToken);
-
-    public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Team team, Customer customer) =>
-        organizationAuthorizationService.CanViewMemberPersonalDetails(team.Organization, customer);
+        await organizationAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team.OrganizationId, customerId, cancellationToken);
 
     public async ValueTask<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
@@ -80,11 +50,11 @@ public class TeamAuthorizationService(
 
         return new Permissions
         {
-            CanView = await CanViewAsync(team, customer, cancellationToken),
-            CanModify = await CanModifyAsync(team, customer, cancellationToken),
-            CanDelete = await CanDeleteAsync(team, customer, cancellationToken),
-            CanInvitePeople = await CanInvitePeopleAsync(team, customer, cancellationToken),
-            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customer, cancellationToken)
+            CanView = await CanViewAsync(team, customer.Id, cancellationToken),
+            CanModify = await CanModifyAsync(team, customer.Id, cancellationToken),
+            CanDelete = await CanDeleteAsync(team, customer.Id, cancellationToken),
+            CanInvitePeople = await CanInvitePeopleAsync(team, customer.Id, cancellationToken),
+            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken)
         };
     }
 }

@@ -37,7 +37,7 @@ public class OrganizationPhysicalAddressService(
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -102,7 +102,7 @@ public class OrganizationPhysicalAddressService(
                 cancellationToken) ??
             throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

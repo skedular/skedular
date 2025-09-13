@@ -31,7 +31,6 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<OrganizationAvailableResources> OrganizationResourcesAvailabilityAsync(
         OrganizationAvailableResourcesWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {

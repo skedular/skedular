@@ -1,5 +1,4 @@
-﻿using Api.Shared.Services.Cache;
-using Customer.Shared.Database;
+﻿using Customer.Shared.Database;
 using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -16,8 +15,8 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken);
-    ValueTask<Database.Entities.Customer> AddAsync(Database.Entities.Customer customer, CancellationToken cancellationToken);
-    ValueTask<Database.Entities.Customer> UpdateAsync(Database.Entities.Customer customer, CancellationToken cancellationToken);
+    Database.Entities.Customer Add(Database.Entities.Customer customer);
+    Database.Entities.Customer Update(Database.Entities.Customer customer);
 
     Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
@@ -147,7 +146,7 @@ internal static class CustomerExtensions
     }
 }
 
-public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider, IGenericCustomerCacheService genericCustomerCacheService)
+public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
@@ -202,26 +201,18 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
             .OrderBy(query => query.Id)
             .ToListAsync(cancellationToken);
 
-    public async ValueTask<Database.Entities.Customer> AddAsync(Database.Entities.Customer customer, CancellationToken cancellationToken)
+    public Database.Entities.Customer Add(Database.Entities.Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.CreatedAt = now;
-        customer = DbContext.Customer.Add(customer).Entity;
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
-
-        return customer;
+        return DbContext.Customer.Add(customer).Entity;
     }
 
-    public async ValueTask<Database.Entities.Customer> UpdateAsync(Database.Entities.Customer customer, CancellationToken cancellationToken)
+    public Database.Entities.Customer Update(Database.Entities.Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        customer = DbContext.Customer.Update(customer).Entity;
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
-
-        return customer;
+        return DbContext.Customer.Update(customer).Entity;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)>

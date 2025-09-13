@@ -1,53 +1,37 @@
 using Api.Shared.Services;
 using Customer.Shared.Database.Entities;
-using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 
 namespace Customer.Api.Services.Authorization;
 
 public interface ILocationAuthorizationService
 {
-    Task<bool> CanAddLocationAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
-    Task<bool> CanAddLocationTagAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
+    ValueTask<bool> CanAddLocationAsPreferredAsync(Location location, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanAddLocationTagAsPreferredAsync(Location location, string customerId, CancellationToken cancellationToken);
 }
 
 public class LocationAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IRepositoryFactory repositoryFactory)
+    ICachedOrganizationService cachedOrganizationService)
     : ILocationAuthorizationService
 {
-    public async Task<bool> CanAddLocationAsPreferredAsync(
-        Location location,
-        Shared.Database.Entities.Customer customer,
-        CancellationToken cancellationToken)
+    public async ValueTask<bool> CanAddLocationAsPreferredAsync(Location location, string customerId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               location.Organization.Id,
-                               null,
-                               false,
-                               false,
-                               cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(location.Organization.Id, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return organizationAuthorizationService.IsOrganizationMember(organization, customer);
+        return await organizationAuthorizationService.IsOrganizationMemberAsync(organization.Id, customerId, cancellationToken);
     }
 
-    public async Task<bool> CanAddLocationTagAsPreferredAsync(
-        Location location,
-        Shared.Database.Entities.Customer customer,
-        CancellationToken cancellationToken)
+    public async ValueTask<bool> CanAddLocationTagAsPreferredAsync(Location location, string customerId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               location.Organization.Id,
-                               null,
-                               false,
-                               false,
-                               cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(location.Organization.Id, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return organizationAuthorizationService.IsOrganizationMember(organization, customer);
+        return await organizationAuthorizationService.IsOrganizationMemberAsync(organization.Id, customerId, cancellationToken);
     }
 }

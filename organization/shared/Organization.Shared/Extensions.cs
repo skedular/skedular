@@ -10,6 +10,7 @@ using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Shared;
 
@@ -31,10 +32,12 @@ public static class Extensions
         services
             .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
             .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
+            .AddSingleton<ITemporalService, TemporalService>()
+            .AddSingleton<IGraphService, GraphService>()
             .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
             .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
-            .AddSingleton<ITemporalService, TemporalService>()
-            .AddSingleton<IGraphService, GraphService>();
+            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

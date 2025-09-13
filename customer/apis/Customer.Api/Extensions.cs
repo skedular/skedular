@@ -2,6 +2,7 @@ using Api.Shared.Services.Configurations.Grpc;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Api.Services.Authorization;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Security;
 
 namespace Customer.Api;
@@ -13,13 +14,12 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddSingleton<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<ICustomerHelper, CustomerHelper>()
+            .AddScoped<ICustomerHelper>(sp => sp.GetRequiredService<ICachedCustomerService>())
             .AddScoped<ICustomerHelperService, CustomerHelperService>()
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<ICustomerSettingsService, CustomerSettingsService>()
             .AddScoped<ICustomerOrganizationSettingsService, CustomerOrganizationSettingsService>()
             .AddScoped<ICustomerLocationSettingsService, CustomerLocationSettingsService>()
@@ -32,7 +32,7 @@ public static class Extensions
             .AddScoped<ICustomerOrganizationTagSettingsService, CustomerOrganizationTagSettingsService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<IStripeCustomerService, StripeCustomerService>()
-            .AddScoped<IMyBillingService, MyBillingService>();
+            .AddScoped<IBillingService, BillingService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

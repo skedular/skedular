@@ -11,6 +11,7 @@ using Team.Shared.Activities;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Services.Cache;
 using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
 using Customer = Team.Shared.Models.Customer;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
@@ -61,7 +62,7 @@ public class InvitationService(
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanInvitePeople(team, customer))
+        if (!await teamAuthorizationService.CanInvitePeopleAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -199,7 +200,7 @@ public class InvitationService(
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
-        if (!teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer))
+        if (!await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

@@ -8,19 +8,20 @@ using Enterprise.Shared.Random;
 
 namespace Customer.Api.Services;
 
-public interface IMyBillingService
+public interface IBillingService
 {
     Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken);
     Task<Shared.Models.Customer> UpdateAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken);
+    Task<CustomerBillingDetails?> GetBillingAsync(string requestedCustomerId, CancellationToken cancellationToken);
 }
 
-public class MyBillingService(
+public class BillingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     IRandomHelper randomHelper,
     IMapper mapper,
-    ICustomerOutboxPublisher organizationOutboxPublisher) : IMyBillingService
+    ICustomerOutboxPublisher organizationOutboxPublisher) : IBillingService
 {
     public async Task<Shared.Models.Customer> AddAsync(CustomerBillingDetails customerBillingDetails, CancellationToken cancellationToken)
     {
@@ -53,7 +54,7 @@ public class MyBillingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationBillingDetailsEntity = mapper.MapTo(customerBillingDetails, customerEntity);
-        await repositoryFactory.CustomerBillingDetailsRepository.AddAsync(organizationBillingDetailsEntity, cancellationToken);
+        repositoryFactory.CustomerBillingDetailsRepository.Add(organizationBillingDetailsEntity);
 
         customerEntity.BillingDetails = organizationBillingDetailsEntity;
         var mappedCustomer = mapper.MapTo(customerEntity);
@@ -84,6 +85,20 @@ public class MyBillingService(
         return customer;
     }
 
+    public async Task<CustomerBillingDetails?> GetBillingAsync(string requestedCustomerId, CancellationToken cancellationToken)
+    {
+        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        if (customerEntity.Id != requestedCustomerId)
+        {
+            return null;
+        }
+
+        var customerBillingDetails =
+            await repositoryFactory.CustomerBillingDetailsRepository.GetByCustomerIdAsync(customerEntity.Id, cancellationToken);
+
+        return mapper.MapTo(customerBillingDetails);
+    }
+
     private async Task<Shared.Models.Customer> UpdateInternalAsync(
         CustomerBillingDetails organizationBillingDetails,
         Shared.Database.Entities.CustomerBillingDetails existingCustomerBillingDetails,
@@ -94,7 +109,7 @@ public class MyBillingService(
 
         var organizationBillingDetailsEntity =
             mapper.MergeToEntity(organizationBillingDetails, existingCustomerBillingDetails, existingCustomer);
-        await repositoryFactory.CustomerBillingDetailsRepository.UpdateAsync(organizationBillingDetailsEntity, cancellationToken);
+        repositoryFactory.CustomerBillingDetailsRepository.Update(organizationBillingDetailsEntity);
 
         existingCustomer.BillingDetails = organizationBillingDetailsEntity;
 

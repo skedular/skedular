@@ -35,7 +35,7 @@ public class CustomerTeamSettingsService(
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
         var team = await repositoryFactory.TeamRepository.UpsertNakedAsync(teamId, null, cancellationToken) ?? throw new TeamNotFound();
-        if (!ignoreAuthorizationCheck && !teamAuthorizationService.CanAddTeamAsDefault(team, customer))
+        if (!ignoreAuthorizationCheck && !teamAuthorizationService.CanAddTeamAsDefault(team, customer.Id))
         {
             throw new UnauthorizedAccessException();
         }

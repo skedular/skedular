@@ -1,24 +1,16 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Team.Shared.Database.Entities;
 using Team.Shared.Services.Cache;
-using Customer = Team.Shared.Models.Customer;
 
 namespace Team.Api.Services.Authorization;
 
 public interface IOrganizationAuthorizationService
 {
-    ValueTask<bool> CanViewAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanView(Organization organization, Customer customer);
-    ValueTask<bool> CanModifyAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanModify(Organization organization, Customer customer);
-    ValueTask<bool> CanDeleteAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanDelete(Organization organization, Customer customer);
-    ValueTask<bool> CanInvitePeopleAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanInvitePeople(Organization organization, Customer customer);
-    ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanCancelPeopleExistingInvitations(Organization organization, Customer customer);
-    ValueTask<bool> CanViewMemberPersonalDetailsAsync(string organizationId, Customer customer, CancellationToken cancellationToken);
-    bool CanViewMemberPersonalDetails(Organization organization, Customer customer);
+    ValueTask<bool> CanViewAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanModifyAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanDeleteAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanInvitePeopleAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
 }
 
 public class OrganizationAuthorizationService(
@@ -26,82 +18,66 @@ public class OrganizationAuthorizationService(
     ICachedOrganizationService cachedOrganizationService)
     : IOrganizationAuthorizationService
 {
-    public async ValueTask<bool> CanViewAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
+    public async ValueTask<bool> CanViewAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanView(organization, customer);
-    }
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
-    public bool CanView(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
-
-    public async ValueTask<bool> CanModifyAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
-    {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanModify(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
-    public bool CanModify(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanModifyAsync(string organizationId, string customerId, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
-
-    public async ValueTask<bool> CanDeleteAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
-    {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanDelete(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
-    public bool CanDelete(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanDeleteAsync(string organizationId, string customerId, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
-
-    public async ValueTask<bool> CanInvitePeopleAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
-    {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanInvitePeople(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
-    public bool CanInvitePeople(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanInvitePeopleAsync(string organizationId, string customerId, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+    }
 
-    public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(string organizationId, Customer customer,
+    public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
+        string organizationId,
+        string customerId,
         CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanCancelPeopleExistingInvitations(organization, customer);
-    }
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
 
-    public bool CanCancelPeopleExistingInvitations(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
-
-    public async ValueTask<bool> CanViewMemberPersonalDetailsAsync(string organizationId, Customer customer, CancellationToken cancellationToken)
-    {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        return organization is not null && CanViewMemberPersonalDetails(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
-
-    public bool CanViewMemberPersonalDetails(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
 }

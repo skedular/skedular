@@ -1,7 +1,7 @@
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
-using MsTeams.Api.Services;
+using MsTeams.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace MsTeams.Api.GraphQL;

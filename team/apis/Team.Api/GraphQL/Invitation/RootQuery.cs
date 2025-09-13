@@ -7,6 +7,7 @@ using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
+using Team.Shared.Services.Cache;
 
 namespace Team.Api.GraphQL.Invitation;
 

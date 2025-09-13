@@ -9,6 +9,7 @@ using Marketplace.Api.Services.Authorization;
 using Marketplace.Shared.Models;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
+using Marketplace.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
 
@@ -43,7 +44,8 @@ public class ProductService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
-    IMapper mapper) : IProductService
+    IMapper mapper,
+    ICachedProductService cachedProductService) : IProductService
 {
     public async Task<Product> AddAsync(
         string? id,
@@ -92,7 +94,7 @@ public class ProductService(
                                        organizationUniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModifyProduct(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyProductAsync(existingOrganization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -132,6 +134,9 @@ public class ProductService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedProductService.UpdateByIdAsync(product.Id, cancellationToken);
+
         return product;
     }
 
@@ -150,9 +155,12 @@ public class ProductService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingProducts = await repositoryFactory.ProductRepository.GetByIdsAsync(productIds, cancellationToken) ?? throw new ProductNotFound();
-        if (existingProducts.Any(existingProduct => !organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer)))
+        foreach (var existingProduct in existingProducts)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyProductAsync(existingProduct.Organization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -164,6 +172,12 @@ public class ProductService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        foreach (var deletedProduct in deletedProducts)
+        {
+            await cachedProductService.RemoveByIdAsync(deletedProduct.Id, cancellationToken);
+        }
+
         return deletedProducts;
     }
 
@@ -171,7 +185,7 @@ public class ProductService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken);
+        var existingProduct = await cachedProductService.GetByIdAsync(id, cancellationToken);
         return existingProduct is null ? null : mapper.MapTo(existingProduct);
     }
 
@@ -189,9 +203,12 @@ public class ProductService(
             organizationIds,
             null,
             cancellationToken);
-        if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
+        foreach (var item in existingOrganizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyProductAsync(item.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -211,6 +228,11 @@ public class ProductService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        foreach (var updatedProduct in updatedProducts)
+        {
+            await cachedProductService.UpdateByIdAsync(updatedProduct.Id, cancellationToken);
+        }
+
         return updatedProducts;
     }
 
@@ -228,9 +250,12 @@ public class ProductService(
             organizationIds,
             null,
             cancellationToken);
-        if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
+        foreach (var item in existingOrganizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyProductAsync(item.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -249,6 +274,11 @@ public class ProductService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        foreach (var updatedProduct in updatedProducts)
+        {
+            await cachedProductService.UpdateByIdAsync(updatedProduct.Id, cancellationToken);
+        }
 
         return updatedProducts;
     }
@@ -274,7 +304,8 @@ public class ProductService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer))
+        if (customer is not null &&
+            !await organizationAuthorizationService.CanModifyProductAsync(existingProduct.Organization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -306,6 +337,9 @@ public class ProductService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedProductService.UpdateByIdAsync(product.Id, cancellationToken);
+
         return product;
     }
 

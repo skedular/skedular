@@ -1,49 +1,54 @@
+using Api.Shared.Services;
 using Booking.Shared.Models;
-using Customer = Booking.Shared.Models.Customer;
+using Booking.Shared.Services.Cache;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services.Authorization;
 
 public interface ITeamAuthorizationService
 {
-    bool CanViewBookings(Team team, Customer customer);
-    bool CanAddBooking(Team team, Customer customer);
-    bool CanUpdateBooking(Team team, Customer customer);
-    bool CanDeleteBooking(Team team, Customer customer);
-    Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
+    ValueTask<bool> CanViewBookingsAsync(Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanAddBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanUpdateBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
+    ValueTask<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
 }
 
 public class TeamAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ICachedCustomerService cachedCustomerService,
-    ICachedTeamService cachedTeamService)
+    ICachedTeamService cachedTeamService,
+    ICachedCustomerService cachedCustomerService)
     : ITeamAuthorizationService
 {
-    public bool CanViewBookings(Team team, Customer customer) =>
-        team.Organization is not null && organizationAuthorizationService.CanViewBookings(team.Organization, customer);
+    public async ValueTask<bool> CanViewBookingsAsync(Team team, string customerId, CancellationToken cancellationToken) =>
+        team.Organization is not null &&
+        await organizationAuthorizationService.CanViewBookingsAsync(team.Organization.Id, customerId, cancellationToken);
 
-    public bool CanAddBooking(Team team, Customer customer) =>
-        team.Organization is not null && organizationAuthorizationService.CanAddBooking(team.Organization, customer);
+    public async ValueTask<bool> CanAddBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
+        team.Organization is not null &&
+        await organizationAuthorizationService.CanAddBookingAsync(team.Organization.Id, customerId, cancellationToken);
 
-    public bool CanUpdateBooking(Team team, Customer customer) =>
-        team.Organization is not null && organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
+    public async ValueTask<bool> CanUpdateBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
+        team.Organization is not null &&
+        await organizationAuthorizationService.CanUpdateBookingAsync(team.Organization.Id, customerId, cancellationToken);
 
-    public bool CanDeleteBooking(Team team, Customer customer) =>
-        team.Organization is not null && organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
+    public async ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
+        team.Organization is not null &&
+        await organizationAuthorizationService.CanDeleteBookingAsync(team.Organization.Id, customerId, cancellationToken);
 
-    public async Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
+    public async ValueTask<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
 
         return new TeamPermissions
         {
-            CanViewBookings = CanViewBookings(team, customer),
-            CanAddBooking = CanAddBooking(team, customer),
-            CanUpdateBooking = CanUpdateBooking(team, customer),
-            CanDeleteBooking = CanDeleteBooking(team, customer)
+            CanViewBookings = await CanViewBookingsAsync(team, customer.Id, cancellationToken),
+            CanAddBooking = await CanAddBookingAsync(team, customer.Id, cancellationToken),
+            CanUpdateBooking = await CanUpdateBookingAsync(team, customer.Id, cancellationToken),
+            CanDeleteBooking = await CanDeleteBookingAsync(team, customer.Id, cancellationToken)
         };
     }
 }

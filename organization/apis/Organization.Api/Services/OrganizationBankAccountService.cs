@@ -7,6 +7,7 @@ using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
@@ -59,7 +60,7 @@ public class OrganizationBankAccountService(
                                        organizationBankAccount.Organization.UniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -100,7 +101,7 @@ public class OrganizationBankAccountService(
                                        existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -129,9 +130,12 @@ public class OrganizationBankAccountService(
             null,
             cancellationToken);
 
-        if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
+        foreach (var existingOrganization in existingOrganizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -158,7 +162,7 @@ public class OrganizationBankAccountService(
                                        existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -191,7 +195,7 @@ public class OrganizationBankAccountService(
                                        existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanView(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -215,7 +219,7 @@ public class OrganizationBankAccountService(
         if (!ignoreAuthorizationCheck)
         {
             var customer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (!organizationAuthorizationService.CanView(organization, customer))
+            if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -242,7 +246,7 @@ public class OrganizationBankAccountService(
                                        existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (customer is not null && !await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

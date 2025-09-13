@@ -14,6 +14,7 @@ using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
+using Organization.Shared.Services.Cache;
 using Stripe;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization;
@@ -93,7 +94,7 @@ public class OrganizationStripeConnectAccountService(
                                organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManageStripeConnectAccount(organization, customer))
+        if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -168,7 +169,7 @@ public class OrganizationStripeConnectAccountService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -202,10 +203,12 @@ public class OrganizationStripeConnectAccountService(
             null,
             cancellationToken);
 
-        if (existingOrganizations.Any(existingOrganization =>
-                !organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer)))
+        foreach (var existingOrganization in existingOrganizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(existingOrganization, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -233,7 +236,7 @@ public class OrganizationStripeConnectAccountService(
                                         null,
                                         cancellationToken) ??
                                     throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanViewStripeConnectAccount(existingOrganizations, customer))
+        if (!await organizationAuthorizationService.CanViewStripeConnectAccountAsync(existingOrganizations, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -280,7 +283,7 @@ public class OrganizationStripeConnectAccountService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -322,7 +325,7 @@ public class OrganizationStripeConnectAccountService(
         if (!ignoreAuthorizationCheck)
         {
             var customer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (!organizationAuthorizationService.CanViewStripeConnectAccount(organization, customer))
+            if (!await organizationAuthorizationService.CanViewStripeConnectAccountAsync(organization, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -432,7 +435,7 @@ public class OrganizationStripeConnectAccountService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

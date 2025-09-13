@@ -5,6 +5,7 @@ using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,8 @@ public class TeamSubscriber(
     ILogger<TeamSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    ICustomerPublisher customerPublisher) : IEventSubscriber<Key, Event>
+    ICustomerPublisher customerPublisher,
+    ICachedCustomerService cachedCustomerService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event,
         CancellationToken cancellationToken)
@@ -85,10 +87,20 @@ public class TeamSubscriber(
 
     private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
-        await UpdateCustomerDefaultTeamsAsync(existingTeam, cancellationToken);
-        await UpdateTeamMembersDefaultTeamsAsync(existingTeam, existingTeam.TeamMembers, cancellationToken);
+        var customers = await UpdateCustomerDefaultTeamsAsync(existingTeam, cancellationToken);
+        customers = customers.Concat(await UpdateTeamMembersDefaultTeamsAsync(existingTeam, existingTeam.TeamMembers, cancellationToken)).ToList();
+
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        foreach (var customer in customers)
+        {
+            await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
+            foreach (var item in customer.Identities)
+            {
+                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
+            }
+        }
     }
 
     private async Task<Team> RebuildTeamMembersAsync(
@@ -172,12 +184,31 @@ public class TeamSubscriber(
         return existingTeam;
     }
 
-    private async Task UpdateTeamMembersDefaultTeamsAsync(
+    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateCustomerDefaultTeamsAsync(Team team, CancellationToken cancellationToken)
+    {
+        var customerIds = team.PreferredByCustomers.Select(customer => customer.Id).ToList();
+        var customers = new List<Shared.Database.Entities.Customer>();
+
+        foreach (var customerId in customerIds)
+        {
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
+            customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
+            _ = repositoryFactory.CustomerRepository.Update(customer);
+
+            customers.Add(customer);
+        }
+
+        return customers;
+    }
+
+    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateTeamMembersDefaultTeamsAsync(
         Team existingTeam,
         IEnumerable<TeamMember> teamMembersToRemove,
         CancellationToken cancellationToken)
     {
         var teamMemberIds = teamMembersToRemove.Select(teamMember => teamMember.Id).ToList();
+        var customers = new List<Shared.Database.Entities.Customer>();
+
         foreach (var teamMemberId in teamMemberIds)
         {
             var member = await repositoryFactory.TeamMemberRepository.Query(
@@ -190,23 +221,15 @@ public class TeamSubscriber(
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != existingTeam.Id).ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-            customer = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
+            customer = repositoryFactory.CustomerRepository.Update(customer);
+            customers.Add(customer);
 
             if (newTeamIds.Count != existingTeamIds.Count || newTeamIds.Except(existingTeamIds).Any())
             {
                 await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)!], cancellationToken);
             }
         }
-    }
 
-    private async Task UpdateCustomerDefaultTeamsAsync(Team team, CancellationToken cancellationToken)
-    {
-        var customerIds = team.PreferredByCustomers.Select(customer => customer.Id).ToList();
-        foreach (var customerId in customerIds)
-        {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
-            customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
-            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
-        }
+        return customers;
     }
 }

@@ -1,4 +1,3 @@
-using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -13,8 +12,8 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    ValueTask<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken);
-    ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken);
+    Customer Update(Customer customer);
+    Customer Remove(Customer customer);
 }
 
 internal static class CustomerExtensions
@@ -31,25 +30,19 @@ internal static class CustomerExtensions
             .ThenInclude(query => query.Organization);
 }
 
-public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider timeProvider, IGenericCustomerCacheService genericCustomerCacheService)
+public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<OrganizationDbContext, string, CancellationToken, Task<Customer?>>
         s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    id,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((dbContext, id, cancellationToken) =>
                 dbContext.Customer
                     .AddDependentObjects()
                     .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<OrganizationDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    verifiableToken,
-                    cancellationToken) =>
+            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((dbContext, verifiableToken, cancellationToken) =>
                 dbContext.Customer
                     .AddDependentObjects()
                     .FirstOrDefault(query =>
@@ -84,25 +77,17 @@ public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider ti
     public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
         await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
 
-    public async ValueTask<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken)
+    public Customer Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        customer = DbContext.Customer.Update(customer).Entity;
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
-
-        return customer;
+        return DbContext.Customer.Update(customer).Entity;
     }
 
-    public async ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken)
+    public Customer Remove(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
-        customer = DbContext.Customer.Update(customer).Entity;
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
-
-        return customer;
+        return DbContext.Customer.Update(customer).Entity;
     }
 }

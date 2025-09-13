@@ -20,7 +20,8 @@ public class OrganizationSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
     ICustomerPublisher customerPublisher,
-    ICachedOrganizationService cachedOrganizationService)
+    ICachedOrganizationService cachedOrganizationService,
+    ICachedCustomerService cachedCustomerService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -94,8 +95,10 @@ public class OrganizationSubscriber(
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
-        await UpdateOrganizationMembersDefaultOrganizationAsync(existingOrganization.Id, existingOrganization.OrganizationMembers, cancellationToken);
-        await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken);
+        var customers = await UpdateOrganizationMembersDefaultOrganizationAsync(
+            existingOrganization.Id, existingOrganization.OrganizationMembers,
+            cancellationToken);
+        customers = customers.Concat(await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)).ToList();
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         existingOrganization.UniqueAlphanumericName = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
@@ -104,6 +107,15 @@ public class OrganizationSubscriber(
             existingOrganization.Id,
             existingOrganization.UniqueAlphanumericName,
             cancellationToken);
+
+        foreach (var customer in customers)
+        {
+            await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
+            foreach (var item in customer.Identities)
+            {
+                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
+            }
+        }
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(
@@ -150,13 +162,14 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private async Task UpdateOrganizationMembersDefaultOrganizationAsync(
+    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateOrganizationMembersDefaultOrganizationAsync(
         string organizationId,
         IEnumerable<OrganizationMember> organizationMembersToRemove,
         CancellationToken cancellationToken)
     {
-        var organizationMemberIds =
-            organizationMembersToRemove.Select(organizationMember => organizationMember.Id).ToList();
+        var organizationMemberIds = organizationMembersToRemove.Select(organizationMember => organizationMember.Id).ToList();
+        var customers = new List<Shared.Database.Entities.Customer>();
+
         foreach (var organizationMemberId in organizationMemberIds)
         {
             var member = await repositoryFactory.OrganizationMemberRepository.Query(
@@ -193,7 +206,8 @@ public class OrganizationSubscriber(
                 .ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
 
-            customer = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
+            customer = repositoryFactory.CustomerRepository.Update(customer);
+            customers.Add(customer);
 
             if (existingOrganizationId != newOrganizationId ||
                 newLocationIds.Count != existingLocationIds.Count ||
@@ -206,17 +220,26 @@ public class OrganizationSubscriber(
                 await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)!], cancellationToken);
             }
         }
+
+        return customers;
     }
 
-    private async Task UpdateCustomerDefaultOrganizationAsync(Organization organization, CancellationToken cancellationToken)
+    private async Task<ICollection<Shared.Database.Entities.Customer>> UpdateCustomerDefaultOrganizationAsync(
+        Organization organization,
+        CancellationToken cancellationToken)
     {
         var customerIds = organization.DefaultedByCustomers.Select(customer => customer.Id).ToList();
+        var customers = new List<Shared.Database.Entities.Customer>();
+
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
             customer.DefaultOrganization = null;
-            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
+            _ = repositoryFactory.CustomerRepository.Update(customer);
+            customers.Add(customer);
         }
+
+        return customers;
     }
 
     private Organization RebuildOrganizationTags(Shared.Models.Organization organization, Organization existingOrganization)

@@ -3,7 +3,7 @@ using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.GraphQL.Product;
-using Marketplace.Api.Services;
+using Marketplace.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Marketplace.Api.GraphQL;

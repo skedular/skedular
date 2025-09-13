@@ -2,6 +2,7 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Booking.Processors.Mappers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
@@ -12,7 +13,11 @@ using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class CustomerSubscriber(
+    ILogger<CustomerSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -98,7 +103,7 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         }
 
         _ = RebuildIdentities(customer, existingCustomer);
-        await repositoryFactory.CustomerRepository.UpdateAsync(
+        repositoryFactory.CustomerRepository.Update(
             mapper.MergeToEntity(
                 customer,
                 existingCustomer,
@@ -107,16 +112,27 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
                 preferredLocations,
                 preferredTeams,
                 preferredResources,
-                preferredOrganizationTags),
-            cancellationToken);
+                preferredOrganizationTags));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
+        foreach (var item in customer.Identities)
+        {
+            await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
+        }
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
-        _ = await repositoryFactory.CustomerRepository.RemoveAsync(existingCustomer, cancellationToken);
+        _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedCustomerService.RemoveByIdAsync(existingCustomer.Id, cancellationToken);
+        foreach (var item in existingCustomer.Identities)
+        {
+            await cachedCustomerService.RemoveByVerifiableTokenAsync(item.Id, cancellationToken);
+        }
     }
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)

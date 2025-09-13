@@ -222,14 +222,14 @@ type CustomerBillingDetails {
 }
 
 type CustomerDetails {
-  billingDetails: CustomerBillingDetails
+  billingDetails: CustomerBillingDetails @cost(weight: "10")
   createdAt: DateTime!
   designation: String
   email: String
   emails: [String!]!
   familyName: String
   givenName: String
-  hasAttachedPaymentMethod: Boolean!
+  hasAttachedPaymentMethod: Boolean! @cost(weight: "10")
   id: ID!
   identities: [CustomerIdentity!]!
   isOnboardingDone: Boolean!
@@ -237,7 +237,7 @@ type CustomerDetails {
   middleName: String
   name: String
   organization: OrganizationDetails
-  paymentMethods: [CustomerPaymentMethod!]!
+  paymentMethods: [CustomerPaymentMethod!]! @cost(weight: "10")
   phoneNumber: String
   photoUrl: String
   photoUrl192: String

@@ -1,31 +1,32 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
-using Location.Shared.Repositories;
+using Marketplace.Shared.Database.Entities;
+using Marketplace.Shared.Repositories;
 using Microsoft.Extensions.Caching.Hybrid;
 
-namespace Location.Shared.Services.Cache;
+namespace Marketplace.Shared.Services.Cache;
 
-public interface ICachedLocationService
+public interface ICachedProductService
 {
-    ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
-public class CachedLocationService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
-    : ICachedLocationService
+public class CachedProductService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
+    : ICachedProductService
 {
-    public async ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async ValueTask<Product?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         try
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.LocationRepository.GetByIdAsync(id, ct) ?? throw new TeamNotFound(),
+                async ct => await repositoryFactory.ProductRepository.GetByIdAsync(id, ct) ?? throw new ProductNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
-        catch (TeamNotFound)
+        catch (ProductNotFound)
         {
             return null;
         }
@@ -34,12 +35,12 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
     public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound(),
+            await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:lcoation-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:product-id-{id}";
 }

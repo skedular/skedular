@@ -36,7 +36,7 @@ public class CustomerLocationSettingsService(
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
         var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(locationId, null, cancellationToken) ??
                        throw new LocationNotFound();
-        if (!ignoreAuthorizationCheck && !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
+        if (!ignoreAuthorizationCheck && !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

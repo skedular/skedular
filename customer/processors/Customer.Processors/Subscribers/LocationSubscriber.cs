@@ -4,13 +4,18 @@ using Api.Shared.Services;
 using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Location = Customer.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Customer.Processors.Subscribers;
 
-public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class LocationSubscriber(
+    ILogger<LocationSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -115,7 +120,13 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredResources =
                 customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
-            _ = await repositoryFactory.CustomerRepository.UpdateAsync(customer, cancellationToken);
+            _ = repositoryFactory.CustomerRepository.Update(customer);
+
+            await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
+            foreach (var item in customer.Identities)
+            {
+                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using Location.Api.Models;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
+using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
 using Booking = Location.Shared.Database.Entities.Booking;
 using DailyDeskCountRecording = Location.Shared.Database.Entities.DailyDeskCountRecording;
@@ -45,7 +46,7 @@ public class LocationAnalyticsService(
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken))
         {
             return new LocationAnalytics(locationId, string.Empty, [], [], []);
         }
@@ -81,7 +82,7 @@ public class LocationAnalyticsService(
         foreach (var item in locations.Item2)
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(item.Node.Id, cancellationToken) ?? throw new LocationNotFound();
-            if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken))
             {
                 return [];
             }

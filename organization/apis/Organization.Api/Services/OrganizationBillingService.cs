@@ -41,7 +41,7 @@ public class OrganizationBillingService(
                                        organizationUniqueAlphanumericName,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanView(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -60,7 +60,7 @@ public class OrganizationBillingService(
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -124,7 +124,7 @@ public class OrganizationBillingService(
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

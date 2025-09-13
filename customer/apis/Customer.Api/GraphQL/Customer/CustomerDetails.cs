@@ -1,5 +1,7 @@
 using Customer.Api.GraphQL.Billing;
 using Customer.Api.GraphQL.Payment;
+using Customer.Api.Mappers;
+using Customer.Api.Services;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -37,13 +39,32 @@ public class CustomerDetails : Node
     [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
     [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
     [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
-    [GraphQLName("paymentMethods")] public IEnumerable<CustomerPaymentMethod> PaymentMethods { get; set; } = [];
-    [GraphQLName("billingDetails")] public CustomerBillingDetails? BillingDetails { get; set; }
-
-    [GraphQLName("hasAttachedPaymentMethod")]
-    public bool HasAttachedPaymentMethod { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+
+    [UseResolverScope]
+    public async Task<bool> HasAttachedPaymentMethodAsync(
+        [Parent] CustomerDetails customer,
+        [Service] IPaymentService paymentService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        await paymentService.HasAttachedPaymentMethodAsync(customer.Id, cancellationToken);
+
+    [UseResolverScope]
+    public async Task<IEnumerable<CustomerPaymentMethod>> PaymentMethodsAsync(
+        [Parent] CustomerDetails customer,
+        [Service] IPaymentService paymentService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await paymentService.GetPaymentMethodsAsync(customer.Id, cancellationToken));
+
+    [UseResolverScope]
+    public async Task<CustomerBillingDetails?> BillingDetailsAsync(
+        [Parent] CustomerDetails customer,
+        [Service] IBillingService billingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        mapper.MapToGraphQl(await billingService.GetBillingAsync(customer.Id, cancellationToken));
 }
 
 [ObjectType<CustomerDetails>]

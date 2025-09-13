@@ -87,13 +87,13 @@ public class LocationService(
                 throw new CustomerNotFound();
             }
 
-            if (!await organizationAuthorizationService.CanModifyAsync(organization.Id, customer, cancellationToken))
+            if (!await organizationAuthorizationService.CanModifyAsync(organization.Id, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
 
             if (!await organizationOfferingService.CanCreateLocationAsync(organization.Id, cancellationToken) ||
-                !await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer, cancellationToken))
+                !await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
             {
                 throw new NoMoreInteractionAllowed();
             }
@@ -165,7 +165,7 @@ public class LocationService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -179,12 +179,12 @@ public class LocationService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!await organizationAuthorizationService.CanDeleteAsync(existingLocation.OrganizationId, customer, cancellationToken))
+        if (!await organizationAuthorizationService.CanDeleteAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -213,7 +213,7 @@ public class LocationService(
             return null;
         }
 
-        Customer? customer = null;
+        Shared.Database.Entities.Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             var verifiableToken = context.GetVerifiableToken();
@@ -233,7 +233,7 @@ public class LocationService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        Customer? customer = null;
+        Shared.Database.Entities.Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -279,7 +279,7 @@ public class LocationService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-            if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customer, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -297,7 +297,7 @@ public class LocationService(
         CancellationToken cancellationToken)
     {
         if (customer is not null &&
-            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer, cancellationToken))
+            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -335,13 +335,13 @@ public class LocationService(
     }
 
     private async Task<Shared.Models.Location> EnrichLocationAsync(
-        Customer? customer,
+        Shared.Database.Entities.Customer? customer,
         Shared.Database.Entities.Location location,
         CancellationToken cancellationToken)
     {
         var isMarketplace = location.Type.ToLocationType() == LocationType.Marketplace;
         if (!isMarketplace && customer is not null &&
-            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer, cancellationToken))
+            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -371,11 +371,11 @@ public class LocationService(
             mappedLocation.Permissions = new Permissions
             {
                 CanView =
-                    isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer, cancellationToken),
-                CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer, cancellationToken),
-                CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer, cancellationToken),
+                    isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
+                CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
+                CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
                 CanViewAnalytics =
-                    await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer, cancellationToken)
+                    await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
             };
         }
 

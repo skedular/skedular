@@ -1,4 +1,6 @@
 using Api.Shared.Services;
+using Customer.Api.Mappers;
+using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
 using Customer.Shared.Workflows.AddPayment;
@@ -12,6 +14,8 @@ public interface IPaymentService
     Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken);
     Task<string> AddPaymentMethodIntentAsync(CancellationToken cancellationToken);
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
+    Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken);
+    Task<bool> HasAttachedPaymentMethodAsync(string requestedCustomerId, CancellationToken cancellationToken);
 }
 
 public class PaymentService(
@@ -22,7 +26,8 @@ public class PaymentService(
     IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
     PaymentMethodService paymentMethodService,
     IStripeCustomerService stripeCustomerService,
-    ITemporalService temporalService) : IPaymentService
+    ITemporalService temporalService,
+    IMapper mapper) : IPaymentService
 {
     public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
         await temporalService.SignalAddCustomerStripePaymentMethodAndGetResultAsync(
@@ -50,13 +55,12 @@ public class PaymentService(
 
     public async Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
-        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        _ = await customerService.GetCustomerAsync(cancellationToken);
         var stripePaymentMethod = await repositoryFactory.StripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
                                   throw new OrganizationPaymentMethodNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.StripePaymentMethodRepository.RemoveAsync(stripePaymentMethod, cancellationToken);
-        await repositoryFactory.CustomerRepository.UpdateAsync(customerEntity, cancellationToken);
+        repositoryFactory.StripePaymentMethodRepository.Remove(stripePaymentMethod);
 
         var paymentMethod = await paymentMethodRetrievableService.GetAsync(stripePaymentMethod.PaymentMethodId, cancellationToken: cancellationToken);
         if (paymentMethod is not null)
@@ -71,4 +75,20 @@ public class PaymentService(
         _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
+
+    public async Task<ICollection<StripePaymentMethod>> GetPaymentMethodsAsync(string requestedCustomerId, CancellationToken cancellationToken)
+    {
+        var (_, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        if (customerEntity.Id != requestedCustomerId)
+        {
+            return [];
+        }
+
+        var stripePaymentMethods = await repositoryFactory.StripePaymentMethodRepository.GetByCustomerIdAsync(customerEntity.Id, cancellationToken);
+
+        return mapper.MapTo(stripePaymentMethods).ToList();
+    }
+
+    public async Task<bool> HasAttachedPaymentMethodAsync(string requestedCustomerId, CancellationToken cancellationToken) =>
+        (await GetPaymentMethodsAsync(requestedCustomerId, cancellationToken)).Any();
 }

@@ -1,4 +1,3 @@
-using Api.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -13,8 +12,8 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(Customer customer, CancellationToken cancellationToken);
-    ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken);
+    void Update(Customer customer);
+    Customer Remove(Customer customer);
 }
 
 internal static class CustomerExtensions
@@ -24,7 +23,7 @@ internal static class CustomerExtensions
             .Include(query => query.Identities);
 }
 
-public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvider, IGenericCustomerCacheService genericCustomerCacheService)
+public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<SlackDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<SlackDbContext, string, CancellationToken, Task<Customer?>>
@@ -62,23 +61,17 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
     public async Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public async ValueTask UpdateAsync(Customer customer, CancellationToken cancellationToken)
+    public void Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
         DbContext.Customer.Update(customer);
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
     }
 
-    public async ValueTask<Customer> RemoveAsync(Customer customer, CancellationToken cancellationToken)
+    public Customer Remove(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
-        customer = DbContext.Customer.Update(customer).Entity;
-
-        await genericCustomerCacheService.InvalidateByVerifiableTokensAsync(customer.Identities.Select(identity => identity.Id), cancellationToken);
-
-        return customer;
+        return DbContext.Customer.Update(customer).Entity;
     }
 }

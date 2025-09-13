@@ -45,7 +45,7 @@ public class CustomerOrganizationTagSettingsService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanAddOrganizationTagAsDefault(organization, customer))
+        if (!await organizationAuthorizationService.CanAddOrganizationTagAsDefaultAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

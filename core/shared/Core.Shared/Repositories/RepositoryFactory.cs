@@ -1,5 +1,4 @@
-﻿using Api.Shared.Services.Cache;
-using Core.Shared.Database;
+﻿using Core.Shared.Database;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,14 +19,11 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<CoreDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(
-        IDbContextFactory<CoreDbContext> dbContextFactory,
-        TimeProvider timeProvider,
-        IGenericCustomerCacheService genericCustomerCacheService)
+    public RepositoryFactory(IDbContextFactory<CoreDbContext> dbContextFactory, TimeProvider timeProvider)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         CdnFileRepository = new CdnFileRepository(_dbContext, timeProvider);
         PrivateFileRepository = new PrivateFileRepository(_dbContext, timeProvider);

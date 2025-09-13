@@ -1,12 +1,17 @@
 using Api.Shared.Services;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Context;
+using Enterprise.Shared.Security;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Customer.Shared.Services.Cache;
 
-public interface ICachedCustomerService
+public interface ICachedCustomerService : ICustomerHelper
 {
+    ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    ValueTask<Database.Entities.Customer> GetAsync(CancellationToken cancellationToken);
+    ValueTask<Database.Entities.Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
@@ -15,9 +20,44 @@ public interface ICachedCustomerService
     ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
 }
 
-public class CachedCustomerService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
+public class CachedCustomerService(
+    ApplicationConfiguration applicationConfiguration,
+    IRepositoryFactory repositoryFactory,
+    IContext context,
+    HybridCache hybridCache)
     : ICachedCustomerService
 {
+    public async ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
+    }
+
+    public async ValueTask<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
+    }
+
+    public async ValueTask<Database.Entities.Customer> GetAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
+    }
+
+    public async ValueTask<Database.Entities.Customer?> GetNullableAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
+    }
+
     public async ValueTask<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         try
@@ -25,7 +65,7 @@ public class CachedCustomerService(ApplicationConfiguration applicationConfigura
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.CustomerRepository.GetByIdAsync(id, ct) ?? throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)
@@ -38,7 +78,7 @@ public class CachedCustomerService(ApplicationConfiguration applicationConfigura
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -51,7 +91,7 @@ public class CachedCustomerService(ApplicationConfiguration applicationConfigura
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyByVerifiableToken(verifiableToken),
                 async ct => await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, ct) ?? throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)
@@ -64,7 +104,7 @@ public class CachedCustomerService(ApplicationConfiguration applicationConfigura
         await hybridCache.SetAsync(
             CreateKeyByVerifiableToken(verifiableToken),
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>

@@ -11,6 +11,7 @@ using Organization.Shared.Activities;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
@@ -67,7 +68,7 @@ public class InvitationService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanInvitePeople(organization, customer))
+        if (!await organizationAuthorizationService.CanInvitePeopleAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -219,7 +220,7 @@ public class InvitationService(
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanCancelPeopleExistingInvitations(organization, customer))
+        if (!await organizationAuthorizationService.CanCancelPeopleExistingInvitationsAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

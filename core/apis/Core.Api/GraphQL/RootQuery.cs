@@ -1,4 +1,4 @@
-using Core.Api.Services;
+using Core.Shared.Services.Cache;
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;

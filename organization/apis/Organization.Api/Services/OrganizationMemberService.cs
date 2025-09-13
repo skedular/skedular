@@ -8,6 +8,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
@@ -40,11 +41,11 @@ public class OrganizationMemberService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
-    IOrganizationService organizationService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    IMapper mapper) : IOrganizationMemberService
+    IMapper mapper,
+    ICachedOrganizationService cachedOrganizationService) : IOrganizationMemberService
 {
     public async Task<(PaginatedInfo, ICollection<Edge<OrganizationMember>>, int)> GetPaginatedOrganizationMembersAsync(
         PaginationInputParam paginationInputParam,
@@ -60,17 +61,9 @@ public class OrganizationMemberService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanView(organization, customer))
+        if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
-        }
-
-        var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        // TODO: 20250415 - Morteza: Make sure for now (need to be reconsidered) to not let customer to search for organization members using name if member view policy is set to limited 
-        if (!organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer) &&
-            memberVisibilityPolicy == OrganizationMemberVisibilityPolicy.LimitedAccess)
-        {
-            searchCriteria = searchCriteria with { NameContains = null };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationMemberRepository.GetPaginatedOrganizationMembersAsync(
@@ -79,27 +72,12 @@ public class OrganizationMemberService(
             orderByFields,
             cancellationToken);
 
-        var result = (paginatedInfo,
+        return (paginatedInfo,
             mapper.MapTo(
                     edges,
                     mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
                 .ToList(),
             totalCount);
-        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer))
-        {
-            return result;
-        }
-
-        foreach (var edge in result.Item2.Where(item => item.Node.Customer.Id != customer.Id))
-        {
-            edge.Node.Customer = edge.Node.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in edge.Node.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
     }
 
     public async Task<OrganizationMember> ChangeRoleAsync(
@@ -117,7 +95,7 @@ public class OrganizationMemberService(
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(organization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -202,10 +180,17 @@ public class OrganizationMemberService(
             organizationIds,
             null,
             cancellationToken);
-        if (!organizationMembers.All(item =>
-                organizationAuthorizationService.CanModify(organizations.Single(organization => organization.Id == item.Organization.Id), customer)))
+
+
+        foreach (var item in organizationMembers)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyAsync(
+                    organizations.Single(organization => organization.Id == item.Organization.Id),
+                    customer.Id,
+                    cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -226,7 +211,7 @@ public class OrganizationMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        var result = organizationMembers
+        return organizationMembers
             .Select(item =>
             {
                 var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
@@ -237,25 +222,6 @@ public class OrganizationMemberService(
                         organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
             })
             .ToList();
-
-        foreach (var organizationMember in result.Where(item => item.Customer.Id != customer.Id))
-        {
-            var organizationEntity =
-                organizations.First(item => item.OrganizationMembers.Select(member => member.Id).Contains(organizationMember.Id));
-            if (organizationAuthorizationService.CanViewMemberPersonalDetails(organizationEntity, customer))
-            {
-                continue;
-            }
-
-            var memberVisibilityPolicy = organizationEntity.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-            organizationMember.Customer = organizationMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in organizationMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
     }
 
     public async Task<ICollection<OrganizationMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
@@ -283,10 +249,15 @@ public class OrganizationMemberService(
             null,
             cancellationToken);
 
-        if (!organizationMembers.All(item =>
-                organizationAuthorizationService.CanModify(organizations.Single(organization => organization.Id == item.Organization.Id), customer)))
+        foreach (var item in organizationMembers)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyAsync(
+                    organizations.Single(organization => organization.Id == item.Organization.Id),
+                    customer.Id,
+                    cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -305,7 +276,7 @@ public class OrganizationMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = organizationMembers.Select(item =>
+        return organizationMembers.Select(item =>
         {
             var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
             return mapper.MapTo(
@@ -314,25 +285,6 @@ public class OrganizationMemberService(
                     matchedOrganization,
                     organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
         }).ToList();
-
-        foreach (var organizationMember in result.Where(item => item.Customer.Id != customer.Id))
-        {
-            var organizationEntity =
-                organizations.First(item => item.OrganizationMembers.Select(member => member.Id).Contains(organizationMember.Id));
-            if (organizationAuthorizationService.CanViewMemberPersonalDetails(organizationEntity, customer))
-            {
-                continue;
-            }
-
-            var memberVisibilityPolicy = organizationEntity.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-            organizationMember.Customer = organizationMember.Customer.Redact(memberVisibilityPolicy);
-            foreach (var identity in organizationMember.Customer.Identities)
-            {
-                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-            }
-        }
-
-        return result;
     }
 
     public async Task<Shared.Models.Organization> AdminAddMemberAsync(
@@ -395,6 +347,9 @@ public class OrganizationMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        organizationService.ClearOrganizationMemberCache(organization, customer);
+        await cachedOrganizationService.RemoveByIdOrUniqueAlphanumericNameAsync(
+            organization.Id,
+            organization.UniqueAlphanumericName,
+            cancellationToken);
     }
 }

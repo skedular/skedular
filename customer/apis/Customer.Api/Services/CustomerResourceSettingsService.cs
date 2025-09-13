@@ -33,7 +33,7 @@ public class CustomerResourceSettingsService(
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, false, cancellationToken) ??
                            throw new LocationNotFound();
-            if (!await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
+            if (!await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

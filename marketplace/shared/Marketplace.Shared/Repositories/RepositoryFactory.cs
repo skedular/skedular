@@ -1,5 +1,4 @@
-﻿using Api.Shared.Services.Cache;
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Marketplace.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,14 +20,11 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<MarketplaceDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(
-        IDbContextFactory<MarketplaceDbContext> dbContextFactory,
-        TimeProvider timeProvider,
-        IGenericCustomerCacheService genericCustomerCacheService)
+    public RepositoryFactory(IDbContextFactory<MarketplaceDbContext> dbContextFactory, TimeProvider timeProvider)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        CustomerRepository = new CustomerRepository(_dbContext, timeProvider, genericCustomerCacheService);
+        CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);

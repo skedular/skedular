@@ -3,6 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Team = Booking.Shared.Database.Entities.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
@@ -10,7 +11,11 @@ using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class TeamSubscriber(
+    ILogger<TeamSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedTeamService cachedTeamService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -65,12 +70,16 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedTeamService.UpdateByIdAsync(existingTeam.Id, cancellationToken);
     }
 
     private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedTeamService.RemoveByIdAsync(existingTeam.Id, cancellationToken);
     }
 
     private async Task<Team> RebuildTeamMembersAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)

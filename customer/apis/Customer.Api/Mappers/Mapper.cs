@@ -26,9 +26,7 @@ public interface IMapper
     Shared.Models.Customer MapTo(IContext context);
     Identity MapToIdentity(IContext context);
     CustomerDetails MapTo(Shared.Models.Customer src);
-    CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId);
     CustomerFeedback MapTo(SubmitCustomerFeedbackInput src);
-    SubmitCustomerFeedbackPayload MapTo(CustomerFeedback src, string? clientMutationId);
     Shared.Models.Customer MapTo(Shared.Database.Entities.Customer src);
 
     Shared.Database.Entities.Customer MapToEntity(
@@ -61,6 +59,10 @@ public interface IMapper
 
     CustomerBillingDetails MapTo(AddMyBillingDetailsInput src);
     CustomerBillingDetails MapTo(UpdateMyBillingDetailsInput src);
+    IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src);
+    IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src);
+    CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src);
+    GraphQL.Billing.CustomerBillingDetails? MapToGraphQl(CustomerBillingDetails? src);
 }
 
 public class Mapper : IMapper
@@ -129,26 +131,17 @@ public class Mapper : IMapper
             Email = src.Identities.ToFirstEmail(),
             Emails = src.Identities.ToEmails(),
             Identities = MapTo(src.Identities),
-            BillingDetails = MapToGraphQl(src.BillingDetails),
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganizationId = src.DefaultOrganization?.Id,
             PreferredLocationIds = src.PreferredLocations.Select(item => item.Id),
             PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
             PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
             PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
-            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id),
-            PaymentMethods = MapTo(src.StripePaymentMethods),
-            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
+            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id)
         };
-
-    public CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId) =>
-        new() { ClientMutationId = clientMutationId, Customer = MapTo(src) };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
         new() { Id = src.Id.ToSafeString(), Content = src.FeedbackContent, Channel = src.Channel };
-
-    public SubmitCustomerFeedbackPayload MapTo(CustomerFeedback src, string? clientMutationId) =>
-        new() { Id = src.Id, ClientMutationId = clientMutationId };
 
     public Shared.Models.Customer MapTo(Shared.Database.Entities.Customer src) =>
         new()
@@ -455,6 +448,55 @@ public class Mapper : IMapper
             CountryCode = src.CountryCode
         };
 
+    public IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
+
+    public IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) => src.Select(MapTo);
+
+    public CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>
+        src is null
+            ? null
+            : new CustomerBillingDetails
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                CountryCode = src.CountryCode
+            };
+
+    public GraphQL.Billing.CustomerBillingDetails? MapToGraphQl(CustomerBillingDetails? src) =>
+        src is null
+            ? null
+            : new GraphQL.Billing.CustomerBillingDetails
+            {
+                Id = src.Id,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
+                OsmType = src.OsmType,
+                OsmId = src.OsmId,
+                PlaceId = src.PlaceId,
+                Longitude = src.Coordinates?.X,
+                Latitude = src.Coordinates?.Y,
+                FormattedAddress = src.ToFormattedAddress(),
+                MultilinesFormattedAddress = src.ToMultilinesFormattedAddress(),
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                CountryCode = src.CountryCode
+            };
+
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
 
     public Shared.Database.Entities.Customer MapToEntity(
@@ -615,9 +657,6 @@ public class Mapper : IMapper
                 StripeCustomerId = src.StripeCustomerId
             };
 
-    private static IEnumerable<StripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.StripePaymentMethod> src) =>
-        src.Select(MapTo);
-
     private static StripePaymentMethod MapTo(Shared.Database.Entities.StripePaymentMethod src) =>
         new()
         {
@@ -638,8 +677,6 @@ public class Mapper : IMapper
             CardLastFourDigit = src.CardLastFourDigit
         };
 
-    private static IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
-
     private static CustomerPaymentMethod MapTo(StripePaymentMethod src) =>
         new()
         {
@@ -654,49 +691,4 @@ public class Mapper : IMapper
             CardIssuer = src.CardIssuer,
             CardLastFourDigit = src.CardLastFourDigit
         };
-
-    private static GraphQL.Billing.CustomerBillingDetails? MapToGraphQl(CustomerBillingDetails? src) =>
-        src is null
-            ? null
-            : new GraphQL.Billing.CustomerBillingDetails
-            {
-                Id = src.Id,
-                CompanyName = src.CompanyName,
-                Email = src.Email,
-                OsmType = src.OsmType,
-                OsmId = src.OsmId,
-                PlaceId = src.PlaceId,
-                Longitude = src.Coordinates?.X,
-                Latitude = src.Coordinates?.Y,
-                FormattedAddress = src.ToFormattedAddress(),
-                MultilinesFormattedAddress = src.ToMultilinesFormattedAddress(),
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                CountryCode = src.CountryCode
-            };
-
-    private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>
-        src is null
-            ? null
-            : new CustomerBillingDetails
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                CompanyName = src.CompanyName,
-                Email = src.Email,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                CountryCode = src.CountryCode
-            };
 }

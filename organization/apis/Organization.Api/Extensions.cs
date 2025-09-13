@@ -13,12 +13,11 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddSingleton<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
             .AddScoped<IAzureTenantService, AzureTenantService>()
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IOrganizationTermsOfUseService, OrganizationTermsOfUseService>()
             .AddScoped<IIndustryMainCategoryService, IndustryMainCategoryService>()
             .AddScoped<IOrganizationService, OrganizationService>()

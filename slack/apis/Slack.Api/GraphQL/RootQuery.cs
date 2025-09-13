@@ -1,7 +1,7 @@
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;
-using Slack.Api.Services;
+using Slack.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Slack.Api.GraphQL;

@@ -41,14 +41,7 @@ public class RootQuery(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(item =>
-            {
-                var customer = mapper.MapTo(item);
-
-                customer.Node.PaymentMethods = [];
-
-                return customer;
-            }),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }

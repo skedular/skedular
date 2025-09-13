@@ -16,7 +16,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerSettingsService.CompleteOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -30,7 +30,7 @@ public class RootMutation(IMapper mapper)
             null,
             false,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -43,7 +43,7 @@ public class RootMutation(IMapper mapper)
             input.LocationId,
             null,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -57,7 +57,7 @@ public class RootMutation(IMapper mapper)
             null,
             false,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -70,7 +70,7 @@ public class RootMutation(IMapper mapper)
             input.TeamId,
             null,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -85,7 +85,7 @@ public class RootMutation(IMapper mapper)
             null,
             false,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -95,7 +95,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(null, cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -104,7 +104,7 @@ public class RootMutation(IMapper mapper)
         [Service] ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
     {
-        var customerFeedback = await customerDetailsService.UpdateMyCustomerDetailsAsync(
+        var customer = await customerDetailsService.UpdateMyCustomerDetailsAsync(
             input.Timezone,
             input.Designation,
             input.Title,
@@ -114,26 +114,29 @@ public class RootMutation(IMapper mapper)
             input.FamilyName,
             input.PhoneNumber,
             cancellationToken);
-        return mapper.MapTo(customerFeedback, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> UpdateCustomerDetailsAsync(
         UpdateCustomerDetailsInput input,
         [Service] ICustomerDetailsService customerDetailsService,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(await customerDetailsService.UpdateCustomerDetailsAsync(
-                input.Id,
-                input.Timezone,
-                input.Designation,
-                input.Title,
-                input.Name,
-                input.GivenName,
-                input.MiddleName,
-                input.FamilyName,
-                input.PhoneNumber,
-                cancellationToken),
-            input.ClientMutationId);
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerDetailsService.UpdateCustomerDetailsAsync(
+            input.Id,
+            input.Timezone,
+            input.Designation,
+            input.Title,
+            input.Name,
+            input.GivenName,
+            input.MiddleName,
+            input.FamilyName,
+            input.PhoneNumber,
+            cancellationToken);
+
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+    }
 
     [UseResolverScope]
     public async Task<CustomerPayload> AddCustomerPreferredOrganizationTagAsync(
@@ -145,7 +148,7 @@ public class RootMutation(IMapper mapper)
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -158,7 +161,7 @@ public class RootMutation(IMapper mapper)
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -168,7 +171,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.AddCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 
     [UseResolverScope]
@@ -178,6 +181,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
 }

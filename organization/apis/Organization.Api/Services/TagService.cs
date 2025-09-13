@@ -10,6 +10,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services;
 
@@ -50,7 +51,7 @@ public class TagService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -86,7 +87,7 @@ public class TagService(
                 cancellationToken) ??
             throw new OrganizationNotFound();
 
-        if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (customer is not null && !await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -154,7 +155,7 @@ public class TagService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -190,9 +191,12 @@ public class TagService(
             null,
             cancellationToken);
 
-        if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
+        foreach (var existingOrganization in existingOrganizations)
         {
-            throw new UnauthorizedAccessException();
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -227,7 +231,7 @@ public class TagService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanView(organization, customer))
+        if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -257,7 +261,7 @@ public class TagService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (customer is not null && !organizationAuthorizationService.CanModify(existingOrganization, customer))
+        if (customer is not null && !await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

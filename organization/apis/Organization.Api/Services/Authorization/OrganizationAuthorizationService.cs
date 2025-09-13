@@ -1,128 +1,160 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Organization.Shared.Models;
-using Organization.Shared.Repositories;
+using Organization.Shared.Services.Cache;
 
 namespace Organization.Api.Services.Authorization;
 
 public interface IOrganizationAuthorizationService
 {
-    bool CanViewMinimum(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanView(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanModify(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
-    bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer);
-    Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
+    ValueTask<bool> CanViewMinimumAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanViewAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanModifyAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanDeleteAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+
+    ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken);
+
+    ValueTask<bool> CanViewAnalyticsAsync(Shared.Database.Entities.Organization organization, string customerId, CancellationToken cancellationToken);
+
+    ValueTask<bool> CanManagePaymentMethodAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken);
+
+    ValueTask<bool> CanViewStripeConnectAccountAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken);
+
+    ValueTask<bool> CanManageStripeConnectAccountAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken);
+
+    ValueTask<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationAuthorizationService(
     ICachedCustomerService cachedCustomerService,
-    IRepositoryFactory repositoryFactory,
-    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+    ICachedOrganizationService cachedOrganizationService)
     : IOrganizationAuthorizationService
 {
-    public bool CanViewMinimum(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public ValueTask<bool> CanViewMinimumAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        ValueTask.FromResult(organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        };
+        });
 
-    public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanViewAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanModify(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanModifyAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanDeleteAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Organization organization, string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanCancelPeopleExistingInvitations(
+    public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
         Shared.Database.Entities.Organization organization,
-        Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        string customerId, CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanViewAnalyticsAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanManagePaymentMethodAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanManagePaymentMethod(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
-
-    public bool CanViewStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanViewStripeConnectAccountAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public bool CanManageStripeConnectAccount(Shared.Database.Entities.Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async ValueTask<bool> CanManageStripeConnectAccountAsync(
+        Shared.Database.Entities.Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
-        } && organizationSsoAuthorizationService.IsSsoValid(organization, customer);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
-    public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
+    public async ValueTask<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               organizationId,
-                               null,
-                               cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return new Permissions
         {
-            CanView = CanView(organization, customer),
-            CanModify = CanModify(organization, customer),
-            CanDelete = CanDelete(organization, customer),
-            CanInvitePeople = CanInvitePeople(organization, customer),
-            CanCancelPeopleExistingInvitations = CanCancelPeopleExistingInvitations(organization, customer),
-            CanViewAnalytics = CanViewAnalytics(organization, customer)
+            CanView = await CanViewAsync(organization, customer.Id, cancellationToken),
+            CanModify = await CanModifyAsync(organization, customer.Id, cancellationToken),
+            CanDelete = await CanDeleteAsync(organization, customer.Id, cancellationToken),
+            CanInvitePeople = await CanInvitePeopleAsync(organization, customer.Id, cancellationToken),
+            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(organization, customer.Id, cancellationToken),
+            CanViewAnalytics = await CanViewAnalyticsAsync(organization, customer.Id, cancellationToken)
         };
     }
 }

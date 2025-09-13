@@ -8,6 +8,7 @@ using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
+using Location.Shared.Services.Cache;
 
 namespace Location.Api.GraphQL.Location;
 

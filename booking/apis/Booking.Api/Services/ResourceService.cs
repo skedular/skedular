@@ -3,6 +3,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services.Cache;
 
 namespace Booking.Api.Services;
 
@@ -55,7 +56,7 @@ public class ResourceService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
+        if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -108,7 +109,7 @@ public class ResourceService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
+        if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

@@ -2,13 +2,18 @@
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Repositories;
+using MsTeams.Shared.Services.Cache;
 using Customer = MsTeams.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace MsTeams.Processors.Subscribers;
 
-public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class CustomerSubscriber(
+    ILogger<CustomerSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -60,17 +65,27 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        await repositoryFactory.CustomerRepository.UpdateAsync(
-            mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities),
-            cancellationToken);
+        repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
+        foreach (var item in customer.Identities)
+        {
+            await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
+        }
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
-        _ = await repositoryFactory.CustomerRepository.RemoveAsync(existingCustomer, cancellationToken);
+        _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await cachedCustomerService.RemoveByIdAsync(existingCustomer.Id, cancellationToken);
+        foreach (var item in existingCustomer.Identities)
+        {
+            await cachedCustomerService.RemoveByVerifiableTokenAsync(item.Id, cancellationToken);
+        }
     }
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)
