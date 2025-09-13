@@ -36,10 +36,20 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
+    networks:
+      - skedular_network
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
     networks:
       - skedular_network
 

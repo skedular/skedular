@@ -1,9 +1,9 @@
 locals {
-  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "temporal", "zipkin", "jaeger"]
+  dns_records_dev_tools = ["contabo", "kowl", "dozzle", "crm", "temporal", "zipkin", "jaeger", "redisinsight"]
 }
 
 locals {
-  dns_records_dev = ["kapp", "dapp", "mapp", "capp"]
+  dns_records_dev = ["kapp", "dapp", "mapp"]
 }
 
 resource "cloudflare_dns_record" "cloudflare_dns_records_dev_tools" {

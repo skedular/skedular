@@ -12,6 +12,10 @@ kowl.skedular.app {
 	reverse_proxy localhost:8888
 }
 
+redisinsight.skedular.app {
+	reverse_proxy localhost:5540
+}
+
 dozzle.skedular.app {
 	reverse_proxy localhost:5001
 }
