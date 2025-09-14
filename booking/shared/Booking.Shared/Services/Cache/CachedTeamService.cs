@@ -32,12 +32,16 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        await RemoveByIdAsync(id, cancellationToken);
+
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TeamRepository.GetByIdAsync(id, false, cancellationToken) ?? throw new TeamNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

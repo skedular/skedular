@@ -66,6 +66,8 @@ public class CachedOrganizationService(
 
     public async ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
     {
+        await RemoveByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, cancellationToken);
+
         if (!string.IsNullOrWhiteSpace(id))
         {
             await hybridCache.SetAsync(
@@ -105,8 +107,6 @@ public class CachedOrganizationService(
         {
             await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName), cancellationToken);
         }
-
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
     }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id:{id}";

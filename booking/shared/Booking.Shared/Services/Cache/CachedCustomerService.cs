@@ -60,12 +60,16 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        await RemoveByIdAsync(id, cancellationToken);
+
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.CustomerRepository.GetByIdAsync(id, true, cancellationToken) ?? throw new CustomerNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
@@ -87,30 +91,38 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
+    public async ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
+    {
+        await RemoveByVerifiableTokenAsync(verifiableToken, cancellationToken);
+
         await hybridCache.SetAsync(
             CreateKeyByVerifiableToken(verifiableToken),
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
             throw new CustomerNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
+    }
 
     public async ValueTask UpdateAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var item in customers)
         {
+            await RemoveByIdAsync(item.Id, cancellationToken);
+
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
 
             foreach (var identity in item.Identities)
             {
+                await RemoveByVerifiableTokenAsync(identity.Id, cancellationToken);
+
                 await hybridCache.SetAsync(
                     CreateKeyByVerifiableToken(identity.Id),
                     item,
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                     cancellationToken: cancellationToken);
             }
         }

@@ -24,7 +24,7 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.ProductRepository.GetByIdAsync(id, ct) ?? throw new ProductNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
         catch (ProductNotFound)
@@ -33,21 +33,27 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        await RemoveByIdAsync(id, cancellationToken);
+
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
+    }
 
     public async ValueTask UpdateAsync(ICollection<Product> products, CancellationToken cancellationToken)
     {
         foreach (var item in products)
         {
+            await RemoveByIdAsync(item.Id, cancellationToken);
+
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
     }

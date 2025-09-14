@@ -1,13 +1,11 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
+public class Customer : ReplicatedModelBaseWithDeleted
 {
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public string DisplayableName => this.ToDisplayableName();
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

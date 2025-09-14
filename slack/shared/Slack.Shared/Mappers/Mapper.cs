@@ -14,6 +14,7 @@ using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
+using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
 using Resource = Slack.Shared.Models.Resource;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 
@@ -187,7 +188,8 @@ public class Mapper : IMapper
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
             IsOnboardingDone = true,
-            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id },
+            PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });

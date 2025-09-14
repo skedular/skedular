@@ -17,6 +17,7 @@ using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails
 using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PaymentMethod = Stripe.PaymentMethod;
+using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
 using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
@@ -232,7 +233,8 @@ public class Mapper : IMapper
             GivenName = src.GivenName.ToSafeString(),
             FamilyName = src.FamilyName.ToSafeString(),
             IsOnboardingDone = true,
-            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id },
+            PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });

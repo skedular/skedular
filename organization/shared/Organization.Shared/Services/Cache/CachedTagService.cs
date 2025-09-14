@@ -24,7 +24,7 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.TagRepository.GetByIdAsync(id, ct) ?? throw new OrganizationTagNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
         catch (OrganizationTagNotFound)
@@ -33,21 +33,27 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        await RemoveByIdAsync(id, cancellationToken);
+
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TagRepository.GetByIdAsync(id, cancellationToken) ?? throw new OrganizationTagNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
             cancellationToken: cancellationToken);
+    }
 
     public async ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken)
     {
         foreach (var item in tags)
         {
+            await RemoveByIdAsync(item.Id, cancellationToken);
+
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
     }
