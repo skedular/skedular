@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c280845b104c19b37942c5d98ff84411>>
+ * @generated SignedSource<<dc07afccfffe0b6c9d5512ae1f97a2b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
 export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_organization_query$data = {
@@ -65,10 +64,6 @@ export type organizationAdmin_organization_query$data = {
     }>;
     readonly isListable: boolean;
     readonly logoUrl: string | null | undefined;
-    readonly memberVisibilityPolicy: {
-      readonly name: string;
-      readonly type: OrganizationMemberVisibilityPolicy;
-    };
     readonly name: string;
     readonly paymentMethods: ReadonlyArray<{
       readonly cardBrand: string | null | undefined;
@@ -136,143 +131,133 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v1/*: any*/)
-],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "osmType",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "osmId",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "placeId",
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "longitude",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "latitude",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "formattedAddress",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "addressLine1",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "addressLine2",
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "suburb",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "city",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "province",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "zipcode",
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "country",
   "storageKey": null
 },
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "countryCode",
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isEnterprise",
   "storageKey": null
 },
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "unitPrice",
   "storageKey": null
 },
-v19 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "featureSet",
   "storageKey": null
 },
-v20 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "underPriceLines",
   "storageKey": null
 },
-v21 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -347,17 +332,16 @@ return {
           "kind": "LinkedField",
           "name": "type",
           "plural": false,
-          "selections": (v2/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-          "kind": "LinkedField",
-          "name": "memberVisibilityPolicy",
-          "plural": false,
-          "selections": (v2/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v1/*: any*/)
+          ],
           "storageKey": null
         },
         {
@@ -410,6 +394,7 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
+            (v2/*: any*/),
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
@@ -422,8 +407,7 @@ return {
             (v12/*: any*/),
             (v13/*: any*/),
             (v14/*: any*/),
-            (v15/*: any*/),
-            (v16/*: any*/)
+            (v15/*: any*/)
           ],
           "storageKey": null
         },
@@ -483,7 +467,7 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
-            (v17/*: any*/),
+            (v16/*: any*/),
             (v1/*: any*/),
             {
               "alias": null,
@@ -499,10 +483,10 @@ return {
               "name": "end",
               "storageKey": null
             },
+            (v17/*: any*/),
             (v18/*: any*/),
             (v19/*: any*/),
-            (v20/*: any*/),
-            (v21/*: any*/)
+            (v20/*: any*/)
           ],
           "storageKey": null
         },
@@ -514,7 +498,7 @@ return {
           "name": "availableOfferings",
           "plural": true,
           "selections": [
-            (v17/*: any*/),
+            (v16/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -523,10 +507,10 @@ return {
               "storageKey": null
             },
             (v1/*: any*/),
+            (v17/*: any*/),
             (v18/*: any*/),
             (v19/*: any*/),
-            (v20/*: any*/),
-            (v21/*: any*/)
+            (v20/*: any*/)
           ],
           "storageKey": null
         },
@@ -618,6 +602,7 @@ return {
               "name": "email",
               "storageKey": null
             },
+            (v2/*: any*/),
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
@@ -630,8 +615,7 @@ return {
             (v12/*: any*/),
             (v13/*: any*/),
             (v14/*: any*/),
-            (v15/*: any*/),
-            (v16/*: any*/)
+            (v15/*: any*/)
           ],
           "storageKey": null
         }
@@ -644,6 +628,6 @@ return {
 };
 })();
 
-(node as any).hash = "a28bc2b71b860cae87c000c0f728b412";
+(node as any).hash = "bdfb00e4cb7ef57c153dcf997603c7f8";
 
 export default node;

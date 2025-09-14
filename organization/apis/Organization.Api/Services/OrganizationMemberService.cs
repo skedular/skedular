@@ -135,22 +135,10 @@ public class OrganizationMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        var result = mapper.MapTo
-        (organizationMember,
+
+        return mapper.MapTo(
+            organizationMember,
             mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)));
-        if (result.Customer.Id == customer.Id)
-        {
-            return result;
-        }
-
-        var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
-        result.Customer = result.Customer.Redact(memberVisibilityPolicy);
-        foreach (var identity in result.Customer.Identities)
-        {
-            identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
-        }
-
-        return result;
     }
 
     public async Task<ICollection<OrganizationMember>> ChangeStatusAsync(

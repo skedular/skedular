@@ -20,7 +20,7 @@ namespace Customer.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -82,6 +82,13 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PersonalInformationVisibility")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("VISIBLE");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(64)
@@ -146,6 +153,8 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("PersonalInformationVisibility");
 
                     b.HasIndex("PhoneNumber");
 
@@ -421,13 +430,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("MemberVisibilityPolicy")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasDefaultValue("FULL_ACCESS");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");

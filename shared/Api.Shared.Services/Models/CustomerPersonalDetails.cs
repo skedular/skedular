@@ -33,7 +33,7 @@ public static class CustomerPersonalDetailsExtensions
         return allNames.Aggregate(string.Empty, (acc, name) => string.IsNullOrWhiteSpace(name) ? acc : $"{acc} {name}");
     }
 
-    public static T Redact<T>(this T src, OrganizationMemberVisibilityPolicy policy) where T : ICustomerPersonalDetails
+    public static T Redact<T>(this T src, PersonalInformationVisibility policy) where T : ICustomerPersonalDetails
     {
         src.Designation = src.Designation.FullRedact(policy);
         src.Title = src.Title.FullRedact(policy);
@@ -55,9 +55,9 @@ public static class CustomerPersonalDetailsExtensions
         return src;
     }
 
-    public static string? FullRedact(this string? src, OrganizationMemberVisibilityPolicy policy) =>
-        policy == OrganizationMemberVisibilityPolicy.FullAccess ? src : string.Empty;
+    public static string? FullRedact(this string? src, PersonalInformationVisibility policy) =>
+        policy == PersonalInformationVisibility.Visible ? src : string.Empty;
 
-    private static string? Redact(this string? src, OrganizationMemberVisibilityPolicy policy) =>
-        policy == OrganizationMemberVisibilityPolicy.FullAccess ? src : src?.Length > 1 ? $"{src[..1]}[*****]" : src;
+    private static string? Redact(this string? src, PersonalInformationVisibility policy) =>
+        policy == PersonalInformationVisibility.Visible ? src : src?.Length > 1 ? $"{src[..1]}[*****]" : src;
 }

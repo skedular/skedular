@@ -16,6 +16,7 @@ using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
+using PersonalInformationVisibility = Api.Shared.Services.Models.PersonalInformationVisibility;
 using Resource = Customer.Shared.Database.Entities.Resource;
 using Team = Customer.Shared.Models.Team;
 
@@ -101,7 +102,8 @@ public class Mapper : IMapper
             PreferredLocations = [],
             PreferredTeams = [],
             PreferredOrganizationTags = [],
-            PreferredResources = []
+            PreferredResources = [],
+            PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 
     public Identity MapToIdentity(IContext context) =>
@@ -137,7 +139,11 @@ public class Mapper : IMapper
             PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
             PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
             PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
-            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id)
+            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id),
+            PersonalInformationVisibility = new PersonalInformationVisibilityDetails
+            {
+                Type = src.PersonalInformationVisibility, Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName()
+            }
         };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
@@ -175,7 +181,8 @@ public class Mapper : IMapper
             PreferredTeams = MapTo(src.PreferredTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
             StripeCustomer = MapTo(src.StripeCustomer),
-            StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList()
+            StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList(),
+            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
         };
 
     public CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src) =>
@@ -249,7 +256,14 @@ public class Mapper : IMapper
                 .ToList(),
             PreferredOrganizationTags = src.PreferredOrganizationTags
                 .Select(item => new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
-                .ToList()
+                .ToList(),
+            PersonalInformationVisibility = src.PersonalInformationVisibility switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
+                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted =>
+                    PersonalInformationVisibility.Redacted,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src)
@@ -283,7 +297,14 @@ public class Mapper : IMapper
                         UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName.ToSafeString(),
                         Name = src.DefaultOrganization.Name.ToSafeString()
                     },
-            DisplayableName = src.DisplayableName.ToSafeString()
+            DisplayableName = src.DisplayableName.ToSafeString(),
+            PersonalInformationVisibility = src.PersonalInformationVisibility switch
+            {
+                PersonalInformationVisibility.Visible => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible,
+                PersonalInformationVisibility.Redacted =>
+                    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>
@@ -532,7 +553,8 @@ public class Mapper : IMapper
             PreferredLocations = preferredLocations,
             PreferredTeams = preferredTeams,
             PreferredResources = preferredResources,
-            PreferredOrganizationTags = preferredOrganizationTags
+            PreferredOrganizationTags = preferredOrganizationTags,
+            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
         };
 
     private static Identity MapToEntity(Shared.Models.Identity src) => new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
@@ -568,8 +590,7 @@ public class Mapper : IMapper
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
-                Type = src.Type.ToOrganizationType(),
-                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+                Type = src.Type.ToOrganizationType()
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src) =>

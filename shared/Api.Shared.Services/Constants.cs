@@ -88,7 +88,8 @@ public static class Constants
     public const int MaxLocationTypeLength = 50;
 
     public const int MaxOrganizationTypeLength = 50;
-    public const int MaxOrganizationMemberVisibilityPolicyLength = 50;
+
+    public const int MaxPersonalInformationVisibilityLength = 50;
 
     public const int MaxProductNameLength = 500;
     public const int MaxProductDescriptionLength = 10000;

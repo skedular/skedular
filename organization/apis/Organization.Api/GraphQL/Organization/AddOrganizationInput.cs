@@ -22,9 +22,6 @@ public class AddOrganizationInput
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("isListable")] public bool IsListable { get; set; }
 
-    [GraphQLName("memberVisibilityPolicy")]
-    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
-
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;
 

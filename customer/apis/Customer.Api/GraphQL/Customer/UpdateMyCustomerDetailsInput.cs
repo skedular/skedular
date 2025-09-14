@@ -1,6 +1,7 @@
+using Api.Shared.Services.Models;
 using HotChocolate;
 
-namespace Customer.Api.GraphQL.Settings;
+namespace Customer.Api.GraphQL.Customer;
 
 [GraphQLName("UpdateMyCustomerDetailsInput")]
 public class UpdateMyCustomerDetailsInput
@@ -14,4 +15,7 @@ public class UpdateMyCustomerDetailsInput
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
     [GraphQLName("familyName")] public string? FamilyName { get; set; }
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
+
+    [GraphQLName("personalInformationVisibility")]
+    public PersonalInformationVisibility PersonalInformationVisibility { get; set; }
 }

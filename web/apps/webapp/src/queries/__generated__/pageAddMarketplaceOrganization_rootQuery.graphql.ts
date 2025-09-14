@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25133edbaa3003316f70c433f1302d96>>
+ * @generated SignedSource<<490b8335589e8ad52552e740a307dd18>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -111,41 +111,16 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-        "kind": "LinkedField",
-        "name": "organizationMemberVisibilityPolicies",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "type",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "010c12b63ea32d3b8c0c112422b2f7b1",
+    "cacheID": "486dd669252bea5a4e065faeccaf01a8",
     "id": null,
     "metadata": {},
     "name": "pageAddMarketplaceOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddMarketplaceOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addMarketplaceOrganization_query\n}\n\nfragment addMarketplaceOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
+    "text": "query pageAddMarketplaceOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addMarketplaceOrganization_query\n}\n\nfragment addMarketplaceOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
   }
 };
 })();

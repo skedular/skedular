@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<864ac4500997ad48a871c3327790a6ca>>
+ * @generated SignedSource<<88257d06a6a9d1ae64a3d836a99c321d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type organizationAdmin_query$data = {
       readonly name: string;
     }>;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "singleChoiceOrganizationMemberVisibilityPolicyquery" | "singleChoiceOrganizationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "singleChoiceOrganizationType_query">;
   readonly " $fragmentType": "organizationAdmin_query";
 };
 export type organizationAdmin_query$key = {
@@ -130,11 +130,6 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceOrganizationType_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceOrganizationMemberVisibilityPolicyquery"
     }
   ],
   "type": "Query",
@@ -142,6 +137,6 @@ return {
 };
 })();
 
-(node as any).hash = "611fb883b1cab1f1b3b3dd94560d735e";
+(node as any).hash = "98066c774058eed4dce6f408ad2cef17";
 
 export default node;

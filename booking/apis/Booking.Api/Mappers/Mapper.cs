@@ -609,8 +609,7 @@ public class Mapper : IMapper
                 ContactPhone = src.ContactPhone,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
-                Type = src.Type.ToOrganizationType(),
-                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+                Type = src.Type.ToOrganizationType()
             };
 
     private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;

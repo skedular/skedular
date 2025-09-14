@@ -1,15 +1,12 @@
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackRow } from '@/components/commons';
 import { AnalyticsIcon, CalendarIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationTermsOfUse, SingleChoiceOrganizationMemberVisibilityPolicy } from '@/components/organization';
+import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type {
-  addPrivateOrganization_addOrganizationMutation,
-  OrganizationMemberVisibilityPolicy,
-} from '@/queries/__generated__/addPrivateOrganization_addOrganizationMutation.graphql';
+import type { addPrivateOrganization_addOrganizationMutation } from '@/queries/__generated__/addPrivateOrganization_addOrganizationMutation.graphql';
 import type { addPrivateOrganization_query$key } from '@/queries/__generated__/addPrivateOrganization_query.graphql';
 import GroupsIcon from '@mui/icons-material/Groups';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -39,7 +36,6 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
-  memberVisibilityPolicy: string;
   agreedToTermsOfUse: boolean;
 };
 
@@ -49,7 +45,6 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
-  memberVisibilityPolicy: string().required('Member visibility policy is required'),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -64,7 +59,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           id
         }
         ...organizationTermsOfUse_query
-        ...singleChoiceOrganizationMemberVisibilityPolicyquery
       }
     `,
     rootDataRelay,
@@ -80,10 +74,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           name
           about
           website
-          memberVisibilityPolicy {
-            type
-            name
-          }
         }
       }
     }
@@ -94,7 +84,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ uniqueAlphanumericName, isListable, name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ uniqueAlphanumericName, isListable, name, about, website }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -112,7 +102,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
-          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
       onCompleted: (response, errors) => {
@@ -148,10 +137,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             name,
             about,
             website,
-            memberVisibilityPolicy: {
-              type: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
-              name: '',
-            },
           },
         },
       },
@@ -199,7 +184,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             name: '',
             about: null,
             website: null,
-            memberVisibilityPolicy: 'FULL_ACCESS',
           }}
           validate={validateOrganizationDetails}
           render={({ handleSubmit }) => (
@@ -246,10 +230,6 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                   required={requiredFields.website}
                   helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
                 />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Member Visibility Policy" required={requiredFields.memberVisibilityPolicy}>
-                <SingleChoiceOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
               </FormFieldLabel>
 
               <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>

@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,6 +25,7 @@ public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public virtual StripeCustomer? StripeCustomer { get; set; }
     public virtual CustomerBillingDetails? BillingDetails { get; set; }
+    public string PersonalInformationVisibility { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Name { get; set; }
@@ -68,6 +70,11 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
 
+        builder
+            .Property(item => item.PersonalInformationVisibility)
+            .HasMaxLength(Constants.MaxPersonalInformationVisibilityLength)
+            .HasDefaultValue(PersonalInformationVisibilityConstants.Visible);
+
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
@@ -85,5 +92,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasIndex(item => item.Timezone);
         builder.HasIndex(item => item.Locale);
         builder.HasIndex(item => item.PhoneNumber);
+        builder.HasIndex(item => item.PersonalInformationVisibility);
     }
 }

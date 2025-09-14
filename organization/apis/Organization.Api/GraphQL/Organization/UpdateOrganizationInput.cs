@@ -20,9 +20,6 @@ public class UpdateOrganizationInput
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("isListable")] public bool IsListable { get; set; }
 
-    [GraphQLName("memberVisibilityPolicy")]
-    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
-
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 }

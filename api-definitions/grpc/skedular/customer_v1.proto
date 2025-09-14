@@ -89,6 +89,7 @@ message Admin_AddInput {
   repeated OrganizationTag preferredOrganizationTags = 22;
   string phoneNumber = 23;
   bool isOnboardingDone = 24;
+  PersonalInformationVisibility personalInformationVisibility = 25;
 }
 
 message Customer {
@@ -117,6 +118,7 @@ message Customer {
   string phoneNumber = 23;
   bool isOnboardingDone = 24;
   string displayableName = 25;
+  PersonalInformationVisibility personalInformationVisibility = 26;
 }
 
 message Identity {
@@ -239,4 +241,9 @@ message AddPreferredResourceInput {
 
 message RemovePreferredResourceInput {
   string resourceId = 1;
+}
+
+enum PersonalInformationVisibility {
+  PersonalInformationVisibility_Visible = 0;
+  PersonalInformationVisibility_Redacted = 1;
 }

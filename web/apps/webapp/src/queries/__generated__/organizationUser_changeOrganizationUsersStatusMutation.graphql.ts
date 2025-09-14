@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<49e4c16d56672c97d34b7aac25d3a665>>
+ * @generated SignedSource<<6847f24520569123c2185fa2cfe2ac39>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type OrganizationMemberStatus = "ACTIVE" | "INACTIVE" | "%future added value";
+export type PersonalInformationVisibility = "REDACTED" | "VISIBLE" | "%future added value";
 export type ChangeOrganizationMembersStatusInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
@@ -29,6 +30,10 @@ export type organizationUser_changeOrganizationUsersStatusMutation$data = {
         readonly id: string;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
+        readonly personalInformationVisibility: {
+          readonly name: string;
+          readonly type: PersonalInformationVisibility;
+        };
         readonly phoneNumber: string | null | undefined;
         readonly photoUrl: string | null | undefined;
       };
@@ -58,7 +63,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": [
@@ -98,13 +110,7 @@ v2 = [
                 "name": "email",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              },
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -139,6 +145,25 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "phoneNumber",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PersonalInformationVisibilityDetails",
+                "kind": "LinkedField",
+                "name": "personalInformationVisibility",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -170,7 +195,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationUser_changeOrganizationUsersStatusMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -179,19 +204,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationUser_changeOrganizationUsersStatusMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "dd9d6bb953197c3a1a3f903258b6ab15",
+    "cacheID": "56be94db710730ec69a918b9288cb92d",
     "id": null,
     "metadata": {},
     "name": "organizationUser_changeOrganizationUsersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationUser_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUser_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        id\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n        personalInformationVisibility {\n          type\n          name\n        }\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6f95797ad724533a592dab0586f14dbb";
+(node as any).hash = "ffe52fae3c4d15da4b97e6e674f560f1";
 
 export default node;

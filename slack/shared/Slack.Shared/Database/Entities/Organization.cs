@@ -12,7 +12,6 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? UniqueAlphanumericName { get; set; }
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
     public string Type { get; set; }
-    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Workspace> Workspaces { get; set; } = [];
@@ -32,10 +31,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .Property(item => item.Type)
             .HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationTypeLength)
             .HasDefaultValue(OrganizationTypeConstants.Private);
-        builder
-            .Property(item => item.MemberVisibilityPolicy)
-            .HasMaxLength(Api.Shared.Services.Constants.MaxOrganizationMemberVisibilityPolicyLength)
-            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.OrganizationDailyUpdateChannels);
 

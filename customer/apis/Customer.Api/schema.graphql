@@ -67,6 +67,7 @@ type CustomerDetails {
   locale: String
   phoneNumber: String
   isOnboardingDone: Boolean!
+  personalInformationVisibility: PersonalInformationVisibilityDetails!
   id: ID!
 }
 
@@ -106,6 +107,8 @@ type LocationDetails {
 type Mutation {
   addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
+  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
+  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
   addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
@@ -116,8 +119,6 @@ type Mutation {
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
-  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
-  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
@@ -139,7 +140,13 @@ type PageInfo {
   endCursor: String
 }
 
+type PersonalInformationVisibilityDetails {
+  type: PersonalInformationVisibility!
+  name: String!
+}
+
 type Query {
+  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
   me: CustomerDetails! @cost(weight: "10")
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customerById(id: String!): CustomerDetails @lookup @internal @cost(weight: "10")
@@ -283,6 +290,7 @@ input UpdateCustomerDetailsInput {
   middleName: String
   familyName: String
   phoneNumber: String
+  personalInformationVisibility: PersonalInformationVisibility!
 }
 
 input UpdateMyBillingDetailsInput {
@@ -316,6 +324,7 @@ input UpdateMyCustomerDetailsInput {
   middleName: String
   familyName: String
   phoneNumber: String
+  personalInformationVisibility: PersonalInformationVisibility!
 }
 
 enum CustomerOrderField {
@@ -339,6 +348,11 @@ enum FeedbackChannelType {
 enum OrderDirection {
   ASCENDING
   DESCENDING
+}
+
+enum PersonalInformationVisibility {
+  VISIBLE
+  REDACTED
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

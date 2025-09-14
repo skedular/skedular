@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d2d281e9de0cfabfe9337e4e3a1a421>>
+ * @generated SignedSource<<bc41f9661c815198509b529efc48bf5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
 export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddOrganizationInput = {
   about?: string | null | undefined;
@@ -20,7 +19,6 @@ export type AddOrganizationInput = {
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   isListable: boolean;
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
@@ -36,10 +34,6 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly isListable: boolean;
-      readonly memberVisibilityPolicy: {
-        readonly name: string;
-        readonly type: OrganizationMemberVisibilityPolicy;
-      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -52,10 +46,6 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly isListable: boolean;
-      readonly memberVisibilityPolicy: {
-        readonly name: string;
-        readonly type: OrganizationMemberVisibilityPolicy;
-      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -76,14 +66,7 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v2 = [
+v1 = [
   {
     "alias": null,
     "args": [
@@ -127,7 +110,13 @@ v2 = [
             "name": "isListable",
             "storageKey": null
           },
-          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -140,25 +129,6 @@ v2 = [
             "args": null,
             "kind": "ScalarField",
             "name": "website",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-            "kind": "LinkedField",
-            "name": "memberVisibilityPolicy",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v1/*: any*/)
-            ],
             "storageKey": null
           }
         ],
@@ -174,7 +144,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -183,19 +153,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "dd13d47ec752182e5c8536a83457ae21",
+    "cacheID": "1cc023675ed0e773859e2ff0f3b3f8bf",
     "id": null,
     "metadata": {},
     "name": "addPrivateOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n      memberVisibilityPolicy {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9386ae8955a833a1dca8b4450347edde";
+(node as any).hash = "5d948e3841a0f0ce699085d5f203752c";
 
 export default node;

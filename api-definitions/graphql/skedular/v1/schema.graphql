@@ -238,6 +238,7 @@ type CustomerDetails {
   name: String
   organization: OrganizationDetails
   paymentMethods: [CustomerPaymentMethod!]! @cost(weight: "10")
+  personalInformationVisibility: PersonalInformationVisibilityDetails!
   phoneNumber: String
   photoUrl: String
   photoUrl192: String
@@ -677,7 +678,6 @@ type OrganizationDetails {
   locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   logoUrl: String
   members(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
   paymentMethods: [OrganizationPaymentMethod!]!
   physicalAddress: OrganizationPhysicalAddressDetails
@@ -746,11 +746,6 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
-}
-
-type OrganizationMemberVisibilityPolicyDetails {
-  name: String!
-  type: OrganizationMemberVisibilityPolicy!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -915,6 +910,11 @@ type PeopleCapacity {
   to: String!
 }
 
+type PersonalInformationVisibilityDetails {
+  name: String!
+  type: PersonalInformationVisibility!
+}
+
 type PriceUnitDetails {
   name: String!
   type: PriceUnit!
@@ -1042,7 +1042,6 @@ type Query {
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): ConnectionOfOrganizationEdge! @cost(weight: "10")
@@ -1056,6 +1055,7 @@ type Query {
   paymentStatuses: [PaymentStatusDetails!]!
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
+  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
@@ -1422,7 +1422,6 @@ input AddOrganizationInput {
   id: String
   industrySubCategoryIds: [String!]!
   isListable: Boolean!
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
@@ -2165,6 +2164,7 @@ input UpdateCustomerDetailsInput {
   id: String!
   middleName: String
   name: String
+  personalInformationVisibility: PersonalInformationVisibility!
   phoneNumber: String
   timezone: String
   title: String
@@ -2258,6 +2258,7 @@ input UpdateMyCustomerDetailsInput {
   givenName: String
   middleName: String
   name: String
+  personalInformationVisibility: PersonalInformationVisibility!
   phoneNumber: String
   timezone: String
   title: String
@@ -2303,7 +2304,6 @@ input UpdateOrganizationInput {
   id: String
   industrySubCategoryIds: [String!]!
   isListable: Boolean!
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   type: OrganizationType!
   uniqueAlphanumericName: String
@@ -2572,11 +2572,6 @@ enum OrganizationMemberStatus {
   INACTIVE
 }
 
-enum OrganizationMemberVisibilityPolicy {
-  FULL_ACCESS
-  LIMITED_ACCESS
-}
-
 enum OrganizationOrderField {
   NAME
 }
@@ -2629,6 +2624,11 @@ enum PaymentStatus {
   PENDING
   RECORD_NEVER_CREATED
   REJECTED
+}
+
+enum PersonalInformationVisibility {
+  REDACTED
+  VISIBLE
 }
 
 enum PriceUnit {

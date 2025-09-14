@@ -19,7 +19,7 @@ import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, Pref
 import { getOrganizationBaseLink, getRootLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, SingleChoiceOrganizationMemberVisibilityPolicy, SingleChoiceOrganizationType } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries, SingleChoiceOrganizationType } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -48,11 +48,7 @@ import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_removeOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdmin_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingDetailsMutation.graphql';
-import type {
-  organizationAdmin_updateOrganizationMutation,
-  OrganizationMemberVisibilityPolicy,
-  OrganizationType,
-} from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
+import type { organizationAdmin_updateOrganizationMutation, OrganizationType } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_updateOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationPhysicalAddressMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
@@ -103,7 +99,6 @@ type OrganizationDetails = {
   about: string | null;
   website: string | null;
   type: string;
-  memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
@@ -116,7 +111,6 @@ const organizationSchema = object({
   about: string().nullable(),
   website: string().url('Website must be a valid Url').nullable(),
   type: string().required('Type is required'),
-  memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
     .email(({ value }) => `${value} is not a valid email`)
@@ -245,7 +239,6 @@ const OrganizationAdmin = ({
         }
         ...organizationMultipleChoicesIndustries_query
         ...singleChoiceOrganizationType_query
-        ...singleChoiceOrganizationMemberVisibilityPolicyquery
       }
     `,
     rootDataRelay,
@@ -262,10 +255,6 @@ const OrganizationAdmin = ({
           logoUrl
           about
           type {
-            type
-            name
-          }
-          memberVisibilityPolicy {
             type
             name
           }
@@ -418,10 +407,6 @@ const OrganizationAdmin = ({
           about
           website
           type {
-            type
-            name
-          }
-          memberVisibilityPolicy {
             type
             name
           }
@@ -715,8 +700,6 @@ const OrganizationAdmin = ({
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
   const [organizationType, setOrganizationType] = useState<string>(rootDataOrganization.organization?.type.type ?? '');
   const debounceSetOrganizationType = useDebounceCallback(setOrganizationType, keyboardTextFieldDebounceTimeout);
-  const [organizationMemberVisibilityPolicy, setOrganizationMemberVisibilityPolicy] = useState<string>(rootDataOrganization.organization?.memberVisibilityPolicy.type ?? '');
-  const debounceSetOrganizationMemberVisibilityPolicy = useDebounceCallback(setOrganizationMemberVisibilityPolicy, keyboardTextFieldDebounceTimeout);
   const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(
     rootDataOrganization.organization?.industrySubCategories.map(({ id }) => id) ?? [],
   );
@@ -897,7 +880,6 @@ const OrganizationAdmin = ({
     about,
     website,
     type,
-    memberVisibilityPolicy,
     industrySubCategoryIds,
     contactEmail,
     contactPhone,
@@ -922,7 +904,6 @@ const OrganizationAdmin = ({
           website,
           type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
-          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
           contactEmail,
           contactPhone,
         },
@@ -959,10 +940,6 @@ const OrganizationAdmin = ({
             website,
             type: {
               type: type as OrganizationType,
-              name: '',
-            },
-            memberVisibilityPolicy: {
-              type: type as OrganizationMemberVisibilityPolicy,
               name: '',
             },
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
@@ -2298,7 +2275,6 @@ const OrganizationAdmin = ({
                 about: organizationAbout,
                 website: organizationWebsite,
                 type: organizationType,
-                memberVisibilityPolicy: organizationMemberVisibilityPolicy,
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
                 contactPhone: organizationContactPhone,
@@ -2311,7 +2287,6 @@ const OrganizationAdmin = ({
                 debounceSetOrganizationAbout(values!.about);
                 debounceSetOrganizationWebsite(values!.website);
                 debounceSetOrganizationType(values!.type);
-                debounceSetOrganizationMemberVisibilityPolicy(values!.memberVisibilityPolicy);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
                 debounceSetOrganizationContactPhone(values!.contactPhone);
@@ -2366,14 +2341,6 @@ const OrganizationAdmin = ({
 
                       <FormFieldLabel label="Type">
                         <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Member Visibility Policy">
-                        <SingleChoiceOrganizationMemberVisibilityPolicy
-                          rootDataRelay={rootData}
-                          name="memberVisibilityPolicy"
-                          required={requiredOrganizationDetailsFields.memberVisibilityPolicy}
-                        />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Industry">

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using HotChocolate;
@@ -9,6 +10,13 @@ namespace Customer.Api.GraphQL.Customer;
 [QueryType]
 public class RootQuery(IMapper mapper)
 {
+    [UseResolverScope]
+    public IEnumerable<PersonalInformationVisibilityDetails> PersonalInformationVisibilityTypes() =>
+    [
+        new() { Type = PersonalInformationVisibility.Visible, Name = PersonalInformationVisibility.Visible.ToPersonalInformationVisibilityName() },
+        new() { Type = PersonalInformationVisibility.Redacted, Name = PersonalInformationVisibility.Redacted.ToPersonalInformationVisibilityName() }
+    ];
+
     [UseResolverScope]
     public async Task<CustomerDetails> MeAsync([Service] ICustomerService customerService, CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56f74124418cf6e2559f2a935b679432>>
+ * @generated SignedSource<<affeaffa0e54cbb0cab45ba7a9fdea2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type PersonalInformationVisibility = "REDACTED" | "VISIBLE" | "%future added value";
 export type UpdateCustomerDetailsInput = {
   clientMutationId?: string | null | undefined;
   designation?: string | null | undefined;
@@ -17,6 +18,7 @@ export type UpdateCustomerDetailsInput = {
   id: string;
   middleName?: string | null | undefined;
   name?: string | null | undefined;
+  personalInformationVisibility: PersonalInformationVisibility;
   phoneNumber?: string | null | undefined;
   timezone?: string | null | undefined;
   title?: string | null | undefined;
@@ -33,6 +35,10 @@ export type mySettings_updateCustomerDetailsMutation$data = {
       readonly id: string;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
+      readonly personalInformationVisibility: {
+        readonly name: string;
+        readonly type: PersonalInformationVisibility;
+      };
       readonly phoneNumber: string | null | undefined;
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
@@ -48,6 +54,10 @@ export type mySettings_updateCustomerDetailsMutation$rawResponse = {
       readonly id: string;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
+      readonly personalInformationVisibility: {
+        readonly name: string;
+        readonly type: PersonalInformationVisibility;
+      };
       readonly phoneNumber: string | null | undefined;
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
@@ -68,7 +78,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -119,13 +136,7 @@ v1 = [
             "name": "title",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -153,6 +164,25 @@ v1 = [
             "kind": "ScalarField",
             "name": "phoneNumber",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PersonalInformationVisibilityDetails",
+            "kind": "LinkedField",
+            "name": "personalInformationVisibility",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -167,7 +197,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "mySettings_updateCustomerDetailsMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -176,19 +206,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "mySettings_updateCustomerDetailsMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "1f07c68b6a90606771e04ce22a6cfbe8",
+    "cacheID": "f14feac77106870cc1cb21db26470007",
     "id": null,
     "metadata": {},
     "name": "mySettings_updateCustomerDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation mySettings_updateCustomerDetailsMutation(\n  $input: UpdateCustomerDetailsInput!\n) {\n  updateCustomerDetails(input: $input) {\n    customer {\n      id\n      timezone\n      designation\n      title\n      name\n      givenName\n      middleName\n      familyName\n      phoneNumber\n    }\n  }\n}\n"
+    "text": "mutation mySettings_updateCustomerDetailsMutation(\n  $input: UpdateCustomerDetailsInput!\n) {\n  updateCustomerDetails(input: $input) {\n    customer {\n      id\n      timezone\n      designation\n      title\n      name\n      givenName\n      middleName\n      familyName\n      phoneNumber\n      personalInformationVisibility {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "785add8bfb66aa625b7c7be01937492a";
+(node as any).hash = "86f28efb5ff608696feaf554b90d059f";
 
 export default node;

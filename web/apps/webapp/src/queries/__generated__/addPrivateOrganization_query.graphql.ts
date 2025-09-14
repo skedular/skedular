@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<37bdd23dc46832b3475e49795adda578>>
+ * @generated SignedSource<<29f289468437e72bb5f6151de086bd7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type addPrivateOrganization_query$data = {
   readonly me: {
     readonly emails: ReadonlyArray<string>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"organizationTermsOfUse_query" | "singleChoiceOrganizationMemberVisibilityPolicyquery">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationTermsOfUse_query">;
   readonly " $fragmentType": "addPrivateOrganization_query";
 };
 export type addPrivateOrganization_query$key = {
@@ -71,17 +71,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "organizationTermsOfUse_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "singleChoiceOrganizationMemberVisibilityPolicyquery"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "d973e0c5d06155bca6b4f9a62f790349";
+(node as any).hash = "875b17ee98a47b48b837ea870eb12a6b";
 
 export default node;

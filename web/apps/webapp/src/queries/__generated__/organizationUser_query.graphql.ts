@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<041d020786aee2da55a10e84a1404f89>>
+ * @generated SignedSource<<0928abb5a0a98635524ce4f55697c7c4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type OrganizationMemberRole = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type OrganizationMemberStatus = "ACTIVE" | "INACTIVE" | "%future added value";
+export type PersonalInformationVisibility = "REDACTED" | "VISIBLE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationUser_query$data = {
   readonly customer: {
@@ -21,6 +22,10 @@ export type organizationUser_query$data = {
     readonly id: string;
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
+    readonly personalInformationVisibility: {
+      readonly name: string;
+      readonly type: PersonalInformationVisibility;
+    };
     readonly phoneNumber: string | null | undefined;
     readonly photoUrl: string | null | undefined;
     readonly timezone: string | null | undefined;
@@ -41,6 +46,10 @@ export type organizationUser_query$data = {
                   readonly id: string;
                   readonly middleName: string | null | undefined;
                   readonly name: string | null | undefined;
+                  readonly personalInformationVisibility: {
+                    readonly name: string;
+                    readonly type: PersonalInformationVisibility;
+                  };
                   readonly photoUrl: string | null | undefined;
                 };
                 readonly uniqueId: string;
@@ -73,7 +82,7 @@ export type organizationUser_query$data = {
       readonly totalCount: number;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "teamCard_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "singleChoiceUserPersonalInformationVisibility_query" | "teamCard_query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -128,18 +137,37 @@ v6 = {
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PersonalInformationVisibilityDetails",
+  "kind": "LinkedField",
+  "name": "personalInformationVisibility",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
+      "storageKey": null
+    },
+    (v3/*: any*/)
+  ],
+  "storageKey": null
+},
+v8 = {
   "kind": "Variable",
   "name": "customerId",
   "variableName": "customerId"
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -255,7 +283,8 @@ return {
           "kind": "ScalarField",
           "name": "phoneNumber",
           "storageKey": null
-        }
+        },
+        (v7/*: any*/)
       ],
       "storageKey": null
     },
@@ -269,7 +298,7 @@ return {
         },
         {
           "fields": [
-            (v7/*: any*/),
+            (v8/*: any*/),
             {
               "kind": "Variable",
               "name": "organizationUniqueAlphanumericName",
@@ -285,7 +314,7 @@ return {
       "name": "__organizationUser_customerTeams_connection",
       "plural": false,
       "selections": [
-        (v8/*: any*/),
+        (v9/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -366,7 +395,8 @@ return {
                                     (v5/*: any*/),
                                     (v6/*: any*/),
                                     (v3/*: any*/),
-                                    (v2/*: any*/)
+                                    (v2/*: any*/),
+                                    (v7/*: any*/)
                                   ],
                                   "storageKey": null
                                 }
@@ -432,7 +462,7 @@ return {
           ],
           "storageKey": null
         },
-        (v9/*: any*/)
+        (v10/*: any*/)
       ],
       "storageKey": null
     },
@@ -455,7 +485,7 @@ return {
           "args": [
             {
               "fields": [
-                (v7/*: any*/)
+                (v8/*: any*/)
               ],
               "kind": "ObjectValue",
               "name": "where"
@@ -466,7 +496,7 @@ return {
           "name": "members",
           "plural": false,
           "selections": [
-            (v8/*: any*/),
+            (v9/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -504,7 +534,7 @@ return {
               ],
               "storageKey": null
             },
-            (v9/*: any*/)
+            (v10/*: any*/)
           ],
           "storageKey": null
         }
@@ -520,6 +550,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "organizationUserLeftSideNavigationMenuContent_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceUserPersonalInformationVisibility_query"
     }
   ],
   "type": "Query",
@@ -527,6 +562,6 @@ return {
 };
 })();
 
-(node as any).hash = "cab472a537c179eb3897649753e169ac";
+(node as any).hash = "4a45b66eff4c069e730c8355c2042f13";
 
 export default node;

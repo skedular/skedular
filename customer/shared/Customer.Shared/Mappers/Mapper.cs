@@ -8,6 +8,7 @@ using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
 using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
 using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
 using PaymentMethod = Stripe.PaymentMethod;
+using PersonalInformationVisibility = Api.Shared.Services.Models.PersonalInformationVisibility;
 using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource;
 using Team = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team;
 
@@ -45,7 +46,13 @@ public class Mapper : IMapper
             PhoneNumber = src.PhoneNumber.ToSafeString(),
             BillingDetails = MapTo(src.BillingDetails),
             Settings = new Settings { IsOnboardingDone = src.IsOnboardingDone },
-            PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
+            PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id,
+            PersonalInformationVisibility = src.PersonalInformationVisibility switch
+            {
+                PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible,
+                PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Redacted,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
         customer.Identities.AddRange(MapTo(src.Identities));

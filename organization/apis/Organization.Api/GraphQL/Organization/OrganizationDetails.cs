@@ -31,9 +31,6 @@ public class OrganizationDetails : Node
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
 
-    [GraphQLName("memberVisibilityPolicy")]
-    public OrganizationMemberVisibilityPolicyDetails MemberVisibilityPolicy { get; set; } = new();
-
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 

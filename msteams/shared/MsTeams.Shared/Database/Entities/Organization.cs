@@ -12,7 +12,6 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? UniqueAlphanumericName { get; set; }
     public string Type { get; set; }
-    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
@@ -28,10 +27,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.Property(item => item.UniqueAlphanumericName).HasMaxLength(Constants.MaxOrganizationUniqueAlphanumericNameLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
-        builder
-            .Property(item => item.MemberVisibilityPolicy)
-            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
-            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
     }

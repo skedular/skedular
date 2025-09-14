@@ -6,11 +6,12 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
+import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
-import type { mySettings_updateCustomerDetailsMutation } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
+import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -44,7 +45,12 @@ const RootQuery = graphql`
       familyName
       timezone
       phoneNumber
+      personalInformationVisibility {
+        type
+        name
+      }
     }
+    ...singleChoiceUserPersonalInformationVisibility_query
   }
 `;
 
@@ -57,6 +63,7 @@ type ProfileDetailsDetails = {
   familyName: string | null;
   timezone: string;
   phoneNumber: string | null;
+  personalInformationVisibility: string;
 };
 
 const profileDetailsSchema = object({
@@ -68,6 +75,7 @@ const profileDetailsSchema = object({
   familyName: string().nullable(),
   timezone: string().required('Timezone is required'),
   phoneNumber: string().nullable(),
+  personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
 
 const MySettings = ({ queryReference }: Props) => {
@@ -86,6 +94,10 @@ const MySettings = ({ queryReference }: Props) => {
           middleName
           familyName
           phoneNumber
+          personalInformationVisibility {
+            type
+            name
+          }
         }
       }
     }
@@ -102,7 +114,17 @@ const MySettings = ({ queryReference }: Props) => {
     router.push(getRootLink(integratedPlatrform));
   };
 
-  const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
+  const handleProfileDetailUpdateClick = ({
+    timezone,
+    designation,
+    title,
+    name,
+    givenName,
+    middleName,
+    familyName,
+    phoneNumber,
+    personalInformationVisibility,
+  }: ProfileDetailsDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating user profile details'...`} />, infoNotificationOptions);
 
     commitUpdateCustomerDetails({
@@ -118,6 +140,7 @@ const MySettings = ({ queryReference }: Props) => {
           middleName,
           familyName,
           phoneNumber,
+          personalInformationVisibility: personalInformationVisibility as PersonalInformationVisibility,
         },
       },
       onCompleted: (_, errors) => {
@@ -153,6 +176,10 @@ const MySettings = ({ queryReference }: Props) => {
             middleName,
             familyName,
             phoneNumber,
+            personalInformationVisibility: {
+              type: personalInformationVisibility as PersonalInformationVisibility,
+              name: '',
+            },
           },
         },
       },
@@ -176,6 +203,7 @@ const MySettings = ({ queryReference }: Props) => {
               middleName: me.middleName,
               familyName: me.familyName,
               phoneNumber: me.phoneNumber,
+              personalInformationVisibility: me.personalInformationVisibility.type,
             }}
             validate={validateProfileDetails}
             render={({ handleSubmit }) => (
@@ -228,6 +256,14 @@ const MySettings = ({ queryReference }: Props) => {
 
                   <FormFieldLabel label="Phone Number">
                     <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                    <SingleChoiceUserPersonalInformationVisibility
+                      rootDataRelay={rootData}
+                      name="personalInformationVisibility"
+                      required={requiredProfileDetailsFields.personalInformationVisibility}
+                    />
                   </FormFieldLabel>
                 </StackColumn>
 

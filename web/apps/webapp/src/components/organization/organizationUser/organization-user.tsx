@@ -17,13 +17,14 @@ import { BookingIcon, DeleteIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { TeamCard } from '@/components/organization/organizationTeams';
+import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
-import type { organizationUser_updateCustomerDetailsMutation } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
+import type { organizationUser_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -54,6 +55,7 @@ type ProfileDetailsDetails = {
   familyName: string | null;
   timezone: string;
   phoneNumber: string | null;
+  personalInformationVisibility: string;
 };
 
 const profileDetailsSchema = object({
@@ -65,6 +67,7 @@ const profileDetailsSchema = object({
   familyName: string().nullable(),
   timezone: string().required('Timezone is required'),
   phoneNumber: string().nullable(),
+  personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
 
 const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, customerId }: Props) => {
@@ -86,6 +89,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
           familyName
           timezone
           phoneNumber
+          personalInformationVisibility {
+            type
+            name
+          }
         }
         customerTeams(
           first: $count
@@ -114,6 +121,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
                         familyName
                         name
                         photoUrl
+                        personalInformationVisibility {
+                          type
+                          name
+                        }
                       }
                     }
                   }
@@ -138,6 +149,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
         }
         ...teamCard_query
         ...organizationUserLeftSideNavigationMenuContent_query
+        ...singleChoiceUserPersonalInformationVisibility_query
       }
     `,
     rootDataRelay,
@@ -156,6 +168,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
           middleName
           familyName
           phoneNumber
+          personalInformationVisibility {
+            type
+            name
+          }
         }
       }
     }
@@ -175,6 +191,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
             familyName
             photoUrl
             phoneNumber
+            personalInformationVisibility {
+              type
+              name
+            }
           }
           status
           role
@@ -231,7 +251,17 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
     router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
-  const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
+  const handleProfileDetailUpdateClick = ({
+    timezone,
+    designation,
+    title,
+    name,
+    givenName,
+    middleName,
+    familyName,
+    phoneNumber,
+    personalInformationVisibility,
+  }: ProfileDetailsDetails) => {
     if (!rootData.customer) {
       return;
     }
@@ -251,6 +281,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
           middleName,
           familyName,
           phoneNumber,
+          personalInformationVisibility: personalInformationVisibility as PersonalInformationVisibility,
         },
       },
       onCompleted: (_, errors) => {
@@ -286,6 +317,10 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
             middleName,
             familyName,
             phoneNumber,
+            personalInformationVisibility: {
+              type: personalInformationVisibility as PersonalInformationVisibility,
+              name: '',
+            },
           },
         },
       },
@@ -443,6 +478,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
               middleName: customer.middleName,
               familyName: customer.familyName,
               phoneNumber: customer.phoneNumber,
+              personalInformationVisibility: customer.personalInformationVisibility.type,
             }}
             validate={validateProfileDetails}
             render={({ handleSubmit }) => (
@@ -512,6 +548,14 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
                   <FormFieldLabel label="Phone Number">
                     {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
                     {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                    <SingleChoiceUserPersonalInformationVisibility
+                      rootDataRelay={rootData}
+                      name="personalInformationVisibility"
+                      required={requiredProfileDetailsFields.personalInformationVisibility}
+                    />
                   </FormFieldLabel>
                 </StackColumn>
 

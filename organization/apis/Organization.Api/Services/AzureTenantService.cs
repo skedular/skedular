@@ -83,7 +83,9 @@ public class AzureTenantService(
 
     public async Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
+        var verifiableToken = context.GetVerifiableToken();
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
         var tenantId = context.GetAzureTenantId();
@@ -100,7 +102,7 @@ public class AzureTenantService(
             : organizationConfigurationService.ApiBaseDomain;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
-            new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken() });
+            new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = verifiableToken });
 
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "v1/organization/onboard-azure-tenant").OriginalString);

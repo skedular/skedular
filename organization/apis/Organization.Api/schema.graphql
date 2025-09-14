@@ -212,7 +212,6 @@ type OrganizationDetails {
   website: String
   logoUrl: String
   type: OrganizationTypeDetails!
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -293,11 +292,6 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
-}
-
-type OrganizationMemberVisibilityPolicyDetails {
-  type: OrganizationMemberVisibilityPolicy!
-  name: String!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -460,7 +454,6 @@ type Query {
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
-  organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -574,7 +567,6 @@ input AddOrganizationInput {
   contactEmail: String
   contactPhone: String
   isListable: Boolean!
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
@@ -903,7 +895,6 @@ input UpdateOrganizationInput {
   contactEmail: String
   contactPhone: String
   isListable: Boolean!
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   industrySubCategoryIds: [String!]!
 }
 
@@ -1017,11 +1008,6 @@ enum OrganizationMemberRole {
 enum OrganizationMemberStatus {
   ACTIVE
   INACTIVE
-}
-
-enum OrganizationMemberVisibilityPolicy {
-  FULL_ACCESS
-  LIMITED_ACCESS
 }
 
 enum OrganizationOrderField {

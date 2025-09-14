@@ -1,5 +1,5 @@
 using Api.Shared.Services.Models;
-using Customer.Shared.Database.Entities;
+using Customer.Shared.Models;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
@@ -9,6 +9,7 @@ using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using Resource = Customer.Shared.Database.Entities.Resource;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Team = Customer.Shared.Models.Team;
@@ -94,8 +95,7 @@ public class Mapper : IMapper
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
-            },
-            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+            }
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -255,7 +255,8 @@ public class Mapper : IMapper
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
                 PreferredResources = MapTo(src.PreferredResources).ToList(),
                 PreferredTeams = MapTo(src.PreferredTeams).ToList(),
-                PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
+                PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
+                PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
             };
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
@@ -266,7 +267,6 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
-        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 
@@ -418,8 +418,7 @@ public class Mapper : IMapper
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
-                Type = src.Type.ToOrganizationType(),
-                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+                Type = src.Type.ToOrganizationType()
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src, bool includeResources) =>

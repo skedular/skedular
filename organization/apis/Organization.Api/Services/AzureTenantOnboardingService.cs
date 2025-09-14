@@ -57,7 +57,6 @@ public class AzureTenantOnboardingService(
             Name = "No name set!!!",
             AgreedToTermsOfUse = true,
             Type = OrganizationTypeConstants.Private,
-            MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
             Locations = [location],
             OrganizationOfferings = [organizationOffering]

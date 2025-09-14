@@ -223,7 +223,6 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type.ToOrganizationType(),
-            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking
         };
@@ -633,7 +632,6 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Type = src.Type.ToOrganizationType(),
-            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
         };
 

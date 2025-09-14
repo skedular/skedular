@@ -1,3 +1,5 @@
+using Api.Shared.Services.Models;
+
 namespace Customer.Api.Services;
 
 public interface ICustomerDetailsService
@@ -11,6 +13,7 @@ public interface ICustomerDetailsService
         string? middleName,
         string? familyName,
         string? phoneNumber,
+        PersonalInformationVisibility personalInformationVisibility,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Customer> UpdateCustomerDetailsAsync(
@@ -23,6 +26,7 @@ public interface ICustomerDetailsService
         string? middleName,
         string? familyName,
         string? phoneNumber,
+        PersonalInformationVisibility personalInformationVisibility,
         CancellationToken cancellationToken);
 }
 
@@ -37,6 +41,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         string? middleName,
         string? familyName,
         string? phoneNumber,
+        PersonalInformationVisibility personalInformationVisibility,
         CancellationToken cancellationToken)
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
@@ -48,6 +53,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         customer.MiddleName = middleName;
         customer.FamilyName = familyName;
         customer.PhoneNumber = phoneNumber;
+        customer.PersonalInformationVisibility = personalInformationVisibility.ToPersonalInformationVisibility();
 
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
@@ -62,6 +68,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         string? middleName,
         string? familyName,
         string? phoneNumber,
+        PersonalInformationVisibility personalInformationVisibility,
         CancellationToken cancellationToken)
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
@@ -78,6 +85,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         customer.MiddleName = middleName;
         customer.FamilyName = familyName;
         customer.PhoneNumber = phoneNumber;
+        customer.PersonalInformationVisibility = personalInformationVisibility.ToPersonalInformationVisibility();
 
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }

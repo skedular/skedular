@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a74e5babca1661ae63d5ca5cfc2ab10d>>
+ * @generated SignedSource<<5ae7e6e1dbb333c71385790d0f0f7ec4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -111,41 +111,16 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-        "kind": "LinkedField",
-        "name": "organizationMemberVisibilityPolicies",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "type",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "943dc6c1fd784f956a99f173acf11c33",
+    "cacheID": "7e8635f1928c4ca3f3a1c6d1a311a829",
     "id": null,
     "metadata": {},
     "name": "pageAddPrivateOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n"
+    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
   }
 };
 })();

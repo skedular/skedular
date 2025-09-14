@@ -112,8 +112,7 @@ public class Mapper : IMapper
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
-            },
-            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+            }
         };
 
         organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
@@ -239,7 +238,6 @@ public class Mapper : IMapper
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();
-        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 

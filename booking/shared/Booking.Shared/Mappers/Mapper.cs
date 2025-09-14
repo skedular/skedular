@@ -345,8 +345,7 @@ public class Mapper : IMapper
                 ContactPhone = src.ContactPhone,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
-                Type = src.Type.ToOrganizationType(),
-                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+                Type = src.Type.ToOrganizationType()
             };
 
     private static IEnumerable<Location> MapTo(IEnumerable<Database.Entities.Location> src) => src.Select(MapTo)!;

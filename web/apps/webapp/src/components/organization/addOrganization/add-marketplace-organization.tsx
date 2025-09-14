@@ -1,14 +1,11 @@
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationTermsOfUse, SingleChoiceOrganizationMemberVisibilityPolicy } from '@/components/organization';
+import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type {
-  addMarketplaceOrganization_addOrganizationMutation,
-  OrganizationMemberVisibilityPolicy,
-} from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
+import type { addMarketplaceOrganization_addOrganizationMutation } from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
 import type { addMarketplaceOrganization_query$key } from '@/queries/__generated__/addMarketplaceOrganization_query.graphql';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -41,7 +38,6 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
-  memberVisibilityPolicy: string;
   agreedToTermsOfUse: boolean;
 };
 
@@ -51,7 +47,6 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
-  memberVisibilityPolicy: string().required('Member visibility policy is required'),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -66,7 +61,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           id
         }
         ...organizationTermsOfUse_query
-        ...singleChoiceOrganizationMemberVisibilityPolicyquery
       }
     `,
     rootDataRelay,
@@ -82,10 +76,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           name
           about
           website
-          memberVisibilityPolicy {
-            type
-            name
-          }
         }
       }
     }
@@ -96,7 +86,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ uniqueAlphanumericName, isListable, name, about, website, memberVisibilityPolicy }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ uniqueAlphanumericName, isListable, name, about, website }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -114,7 +104,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
-          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
       onCompleted: (response, errors) => {
@@ -150,10 +139,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             name,
             about,
             website,
-            memberVisibilityPolicy: {
-              type: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
-              name: '',
-            },
           },
         },
       },
@@ -206,7 +191,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             name: '',
             about: null,
             website: null,
-            memberVisibilityPolicy: 'LIMITED_ACCESS',
           }}
           validate={validateOrganizationDetails}
           render={({ handleSubmit }) => (
@@ -245,10 +229,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
 
               <FormFieldLabel label="Website" required={requiredFields.website}>
                 <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space's website to share with members." />} />
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Member Visibility Policy" required={requiredFields.memberVisibilityPolicy}>
-                <SingleChoiceOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
               </FormFieldLabel>
 
               <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>

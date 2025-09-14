@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<815693c3d57173c2348b1e1a9e0d63a4>>
+ * @generated SignedSource<<158aad81115dbb0fd7934ad3f26e93ac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationMemberVisibilityPolicy = "FULL_ACCESS" | "LIMITED_ACCESS" | "%future added value";
 export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateOrganizationInput = {
   about?: string | null | undefined;
@@ -19,7 +18,6 @@ export type UpdateOrganizationInput = {
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   isListable: boolean;
-  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
   type: OrganizationType;
   uniqueAlphanumericName?: string | null | undefined;
@@ -40,10 +38,6 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly name: string;
       }>;
       readonly isListable: boolean;
-      readonly memberVisibilityPolicy: {
-        readonly name: string;
-        readonly type: OrganizationMemberVisibilityPolicy;
-      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -66,10 +60,6 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly name: string;
       }>;
       readonly isListable: boolean;
-      readonly memberVisibilityPolicy: {
-        readonly name: string;
-        readonly type: OrganizationMemberVisibilityPolicy;
-      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -109,16 +99,6 @@ v2 = {
   "storageKey": null
 },
 v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v2/*: any*/)
-],
-v4 = [
   {
     "alias": null,
     "args": [
@@ -178,17 +158,16 @@ v4 = [
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v3/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationMemberVisibilityPolicyDetails",
-            "kind": "LinkedField",
-            "name": "memberVisibilityPolicy",
-            "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -231,7 +210,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v4/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -240,19 +219,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v4/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "93a78c9e5d82a0bcb9870ec9f477bddf",
+    "cacheID": "38165fbd6d1cf6a3f2de1501185a31ca",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5069ef6127225084b2365b7004a18a60";
+(node as any).hash = "ae00edcb4a65e467b0bc011ab29de34f";
 
 export default node;

@@ -22,9 +22,9 @@ namespace Customer.Api.Services;
 
 public interface ICustomerService
 {
+    Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken);
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken);
     Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken);
 
@@ -50,58 +50,10 @@ public class CustomerService(
     ICachedCustomerService cachedCustomerService,
     TimeProvider timeProvider) : ICustomerService
 {
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
-
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken) ??
-                       throw new CustomerNotFound();
-
-        return (mapper.MapTo(customer), customer);
-    }
-
-    public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        var customer = await cachedCustomerService.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
-        if (!ignoreAuthorizationCheck)
-        {
-            var callingCustomer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (callingCustomer.Id != id)
-            {
-                var askingCustomerOrganizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
-                var callingCustomerOrganizations =
-                    await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(callingCustomer.Id, cancellationToken);
-
-                var mutualOrganizations = askingCustomerOrganizations
-                    .Where(item => callingCustomerOrganizations.Select(organization => organization.Id).Contains(item.Id))
-                    .ToList();
-                if (mutualOrganizations.Count == 0)
-                {
-                    throw new UnauthorizedAccessException();
-                }
-
-                if (mutualOrganizations.All(item => item.MemberVisibilityPolicy != OrganizationMemberVisibilityPolicyConstants.FullAccess))
-                {
-                    var result = mapper.MapTo(customer);
-                    result = result.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                    foreach (var identity in result.Identities)
-                    {
-                        identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
-                    }
-
-                    return result;
-                }
-            }
-        }
-
-        return mapper.MapTo(customer);
-    }
-
     public async Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
         var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
         if (customer is not null)
@@ -115,6 +67,43 @@ public class CustomerService(
         }
 
         return await AddAsync(mapper.MapTo(context), true, cancellationToken);
+    }
+    
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
+                       throw new CustomerNotFound();
+
+        return (mapper.MapTo(customer), customer);
+    }
+
+    public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var customer = await cachedCustomerService.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
+        var mappedCustomer = mapper.MapTo(customer);
+        
+        var me = await cachedCustomerService.GetAsync(cancellationToken) ?? throw new CustomerNotFound();
+        if (ignoreAuthorizationCheck || me.Id == customer.Id)
+        {
+            return mappedCustomer;
+        }
+
+        if (mappedCustomer.PersonalInformationVisibility == PersonalInformationVisibility.Redacted)
+        {
+            return mappedCustomer.Redact(mappedCustomer.PersonalInformationVisibility);
+        }
+
+        mappedCustomer.Identities = [];
+        mappedCustomer.BillingDetails = null;
+        mappedCustomer.StripePaymentMethods = [];
+        mappedCustomer.StripeCustomer = null;
+        
+        return mappedCustomer;
     }
 
     public async Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(

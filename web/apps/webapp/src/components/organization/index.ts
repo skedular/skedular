@@ -8,7 +8,6 @@ export { default as OrganizationPaymentMethodSetupForm } from './organization-pa
 export { default as OrganizationSingleChoiceMemberRole } from './organization-single-choice-member-role';
 export { default as OrganizationTermsOfUse } from './organization-terms-of-use';
 export { default as SingleChoiceCurrency } from './single-choice-currency';
-export { default as SingleChoiceOrganizationMemberVisibilityPolicy } from './single-choice-organization-member-visibility-policy';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
 export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
 export { default as SingleChoicePriceUnit } from './single-choice-price-unit';

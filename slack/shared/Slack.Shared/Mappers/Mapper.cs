@@ -212,7 +212,6 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Type = src.Type.ToOrganizationType(),
-            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
         };
 

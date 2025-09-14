@@ -15,7 +15,6 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
     public string Type { get; set; }
-    public string MemberVisibilityPolicy { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
 
@@ -44,10 +43,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
-        builder
-            .Property(item => item.MemberVisibilityPolicy)
-            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
-            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 

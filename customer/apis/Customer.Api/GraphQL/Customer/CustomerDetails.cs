@@ -1,11 +1,12 @@
-using Customer.Api.GraphQL.Billing;
 using Customer.Api.GraphQL.Payment;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
+using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
+using CustomerBillingDetails = Customer.Api.GraphQL.Billing.CustomerBillingDetails;
 
 namespace Customer.Api.GraphQL.Customer;
 
@@ -39,6 +40,9 @@ public class CustomerDetails : Node
     [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
     [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
     [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
+
+    [GraphQLName("personalInformationVisibility")]
+    public PersonalInformationVisibilityDetails PersonalInformationVisibility { get; set; } = new();
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
