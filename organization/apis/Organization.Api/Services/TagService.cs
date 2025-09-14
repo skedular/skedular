@@ -53,7 +53,7 @@ public class TagService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -255,6 +255,8 @@ public class TagService(
             searchCriteria,
             orderByFields,
             cancellationToken);
+
+        await cachedTagService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
 
         return (paginatedInfo,
             mapper.MapTo(

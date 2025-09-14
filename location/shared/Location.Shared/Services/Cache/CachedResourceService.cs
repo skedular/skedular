@@ -10,6 +10,7 @@ public interface ICachedResourceService
 {
     ValueTask<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Resource> resources, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -38,6 +39,18 @@ public class CachedResourceService(ApplicationConfiguration applicationConfigura
             await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
+
+    public async ValueTask UpdateAsync(ICollection<Resource> resources, CancellationToken cancellationToken)
+    {
+        foreach (var item in resources)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

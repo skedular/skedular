@@ -9,6 +9,7 @@ public interface ICachedTeamService
 {
     ValueTask<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Database.Entities.Team> teams, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -37,6 +38,18 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
             await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
+
+    public async ValueTask UpdateAsync(ICollection<Database.Entities.Team> teams, CancellationToken cancellationToken)
+    {
+        foreach (var item in teams)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

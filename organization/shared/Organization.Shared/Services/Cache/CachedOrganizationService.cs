@@ -13,6 +13,7 @@ public interface ICachedOrganizationService
         CancellationToken cancellationToken);
 
     ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Database.Entities.Organization> organizations, CancellationToken cancellationToken);
     ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
 }
 
@@ -84,6 +85,27 @@ public class CachedOrganizationService(
         }
 
         throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async ValueTask UpdateAsync(ICollection<Database.Entities.Organization> organizations, CancellationToken cancellationToken)
+    {
+        foreach (var item in organizations)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+            {
+                await hybridCache.SetAsync(
+                    CreateKeyByUniqueAlphanumericName(item.UniqueAlphanumericName),
+                    item,
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                    cancellationToken: cancellationToken);
+            }
+        }
     }
 
     public async ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)

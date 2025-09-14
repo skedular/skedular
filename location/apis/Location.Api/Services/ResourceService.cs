@@ -183,9 +183,9 @@ public class ResourceService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        
+
         await cachedResourceService.RemoveByIdAsync(deletedResource.Id, cancellationToken);
-        
+
         return deletedResource;
     }
 
@@ -401,6 +401,8 @@ public class ResourceService(
                 searchCriteria,
                 orderByFields,
                 cancellationToken);
+
+        await cachedResourceService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
 
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
     }

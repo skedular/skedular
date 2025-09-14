@@ -324,6 +324,8 @@ public class OrganizationService(
             result.Add(await EnrichOrganizationAsync(customer, organization, false, cancellationToken));
         }
 
+        await cachedOrganizationService.UpdateAsync(organizations, cancellationToken);
+
         return result;
     }
 
@@ -342,6 +344,8 @@ public class OrganizationService(
             searchCriteria,
             orderByFields,
             cancellationToken);
+
+        await cachedOrganizationService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
 
         var mappedOrganizations = new List<Edge<Shared.Models.Organization>>();
         foreach (var edge in edges)

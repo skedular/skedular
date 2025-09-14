@@ -23,7 +23,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
         ICollection<string>? uniqueAlphanumericNames,
         CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Organization Add(Database.Entities.Organization organization);
@@ -224,7 +224,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
     }
 
-    public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue && query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
             .AddDependentObjects(false)

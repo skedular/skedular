@@ -10,6 +10,7 @@ public interface ICachedProductService
 {
     ValueTask<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Product> products, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -38,6 +39,18 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
             await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
+
+    public async ValueTask UpdateAsync(ICollection<Product> products, CancellationToken cancellationToken)
+    {
+        foreach (var item in products)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

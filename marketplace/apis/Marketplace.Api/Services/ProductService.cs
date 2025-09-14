@@ -295,6 +295,8 @@ public class ProductService(
             orderByFields,
             cancellationToken);
 
+        await cachedProductService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+
         return (paginatedInfo, edges.Select(item => new Edge<Product>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
     }
 

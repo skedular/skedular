@@ -318,6 +318,8 @@ public class TeamService(
             orderByFields,
             cancellationToken);
 
+        await cachedTeamService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+
         var mappedTeams = new List<Edge<Shared.Models.Team>>();
         foreach (var edge in edges)
         {
@@ -349,6 +351,8 @@ public class TeamService(
         }
 
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organization?.Id, cancellationToken);
+
+        await cachedTeamService.UpdateAsync(teams, cancellationToken);
 
         return teams.Select(mapper.MapTo).ToList();
     }

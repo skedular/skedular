@@ -10,6 +10,7 @@ public interface ICachedTagService
 {
     ValueTask<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -38,6 +39,18 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             await repositoryFactory.TagRepository.GetByIdAsync(id, cancellationToken) ?? throw new OrganizationTagNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
+
+    public async ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken)
+    {
+        foreach (var item in tags)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

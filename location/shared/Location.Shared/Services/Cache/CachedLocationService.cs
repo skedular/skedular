@@ -9,6 +9,7 @@ public interface ICachedLocationService
 {
     ValueTask<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Database.Entities.Location> locations, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -37,6 +38,18 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
             await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
+
+    public async ValueTask UpdateAsync(ICollection<Database.Entities.Location> locations, CancellationToken cancellationToken)
+    {
+        foreach (var item in locations)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
