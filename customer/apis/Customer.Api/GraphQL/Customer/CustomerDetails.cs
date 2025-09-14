@@ -1,7 +1,6 @@
 using Customer.Api.GraphQL.Payment;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
-using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;

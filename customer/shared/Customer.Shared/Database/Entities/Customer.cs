@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

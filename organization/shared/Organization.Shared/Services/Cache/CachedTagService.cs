@@ -24,7 +24,7 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.TagRepository.GetByIdAsync(id, ct) ?? throw new OrganizationTagNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
         catch (OrganizationTagNotFound)
@@ -37,7 +37,7 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TagRepository.GetByIdAsync(id, cancellationToken) ?? throw new OrganizationTagNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask UpdateAsync(ICollection<Tag> tags, CancellationToken cancellationToken)
@@ -47,7 +47,7 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
     }

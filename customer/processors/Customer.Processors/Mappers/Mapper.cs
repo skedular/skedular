@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using Customer.Shared.Models;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;

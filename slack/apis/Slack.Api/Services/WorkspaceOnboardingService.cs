@@ -1,5 +1,4 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;

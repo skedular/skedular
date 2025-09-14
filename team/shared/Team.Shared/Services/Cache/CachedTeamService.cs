@@ -23,7 +23,7 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.TeamRepository.GetByIdAsync(id, ct) ?? throw new TeamNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
         catch (TeamNotFound)
@@ -36,7 +36,7 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
     public async ValueTask UpdateAsync(ICollection<Database.Entities.Team> teams, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromHours(1) },
                 cancellationToken: cancellationToken);
         }
     }

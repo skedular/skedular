@@ -68,7 +68,7 @@ public class CustomerService(
 
         return await AddAsync(mapper.MapTo(context), true, cancellationToken);
     }
-    
+
     public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
     {
         var verifiableToken = context.GetVerifiableToken();
@@ -86,7 +86,7 @@ public class CustomerService(
 
         var customer = await cachedCustomerService.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
         var mappedCustomer = mapper.MapTo(customer);
-        
+
         var me = await cachedCustomerService.GetAsync(cancellationToken) ?? throw new CustomerNotFound();
         if (ignoreAuthorizationCheck || me.Id == customer.Id)
         {
@@ -102,7 +102,7 @@ public class CustomerService(
         mappedCustomer.BillingDetails = null;
         mappedCustomer.StripePaymentMethods = [];
         mappedCustomer.StripeCustomer = null;
-        
+
         return mappedCustomer;
     }
 

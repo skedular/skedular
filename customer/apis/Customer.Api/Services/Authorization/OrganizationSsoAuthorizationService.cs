@@ -12,7 +12,7 @@ public interface IOrganizationSsoAuthorizationService
 public class OrganizationSsoAuthorizationService(
     IContext context,
     ICachedOrganizationService cachedOrganizationService,
-    Shared.Services.Cache.ICachedCustomerService cachedCustomerService)
+    ICachedCustomerService cachedCustomerService)
     : IOrganizationSsoAuthorizationService
 {
     public async ValueTask<bool> IsSsoValidAsync(string organizationId, string customerId, CancellationToken cancellationToken)
