@@ -55,5 +55,5 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organizationtag-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organizationtag-id:{id}";
 }

@@ -130,8 +130,8 @@ public class CachedCustomerService(
         }
     }
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id:{id}";
 
     private string CreateKeyByVerifiableToken(string verifiableToken) =>
-        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-verifiabletoken-{verifiableToken}";
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-verifiabletoken:{verifiableToken}";
 }

@@ -54,5 +54,5 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:lcoation-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:location-id:{id}";
 }

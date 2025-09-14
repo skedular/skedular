@@ -45,5 +45,5 @@ public class CachedProductVersionService(
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:productversion-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:productversion-id:{id}";
 }

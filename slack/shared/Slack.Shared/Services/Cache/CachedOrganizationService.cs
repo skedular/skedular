@@ -102,8 +102,8 @@ public class CachedOrganizationService(
         throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
     }
 
-    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id-{id}";
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id:{id}";
 
     private string CreateKeyByUniqueAlphanumericName(string uniqueAlphanumericName) =>
-        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-uniqueAlphanumericName-{uniqueAlphanumericName}";
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-uniqueAlphanumericName:{uniqueAlphanumericName}";
 }
