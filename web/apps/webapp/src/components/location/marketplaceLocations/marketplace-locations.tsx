@@ -2,6 +2,7 @@ import { GridContainer, StackColumn } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
+import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { LatLngBounds, LatLngTuple } from 'leaflet';
@@ -52,6 +53,8 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     rootDataRelay,
   );
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locations = useMemo(() => rootDataRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataRefetchable.marketplaceLocations]);
   const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
@@ -197,45 +200,52 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     return null;
   };
 
+  const MapSection = (
+    <Box sx={{ height: isMobile ? '40vh' : '90vh', width: '100%', position: 'relative' }}>
+      <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {locations
+          .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
+          .map((item) => (
+            <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
+              <Popup>
+                <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+              </Popup>
+            </Marker>
+          ))}
+
+        <MapInitBoundsTracker />
+        <MapCenterTracker />
+        {!centerSet && <MapUpdater center={initialPosition} />}
+      </MapContainer>
+    </Box>
+  );
+
   return (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <GridContainer>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
-            {locations.map((item) => (
-              <Grid key={item.id}>
-                <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-              </Grid>
-            ))}
-          </GridContainer>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Box sx={{ height: '90vh', width: '100%' }}>
-            <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              {locations
-                .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
-                .map((item) => {
-                  return (
-                    <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                      <Popup>
-                        <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-                      </Popup>
-                    </Marker>
-                  );
-                })}
-
-              <MapInitBoundsTracker />
-              <MapCenterTracker />
-              {!centerSet && <MapUpdater center={initialPosition} />}
-            </MapContainer>
-          </Box>
-        </Grid>
-      </GridContainer>
+    <StackColumn sx={{ p: defaultPadding }}>
+      {isMobile ? (
+        <>
+          {MapSection}
+          {locations.map((item) => (
+            <Box key={item.id} mb={2}>
+              <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+            </Box>
+          ))}
+        </>
+      ) : (
+        <GridContainer>
+          <Grid size={{ xs: 12, md: 8 }}>
+            <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
+              {locations.map((item) => (
+                <Grid key={item.id}>
+                  <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                </Grid>
+              ))}
+            </GridContainer>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>{MapSection}</Grid>
+        </GridContainer>
+      )}
     </StackColumn>
   );
 };
