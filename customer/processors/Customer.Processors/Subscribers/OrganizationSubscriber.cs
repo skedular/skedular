@@ -108,14 +108,7 @@ public class OrganizationSubscriber(
             existingOrganization.UniqueAlphanumericName,
             cancellationToken);
 
-        foreach (var customer in customers)
-        {
-            await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
-            foreach (var item in customer.Identities)
-            {
-                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-            }
-        }
+        await cachedCustomerService.UpdateAsync(customers, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

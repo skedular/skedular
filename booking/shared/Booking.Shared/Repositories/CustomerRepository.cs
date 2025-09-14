@@ -13,7 +13,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
-    void Update(Customer customer);
+    Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
@@ -67,11 +67,11 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
             .AddDependentObjects(includeActiveItemsOnly)
             .ToListAsync(cancellationToken);
 
-    public void Update(Customer customer)
+    public Customer Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        DbContext.Customer.Update(customer);
+        return DbContext.Customer.Update(customer).Entity;
     }
 
     public Customer Remove(Customer customer)

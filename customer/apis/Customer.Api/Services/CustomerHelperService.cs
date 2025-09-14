@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Customer.Api.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 
@@ -20,7 +21,7 @@ public class CustomerHelperService(
     ICustomerOutboxPublisher customerOutboxPublisher,
     IMapper mapper,
     IContext context,
-    Shared.Services.Cache.ICachedCustomerService cachedCustomerService) : ICustomerHelperService
+    ICachedCustomerService cachedCustomerService) : ICustomerHelperService
 {
     public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -47,17 +48,14 @@ public class CustomerHelperService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
+        var customerEntity = repositoryFactory.CustomerRepository.Update(existingCustomer);
+        var customer = mapper.MapTo(customerEntity);
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
-        foreach (var item in customer.Identities)
-        {
-            await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-        }
+        await cachedCustomerService.UpdateAsync([customerEntity], cancellationToken);
 
         return customer;
     }

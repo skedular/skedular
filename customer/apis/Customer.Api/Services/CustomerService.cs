@@ -143,6 +143,8 @@ public class CustomerService(
             orderByFields,
             cancellationToken);
 
+        await cachedCustomerService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
 
@@ -236,14 +238,16 @@ public class CustomerService(
             identities.ForEach(identity => identity.Customer = existingCustomer);
             repositoryFactory.IdentityRepository.AddRange(identities);
             existingCustomer.Identities = identities;
-            customer = mapper.MapTo(repositoryFactory.CustomerRepository.Add(existingCustomer));
+            existingCustomer = repositoryFactory.CustomerRepository.Add(existingCustomer);
+            customer = mapper.MapTo(existingCustomer);
         }
         else
         {
             var identity = mapper.MapToIdentity(context);
             identity.CreatedAt = timeProvider.GetUtcNow();
             existingCustomer.Identities = existingCustomer.Identities.Concat([identity]).ToList();
-            customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
+            existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
+            customer = mapper.MapTo(existingCustomer);
         }
 
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
@@ -256,11 +260,7 @@ public class CustomerService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
-        foreach (var item in customer.Identities)
-        {
-            await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-        }
+        await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
 
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken))!);
     }
@@ -279,18 +279,14 @@ public class CustomerService(
             var identityToAdd = mapper.MapTo(identity, existingCustomer);
             repositoryFactory.IdentityRepository.Add(identityToAdd);
             existingCustomer.Identities = existingCustomer.Identities.Concat([identityToAdd]).ToList();
+            existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
-            customerOutboxPublisher.PublishCustomers([mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer))],
-                repositoryFactory.UnitOfWork);
+            customerOutboxPublisher.PublishCustomers([mapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
-            await cachedCustomerService.UpdateByIdAsync(existingCustomer.Id, cancellationToken);
-            foreach (var item in existingCustomer.Identities)
-            {
-                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-            }
+            await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
         }
 
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
@@ -312,19 +308,14 @@ public class CustomerService(
 
             var identityToUpdate = mapper.MergeTo(identity, matchingIdentityToUpdate, existingCustomer);
             repositoryFactory.IdentityRepository.Update(identityToUpdate);
+            existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
-            customerOutboxPublisher.PublishCustomers(
-                [mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer))],
-                repositoryFactory.UnitOfWork);
+            customerOutboxPublisher.PublishCustomers([mapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
-            await cachedCustomerService.UpdateByIdAsync(existingCustomer.Id, cancellationToken);
-            foreach (var item in existingCustomer.Identities)
-            {
-                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-            }
+            await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
         }
 
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);

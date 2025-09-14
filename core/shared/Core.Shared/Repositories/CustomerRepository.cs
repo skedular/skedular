@@ -11,7 +11,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    void Update(Customer customer);
+    Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
@@ -55,11 +55,11 @@ public class CustomerRepository(CoreDbContext dbContext, TimeProvider timeProvid
     public async Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public void Update(Customer customer)
+    public Customer Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        DbContext.Customer.Update(customer);
+        return DbContext.Customer.Update(customer).Entity;
     }
 
     public Customer Remove(Customer customer)

@@ -17,7 +17,9 @@ public interface ICachedCustomerService : ICustomerHelper
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
+    ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
     ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
+    ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(
@@ -107,8 +109,42 @@ public class CachedCustomerService(
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
             cancellationToken: cancellationToken);
 
+    public async ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
+    {
+        foreach (var item in customers)
+        {
+            await hybridCache.SetAsync(
+                CreateKeyById(item.Id),
+                item,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+
+            foreach (var identity in item.Identities)
+            {
+                await hybridCache.SetAsync(
+                    CreateKeyByVerifiableToken(identity.Id),
+                    item,
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                    cancellationToken: cancellationToken);
+            }
+        }
+    }
+
     public async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);
+
+    public async ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
+    {
+        foreach (var item in customers)
+        {
+            await RemoveByIdAsync(item.Id, cancellationToken);
+
+            foreach (var identity in item.Identities)
+            {
+                await RemoveByVerifiableTokenAsync(identity.Id, cancellationToken);
+            }
+        }
+    }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id-{id}";
 

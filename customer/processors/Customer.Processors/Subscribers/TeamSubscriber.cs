@@ -93,14 +93,7 @@ public class TeamSubscriber(
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        foreach (var customer in customers)
-        {
-            await cachedCustomerService.UpdateByIdAsync(customer.Id, cancellationToken);
-            foreach (var item in customer.Identities)
-            {
-                await cachedCustomerService.UpdateByVerifiableTokenAsync(item.Id, cancellationToken);
-            }
-        }
+        await cachedCustomerService.UpdateAsync(customers, cancellationToken);
     }
 
     private async Task<Team> RebuildTeamMembersAsync(
@@ -108,12 +101,8 @@ public class TeamSubscriber(
         Team existingTeam,
         CancellationToken cancellationToken)
     {
-        var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
-            existingTeam.Id,
-            cancellationToken);
-        var itemsToRemove = teamMembers
-            .Where(teamMember => team.TeamMembers.All(item => item.Id != teamMember.Id))
-            .ToList();
+        var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(existingTeam.Id, cancellationToken);
+        var itemsToRemove = teamMembers.Where(teamMember => team.TeamMembers.All(item => item.Id != teamMember.Id)).ToList();
         var updatedItems = new List<TeamMember>();
         foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
