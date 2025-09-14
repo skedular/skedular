@@ -38,15 +38,17 @@ public class TagService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
-    IOrganizationOutboxPublisher organizationOutboxPublisher) : ITagService
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
+    ICachedTagService cachedTagService,
+    ICachedOrganizationService cachedOrganizationService) : ITagService
 {
     public async Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var tag = await cachedTagService.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
+        var existingOrganization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
                                        tag.Organization.Id,
                                        null,
                                        cancellationToken) ??
@@ -131,6 +133,9 @@ public class TagService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedTagService.UpdateByIdAsync(tag.Id, cancellationToken);
+        
         return tag;
     }
 
@@ -173,6 +178,9 @@ public class TagService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedTagService.RemoveByIdAsync(deletedTag.Id, cancellationToken);
+        
         return deletedTag;
     }
 
@@ -214,6 +222,12 @@ public class TagService(
         organizationOutboxPublisher.PublishOrganizations(mappedOrganizations, repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        foreach (var deletedTag in deletedTags)
+        {
+            await cachedTagService.RemoveByIdAsync(deletedTag.Id, cancellationToken);
+        }
+        
         return deletedTags;
     }
 
@@ -305,6 +319,9 @@ public class TagService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedTagService.UpdateByIdAsync(tag.Id, cancellationToken);
+        
         return tag;
     }
 }

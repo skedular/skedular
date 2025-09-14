@@ -1,0 +1,46 @@
+using Api.Shared.Services;
+using Enterprise.Shared.Configurations;
+using Microsoft.Extensions.Caching.Hybrid;
+using Organization.Shared.Database.Entities;
+using Organization.Shared.Repositories;
+
+namespace Organization.Shared.Services.Cache;
+
+public interface ICachedTagService
+{
+    ValueTask<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
+    ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
+}
+
+public class CachedTagService(ApplicationConfiguration applicationConfiguration, IRepositoryFactory repositoryFactory, HybridCache hybridCache)
+    : ICachedTagService
+{
+    public async ValueTask<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await hybridCache.GetOrCreateAsync(
+                CreateKeyById(id),
+                async ct => await repositoryFactory.TagRepository.GetByIdAsync(id, ct) ?? throw new OrganizationTagNotFound(),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+                cancellationToken: cancellationToken);
+        }
+        catch (OrganizationTagNotFound)
+        {
+            return null;
+        }
+    }
+
+    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken) =>
+        await hybridCache.SetAsync(
+            CreateKeyById(id),
+            await repositoryFactory.TagRepository.GetByIdAsync(id, cancellationToken) ?? throw new OrganizationTagNotFound(),
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(1), LocalCacheExpiration = TimeSpan.FromHours(1) },
+            cancellationToken: cancellationToken);
+
+    public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
+        await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+
+    private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organizationtag-id-{id}";
+}

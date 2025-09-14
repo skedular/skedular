@@ -183,6 +183,9 @@ public class ResourceService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        
+        await cachedResourceService.RemoveByIdAsync(deletedResource.Id, cancellationToken);
+        
         return deletedResource;
     }
 
@@ -232,6 +235,11 @@ public class ResourceService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        foreach (var deletedResource in deletedResources)
+        {
+            await cachedResourceService.RemoveByIdAsync(deletedResource.Id, cancellationToken);
+        }
 
         return deletedResources;
     }

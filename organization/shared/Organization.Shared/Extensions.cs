@@ -37,7 +37,8 @@ public static class Extensions
             .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
             .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
             .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>();
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
+            .AddScoped<ICachedTagService, CachedTagService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
