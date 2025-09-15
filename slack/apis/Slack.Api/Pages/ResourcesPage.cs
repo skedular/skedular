@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
@@ -13,13 +12,13 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
@@ -44,8 +43,6 @@ public class ResourcesPage(
     SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
-    CustomerConfiguration customerConfiguration,
-    CustomerService.CustomerServiceClient customerServiceClient,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -56,7 +53,8 @@ public class ResourcesPage(
     IResourceComponents resourceComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService) :
+    IBookingsPageContextService bookingsPageContextService,
+    ICustomerService customerService) :
     IResourcesPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -730,10 +728,7 @@ public class ResourcesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredResourceAsync(
-            new AddPreferredResourceInput { ResourceId = context.ResourceId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.AddPreferredResourceAsync(workspaceMember, context.ResourceId, cancellationToken);
 
         await RenderWithContextAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), hash, cancellationToken);
     }
@@ -745,10 +740,7 @@ public class ResourcesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredResourceAsync(
-            new RemovePreferredResourceInput { ResourceId = context.ResourceId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.RemovePreferredResourceAsync(workspaceMember, context.ResourceId, cancellationToken);
 
         await RenderWithContextAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), hash, cancellationToken);
     }

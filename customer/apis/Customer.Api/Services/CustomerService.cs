@@ -87,8 +87,13 @@ public class CustomerService(
         var customer = await cachedCustomerService.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound();
         var mappedCustomer = mapper.MapTo(customer);
 
+        if (ignoreAuthorizationCheck)
+        {
+            return mappedCustomer;
+        }
+
         var me = await cachedCustomerService.GetAsync(cancellationToken) ?? throw new CustomerNotFound();
-        if (ignoreAuthorizationCheck || me.Id == customer.Id)
+        if (me.Id == customer.Id)
         {
             return mappedCustomer;
         }

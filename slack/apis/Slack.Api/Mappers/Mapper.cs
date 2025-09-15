@@ -126,7 +126,7 @@ public class Mapper : IMapper
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
             IsOnboardingDone = true,
-            DefaultOrganization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganizationId = defaultOrganization.Id
         };
 
         input.Identities.Add(new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
@@ -195,7 +195,7 @@ public class Mapper : IMapper
                 : new Shared.Models.Organization { Id = item.Organization.Id }
         }).ToList();
 
-        customer.PreferredResource = src.PreferredResources.Select(item => new Resource
+        customer.PreferredResources = src.PreferredResources.Select(item => new Resource
         {
             Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
         }).ToList();
@@ -269,7 +269,7 @@ public class Mapper : IMapper
                 OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Customer = MapTo(src.Customer)
+            Customer = new Customer { Id = src.CustomerId.ToSafeString() }
         };
 
     public Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
@@ -520,30 +520,6 @@ public class Mapper : IMapper
                 : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = MapTo(src.OrganizationMember.Customer) },
             Team = team
         };
-
-    private static Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            Identities = MapTo(src.Identities).ToList()
-        };
-
-    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> src) =>
-        src.Select(MapTo);
-
-    private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
     private static Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization src) =>
         new() { Id = src.Id, UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(), Name = src.Name.ToSafeString() };

@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
@@ -12,15 +11,13 @@ using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
-using Customer = Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer;
-using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
+using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
-using Location = Slack.Shared.Database.Entities.Location;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
-using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationMember = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
@@ -32,22 +29,21 @@ public interface IWorkspaceMemberService
 {
     Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken);
     Task UpdateWorkspaceMemberProfileStatusAsync(string workspaceMemberId, CancellationToken cancellationToken);
-    string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Models.Customer customer);
+    string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Customer customer);
 }
 
 public class WorkspaceMemberService(
     BookingConfiguration bookingConfiguration,
-    CustomerConfiguration customerConfiguration,
     LocationConfiguration locationConfiguration,
     OrganizationConfiguration organizationConfiguration,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
     BookingService.BookingServiceClient bookingServiceClient,
-    CustomerService.CustomerServiceClient customerServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider) : IWorkspaceMemberService
+    TimeProvider timeProvider,
+    IAdminCustomerService adminCustomerService) : IWorkspaceMemberService
 {
     public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -67,12 +63,8 @@ public class WorkspaceMemberService(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.GetByWorkspaceIdAsync(
-            workspaceId,
-            cancellationToken);
-        var itemsToRemove = workspaceMembers
-            .Where(workspaceMember => users.All(item => item.Id != workspaceMember.Id))
-            .ToList();
+        var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.GetByWorkspaceIdAsync(workspaceId, cancellationToken);
+        var itemsToRemove = workspaceMembers.Where(workspaceMember => users.All(item => item.Id != workspaceMember.Id)).ToList();
         var updatedItems = workspaceMembers
             .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id))
             .Select(workspaceMember =>
@@ -174,10 +166,10 @@ public class WorkspaceMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Models.Customer customer)
+    public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Customer customer)
     {
         var workspaceMember = workspace.WorkspaceMembers.FirstOrDefault(item => identities.Contains(item.Id));
-        return workspaceMember is null ? customer.ToDisplayableName() : $"<@{workspaceMember.Id}>";
+        return workspaceMember is null ? customer.DisplayableName : $"<@{workspaceMember.Id}>";
     }
 
     private async Task SyncCustomersAndOrganizationMembersAsync(Database.Entities.Workspace workspace, CancellationToken cancellationToken)
@@ -200,81 +192,56 @@ public class WorkspaceMemberService(
 
         foreach (var workspaceMember in workspace.WorkspaceMembers)
         {
-            var anyCustomerExistByVerifiableTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-                new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = workspaceMember.Id },
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-            if (anyCustomerExistByVerifiableTokenResponse.Exist)
+            var customerExistenceResult =
+                await adminCustomerService.AnyCustomerExistByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
+            if (customerExistenceResult.Exists)
             {
-                customerIdsWorkspaceMembersPair.Add(
-                    (anyCustomerExistByVerifiableTokenResponse.Customer.Id, workspaceMember));
+                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer.Id, workspaceMember));
 
-                await customerServiceClient.Admin_UpdateIdentityAsync(
-                    mapper.MapToUpdateIdentityInput(
-                        workspaceMember,
-                        anyCustomerExistByVerifiableTokenResponse.Customer.Id),
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
+                _ = await adminCustomerService.UpdateIdentityAsync(workspaceMember, customerExistenceResult.Customer.Id, cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(customerExistenceResult.Customer.DefaultOrganization?.Id))
                 {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
-                        new Admin_SetDefaultOrganizationInput
-                        {
-                            OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
+                    _ = await adminCustomerService.SetDefaultOrganizationAsync(
+                        customerExistenceResult.Customer.Id,
+                        workspace.Organization.Id,
+                        cancellationToken);
                 }
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
-                        new Admin_AddPreferredLocationInput
-                        {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
+                    _ = await adminCustomerService.AddPreferredLocationAsync(
+                        customerExistenceResult.Customer.Id,
+                        getLocationsResponse.Edges.First().Node.Id,
+                        cancellationToken);
                 }
 
                 continue;
             }
 
-            var anyCustomerExistByEmailTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
-                new Admin_AnyCustomerExistByEmailInput { Email = workspaceMember.Email },
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-            if (anyCustomerExistByEmailTokenResponse.Exist)
+            customerExistenceResult = await adminCustomerService.AnyCustomerExistByEmailAsync(workspaceMember.Email, cancellationToken);
+            if (customerExistenceResult.Exists)
             {
-                customerIdsWorkspaceMembersPair.Add((anyCustomerExistByEmailTokenResponse.Customer.Id, workspaceMember));
-                await customerServiceClient.Admin_AddIdentityAsync(
-                    mapper.MapTo(workspaceMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
+                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer.Id, workspaceMember));
+                _ = await adminCustomerService.AddIdentityAsync(
+                    workspaceMember,
+                    customerExistenceResult.Customer.Id,
+                    cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(
-                        anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(customerExistenceResult.Customer.DefaultOrganization?.Id))
                 {
-                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
-                        new Admin_SetDefaultOrganizationInput
-                        {
-                            OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
+                    _ = await adminCustomerService.SetDefaultOrganizationAsync(
+                        customerExistenceResult.Customer.Id,
+                        workspace.Organization.Id,
+                        cancellationToken);
                 }
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddPreferredLocationAsync(
-                        new Admin_AddPreferredLocationInput
-                        {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
-                        },
-                        customerConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: cancellationToken);
+                    _ = await adminCustomerService.AddPreferredLocationAsync(
+                        customerExistenceResult.Customer.Id,
+                        getLocationsResponse.Edges.First().Node.Id,
+                        cancellationToken);
                 }
 
                 continue;
@@ -282,16 +249,13 @@ public class WorkspaceMemberService(
 
             var customerId = randomHelper.Generate();
             customerIdsWorkspaceMembersPair.Add((customerId, workspaceMember));
-            await customerServiceClient.Admin_AddAsync(
-                mapper.MapTo(
-                    workspaceMember,
-                    customerId,
-                    new Organization { Id = workspace.Organization.Id },
-                    getLocationsResponse.TotalCount == 1
-                        ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }]
-                        : []),
-                customerConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
+
+            _ = await adminCustomerService.AddAsync(
+                workspaceMember,
+                customerId,
+                workspace.Organization.Id,
+                getLocationsResponse.TotalCount == 1 ? [getLocationsResponse.Edges.First().Node.Id] : [],
+                cancellationToken);
         }
 
         await customerIdsWorkspaceMembersPair.Select(customerIdWorkspaceMemberPair =>
@@ -319,14 +283,14 @@ public class WorkspaceMemberService(
 
                 return new OrganizationMember
                 {
-                    Id = randomHelper.Generate(), Customer = new Customer { Id = customerId }, Role = role, IsOrganizationOnboardingDone = true
+                    Id = randomHelper.Generate(), CustomerId = customerId, Role = role, IsOrganizationOnboardingDone = true
                 };
             }
 
             return new OrganizationMember
             {
                 Id = organizationMember.Id,
-                Customer = new Customer { Id = customerId },
+                CustomerId = customerId,
                 Role = organizationMember.Role switch
                 {
                     OrganizationMemberRoleConstants.Owner => Role.Owner,

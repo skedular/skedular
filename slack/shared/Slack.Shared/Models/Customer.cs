@@ -1,19 +1,10 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Slack.Shared.Models;
 
-public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
+public class Customer : ReplicatedModelBaseWithDeleted
 {
-    public bool? IsOnboardingDone { get; set; }
-    public ICollection<Identity> Identities { get; set; } = [];
-    public Organization? DefaultOrganization { get; set; }
-    public ICollection<Location> PreferredLocations { get; set; } = [];
-    public ICollection<Resource> PreferredResource { get; set; } = [];
-    public ICollection<Team> PreferredTeams { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
-    public string DisplayableName => this.ToDisplayableName();
+    public string DisplayableName { get; set; } = string.Empty;
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }
@@ -30,4 +21,18 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
     public string? PhoneNumber { get; set; }
+    public bool? IsOnboardingDone { get; set; }
+    public string? DefaultOrganizationId { get; set; }
+    public ICollection<string> PreferredLocationIds { get; set; } = [];
+    public ICollection<string> PreferredResourceIds { get; set; } = [];
+    public ICollection<string> PreferredTeamIds { get; set; } = [];
+    public ICollection<string> PreferredOrganizationTagIds { get; set; } = [];
+    public ICollection<Identity> Identities { get; set; } = [];
+
+    public Organization? DefaultOrganization { get; set; }
+    public ICollection<Location> PreferredLocations { get; set; } = [];
+    public ICollection<Resource> PreferredResources { get; set; } = [];
+    public ICollection<Team> PreferredTeams { get; set; } = [];
+    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
 }

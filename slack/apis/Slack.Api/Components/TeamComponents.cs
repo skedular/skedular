@@ -3,6 +3,7 @@ using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 
 namespace Slack.Api.Components;

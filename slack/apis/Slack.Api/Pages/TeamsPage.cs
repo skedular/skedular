@@ -1,8 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -15,6 +13,7 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
@@ -22,7 +21,6 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
 using Team = Slack.Shared.Database.Entities.Team;
 using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
@@ -45,18 +43,17 @@ public class TeamsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     TeamConfiguration teamConfiguration,
-    CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
-    CustomerService.CustomerServiceClient customerServiceClient,
     TeamService.TeamServiceClient teamServiceClient,
     IBookingsPage bookingsPage,
     ITeamComponents teamComponents,
     ITeamService teamService,
     IBookingService bookingService,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService) :
+    IBookingsPageContextService bookingsPageContextService,
+    ICustomerService customerService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -371,7 +368,7 @@ public class TeamsPage(
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
                 new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
-                    .AddInclude(query => query!.DailyUpdateChannel!))
+                    .AddInclude(query => query.DailyUpdateChannel!))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
         {
@@ -627,7 +624,7 @@ public class TeamsPage(
                         var customer = mapper.MapTo(item.Customer);
                         return new Option
                         {
-                            Text = customer.ToDisplayableName().ToOptionText(),
+                            Text = customer.DisplayableName.ToOptionText(),
                             Value = $"{item.OrganizationMember.Id}{Global.OptionLoaderValueSeparator}{customer.Id}"
                         };
                     }).ToList(),
@@ -691,10 +688,7 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredTeamAsync(
-            new AddPreferredTeamInput { TeamId = context.TeamId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.AddPreferredTeamAsync(workspaceMember, context.TeamId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -711,10 +705,7 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredTeamAsync(
-            new RemovePreferredTeamInput { TeamId = context.TeamId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.RemovePreferredTeamAsync(workspaceMember, context.TeamId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

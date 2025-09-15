@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
@@ -12,12 +11,12 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
@@ -40,9 +39,7 @@ public class CustomTagsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     OrganizationConfiguration organizationConfiguration,
-    CustomerConfiguration customerConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -51,7 +48,8 @@ public class CustomTagsPage(
     ICustomTagComponents customTagComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService) :
+    IBookingsPageContextService bookingsPageContextService,
+    ICustomerService customerService) :
     ICustomTagsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -639,10 +637,7 @@ public class CustomTagsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredOrganizationTagAsync(
-            new AddPreferredOrganizationTagInput { OrganizationTagId = context.CustomTagId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.AddPreferredOrganizationTagAsync(workspaceMember, context.CustomTagId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -659,10 +654,7 @@ public class CustomTagsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredOrganizationTagAsync(
-            new RemovePreferredOrganizationTagInput { OrganizationTagId = context.CustomTagId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.RemovePreferredOrganizationTagAsync(workspaceMember, context.CustomTagId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

@@ -1,9 +1,5 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
-using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -12,23 +8,21 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Feedback;
 
 public class SendUsFeedbackButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    CustomerConfiguration customerConfiguration,
-    CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IRandomHelper randomHelper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    ICustomerService customerService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string FeedbackKey = "Feedback";
@@ -100,8 +94,8 @@ public class SendUsFeedbackButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var submitFeedbackInput = new SubmitFeedbackInput { Id = randomHelper.Generate(), Channel = FeedbackChannel.Slack };
         var values = viewSubmission.View.State.Values;
+        string feedback;
 
         if (values.TryGetValue(FeedbackKey, out var notesBlock))
         {
@@ -110,7 +104,7 @@ public class SendUsFeedbackButtonHandler(
                 if (notes is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    submitFeedbackInput.Feedback = value.Value.ToSafeString();
+                    feedback = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -127,10 +121,7 @@ public class SendUsFeedbackButtonHandler(
             throw new InvalidOperationException("feedback block is missing");
         }
 
-        await customerServiceClient.SubmitFeedbackAsync(
-            submitFeedbackInput,
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.SubmitFeedbackAsync(workspaceMember, feedback, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -14,6 +13,7 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
@@ -21,7 +21,6 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.GetInput;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
@@ -44,11 +43,9 @@ public class LocationsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
-    CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
-    CustomerService.CustomerServiceClient customerServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
     IBookingsPage bookingsPage,
     IZonesPage zonesPage,
@@ -59,7 +56,8 @@ public class LocationsPage(
     IBookingService bookingService,
     IResourcesPageContextService resourcesPageContextService,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService) :
+    IBookingsPageContextService bookingsPageContextService,
+    ICustomerService customerService) :
     ILocationsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<ButtonAction>,
@@ -719,10 +717,7 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredLocationAsync(
-            new AddPreferredLocationInput { LocationId = context.LocationId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.AddPreferredLocationAsync(workspaceMember, context.LocationId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -739,10 +734,7 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredLocationAsync(
-            new RemovePreferredLocationInput { LocationId = context.LocationId },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await customerService.RemovePreferredLocationAsync(workspaceMember, context.LocationId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

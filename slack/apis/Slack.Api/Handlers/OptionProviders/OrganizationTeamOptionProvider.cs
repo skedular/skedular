@@ -35,14 +35,14 @@ public class OrganizationTeamOptionProvider(
 
         getPaginatedMembersInput.OrderBy.Add(new TeamOrderInput { Direction = OrderDirection.Ascending, Field = TeamOrderField.Name });
 
-        var memberConnection = await teamServiceClient.GetPaginatedTeamsAsync(
+        var teamsConnection = await teamServiceClient.GetPaginatedTeamsAsync(
             getPaginatedMembersInput,
             teamConfiguration.ApiKey.CreateMetadata(request.User.Id),
             cancellationToken: cancellationToken);
 
         return new BlockOptionsResponse
         {
-            Options = memberConnection.Edges
+            Options = teamsConnection.Edges
                 .Select(item => mapper.MapTo(item.Node))
                 .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id })
                 .ToList()

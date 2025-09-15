@@ -30,14 +30,16 @@ public interface IMapper
     WorkspaceChannel MapToEntity(Conversation src, Workspace workspace);
     WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace);
     Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
-    Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
+    Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
 
     Admin_AddInput MapTo(
         WorkspaceMember src,
         string customerId,
-        Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> preferredLocations);
+        string defaultOrganizationId,
+        ICollection<string> preferredLocationIds);
+
+    Customer MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src);
 }
 
 public class Mapper : IMapper
@@ -160,7 +162,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId) =>
+    public Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
@@ -169,8 +171,8 @@ public class Mapper : IMapper
     public Admin_AddInput MapTo(
         WorkspaceMember src,
         string customerId,
-        Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> preferredLocations)
+        string defaultOrganizationId,
+        ICollection<string> preferredLocationIds)
     {
         var input = new Admin_AddInput
         {
@@ -188,20 +190,49 @@ public class Mapper : IMapper
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
             IsOnboardingDone = true,
-            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id },
+            DefaultOrganizationId = defaultOrganizationId.ToSafeString(),
             PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
+        input.PreferredLocations.AddRange(preferredLocationIds.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
-                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+                Id = item, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganizationId }
             }));
 
         return input;
     }
+
+    public Customer MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src) =>
+        new()
+        {
+            Id = src.Id,
+            DisplayableName = src.DisplayableName.ToSafeString(),
+            Designation = src.Designation.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            Timezone = src.Timezone.ToSafeString(),
+            Locale = src.Locale.ToSafeString(),
+            Name = src.Name.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            MiddleName = src.MiddleName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            PhotoUrl = src.PhotoUrl.ToSafeString(),
+            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
+            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
+            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
+            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
+            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
+            IsOnboardingDone = src.IsOnboardingDone,
+            Identities = MapTo(src.Identities).ToList(),
+            DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
+            PreferredLocationIds = src.PreferredLocations.Select(item => item.Id).ToList(),
+            PreferredResourceIds = src.PreferredResources.Select(item => item.Id).ToList(),
+            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id).ToList(),
+            PreferredOrganizationTagIds = src.PreferredOrganizationTags.Select(item => item.Id).ToList()
+        };
 
     private Organization MapTo(Database.Entities.Organization src)
     {
@@ -342,4 +373,10 @@ public class Mapper : IMapper
     private static IEnumerable<Organization> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization> src) => src.Select(MapTo)!;
     private static IEnumerable<Location> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Location> src) => src.Select(MapTo)!;
     private static IEnumerable<Team> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Team> src) => src.Select(MapTo)!;
+
+    private static IEnumerable<Identity> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity> src) =>
+        src.Select(MapTo);
+
+    private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity src) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 }

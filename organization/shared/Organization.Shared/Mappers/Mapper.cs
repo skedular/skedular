@@ -233,7 +233,7 @@ public class Mapper : IMapper
             GivenName = src.GivenName.ToSafeString(),
             FamilyName = src.FamilyName.ToSafeString(),
             IsOnboardingDone = true,
-            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id },
+            DefaultOrganizationId = defaultOrganization.Id,
             PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 

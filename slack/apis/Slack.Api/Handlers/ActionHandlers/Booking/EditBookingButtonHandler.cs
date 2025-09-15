@@ -2,7 +2,6 @@ using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
@@ -83,7 +82,7 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                InitialOption = new Option { Text = customer.ToDisplayableName().ToOptionText(), Value = customer.Id },
+                InitialOption = new Option { Text = customer.DisplayableName.ToOptionText(), Value = customer.Id },
                 MinQueryLength = 0
             },
             Optional = false

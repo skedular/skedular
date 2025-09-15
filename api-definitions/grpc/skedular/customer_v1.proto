@@ -12,15 +12,12 @@ service CustomerService {
   rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
   rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
   rpc Admin_AddPreferredLocation (Admin_AddPreferredLocationInput) returns (Customer);
-  rpc Admin_AddPreferredTeam (Admin_AddPreferredTeamInput) returns (Customer);
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc Get (GetInput) returns (Customer);
   rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
-  rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
   rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
   rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
-  rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
   rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
   rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
   rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
@@ -82,7 +79,7 @@ message Admin_AddInput {
   string photoUrl512 = 15;
   string timezone = 16;
   string locale = 17;
-  Organization defaultOrganization = 18;
+  string defaultOrganizationId = 18;
   repeated Location preferredLocations = 19;
   repeated Resource preferredResources = 20;
   repeated Team preferredTeams = 21;
@@ -169,11 +166,6 @@ message Admin_AddPreferredLocationInput {
   string locationId = 2;
 }
 
-message Admin_AddPreferredTeamInput {
-  string customerId = 1;
-  string teamId = 2;
-}
-
 enum FeedbackChannel {
   FeedbackChannel_Web = 0;
   FeedbackChannel_Slack = 1;
@@ -190,19 +182,12 @@ message Feedback {
   string id = 1;
 }
 
-message SetDefaultOrganizationInput {
-  string organizationId = 1;
-}
-
 message AddPreferredLocationInput {
   string locationId = 1;
 }
 
 message AddPreferredTeamInput {
   string teamId = 1;
-}
-
-message ClearDefaultOrganizationInput {
 }
 
 message RemovePreferredLocationInput {

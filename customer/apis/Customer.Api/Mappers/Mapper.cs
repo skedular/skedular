@@ -243,8 +243,7 @@ public class Mapper : IMapper
                 .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList(),
             IsOnboardingDone = src.IsOnboardingDone,
-            DefaultOrganization =
-                string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
+            DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId) ? null : new Organization { Id = src.DefaultOrganizationId },
             PreferredLocations = src.PreferredLocations.Select(item =>
                     new Location { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList(),

@@ -151,7 +151,7 @@ enum Role {
 
 message OrganizationMember {
   string id = 1;
-  Customer customer = 2;
+  string customerId = 2;
   Role role = 3;
   bool isOrganizationOnboardingDone = 4;
   OrganizationMemberStatus status = 5;
@@ -207,29 +207,6 @@ message MemberConnection {
 message MemberEdge {
   OrganizationMember node = 1;
   string cursor = 2;
-}
-
-message Customer {
-  string id = 1;
-  string name = 2;
-  string givenName = 3;
-  string middleName = 4;
-  string familyName = 5;
-  string photoUrl = 6;
-  string photoUrl24 = 7;
-  string photoUrl32 = 8;
-  string photoUrl48 = 9;
-  string photoUrl72 = 10;
-  string photoUrl192 = 11;
-  string photoUrl512 = 12;
-  repeated Identity identities = 13;
-  string phoneNumber = 14;
-}
-
-message Identity {
-  string id = 1;
-  string email = 2;
-  bool emailVerified = 3;
 }
 
 message GetPermissionsInput {

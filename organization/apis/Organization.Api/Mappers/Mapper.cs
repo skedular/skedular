@@ -1426,40 +1426,10 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapToGrpcResponse(src.Customer)
+            CustomerId = src.Customer.Id
         };
 
     private static IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer MapToGrpcResponse(Customer src)
-    {
-        var customer = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            PhoneNumber = src.PhoneNumber.ToSafeString()
-        };
-
-        customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
-
-        return customer;
-    }
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> MapToGrpcResponse(IEnumerable<Identity> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity MapToGrpcResponse(Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
     private static OrganizationMember MapTo(Member src, Shared.Models.Organization organization) =>
         new()
@@ -1479,7 +1449,7 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            Customer = new Customer { Id = src.Customer.Id },
+            Customer = new Customer { Id = src.CustomerId },
             Organization = organization
         };
 

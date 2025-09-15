@@ -123,16 +123,6 @@ public class CustomerGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_AddPreferredTeam(
-        Admin_AddPreferredTeamInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerTeamSettingsService.AddCustomerPreferredTeamAsync(request.TeamId, request.CustomerId, true, context.CancellationToken));
-    }
-
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -163,21 +153,6 @@ public class CustomerGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> SetDefaultOrganization(
-        SetDefaultOrganizationInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
-                request.OrganizationId,
-                null,
-                null,
-                false,
-                context.CancellationToken));
-    }
-
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredLocation(
         AddPreferredLocationInput request,
         ServerCallContext context)
@@ -196,16 +171,6 @@ public class CustomerGrpcService(
 
         return mapper.MapToGrpcResponse(
             await customerTeamSettingsService.AddCustomerPreferredTeamAsync(request.TeamId, null, false, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> ClearDefaultOrganization(
-        ClearDefaultOrganizationInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(null, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredLocation(

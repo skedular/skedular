@@ -31,7 +31,6 @@ public class AddResourceButtonHandler(
     LocationService.LocationServiceClient locationServiceClient,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    ICustomerService customerService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
@@ -50,7 +49,6 @@ public class AddResourceButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
         var resourceType = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationResourceTypeKey,

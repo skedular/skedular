@@ -1,12 +1,12 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Constants;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 
@@ -16,7 +16,8 @@ public class OrganizationMemberOptionProvider(
     OrganizationConfiguration organizationConfiguration,
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
-    OrganizationService.OrganizationServiceClient organizationServiceClient)
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    IAdminCustomerService customerAdminService)
     : IBlockOptionProvider
 {
     public async Task<BlockOptionsResponse> GetOptions(BlockOptionsRequest request)
@@ -40,11 +41,22 @@ public class OrganizationMemberOptionProvider(
             organizationConfiguration.ApiKey.CreateMetadata(request.User.Id),
             cancellationToken: cancellationToken);
 
+        var customers =
+            await Task.WhenAll(memberConnection.Edges.Select(item => customerAdminService.GetAsync(item.Node.CustomerId, cancellationToken)));
+
         return new BlockOptionsResponse
         {
             Options = memberConnection.Edges
                 .Select(item => mapper.MapTo(item.Node))
-                .Select(item => new Option { Text = item.Customer.ToDisplayableName().ToOptionText(), Value = item.Customer.Id })
+                .Select(item =>
+                {
+                    var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == item.Customer.Id);
+
+                    return new Option
+                    {
+                        Text = matchingCustomer is null ? "???" : matchingCustomer.DisplayableName.ToOptionText(), Value = item.Customer.Id
+                    };
+                })
                 .ToList()
         };
     }
