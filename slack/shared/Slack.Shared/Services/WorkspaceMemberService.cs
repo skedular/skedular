@@ -17,9 +17,11 @@ using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using OrganizationMember = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
@@ -43,7 +45,7 @@ public class WorkspaceMemberService(
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    IAdminCustomerService adminCustomerService) : IWorkspaceMemberService
+    ICustomerService customerService) : IWorkspaceMemberService
 {
     public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -193,16 +195,16 @@ public class WorkspaceMemberService(
         foreach (var workspaceMember in workspace.WorkspaceMembers)
         {
             var customerExistenceResult =
-                await adminCustomerService.AnyCustomerExistByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
+                await customerService.AdminAnyCustomerExistByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
             if (customerExistenceResult.Exists)
             {
-                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer.Id, workspaceMember));
+                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer!.Id, workspaceMember));
 
-                _ = await adminCustomerService.UpdateIdentityAsync(workspaceMember, customerExistenceResult.Customer.Id, cancellationToken);
+                _ = await customerService.AdminUpdateIdentityAsync(workspaceMember, customerExistenceResult.Customer.Id, cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(customerExistenceResult.Customer.DefaultOrganization?.Id))
                 {
-                    _ = await adminCustomerService.SetDefaultOrganizationAsync(
+                    _ = await customerService.AdminSetDefaultOrganizationAsync(
                         customerExistenceResult.Customer.Id,
                         workspace.Organization.Id,
                         cancellationToken);
@@ -210,7 +212,7 @@ public class WorkspaceMemberService(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    _ = await adminCustomerService.AddPreferredLocationAsync(
+                    _ = await customerService.AdminAddPreferredLocationAsync(
                         customerExistenceResult.Customer.Id,
                         getLocationsResponse.Edges.First().Node.Id,
                         cancellationToken);
@@ -219,18 +221,18 @@ public class WorkspaceMemberService(
                 continue;
             }
 
-            customerExistenceResult = await adminCustomerService.AnyCustomerExistByEmailAsync(workspaceMember.Email, cancellationToken);
+            customerExistenceResult = await customerService.AdminAnyCustomerExistByEmailAsync(workspaceMember.Email, cancellationToken);
             if (customerExistenceResult.Exists)
             {
-                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer.Id, workspaceMember));
-                _ = await adminCustomerService.AddIdentityAsync(
+                customerIdsWorkspaceMembersPair.Add((customerExistenceResult.Customer!.Id, workspaceMember));
+                _ = await customerService.AdminAddIdentityAsync(
                     workspaceMember,
                     customerExistenceResult.Customer.Id,
                     cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(customerExistenceResult.Customer.DefaultOrganization?.Id))
                 {
-                    _ = await adminCustomerService.SetDefaultOrganizationAsync(
+                    _ = await customerService.AdminSetDefaultOrganizationAsync(
                         customerExistenceResult.Customer.Id,
                         workspace.Organization.Id,
                         cancellationToken);
@@ -238,7 +240,7 @@ public class WorkspaceMemberService(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    _ = await adminCustomerService.AddPreferredLocationAsync(
+                    _ = await customerService.AdminAddPreferredLocationAsync(
                         customerExistenceResult.Customer.Id,
                         getLocationsResponse.Edges.First().Node.Id,
                         cancellationToken);
@@ -250,7 +252,7 @@ public class WorkspaceMemberService(
             var customerId = randomHelper.Generate();
             customerIdsWorkspaceMembersPair.Add((customerId, workspaceMember));
 
-            _ = await adminCustomerService.AddAsync(
+            _ = await customerService.AdminAddAsync(
                 workspaceMember,
                 customerId,
                 workspace.Organization.Id,

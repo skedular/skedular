@@ -13,6 +13,7 @@ using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
@@ -26,6 +27,7 @@ public class EditTeamButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ITeamService teamService,
+    ITeamPermissionsService teamPermissionsService,
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
     IRandomHelper randomHelper,
@@ -44,14 +46,13 @@ public class EditTeamButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditTeamContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions =
-            await teamService.GetPermissionsAsync(context.TeamId, workspaceMember, cancellationToken);
+        var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new UnauthorizedAccessException();
         }
 
-        var team = await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);
+        var team = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         var values = viewSubmission.View.State.Values;
         var updateInput = new UpdateInput { Id = context.TeamId, OrganizationId = workspace.Organization.Id };
 

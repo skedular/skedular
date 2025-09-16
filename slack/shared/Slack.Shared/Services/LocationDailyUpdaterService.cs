@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
@@ -10,11 +9,10 @@ using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Mappers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
-using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_GetInput;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection;
 
 namespace Slack.Shared.Services;
@@ -25,15 +23,14 @@ public interface ILocationDailyUpdaterService
 }
 
 public class LocationDailyUpdaterService(
-    LocationConfiguration locationConfiguration,
     BookingConfiguration bookingConfiguration,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    LocationService.LocationServiceClient locationServiceClient,
     BookingService.BookingServiceClient bookingServiceClient,
     IBookingComponents bookingComponents,
     IWorkspaceMemberService workspaceMemberService,
-    TimeProvider timeProvider) : ILocationDailyUpdaterService
+    TimeProvider timeProvider,
+    ILocationService locationService) : ILocationDailyUpdaterService
 {
     public async Task SendDailyUpdateAsync(string locationId, CancellationToken cancellationToken)
     {
@@ -49,16 +46,13 @@ public class LocationDailyUpdaterService(
             return;
         }
 
-        var location = await locationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = locationId },
-            locationConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
-        if (string.IsNullOrWhiteSpace(location.OrganizationId))
+        var location = await locationService.AdminGetAsync(locationId, cancellationToken);
+        if (string.IsNullOrWhiteSpace(location.Organization?.Id))
         {
             return;
         }
 
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(location.OrganizationId, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(location.Organization!.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             return;

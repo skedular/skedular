@@ -7,6 +7,7 @@ using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Interaction;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 
@@ -17,7 +18,7 @@ public class RemoveZoneButtonHandler(
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    IOrganizationService organizationService,
+    IOrganizationPermissionsService organizationPermissionsService,
     IMapper mapper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -34,7 +35,7 @@ public class RemoveZoneButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = RemoveZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new UnauthorizedAccessException();

@@ -17,6 +17,7 @@ using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.Or
 using TermsOfUse = Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse;
 using Version = Api.Shared.Services.Grpc.Skedular.Organization.V1.Version;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions;
+using Tag = Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag;
 
 namespace Organization.Api.Grpc;
 
@@ -238,6 +239,52 @@ public class OrganizationGrpcService(
             CanCancelPeopleExistingInvitations = permissions.CanCancelPeopleExistingInvitations,
             CanViewAnalytics = permissions.CanViewAnalytics
         };
+    }
+
+    public override async Task<TagConnection> GetPaginatedTags(GetPaginatedTagsInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.OrganizationId, null, null, request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    TagOrderField.Name => OrganizationTagOrderField.Name,
+                    TagOrderField.Description => OrganizationTagOrderField.Description,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new TagOrder(direction, field);
+            }).ToList(),
+            context.CancellationToken);
+
+        var connection = new TagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseTag));
+        return connection;
+    }
+
+    public override async Task<Tag> GetTag(GetTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<CustomTagConnection> GetPaginatedCustomTags(GetPaginatedCustomTagsInput request, ServerCallContext context)

@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
@@ -24,8 +23,7 @@ public interface IZoneComponents
         CancellationToken cancellationToken);
 }
 
-public class ZoneComponents(ICustomerService customerService, IOrganizationService organizationService)
-    : IZoneComponents
+public class ZoneComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService) : IZoneComponents
 {
     public async Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
         Workspace workspace,
@@ -33,7 +31,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
@@ -55,8 +53,8 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var zone in zones)
         {

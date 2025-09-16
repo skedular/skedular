@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
@@ -24,7 +23,7 @@ public interface ICustomTagComponents
         CancellationToken cancellationToken);
 }
 
-public class CustomTagComponents(ICustomerService customerService, IOrganizationService organizationService)
+public class CustomTagComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService)
     : ICustomTagComponents
 {
     public async Task<ICollection<IActionElement>> GetAddCustomTagButtonAsync(
@@ -33,7 +32,7 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
@@ -55,8 +54,8 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var customTag in customTags)
         {

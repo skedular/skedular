@@ -7,6 +7,7 @@ using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Interaction;
 using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 
@@ -17,7 +18,7 @@ public class RemoveTeamButtonHandler(
     TeamService.TeamServiceClient teamServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    ITeamService teamService,
+    ITeamPermissionsService teamPermissionsService,
     IMapper mapper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -34,7 +35,7 @@ public class RemoveTeamButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = RemoveTeamContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions = await teamService.GetPermissionsAsync(context.TeamId, workspaceMember, cancellationToken);
+        var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         if (!permissions.CanDelete)
         {
             throw new UnauthorizedAccessException();

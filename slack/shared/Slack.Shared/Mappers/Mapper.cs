@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Slack.Shared.Models;
@@ -14,8 +15,14 @@ using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
+using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
+using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
 using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
 using Resource = Slack.Shared.Models.Resource;
+using ResourceType = Slack.Shared.Models.ResourceType;
+using Role = Api.Shared.Services.Grpc.Skedular.Team.V1.Role;
+using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 
 namespace Slack.Shared.Mappers;
@@ -32,14 +39,15 @@ public interface IMapper
     Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
     Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
-
-    Admin_AddInput MapTo(
-        WorkspaceMember src,
-        string customerId,
-        string defaultOrganizationId,
-        ICollection<string> preferredLocationIds);
-
-    Customer MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src);
+    Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, ICollection<string> preferredLocationIds);
+    Customer? MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer? src);
+    Organization MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
+    Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
+    Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src);
+    OrganizationPermissions MapTo(Permissions src);
+    LocationPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions src);
+    TeamPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
+    Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src);
 }
 
 public class Mapper : IMapper
@@ -168,11 +176,7 @@ public class Mapper : IMapper
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
-    public Admin_AddInput MapTo(
-        WorkspaceMember src,
-        string customerId,
-        string defaultOrganizationId,
-        ICollection<string> preferredLocationIds)
+    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, ICollection<string> preferredLocationIds)
     {
         var input = new Admin_AddInput
         {
@@ -205,33 +209,144 @@ public class Mapper : IMapper
         return input;
     }
 
-    public Customer MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src) =>
+    public Organization MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src) =>
         new()
         {
             Id = src.Id,
-            DisplayableName = src.DisplayableName.ToSafeString(),
-            Designation = src.Designation.ToSafeString(),
-            Title = src.Title.ToSafeString(),
-            Timezone = src.Timezone.ToSafeString(),
-            Locale = src.Locale.ToSafeString(),
+            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            IsOnboardingDone = src.IsOnboardingDone,
-            Identities = MapTo(src.Identities).ToList(),
-            DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
-            PreferredLocationIds = src.PreferredLocations.Select(item => item.Id).ToList(),
-            PreferredResourceIds = src.PreferredResources.Select(item => item.Id).ToList(),
-            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id).ToList(),
-            PreferredOrganizationTagIds = src.PreferredOrganizationTags.Select(item => item.Id).ToList()
+            About = src.About.ToSafeString(),
+            Website = src.Website.ToSafeString(),
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl.ToSafeString(),
+            Type = src.Type switch
+            {
+                OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
+                OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
+            HasFutureBooking = src.HasFutureBooking
+        };
+
+    public Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            About = src.About.ToSafeString(),
+            Timezone = src.Timezone.ToSafeString(),
+            Type = src.Type switch
+            {
+                LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Resources = MapTo(src.Resources).ToList(),
+            HasFutureBooking = src.HasFutureBooking
+        };
+
+    public Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
+    {
+        var team = new Team
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            About = src.About.ToSafeString(),
+            Timezone = src.Timezone.ToSafeString(),
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
+            PrimaryLocation = src.PrimaryLocation is null
+                ? null
+                : new Location { Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name },
+            Permissions = new TeamPermissions
+            {
+                CanView = src.Permissions.CanView,
+                CanModify = src.Permissions.CanModify,
+                CanDelete = src.Permissions.CanDelete,
+                CanInvitePeople = src.Permissions.CanInvitePeople,
+                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations
+            },
+            HasFutureBooking = src.HasFutureBooking
+        };
+
+        team.TeamMembers = MapTo(src.Members, team).ToList();
+
+        return team;
+    }
+
+    public Customer? MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer? src) =>
+        src is null
+            ? null
+            : new Customer
+            {
+                Id = src.Id,
+                DisplayableName = src.DisplayableName.ToSafeString(),
+                Designation = src.Designation.ToSafeString(),
+                Title = src.Title.ToSafeString(),
+                Timezone = src.Timezone.ToSafeString(),
+                Locale = src.Locale.ToSafeString(),
+                Name = src.Name.ToSafeString(),
+                GivenName = src.GivenName.ToSafeString(),
+                MiddleName = src.MiddleName.ToSafeString(),
+                FamilyName = src.FamilyName.ToSafeString(),
+                PhotoUrl = src.PhotoUrl.ToSafeString(),
+                PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
+                PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
+                PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
+                PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
+                PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
+                PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
+                IsOnboardingDone = src.IsOnboardingDone,
+                Identities = MapTo(src.Identities).ToList(),
+                DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
+                PreferredLocationIds = src.PreferredLocations.Select(item => item.Id).ToList(),
+                PreferredResourceIds = src.PreferredResources.Select(item => item.Id).ToList(),
+                PreferredTeamIds = src.PreferredTeams.Select(item => item.Id).ToList(),
+                PreferredOrganizationTagIds = src.PreferredOrganizationTags.Select(item => item.Id).ToList()
+            };
+
+    public OrganizationPermissions MapTo(Permissions src) =>
+        new()
+        {
+            CanView = src.CanView,
+            CanModify = src.CanModify,
+            CanDelete = src.CanDelete,
+            CanInvitePeople = src.CanInvitePeople,
+            CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations,
+            CanViewAnalytics = src.CanViewAnalytics
+        };
+
+    public LocationPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions src) =>
+        new() { CanView = src.CanView, CanModify = src.CanModify, CanDelete = src.CanDelete, CanViewAnalytics = src.CanViewAnalytics };
+
+    public TeamPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src) =>
+        new()
+        {
+            CanView = src.CanView,
+            CanModify = src.CanModify,
+            CanDelete = src.CanDelete,
+            CanInvitePeople = src.CanInvitePeople,
+            CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations
+        };
+
+    public Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src) =>
+        new()
+        {
+            Id = src.Id,
+            Role = src.Role switch
+            {
+                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Owner => OrganizationMemberRole.Owner,
+                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Administrator => OrganizationMemberRole.Administrator,
+                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Member => OrganizationMemberRole.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = new Customer { Id = src.CustomerId.ToSafeString() }
         };
 
     private Organization MapTo(Database.Entities.Organization src)
@@ -379,4 +494,66 @@ public class Mapper : IMapper
 
     private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
+
+    private static IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) =>
+        src.Select(MapTo);
+
+    private static Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
+            ResourceType = MapTo(src.ResourceType)
+        };
+
+    private static ResourceType MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<TeamMember> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> src, Team team) =>
+        src.Select(item => MapTo(item, team));
+
+    private static TeamMember MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Team team) =>
+        new()
+        {
+            Id = src.Id,
+            Role = src.Role switch
+            {
+                Role.Owner => TeamMemberRole.Owner,
+                Role.Administrator => TeamMemberRole.Administrator,
+                Role.Member => TeamMemberRole.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                TeamMemberStatus.Active => Api.Shared.Services.Models.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => Api.Shared.Services.Models.TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = MapTo(src.Customer),
+            OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
+                ? null
+                : new Models.OrganizationMember { Id = src.OrganizationMember.Id, Customer = MapTo(src.OrganizationMember.Customer) },
+            Team = team
+        };
+
+    private static Customer MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            MiddleName = src.MiddleName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            PhotoUrl = src.PhotoUrl.ToSafeString(),
+            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
+            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
+            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
+            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
+            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString()
+        };
 }

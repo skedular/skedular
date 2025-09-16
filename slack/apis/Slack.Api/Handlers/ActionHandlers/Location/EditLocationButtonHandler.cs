@@ -11,9 +11,11 @@ using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
+using LocationType = Api.Shared.Services.Models.LocationType;
 
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
@@ -22,10 +24,11 @@ public class EditLocationButtonHandler(
     LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    ILocationService locationService,
+    ILocationPermissionsService locationPermissionsService,
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IViewSubmissionHandler
+    IPageNavigator pageNavigator,
+    ILocationService locationService) : IViewSubmissionHandler
 {
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
@@ -41,19 +44,25 @@ public class EditLocationButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditLocationContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions =
-            await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
+            await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new UnauthorizedAccessException();
         }
 
-        var existingLocation = await locationServiceClient.GetAsync(
-            new GetInput { Id = context.LocationId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var existingLocation = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateInput { Id = context.LocationId, OrganizationId = workspace.Organization.Id, Type = existingLocation.Type };
+        var updateInput = new UpdateInput
+        {
+            Id = context.LocationId,
+            OrganizationId = workspace.Organization.Id,
+            Type = existingLocation.Type switch
+            {
+                LocationType.Private => global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
+                LocationType.Marketplace => global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {

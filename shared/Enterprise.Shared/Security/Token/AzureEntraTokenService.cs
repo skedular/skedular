@@ -31,12 +31,12 @@ public class AzureEntraTokenService(
 
             var authority = $"https://login.microsoftonline.com/{tenantId}";
             var openIdConnectConfiguration = await memoryCache.GetOrCreateAsync<OpenIdConnectConfiguration>(
-                $"openid-configuration-msteams-{tenantId}", async cacheEntry =>
+                $"openid-configuration-msteams-{tenantId}",
+                async cacheEntry =>
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(15);
 
-                    var documentRetriever =
-                        new HttpDocumentRetriever { RequireHttps = true };
+                    var documentRetriever = new HttpDocumentRetriever { RequireHttps = true };
                     var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                         $"{authority}/.well-known/openid-configuration",
                         new OpenIdConnectConfigurationRetriever(),

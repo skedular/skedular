@@ -12,6 +12,7 @@ using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.Cache;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
@@ -42,7 +43,7 @@ public class SettingsPage(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     ICommonComponents commonComponents,
-    IOrganizationService organizationService,
+    IOrganizationPermissionsService organizationPermissionsService,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IWorkspaceChannelService workspaceChannelService,
     ICachedOrganizationService cachedOrganizationService) :
@@ -123,7 +124,8 @@ public class SettingsPage(
         {
             case BillingActionTypes.Billing:
                 {
-                    var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+                    var permissions =
+                        await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                     context.PageContext.PushCurrentPageToVisitedPages();
                     if (permissions.CanModify)
@@ -228,7 +230,7 @@ public class SettingsPage(
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
         var actionMenus = new List<StaticSelectMenu>();
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (permissions.CanView)
         {
             actionMenus.Add(new StaticSelectMenu

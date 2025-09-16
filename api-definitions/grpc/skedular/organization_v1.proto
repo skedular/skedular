@@ -18,6 +18,9 @@ service OrganizationService {
   rpc GetPaginatedMembers (GetPaginatedMembersInput) returns (MemberConnection);
   rpc GetPermissions (GetPermissionsInput) returns (Permissions);
 
+  rpc GetPaginatedTags (GetPaginatedTagsInput) returns (TagConnection);
+  rpc GetTag (GetTagInput) returns (Tag);
+
   rpc GetPaginatedCustomTags (GetPaginatedCustomTagsInput) returns (CustomTagConnection);
   rpc GetCustomTag (GetCustomTagInput) returns (CustomTag);
   rpc AddCustomTag (AddCustomTagInput) returns (CustomTag);
@@ -106,7 +109,7 @@ message Organization {
   bool hasFutureBooking = 13;
   repeated Tag tags = 14;
   repeated ResourceType resourceTypes = 15;
-  string type = 16;
+  OrganizationType type = 16;
   string contactEmail = 17;
   string contactPhone = 18;
   bool isListable = 19;
@@ -229,6 +232,17 @@ message Tag {
   string color = 4;
 }
 
+message TagConnection {
+  PageInfo pageInfo = 1;
+  repeated TagEdge edges = 2;
+  int32 totalCount = 3;
+}
+
+message TagEdge {
+  Tag node = 1;
+  string cursor = 2;
+}
+
 message CustomTag {
   string id = 1;
   string name = 2;
@@ -245,6 +259,30 @@ message CustomTagConnection {
 message CustomTagEdge {
   CustomTag node = 1;
   string cursor = 2;
+}
+
+message GetPaginatedTagsInput {
+  string after = 1;
+  int32 first = 2;
+  string before = 3;
+  int32 last = 4;
+  TagWhereInput where = 5;
+  repeated TagOrderInput orderBy = 6;
+}
+
+message TagWhereInput {
+  string organizationId = 1;
+  string nameContains = 2;
+}
+
+message TagOrderInput {
+  OrderDirection direction = 1;
+  TagOrderField field = 2;
+}
+
+enum TagOrderField {
+  TagOrderField_Name = 0;
+  TagOrderField_Description = 1;
 }
 
 message GetPaginatedCustomTagsInput {
@@ -269,6 +307,10 @@ message CustomTagOrderInput {
 enum CustomTagOrderField {
   CustomTagOrderField_Name = 0;
   CustomTagOrderField_Description = 1;
+}
+
+message GetTagInput {
+  string id = 1;
 }
 
 message GetCustomTagInput {

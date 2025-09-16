@@ -1,8 +1,10 @@
 ﻿using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Microsoft.Extensions.Caching.Hybrid;
 using Slack.Shared.Mappers;
-using Slack.Shared.Models;
+using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Customer = Slack.Shared.Models.Customer;
 using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
 
@@ -10,156 +12,324 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface ICustomerService
 {
-    ValueTask<Customer> GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken);
-    Task SubmitFeedbackAsync(WorkspaceMember workspaceMember, string feedback, CancellationToken cancellationToken);
-    Task<Customer> AddPreferredLocationAsync(WorkspaceMember workspaceMember, string locationId, CancellationToken cancellationToken);
-    Task<Customer> RemovePreferredLocationAsync(WorkspaceMember workspaceMember, string locationId, CancellationToken cancellationToken);
-    Task<Customer> AddPreferredTeamAsync(WorkspaceMember workspaceMember, string teamId, CancellationToken cancellationToken);
-    Task<Customer> RemovePreferredTeamAsync(WorkspaceMember workspaceMember, string teamId, CancellationToken cancellationToken);
-    Task<Customer> AddPreferredOrganizationTagAsync(WorkspaceMember workspaceMember, string organizationTagId, CancellationToken cancellationToken);
+    Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken);
 
-    Task<Customer> RemovePreferredOrganizationTagAsync(
+    Task<Customer> AdminAddAsync(
         WorkspaceMember workspaceMember,
-        string organizationTagId,
+        string customerId,
+        string defaultOrganizationId,
+        ICollection<string> preferredLocationIds,
         CancellationToken cancellationToken);
 
-    Task<Customer> AddPreferredResourceAsync(WorkspaceMember workspaceMember, string resourceId, CancellationToken cancellationToken);
-    Task<Customer> RemovePreferredResourceAsync(WorkspaceMember workspaceMember, string resourceId, CancellationToken cancellationToken);
+    Task<Customer> AdminAddIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken);
+    Task<Customer> AdminUpdateIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken);
+    Task<(bool Exists, Customer? Customer)> AdminAnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<(bool Exists, Customer? Customer)> AdminAnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken);
+    Task SubmitFeedbackAsync(string workspaceMemberId, string feedback, CancellationToken cancellationToken);
+    Task<Customer> AdminSetDefaultOrganizationAsync(string customerId, string organizationId, CancellationToken cancellationToken);
+    Task<Customer> AdminAddPreferredLocationAsync(string customerId, string locationId, CancellationToken cancellationToken);
+    Task<Customer> GetAsync(string workspaceMemberId, CancellationToken cancellationToken);
+    Task<Customer> GetByIdAsync(string workspaceMemberId, string customerId, CancellationToken cancellationToken);
+    Task<Customer> AddPreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
+    Task<Customer> RemovePreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
+    Task<Customer> AddPreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
+    Task<Customer> RemovePreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
+    Task<Customer> AddPreferredOrganizationTagAsync(string workspaceMemberId, string organizationTagId, CancellationToken cancellationToken);
+    Task<Customer> RemovePreferredOrganizationTagAsync(string workspaceMemberId, string organizationTagId, CancellationToken cancellationToken);
+    Task<Customer> AddPreferredResourceAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken);
+    Task<Customer> RemovePreferredResourceAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken);
 }
 
 public class CustomerService(
+    ApplicationConfiguration applicationConfiguration,
     CustomerConfiguration customerConfiguration,
     Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
     IMapper mapper,
-    IRandomHelper randomHelper)
-    : ICustomerService, IDisposable
+    IRandomHelper randomHelper,
+    HybridCache hybridCache)
+    : ICustomerService
 {
-    private readonly SemaphoreSlim _cachedCustomerLock = new(1, 1);
-    private Customer? _cachedCustomer;
-    private bool _disposed;
-
-    public async ValueTask<Customer> GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken)
-    {
-        if (_cachedCustomer is not null)
-        {
-            return _cachedCustomer;
-        }
-
-        try
-        {
-            await _cachedCustomerLock.WaitAsync(cancellationToken);
-
-            _cachedCustomer = mapper.MapTo(
-                await customerServiceClient.GetAsync(
-                    new GetInput(),
-                    customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                    cancellationToken: cancellationToken));
-
-            return _cachedCustomer;
-        }
-        finally
-        {
-            _cachedCustomerLock.Release();
-        }
-    }
-
-    public async Task SubmitFeedbackAsync(WorkspaceMember workspaceMember, string feedback, CancellationToken cancellationToken) =>
-        await customerServiceClient.SubmitFeedbackAsync(
-            new SubmitFeedbackInput { Id = randomHelper.Generate(), Channel = FeedbackChannel.Slack, Feedback = feedback },
-            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+    public async Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyById(customerId),
+            async ct => mapper.MapTo(
+                await customerServiceClient.Admin_GetAsync(
+                    new Admin_GetInput { CustomerId = customerId },
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: ct))!,
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
 
-    public async Task<Customer> AddPreferredLocationAsync(WorkspaceMember workspaceMember, string locationId, CancellationToken cancellationToken) =>
-        mapper.MapTo(
+    public async Task<Customer> AdminAddAsync(
+        WorkspaceMember workspaceMember,
+        string customerId,
+        string defaultOrganizationId,
+        ICollection<string> preferredLocationIds,
+        CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
+            await customerServiceClient.Admin_AddAsync(
+                mapper.MapTo(workspaceMember, customerId, defaultOrganizationId, preferredLocationIds),
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> AdminAddIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
+            await customerServiceClient.Admin_AddIdentityAsync(
+                mapper.MapToAddIdentityInput(workspaceMember, customerId),
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> AdminUpdateIdentityAsync(WorkspaceMember workspaceMember, string customerId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
+            await customerServiceClient.Admin_UpdateIdentityAsync(
+                mapper.MapToUpdateIdentityInput(workspaceMember, customerId),
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<(bool, Customer?)> AdminAnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
+    {
+        var result = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+            new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = verifiableToken },
+            customerConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        var customer = mapper.MapTo(result.Customer);
+        if (customer is not null)
+        {
+            await CacheCustomerAsync([customer], cancellationToken);
+        }
+
+        return (result.Exist, customer);
+    }
+
+    public async Task<(bool, Customer?)> AdminAnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var result = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
+            new Admin_AnyCustomerExistByEmailInput { Email = email },
+            customerConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        var customer = mapper.MapTo(result.Customer);
+        if (customer is not null)
+        {
+            await CacheCustomerAsync([customer], cancellationToken);
+        }
+
+        return (result.Exist, customer);
+    }
+
+    public async Task<Customer> AdminSetDefaultOrganizationAsync(string customerId, string organizationId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
+            await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+                new Admin_SetDefaultOrganizationInput { CustomerId = customerId, OrganizationId = organizationId },
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> AdminAddPreferredLocationAsync(string customerId, string locationId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
+            await customerServiceClient.Admin_AddPreferredLocationAsync(
+                new Admin_AddPreferredLocationInput { CustomerId = customerId, LocationId = locationId },
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task SubmitFeedbackAsync(string workspaceMemberId, string feedback, CancellationToken cancellationToken) =>
+        await customerServiceClient.SubmitFeedbackAsync(
+            new SubmitFeedbackInput { Id = randomHelper.Generate(), Channel = FeedbackChannel.Slack, Feedback = feedback },
+            customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+            cancellationToken: cancellationToken);
+
+    public async Task<Customer> GetAsync(string workspaceMemberId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyByVerifiableToken(workspaceMemberId),
+            async ct => mapper.MapTo(
+                await customerServiceClient.GetAsync(
+                    new GetInput(),
+                    customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                    cancellationToken: ct))!,
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken: cancellationToken);
+
+    public async Task<Customer> GetByIdAsync(string workspaceMemberId, string customerId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyById(customerId),
+            async ct => mapper.MapTo(
+                await customerServiceClient.GetByIdAsync(
+                    new GetByIdInput { CustomerId = customerId },
+                    customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                    cancellationToken: ct))!,
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken: cancellationToken);
+
+    public async Task<Customer> AddPreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.AddPreferredLocationAsync(
                 new AddPreferredLocationInput { LocationId = locationId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
 
-    public async Task<Customer> RemovePreferredLocationAsync(
-        WorkspaceMember workspaceMember,
-        string locationId,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> RemovePreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.RemovePreferredLocationAsync(
                 new RemovePreferredLocationInput { LocationId = locationId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
 
-    public async Task<Customer> AddPreferredTeamAsync(WorkspaceMember workspaceMember, string teamId, CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> AddPreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.AddPreferredTeamAsync(
                 new AddPreferredTeamInput { TeamId = teamId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
 
-    public async Task<Customer> RemovePreferredTeamAsync(WorkspaceMember workspaceMember, string teamId, CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
+
+    public async Task<Customer> RemovePreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.RemovePreferredTeamAsync(
                 new RemovePreferredTeamInput { TeamId = teamId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
 
     public async Task<Customer> AddPreferredOrganizationTagAsync(
-        WorkspaceMember workspaceMember,
+        string workspaceMemberId,
         string organizationTagId,
         CancellationToken cancellationToken) =>
         mapper.MapTo(
             await customerServiceClient.AddPreferredOrganizationTagAsync(
                 new AddPreferredOrganizationTagInput { OrganizationTagId = organizationTagId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
 
     public async Task<Customer> RemovePreferredOrganizationTagAsync(
-        WorkspaceMember workspaceMember,
+        string workspaceMemberId,
         string organizationTagId,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.RemovePreferredOrganizationTagAsync(
                 new RemovePreferredOrganizationTagInput { OrganizationTagId = organizationTagId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
 
     public async Task<Customer> AddPreferredResourceAsync(
-        WorkspaceMember workspaceMember,
+        string workspaceMemberId,
         string resourceId,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.AddPreferredResourceAsync(
                 new AddPreferredResourceInput { ResourceId = resourceId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
+
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
+    }
 
     public async Task<Customer> RemovePreferredResourceAsync(
-        WorkspaceMember workspaceMember,
+        string workspaceMemberId,
         string resourceId,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(
+        CancellationToken cancellationToken)
+    {
+        var customer = mapper.MapTo(
             await customerServiceClient.RemovePreferredResourceAsync(
                 new RemovePreferredResourceInput { ResourceId = resourceId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
+                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken))!;
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        await CacheCustomerAsync([customer], cancellationToken);
+
+        return customer;
     }
 
-    ~CustomerService() => Dispose(false);
-
-    protected virtual void Dispose(bool disposing)
+    private async Task CacheCustomerAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
     {
-        if (_disposed)
+        foreach (var customer in customers)
         {
-            return;
-        }
+            var key = CreateKeyById(customer.Id);
 
-        if (disposing)
-        {
-            _cachedCustomerLock.Dispose();
-        }
+            await hybridCache.RemoveAsync(key, cancellationToken);
+            await hybridCache.SetAsync(
+                key,
+                customer,
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                cancellationToken: cancellationToken);
 
-        _disposed = true;
+            foreach (var identity in customer.Identities)
+            {
+                key = CreateKeyByVerifiableToken(identity.Id);
+
+                await hybridCache.RemoveAsync(key, cancellationToken);
+                await hybridCache.SetAsync(
+                    key,
+                    customer,
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                    cancellationToken: cancellationToken);
+            }
+        }
     }
+
+    private string CreateKeyById(string id) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:crossdomain:customer-id:{id}";
+
+    private string CreateKeyByVerifiableToken(string verifiableToken) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:crossdomain:customer-verifiabletoken:{verifiableToken}";
 }

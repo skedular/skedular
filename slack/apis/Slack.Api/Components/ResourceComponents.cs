@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
@@ -24,7 +23,7 @@ public interface IResourceComponents
         CancellationToken cancellationToken);
 }
 
-public class ResourceComponents(ICustomerService customerService, ILocationService locationService) : IResourceComponents
+public class ResourceComponents(ICustomerService customerService, ILocationPermissionsService locationPermissionsService) : IResourceComponents
 {
     public async Task<ICollection<IActionElement>> GetAddResourceButtonAsync(
         string locationId,
@@ -32,7 +31,7 @@ public class ResourceComponents(ICustomerService customerService, ILocationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+        var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, locationId, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
@@ -54,8 +53,8 @@ public class ResourceComponents(ICustomerService customerService, ILocationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
+        var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, locationId, cancellationToken);
         var blocks = new List<Block>();
         foreach (var resource in resources)
         {

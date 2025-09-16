@@ -44,7 +44,7 @@ public class CustomTagsPage(
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
     IBookingService bookingService,
-    IOrganizationService organizationService,
+    IOrganizationPermissionsService organizationPermissionsService,
     ICustomTagComponents customTagComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
@@ -176,10 +176,8 @@ public class CustomTagsPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.CustomTagsPage);
 
             var customTagId = action.SelectedOption.Value[CustomTagActionTypes.EditCustomTag.Length..];
-            var permissions = await organizationService.GetPermissionsAsync(
-                workspace,
-                workspaceMember,
-                cancellationToken);
+            var permissions =
+                await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new UnauthorizedAccessException();
@@ -201,10 +199,8 @@ public class CustomTagsPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.CustomTagsPage);
 
             var customTagId = action.SelectedOption.Value[CustomTagActionTypes.RemoveCustomTag.Length..];
-            var permissions = await organizationService.GetPermissionsAsync(
-                workspace,
-                workspaceMember,
-                cancellationToken);
+            var permissions =
+                await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!permissions.CanDelete)
             {
                 throw new UnauthorizedAccessException();
@@ -637,7 +633,7 @@ public class CustomTagsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.AddPreferredOrganizationTagAsync(workspaceMember, context.CustomTagId, cancellationToken);
+        await customerService.AddPreferredOrganizationTagAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -654,7 +650,7 @@ public class CustomTagsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.RemovePreferredOrganizationTagAsync(workspaceMember, context.CustomTagId, cancellationToken);
+        await customerService.RemovePreferredOrganizationTagAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

@@ -125,12 +125,15 @@ public interface IMapper
     OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 
-    CustomTag MapToGrpcResponseCustomTag(Tag? src);
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponseTag(Tag src);
+    TagEdge MapToGrpcResponseTag(Edge<Tag> src);
+
+    CustomTag MapToGrpcResponseCustomTag(Tag src);
     CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src);
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src);
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateCustomTagInput src);
 
-    Zone MapToGrpcResponseZone(Tag? src);
+    Zone MapToGrpcResponseZone(Tag src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
@@ -529,7 +532,12 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
-            Type = src.Type.ToOrganizationType(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Models.OrganizationType.Private => OrganizationType.Private,
+                global::Api.Shared.Services.Models.OrganizationType.Marketplace => OrganizationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             IsListable = src.IsListable,
@@ -697,13 +705,13 @@ public class Mapper : IMapper
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
-        src is null
-            ? new CustomTag()
-            : new CustomTag
-            {
-                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString()
-            };
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponseTag(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    public TagEdge MapToGrpcResponseTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseTag(src.Node) };
+
+    public CustomTag MapToGrpcResponseCustomTag(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
 
@@ -728,13 +736,8 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    public Zone MapToGrpcResponseZone(Tag? src) =>
-        src is null
-            ? new Zone()
-            : new Zone
-            {
-                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString()
-            };
+    public Zone MapToGrpcResponseZone(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
 

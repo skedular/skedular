@@ -15,6 +15,7 @@ service CustomerService {
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc Get (GetInput) returns (Customer);
+  rpc GetById (GetByIdInput) returns (Customer);
   rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
   rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
   rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
@@ -41,6 +42,10 @@ message Admin_GetInput {
 }
 
 message GetInput {
+}
+
+message GetByIdInput {
+  string customerId = 1;
 }
 
 message Admin_AnyCustomerExistByVerifiableTokenInput {

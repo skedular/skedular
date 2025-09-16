@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
@@ -10,11 +9,11 @@ using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Mappers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
 using Icons = Slack.Shared.Constants.Icons;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection;
-using TeamConfiguration = Api.Shared.Clients.Configurations.Grpc.TeamConfiguration;
 
 namespace Slack.Shared.Services;
 
@@ -24,15 +23,14 @@ public interface ITeamDailyUpdaterService
 }
 
 public class TeamDailyUpdaterService(
-    TeamConfiguration teamConfiguration,
     BookingConfiguration bookingConfiguration,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    TeamService.TeamServiceClient teamServiceClient,
     BookingService.BookingServiceClient bookingServiceClient,
     IBookingComponents bookingComponents,
     IWorkspaceMemberService workspaceMemberService,
-    TimeProvider timeProvider) : ITeamDailyUpdaterService
+    TimeProvider timeProvider,
+    ITeamService teamService) : ITeamDailyUpdaterService
 {
     public async Task SendDailyUpdateAsync(string teamId, CancellationToken cancellationToken)
     {
@@ -48,16 +46,13 @@ public class TeamDailyUpdaterService(
             return;
         }
 
-        var team = await teamServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = teamId },
-            teamConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
-        if (string.IsNullOrWhiteSpace(team.OrganizationId))
+        var team = await teamService.AdminGetAsync(teamId, cancellationToken);
+        if (string.IsNullOrWhiteSpace(team.Organization?.Id))
         {
             return;
         }
 
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(team.OrganizationId, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(team.Organization!.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             return;

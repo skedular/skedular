@@ -1,9 +1,7 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -21,9 +19,7 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
 using Team = Slack.Shared.Database.Entities.Team;
-using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -42,15 +38,14 @@ public interface ITeamsPage
 public class TeamsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    TeamConfiguration teamConfiguration,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
-    TeamService.TeamServiceClient teamServiceClient,
     IBookingsPage bookingsPage,
     ITeamComponents teamComponents,
-    ITeamService teamService,
+    ITeamPermissionsService teamPermissionsService,
     IBookingService bookingService,
+    ITeamService teamService,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
     ICustomerService customerService) :
@@ -170,7 +165,7 @@ public class TeamsPage(
         else if (action.SelectedOption.Value.StartsWith(TeamActionTypes.EditTeam))
         {
             var teamId = action.SelectedOption.Value[TeamActionTypes.EditTeam.Length..];
-            var permissions = await teamService.GetPermissionsAsync(teamId, workspaceMember, cancellationToken);
+            var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, teamId, cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new UnauthorizedAccessException();
@@ -190,7 +185,7 @@ public class TeamsPage(
         else if (action.SelectedOption.Value.StartsWith(TeamActionTypes.RemoveTeam))
         {
             var teamId = action.SelectedOption.Value[TeamActionTypes.RemoveTeam.Length..];
-            var permissions = await teamService.GetPermissionsAsync(teamId, workspaceMember, cancellationToken);
+            var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, teamId, cancellationToken);
             if (!permissions.CanDelete)
             {
                 throw new UnauthorizedAccessException();
@@ -355,16 +350,16 @@ public class TeamsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Teams;
 
-        var teamConnection = await GetPaginatedTeamsAsync(
-            workspace,
-            workspaceMember,
+        var (teams, teamConnection) = await teamService.GetPaginatedTeamsAsync(
+            workspaceMember.Id,
+            workspace.Organization.Id,
+            null,
             after,
             first,
             before,
             last,
-            commonPageContext,
             cancellationToken);
-        var teams = teamConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
                 new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
@@ -435,36 +430,6 @@ public class TeamsPage(
                 Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addTeamButton).Concat(feedbackButton).ToList()
             }
         ];
-    }
-
-    private async Task<TeamConnection> GetPaginatedTeamsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        CommonPageContext commonPageContext,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.TeamsPage);
-        var getPaginatedTeamsInput = new GetPaginatedTeamsInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new TeamWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedTeamsInput.OrderBy.AddRange([
-            new TeamOrderInput { Direction = OrderDirection.Ascending, Field = TeamOrderField.Name }
-        ]);
-
-        return await teamServiceClient.GetPaginatedTeamsAsync(
-            getPaginatedTeamsInput,
-            teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
     }
 
     private static List<Block> GetTeamsSearchCriteriaAndPaginationBlocks(TeamConnection teamConnection, PageContext pageContext)
@@ -543,11 +508,7 @@ public class TeamsPage(
         EditTeamContext context,
         CancellationToken cancellationToken)
     {
-        var team = await teamServiceClient.GetAsync(
-            new GetInput { Id = context.TeamId },
-            teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var team = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         var name = new InputBlock
         {
             BlockId = TeamActionTypes.Name,
@@ -586,10 +547,9 @@ public class TeamsPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                InitialOption =
-                    team.PrimaryLocation is null
-                        ? null
-                        : new Option { Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id },
+                InitialOption = team.PrimaryLocation is null
+                    ? null
+                    : new Option { Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id },
                 MinQueryLength = 3
             },
             Optional = true
@@ -618,16 +578,11 @@ public class TeamsPage(
             Element = new ExternalMultiSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
-                InitialOptions =
-                    team.Members.Select(item =>
-                    {
-                        var customer = mapper.MapTo(item.Customer);
-                        return new Option
-                        {
-                            Text = customer.DisplayableName.ToOptionText(),
-                            Value = $"{item.OrganizationMember.Id}{Global.OptionLoaderValueSeparator}{customer.Id}"
-                        };
-                    }).ToList(),
+                InitialOptions = team.TeamMembers.Where(item => item.OrganizationMember is not null).Select(item => new Option
+                {
+                    Text = item.Customer.DisplayableName.ToOptionText(),
+                    Value = $"{item.OrganizationMember!.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}"
+                }).ToList(),
                 MinQueryLength = 0
             },
             Optional = false
@@ -658,11 +613,7 @@ public class TeamsPage(
         RemoveTeamContext context,
         CancellationToken cancellationToken)
     {
-        var team = await teamServiceClient.GetAsync(
-            new GetInput { Id = context.TeamId },
-            teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var team = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
@@ -674,8 +625,7 @@ public class TeamsPage(
                 Title = "Remove Team",
                 Close = "No",
                 Submit = "Yes",
-                Blocks =
-                    [confirmationMessage],
+                Blocks = [confirmationMessage],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);
@@ -688,7 +638,7 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.AddPreferredTeamAsync(workspaceMember, context.TeamId, cancellationToken);
+        await customerService.AddPreferredTeamAsync(workspaceMember.Id, context.TeamId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -705,7 +655,7 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.RemovePreferredTeamAsync(workspaceMember, context.TeamId, cancellationToken);
+        await customerService.RemovePreferredTeamAsync(workspaceMember.Id, context.TeamId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

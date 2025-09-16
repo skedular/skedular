@@ -1,9 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +14,9 @@ using Slack.Shared.Services.Cache;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.AspNetCore;
 using CustomerService = Slack.Shared.Services.CrossDomains.CustomerService;
+using LocationService = Slack.Shared.Services.CrossDomains.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
+using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 
 namespace Slack.Shared;
 
@@ -75,8 +75,13 @@ public static class Extensions
             .AddScoped<IWorkspaceService, WorkspaceService>()
             .AddScoped<IWorkspaceMemberService, WorkspaceMemberService>()
             .AddScoped<IWorkspaceChannelService, WorkspaceChannelService>()
-            .AddScoped<IAdminCustomerService, AdminCustomerService>()
-            .AddScoped<ICustomerService, CustomerService>();
+            .AddSingleton<ICustomerService, CustomerService>()
+            .AddSingleton<IOrganizationService, Services.CrossDomains.OrganizationService>()
+            .AddSingleton<IOrganizationPermissionsService, OrganizationPermissionsService>()
+            .AddSingleton<ILocationService, LocationService>()
+            .AddSingleton<ILocationPermissionsService, LocationPermissionsService>()
+            .AddSingleton<ITeamService, Services.CrossDomains.TeamService>()
+            .AddSingleton<ITeamPermissionsService, TeamPermissionsService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -153,7 +158,7 @@ public static class Extensions
 
         services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
         services.AddGrpcClient<Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
-        services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
+        services.AddGrpcClient<Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
         services.AddGrpcClient<TeamService.TeamServiceClient>(GrpcClients.ConfigureTeam);
 

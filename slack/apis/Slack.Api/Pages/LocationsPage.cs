@@ -1,9 +1,7 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -21,9 +19,7 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.GetInput;
 using Location = Slack.Shared.Database.Entities.Location;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -42,22 +38,21 @@ public interface ILocationsPage
 public class LocationsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    LocationConfiguration locationConfiguration,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
-    LocationService.LocationServiceClient locationServiceClient,
     IBookingsPage bookingsPage,
     IZonesPage zonesPage,
     ICustomTagsPage customTagsPage,
     IResourcesPage resourcesPage,
     ILocationComponents locationComponents,
-    ILocationService locationService,
+    ILocationPermissionsService locationPermissionsService,
     IBookingService bookingService,
     IResourcesPageContextService resourcesPageContextService,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
-    ICustomerService customerService) :
+    ICustomerService customerService,
+    ILocationService locationService) :
     ILocationsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<ButtonAction>,
@@ -180,7 +175,7 @@ public class LocationsPage(
         else if (action.SelectedOption.Value.StartsWith(LocationActionTypes.EditLocation))
         {
             var locationId = action.SelectedOption.Value[LocationActionTypes.EditLocation.Length..];
-            var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, locationId, cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new UnauthorizedAccessException();
@@ -200,7 +195,7 @@ public class LocationsPage(
         else if (action.SelectedOption.Value.StartsWith(LocationActionTypes.RemoveLocation))
         {
             var locationId = action.SelectedOption.Value[LocationActionTypes.RemoveLocation.Length..];
-            var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, locationId, cancellationToken);
             if (!permissions.CanDelete)
             {
                 throw new UnauthorizedAccessException();
@@ -405,16 +400,16 @@ public class LocationsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Locations;
 
-        var locationConnection = await GetPaginatedLocationsAsync(
-            workspace,
-            workspaceMember,
+        var (locations, locationConnection) = await locationService.GetPaginatedLocationsAsync(
+            workspaceMember.Id,
+            workspace.Organization.Id,
+            null,
             after,
             first,
             before,
             last,
-            commonPageContext,
             cancellationToken);
-        var locations = locationConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
             .Query(new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id) }
@@ -501,36 +496,6 @@ public class LocationsPage(
         ];
     }
 
-    private async Task<LocationConnection> GetPaginatedLocationsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        CommonPageContext commonPageContext,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
-        var getPaginatedLocationsInput = new GetPaginatedLocationsInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedLocationsInput.OrderBy.AddRange([
-            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
-        ]);
-
-        return await locationServiceClient.GetPaginatedLocationsAsync(
-            getPaginatedLocationsInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
     private static List<Block> GetLocationsSearchCriteriaAndPaginationBlocks(
         LocationConnection locationConnection,
         PageContext pageContext)
@@ -609,11 +574,7 @@ public class LocationsPage(
         EditLocationContext context,
         CancellationToken cancellationToken)
     {
-        var location = await locationServiceClient.GetAsync(
-            new GetInput { Id = context.LocationId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var location = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         var name = new InputBlock
         {
             BlockId = LocationActionTypes.Name,
@@ -687,11 +648,7 @@ public class LocationsPage(
         RemoveLocationContext context,
         CancellationToken cancellationToken)
     {
-        var location = await locationServiceClient.GetAsync(
-            new GetInput { Id = context.LocationId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var location = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the location {location.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
@@ -717,7 +674,7 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.AddPreferredLocationAsync(workspaceMember, context.LocationId, cancellationToken);
+        await customerService.AddPreferredLocationAsync(workspaceMember.Id, context.LocationId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -734,7 +691,7 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.RemovePreferredLocationAsync(workspaceMember, context.LocationId, cancellationToken);
+        await customerService.RemovePreferredLocationAsync(workspaceMember.Id, context.LocationId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

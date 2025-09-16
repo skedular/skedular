@@ -30,7 +30,6 @@ public class AddBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     BookingConfiguration bookingConfiguration,
-    IAdminCustomerService adminCustomerService,
     ICustomerService customerService,
     ITeamService teamService,
     BookingService.BookingServiceClient bookingServiceClient,
@@ -56,7 +55,7 @@ public class AddBookingButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken) ?? throw new CustomerNotFound();
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken) ?? throw new CustomerNotFound();
         var context = AddBookingContext.Deserialize(action.Value);
         var bookingDate = new InputBlock
         {
@@ -260,7 +259,7 @@ public class AddBookingButtonHandler(
             ];
         }
 
-        var customerToAddToBooking = await adminCustomerService.GetAsync(context.CustomerId, cancellationToken);
+        var customerToAddToBooking = await customerService.AdminGetAsync(context.CustomerId, cancellationToken);
         ArgumentNullException.ThrowIfNull(customerToAddToBooking);
 
         return
@@ -312,8 +311,7 @@ public class AddBookingButtonHandler(
             ];
         }
 
-        var teamToAddToBooking = await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(teamToAddToBooking);
+        var teamToAddToBooking = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
 
         return
         [

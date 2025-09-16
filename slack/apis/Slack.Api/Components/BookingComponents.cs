@@ -73,7 +73,7 @@ public class BookingComponents(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var booking in bookings)
         {

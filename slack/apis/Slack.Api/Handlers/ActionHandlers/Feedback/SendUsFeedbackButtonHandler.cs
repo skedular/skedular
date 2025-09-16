@@ -121,7 +121,7 @@ public class SendUsFeedbackButtonHandler(
             throw new InvalidOperationException("feedback block is missing");
         }
 
-        await customerService.SubmitFeedbackAsync(workspaceMember, feedback, cancellationToken);
+        await customerService.SubmitFeedbackAsync(workspaceMember.Id, feedback, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

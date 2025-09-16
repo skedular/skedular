@@ -44,7 +44,7 @@ public class ZonesPage(
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
     IBookingService bookingService,
-    IOrganizationService organizationService,
+    IOrganizationPermissionsService organizationPermissionsService,
     IZoneComponents zoneComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
@@ -171,7 +171,8 @@ public class ZonesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
 
             var zoneId = action.SelectedOption.Value[ZoneActionTypes.EditZone.Length..];
-            var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+            var permissions =
+                await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new UnauthorizedAccessException();
@@ -188,10 +189,8 @@ public class ZonesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
 
             var zoneId = action.SelectedOption.Value[ZoneActionTypes.RemoveZone.Length..];
-            var permissions = await organizationService.GetPermissionsAsync(
-                workspace,
-                workspaceMember,
-                cancellationToken);
+            var permissions =
+                await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!permissions.CanDelete)
             {
                 throw new UnauthorizedAccessException();
@@ -605,7 +604,7 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.AddPreferredOrganizationTagAsync(workspaceMember, context.ZoneId, cancellationToken);
+        await customerService.AddPreferredOrganizationTagAsync(workspaceMember.Id, context.ZoneId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,
@@ -622,7 +621,7 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.RemovePreferredOrganizationTagAsync(workspaceMember, context.ZoneId, cancellationToken);
+        await customerService.RemovePreferredOrganizationTagAsync(workspaceMember.Id, context.ZoneId, cancellationToken);
 
         await RenderWithContextAsync(
             workspace,

@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
@@ -23,8 +22,7 @@ public interface ITeamComponents
         CancellationToken cancellationToken);
 }
 
-public class TeamComponents(ICustomerService customerService, IOrganizationService organizationService)
-    : ITeamComponents
+public class TeamComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService) : ITeamComponents
 {
     public async Task<ICollection<IActionElement>> GetAddTeamButtonAsync(
         Workspace workspace,
@@ -32,7 +30,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
@@ -53,7 +51,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var team in teams)
         {

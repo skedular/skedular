@@ -8,6 +8,7 @@ using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
@@ -119,7 +120,13 @@ public class Mapper : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Timezone = locationAfterState.Timezone.ToSafeString()
+            Timezone = locationAfterState.Timezone.ToSafeString(),
+            Type = locationAfterState.Type switch
+            {
+                LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
     }
 

@@ -16,7 +16,7 @@ namespace Organization.Api.Services;
 
 public interface ITagService
 {
-    Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken);
+    Task<Tag> GetByIdAsync(string tagId, CancellationToken cancellationToken);
     Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
@@ -42,7 +42,7 @@ public class TagService(
     ICachedTagService cachedTagService,
     ICachedOrganizationService cachedOrganizationService) : ITagService
 {
-    public async Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken)
+    public async Task<Tag> GetByIdAsync(string tagId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 

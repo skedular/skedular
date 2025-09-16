@@ -9,6 +9,7 @@ using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
@@ -20,7 +21,7 @@ public class EditResourceButtonHandler(
     LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    ILocationService locationService,
+    ILocationPermissionsService locationPermissionsService,
     IMapper mapper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -37,7 +38,7 @@ public class EditResourceButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
+        var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new UnauthorizedAccessException();

@@ -130,6 +130,14 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(await customerService.GetMeAsync(false, context.CancellationToken));
     }
 
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> GetById(GetByIdInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await customerService.GetByIdAsync(request.CustomerId, false, context.CancellationToken));
+    }
+
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);

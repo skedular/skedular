@@ -1,5 +1,4 @@
 using Enterprise.Shared;
-using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
@@ -23,7 +22,8 @@ public interface ILocationComponents
         CancellationToken cancellationToken);
 }
 
-public class LocationComponents(ICustomerService customerService, IOrganizationService organizationService) : ILocationComponents
+public class LocationComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService)
+    : ILocationComponents
 {
     public async Task<ICollection<IActionElement>> GetAddLocationButtonAsync(
         Workspace workspace,
@@ -31,7 +31,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await organizationPermissionsService.GetPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
@@ -52,7 +52,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
+        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var location in locations)
         {

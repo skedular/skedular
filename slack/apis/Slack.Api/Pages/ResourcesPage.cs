@@ -49,7 +49,7 @@ public class ResourcesPage(
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
     IBookingService bookingService,
-    ILocationService locationService,
+    ILocationPermissionsService locationPermissionsService,
     IResourceComponents resourceComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
@@ -176,8 +176,10 @@ public class ResourcesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ResourcesPage);
 
             var deskId = action.SelectedOption.Value[ResourceActionTypes.EditResource.Length..];
-            var permissions =
-                await locationService.GetPermissionsAsync(context.PageContext.ResourcesPage.LocationId, workspaceMember, cancellationToken);
+            var permissions = await locationPermissionsService.GetPermissionsAsync(
+                workspaceMember.Id,
+                context.PageContext.ResourcesPage.LocationId,
+                cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new UnauthorizedAccessException();
@@ -200,8 +202,10 @@ public class ResourcesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ResourcesPage);
 
             var deskId = action.SelectedOption.Value[ResourceActionTypes.RemoveResource.Length..];
-            var permissions =
-                await locationService.GetPermissionsAsync(context.PageContext.ResourcesPage.LocationId, workspaceMember, cancellationToken);
+            var permissions = await locationPermissionsService.GetPermissionsAsync(
+                workspaceMember.Id,
+                context.PageContext.ResourcesPage.LocationId,
+                cancellationToken);
             if (!permissions.CanDelete)
             {
                 throw new UnauthorizedAccessException();
@@ -728,7 +732,7 @@ public class ResourcesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.AddPreferredResourceAsync(workspaceMember, context.ResourceId, cancellationToken);
+        await customerService.AddPreferredResourceAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
 
         await RenderWithContextAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), hash, cancellationToken);
     }
@@ -740,7 +744,7 @@ public class ResourcesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerService.RemovePreferredResourceAsync(workspaceMember, context.ResourceId, cancellationToken);
+        await customerService.RemovePreferredResourceAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
 
         await RenderWithContextAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), hash, cancellationToken);
     }
