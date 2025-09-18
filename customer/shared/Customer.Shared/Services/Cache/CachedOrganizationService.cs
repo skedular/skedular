@@ -92,8 +92,6 @@ public class CachedOrganizationService(
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromMinutes(1) },
                 cancellationToken: cancellationToken);
         }
-
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
     }
 
     public async ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
